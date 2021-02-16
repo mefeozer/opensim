@@ -47,7 +47,7 @@ namespace OpenSim.Server.Handlers.Asset
         public AssetServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             IConfig serverConfig = config.Configs[m_ConfigName];
@@ -57,7 +57,7 @@ namespace OpenSim.Server.Handlers.Asset
             string assetService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (assetService == String.Empty)
+            if (string.IsNullOrEmpty(assetService))
                 throw new Exception("No LocalServiceModule in config file");
 
             Object[] args = new Object[] { config, m_ConfigName };

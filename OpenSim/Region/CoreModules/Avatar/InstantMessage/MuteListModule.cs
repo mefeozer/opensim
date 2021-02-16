@@ -27,18 +27,13 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using log4net;
 using Nini.Config;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers;
-using OpenSim.Framework.Client;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using Mono.Addins;
-
-using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Region.CoreModules.Avatar.InstantMessage

@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using OpenSim.Framework;
 using OpenSim.Framework.Monitoring;
-using OpenSim.Data;
 using OpenSim.Server.Base;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
@@ -99,7 +98,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
 
                     string serviceDll = inventoryConfig.GetString("LocalServiceModule", String.Empty);
 
-                    if (serviceDll == String.Empty)
+                    if (string.IsNullOrEmpty(serviceDll))
                     {
                         m_log.Error("[LOCAL INVENTORY SERVICES CONNECTOR]: No LocalServiceModule named in section InventoryService");
                         return;

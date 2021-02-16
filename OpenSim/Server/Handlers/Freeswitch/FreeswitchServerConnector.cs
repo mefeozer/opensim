@@ -35,8 +35,6 @@ using OpenSim.Services.Interfaces;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Server.Handlers.Base;
 using log4net;
-using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 
 namespace OpenSim.Server.Handlers.Freeswitch
 {
@@ -51,7 +49,7 @@ namespace OpenSim.Server.Handlers.Freeswitch
         public FreeswitchServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             IConfig serverConfig = config.Configs[m_ConfigName];
@@ -61,7 +59,7 @@ namespace OpenSim.Server.Handlers.Freeswitch
             string freeswitchService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (freeswitchService == String.Empty)
+            if (string.IsNullOrEmpty(freeswitchService))
                 throw new Exception("No LocalServiceModule in config file");
 
             Object[] args = new Object[] { config };

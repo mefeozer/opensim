@@ -25,14 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using OMV = OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public sealed class BSLinksetConstraints : BSLinkset
+    public sealed class BSLinksetConstraints : BSLinkset
 {
     // private static string LogHeader = "[BULLETSIM LINKSET CONSTRAINTS]";
 

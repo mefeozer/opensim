@@ -28,7 +28,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using OpenSim.Tests.Common;
-using OpenSim.Region.ScriptEngine.Shared;
 
 namespace OpenSim.Region.ScriptEngine.Shared.Tests
 {

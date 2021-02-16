@@ -25,14 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using OpenSim.Region.ScriptEngine.Shared.ScriptBase;
-using OpenSim.Region.ScriptEngine.Yengine;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 using System.Text.RegularExpressions;
 using OpenSim.Region.ScriptEngine.Shared;
 

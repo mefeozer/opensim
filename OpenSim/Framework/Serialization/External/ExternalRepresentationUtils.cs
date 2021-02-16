@@ -152,7 +152,7 @@ namespace OpenSim.Framework.Serialization.External
         [Obsolete("This method is deprecated. Use RewriteSOP instead.")]
         public static string RewriteSOP_Old(string xml, string homeURL, IUserAccountService userService, UUID scopeID)
         {
-            if (xml == string.Empty || homeURL == string.Empty || userService == null)
+            if (string.IsNullOrEmpty(xml) || string.IsNullOrEmpty(homeURL) || userService == null)
                 return xml;
 
             XmlDocument doc = new XmlDocument();
@@ -174,7 +174,7 @@ namespace OpenSim.Framework.Serialization.External
                         creator = userService.GetUserAccount(scopeID, uuid);
                     }
 
-                    if (node.Name == "CreatorData" && node.InnerText != null && node.InnerText != string.Empty)
+                    if (node.Name == "CreatorData" && node.InnerText != null && !string.IsNullOrEmpty(node.InnerText))
                         hasCreatorData = true;
 
                     //if (node.Name == "OwnerID")
@@ -212,7 +212,7 @@ namespace OpenSim.Framework.Serialization.External
         public static string RewriteSOP(string xmlData, string sceneName, string homeURL, IUserAccountService userService, UUID scopeID)
         {
             //            Console.WriteLine("Input XML [{0}]", xmlData);
-            if (xmlData == string.Empty || homeURL == string.Empty || userService == null)
+            if (string.IsNullOrEmpty(xmlData) || string.IsNullOrEmpty(homeURL) || userService == null)
                 return xmlData;
 
             // Deal with bug introduced in Oct. 20 2014 (1eb3e6cc43e2a7b4053bc1185c7c88e22356c5e8)

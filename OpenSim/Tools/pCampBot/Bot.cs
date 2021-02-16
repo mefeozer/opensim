@@ -27,20 +27,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using System.Timers;
 using log4net;
 using OpenMetaverse;
 using OpenMetaverse.Assets;
 using OpenMetaverse.Packets;
-using Nini.Config;
-using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using pCampBot.Interfaces;
-using Timer = System.Timers.Timer;
 using PermissionMask = OpenSim.Framework.PermissionMask;
 
 namespace pCampBot

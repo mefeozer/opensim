@@ -68,7 +68,7 @@ namespace OSHttpServer
             }
 
             // last cookie
-            if (name != string.Empty)
+            if (!string.IsNullOrEmpty(name))
                 Add(new RequestCookie(name, cookies.Substring(start, cookies.Length - start)));
         }
 
@@ -82,9 +82,9 @@ namespace OSHttpServer
             // Verifies the parameter
             if (cookie == null)
                 throw new ArgumentNullException("cookie");
-            if (cookie.Name == null || cookie.Name.Trim() == string.Empty)
+            if (cookie.Name == null || string.IsNullOrEmpty(cookie.Name.Trim()))
                 throw new ArgumentException("Name must be specified.");
-            if (cookie.Value == null || cookie.Value.Trim() == string.Empty)
+            if (cookie.Value == null || string.IsNullOrEmpty(cookie.Value.Trim()))
                 throw new ArgumentException("Content must be specified.");
 
             if (_items.ContainsKey(cookie.Name))

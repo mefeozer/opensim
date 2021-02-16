@@ -25,15 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OMV = OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Region.PhysicsModules.SharedBase;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public sealed class BSShapeCollection : IDisposable
+    public sealed class BSShapeCollection : IDisposable
 {
 #pragma warning disable 414
     private static string LogHeader = "[BULLETSIM SHAPE COLLECTION]";

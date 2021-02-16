@@ -28,11 +28,9 @@
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Nini.Config;
 using OpenSim.Framework;
-using OpenSim.Framework.ServiceAuth;
 
 using OpenSim.Services.Interfaces;
 using FriendInfo = OpenSim.Services.Interfaces.FriendInfo;
@@ -75,7 +73,7 @@ namespace OpenSim.Services.Connectors.Friends
             string serviceURI = gridConfig.GetString("FriendsServerURI",
                     String.Empty);
 
-            if (serviceURI == String.Empty)
+            if (string.IsNullOrEmpty(serviceURI))
             {
                 m_log.Error("[FRIENDS SERVICE CONNECTOR]: No Server URI named in section FriendsService");
                 throw new Exception("Friends connector init error");
@@ -115,7 +113,7 @@ namespace OpenSim.Services.Connectors.Friends
             try
             {
                 string reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -178,7 +176,7 @@ namespace OpenSim.Services.Connectors.Friends
                 return false;
             }
 
-            if (reply != string.Empty)
+            if (!string.IsNullOrEmpty(reply))
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -233,7 +231,7 @@ namespace OpenSim.Services.Connectors.Friends
                 return false;
             }
 
-            if (reply != string.Empty)
+            if (!string.IsNullOrEmpty(reply))
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 

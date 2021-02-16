@@ -26,12 +26,7 @@
  */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 using OpenMetaverse;
-using OpenSim.Framework;
-using System.Text;
 using Npgsql;
 using log4net;
 using System.Reflection;

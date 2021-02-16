@@ -31,7 +31,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using Microsoft.CSharp;
 using NUnit.Framework;
-using OpenSim.Region.ScriptEngine.Shared.CodeTools;
 using OpenSim.Region.ScriptEngine.Shared.ScriptBase;
 using OpenSim.Tests.Common;
 

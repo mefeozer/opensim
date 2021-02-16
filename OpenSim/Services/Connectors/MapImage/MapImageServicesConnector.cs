@@ -28,19 +28,13 @@
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Reflection;
 
 using Nini.Config;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
-
-using OpenSim.Framework.ServiceAuth;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 
 namespace OpenSim.Services.Connectors
 {
@@ -78,7 +72,7 @@ namespace OpenSim.Services.Connectors
             string serviceURI = config.GetString("MapImageServerURI",
                     String.Empty);
 
-            if (serviceURI == String.Empty)
+            if (string.IsNullOrEmpty(serviceURI))
             {
                 m_log.Error("[MAP IMAGE CONNECTOR]: No Server URI named in section MapImageService");
                 throw new Exception("MapImage connector init error");
@@ -105,7 +99,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -166,7 +160,7 @@ namespace OpenSim.Services.Connectors
                 string reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
                         reqString);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -231,7 +225,7 @@ namespace OpenSim.Services.Connectors
                         reqString,
                         30,
                         m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 

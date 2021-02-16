@@ -32,7 +32,6 @@ using System.Net.Security;
 using System.Web;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -40,17 +39,13 @@ using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 using log4net;
 using Nini.Config;
-using Nwc.XmlRpc;
 using OpenSim.Framework;
 using Mono.Addins;
-
-using OpenSim.Framework.Capabilities;
 using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using Caps = OpenSim.Framework.Capabilities.Caps;
-using System.Text.RegularExpressions;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OSDMap = OpenMetaverse.StructuredData.OSDMap;
@@ -114,7 +109,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
                 string serviceDll = m_Config.GetString("LocalServiceModule",
                         String.Empty);
 
-                if (serviceDll == String.Empty)
+                if (string.IsNullOrEmpty(serviceDll))
                 {
                     m_log.Error("[FreeSwitchVoice]: No LocalServiceModule named in section FreeSwitchVoice.  Not starting.");
                     return;

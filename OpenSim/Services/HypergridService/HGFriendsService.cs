@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 
 using OpenSim.Framework;
@@ -75,7 +74,7 @@ namespace OpenSim.Services.HypergridService
             {
                 m_Initialized = true;
 
-                if (configName != String.Empty)
+                if (!string.IsNullOrEmpty(configName))
                     m_ConfigName = configName;
 
                 Object[] args = new Object[] { config };
@@ -85,22 +84,22 @@ namespace OpenSim.Services.HypergridService
                     throw new Exception(String.Format("No section {0} in config file", m_ConfigName));
 
                 string theService = serverConfig.GetString("FriendsService", string.Empty);
-                if (theService == String.Empty)
+                if (string.IsNullOrEmpty(theService))
                     throw new Exception("No FriendsService in config file " + m_ConfigName);
                 m_FriendsService = ServerUtils.LoadPlugin<IFriendsService>(theService, args);
 
                 theService = serverConfig.GetString("UserAccountService", string.Empty);
-                if (theService == String.Empty)
+                if (string.IsNullOrEmpty(theService))
                     throw new Exception("No UserAccountService in " + m_ConfigName);
                 m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(theService, args);
 
                 theService = serverConfig.GetString("GridService", string.Empty);
-                if (theService == String.Empty)
+                if (string.IsNullOrEmpty(theService))
                     throw new Exception("No GridService in " + m_ConfigName);
                 m_GridService = ServerUtils.LoadPlugin<IGridService>(theService, args);
 
                 theService = serverConfig.GetString("PresenceService", string.Empty);
-                if (theService == String.Empty)
+                if (string.IsNullOrEmpty(theService))
                     throw new Exception("No PresenceService in " + m_ConfigName);
                 m_PresenceService = ServerUtils.LoadPlugin<IPresenceService>(theService, args);
 

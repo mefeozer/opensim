@@ -32,9 +32,7 @@ using System.Globalization;
 using System.Reflection;
 using System.IO;
 using System.Text;
-using Microsoft.CSharp;
 //using Microsoft.JScript;
-using Microsoft.VisualBasic;
 using log4net;
 
 using OpenSim.Region.Framework.Interfaces;
@@ -298,7 +296,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
 
 //            m_log.DebugFormat("[Compiler]: Compiling assembly {0} for asset {1} in {2}", assembly, asset, m_scriptEngine.World.Name);
 
-            if (source == String.Empty)
+            if (string.IsNullOrEmpty(source))
                 throw new Exception("Cannot find script assembly and no script text present");
 
             enumCompileType language = DefaultCompileLanguage;

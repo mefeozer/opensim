@@ -35,7 +35,6 @@ using System.Threading;
 using log4net;
 using Nini.Config;
 using OpenMetaverse.StructuredData;
-using OpenSim.Framework;
 
 namespace OpenSim.Framework.Monitoring
 {

@@ -26,9 +26,7 @@
  */
 
 using System;
-using System.Text;
 using OpenSim.Framework;
-using Nini.Config;
 using OpenMetaverse;
 
 namespace OpenSim.Region.ClientStack.LindenUDP

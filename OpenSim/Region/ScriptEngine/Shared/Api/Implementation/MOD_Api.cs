@@ -26,20 +26,12 @@
  */
 
 using System;
-using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.Remoting.Lifetime;
-using System.Threading;
-using log4net;
 using OpenMetaverse;
 using Nini.Config;
-using OpenSim;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.ScriptEngine.Shared;
-using OpenSim.Region.ScriptEngine.Shared.Api.Plugins;
 using OpenSim.Region.ScriptEngine.Shared.ScriptBase;
 using OpenSim.Region.ScriptEngine.Interfaces;
 using OpenSim.Region.ScriptEngine.Shared.Api.Interfaces;

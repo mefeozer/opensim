@@ -31,12 +31,9 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using OpenSim.Framework;
-using OpenSim.Framework.Capabilities;
-using OpenSim.Framework.Client;
 using OpenSim.Framework.Monitoring;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.PhysicsModules.SharedBase;
 using OpenSim.Services.Interfaces;
 
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
@@ -1643,7 +1640,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                                                             ctx, out newpos, out failureReason);
             if (neighbourRegion == null)
             {
-                if (!agent.IsDeleted && failureReason != String.Empty && agent.ControllingClient != null)
+                if (!agent.IsDeleted && !string.IsNullOrEmpty(failureReason) && agent.ControllingClient != null)
                     agent.ControllingClient.SendAlertMessage(failureReason);
                 return agent;
             }

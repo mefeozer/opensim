@@ -26,9 +26,7 @@
  */
 
 using NUnit.Framework;
-using OpenSim.Framework;
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 using System;
 using System.Globalization;
 using System.Threading;

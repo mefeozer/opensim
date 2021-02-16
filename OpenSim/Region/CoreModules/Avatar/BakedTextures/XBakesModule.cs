@@ -32,7 +32,6 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -65,7 +64,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
                 return;
 
             m_URL = config.GetString("URL", String.Empty);
-            if (m_URL == String.Empty)
+            if (string.IsNullOrEmpty(m_URL))
                 return;
 
             m_enabled = true;
@@ -108,7 +107,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
 
         public WearableCacheItem[] Get(UUID id)
         {
-            if (m_URL == String.Empty)
+            if (string.IsNullOrEmpty(m_URL))
                 return null;
 
             using (RestClient rc = new RestClient(m_URL))
@@ -188,7 +187,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
 
         public async Task Store(UUID agentId, WearableCacheItem[] data)
         {
-            if (m_URL == String.Empty)
+            if (string.IsNullOrEmpty(m_URL))
                 return;
 
             int numberWears = 0;

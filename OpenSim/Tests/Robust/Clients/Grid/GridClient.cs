@@ -25,16 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 
 using OpenMetaverse;
 using NUnit.Framework;
 
 using OpenSim.Framework;
-using OpenSim.Services.Interfaces;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenSim.Services.Connectors;
 

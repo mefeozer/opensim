@@ -34,7 +34,6 @@ using log4net;
 using Mono.Addins;
 using Nini.Config;
 using Nwc.XmlRpc;
-using OpenSim.Framework;
 using OpenSim.Framework.Servers;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
@@ -163,7 +162,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 bool found = false;
                 string region = String.Empty;
 
-                if (m_password != String.Empty)
+                if (!string.IsNullOrEmpty(m_password))
                 {
                     if (!requestData.ContainsKey("password"))
                         throw new Exception("Invalid request");

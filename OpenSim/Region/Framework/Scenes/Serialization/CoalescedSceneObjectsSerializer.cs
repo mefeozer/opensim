@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -35,8 +34,6 @@ using System.Xml;
 using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.Framework.Scenes;
 
 namespace OpenSim.Region.Framework.Scenes.Serialization
 {

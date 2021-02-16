@@ -29,7 +29,6 @@
  * @brief Compile a script to produce a ScriptObjCode object
  */
 
-using System;
 using System.IO;
 
 namespace OpenSim.Region.ScriptEngine.Yengine

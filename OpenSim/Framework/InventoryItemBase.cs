@@ -26,7 +26,6 @@
  */
 
 using System;
-using System.Text;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 
@@ -134,7 +133,7 @@ namespace OpenSim.Framework
             }
             set
             {
-                if ((value == null) || (value != null && value == string.Empty))
+                if ((value == null) || (value != null && string.IsNullOrEmpty(value)))
                 {
                     m_creatorData = string.Empty;
                     return;

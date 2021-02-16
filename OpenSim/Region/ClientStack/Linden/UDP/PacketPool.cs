@@ -31,7 +31,6 @@ using System.Reflection;
 using OpenMetaverse;
 using OpenMetaverse.Packets;
 using log4net;
-using OpenSim.Framework.Monitoring;
 
 namespace OpenSim.Region.ClientStack.LindenUDP
 {

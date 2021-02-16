@@ -25,19 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using log4net.Config;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenMetaverse.Assets;
-using OpenSim.Framework;
-using OpenSim.Region.CoreModules.World.Media.Moap;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.Framework.Scenes.Serialization;
 using OpenSim.Tests.Common;
 
 namespace OpenSim.Region.CoreModules.World.Media.Moap.Tests

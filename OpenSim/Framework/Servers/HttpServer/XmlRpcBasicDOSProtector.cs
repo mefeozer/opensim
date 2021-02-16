@@ -27,7 +27,6 @@
 
 using System.Net;
 using Nwc.XmlRpc;
-using OpenSim.Framework;
 
 
 namespace OpenSim.Framework.Servers.HttpServer

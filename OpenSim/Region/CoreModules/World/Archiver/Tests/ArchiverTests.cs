@@ -30,13 +30,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using log4net.Config;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
 using OpenMetaverse.Assets;
 using OpenSim.Framework;
-using OpenSim.Framework.Serialization;
 using OpenSim.Framework.Serialization.External;
 using OpenSim.Region.CoreModules.World.Land;
 using OpenSim.Region.CoreModules.World.Serialiser;
@@ -49,7 +47,6 @@ using ArchiveConstants = OpenSim.Framework.Serialization.ArchiveConstants;
 using TarArchiveReader = OpenSim.Framework.Serialization.TarArchiveReader;
 using TarArchiveWriter = OpenSim.Framework.Serialization.TarArchiveWriter;
 using RegionSettings = OpenSim.Framework.RegionSettings;
-using OpenSim.Region.Framework.Interfaces;
 
 namespace OpenSim.Region.CoreModules.World.Archiver.Tests
 {

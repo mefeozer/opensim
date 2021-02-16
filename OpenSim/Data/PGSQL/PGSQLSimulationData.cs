@@ -29,15 +29,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Reflection;
-using System.Threading;
 using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Data;
 using Npgsql;
 
 namespace OpenSim.Data.PGSQL

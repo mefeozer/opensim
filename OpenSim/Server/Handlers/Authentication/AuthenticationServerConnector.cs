@@ -43,7 +43,7 @@ namespace OpenSim.Server.Handlers.Authentication
         public AuthenticationServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             IConfig serverConfig = config.Configs[m_ConfigName];
@@ -53,7 +53,7 @@ namespace OpenSim.Server.Handlers.Authentication
             string authenticationService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (authenticationService == String.Empty)
+            if (string.IsNullOrEmpty(authenticationService))
                 throw new Exception("No AuthenticationService in config file");
 
             Object[] args = new Object[] { config };

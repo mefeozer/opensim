@@ -25,10 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using NUnit.Framework;
-using OpenSim.Region.ScriptEngine.Shared.CodeTools;
 using OpenSim.Tests.Common;
 
 namespace OpenSim.Region.ScriptEngine.Shared.CodeTools.Tests

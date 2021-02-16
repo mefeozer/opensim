@@ -26,13 +26,11 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using log4net;
 using Nini.Config;
-using Nwc.XmlRpc;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Framework;
@@ -59,7 +57,7 @@ namespace OpenSim.Server.Handlers.Inventory
         public InventoryServiceInConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            if (configName != string.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             IConfig serverConfig = config.Configs[m_ConfigName];
@@ -69,7 +67,7 @@ namespace OpenSim.Server.Handlers.Inventory
             string inventoryService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (inventoryService == String.Empty)
+            if (string.IsNullOrEmpty(inventoryService))
                 throw new Exception("No LocalServiceModule in config file");
 
             Object[] args = new Object[] { config };

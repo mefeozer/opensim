@@ -33,7 +33,6 @@ using Mono.Addins;
 using Nini.Config;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
-using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 
@@ -66,7 +65,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             m_log.Info("[GODNAMES]: Enabled");
             m_enabled = true;
             string conf_str = moduleConfig.GetString("FullNames", String.Empty);
-            if (conf_str != String.Empty)
+            if (!string.IsNullOrEmpty(conf_str))
             {
                 foreach (string strl in conf_str.Split(',')) {
                     string strlan = strl.Trim(" \t".ToCharArray());
@@ -76,7 +75,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             }
 
             conf_str = moduleConfig.GetString("Surnames", String.Empty);
-            if (conf_str != String.Empty)
+            if (!string.IsNullOrEmpty(conf_str))
             {
                 foreach (string strl in conf_str.Split(',')) {
                     string strlan = strl.Trim(" \t".ToCharArray());

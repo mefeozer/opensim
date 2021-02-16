@@ -30,7 +30,6 @@ using OpenMetaverse;
 using log4net;
 using Nini.Config;
 using System.Reflection;
-using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Data;
 using OpenSim.Framework;
@@ -81,16 +80,16 @@ namespace OpenSim.Services.AuthenticationService
             IConfig dbConfig = config.Configs["DatabaseService"];
             if (dbConfig != null)
             {
-                if (dllName == String.Empty)
+                if (string.IsNullOrEmpty(dllName))
                     dllName = dbConfig.GetString("StorageProvider", String.Empty);
-                if (connString == String.Empty)
+                if (string.IsNullOrEmpty(connString))
                     connString = dbConfig.GetString("ConnectionString", String.Empty);
             }
 
             //
             // We tried, but this doesn't exist. We can't proceed.
             //
-            if (dllName == String.Empty || realm == String.Empty)
+            if (string.IsNullOrEmpty(dllName) || string.IsNullOrEmpty(realm))
                 throw new Exception("No StorageProvider configured");
 
             m_Database = LoadPlugin<IAuthenticationData>(dllName,

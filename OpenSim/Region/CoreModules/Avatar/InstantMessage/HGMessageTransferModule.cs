@@ -26,23 +26,17 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 using log4net;
 using Nini.Config;
-using Nwc.XmlRpc;
 using Mono.Addins;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Framework.Servers;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using GridRegion = OpenSim.Services.Interfaces.GridRegion;
-using PresenceInfo = OpenSim.Services.Interfaces.PresenceInfo;
 using OpenSim.Services.Interfaces;
-using OpenSim.Services.Connectors.InstantMessage;
 using OpenSim.Services.Connectors.Hypergrid;
 using OpenSim.Server.Handlers.Hypergrid;
 
@@ -172,11 +166,11 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             Util.FireAndForget(delegate
             {
                 bool success = false;
-                if (foreigner && url == string.Empty) // we don't know about this user
+                if (foreigner && string.IsNullOrEmpty(url)) // we don't know about this user
                 {
                     string recipientUUI = TryGetRecipientUUI(new UUID(im.fromAgentID), toAgentID);
                     //m_log.DebugFormat("[HG MESSAGE TRANSFER]: Got UUI {0}", recipientUUI);
-                    if (recipientUUI != string.Empty)
+                    if (!string.IsNullOrEmpty(recipientUUI))
                     {
                         UUID id; string tourl = string.Empty, first = string.Empty, last = string.Empty, secret = string.Empty;
                         if (Util.ParseUniversalUserIdentifier(recipientUUI, out id, out tourl, out first, out last, out secret))

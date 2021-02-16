@@ -25,14 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
 
-public abstract class BSConstraint : IDisposable
+    public abstract class BSConstraint : IDisposable
 {
     private static string LogHeader = "[BULLETSIM CONSTRAINT]";
 

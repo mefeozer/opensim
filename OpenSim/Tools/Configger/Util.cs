@@ -26,19 +26,8 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.IO.Compression;
-using System.Net;
-using System.Net.Sockets;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using log4net;
-using Nini.Config;
 
 namespace OpenSim.Tools.Configger
 {
@@ -64,7 +53,7 @@ namespace OpenSim.Tools.Configger
             // Glob
 
             path = vol;
-            if (vol != String.Empty)
+            if (!string.IsNullOrEmpty(vol))
                 path += new String(new char[] {Path.VolumeSeparatorChar, Path.DirectorySeparatorChar});
             else
                 path = new String(new char[] {Path.DirectorySeparatorChar});

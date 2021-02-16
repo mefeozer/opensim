@@ -26,19 +26,12 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
-using log4net;
-using log4net.Config;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenSim.Capabilities.Handlers;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Interfaces;
 using OpenSim.Tests.Common;
 
 namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
@@ -158,7 +151,7 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             string llsdresponse = dorequest(handler, request);
 
             Assert.That(llsdresponse != null, Is.True, "Incorrect null response");
-            Assert.That(llsdresponse != string.Empty, Is.True, "Incorrect empty response");
+            Assert.That(!string.IsNullOrEmpty(llsdresponse), Is.True, "Incorrect empty response");
             Assert.That(llsdresponse.Contains(m_userID.ToString()), Is.True, "Response should contain userID");
 
             string descendents = "descendents</key><integer>" + m_rootDescendents + "</integer>";
@@ -289,7 +282,7 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             string llsdresponse = dorequest(handler, request);
 
             Assert.That(llsdresponse != null, Is.True, "Incorrect null response");
-            Assert.That(llsdresponse != string.Empty, Is.True, "Incorrect empty response");
+            Assert.That(!string.IsNullOrEmpty(llsdresponse), Is.True, "Incorrect empty response");
             // we do return a answer now
             //Assert.That(llsdresponse.Contains("bad_folders</key><array><uuid>00000000-0000-0000-0000-000000000000"), Is.True, "Folder Zero should be a bad folder");
 

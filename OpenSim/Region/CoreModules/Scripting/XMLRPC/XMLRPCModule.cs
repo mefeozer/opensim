@@ -35,7 +35,6 @@ using log4net;
 using Nini.Config;
 using Nwc.XmlRpc;
 using OpenMetaverse;
-using OpenSim.Framework;
 using OpenSim.Framework.Monitoring;
 using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;

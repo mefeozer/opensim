@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using OMV = OpenMetaverse;
 using OpenSim.Framework;
@@ -34,29 +32,29 @@ using OpenSim.Region.PhysicsModules.SharedBase;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-/*
- * Class to wrap all objects.
- * The rest of BulletSim doesn't need to keep checking for avatars or prims
- *        unless the difference is significant.
- *
- *  Variables in the physicsl objects are in three forms:
- *      VariableName: used by the simulator and performs taint operations, etc
- *      RawVariableName: direct reference to the BulletSim storage for the variable value
- *      ForceVariableName: direct reference (store and fetch) to the value in the physics engine.
- *  The last one should only be referenced in taint-time.
- */
+    /*
+     * Class to wrap all objects.
+     * The rest of BulletSim doesn't need to keep checking for avatars or prims
+     *        unless the difference is significant.
+     *
+     *  Variables in the physicsl objects are in three forms:
+     *      VariableName: used by the simulator and performs taint operations, etc
+     *      RawVariableName: direct reference to the BulletSim storage for the variable value
+     *      ForceVariableName: direct reference (store and fetch) to the value in the physics engine.
+     *  The last one should only be referenced in taint-time.
+     */
 
-/*
- * As of 20121221, the following are the call sequences (going down) for different script physical functions:
- * llApplyImpulse       llApplyRotImpulse           llSetTorque             llSetForce
- * SOP.ApplyImpulse     SOP.ApplyAngularImpulse     SOP.SetAngularImpulse   SOP.SetForce
- * SOG.ApplyImpulse     SOG.ApplyAngularImpulse     SOG.SetAngularImpulse
- * PA.AddForce          PA.AddAngularForce          PA.Torque = v           PA.Force = v
- * BS.ApplyCentralForce BS.ApplyTorque
- */
+    /*
+     * As of 20121221, the following are the call sequences (going down) for different script physical functions:
+     * llApplyImpulse       llApplyRotImpulse           llSetTorque             llSetForce
+     * SOP.ApplyImpulse     SOP.ApplyAngularImpulse     SOP.SetAngularImpulse   SOP.SetForce
+     * SOG.ApplyImpulse     SOG.ApplyAngularImpulse     SOG.SetAngularImpulse
+     * PA.AddForce          PA.AddAngularForce          PA.Torque = v           PA.Force = v
+     * BS.ApplyCentralForce BS.ApplyTorque
+     */
 
-// Flags used to denote which properties updates when making UpdateProperties calls to linksets, etc.
-public enum UpdatedProperties : uint
+    // Flags used to denote which properties updates when making UpdateProperties calls to linksets, etc.
+    public enum UpdatedProperties : uint
 {
     Position                = 1 << 0,
     Orientation             = 1 << 1,

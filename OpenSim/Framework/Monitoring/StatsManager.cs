@@ -29,9 +29,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using OpenSim.Framework;
 using OpenMetaverse.StructuredData;
 
 namespace OpenSim.Framework.Monitoring
@@ -304,7 +301,7 @@ namespace OpenSim.Framework.Monitoring
             int response_code = 200;
             string contenttype = "text/json";
 
-            if (StatsPassword != String.Empty && (!request.ContainsKey("pass") || request["pass"].ToString() != StatsPassword))
+            if (!string.IsNullOrEmpty(StatsPassword) && (!request.ContainsKey("pass") || request["pass"].ToString() != StatsPassword))
             {
                 responsedata["int_response_code"] = response_code;
                 responsedata["content_type"] = "text/plain";

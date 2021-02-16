@@ -25,18 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text;
 using System.Threading;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.CoreModules.Framework;
 using OpenSim.Region.CoreModules.Framework.EntityTransfer;
 using OpenSim.Region.CoreModules.ServiceConnectorsOut.Simulation;

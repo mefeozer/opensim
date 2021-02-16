@@ -26,10 +26,8 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using OpenMetaverse;
-using OpenSim.Region.ScriptEngine.Shared.Api;
 
 namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 {

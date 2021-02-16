@@ -27,17 +27,12 @@
 
 using log4net;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Text;
-using Nini.Config;
 using OpenSim.Framework;
 
 using OpenSim.Services.Interfaces;
-using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;

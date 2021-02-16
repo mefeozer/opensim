@@ -35,7 +35,6 @@ using System.Xml;
 using OpenSim.Framework;
 using OpenSim.Server.Base;
 using OpenSim.Framework.Servers.HttpServer;
-using FriendInfo = OpenSim.Services.Interfaces.FriendInfo;
 using OpenSim.Services.Interfaces;
 
 using OpenMetaverse;
@@ -43,8 +42,8 @@ using log4net;
 
 namespace OpenSim.Region.CoreModules.Avatar.Friends
 {
-    
-//    public class FriendsRequestHandler : BaseStreamHandlerBasicDOSProtector
+
+    //    public class FriendsRequestHandler : BaseStreamHandlerBasicDOSProtector
     public class FriendsSimpleRequestHandler : SimpleStreamHandler
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

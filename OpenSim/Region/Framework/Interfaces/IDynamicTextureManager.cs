@@ -27,7 +27,6 @@
 
 using System;
 using System.Drawing;
-using System.IO;
 using OpenMetaverse;
 
 namespace OpenSim.Region.Framework.Interfaces

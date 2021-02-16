@@ -111,7 +111,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.RegionReady
                 // failing that, we will print out to console instead.
                 MainConsole.Instance.Output("Region {0} - LOGINS DISABLED DURING INITIALIZATION.", m_scene.Name);
 
-                if (m_uri != string.Empty)
+                if (!string.IsNullOrEmpty(m_uri))
                 {
                     RRAlert("disabled");
                 }
@@ -128,7 +128,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.RegionReady
             if (m_disable_logins)
                 m_scene.EventManager.OnEmptyScriptCompileQueue -= OnEmptyScriptCompileQueue;
 
-            if (m_uri != string.Empty)
+            if (!string.IsNullOrEmpty(m_uri))
                 RRAlert("shutdown");
 
             m_scene = null;
@@ -194,7 +194,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.RegionReady
         {
             m_oarFileLoading = true;
 
-            if (message==String.Empty)
+            if (string.IsNullOrEmpty(message))
             {
                 m_lastOarLoadedOk = true;
             }
@@ -238,7 +238,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.RegionReady
             m_scene.SceneGridService.InformNeighborsThatRegionisUp(
                 m_scene.RequestModuleInterface<INeighbourService>(), m_scene.RegionInfo);
 
-            if (m_uri != string.Empty)
+            if (!string.IsNullOrEmpty(m_uri))
             {
                 RRAlert("enabled");
             }

@@ -27,8 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using log4net;
 using OpenMetaverse;
 
 namespace OpenSim.Framework
@@ -322,7 +320,7 @@ namespace OpenSim.Framework
         /// <returns>null if the folder is not found</returns>
         public InventoryFolderImpl FindFolderByPath(string path)
         {
-            if (path == string.Empty)
+            if (string.IsNullOrEmpty(path))
                 return this;
 
             path = path.Trim();

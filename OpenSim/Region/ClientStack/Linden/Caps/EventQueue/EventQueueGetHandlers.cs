@@ -26,21 +26,12 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using System.Reflection;
-using System.Text;
-using log4net;
-using Nini.Config;
-using Mono.Addins;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.Framework.Scenes;
-using Caps=OpenSim.Framework.Capabilities.Caps;
 
 namespace OpenSim.Region.ClientStack.Linden
 {

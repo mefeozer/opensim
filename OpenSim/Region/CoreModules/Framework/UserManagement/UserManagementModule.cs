@@ -26,10 +26,7 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.IO;
 using System.Reflection;
-using System.Threading;
 
 using OpenSim.Framework;
 using OpenSim.Framework.Console;

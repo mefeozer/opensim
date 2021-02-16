@@ -30,7 +30,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 
 using System.Net;
-using log4net;
 using Nini.Config;
 using Mono.Addins;
 using OpenMetaverse;
@@ -64,7 +63,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
             m_URL = config.GetString("Cap_AvatarPickerSearch", string.Empty);
             // Cap doesn't exist
-            if (m_URL != string.Empty)
+            if (!string.IsNullOrEmpty(m_URL))
                 m_Enabled = true;
         }
 

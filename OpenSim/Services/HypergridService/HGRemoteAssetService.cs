@@ -25,10 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Xml;
 
 using Nini.Config;
 using log4net;
@@ -38,7 +35,6 @@ using OpenSim.Framework;
 using OpenSim.Framework.Serialization.External;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
-using OpenSim.Services.AssetService;
 
 namespace OpenSim.Services.HypergridService
 {
@@ -71,7 +67,7 @@ namespace OpenSim.Services.HypergridService
             Object[] args = new Object[] { config };
 
             string assetConnectorDll = assetConfig.GetString("AssetConnector", String.Empty);
-            if (assetConnectorDll == String.Empty)
+            if (string.IsNullOrEmpty(assetConnectorDll))
                 throw new Exception("Please specify AssetConnector in HGAssetService configuration");
 
             m_assetConnector = ServerUtils.LoadPlugin<IAssetService>(assetConnectorDll, args);
@@ -79,7 +75,7 @@ namespace OpenSim.Services.HypergridService
                 throw new Exception(String.Format("Unable to create AssetConnector from {0}", assetConnectorDll));
 
             string userAccountsDll = assetConfig.GetString("UserAccountsService", string.Empty);
-            if (userAccountsDll == string.Empty)
+            if (string.IsNullOrEmpty(userAccountsDll))
                 throw new Exception("Please specify UserAccountsService in HGAssetService configuration");
 
             m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userAccountsDll, args);
@@ -88,7 +84,7 @@ namespace OpenSim.Services.HypergridService
 
             m_HomeURL = Util.GetConfigVarFromSections<string>(config, "HomeURI",
                 new string[] { "Startup", "Hypergrid", configName }, string.Empty);
-            if (m_HomeURL == string.Empty)
+            if (string.IsNullOrEmpty(m_HomeURL))
                 throw new Exception("[HGAssetService] No HomeURI specified");
 
             m_Cache = UserAccountCache.CreateUserAccountCache(m_UserAccountService);

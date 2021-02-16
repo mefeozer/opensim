@@ -32,8 +32,6 @@ using Nini.Config;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Server.Base;
 using OpenSim.Server.Handlers;
 using OpenSim.Region.Framework.Interfaces;
@@ -41,7 +39,6 @@ using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Framework.Servers;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Interfaces;
-using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenMetaverse;
 
 namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
@@ -118,7 +115,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
 
             string serviceDll = config.GetString("LocalServiceModule", String.Empty);
 
-            if (serviceDll == String.Empty)
+            if (string.IsNullOrEmpty(serviceDll))
             {
                 m_log.Error("[LOCAL USERPROFILES SERVICE CONNECTOR]: No LocalServiceModule named in section UserProfilesService");
                 return;

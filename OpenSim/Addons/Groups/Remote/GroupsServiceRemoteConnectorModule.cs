@@ -27,16 +27,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Text;
 
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Server.Base;
-using OpenSim.Services.Interfaces;
 
 using OpenMetaverse;
 using Mono.Addins;
@@ -183,7 +178,7 @@ namespace OpenSim.Groups
 
         public ExtendedGroupRecord GetGroupRecord(string RequestingAgentID, UUID GroupID, string GroupName)
         {
-            if (GroupID == UUID.Zero && (GroupName == null || GroupName != null && GroupName == string.Empty))
+            if (GroupID == UUID.Zero && (GroupName == null || GroupName != null && string.IsNullOrEmpty(GroupName)))
                 return null;
 
             return m_CacheWrapper.GetGroupRecord(RequestingAgentID,GroupID,GroupName, delegate

@@ -30,18 +30,13 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Reflection;
 using System.Text;
-using System.Threading;
-using System.Timers;
 using System.Xml;
 using OpenMetaverse;
-using OpenMetaverse.Packets;
 using log4net;
 using OpenSim.Framework;
 using OpenSim.Framework.Serialization.External;
-using OpenSim.Region.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes.Serialization;
-using OpenSim.Services.Interfaces;
 using PermissionMask = OpenSim.Framework.PermissionMask;
 
 namespace OpenSim.Region.Framework.Scenes
@@ -1058,14 +1053,14 @@ namespace OpenSim.Region.Framework.Scenes
                     return;
             }
 
-            if (newName == String.Empty)
+            if (string.IsNullOrEmpty(newName))
                 newName = item.Name;
 
             AssetBase asset = AssetService.Get(item.AssetID.ToString());
 
             if (asset != null)
             {
-                if (newName != String.Empty)
+                if (!string.IsNullOrEmpty(newName))
                 {
                     asset.Name = newName;
                 }

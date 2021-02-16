@@ -51,7 +51,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
         public HGFriendsServerConnector(IConfigSource config, IHttpServer server, string configName, IFriendsSimConnector localConn)
             : base(config, server, configName)
         {
-            if (configName != string.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             Object[] args = new Object[] { config, m_ConfigName, localConn };
@@ -62,12 +62,12 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             string theService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
-            if (theService == String.Empty)
+            if (string.IsNullOrEmpty(theService))
                 throw new Exception("No LocalServiceModule in config file");
             m_TheService = ServerUtils.LoadPlugin<IHGFriendsService>(theService, args);
 
             theService = serverConfig.GetString("UserAgentService", string.Empty);
-            if (theService == String.Empty)
+            if (string.IsNullOrEmpty(theService))
                 throw new Exception("No UserAgentService in " + m_ConfigName);
             m_UserAgentService = ServerUtils.LoadPlugin<IUserAgentService>(theService, new Object[] { config, localConn });
 

@@ -28,14 +28,10 @@
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Nini.Config;
 using OpenSim.Framework;
-
-using OpenSim.Framework.ServiceAuth;
 using OpenSim.Services.Interfaces;
-using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenSim.Server.Base;
 using OpenMetaverse;
 
@@ -174,7 +170,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -211,7 +207,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
                     GridUserInfo guinfo = null;
@@ -257,7 +253,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply == null || (reply != null && reply == string.Empty))
+                if (reply == null || (reply != null && string.IsNullOrEmpty(reply)))
                 {
                     m_log.DebugFormat("[GRID USER CONNECTOR]: GetGridUserInfo received null or empty reply");
                     return null;

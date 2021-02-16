@@ -34,7 +34,6 @@ using DotNetOpenMail.SmtpAuth;
 using log4net;
 using Nini.Config;
 using OpenMetaverse;
-using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using Mono.Addins;
@@ -255,7 +254,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
         public void SendEmail(UUID objectID, string address, string subject, string body)
         {
             //Check if address is empty
-            if (address == string.Empty)
+            if (string.IsNullOrEmpty(address))
                 return;
 
             //FIXED:Check the email is correct form in REGEX
@@ -309,7 +308,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
                     SmtpServer smtpServer=new SmtpServer(SMTP_SERVER_HOSTNAME,SMTP_SERVER_PORT);
                     // Add authentication only when requested
                     //
-                    if (SMTP_SERVER_LOGIN != String.Empty && SMTP_SERVER_PASSWORD != String.Empty)
+                    if (!string.IsNullOrEmpty(SMTP_SERVER_LOGIN) && !string.IsNullOrEmpty(SMTP_SERVER_PASSWORD))
                     {
                         //Authentication
                         smtpServer.SmtpAuthToken=new SmtpAuthToken(SMTP_SERVER_LOGIN, SMTP_SERVER_PASSWORD);

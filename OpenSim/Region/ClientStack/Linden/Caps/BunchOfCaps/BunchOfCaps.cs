@@ -34,9 +34,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
@@ -45,11 +43,9 @@ using log4net;
 
 using OpenSim.Framework;
 using OpenSim.Framework.Capabilities;
-using OpenSim.Region.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.Framework.Scenes.Serialization;
-using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Services.Interfaces;
 
@@ -198,19 +194,19 @@ namespace OpenSim.Region.ClientStack.Linden
                 if (CapsConfig != null)
                 {
                     string homeLocationUrl = CapsConfig.GetString("Cap_HomeLocation", "localhost");
-                    if(homeLocationUrl == String.Empty)
+                    if(string.IsNullOrEmpty(homeLocationUrl))
                         m_AllowCapHomeLocation = false;
 
                     string GroupMemberDataUrl = CapsConfig.GetString("Cap_GroupMemberData", "localhost");
-                    if(GroupMemberDataUrl == String.Empty)
+                    if(string.IsNullOrEmpty(GroupMemberDataUrl))
                         m_AllowCapGroupMemberData = false;
 
                     string LandResourcesUrl = CapsConfig.GetString("Cap_LandResources", "localhost");
-                    if (LandResourcesUrl == String.Empty)
+                    if (string.IsNullOrEmpty(LandResourcesUrl))
                         m_AllowCapLandResources = false;
 
                     string AttachmentResourcesUrl = CapsConfig.GetString("Cap_AttachmentResources", "localhost");
-                    if (AttachmentResourcesUrl == String.Empty)
+                    if (string.IsNullOrEmpty(AttachmentResourcesUrl))
                         m_AllowCapAttachmentResources = false;
                 }
             }
@@ -610,7 +606,7 @@ namespace OpenSim.Region.ClientStack.Linden
                             warning += "Upload for testing purposes only. Items will be local to region only, Inventory entry will be lost on logout";
                     }
 
-                    if (client != null && warning != String.Empty)
+                    if (client != null && !string.IsNullOrEmpty(warning))
                         client.SendAgentAlertMessage(warning, true);
                 }
             }
@@ -2454,7 +2450,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 uploadComplete.new_group_mask = m_groupMask;
                 uploadComplete.new_everyone_mask = m_everyoneMask;
 
-                if (m_error == String.Empty)
+                if (string.IsNullOrEmpty(m_error))
                 {
                     uploadComplete.new_asset = newAssetID.ToString();
                     uploadComplete.new_inventory_item = inv;

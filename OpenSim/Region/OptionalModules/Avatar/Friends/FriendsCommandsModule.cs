@@ -27,18 +27,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using log4net;
 using Mono.Addins;
 using NDesk.Options;
 using Nini.Config;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
-using OpenSim.Framework.Monitoring;
-using OpenSim.Region.ClientStack.LindenUDP;
 using OpenSim.Region.CoreModules.Avatar.Friends;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;

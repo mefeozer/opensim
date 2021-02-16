@@ -25,11 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using OpenSim.Framework;
 using OpenSim.Server.Base;
@@ -95,7 +92,7 @@ namespace OpenSim.Groups
 
         public ExtendedGroupRecord GetGroupRecord(string RequestingAgentID, UUID GroupID, string GroupName, string token)
         {
-            if (GroupID == UUID.Zero && (GroupName == null || (GroupName != null && GroupName == string.Empty)))
+            if (GroupID == UUID.Zero && (GroupName == null || (GroupName != null && string.IsNullOrEmpty(GroupName))))
                 return null;
 
             Dictionary<string, object> sendData = new Dictionary<string, object>();

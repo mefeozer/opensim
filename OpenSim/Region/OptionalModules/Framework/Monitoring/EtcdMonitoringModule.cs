@@ -28,13 +28,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using log4net;
 using Mono.Addins;
 using Nini.Config;
-using OpenMetaverse;
-using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using netcd;
@@ -77,7 +73,7 @@ namespace OpenSim.Region.OptionalModules.Framework.Monitoring
             IConfig etcdConfig = source.Configs["Etcd"];
 
             string etcdUrls = etcdConfig.GetString("EtcdUrls", String.Empty);
-            if (etcdUrls == String.Empty)
+            if (string.IsNullOrEmpty(etcdUrls))
                 return;
 
             m_etcdBasePath = etcdConfig.GetString("BasePath", m_etcdBasePath);

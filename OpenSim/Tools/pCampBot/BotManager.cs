@@ -33,7 +33,6 @@ using System.Threading;
 using OpenMetaverse;
 using log4net;
 using log4net.Appender;
-using log4net.Core;
 using log4net.Repository;
 using Nini.Config;
 using OpenSim.Framework;

@@ -28,11 +28,9 @@
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Nini.Config;
 using OpenSim.Framework;
-using OpenSim.Framework.ServiceAuth;
 using OpenSim.Services.Interfaces;
 using OpenSim.Server.Base;
 using OpenMetaverse;
@@ -74,7 +72,7 @@ namespace OpenSim.Services.Connectors
             string serviceURI = assetConfig.GetString("AuthenticationServerURI",
                     String.Empty);
 
-            if (serviceURI == String.Empty)
+            if (string.IsNullOrEmpty(serviceURI))
             {
                 m_log.Error("[AUTH CONNECTOR]: No Server URI named in section AuthenticationService");
                 throw new Exception("Authentication connector init error");

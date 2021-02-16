@@ -28,7 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Timers;
 using log4net;
 using Mono.Addins;
 using Nini.Config;
@@ -1158,7 +1157,7 @@ namespace OpenSim.Groups
                 // Should this send updates to everyone in the group?
                 SendAgentGroupDataUpdate(remoteClient, true);
 
-                if (reason != string.Empty)
+                if (!string.IsNullOrEmpty(reason))
                     // A warning
                     remoteClient.SendAlertMessage("Warning: " + reason);
             }

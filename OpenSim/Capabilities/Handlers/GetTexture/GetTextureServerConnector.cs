@@ -31,7 +31,6 @@ using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Server.Handlers.Base;
-using OpenMetaverse;
 
 
 namespace OpenSim.Capabilities.Handlers
@@ -44,7 +43,7 @@ namespace OpenSim.Capabilities.Handlers
         public GetTextureServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             IConfig serverConfig = config.Configs[m_ConfigName];
@@ -53,7 +52,7 @@ namespace OpenSim.Capabilities.Handlers
 
             string assetService = serverConfig.GetString("AssetService", String.Empty);
 
-            if (assetService == String.Empty)
+            if (string.IsNullOrEmpty(assetService))
                 throw new Exception("No AssetService in config file");
 
             Object[] args = new Object[] { config };

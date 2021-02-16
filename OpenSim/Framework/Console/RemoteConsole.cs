@@ -29,10 +29,7 @@ using System;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using OpenMetaverse;
@@ -402,7 +399,7 @@ namespace OpenSim.Framework.Console
             reply["content_type"] = "text/plain";
 
             // Check user name and password
-            if (m_UserName == String.Empty)
+            if (string.IsNullOrEmpty(m_UserName))
                 return reply;
 
             if (post["USER"] == null || post["PASS"] == null)

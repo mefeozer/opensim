@@ -30,7 +30,6 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading;
 using log4net;
-using OpenSim.Framework;
 
 namespace OpenSim.Framework.Monitoring
 {

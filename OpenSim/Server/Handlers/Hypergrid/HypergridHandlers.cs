@@ -24,9 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 
@@ -73,7 +71,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             int sizeX = 256;
             int sizeY = 256;
 
-            m_log.DebugFormat("[HG Handler]: XMLRequest to link to {0} from {1}", (name == string.Empty) ? "default region" : name, remoteClient.Address.ToString());
+            m_log.DebugFormat("[HG Handler]: XMLRequest to link to {0} from {1}", (string.IsNullOrEmpty(name)) ? "default region" : name, remoteClient.Address.ToString());
             bool success = m_GatekeeperService.LinkRegion(name, out regionID, out regionHandle, out externalName, out imageURL, out reason, out sizeX, out sizeY);
 
             Hashtable hash = new Hashtable();

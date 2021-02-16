@@ -28,7 +28,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Globalization;
@@ -36,7 +35,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using System.Xml;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 using log4net;
@@ -50,7 +48,6 @@ using OpenSim.Services.Connectors.Hypergrid;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Services.UserProfilesService;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
-using Microsoft.CSharp;
 
 namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
 {
@@ -108,7 +105,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
 
                             bool ok = true;
                             bool foreign = GetUserProfileServerURI(avatarID, out serverURI);
-                            if(serverURI == string.Empty)
+                            if(string.IsNullOrEmpty(serverURI))
                                 ok = false;
 
                             Byte[] membershipType = new Byte[1];

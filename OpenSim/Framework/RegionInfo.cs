@@ -28,7 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Xml;
 using System.IO;
@@ -160,7 +159,7 @@ namespace OpenSim.Framework
 
                 ReadNiniConfig(source, configName);
 
-                if (configName != String.Empty && saveFile)
+                if (!string.IsNullOrEmpty(configName) && saveFile)
                     source.Save(filename);
 
                 RegionFile = filename;
@@ -318,7 +317,7 @@ namespace OpenSim.Framework
         public string ServerURI
         {
             get {
-                if ( m_serverURI != string.Empty ) {
+                if (!string.IsNullOrEmpty(m_serverURI)) {
                     return m_serverURI;
                 } else {
                     return "http://" + m_externalHostName + ":" + m_httpPort + "/";
@@ -444,12 +443,12 @@ namespace OpenSim.Framework
                 MainConsole.Instance.Output("the default is displayed between [ ] brackets.\n");
                 MainConsole.Instance.Output("=====================================\n");
 
-                if (name == String.Empty)
+                if (string.IsNullOrEmpty(name))
                 {
-                    while (name.Trim() == string.Empty)
+                    while (string.IsNullOrEmpty(name.Trim()))
                     {
                         name = MainConsole.Instance.Prompt("New region name", name);
-                        if (name.Trim() == string.Empty)
+                        if (string.IsNullOrEmpty(name.Trim()))
                         {
                             MainConsole.Instance.Output("Cannot interactively create region with no name");
                         }
@@ -461,7 +460,7 @@ namespace OpenSim.Framework
                 creatingNew = true;
             }
 
-            if (name == String.Empty)
+            if (string.IsNullOrEmpty(name))
                 name = source.Configs[0].Name;
 
             if (source.Configs[name] == null)
@@ -505,7 +504,7 @@ namespace OpenSim.Framework
             //
             allKeys.Remove("Location");
             string location = config.GetString("Location", String.Empty);
-            if (location == String.Empty)
+            if (string.IsNullOrEmpty(location))
             {
                 location = MainConsole.Instance.Prompt("Region Location", "1000,1000");
                 config.Set("Location", location);
@@ -786,7 +785,7 @@ namespace OpenSim.Framework
             string location = String.Format("{0},{1}", RegionLocX, RegionLocY);
             config.Set("Location", location);
 
-            if (DataStore != String.Empty)
+            if (!string.IsNullOrEmpty(DataStore))
                 config.Set("Datastore", DataStore);
 
             if (RegionSizeX != Constants.RegionSize || RegionSizeY != Constants.RegionSize)
@@ -831,13 +830,13 @@ namespace OpenSim.Framework
             if (ScopeID != UUID.Zero)
                 config.Set("ScopeID", ScopeID.ToString());
 
-            if (RegionType != String.Empty)
+            if (!string.IsNullOrEmpty(RegionType))
                 config.Set("RegionType", RegionType);
 
             if (m_maptileStaticUUID != UUID.Zero)
                 config.Set("MaptileStaticUUID", m_maptileStaticUUID.ToString());
 
-            if (MaptileStaticFile != null && MaptileStaticFile != String.Empty)
+            if (MaptileStaticFile != null && !string.IsNullOrEmpty(MaptileStaticFile))
                 config.Set("MaptileStaticFile", MaptileStaticFile);
         }
 
@@ -1109,7 +1108,7 @@ namespace OpenSim.Framework
             args["remoting_port"] = OSD.FromString(RemotingPort.ToString());
             if ((proxyUrl != null) && !proxyUrl.Equals(""))
                 args["proxy_url"] = OSD.FromString(proxyUrl);
-            if (RegionType != String.Empty)
+            if (!string.IsNullOrEmpty(RegionType))
                 args["region_type"] = OSD.FromString(RegionType);
 
             return args;

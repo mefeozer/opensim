@@ -31,7 +31,6 @@ using System.Net.Sockets;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Text;
 using log4net;
 
 namespace OpenSim.Framework

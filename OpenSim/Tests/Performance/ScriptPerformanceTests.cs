@@ -27,16 +27,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
 using System.Threading;
-using log4net;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Region.CoreModules.Scripting.WorldComm;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.ScriptEngine.XEngine;
 using OpenSim.Tests.Common;

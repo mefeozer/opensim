@@ -27,7 +27,6 @@
 
 using System;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 using System.Collections.Generic;
 using System.IO;
@@ -41,8 +40,6 @@ using OpenSim.Server.Handlers.Base;
 using log4net;
 using OpenMetaverse;
 
-using System.Threading;
-
 namespace OpenSim.Server.Handlers.Inventory
 {
     public class XInventoryInConnector : ServiceConnector
@@ -55,7 +52,7 @@ namespace OpenSim.Server.Handlers.Inventory
         public XInventoryInConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             m_log.DebugFormat("[XInventoryInConnector]: Starting with config name {0}", m_ConfigName);
@@ -67,7 +64,7 @@ namespace OpenSim.Server.Handlers.Inventory
             string inventoryService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (inventoryService == String.Empty)
+            if (string.IsNullOrEmpty(inventoryService))
                 throw new Exception("No InventoryService in config file");
 
             Object[] args = new Object[] { config, m_ConfigName };

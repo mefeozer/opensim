@@ -28,17 +28,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security;
 using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Xml;
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 using log4net;
 using Nini.Config;
 using Amib.Threading;
@@ -2230,7 +2227,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
         {
 //            m_log.DebugFormat("[XEngine]: Writing state for script item with ID {0}", itemID);
 
-            if (xml == String.Empty)
+            if (string.IsNullOrEmpty(xml))
                 return false;
 
             XmlDocument doc = new XmlDocument();

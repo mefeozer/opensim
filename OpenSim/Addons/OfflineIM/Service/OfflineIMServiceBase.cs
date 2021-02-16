@@ -25,12 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Nini.Config;
-using OpenSim.Framework;
 using OpenSim.Data;
-using OpenSim.Services.Interfaces;
 using OpenSim.Services.Base;
 
 namespace OpenSim.OfflineIM
@@ -52,9 +48,9 @@ namespace OpenSim.OfflineIM
             IConfig dbConfig = config.Configs["DatabaseService"];
             if (dbConfig != null)
             {
-                if (dllName == String.Empty)
+                if (string.IsNullOrEmpty(dllName))
                     dllName = dbConfig.GetString("StorageProvider", String.Empty);
-                if (connString == String.Empty)
+                if (string.IsNullOrEmpty(connString))
                     connString = dbConfig.GetString("ConnectionString", String.Empty);
             }
 

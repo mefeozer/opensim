@@ -25,12 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 using NUnit.Framework;
-using OpenSim.Framework;
 using OpenSim.Framework.Serialization.External;
 using OpenSim.Tests.Common;
 

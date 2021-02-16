@@ -30,13 +30,11 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using OpenSim.Framework;
-using OpenSim.Framework.Client;
 using OpenSim.Framework.Monitoring;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Connectors.Hypergrid;
 using OpenSim.Services.Interfaces;
-using OpenSim.Server.Base;
 
 using OpenMetaverse;
 using log4net;
@@ -141,7 +139,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                         if (m_RestrictAppearanceAbroad)
                         {
                             m_AccountName = transferConfig.GetString("AccountForAppearance", string.Empty);
-                            if (m_AccountName == string.Empty)
+                            if (string.IsNullOrEmpty(m_AccountName))
                                 m_log.WarnFormat("[HG ENTITY TRANSFER MODULE]: RestrictAppearanceAbroad is on, but no account has been given for avatar appearance!");
                         }
                     }
@@ -543,9 +541,9 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         public override void RequestTeleportLandmark(IClientAPI remoteClient, AssetLandmark lm)
         {
             m_log.DebugFormat("[HG ENTITY TRANSFER MODULE]: Teleporting agent via landmark to {0} region {1} position {2}",
-                (lm.Gatekeeper == string.Empty) ? "local" : lm.Gatekeeper, lm.RegionID, lm.Position);
+                (string.IsNullOrEmpty(lm.Gatekeeper)) ? "local" : lm.Gatekeeper, lm.RegionID, lm.Position);
 
-            if (lm.Gatekeeper == string.Empty)
+            if (string.IsNullOrEmpty(lm.Gatekeeper))
             {
                 base.RequestTeleportLandmark(remoteClient, lm);
                 return;

@@ -26,12 +26,8 @@
  */
 
 using System;
-using System.Threading;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using OpenMetaverse;
-using OpenMetaverse.Imaging;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Services.Interfaces;

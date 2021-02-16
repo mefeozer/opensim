@@ -34,7 +34,6 @@ using OpenMetaverse;
 using Mono.Addins;
 
 using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.CoreModules.World.Wind;
 
 namespace OpenSim.Region.CoreModules.World.Wind.Plugins
 {

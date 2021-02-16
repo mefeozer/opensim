@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using System.Xml;
 using log4net;
 using Nini.Config;
@@ -85,7 +84,7 @@ namespace OpenSim.Tools.Configger
                 string masterFilePath = Path.GetFullPath(
                         Path.Combine(Util.configDir(), masterFileName));
 
-                if (masterFileName != String.Empty)
+                if (!string.IsNullOrEmpty(masterFileName))
                 {
                     if (File.Exists(masterFilePath))
                     {

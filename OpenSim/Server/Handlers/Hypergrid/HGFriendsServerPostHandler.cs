@@ -25,21 +25,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using Nini.Config;
 using log4net;
 using System;
 using System.Reflection;
 using System.IO;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Serialization;
 using System.Collections.Generic;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using FriendInfo = OpenSim.Services.Interfaces.FriendInfo;
-using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenSim.Framework;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenMetaverse;
@@ -186,7 +180,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (request.ContainsKey("SECRET"))
                 secret = request["SECRET"].ToString();
 
-            if (secret == string.Empty)
+            if (string.IsNullOrEmpty(secret))
                 return BoolResult(false);
 
             bool success = m_TheService.DeleteFriendship(friend, secret);
@@ -303,7 +297,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             string sessionStr = request["SESSIONID"].ToString();
 
             UUID sessionID;
-            if (!UUID.TryParse(sessionStr, out sessionID) || serviceKey == string.Empty)
+            if (!UUID.TryParse(sessionStr, out sessionID) || string.IsNullOrEmpty(serviceKey))
                 return false;
 
             if (!m_UserAgentService.VerifyAgent(sessionID, serviceKey))

@@ -26,8 +26,6 @@
  */
 
 using System;
-using System.Reflection;
-using log4net;
 using OpenMetaverse;
 
 namespace OpenSim.Framework
@@ -132,7 +130,7 @@ namespace OpenSim.Framework
             }
             set
             {
-                if ((value == null) || (value != null && value == string.Empty))
+                if ((value == null) || (value != null && string.IsNullOrEmpty(value)))
                 {
                     _creatorData = string.Empty;
                     return;

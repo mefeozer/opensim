@@ -66,16 +66,16 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             {
                 result = this.parseFloat(args[3], out data.elevation);
             }
-            if (result == String.Empty)
+            if (string.IsNullOrEmpty(result))
             {
                 int index = 3;
-                while(++index < args.Length && result == String.Empty)
+                while(++index < args.Length && string.IsNullOrEmpty(result))
                 {
                     arg = args[index];
                     // check for shape
                     if (arg.StartsWith("-rec=") || arg.StartsWith("-ell="))
                     {
-                        if (data.shape != String.Empty)
+                        if (!string.IsNullOrEmpty(data.shape))
                         {
                             result = "Only 1 '-rec' or '-ell' parameter is permitted.";
                         }
@@ -91,15 +91,15 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                             else
                             {
                                 result = this.parseInt(coords[0], out data.x0);
-                                if (result == String.Empty)
+                                if (string.IsNullOrEmpty(result))
                                 {
                                     result = this.parseInt(coords[1], out data.y0);
                                 }
-                                if (result == String.Empty)
+                                if (string.IsNullOrEmpty(result))
                                 {
                                     result = this.parseInt(coords[2], out data.dx);
                                 }
-                                if (result == String.Empty)
+                                if (string.IsNullOrEmpty(result))
                                 {
                                     if (coords.Length == 4)
                                     {
@@ -110,7 +110,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                                         data.dy = data.dx;
                                     }
                                 }
-                                if (result == String.Empty)
+                                if (string.IsNullOrEmpty(result))
                                 {
                                     if ((data.dx <= 0) || (data.dy <= 0))
                                     {
@@ -126,7 +126,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     }
                     else if (arg.StartsWith("-taper="))
                     {
-                        if (data.bevel != String.Empty)
+                        if (!string.IsNullOrEmpty(data.bevel))
                         {
                             result = "Only 1 '-taper' parameter is permitted.";
                         }
@@ -135,7 +135,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                             data.bevel = "taper";
                             val = arg.Substring(arg.IndexOf("=") + 1);
                             result = this.parseFloat(val, out data.bevelevation);
-                            if (result != String.Empty)
+                            if (!string.IsNullOrEmpty(result))
                             {
                                 result = String.Format("Bad format for taper parameter {0}", arg);
                             }

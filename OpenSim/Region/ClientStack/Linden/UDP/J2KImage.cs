@@ -26,7 +26,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using OpenMetaverse;
 using OpenMetaverse.Imaging;
 using OpenSim.Framework;

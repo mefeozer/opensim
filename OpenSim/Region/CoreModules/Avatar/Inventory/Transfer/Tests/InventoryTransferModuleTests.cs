@@ -27,15 +27,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using log4net.Config;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenMetaverse.Assets;
 using OpenSim.Framework;
-using OpenSim.Region.CoreModules.Avatar.Inventory.Transfer;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Interfaces;
 using OpenSim.Tests.Common;

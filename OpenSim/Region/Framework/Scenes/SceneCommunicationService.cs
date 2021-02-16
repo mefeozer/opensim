@@ -27,18 +27,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
-using System.Threading;
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 using log4net;
 using OpenSim.Framework;
-using OpenSim.Framework.Client;
-using OpenSim.Framework.Capabilities;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Services.Interfaces;
-using OSD = OpenMetaverse.StructuredData.OSD;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 
 namespace OpenSim.Region.Framework.Scenes

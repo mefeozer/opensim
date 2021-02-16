@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using Nini.Config;
@@ -76,7 +75,7 @@ namespace OpenSim.Services.GridService
 
                 string authService = gridConfig.GetString("AuthenticationService", String.Empty);
 
-                if (authService != String.Empty)
+                if (!string.IsNullOrEmpty(authService))
                 {
                     Object[] args = new Object[] { config };
                     m_AuthenticationService = ServerUtils.LoadPlugin<IAuthenticationService>(authService, args);
@@ -366,7 +365,7 @@ namespace OpenSim.Services.GridService
             else
             {
                 rdata.Data["flags"] = "0";
-                if ((gridConfig != null) && rdata.RegionName != string.Empty)
+                if ((gridConfig != null) && !string.IsNullOrEmpty(rdata.RegionName))
                 {
                     int newFlags = 0;
                     string regionName = rdata.RegionName.Trim().Replace(' ', '_');

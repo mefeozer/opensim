@@ -27,17 +27,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 
 using OpenSim.Framework;
-using OpenSim.Services.Connectors.Friends;
-using OpenSim.Services.Connectors.Hypergrid;
 using OpenSim.Services.Interfaces;
 using OpenSim.Services.Connectors.InstantMessage;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenSim.Server.Base;
-using FriendInfo = OpenSim.Services.Interfaces.FriendInfo;
 
 using OpenMetaverse;
 using log4net;
@@ -94,7 +90,7 @@ namespace OpenSim.Services.HypergridService
                 m_InGatekeeper = serverConfig.GetBoolean("InGatekeeper", false);
                 m_log.DebugFormat("[HG IM SERVICE]: Starting... InRobust? {0}", m_InGatekeeper);
 
-                if (gridService == string.Empty || presenceService == string.Empty)
+                if (string.IsNullOrEmpty(gridService) || string.IsNullOrEmpty(presenceService))
                     throw new Exception(String.Format("Incomplete specifications, InstantMessage Service cannot function."));
 
                 Object[] args = new Object[] { config };
@@ -121,7 +117,7 @@ namespace OpenSim.Services.HypergridService
                 if (m_InGatekeeper)
                 {
                     string offlineIMService = cnf.GetString("OfflineIMService", string.Empty);
-                    if (offlineIMService != string.Empty)
+                    if (!string.IsNullOrEmpty(offlineIMService))
                         m_OfflineIMService = ServerUtils.LoadPlugin<IOfflineIMService>(offlineIMService, args);
                 }
             }
@@ -152,7 +148,7 @@ namespace OpenSim.Services.HypergridService
         public bool OutgoingInstantMessage(GridInstantMessage im, string url, bool foreigner)
         {
 //            m_log.DebugFormat("[HG IM SERVICE]: Sending message from {0} to {1}@{2}", im.fromAgentID, im.toAgentID, url);
-            if (url != string.Empty)
+            if (!string.IsNullOrEmpty(url))
                 return TrySendInstantMessage(im, url, true, foreigner);
             else
             {
@@ -250,14 +246,14 @@ namespace OpenSim.Services.HypergridService
                 // the entire time we're trying to deliver the IM
                 return SendIMToRegion(upd, im, toAgentID, foreigner);
             }
-            else if (url != string.Empty)
+            else if (!string.IsNullOrEmpty(url))
             {
                 // ok, the user is around somewhere. Let's send back the reply with "success"
                 // even though the IM may still fail. Just don't keep the caller waiting for
                 // the entire time we're trying to deliver the IM
                 return ForwardIMToGrid(url, im, toAgentID, foreigner);
             }
-            else if (firstTime && previousLocation is string && (string)previousLocation != string.Empty)
+            else if (firstTime && previousLocation is string && !string.IsNullOrEmpty((string)previousLocation))
             {
                 return ForwardIMToGrid((string)previousLocation, im, toAgentID, foreigner);
             }

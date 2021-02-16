@@ -27,12 +27,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Region.Framework.Interfaces;
 
 namespace OpenSim.Region.Framework.Scenes
 {

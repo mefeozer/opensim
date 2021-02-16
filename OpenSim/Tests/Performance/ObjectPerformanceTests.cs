@@ -26,12 +26,8 @@
  */
 
 using System;
-using System.Diagnostics;
-using System.Reflection;
-using log4net;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenSim.Framework;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Tests.Common;
 

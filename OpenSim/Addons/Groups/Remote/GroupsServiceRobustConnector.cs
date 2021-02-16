@@ -27,14 +27,11 @@
 
 using System;
 using System.Reflection;
-using System.Text;
-using System.Xml;
 using System.Collections.Generic;
 using System.IO;
 using Nini.Config;
 using OpenSim.Framework;
 using OpenSim.Server.Base;
-using OpenSim.Services.Interfaces;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Framework.ServiceAuth;
 using OpenSim.Server.Handlers.Base;
@@ -54,7 +51,7 @@ namespace OpenSim.Groups
             base(config, server, configName)
         {
             string key = string.Empty;
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             m_log.DebugFormat("[Groups.RobustConnector]: Starting with config name {0}", m_ConfigName);

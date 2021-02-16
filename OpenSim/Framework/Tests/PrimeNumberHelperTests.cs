@@ -26,11 +26,7 @@
  */
 
 using System;
-using System.Reflection;
 using NUnit.Framework;
-using OpenMetaverse;
-using OpenMetaverse.StructuredData;
-using OpenSim.Framework;
 using OpenSim.Tests.Common;
 
 namespace OpenSim.Framework.Tests

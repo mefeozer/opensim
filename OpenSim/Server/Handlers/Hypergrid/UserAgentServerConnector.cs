@@ -29,17 +29,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using System.Reflection;
 
 using Nini.Config;
-using OpenSim.Framework;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Server.Handlers.Base;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
-
-using log4net;
 using Nwc.XmlRpc;
 using OpenMetaverse;
 
@@ -413,7 +409,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                     UUID.TryParse(userID_str, out userID);
 
                     string url = m_HomeUsersService.LocateUser(userID);
-                    if (url != string.Empty)
+                    if (!string.IsNullOrEmpty(url))
                         hash["URL"] = url;
                     else
                         hash["result"] = "Unable to locate user";
@@ -449,7 +445,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 UUID targetUserID = UUID.Zero;
                 UUID.TryParse(tuserID_str, out targetUserID);
                 string uui = m_HomeUsersService.GetUUI(userID, targetUserID);
-                if (uui != string.Empty)
+                if (!string.IsNullOrEmpty(uui))
                     hash["UUI"] = uui;
                 else
                     hash["result"] = "User unknown";

@@ -261,7 +261,7 @@ namespace OpenSim.Framework.Capabilities
                         reader.Read();
                         string s = reader.ReadString().Trim();
 
-                        if (s == String.Empty || s == "false" || s == "0")
+                        if (string.IsNullOrEmpty(s) || s == "false" || s == "0")
                             ret = false;
                         else if (s == "true" || s == "1")
                             ret = true;

@@ -28,13 +28,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using Mono.Data.SqliteClient;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Framework.Monitoring;
 
 
 namespace OpenSim.Region.UserStatistics

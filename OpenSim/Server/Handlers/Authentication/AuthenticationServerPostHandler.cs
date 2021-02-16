@@ -30,11 +30,7 @@ using log4net;
 using System;
 using System.Reflection;
 using System.IO;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Serialization;
 using System.Collections.Generic;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
@@ -135,7 +131,7 @@ namespace OpenSim.Server.Handlers.Authentication
 
                     token = m_AuthenticationService.Authenticate(principalID, request["PASSWORD"].ToString(), lifetime);
 
-                    if (token != String.Empty)
+                    if (!string.IsNullOrEmpty(token))
                         return SuccessResult(token);
                     return FailureResult();
 

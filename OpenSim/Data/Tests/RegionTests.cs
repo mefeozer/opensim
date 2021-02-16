@@ -29,15 +29,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using log4net.Config;
 using NUnit.Framework;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Tests.Common;
-using log4net;
-using System.Reflection;
 using System.Data.Common;
 using System.Threading;
 

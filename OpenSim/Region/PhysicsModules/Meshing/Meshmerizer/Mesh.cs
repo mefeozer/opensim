@@ -30,7 +30,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using OpenSim.Region.PhysicsModules.SharedBase;
-using PrimMesher;
 using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.Meshing

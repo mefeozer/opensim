@@ -28,11 +28,9 @@
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Nini.Config;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
 
 using OpenSim.Framework.Monitoring;
 using OpenSim.Services.Interfaces;
@@ -100,7 +98,7 @@ namespace OpenSim.Services.Connectors
             string serviceURI = config.GetString("InventoryServerURI",
                     String.Empty);
 
-            if (serviceURI == String.Empty)
+            if (string.IsNullOrEmpty(serviceURI))
             {
                 m_log.Error("[INVENTORY CONNECTOR]: No Server URI named in section InventoryService");
                 throw new Exception("Inventory connector init error");

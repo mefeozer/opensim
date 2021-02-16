@@ -26,12 +26,6 @@
  */
 
 using OpenMetaverse;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using log4net;
-using pCampBot.Interfaces;
 
 namespace pCampBot
 {

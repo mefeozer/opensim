@@ -26,7 +26,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using log4net;
 using Nini.Config;
@@ -36,7 +35,6 @@ using Mono.Addins;
 
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Region.CoreModules.Avatar.Dialog
 {

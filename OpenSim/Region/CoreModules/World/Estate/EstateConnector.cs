@@ -32,7 +32,6 @@ using System.Reflection;
 using OpenSim.Services.Interfaces;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenSim.Server.Base;
-using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Scenes;
 
@@ -200,9 +199,9 @@ namespace OpenSim.Region.CoreModules.World.Estate
                         url + "estate",
                         reqString);
 
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
-                    if (reply != string.Empty)
+                    if (!string.IsNullOrEmpty(reply))
                     {
                         int indx = reply.IndexOf("true", StringComparison.InvariantCultureIgnoreCase);
                         if (indx > 0)

@@ -1,7 +1,8 @@
-using System;using Tools;
-namespace OpenSim.Region.ScriptEngine.Shared.CodeTools {
-//%+LSLProgramRoot+97
-public class LSLProgramRoot : SYMBOL{
+using Tools;
+namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
+{
+    //%+LSLProgramRoot+97
+    public class LSLProgramRoot : SYMBOL{
  public  LSLProgramRoot (Parser yyp, States  s ):base(((LSLSyntax
 )yyp)){ while (0< s . kids . Count ) kids . Add ( s . kids . Pop ());
 }

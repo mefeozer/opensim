@@ -26,14 +26,8 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
-using log4net;
 using OpenMetaverse;
-using OpenSim.Framework;
 using Npgsql;
-using NpgsqlTypes;
 
 
 namespace OpenSim.Data.PGSQL

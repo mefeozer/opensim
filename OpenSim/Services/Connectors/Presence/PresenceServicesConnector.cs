@@ -28,14 +28,10 @@
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Nini.Config;
 using OpenSim.Framework;
-
-using OpenSim.Framework.ServiceAuth;
 using OpenSim.Services.Interfaces;
-using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenSim.Server.Base;
 using OpenMetaverse;
 
@@ -73,7 +69,7 @@ namespace OpenSim.Services.Connectors
             string serviceURI = gridConfig.GetString("PresenceServerURI",
                     String.Empty);
 
-            if (serviceURI == String.Empty)
+            if (string.IsNullOrEmpty(serviceURI))
             {
                 m_log.Error("[PRESENCE CONNECTOR]: No Server URI named in section PresenceService");
                 throw new Exception("Presence connector init error");
@@ -107,7 +103,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     int indx = reply.IndexOf("success", StringComparison.InvariantCultureIgnoreCase);
                     if (indx > 0)
@@ -146,7 +142,7 @@ namespace OpenSim.Services.Connectors
                         reqString,
                         m_Auth);
 
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     int indx = reply.IndexOf("success", StringComparison.InvariantCultureIgnoreCase);
                     if (indx > 0)
@@ -183,7 +179,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     int indx = reply.IndexOf("success", StringComparison.InvariantCultureIgnoreCase);
                     if (indx > 0)
@@ -221,7 +217,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -267,7 +263,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply == null || (reply != null && reply == string.Empty))
+                if (reply == null || (reply != null && string.IsNullOrEmpty(reply)))
                 {
                     m_log.DebugFormat("[PRESENCE CONNECTOR]: GetAgent received null or empty reply");
                     return null;
@@ -324,7 +320,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply == null || (reply != null && reply == string.Empty))
+                if (reply == null || (reply != null && string.IsNullOrEmpty(reply)))
                 {
                     m_log.DebugFormat("[PRESENCE CONNECTOR]: GetAgents received null or empty reply");
                     return null;

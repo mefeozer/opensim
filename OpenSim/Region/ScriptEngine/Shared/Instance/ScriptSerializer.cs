@@ -26,27 +26,11 @@
  */
 
 using System;
-using System.IO;
-using System.Threading;
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Policy;
-using System.Reflection;
 using System.Globalization;
 using System.Xml;
 using OpenMetaverse;
-using log4net;
-using Nini.Config;
-using Amib.Threading;
 using OpenSim.Framework;
-using OpenSim.Region.CoreModules;
-using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.ScriptEngine.Shared;
-using OpenSim.Region.ScriptEngine.Shared.Api;
-using OpenSim.Region.ScriptEngine.Shared.ScriptBase;
-using OpenSim.Region.ScriptEngine.Shared.CodeTools;
-using OpenSim.Region.ScriptEngine.Interfaces;
 
 namespace OpenSim.Region.ScriptEngine.Shared.Instance
 {
@@ -420,7 +404,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
                 DumpList(doc, n, (LSL_Types.list) value);
 
-                if (name != String.Empty)
+                if (!string.IsNullOrEmpty(name))
                 {
                     XmlAttribute nam = doc.CreateAttribute("", "name", "");
                     nam.Value = name;
@@ -435,7 +419,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
             typ.Value = t.ToString();
             n.Attributes.Append(typ);
-            if (name != String.Empty)
+            if (!string.IsNullOrEmpty(name))
             {
                 XmlAttribute nam = doc.CreateAttribute("", "name", "");
                 nam.Value = name;

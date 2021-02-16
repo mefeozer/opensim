@@ -26,9 +26,7 @@
  */
 
 using System.Collections.Generic;
-using System.Reflection;
 using System.Xml;
-using log4net;
 using OpenMetaverse;
 
 namespace OpenSim.Region.Framework.Scenes.Animation

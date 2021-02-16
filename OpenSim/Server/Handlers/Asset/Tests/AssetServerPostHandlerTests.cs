@@ -25,7 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -35,9 +34,7 @@ using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Server.Handlers.Asset;
 using OpenSim.Services.AssetService;
-using OpenSim.Services.Interfaces;
 using OpenSim.Tests.Common;
 
 namespace OpenSim.Server.Handlers.Asset.Test

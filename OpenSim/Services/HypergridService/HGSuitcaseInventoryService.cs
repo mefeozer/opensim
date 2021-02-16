@@ -27,12 +27,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using OpenMetaverse;
 using log4net;
 using Nini.Config;
 using System.Reflection;
-using OpenSim.Services.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Services.InventoryService;
 using OpenSim.Data;
@@ -67,7 +65,7 @@ namespace OpenSim.Services.HypergridService
             : base(config, configName)
         {
             m_log.DebugFormat("[HG SUITCASE INVENTORY SERVICE]: Starting with config name {0}", configName);
-            if (configName != string.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             if (m_Database == null)
@@ -80,7 +78,7 @@ namespace OpenSim.Services.HypergridService
             if (invConfig != null)
             {
                 string userAccountsDll = invConfig.GetString("UserAccountsService", string.Empty);
-                if (userAccountsDll == string.Empty)
+                if (string.IsNullOrEmpty(userAccountsDll))
                     throw new Exception("Please specify UserAccountsService in HGInventoryService configuration");
 
                 Object[] args = new Object[] { config };
@@ -89,7 +87,7 @@ namespace OpenSim.Services.HypergridService
                     throw new Exception(String.Format("Unable to create UserAccountService from {0}", userAccountsDll));
 
                 string avatarDll = invConfig.GetString("AvatarService", string.Empty);
-                if (avatarDll == string.Empty)
+                if (string.IsNullOrEmpty(avatarDll))
                     throw new Exception("Please specify AvatarService in HGInventoryService configuration");
 
                 m_AvatarService = ServerUtils.LoadPlugin<IAvatarService>(avatarDll, args);

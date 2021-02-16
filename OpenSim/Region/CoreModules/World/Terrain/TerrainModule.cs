@@ -2026,7 +2026,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     result = operation.ModifyTerrain(m_channel, cmd);
                 }
 
-                if (result == String.Empty)
+                if (string.IsNullOrEmpty(result))
                 {
                     result = "Modified terrain";
                     m_log.DebugFormat("Performed terrain operation {0}", operationType);
@@ -2036,7 +2036,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             {
                 result = "Usage: <operation-name> <arg1> <arg2>...";
             }
-            if (result != String.Empty)
+            if (!string.IsNullOrEmpty(result))
             {
                 MainConsole.Instance.Output(result);
             }

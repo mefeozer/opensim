@@ -25,14 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Reflection;
 using NUnit.Framework;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
-using OpenSim.Framework;
 using OpenSim.Tests.Common;
-using Animation = OpenSim.Framework.Animation;
 
 namespace OpenSim.Framework.Tests
 {

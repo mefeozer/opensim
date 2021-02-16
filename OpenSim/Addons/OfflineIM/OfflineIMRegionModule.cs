@@ -32,8 +32,6 @@ using Mono.Addins;
 using Nini.Config;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers;
-using OpenSim.Framework.Client;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Interfaces;
@@ -63,7 +61,7 @@ namespace OpenSim.OfflineIM
             m_Enabled = true;
 
             string serviceLocation = cnf.GetString("OfflineMessageURL", string.Empty);
-            if (serviceLocation == string.Empty)
+            if (string.IsNullOrEmpty(serviceLocation))
                 m_OfflineIMService = new OfflineIMService(config);
             else
                 m_OfflineIMService = new OfflineIMServiceRemoteConnector(config);

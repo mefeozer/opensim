@@ -25,16 +25,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Text;
 using OpenMetaverse;
 
-namespace OpenSim.Region.PhysicsModule.BulletS {
+namespace OpenSim.Region.PhysicsModule.BulletS
+{
 
     // Constraint type values as defined by Bullet
-public enum ConstraintType : int
+    public enum ConstraintType : int
 {
     POINT2POINT_CONSTRAINT_TYPE = 3,
     HINGE_CONSTRAINT_TYPE,

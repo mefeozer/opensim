@@ -27,7 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 using OpenSim.Region.PhysicsModules.SharedBase;
 
@@ -36,7 +35,7 @@ using Nini.Config;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public static class BSParam
+    public static class BSParam
 {
     private static string LogHeader = "[BULLETSIM PARAMETERS]";
 

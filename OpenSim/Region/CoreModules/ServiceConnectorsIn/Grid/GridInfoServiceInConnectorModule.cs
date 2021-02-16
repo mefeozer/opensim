@@ -27,18 +27,13 @@
 
 using System;
 using System.Reflection;
-using System.Collections.Generic;
 using log4net;
 using Mono.Addins;
 using Nini.Config;
-using OpenSim.Framework;
 using OpenSim.Framework.Servers;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Server.Base;
-using OpenSim.Server.Handlers.Base;
 using OpenSim.Server.Handlers.Grid;
-using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Grid
 {

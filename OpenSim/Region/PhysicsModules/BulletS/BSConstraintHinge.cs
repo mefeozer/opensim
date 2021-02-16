@@ -24,15 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
 
-public sealed class BSConstraintHinge : BSConstraint
+    public sealed class BSConstraintHinge : BSConstraint
 {
     public override ConstraintType Type { get { return ConstraintType.HINGE_CONSTRAINT_TYPE; } }
 

@@ -38,7 +38,6 @@ using Mono.Addins;
 using Nini.Config;
 
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
@@ -1111,7 +1110,6 @@ namespace Nwc.XmlRpc
     using System.Xml;
     using System.Net;
     using System.Text;
-    using System.Reflection;
 
     /// <summary>Class supporting the request side of an XML-RPC transaction.</summary>
     public class ConfigurableKeepAliveXmlRpcRequest : XmlRpcRequest

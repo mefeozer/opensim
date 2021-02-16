@@ -32,8 +32,6 @@ using Mono.Addins;
 using Nini.Config;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers;
-using OpenSim.Framework.Client;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 
@@ -188,7 +186,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         private void RetrieveInstantMessages(IClientAPI client)
         {
-            if (m_RestURL == String.Empty)
+            if (string.IsNullOrEmpty(m_RestURL))
             {
                 return;
             }

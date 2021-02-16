@@ -27,15 +27,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Text;
 using log4net;
 using OpenMetaverse;
-using OpenMetaverse.Assets;
 using OpenMetaverse.StructuredData;
 using OpenSim.Framework;
-using OpenSim.Region.Framework.Scenes.Serialization;
 using OpenSim.Services.Interfaces;
 using OpenSimAssetType = OpenSim.Framework.SLUtil.OpenSimAssetType;
 

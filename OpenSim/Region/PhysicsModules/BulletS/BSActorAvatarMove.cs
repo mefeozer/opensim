@@ -27,17 +27,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using OpenSim.Framework;
 using OpenSim.Region.PhysicsModules.SharedBase;
 
 using OMV = OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public class BSActorAvatarMove : BSActor
+    public class BSActorAvatarMove : BSActor
 {
     BSVMotor m_velocityMotor;
 

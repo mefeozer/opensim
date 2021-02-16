@@ -26,9 +26,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
 using System.Reflection;
 using System.Threading;
 
@@ -38,7 +35,6 @@ using log4net.Appender;
 using log4net.Layout;
 
 using OpenSim.Framework;
-using OpenSim.Services.Interfaces;
 using OpenSim.Services.Connectors;
 
 namespace OpenSim.Tests.Clients.AssetsClient

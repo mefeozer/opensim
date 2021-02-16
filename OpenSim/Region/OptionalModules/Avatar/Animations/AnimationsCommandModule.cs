@@ -27,21 +27,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using log4net;
 using Mono.Addins;
 using Nini.Config;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Framework.Console;
-using OpenSim.Framework.Monitoring;
-using OpenSim.Region.ClientStack.LindenUDP;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.Framework.Scenes.Animation;
-using OpenSim.Services.Interfaces;
 using AnimationSet = OpenSim.Region.Framework.Scenes.Animation.AnimationSet;
 
 namespace OpenSim.Region.OptionalModules.Avatar.Animations

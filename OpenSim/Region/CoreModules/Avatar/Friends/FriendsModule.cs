@@ -26,14 +26,10 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using log4net;
 using Nini.Config;
-using Nwc.XmlRpc;
 using OpenMetaverse;
 using Mono.Addins;
 using OpenSim.Framework;

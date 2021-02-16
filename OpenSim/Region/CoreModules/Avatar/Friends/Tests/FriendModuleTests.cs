@@ -25,14 +25,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
 using OpenSim.Data.Null;
 using OpenSim.Framework;
-using OpenSim.Region.CoreModules.Avatar.Friends;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Tests.Common;
 

@@ -27,19 +27,15 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using log4net.Config;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenMetaverse.Packets;
 using OpenMetaverse.StructuredData;
 using OpenSim.Framework;
 using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
-using OpenSim.Region.ClientStack.Linden;
 using OpenSim.Region.CoreModules.Framework;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.OptionalModules.World.NPC;

@@ -25,21 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-
-using OpenSim.Framework;
-using OpenSim.Region.Framework;
-using OpenSim.Region.PhysicsModules.SharedBase;
-
-using Nini.Config;
-using log4net;
 
 using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public sealed class BSTerrainMesh : BSTerrainPhys
+    public sealed class BSTerrainMesh : BSTerrainPhys
 {
     static string LogHeader = "[BULLETSIM TERRAIN MESH]";
 

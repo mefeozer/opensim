@@ -26,14 +26,12 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OpenMetaverse;
 using OpenSim.Framework;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public abstract class BSMotor
+    public abstract class BSMotor
 {
     // Timescales and other things can be turned off by setting them to 'infinite'.
     public const float Infinite = 12345.6f;

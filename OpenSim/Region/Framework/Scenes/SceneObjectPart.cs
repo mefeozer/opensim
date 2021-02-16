@@ -533,7 +533,7 @@ namespace OpenSim.Region.Framework.Scenes
             set
             {
                 CreatorData = string.Empty;
-                if ((value == null) || (value != null && value == string.Empty))
+                if ((value == null) || (value != null && string.IsNullOrEmpty(value)))
                     return;
 
                 // value is uuid  or uuid;homeuri;firstname lastname

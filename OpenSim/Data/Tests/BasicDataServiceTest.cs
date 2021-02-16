@@ -27,17 +27,11 @@
 
 using System;
 using System.IO;
-using System.Collections.Generic;
-using log4net.Config;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
-using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Tests.Common;
 using log4net;
 using System.Data;
 using System.Data.Common;
-using System.Reflection;
 
 namespace OpenSim.Data.Tests
 {

@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using OpenMetaverse;
 using OpenSim.Region.PhysicsModules.SharedBase;
 using log4net;

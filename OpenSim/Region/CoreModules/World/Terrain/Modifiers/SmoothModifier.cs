@@ -25,7 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using OpenSim.Region.CoreModules.World.Terrain;
 using OpenSim.Region.Framework.Interfaces;
 
 namespace OpenSim.Region.CoreModules.World.Terrain.Modifiers
@@ -49,7 +48,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Modifiers
                 result = this.parseParameters(args, out data);
 
                 // Context-specific validation
-                if (result == String.Empty)
+                if (string.IsNullOrEmpty(result))
                 {
                     if (data.bevel == "taper")
                     {
@@ -68,7 +67,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Modifiers
                         result = String.Format("Smoothing strength must be 0.0 to 1.0: {0}", data.elevation);
                     }
 
-                    if (data.shape == String.Empty)
+                    if (string.IsNullOrEmpty(data.shape))
                     {
                         data.shape = "rectangle";
                         data.x0 = 0;
@@ -79,7 +78,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Modifiers
                 }
 
                 // if it's all good, then do the work
-                if (result == String.Empty)
+                if (string.IsNullOrEmpty(result))
                 {
                     this.applyModification(map, data);
                 }

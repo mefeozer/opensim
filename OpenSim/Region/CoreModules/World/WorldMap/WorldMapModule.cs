@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -50,9 +49,9 @@ using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.CoreModules.World.Land;
-using Caps=OpenSim.Framework.Capabilities.Caps;
-using OSDArray=OpenMetaverse.StructuredData.OSDArray;
-using OSDMap=OpenMetaverse.StructuredData.OSDMap;
+using Caps = OpenSim.Framework.Capabilities.Caps;
+using OSDArray = OpenMetaverse.StructuredData.OSDArray;
+using OSDMap = OpenMetaverse.StructuredData.OSDMap;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 
 namespace OpenSim.Region.CoreModules.World.WorldMap

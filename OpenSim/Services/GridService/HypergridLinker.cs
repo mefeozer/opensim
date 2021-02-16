@@ -29,7 +29,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Xml;
@@ -37,7 +36,6 @@ using System.Xml;
 using Nini.Config;
 using log4net;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Data;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
@@ -83,11 +81,11 @@ namespace OpenSim.Services.GridService
 
             object[] args = new object[] { config };
 
-            if (assetService != string.Empty)
+            if (!string.IsNullOrEmpty(assetService))
                 m_AssetService = ServerUtils.LoadPlugin<IAssetService>(assetService, args);
 
             string scope = gridConfig.GetString("ScopeID", string.Empty);
-            if (scope != string.Empty)
+            if (!string.IsNullOrEmpty(scope))
                 UUID.TryParse(scope, out m_ScopeID);
 
             //m_Check4096 = gridConfig.GetBoolean("Check4096", true);
@@ -224,7 +222,7 @@ namespace OpenSim.Services.GridService
             regInfo.RegionSizeX = sizeX;
             regInfo.RegionSizeY = sizeY;
 
-            if (externalName == string.Empty)
+            if (string.IsNullOrEmpty(externalName))
                 regInfo.RegionName = regInfo.ServerURI;
             else
                 regInfo.RegionName = externalName;
@@ -322,7 +320,7 @@ namespace OpenSim.Services.GridService
                 catch {}
             }
 
-            if (remoteRegionName != string.Empty)
+            if (!string.IsNullOrEmpty(remoteRegionName))
                 regInfo.RegionName = remoteRegionName;
 
             regInfo.RegionLocX = xloc;
@@ -402,7 +400,7 @@ namespace OpenSim.Services.GridService
             regInfo.RegionSizeX = sizeX;
             regInfo.RegionSizeY = sizeY;
 
-            if (externalName == string.Empty)
+            if (string.IsNullOrEmpty(externalName))
                 regInfo.RegionName = regInfo.ServerURI;
              else
                 regInfo.RegionName = externalName;

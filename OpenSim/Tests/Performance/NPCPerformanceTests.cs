@@ -28,8 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
-using log4net;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
@@ -39,11 +37,9 @@ using OpenSim.Region.CoreModules.Avatar.Attachments;
 using OpenSim.Region.CoreModules.Avatar.AvatarFactory;
 using OpenSim.Region.CoreModules.Framework.InventoryAccess;
 using OpenSim.Region.CoreModules.Framework.UserManagement;
-using OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.OptionalModules.World.NPC;
-using OpenSim.Services.AvatarService;
 using OpenSim.Tests.Common;
 
 namespace OpenSim.Tests.Performance

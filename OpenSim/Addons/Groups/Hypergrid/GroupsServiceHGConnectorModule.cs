@@ -27,9 +27,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using OpenSim.Framework;
 using OpenSim.Framework.Monitoring;
@@ -220,7 +218,7 @@ namespace OpenSim.Groups
             string name = string.Empty;
             if (IsLocal(GroupID, out url, out name))
                 return m_LocalGroupsConnector.GetGroupRecord(AgentUUI(RequestingAgentID), GroupID, GroupName);
-            else if (url != string.Empty)
+            else if (!string.IsNullOrEmpty(url))
             {
                 ExtendedGroupMembershipData membership = m_LocalGroupsConnector.GetAgentGroupMembership(RequestingAgentID, RequestingAgentID, GroupID);
                 string accessToken = string.Empty;
@@ -403,7 +401,7 @@ namespace OpenSim.Groups
                         // Here we always return true. The user has been added to the local group,
                         // independent of whether the remote operation succeeds or not
                         url = m_UserManagement.GetUserServerURL(uid, "GroupsServerURI");
-                        if (url == string.Empty)
+                        if (string.IsNullOrEmpty(url))
                         {
                             reason = "You don't have an accessible groups server in your home world. You membership to this group in only within this grid.";
                             return true;
@@ -433,7 +431,7 @@ namespace OpenSim.Groups
         public void RemoveAgentFromGroup(string RequestingAgentID, string AgentID, UUID GroupID)
         {
             string url = string.Empty, name = string.Empty;
-            if (!IsLocal(GroupID, out url, out name) && url != string.Empty)
+            if (!IsLocal(GroupID, out url, out name) && !string.IsNullOrEmpty(url))
             {
                 ExtendedGroupMembershipData membership = m_LocalGroupsConnector.GetAgentGroupMembership(AgentUUI(RequestingAgentID), AgentUUI(AgentID), GroupID);
                 if (membership != null)
@@ -672,7 +670,7 @@ namespace OpenSim.Groups
 
             serviceLocation = group.ServiceLocation;
             name = group.GroupName;
-            bool isLocal = (group.ServiceLocation == string.Empty);
+            bool isLocal = (string.IsNullOrEmpty(group.ServiceLocation));
             //m_log.DebugFormat("[XXX]: IsLocal? {0}", isLocal);
             return isLocal;
         }

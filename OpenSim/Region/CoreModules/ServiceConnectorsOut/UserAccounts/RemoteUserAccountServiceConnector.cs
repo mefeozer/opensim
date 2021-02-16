@@ -26,7 +26,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Nini.Config;
 using log4net;

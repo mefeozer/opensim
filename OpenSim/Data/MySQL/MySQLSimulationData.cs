@@ -1171,7 +1171,7 @@ namespace OpenSim.Data.MySQL
 
             SOPVehicle vehicle = null;
 
-            if (row["Vehicle"].ToString() != String.Empty)
+            if (!string.IsNullOrEmpty(row["Vehicle"].ToString()))
             {
                 vehicle = SOPVehicle.FromXml2(row["Vehicle"].ToString());
                 if (vehicle != null)
@@ -1179,7 +1179,7 @@ namespace OpenSim.Data.MySQL
             }
 
             PhysicsInertiaData pdata = null;
-            if (row["PhysInertia"].ToString() != String.Empty)
+            if (!string.IsNullOrEmpty(row["PhysInertia"].ToString()))
                 pdata = PhysicsInertiaData.FromXml2(row["PhysInertia"].ToString());
             prim.PhysicsInertia = pdata;
 

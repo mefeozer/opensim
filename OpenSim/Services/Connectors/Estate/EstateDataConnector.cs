@@ -35,8 +35,6 @@ using OpenMetaverse;
 using Nini.Config;
 
 using OpenSim.Framework;
-using OpenSim.Framework.ServiceAuth;
-using OpenSim.Services.Connectors;
 using OpenSim.Services.Interfaces;
 using OpenSim.Server.Base;
 
@@ -69,7 +67,7 @@ namespace OpenSim.Services.Connectors
             string serviceURI = gridConfig.GetString("EstateServerURI",
                     String.Empty);
 
-            if (serviceURI == String.Empty)
+            if (string.IsNullOrEmpty(serviceURI))
             {
                 m_log.Error("[ESTATE CONNECTOR]: No Server URI named in section EstateService");
                 throw new Exception("Estate connector init error");

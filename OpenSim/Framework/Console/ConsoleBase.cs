@@ -27,11 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using log4net;
 
 namespace OpenSim.Framework.Console
 {
@@ -127,7 +122,7 @@ namespace OpenSim.Framework.Console
         public string Prompt(string p, string def)
         {
             string ret = ReadLine(String.Format("{0} [{1}]: ", p, def), false, true);
-            if (ret == String.Empty)
+            if (string.IsNullOrEmpty(ret))
                 ret = def;
 
             return ret;
@@ -168,7 +163,7 @@ namespace OpenSim.Framework.Console
                 else
                     ret = ReadLine(String.Format("{0} [{1}]: ", p, def), false, echo);
 
-                if (ret == String.Empty && def != null)
+                if (string.IsNullOrEmpty(ret) && def != null)
                 {
                     ret = def;
                 }

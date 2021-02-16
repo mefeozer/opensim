@@ -26,14 +26,11 @@
  */
 
 using System;
-using System.Reflection;
 using Nini.Config;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Framework.Servers.HttpServer;
-using OpenSim.Framework;
 using OpenSim.Server.Handlers.Base;
-using log4net;
 
 namespace OpenSim.Server.Handlers.Profiles
 {

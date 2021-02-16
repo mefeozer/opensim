@@ -248,7 +248,7 @@ namespace OpenSim.Framework
             string customDir = Environment.GetEnvironmentVariable ("MONO_ADDINS_REGISTRY");
             string v0 = "addin-db-000";
             string v1 = "addin-db-001";
-            if (customDir != null && customDir != String.Empty)
+            if (customDir != null && !string.IsNullOrEmpty(customDir))
             {
                 v0 = Path.Combine(customDir, v0);
                 v1 = Path.Combine(customDir, v1);

@@ -34,7 +34,6 @@ using NDesk.Options;
 using Nini.Config;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Interfaces;
@@ -570,7 +569,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
             try
             {
                 string encpass = Util.Md5Hash(pass);
-                if (m_aScene.AuthenticationService.Authenticate(account.PrincipalID, encpass, 1) != string.Empty)
+                if (!string.IsNullOrEmpty(m_aScene.AuthenticationService.Authenticate(account.PrincipalID, encpass, 1)))
                 {
                     return account;
                 }

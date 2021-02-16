@@ -33,9 +33,6 @@ using log4net;
 using Nini.Config;
 using System.Reflection;
 using OpenSim.Data;
-using OpenSim.Framework;
-using OpenSim.Framework.Console;
-using OpenSim.Server.Base;
 
 namespace OpenSim.Services.AuthenticationService
 {
@@ -71,16 +68,16 @@ namespace OpenSim.Services.AuthenticationService
                 {
                     m_log.DebugFormat("[AUTH SERVICE]: Attempting web key authentication for PrincipalID {0}", principalID);
                     result = m_svcChecks["web_login_key"].Authenticate(principalID, password, lifetime, out realID);
-                    if (result == String.Empty)
+                    if (string.IsNullOrEmpty(result))
                     {
                         m_log.DebugFormat("[AUTH SERVICE]: Web Login failed for PrincipalID {0}", principalID);
                     }
                 }
-                if (result == string.Empty && data.Data.ContainsKey("passwordHash") && data.Data.ContainsKey("passwordSalt"))
+                if (string.IsNullOrEmpty(result) && data.Data.ContainsKey("passwordHash") && data.Data.ContainsKey("passwordSalt"))
                 {
                     m_log.DebugFormat("[AUTH SERVICE]: Attempting password authentication for PrincipalID {0}", principalID);
                     result = m_svcChecks["password"].Authenticate(principalID, password, lifetime, out realID);
-                    if (result == String.Empty)
+                    if (string.IsNullOrEmpty(result))
                     {
                         m_log.DebugFormat("[AUTH SERVICE]: Password login failed for PrincipalID {0}", principalID);
                     }
@@ -88,7 +85,7 @@ namespace OpenSim.Services.AuthenticationService
 
 
 
-                if (result == string.Empty)
+                if (string.IsNullOrEmpty(result))
                 {
                     m_log.DebugFormat("[AUTH SERVICE]: Both password and webLoginKey-based authentication failed for PrincipalID {0}", principalID);
                 }

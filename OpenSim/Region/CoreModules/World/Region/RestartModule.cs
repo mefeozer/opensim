@@ -30,17 +30,14 @@ using System.Linq;
 using System.Reflection;
 using System.Timers;
 using System.IO;
-using System.Diagnostics;
-using System.Threading;
 using System.Collections.Generic;
 using log4net;
 using Nini.Config;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using Timer=System.Timers.Timer;
+using Timer = System.Timers.Timer;
 using Mono.Addins;
 
 namespace OpenSim.Region.CoreModules.World.Region
@@ -78,7 +75,7 @@ namespace OpenSim.Region.CoreModules.World.Region
 
         public void AddRegion(Scene scene)
         {
-            if (m_MarkerPath != String.Empty)
+            if (!string.IsNullOrEmpty(m_MarkerPath))
                 File.Delete(Path.Combine(m_MarkerPath,
                         scene.RegionInfo.RegionID.ToString()));
 
@@ -217,7 +214,7 @@ namespace OpenSim.Region.CoreModules.World.Region
 
                 string msg = String.Format(m_Message, currentAlertString);
 
-                if (m_DialogModule != null && msg != String.Empty)
+                if (m_DialogModule != null && !string.IsNullOrEmpty(msg))
                 {
                     if (m_Notice)
                         m_DialogModule.SendGeneralAlert(msg);
@@ -291,11 +288,11 @@ namespace OpenSim.Region.CoreModules.World.Region
             {
                 m_CountdownTimer.Stop();
                 m_CountdownTimer = null;
-                if (m_DialogModule != null && message != String.Empty)
+                if (m_DialogModule != null && !string.IsNullOrEmpty(message))
                     m_DialogModule.SendNotificationToUsersInRegion(UUID.Zero, "System", message);
                     //m_DialogModule.SendGeneralAlert(message);
             }
-            if (m_MarkerPath != String.Empty)
+            if (!string.IsNullOrEmpty(m_MarkerPath))
                 File.Delete(Path.Combine(m_MarkerPath,
                         m_Scene.RegionInfo.RegionID.ToString()));
         }
@@ -345,7 +342,7 @@ namespace OpenSim.Region.CoreModules.World.Region
 
         protected void CreateMarkerFile()
         {
-            if (m_MarkerPath == String.Empty)
+            if (string.IsNullOrEmpty(m_MarkerPath))
                 return;
 
             string path = Path.Combine(m_MarkerPath, m_Scene.RegionInfo.RegionID.ToString());

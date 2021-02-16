@@ -25,18 +25,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using OpenMetaverse.StructuredData;
 
 namespace OpenSim.Framework.Monitoring
 {
-// A statistic that wraps a counter.
-// Built this way mostly so histograms and history can be created.
-public class CounterStat : Stat
+    // A statistic that wraps a counter.
+    // Built this way mostly so histograms and history can be created.
+    public class CounterStat : Stat
 {
     private SortedDictionary<string, EventHistogram> m_histograms;
     private object counterLock = new object();

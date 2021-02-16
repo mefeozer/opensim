@@ -25,11 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 
 using OpenSim.Framework;
 
@@ -37,7 +34,7 @@ using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public sealed class BSAPIUnman : BSAPITemplate
+    public sealed class BSAPIUnman : BSAPITemplate
 {
 
 private sealed class BulletWorldUnman : BulletWorld

@@ -29,15 +29,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
-using log4net;
 #if CSharpSqlite
     using Community.CsharpSqlite.Sqlite;
 #else
-    using Mono.Data.Sqlite;
+using Mono.Data.Sqlite;
 #endif
 using OpenMetaverse;
-using OpenSim.Framework;
-using OpenSim.Region.Framework.Interfaces;
 
 namespace OpenSim.Data.SQLite
 {
@@ -71,7 +68,7 @@ namespace OpenSim.Data.SQLite
                 //Console.WriteLine(string.Format("OPENING CONNECTION FOR {0} USING {1}", storeName, connectionString));
                 m_Connection.Open();
 
-                if (storeName != String.Empty)
+                if (!string.IsNullOrEmpty(storeName))
                 {
                     //SqliteConnection newConnection =
                     //        (SqliteConnection)((ICloneable)m_Connection).Clone();

@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Reflection;
 using log4net;
 #if CSharpSqlite
@@ -38,7 +37,6 @@ using log4net;
 using Mono.Data.Sqlite;
 #endif
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
@@ -1783,7 +1781,7 @@ namespace OpenSim.Data.SQLite
             prim.RotationAxisLocks = Convert.ToByte(row["RotationAxisLocks"]);
 
             SOPVehicle vehicle = null;
-            if (!(row["Vehicle"] is DBNull) && row["Vehicle"].ToString() != String.Empty)
+            if (!(row["Vehicle"] is DBNull) && !string.IsNullOrEmpty(row["Vehicle"].ToString()))
             {
                 vehicle = SOPVehicle.FromXml2(row["Vehicle"].ToString());
                 if (vehicle != null)
@@ -1791,7 +1789,7 @@ namespace OpenSim.Data.SQLite
             }
 
             PhysicsInertiaData pdata = null;
-            if (!(row["PhysInertia"] is DBNull) && row["PhysInertia"].ToString() != String.Empty)
+            if (!(row["PhysInertia"] is DBNull) && !string.IsNullOrEmpty(row["PhysInertia"].ToString()))
                 pdata = PhysicsInertiaData.FromXml2(row["PhysInertia"].ToString());
             prim.PhysicsInertia = pdata;
 

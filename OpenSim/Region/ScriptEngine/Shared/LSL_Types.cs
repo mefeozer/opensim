@@ -31,8 +31,6 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using OpenSim.Framework;
-
-using OpenMetaverse;
 using OMV_Vector3 = OpenMetaverse.Vector3;
 using OMV_Vector3d = OpenMetaverse.Vector3d;
 using OMV_Quaternion = OpenMetaverse.Quaternion;
@@ -1895,7 +1893,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
                 // Leading plus sign is allowed, but ignored
                 v = v.Replace("+", "");
 
-                if (v == String.Empty)
+                if (string.IsNullOrEmpty(v))
                 {
                     value = 0;
                 }
@@ -2238,7 +2236,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
                 v = v.Trim();
 
-                if (v == String.Empty || v == null)
+                if (string.IsNullOrEmpty(v) || v == null)
                     v = "0.0";
                 else
                     if (!v.Contains(".") && !v.ToLower().Contains("e"))

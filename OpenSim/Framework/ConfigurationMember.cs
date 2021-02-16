@@ -109,8 +109,8 @@ namespace OpenSim.Framework
 
         private void checkAndAddConfigOption(ConfigurationOption option)
         {
-            if ((option.configurationKey != String.Empty && option.configurationQuestion != String.Empty) ||
-                (option.configurationKey != String.Empty && option.configurationUseDefaultNoPrompt))
+            if ((!string.IsNullOrEmpty(option.configurationKey) && !string.IsNullOrEmpty(option.configurationQuestion)) ||
+                (!string.IsNullOrEmpty(option.configurationKey) && option.configurationUseDefaultNoPrompt))
             {
                 if (!configurationOptions.Contains(option))
                 {
@@ -196,7 +196,7 @@ namespace OpenSim.Framework
                 return;
             }
 
-            if (configurationFilename.Trim() != String.Empty)
+            if (!string.IsNullOrEmpty(configurationFilename.Trim()))
             {
                 configurationPlugin.SetFileName(configurationFilename);
                 try
@@ -259,7 +259,7 @@ namespace OpenSim.Framework
                                  configOption.shouldIBeAsked(configOption.configurationKey)) ||
                                 configOption.shouldIBeAsked == null)
                             {
-                                if (configurationDescription.Trim() != String.Empty)
+                                if (!string.IsNullOrEmpty(configurationDescription.Trim()))
                                 {
                                     console_result =
                                         MainConsole.Instance.Prompt(

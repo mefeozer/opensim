@@ -25,16 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Text;
-using System.Net;
-using OpenMetaverse;
-using OpenMetaverse.Packets;
-using OpenMetaverse.StructuredData;
-using OpenMetaverse.Messages.Linden;
-
-using OpenSim.Framework;
-
 namespace OpenSim.Region.ClientStack.Linden
 {
     public class EventQueueHelper

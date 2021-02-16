@@ -24,7 +24,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -32,19 +31,19 @@ using OMV = OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-// Classes to allow some type checking for the API
-// These hold pointers to allocated objects in the unmanaged space.
-// These classes are subclassed by the various physical implementations of
-// objects. In particular, there is a version for physical instances in
-// unmanaged memory ("unman") and one for in managed memory ("XNA").
+    // Classes to allow some type checking for the API
+    // These hold pointers to allocated objects in the unmanaged space.
+    // These classes are subclassed by the various physical implementations of
+    // objects. In particular, there is a version for physical instances in
+    // unmanaged memory ("unman") and one for in managed memory ("XNA").
 
-// Currently, the instances of these classes are a reference to a
-// physical representation and this has no releationship to other
-// instances. Someday, refarb the usage of these classes so each instance
-// refers to a particular physical instance and this class controls reference
-// counts and such. This should be done along with adding BSShapes.
+    // Currently, the instances of these classes are a reference to a
+    // physical representation and this has no releationship to other
+    // instances. Someday, refarb the usage of these classes so each instance
+    // refers to a particular physical instance and this class controls reference
+    // counts and such. This should be done along with adding BSShapes.
 
-public class BulletWorld
+    public class BulletWorld
 {
     public BulletWorld(uint worldId, BSScene bss)
     {

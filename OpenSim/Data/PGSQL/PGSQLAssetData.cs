@@ -26,14 +26,12 @@
  */
 
 using System;
-using System.Data;
 using System.Reflection;
 using System.Collections.Generic;
 using OpenMetaverse;
 using log4net;
 using OpenSim.Framework;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace OpenSim.Data.PGSQL
 {

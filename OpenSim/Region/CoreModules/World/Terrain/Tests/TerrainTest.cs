@@ -25,7 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using NUnit.Framework;
 using OpenSim.Framework;
 using OpenSim.Region.CoreModules.World.Terrain.PaintBrushes;

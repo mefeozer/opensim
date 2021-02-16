@@ -30,7 +30,6 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading;
-using System.Text;
 using System.Timers;
 using log4net;
 using Nini.Config;

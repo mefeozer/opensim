@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using Nwc.XmlRpc;
-
 namespace OpenSim.Framework.Servers.HttpServer
 {
     /// <summary>

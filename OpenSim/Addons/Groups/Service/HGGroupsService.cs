@@ -28,7 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Timers;
 using log4net;
 using Nini.Config;
 
@@ -77,7 +76,7 @@ namespace OpenSim.Groups
             // Check if it already exists
             GroupData grec = m_Database.RetrieveGroup(groupID);
             if (grec == null ||
-                (grec != null && grec.Data["Location"] != string.Empty && grec.Data["Location"].ToLower() != serviceLocation.ToLower()))
+                (grec != null && !string.IsNullOrEmpty(grec.Data["Location"]) && grec.Data["Location"].ToLower() != serviceLocation.ToLower()))
             {
                 // Create the group
                 grec = new GroupData();
@@ -100,7 +99,7 @@ namespace OpenSim.Groups
                     return false;
             }
 
-            if (grec.Data["Location"] == string.Empty)
+            if (string.IsNullOrEmpty(grec.Data["Location"]))
             {
                 reason = "Cannot add proxy membership to non-proxy group";
                 return false;
@@ -137,7 +136,7 @@ namespace OpenSim.Groups
             MembershipData membership = m_Database.RetrieveMember(GroupID, AgentID);
             if (membership != null)
             {
-                if (token != string.Empty && token.Equals(membership.Data["AccessToken"]))
+                if (!string.IsNullOrEmpty(token) && token.Equals(membership.Data["AccessToken"]))
                 {
                     return RemoveAgentFromGroup(RequestingAgentID, AgentID, GroupID);
                 }
@@ -234,7 +233,7 @@ namespace OpenSim.Groups
             }
 
             // check that the group is remote
-            if (grec.ServiceLocation == string.Empty)
+            if (string.IsNullOrEmpty(grec.ServiceLocation))
             {
                 m_log.DebugFormat("[Groups.HGGroupsService]: attempt at adding notice to local (non-proxy) group");
                 return false;
@@ -347,7 +346,7 @@ namespace OpenSim.Groups
             MembershipData membership = m_Database.RetrieveMember(groupID, agentID);
             if (membership != null)
             {
-                if (token != string.Empty && token.Equals(membership.Data["AccessToken"]))
+                if (!string.IsNullOrEmpty(token) && token.Equals(membership.Data["AccessToken"]))
                     return true;
                 else
                     m_log.DebugFormat("[Groups.HGGroupsService]: access token {0} did not match stored one {1}", token, membership.Data["AccessToken"]);

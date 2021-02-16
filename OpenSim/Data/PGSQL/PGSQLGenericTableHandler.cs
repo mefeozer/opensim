@@ -31,8 +31,6 @@ using System.Data;
 using System.Reflection;
 using log4net;
 using OpenMetaverse;
-using OpenSim.Framework;
-using OpenSim.Region.Framework.Interfaces;
 using System.Text;
 using Npgsql;
 
@@ -67,7 +65,7 @@ namespace OpenSim.Data.PGSQL
 
             m_ConnectionString = connectionString;
 
-            if (storeName != String.Empty)
+            if (!string.IsNullOrEmpty(storeName))
             {
                 using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
                 {

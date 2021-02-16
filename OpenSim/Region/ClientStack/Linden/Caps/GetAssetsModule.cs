@@ -28,11 +28,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Reflection;
-using System.Threading;
 using Mono.Addins;
-using OpenSim.Framework.Monitoring;
 using log4net;
 using Nini.Config;
 using OpenMetaverse;
@@ -96,19 +93,19 @@ namespace OpenSim.Region.ClientStack.Linden
                 return;
 
             m_GetTextureURL = config.GetString("Cap_GetTexture", string.Empty);
-            if (m_GetTextureURL != string.Empty)
+            if (!string.IsNullOrEmpty(m_GetTextureURL))
                 m_Enabled = true;
 
             m_GetMeshURL = config.GetString("Cap_GetMesh", string.Empty);
-            if (m_GetMeshURL != string.Empty)
+            if (!string.IsNullOrEmpty(m_GetMeshURL))
                 m_Enabled = true;
 
             m_GetMesh2URL = config.GetString("Cap_GetMesh2", string.Empty);
-            if (m_GetMesh2URL != string.Empty)
+            if (!string.IsNullOrEmpty(m_GetMesh2URL))
                 m_Enabled = true;
 
             m_GetAssetURL = config.GetString("Cap_GetAsset", string.Empty);
-            if (m_GetAssetURL != string.Empty)
+            if (!string.IsNullOrEmpty(m_GetAssetURL))
                 m_Enabled = true;
         }
 
@@ -388,7 +385,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 else
                     caps.RegisterPollHandler("GetMesh", args);
             }
-            else if (m_GetMeshURL != string.Empty)
+            else if (!string.IsNullOrEmpty(m_GetMeshURL))
                 caps.RegisterHandler("GetMesh", m_GetMeshURL);
 
             //GetMesh2
@@ -403,7 +400,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 else
                     caps.RegisterPollHandler("GetMesh2", args);
             }
-            else if (m_GetMesh2URL != string.Empty)
+            else if (!string.IsNullOrEmpty(m_GetMesh2URL))
                 caps.RegisterHandler("GetMesh2", m_GetMesh2URL);
 
             //ViewerAsset
@@ -418,7 +415,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 else
                     caps.RegisterPollHandler("ViewerAsset", args);
             }
-            else if (m_GetAssetURL != string.Empty)
+            else if (!string.IsNullOrEmpty(m_GetAssetURL))
                 caps.RegisterHandler("ViewerAsset", m_GetAssetURL);
         }
     }

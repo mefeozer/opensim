@@ -184,7 +184,7 @@ namespace OpenSim.Framework
 
         public static PhysicsInertiaData FromXml2(string text)
         {
-            if (text == String.Empty)
+            if (string.IsNullOrEmpty(text))
                 return null;
 
             bool error;

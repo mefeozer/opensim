@@ -31,7 +31,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text;
 using log4net;
 using Nini.Config;
 using OpenMetaverse;
@@ -40,13 +39,9 @@ using OpenSim.Framework.Console;
 using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Framework.Monitoring;
-using OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts;
-using OpenSim.Region.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.PhysicsModules.SharedBase;
 using OpenSim.Server.Base;
-using OpenSim.Services.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Services.UserAccountService;
 
@@ -182,7 +177,7 @@ namespace OpenSim
             // The location can also be specified in the environment. If there
             // is no location in the configuration, we must call the constructor
             // without a location parameter to allow that to happen.
-            if (registryLocation == String.Empty)
+            if (string.IsNullOrEmpty(registryLocation))
             {
                 using (PluginLoader<IApplicationPlugin> loader = new PluginLoader<IApplicationPlugin>(new ApplicationPluginInitialiser(this)))
                 {
@@ -227,7 +222,7 @@ namespace OpenSim
                 }
 
                 string pidFile = startupConfig.GetString("PIDFile", String.Empty);
-                if (pidFile != String.Empty)
+                if (!string.IsNullOrEmpty(pidFile))
                     CreatePIDFile(pidFile);
 
                 userStatsURI = startupConfig.GetString("Stats_URI", String.Empty);

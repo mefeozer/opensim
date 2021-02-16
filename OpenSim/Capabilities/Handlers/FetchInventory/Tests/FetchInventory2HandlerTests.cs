@@ -26,19 +26,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using log4net;
-using log4net.Config;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenSim.Capabilities.Handlers;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Interfaces;
 using OpenSim.Tests.Common;
 
 namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
@@ -124,7 +115,7 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             string llsdresponse = handler.FetchInventoryRequest(request, "/FETCH", string.Empty, req, resp);
 
             Assert.That(llsdresponse != null, Is.True, "Incorrect null response");
-            Assert.That(llsdresponse != string.Empty, Is.True, "Incorrect empty response");
+            Assert.That(!string.IsNullOrEmpty(llsdresponse), Is.True, "Incorrect empty response");
             Assert.That(llsdresponse.Contains(m_userID.ToString()), Is.True, "Response should contain userID");
 
             Assert.That(llsdresponse.Contains("10000000-0000-0000-0000-000000000001"), Is.True, "Response does not contain item uuid");
@@ -154,7 +145,7 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             string llsdresponse = handler.FetchInventoryRequest(request, "/FETCH", string.Empty, req, resp);
 
             Assert.That(llsdresponse != null, Is.True, "Incorrect null response");
-            Assert.That(llsdresponse != string.Empty, Is.True, "Incorrect empty response");
+            Assert.That(!string.IsNullOrEmpty(llsdresponse), Is.True, "Incorrect empty response");
             Assert.That(llsdresponse.Contains(m_userID.ToString()), Is.True, "Response should contain userID");
 
             Console.WriteLine(llsdresponse);

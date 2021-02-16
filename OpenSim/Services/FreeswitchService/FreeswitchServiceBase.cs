@@ -28,8 +28,6 @@
 using System;
 using System.Reflection;
 using Nini.Config;
-using OpenSim.Framework;
-using OpenSim.Services.Interfaces;
 using OpenSim.Services.Base;
 using log4net;
 
@@ -62,7 +60,7 @@ namespace OpenSim.Services.FreeswitchService
             if (freeswitchConfig != null)
             {
                 m_freeSwitchDefaultWellKnownIP = freeswitchConfig.GetString("ServerAddress", String.Empty);
-                if (m_freeSwitchDefaultWellKnownIP == String.Empty)
+                if (string.IsNullOrEmpty(m_freeSwitchDefaultWellKnownIP))
                 {
                     m_log.Error("[FREESWITCH]: No ServerAddress given, cannot start service.");
                     return;

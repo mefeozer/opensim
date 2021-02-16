@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 using LSL_Float = OpenSim.Region.ScriptEngine.Shared.LSL_Types.LSLFloat;

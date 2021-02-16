@@ -26,13 +26,10 @@
  */
 
 using System;
-using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using log4net;
 using OpenSim.Framework;
-using OpenSim.Framework.Monitoring;
 
 namespace OpenMetaverse
 {

@@ -26,7 +26,6 @@
  */
 
 using OpenSim.Region.ScriptEngine.Shared.ScriptBase;
-using OpenSim.Region.ScriptEngine.Yengine;
 using System;
 using System.Collections.Generic;
 using System.Reflection;

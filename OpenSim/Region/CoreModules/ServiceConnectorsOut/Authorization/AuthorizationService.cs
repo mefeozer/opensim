@@ -26,18 +26,13 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Nini.Config;
 using log4net;
 using OpenSim.Framework;
 using OpenSim.Services.Interfaces;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenMetaverse;
-
-using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 
 namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
 {
@@ -70,7 +65,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
             if (config != null)
             {
                 string accessStr = config.GetString("Region_" + scene.RegionInfo.RegionName.Replace(' ', '_'), String.Empty);
-                if (accessStr != string.Empty)
+                if (!string.IsNullOrEmpty(accessStr))
                 {
                     try
                     {

@@ -27,8 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 
 using OpenSim.Framework;
 
@@ -38,11 +36,10 @@ using BulletXNA;
 using BulletXNA.LinearMath;
 using BulletXNA.BulletCollision;
 using BulletXNA.BulletDynamics;
-using BulletXNA.BulletCollision.CollisionDispatch;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public sealed class BSAPIXNA : BSAPITemplate
+    public sealed class BSAPIXNA : BSAPITemplate
 {
 private sealed class BulletWorldXNA : BulletWorld
 {

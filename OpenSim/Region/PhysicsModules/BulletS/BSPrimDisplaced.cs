@@ -26,18 +26,14 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Region.PhysicsModules.SharedBase;
 
 using OMV = OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public class BSPrimDisplaced : BSPrim
+    public class BSPrimDisplaced : BSPrim
 {
     // The purpose of this subclass is to do any mapping between what the simulator thinks
     //    the prim position and orientation is and what the physical position/orientation.

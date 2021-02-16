@@ -31,8 +31,6 @@ using System.Reflection;
 using log4net;
 using Mono.Addins;
 using Nini.Config;
-using OpenSim;
-using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 
@@ -136,7 +134,7 @@ namespace OpenSim.ApplicationPlugins.RegionModulesController
                     continue;
 
                 // Get the port number, if there is one
-                if (moduleString != String.Empty)
+                if (!string.IsNullOrEmpty(moduleString))
                 {
                     // Get the port number from the string
                     string[] moduleParts = moduleString.Split(new char[] { '/' },
@@ -275,7 +273,7 @@ namespace OpenSim.ApplicationPlugins.RegionModulesController
                     modulesConfig.GetString("Setup_" + node.Id, String.Empty);
 
             // We have a selector
-            if (moduleString != String.Empty)
+            if (!string.IsNullOrEmpty(moduleString))
             {
                 // Allow disabling modules even if they don't have
                 // support for it
@@ -290,7 +288,7 @@ namespace OpenSim.ApplicationPlugins.RegionModulesController
                     className = moduleParts[1];
 
                 // Match the class name if given
-                if (className != String.Empty &&
+                if (!string.IsNullOrEmpty(className) &&
                         node.Type.ToString() != className)
                     return false;
             }
@@ -373,7 +371,7 @@ namespace OpenSim.ApplicationPlugins.RegionModulesController
                     continue;
 
                 // Get the port number, if there is one
-                if (moduleString != String.Empty)
+                if (!string.IsNullOrEmpty(moduleString))
                 {
                     // Get the port number from the string
                     string[] moduleParts = moduleString.Split(new char[] {'/'},

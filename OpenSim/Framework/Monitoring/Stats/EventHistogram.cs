@@ -26,19 +26,16 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using OpenMetaverse.StructuredData;
 
 namespace OpenSim.Framework.Monitoring
 {
-// Create a time histogram of events. The histogram is built in a wrap-around
-//   array of equally distributed buckets.
-// For instance, a minute long histogram of second sized buckets would be:
-//          new EventHistogram(60, 1000)
-public class EventHistogram
+    // Create a time histogram of events. The histogram is built in a wrap-around
+    //   array of equally distributed buckets.
+    // For instance, a minute long histogram of second sized buckets would be:
+    //          new EventHistogram(60, 1000)
+    public class EventHistogram
 {
     private int m_timeBase;
     private int m_numBuckets;

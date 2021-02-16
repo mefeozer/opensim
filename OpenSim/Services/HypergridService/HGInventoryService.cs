@@ -31,7 +31,6 @@ using OpenMetaverse;
 using log4net;
 using Nini.Config;
 using System.Reflection;
-using OpenSim.Services.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Services.InventoryService;
 using OpenSim.Data;
@@ -62,7 +61,7 @@ namespace OpenSim.Services.HypergridService
             : base(config, configName)
         {
             m_log.Debug("[HGInventory Service]: Starting");
-            if (configName != string.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             //
@@ -73,7 +72,7 @@ namespace OpenSim.Services.HypergridService
             {
                 // realm = authConfig.GetString("Realm", realm);
                 string userAccountsDll = invConfig.GetString("UserAccountsService", string.Empty);
-                if (userAccountsDll == string.Empty)
+                if (string.IsNullOrEmpty(userAccountsDll))
                     throw new Exception("Please specify UserAccountsService in HGInventoryService configuration");
 
                 Object[] args = new Object[] { config };

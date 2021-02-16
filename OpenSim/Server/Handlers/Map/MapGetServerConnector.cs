@@ -28,11 +28,9 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Threading;
 
 using Nini.Config;
-using log4net;
 
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;

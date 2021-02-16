@@ -244,7 +244,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                         && requestData.ContainsKey("position_z") && requestData.ContainsKey("region_id")
                         && requestData.ContainsKey("binary_bucket"))
                 {
-                    if (m_MessageKey != String.Empty)
+                    if (!string.IsNullOrEmpty(m_MessageKey))
                     {
                         XmlRpcResponse error_resp = new XmlRpcResponse();
                         Hashtable error_respdata = new Hashtable();
@@ -716,7 +716,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             gim["position_z"] = msg.Position.Z.ToString();
             gim["region_id"] = new UUID(msg.RegionID).ToString();
             gim["binary_bucket"] = Convert.ToBase64String(msg.binaryBucket,Base64FormattingOptions.None);
-            if (m_MessageKey != String.Empty)
+            if (!string.IsNullOrEmpty(m_MessageKey))
                 gim["message_key"] = m_MessageKey;
             return gim;
         }

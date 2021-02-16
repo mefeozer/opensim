@@ -31,7 +31,6 @@ using System.Reflection;
 using System.Threading;
 using Nini.Config;
 using log4net;
-using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Framework.Monitoring;
 using OpenSim.Region.Framework.Interfaces;

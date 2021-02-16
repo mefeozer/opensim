@@ -44,7 +44,6 @@ using System.Xml.Linq;
 using log4net;
 using Nwc.XmlRpc;
 using OpenMetaverse.StructuredData;
-using OpenSim.Framework;
 using OpenSim.Framework.ServiceAuth;
 
 namespace OpenSim.Framework

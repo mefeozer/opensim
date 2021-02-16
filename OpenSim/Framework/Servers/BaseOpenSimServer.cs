@@ -27,27 +27,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using log4net;
-using log4net.Appender;
-using log4net.Core;
-using log4net.Repository;
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
-using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Framework.Monitoring;
-using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
-using Timer=System.Timers.Timer;
+using Timer = System.Timers.Timer;
 using Nini.Config;
 
 namespace OpenSim.Framework.Servers

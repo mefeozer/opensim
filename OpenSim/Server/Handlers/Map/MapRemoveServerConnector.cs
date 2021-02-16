@@ -64,14 +64,14 @@ namespace OpenSim.Server.Handlers.MapImage
             string mapService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (mapService == String.Empty)
+            if (string.IsNullOrEmpty(mapService))
                 throw new Exception("No LocalServiceModule in config file");
 
             Object[] args = new Object[] { config };
             m_MapService = ServerUtils.LoadPlugin<IMapImageService>(mapService, args);
 
             string gridService = serverConfig.GetString("GridService", String.Empty);
-            if (gridService != string.Empty)
+            if (!string.IsNullOrEmpty(gridService))
                 m_GridService = ServerUtils.LoadPlugin<IGridService>(gridService, args);
 
             if (m_GridService != null)
@@ -236,10 +236,10 @@ namespace OpenSim.Server.Handlers.MapImage
             // We're behind a proxy
             string xff = "X-Forwarded-For";
             string xffValue = request.Headers[xff.ToLower()];
-            if (xffValue == null || (xffValue != null && xffValue == string.Empty))
+            if (xffValue == null || (xffValue != null && string.IsNullOrEmpty(xffValue)))
                 xffValue = request.Headers[xff];
 
-            if (xffValue == null || (xffValue != null && xffValue == string.Empty))
+            if (xffValue == null || (xffValue != null && string.IsNullOrEmpty(xffValue)))
             {
 //                m_log.WarnFormat("[MAP IMAGE HANDLER]: No XFF header");
                 return request.RemoteIPEndPoint.Address;

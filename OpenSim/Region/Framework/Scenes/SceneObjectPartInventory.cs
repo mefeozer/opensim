@@ -28,17 +28,13 @@
 using System;
 using System.Text;
 using System.Xml;
-using System.IO;
 using System.Collections.Generic;
 using System.Collections;
 using System.Reflection;
-using System.Threading;
 using OpenMetaverse;
 using log4net;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.Framework.Scenes.Scripting;
-using OpenSim.Region.Framework.Scenes.Serialization;
 using PermissionMask = OpenSim.Framework.PermissionMask;
 
 namespace OpenSim.Region.Framework.Scenes
@@ -1010,7 +1006,7 @@ namespace OpenSim.Region.Framework.Scenes
         protected void AddInventoryItem(string name, TaskInventoryItem item, bool allowedDrop)
         {
             name = FindAvailableInventoryName(name);
-            if (name == String.Empty)
+            if (string.IsNullOrEmpty(name))
                 return;
 
             item.ParentID = m_part.UUID;
@@ -1777,7 +1773,7 @@ namespace OpenSim.Region.Framework.Scenes
                         //    e.Name, item.Name, m_part.Name, m_part.ParentGroup.Name, m_part.ParentGroup.Scene.Name);
 
                         string n = e.GetXMLState(item.ItemID);
-                        if (n != String.Empty)
+                        if (!string.IsNullOrEmpty(n))
                         {
                             if (oldIDs)
                             {

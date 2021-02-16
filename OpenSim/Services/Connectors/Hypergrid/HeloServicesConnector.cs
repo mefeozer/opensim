@@ -29,7 +29,6 @@ using log4net;
 using System;
 using System.Net;
 using System.Reflection;
-using Nini.Config;
 
 namespace OpenSim.Services.Connectors
 {
@@ -63,7 +62,7 @@ namespace OpenSim.Services.Connectors
                     // http://valley.virtualportland.org/simtest/Grid/?id=
                     //
                     uri = new Uri(serverURI + "xxx");
-                    if (uri.Query == string.Empty)
+                    if (string.IsNullOrEmpty(uri.Query))
                         m_ServerURI = serverURI.TrimEnd('/') + "/helo/";
                     else
                     {

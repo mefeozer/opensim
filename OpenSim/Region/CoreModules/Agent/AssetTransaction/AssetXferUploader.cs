@@ -32,9 +32,7 @@ using System.Collections.Generic;
 using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Interfaces;
 using PermissionMask = OpenSim.Framework.PermissionMask;
 
 namespace OpenSim.Region.CoreModules.Agent.AssetTransaction

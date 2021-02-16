@@ -25,24 +25,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using NUnit.Framework;
-using log4net;
 
 using OpenSim.Framework;
-using OpenSim.Region.PhysicsModule.BulletS;
-using OpenSim.Region.PhysicsModules.SharedBase;
 using OpenSim.Tests.Common;
 
 using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS.Tests
 {
-[TestFixture]
+    [TestFixture]
 public class HullCreation : OpenSimTestCase
 {
     // Documentation on attributes: http://www.nunit.org/index.php?p=attributes&r=2.6.1

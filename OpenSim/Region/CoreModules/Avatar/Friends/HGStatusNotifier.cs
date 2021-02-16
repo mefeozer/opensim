@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using OpenSim.Framework;
-using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Services.Interfaces;
 using OpenSim.Services.Connectors.Hypergrid;
 using FriendInfo = OpenSim.Services.Interfaces.FriendInfo;
 
@@ -48,7 +44,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                     if (Util.ParseUniversalUserIdentifier(ids[0], out friendID, out tmp, out tmp, out tmp, out tmp))
                     {
                         string friendsServerURI = m_FriendsModule.UserManagementModule.GetUserServerURL(friendID, "FriendsServerURI");
-                        if (friendsServerURI != string.Empty)
+                        if (!string.IsNullOrEmpty(friendsServerURI))
                         {
                             HGFriendsServicesConnector fConn = new HGFriendsServicesConnector(friendsServerURI);
 

@@ -25,7 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using log4net;
 using OMV = OpenMetaverse;
@@ -34,7 +33,7 @@ using OpenSim.Region.PhysicsModules.SharedBase;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public sealed class BSCharacter : BSPhysObject
+    public sealed class BSCharacter : BSPhysObject
 {
     private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     private static readonly string LogHeader = "[BULLETS CHAR]";

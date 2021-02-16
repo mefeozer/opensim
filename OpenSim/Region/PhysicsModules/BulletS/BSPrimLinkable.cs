@@ -26,8 +26,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using OpenSim.Framework;
 
@@ -35,7 +33,7 @@ using OMV = OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
-public class BSPrimLinkable : BSPrimDisplaced
+    public class BSPrimLinkable : BSPrimDisplaced
 {
     // The purpose of this subclass is to add linkset functionality to the prim. This overrides
     //    operations necessary for keeping the linkset created and, additionally, this

@@ -27,9 +27,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using OpenSim.Framework;
 using OpenSim.Framework.ServiceAuth;
@@ -134,7 +132,7 @@ namespace OpenSim.Groups
 
         public ExtendedGroupRecord GetGroupRecord(string RequestingAgentID, UUID GroupID, string GroupName)
         {
-            if (GroupID == UUID.Zero && (GroupName == null || (GroupName != null && GroupName == string.Empty)))
+            if (GroupID == UUID.Zero && (GroupName == null || (GroupName != null && string.IsNullOrEmpty(GroupName))))
                 return null;
 
             Dictionary<string, object> sendData = new Dictionary<string, object>();
@@ -682,7 +680,7 @@ namespace OpenSim.Groups
                          ServerUtils.BuildQueryString(sendData),
                          m_Auth);
 
-            if (reply == string.Empty)
+            if (string.IsNullOrEmpty(reply))
                 return null;
 
             Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(

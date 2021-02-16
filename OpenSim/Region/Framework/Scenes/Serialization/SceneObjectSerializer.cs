@@ -30,15 +30,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Framework.Serialization.External;
-using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Region.Framework.Scenes.Serialization
 {

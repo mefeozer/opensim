@@ -29,7 +29,6 @@
 // Revision by Ubit 2011/12
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using OpenMetaverse;
 using OpenSim.Framework;

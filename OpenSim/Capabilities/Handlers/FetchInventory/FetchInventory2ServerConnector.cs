@@ -43,7 +43,7 @@ namespace OpenSim.Capabilities.Handlers
         public FetchInventory2ServerConnector(IConfigSource config, IHttpServer server, string configName)
             : base(config, server, configName)
         {
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             IConfig serverConfig = config.Configs[m_ConfigName];
@@ -52,7 +52,7 @@ namespace OpenSim.Capabilities.Handlers
 
             string invService = serverConfig.GetString("InventoryService", String.Empty);
 
-            if (invService == String.Empty)
+            if (string.IsNullOrEmpty(invService))
                 throw new Exception("No InventoryService in config file");
 
             Object[] args = new Object[] { config };

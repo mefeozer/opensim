@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -37,7 +36,6 @@ using OpenSim.Services.Interfaces;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenMetaverse;
 using OpenMetaverse.Imaging;
-using OpenMetaverse.StructuredData;
 using Nwc.XmlRpc;
 using log4net;
 

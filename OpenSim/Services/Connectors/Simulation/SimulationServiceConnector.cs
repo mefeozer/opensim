@@ -27,11 +27,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Collections;
 
 using OpenSim.Framework;
 using OpenSim.Services.Interfaces;
@@ -349,7 +345,7 @@ namespace OpenSim.Services.Connectors.Simulation
                     else if (data.TryGetValue("version", out tmpOSD) && tmpOSD != null)
                     {
                         string versionString = tmpOSD.AsString();
-                        if(versionString != string.Empty)
+                        if(!string.IsNullOrEmpty(versionString))
                         {
                             String[] parts = versionString.Split(new char[] {'/'});
                             if (parts.Length > 1)

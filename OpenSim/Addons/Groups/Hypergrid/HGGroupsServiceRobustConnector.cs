@@ -27,8 +27,6 @@
 
 using System;
 using System.Reflection;
-using System.Text;
-using System.Xml;
 using System.Collections.Generic;
 using System.IO;
 using Nini.Config;
@@ -59,14 +57,14 @@ namespace OpenSim.Groups
         public HGGroupsServiceRobustConnector(IConfigSource config, IHttpServer server, string configName, IOfflineIMService im, IUserAccountService users) :
             base(config, server, configName)
         {
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             m_log.DebugFormat("[Groups.RobustHGConnector]: Starting with config name {0}", m_ConfigName);
 
             string homeURI = Util.GetConfigVarFromSections<string>(config, "HomeURI",
                 new string[] { "Startup", "Hypergrid", m_ConfigName}, string.Empty);
-            if (homeURI == string.Empty)
+            if (string.IsNullOrEmpty(homeURI))
                 throw new Exception(String.Format("[Groups.RobustHGConnector]: please provide the HomeURI [Startup] or in section {0}", m_ConfigName));
 
             IConfig cnf = config.Configs[m_ConfigName];
@@ -76,7 +74,7 @@ namespace OpenSim.Groups
             if (im == null)
             {
                 string imDll = cnf.GetString("OfflineIMService", string.Empty);
-                if (imDll == string.Empty)
+                if (string.IsNullOrEmpty(imDll))
                     throw new Exception(String.Format("[Groups.RobustHGConnector]: please provide OfflineIMService in section {0}", m_ConfigName));
 
                 Object[] args = new Object[] { config };
@@ -86,7 +84,7 @@ namespace OpenSim.Groups
             if (users == null)
             {
                 string usersDll = cnf.GetString("UserAccountService", string.Empty);
-                if (usersDll == string.Empty)
+                if (string.IsNullOrEmpty(usersDll))
                     throw new Exception(String.Format("[Groups.RobustHGConnector]: please provide UserAccountService in section {0}", m_ConfigName));
 
                 Object[] args = new Object[] { config };

@@ -28,7 +28,6 @@
 using System.Net;
 using System.IO;
 using OpenSim.Framework.ServiceAuth;
-using OpenMetaverse.StructuredData;
 
 namespace OpenSim.Framework.Servers.HttpServer
 {

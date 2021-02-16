@@ -28,9 +28,7 @@
 using System;
 using System.Collections.Generic;
 using OpenMetaverse;
-using log4net;
 using Nini.Config;
-using System.Reflection;
 using OpenSim.Services.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Data;
@@ -70,7 +68,7 @@ namespace OpenSim.Services.EstateService
             }
 
             // We tried, but this doesn't exist. We can't proceed
-            if (dllName == String.Empty)
+            if (string.IsNullOrEmpty(dllName))
                 throw new Exception("No StorageProvider configured");
 
             m_database = LoadPlugin<IEstateDataStore>(dllName, new Object[] { connString });

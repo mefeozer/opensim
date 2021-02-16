@@ -26,21 +26,15 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Reflection;
-using System.Text;
 using log4net;
 using Mono.Addins;
 using Nini.Config;
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.Framework.Scenes.Serialization;
 using OpenSim.Services.Interfaces;
 using OpenSim.Services.Connectors.Simulation;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;

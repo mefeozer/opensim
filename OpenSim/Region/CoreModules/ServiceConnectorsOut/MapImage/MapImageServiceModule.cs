@@ -28,7 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Net;
 using System.IO;
 using System.Timers;
 using System.Drawing;
@@ -43,7 +42,6 @@ using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Interfaces;
 using OpenSim.Server.Base;
 using OpenMetaverse;
-using OpenMetaverse.StructuredData;
 
 namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MapImage
 {
@@ -102,7 +100,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MapImage
             }
 
             string service = config.GetString("LocalServiceModule", string.Empty);
-            if (service == string.Empty)
+            if (string.IsNullOrEmpty(service))
             {
                 m_log.WarnFormat("[MAP IMAGE SERVICE MODULE]: No service dll given in config. Unable to proceed.");
                 return;

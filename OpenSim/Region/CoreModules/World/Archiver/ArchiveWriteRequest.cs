@@ -28,21 +28,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Reflection;
 using System.Runtime;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Xml;
 using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Monitoring;
 using OpenSim.Framework.Serialization;
-using OpenSim.Region.CoreModules.World.Terrain;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using Ionic.Zlib;
 using GZipStream = Ionic.Zlib.GZipStream;
 using CompressionMode = Ionic.Zlib.CompressionMode;
 using CompressionLevel = Ionic.Zlib.CompressionLevel;
@@ -571,7 +565,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
         protected void Save(Scene scene, List<SceneObjectGroup> sceneObjects, string regionDir)
         {
-            if (regionDir != string.Empty)
+            if (!string.IsNullOrEmpty(regionDir))
                 regionDir = ArchiveConstants.REGIONS_PATH + regionDir + "/";
 
             m_log.InfoFormat("[ARCHIVER]: Adding region settings to archive.");
@@ -660,7 +654,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             catch (Exception e)
             {
                 m_log.Error(string.Format("[ARCHIVER]: Error closing archive: {0} ", e.Message), e);
-                if (errorMessage == string.Empty)
+                if (string.IsNullOrEmpty(errorMessage))
                     errorMessage = e.Message;
             }
 

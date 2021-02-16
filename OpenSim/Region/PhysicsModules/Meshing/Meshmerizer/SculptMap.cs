@@ -30,7 +30,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 #if SYSTEM_DRAWING
 using System.Drawing;

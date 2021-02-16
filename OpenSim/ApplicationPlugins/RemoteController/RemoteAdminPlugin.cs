@@ -40,18 +40,13 @@ using Nini.Config;
 using Nwc.XmlRpc;
 using OpenMetaverse;
 using Mono.Addins;
-using OpenSim;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
-using OpenSim.Region.CoreModules.World.Terrain;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Interfaces;
-using PresenceInfo = OpenSim.Services.Interfaces.PresenceInfo;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
-using PermissionMask = OpenSim.Framework.PermissionMask;
 using RegionInfo = OpenSim.Framework.RegionInfo;
 
 namespace OpenSim.ApplicationPlugins.RemoteController
@@ -113,14 +108,14 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
                     string accessIP = m_config.GetString("access_ip_addresses", String.Empty);
                     m_accessIP = new HashSet<string>();
-                    if (accessIP != String.Empty)
+                    if (!string.IsNullOrEmpty(accessIP))
                     {
                         string[] ips = accessIP.Split(new char[] { ',' });
                         foreach (string ip in ips)
                         {
                             string current = ip.Trim();
 
-                            if (current != String.Empty)
+                            if (!string.IsNullOrEmpty(current))
                                 m_accessIP.Add(current);
                         }
                     }
@@ -259,7 +254,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 throw new Exception("not authorized");
             }
 
-            if (m_requiredPassword != String.Empty && password != m_requiredPassword)
+            if (!string.IsNullOrEmpty(m_requiredPassword) && password != m_requiredPassword)
             {
                 m_log.WarnFormat("[RADMIN]: Wrong password, blocked access from IP {0}", check_ip_address);
                 responseData["accepted"] = false;

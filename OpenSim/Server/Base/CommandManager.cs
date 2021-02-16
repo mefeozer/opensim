@@ -27,14 +27,10 @@
 
 
 using System;
-using System.Text;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Mono.Addins.Setup;
 using Mono.Addins;
-using Mono.Addins.Description;
 using OpenSim.Framework;
 
 namespace OpenSim.Server.Base

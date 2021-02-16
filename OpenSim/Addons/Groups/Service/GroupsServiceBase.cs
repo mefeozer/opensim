@@ -26,11 +26,8 @@
  */
 
 using System;
-using System.Reflection;
 using Nini.Config;
-using OpenSim.Framework;
 using OpenSim.Data;
-using OpenSim.Services.Interfaces;
 using OpenSim.Services.Base;
 
 namespace OpenSim.Groups
@@ -47,7 +44,7 @@ namespace OpenSim.Groups
             string connString = String.Empty;
             string realm = "os_groups";
             string usersRealm = "GridUser";
-            string configName = (cName == string.Empty) ? "Groups" : cName;
+            string configName = (string.IsNullOrEmpty(cName)) ? "Groups" : cName;
 
             //
             // Try reading the [DatabaseService] section, if it exists
@@ -55,9 +52,9 @@ namespace OpenSim.Groups
             IConfig dbConfig = config.Configs["DatabaseService"];
             if (dbConfig != null)
             {
-                if (dllName == String.Empty)
+                if (string.IsNullOrEmpty(dllName))
                     dllName = dbConfig.GetString("StorageProvider", String.Empty);
-                if (connString == String.Empty)
+                if (string.IsNullOrEmpty(connString))
                     connString = dbConfig.GetString("ConnectionString", String.Empty);
             }
 

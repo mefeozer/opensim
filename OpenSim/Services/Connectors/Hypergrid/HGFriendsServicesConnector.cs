@@ -28,11 +28,8 @@
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using Nini.Config;
 using OpenSim.Framework;
-using OpenSim.Services.Interfaces;
 using OpenSim.Services.Connectors.Friends;
 using FriendInfo = OpenSim.Services.Interfaces.FriendInfo;
 using OpenSim.Server.Base;
@@ -91,7 +88,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 string reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
                         reqString);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -142,7 +139,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 return false;
             }
 
-            if (reply != string.Empty)
+            if (!string.IsNullOrEmpty(reply))
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -188,7 +185,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 return false;
             }
 
-            if (reply != string.Empty)
+            if (!string.IsNullOrEmpty(reply))
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -234,7 +231,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 return false;
             }
 
-            if (reply != string.Empty)
+            if (!string.IsNullOrEmpty(reply))
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
@@ -288,7 +285,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 return friendsOnline;
             }
 
-            if (reply != string.Empty)
+            if (!string.IsNullOrEmpty(reply))
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 

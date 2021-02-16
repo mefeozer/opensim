@@ -25,16 +25,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using Nini.Config;
 using log4net;
 using System;
 using System.Reflection;
 using System.IO;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Serialization;
 using System.Collections.Generic;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
@@ -199,7 +194,7 @@ namespace OpenSim.Server.Handlers.Grid
             if (rinfo != null)
                 result = m_GridService.RegisterRegion(scopeID, rinfo);
 
-            if (result == String.Empty)
+            if (string.IsNullOrEmpty(result))
                 return SuccessResult();
             else
                 return FailureResult(result);

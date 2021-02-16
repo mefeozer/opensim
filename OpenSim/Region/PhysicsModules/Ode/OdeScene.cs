@@ -42,12 +42,10 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using log4net;
 using Nini.Config;
-using Mono.Addins;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Region.PhysicsModules.SharedBase;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.Framework.Interfaces;
 
 namespace OpenSim.Region.PhysicsModule.ODE
 {

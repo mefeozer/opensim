@@ -163,7 +163,7 @@ namespace OpenSim.Services.LLLoginService
             if (messagingConfig != null)
                 m_messageKey = messagingConfig.GetString("MessageKey", string.Empty);
             // These are required; the others aren't
-            if (accountService == string.Empty || authService == string.Empty)
+            if (string.IsNullOrEmpty(accountService) || string.IsNullOrEmpty(authService))
                 throw new Exception("LoginService is missing service specifications");
 
             // replace newlines in welcome message
@@ -264,7 +264,7 @@ namespace OpenSim.Services.LLLoginService
                 //
                 string token = m_AuthenticationService.Authenticate(account.PrincipalID, passwd, 30);
                 UUID secureSession = UUID.Zero;
-                if ((token == string.Empty) || (token != string.Empty && !UUID.TryParse(token, out secureSession)))
+                if ((string.IsNullOrEmpty(token)) || (!string.IsNullOrEmpty(token) && !UUID.TryParse(token, out secureSession)))
                 {
                     m_log.InfoFormat("[LLOGIN SERVICE]: SetLevel failed, reason: authentication failed");
                     return response;
@@ -571,7 +571,7 @@ namespace OpenSim.Services.LLLoginService
                 //
                 // Finally, fill out the response and return it
                 //
-                if (m_MessageUrl != string.Empty)
+                if (!string.IsNullOrEmpty(m_MessageUrl))
                 {
                     using(WebClient client = new WebClient())
                         processedMessage = client.DownloadString(m_MessageUrl);
@@ -926,7 +926,7 @@ namespace OpenSim.Services.LLLoginService
             {
                 if (gatekeeper == null) // login to local grid
                 {
-                    if (hostName == string.Empty)
+                    if (string.IsNullOrEmpty(hostName))
                         SetHostAndPort(m_GatekeeperURL);
 
                     gatekeeper = new GridRegion(destination);

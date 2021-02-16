@@ -26,18 +26,14 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
 using System.Threading;
 using System.Reflection;
 using OpenSim.Data;
 using OpenSim.Framework;
 using OpenSim.Framework.Serialization.External;
-using OpenSim.Framework.Console;
-using OpenSim.Server.Base;
 using OpenSim.Services.Base;
 using OpenSim.Services.Interfaces;
 using Nini.Config;
@@ -130,10 +126,10 @@ namespace OpenSim.Services.FSAssetService
 
             if (dbConfig != null)
             {
-                if (dllName == String.Empty)
+                if (string.IsNullOrEmpty(dllName))
                     dllName = dbConfig.GetString("StorageProvider", String.Empty);
 
-                if (connectionString == String.Empty)
+                if (string.IsNullOrEmpty(connectionString))
                     connectionString = dbConfig.GetString("ConnectionString", String.Empty);
             }
 
@@ -156,7 +152,7 @@ namespace OpenSim.Services.FSAssetService
             // Setup Fallback Service
             string str = assetConfig.GetString("FallbackService", string.Empty);
 
-            if (str != string.Empty)
+            if (!string.IsNullOrEmpty(str))
             {
                 object[] args = new object[] { config };
                 m_FallbackService = LoadPlugin<IAssetService>(str, args);
@@ -178,7 +174,7 @@ namespace OpenSim.Services.FSAssetService
             Directory.CreateDirectory(spoolTmp);
 
             m_FSBase = assetConfig.GetString("BaseDirectory", String.Empty);
-            if (m_FSBase == String.Empty)
+            if (string.IsNullOrEmpty(m_FSBase))
             {
                 m_log.ErrorFormat("[FSASSETS]: BaseDirectory not specified");
                 throw new Exception("Configuration error");
@@ -192,7 +188,7 @@ namespace OpenSim.Services.FSAssetService
             if (m_MainInstance)
             {
                 string loader = assetConfig.GetString("DefaultAssetLoader", string.Empty);
-                if (loader != string.Empty)
+                if (!string.IsNullOrEmpty(loader))
                 {
                     m_AssetLoader = LoadPlugin<IAssetLoader>(loader);
                     string loaderArgs = assetConfig.GetString("AssetLoaderArgs", string.Empty);
@@ -668,7 +664,7 @@ namespace OpenSim.Services.FSAssetService
                 }
             }
 
-            if (asset.ID == string.Empty)
+            if (string.IsNullOrEmpty(asset.ID))
             {
                 if (asset.FullID == UUID.Zero)
                 {

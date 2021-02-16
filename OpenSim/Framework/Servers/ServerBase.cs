@@ -108,7 +108,7 @@ namespace OpenSim.Framework.Servers
 
         protected void RemovePIDFile()
         {
-            if (m_pidFile != String.Empty)
+            if (!string.IsNullOrEmpty(m_pidFile))
             {
                 try
                 {

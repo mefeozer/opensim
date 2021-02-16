@@ -28,14 +28,7 @@
 using System;
 using System.Xml;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using log4net;
-using OpenSim.Framework;
 using Nini.Config;
 
 namespace OpenSim.Framework.Console
@@ -199,7 +192,7 @@ namespace OpenSim.Framework.Console
                 string descriptiveHelp = commandInfo.descriptive_help;
 
                 // If we do have some descriptive help then insert a spacing line before for readability.
-                if (descriptiveHelp != string.Empty)
+                if (!string.IsNullOrEmpty(descriptiveHelp))
                     help.Add(string.Empty);
 
                 help.Add(commandInfo.descriptive_help);
@@ -405,7 +398,7 @@ namespace OpenSim.Framework.Console
                 bool addcr = false;
                 foreach (string s in current.Keys)
                 {
-                    if (s == String.Empty)
+                    if (string.IsNullOrEmpty(s))
                     {
                         CommandInfo ci = (CommandInfo)current[String.Empty];
                         if (ci.fn.Count != 0)
@@ -675,7 +668,7 @@ namespace OpenSim.Framework.Console
                     bool option = false;
                     foreach (string w in words)
                     {
-                        if (w != String.Empty)
+                        if (!string.IsNullOrEmpty(w))
                         {
                             if (optionRegex.Match(w) == Match.Empty)
                                 option = false;
@@ -758,7 +751,7 @@ namespace OpenSim.Framework.Console
         {
             string line = ReadLine(DefaultPrompt + "# ", true, true);
 
-            if (line != String.Empty)
+            if (!string.IsNullOrEmpty(line))
                 Output("Invalid command");
         }
 

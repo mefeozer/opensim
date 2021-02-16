@@ -25,10 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Xml;
 
 using Nini.Config;
 using log4net;
@@ -38,7 +35,6 @@ using OpenSim.Framework;
 using OpenSim.Framework.Serialization.External;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
-using OpenSim.Services.AssetService;
 using OpenSim.Services.Base;
 
 namespace OpenSim.Services.HypergridService
@@ -71,7 +67,7 @@ namespace OpenSim.Services.HypergridService
                 throw new Exception("No HGAssetService configuration");
 
             string userAccountsDll = assetConfig.GetString("UserAccountsService", string.Empty);
-            if (userAccountsDll == string.Empty)
+            if (string.IsNullOrEmpty(userAccountsDll))
                 throw new Exception("Please specify UserAccountsService in HGAssetService configuration");
 
             Object[] args = new Object[] { config };
@@ -81,7 +77,7 @@ namespace OpenSim.Services.HypergridService
 
             m_HomeURL = Util.GetConfigVarFromSections<string>(config, "HomeURI",
                 new string[] { "Startup", "Hypergrid", configName }, string.Empty);
-            if (m_HomeURL == string.Empty)
+            if (string.IsNullOrEmpty(m_HomeURL))
                 throw new Exception("[HGAssetService] No HomeURI specified");
 
             m_Cache = UserAccountCache.CreateUserAccountCache(m_UserAccountService);
@@ -91,7 +87,7 @@ namespace OpenSim.Services.HypergridService
 
             string str = assetConfig.GetString("BackingService", "OpenSim.Services.AssetService.dll:AssetService");
 
-            if (str != string.Empty)
+            if (!string.IsNullOrEmpty(str))
             {
                 args = new object[] { config };
                 m_assetService = LoadPlugin<IAssetService>(str, args);

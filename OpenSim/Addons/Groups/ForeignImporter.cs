@@ -25,12 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-
 using OpenSim.Framework;
-using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Groups
 {
@@ -55,7 +50,7 @@ namespace OpenSim.Groups
 
             string url = string.Empty, first = string.Empty, last = string.Empty, tmp = string.Empty;
             Util.ParseUniversalUserIdentifier(_m.AgentID, out m.AgentID, out url, out first, out last, out tmp);
-            if (url != string.Empty)
+            if (!string.IsNullOrEmpty(url))
                 m_UserManagement.AddUser(m.AgentID, first, last, url);
 
             return m;
@@ -68,7 +63,7 @@ namespace OpenSim.Groups
 
             string url = string.Empty, first = string.Empty, last = string.Empty, tmp = string.Empty;
             Util.ParseUniversalUserIdentifier(_rm.MemberID, out rm.MemberID, out url, out first, out last, out tmp);
-            if (url != string.Empty)
+            if (!string.IsNullOrEmpty(url))
                 m_UserManagement.AddUser(rm.MemberID, first, last, url);
 
             return rm;

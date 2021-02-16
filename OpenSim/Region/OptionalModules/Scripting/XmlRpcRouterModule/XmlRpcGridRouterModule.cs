@@ -35,9 +35,6 @@ using OpenMetaverse;
 using Mono.Addins;
 
 using OpenSim.Framework;
-using OpenSim.Framework.Servers;
-using OpenSim.Framework.Servers.HttpServer;
-using OpenSim.Framework.Client;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 
@@ -73,7 +70,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
                     "XmlRpcRouterModule") == "XmlRpcGridRouterModule")
             {
                 m_ServerURI = startupConfig.GetString("XmlRpcHubURI", String.Empty);
-                if (m_ServerURI == String.Empty)
+                if (string.IsNullOrEmpty(m_ServerURI))
                 {
                     m_log.Error("[XMLRPC GRID ROUTER] Module configured but no URI given. Disabling");
                     return;

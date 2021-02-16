@@ -26,13 +26,10 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
 using log4net;
 using Nini.Config;
-using Nwc.XmlRpc;
 using Mono.Addins;
 using OpenMetaverse;
 using OpenSim.Framework;
@@ -410,7 +407,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (friendIsLocal) // agent is foreigner, friend is local
             {
                 string agentUUI = GetUUI(friendID, agentID);
-                if (agentUUI != string.Empty)
+                if (!string.IsNullOrEmpty(agentUUI))
                 {
                     FriendsService.StoreFriend(agentUUI, friendID.ToString(), rights);
                     return true;
@@ -505,7 +502,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                 // We need to look for its information in the friends list itself
                 FriendInfo[] finfos = null;
                 bool confirming = false;
-                if (friendUUI == string.Empty)
+                if (string.IsNullOrEmpty(friendUUI))
                 {
                     finfos = GetFriendsFromCache(agentID);
                     foreach (FriendInfo finfo in finfos)
@@ -715,7 +712,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             {
                 agentUUI = GetUUI(exfriendID, agentID);
 
-                if (agentUUI != string.Empty)
+                if (!string.IsNullOrEmpty(agentUUI))
                 {
                     // delete in the local friends service the reference to the foreign agent
                     FriendsService.Delete(exfriendID, agentUUI);
@@ -782,7 +779,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (!m_uMan.IsLocalGridUser(friendID))
             {
                 string friendsURL = m_uMan.GetUserServerURL(friendID, "FriendsServerURI");
-                if (friendsURL != string.Empty)
+                if (!string.IsNullOrEmpty(friendsURL))
                 {
                     m_log.DebugFormat("[HGFRIENDS MODULE]: Forwading friendship from {0} to {1} @ {2}", agentID, friendID, friendsURL);
                     GridRegion region = new GridRegion();

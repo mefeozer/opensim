@@ -27,7 +27,6 @@
 
 using System;
 using Nini.Config;
-using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OpenSim.Framework;
 using OpenSim.Framework.Servers.HttpServer;

@@ -26,22 +26,17 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 using OpenSim.Framework;
-using OpenSim.Region.Framework;
 using OpenSim.Region.PhysicsModules.SharedBase;
-
-using Nini.Config;
-using log4net;
 
 using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
 
-// The physical implementation of the terrain is wrapped in this class.
-public abstract class BSTerrainPhys : IDisposable
+    // The physical implementation of the terrain is wrapped in this class.
+    public abstract class BSTerrainPhys : IDisposable
 {
     public enum TerrainImplementation
     {

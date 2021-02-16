@@ -26,14 +26,10 @@
  */
 
 using System;
-using System.Text;
 using System.Reflection;
 using Nini.Config;
 using log4net;
-using OpenSim.Framework;
-using OpenSim.Data;
 using OpenSim.Services.Interfaces;
-using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 using System.Collections;
 
@@ -64,7 +60,7 @@ namespace OpenSim.Services.FreeswitchService
             response["keepalive"] = false;
             response["int_response_code"] = 200;
 
-            if (m_freeSwitchContext != String.Empty && m_freeSwitchContext != requestcontext)
+            if (!string.IsNullOrEmpty(m_freeSwitchContext) && m_freeSwitchContext != requestcontext)
             {
                 m_log.Debug("[FreeSwitchDirectory]: returning empty as it's for another context");
                 response["str_response_string"] = "";

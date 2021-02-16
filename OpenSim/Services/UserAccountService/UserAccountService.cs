@@ -35,7 +35,6 @@ using OpenMetaverse;
 using OpenSim.Data;
 using OpenSim.Framework;
 using OpenSim.Services.Interfaces;
-using OpenSim.Framework.Console;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using PermissionMask = OpenSim.Framework.PermissionMask;
 
@@ -65,23 +64,23 @@ namespace OpenSim.Services.UserAccountService
                 throw new Exception("No UserAccountService configuration");
 
             string gridServiceDll = userConfig.GetString("GridService", string.Empty);
-            if (gridServiceDll != string.Empty)
+            if (!string.IsNullOrEmpty(gridServiceDll))
                 m_GridService = LoadPlugin<IGridService>(gridServiceDll, new Object[] { config });
 
             string authServiceDll = userConfig.GetString("AuthenticationService", string.Empty);
-            if (authServiceDll != string.Empty)
+            if (!string.IsNullOrEmpty(authServiceDll))
                 m_AuthenticationService = LoadPlugin<IAuthenticationService>(authServiceDll, new Object[] { config });
 
             string presenceServiceDll = userConfig.GetString("GridUserService", string.Empty);
-            if (presenceServiceDll != string.Empty)
+            if (!string.IsNullOrEmpty(presenceServiceDll))
                 m_GridUserService = LoadPlugin<IGridUserService>(presenceServiceDll, new Object[] { config });
 
             string invServiceDll = userConfig.GetString("InventoryService", string.Empty);
-            if (invServiceDll != string.Empty)
+            if (!string.IsNullOrEmpty(invServiceDll))
                 m_InventoryService = LoadPlugin<IInventoryService>(invServiceDll, new Object[] { config });
 
             string avatarServiceDll = userConfig.GetString("AvatarService", string.Empty);
-            if (avatarServiceDll != string.Empty)
+            if (!string.IsNullOrEmpty(avatarServiceDll))
                 m_AvatarService = LoadPlugin<IAvatarService>(avatarServiceDll, new Object[] { config });
 
             m_CreateDefaultAvatarEntries = userConfig.GetBoolean("CreateDefaultAvatarEntries", false);

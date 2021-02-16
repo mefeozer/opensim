@@ -29,16 +29,12 @@ using log4net;
 using Mono.Addins;
 using Nini.Config;
 using System;
-using System.Collections.Concurrent;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Threading;
-using System.Timers;
 
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Framework.Monitoring;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;

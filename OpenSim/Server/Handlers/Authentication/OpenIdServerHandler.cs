@@ -34,11 +34,8 @@ using System.Web;
 using DotNetOpenId;
 using DotNetOpenId.Provider;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
-using OpenSim.Server.Handlers.Base;
 using OpenSim.Services.Interfaces;
-using Nini.Config;
 using OpenMetaverse;
 
 namespace OpenSim.Server.Handlers.Authentication
@@ -245,7 +242,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
                             if (passwordValues != null && passwordValues.Length == 1)
                             {
                                 if (account != null &&
-                                    (m_authenticationService.Authenticate(account.PrincipalID,Util.Md5Hash(passwordValues[0]), 30) != string.Empty))
+                                    (!string.IsNullOrEmpty(m_authenticationService.Authenticate(account.PrincipalID, Util.Md5Hash(passwordValues[0]), 30))))
                                     authRequest.IsAuthenticated = true;
                                 else
                                     authRequest.IsAuthenticated = false;

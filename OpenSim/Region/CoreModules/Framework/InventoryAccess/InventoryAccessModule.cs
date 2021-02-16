@@ -27,21 +27,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Xml;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 
 using OpenSim.Framework;
-using OpenSim.Framework.Capabilities;
-using OpenSim.Framework.Client;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.Framework.Scenes.Serialization;
 using OpenSim.Services.Interfaces;
-
-using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 
 using OpenMetaverse;
 using log4net;
@@ -1408,7 +1401,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
             IInventoryService invService = m_Scene.RequestModuleInterface<IInventoryService>();
             InventoryItemBase item = invService.GetItem(agentID, itemID);
 
-            if (item != null && item.CreatorData != null && item.CreatorData != string.Empty)
+            if (item != null && item.CreatorData != null && !string.IsNullOrEmpty(item.CreatorData))
                 UserManagementModule.AddCreatorUser(item.CreatorIdAsUuid, item.CreatorData);
 
             return item;

@@ -25,16 +25,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
 using NUnit.Framework;
-using OpenSim.Framework;
 using OpenSim.Tests.Common;
-using OpenSim.Region.ScriptEngine.Shared;
 using OpenSim.Region.Framework.Scenes;
 using Nini.Config;
 using OpenSim.Region.ScriptEngine.Shared.Api;
-using OpenSim.Region.ScriptEngine.Shared.Instance;
-using OpenSim.Region.ScriptEngine.Shared.ScriptBase;
 using OpenMetaverse;
 using System;
 

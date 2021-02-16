@@ -26,7 +26,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 
@@ -125,7 +124,7 @@ namespace OpenSim.Services.Connectors.InstantMessage
             gim["binary_bucket"] = Convert.ToBase64String(msg.binaryBucket, Base64FormattingOptions.None);
             gim["region_id"] = new UUID(msg.RegionID).ToString();
 
-            if (messageKey != String.Empty)
+            if (!string.IsNullOrEmpty(messageKey))
                 gim["message_key"] = messageKey;
 
             return gim;

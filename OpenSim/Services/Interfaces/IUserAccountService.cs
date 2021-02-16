@@ -132,7 +132,7 @@ namespace OpenSim.Services.Interfaces
             {
                 ServiceURLs = new Dictionary<string, object>();
                 string str = kvp["ServiceURLs"].ToString();
-                if (str != string.Empty)
+                if (!string.IsNullOrEmpty(str))
                 {
                     string[] parts = str.Split(new char[] { ';' });
 //                    Dictionary<string, object> dic = new Dictionary<string, object>();

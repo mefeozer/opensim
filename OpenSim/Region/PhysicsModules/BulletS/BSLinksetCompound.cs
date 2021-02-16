@@ -24,18 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using OpenSim.Framework;
-
 using OMV = OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
 
-public sealed class BSLinksetCompound : BSLinkset
+    public sealed class BSLinksetCompound : BSLinkset
 {
 #pragma warning disable 414
     private static string LogHeader = "[BULLETSIM LINKSET COMPOUND]";

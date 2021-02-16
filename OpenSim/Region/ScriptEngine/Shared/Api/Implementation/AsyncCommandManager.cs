@@ -26,17 +26,14 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using OpenMetaverse;
-using OpenSim.Framework;
 using OpenSim.Framework.Monitoring;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.ScriptEngine.Interfaces;
-using OpenSim.Region.ScriptEngine.Shared;
 using OpenSim.Region.ScriptEngine.Shared.Api.Plugins;
-using Timer=OpenSim.Region.ScriptEngine.Shared.Api.Plugins.Timer;
+using Timer = OpenSim.Region.ScriptEngine.Shared.Api.Plugins.Timer;
 using System.Reflection;
 using log4net;
 

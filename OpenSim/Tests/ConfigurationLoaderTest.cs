@@ -139,7 +139,7 @@ namespace OpenSim.Tests
         private void CreateIni(string filepath, IniConfigSource source)
         {
             string path = Path.GetDirectoryName(filepath);
-            if (path != string.Empty)
+            if (!string.IsNullOrEmpty(path))
             {
                 Directory.CreateDirectory(path);
             }

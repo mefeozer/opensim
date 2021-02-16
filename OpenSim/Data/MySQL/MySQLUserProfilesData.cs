@@ -28,7 +28,6 @@
 using System;
 using System.Data;
 using System.Reflection;
-using OpenSim.Data;
 using OpenSim.Framework;
 using MySql.Data.MySqlClient;
 using OpenMetaverse;

@@ -28,12 +28,9 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Mono.Addins;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenSim;
-using OpenSim.ApplicationPlugins.RegionModulesController;
 using OpenSim.Framework;
 using OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid;
 using OpenSim.Region.Framework.Interfaces;

@@ -32,7 +32,6 @@ using OpenMetaverse;
 using OpenSim.Framework;
 
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Interfaces;
 using OpenSim.Region.Framework.Interfaces;
 
 namespace OpenSim.Region.CoreModules.Agent.AssetTransaction

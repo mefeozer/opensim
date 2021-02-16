@@ -33,7 +33,6 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Timers;
-using System.Threading;
 using log4net;
 using Mono.Addins;
 using Nini.Config;

@@ -25,11 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using OpenSim.Region.ScriptEngine.Yengine;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Reflection.Emit;
 
 namespace OpenSim.Region.ScriptEngine.Yengine

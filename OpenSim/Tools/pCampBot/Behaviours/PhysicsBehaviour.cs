@@ -30,7 +30,6 @@ using System.IO;
 using System.Threading;
 using OpenMetaverse;
 using OpenSim.Framework;
-using pCampBot.Interfaces;
 
 namespace pCampBot
 {

@@ -25,24 +25,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Text;
 
 using Nini.Config;
 
 using OpenSim.Framework;
 using OpenSim.Region.PhysicsModules.SharedBase;
-using OpenSim.Region.PhysicsModule.Meshing;
 using OpenSim.Region.Framework.Interfaces;
 
 using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS.Tests
 {
-// Utility functions for building up and tearing down the sample physics environments
-public static class BulletSimTestsUtil
+    // Utility functions for building up and tearing down the sample physics environments
+    public static class BulletSimTestsUtil
 {
     // 'engineName' is the Bullet engine to use. Either null (for unmanaged), "BulletUnmanaged" or "BulletXNA"
     // 'params' is a set of keyValue pairs to set in the engine's configuration file (override defaults)

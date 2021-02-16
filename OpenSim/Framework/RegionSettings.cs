@@ -27,9 +27,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using OpenMetaverse;
-using System.Runtime.Serialization;
 
 namespace OpenSim.Framework
 {

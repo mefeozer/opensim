@@ -32,9 +32,6 @@ using System.Reflection;
 using System.Xml;
 using OpenMetaverse;
 using log4net;
-using OpenSim.Framework;
-using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.PhysicsModules.SharedBase;
 
 namespace OpenSim.Region.Framework.Scenes.Serialization
 {

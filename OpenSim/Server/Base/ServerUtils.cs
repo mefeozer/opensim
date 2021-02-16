@@ -39,9 +39,8 @@ using OpenMetaverse;
 using Mono.Addins;
 using OpenSim.Framework.Servers.HttpServer;
 using OpenSim.Framework.Servers;
-using OpenMetaverse.StructuredData; // LitJson is hidden on this
 
-[assembly:AddinRoot("Robust", OpenSim.VersionInfo.VersionNumber)]
+[assembly: AddinRoot("Robust", OpenSim.VersionInfo.VersionNumber)]
 namespace OpenSim.Server.Base
 {
     [TypeExtensionPoint(Path="/Robust/Connector", Name="RobustConnector")]
@@ -276,7 +275,7 @@ namespace OpenSim.Server.Base
                 {
                     if (pluginType.IsPublic)
                     {
-                        if (className != String.Empty
+                        if (!string.IsNullOrEmpty(className)
                             && pluginType.ToString() != pluginType.Namespace + "." + className)
                             continue;
 

@@ -27,11 +27,6 @@
 
 using System;
 using System.Diagnostics; //for [DebuggerNonUserCode]
-using System.Runtime.Remoting.Lifetime;
-using System.Threading;
-using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
 using OpenSim.Region.ScriptEngine.Interfaces;
 using OpenSim.Region.ScriptEngine.Shared.Api.Interfaces;
 

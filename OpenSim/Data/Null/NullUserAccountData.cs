@@ -26,14 +26,10 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using log4net;
 using OpenMetaverse;
-using OpenSim.Framework;
-using OpenSim.Data;
 
 namespace OpenSim.Data.Null
 {
@@ -120,7 +116,7 @@ namespace OpenSim.Data.Null
 
             m_DataByUUID[data.PrincipalID] = data;
             m_DataByName[data.FirstName + " " + data.LastName] = data;
-            if (data.Data.ContainsKey("Email") && data.Data["Email"] != null && data.Data["Email"] != string.Empty)
+            if (data.Data.ContainsKey("Email") && data.Data["Email"] != null && !string.IsNullOrEmpty(data.Data["Email"]))
                 m_DataByEmail[data.Data["Email"]] = data;
 
 //            m_log.DebugFormat("m_DataByUUID count is {0}, m_DataByName count is {1}", m_DataByUUID.Count, m_DataByName.Count);
@@ -184,7 +180,7 @@ namespace OpenSim.Data.Null
                     m_DataByUUID.Remove(uuid);
                     if (m_DataByName.ContainsKey(account.FirstName + " " + account.LastName))
                         m_DataByName.Remove(account.FirstName + " " + account.LastName);
-                    if (account.Data.ContainsKey("Email") && account.Data["Email"] != string.Empty && m_DataByEmail.ContainsKey(account.Data["Email"]))
+                    if (account.Data.ContainsKey("Email") && !string.IsNullOrEmpty(account.Data["Email"]) && m_DataByEmail.ContainsKey(account.Data["Email"]))
                         m_DataByEmail.Remove(account.Data["Email"]);
 
                     return true;

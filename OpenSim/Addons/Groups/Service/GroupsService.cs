@@ -35,7 +35,6 @@ using Nini.Config;
 using OpenMetaverse;
 using OpenSim.Data;
 using OpenSim.Framework;
-using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Groups
 {
@@ -228,7 +227,7 @@ namespace OpenSim.Groups
                 foreach (GroupData d in data)
                 {
                     // Don't list group proxies
-                    if (d.Data.ContainsKey("Location") && d.Data["Location"] != string.Empty)
+                    if (d.Data.ContainsKey("Location") && !string.IsNullOrEmpty(d.Data["Location"]))
                         continue;
 
                     int nmembers = m_Database.MemberCount(d.GroupID);

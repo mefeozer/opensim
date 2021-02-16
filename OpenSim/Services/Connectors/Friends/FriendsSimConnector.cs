@@ -28,8 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-
-using OpenSim.Services.Interfaces;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenSim.Server.Base;
 using OpenSim.Framework;
@@ -63,7 +61,7 @@ namespace OpenSim.Services.Connectors.Friends
             sendData["FromID"] = userID.ToString();
             sendData["ToID"] = friendID.ToString();
             sendData["Message"] = message;
-            if (userName != String.Empty)
+            if (!string.IsNullOrEmpty(userName))
                 sendData["FromName"] = userName;
 
             return Call(region, sendData);
@@ -159,7 +157,7 @@ namespace OpenSim.Services.Connectors.Friends
                 try
                 {
                     string reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, 15, null, false);
-                    if (reply != string.Empty)
+                    if (!string.IsNullOrEmpty(reply))
                     {
                         Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 

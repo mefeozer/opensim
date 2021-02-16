@@ -4436,7 +4436,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
 
                 string ownerName = resolveName(m_host.ParentGroup.RootPart.OwnerID);
-                if (ownerName == String.Empty)
+                if (string.IsNullOrEmpty(ownerName))
                     ownerName = "(hippos)";
 
                 if (!m_waitingForScriptAnswer)
@@ -5186,7 +5186,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 ScenePresence presence = World.GetScenePresence(agentId);
                 if (presence != null && presence.PresenceType != PresenceType.Npc)
                 {
-                    if (destination == String.Empty)
+                    if (string.IsNullOrEmpty(destination))
                         destination = World.RegionInfo.RegionName;
 
                     if (m_item.PermsGranter == agentId)
@@ -5294,7 +5294,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 return;
             }
 
-            if (message == string.Empty)
+            if (string.IsNullOrEmpty(message))
             {
                 Error("llTextBox", "Empty message");
             }
@@ -6398,7 +6398,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     return "0";
 
                 case "region_product_name":
-                    if (World.RegionInfo.RegionType != String.Empty)
+                    if (!string.IsNullOrEmpty(World.RegionInfo.RegionType))
                         return World.RegionInfo.RegionType;
                     else
                         return "";
@@ -8327,7 +8327,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             string[] buts = new string[length];
             for (int i = 0; i < length; i++)
             {
-                if (buttons.Data[i].ToString() == String.Empty)
+                if (string.IsNullOrEmpty(buttons.Data[i].ToString()))
                 {
                     Error("llDialog", "Button label cannot be blank");
                     return;
@@ -14069,9 +14069,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             ScriptSleep(300);
             m_host.AddScriptLPS(1);
 
-            if (str1 == string.Empty)
+            if (string.IsNullOrEmpty(str1))
                 return string.Empty;
-            if (str2 == string.Empty)
+            if (string.IsNullOrEmpty(str2))
                 return str1;
 
             int len = str2.Length;
@@ -14152,9 +14152,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             m_host.AddScriptLPS(1);
 
-            if (str1 == string.Empty)
+            if (string.IsNullOrEmpty(str1))
                 return string.Empty;
-            if (str2 == string.Empty)
+            if (string.IsNullOrEmpty(str2))
                 return str1;
 
             int len = str2.Length;
@@ -14409,7 +14409,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 {
                     // The rest of those would be added to the body in SL.
                     // Let's not do that.
-                    if (urlParts[i] == string.Empty)
+                    if (string.IsNullOrEmpty(urlParts[i]))
                         break;
 
                     // See if this could be a valid header
@@ -17659,7 +17659,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
             }
 
-            if (state == String.Empty)
+            if (string.IsNullOrEmpty(state))
             {
                 llShout(ScriptBaseClass.DEBUG_CHANNEL, "Invalid animation state " + animState);
                 return;
@@ -17736,7 +17736,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
             }
 
-            if (state == String.Empty)
+            if (string.IsNullOrEmpty(state))
             {
                 return;
             }
@@ -17775,7 +17775,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
             }
 
-            if (state == String.Empty)
+            if (string.IsNullOrEmpty(state))
             {
                 return String.Empty;
             }

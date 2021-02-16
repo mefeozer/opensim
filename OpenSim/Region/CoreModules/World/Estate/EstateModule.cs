@@ -26,18 +26,14 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using log4net;
 using Nini.Config;
-using Nwc.XmlRpc;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Interfaces;
-using OpenSim.Server.Base;
 using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
 using Mono.Addins;

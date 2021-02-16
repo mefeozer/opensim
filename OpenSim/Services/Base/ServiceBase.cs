@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using log4net;
 using Nini.Config;
-using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Services.Base
 {
@@ -81,7 +80,7 @@ namespace OpenSim.Services.Base
 
                     if (pluginType.IsPublic)
                     {
-                        if (className != String.Empty &&
+                        if (!string.IsNullOrEmpty(className) &&
                                 pluginType.ToString() !=
                                 pluginType.Namespace + "." + className)
                             continue;

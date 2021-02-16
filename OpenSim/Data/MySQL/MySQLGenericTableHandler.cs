@@ -69,7 +69,7 @@ namespace OpenSim.Data.MySQL
 
         protected void CommonConstruct(string storeName)
         {
-            if (storeName != String.Empty)
+            if (!string.IsNullOrEmpty(storeName))
             {
                 // We always use a new connection for any Migrations
                 using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))

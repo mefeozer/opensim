@@ -563,23 +563,23 @@ namespace OpenSim.Services.LLLoginService
                 responseData["region_size_y"] = (Int32)RegionSizeY;
                 m_log.DebugFormat("[LOGIN RESPONSE] returning sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);
 
-                if (searchURL != String.Empty)
+                if (!string.IsNullOrEmpty(searchURL))
                     responseData["search"] = searchURL;
 
-                if (mapTileURL != String.Empty)
+                if (!string.IsNullOrEmpty(mapTileURL))
                     responseData["map-server-url"] = mapTileURL;
 
-                if (profileURL != String.Empty)
+                if (!string.IsNullOrEmpty(profileURL))
                     responseData["profile-server-url"] = profileURL;
 
-                if (DestinationsURL != String.Empty)
+                if (!string.IsNullOrEmpty(DestinationsURL))
                     responseData["destination_guide_url"] = DestinationsURL;
 
-                if (AvatarsURL != String.Empty)
+                if (!string.IsNullOrEmpty(AvatarsURL))
                     responseData["avatar_picker_url"] = AvatarsURL;
 
                 // We need to send an openid_token back in the response too
-                if (openIDURL != String.Empty)
+                if (!string.IsNullOrEmpty(openIDURL))
                 {
                     responseData["openid_url"] = openIDURL;
                     responseData["openid_token"] = AgentID.ToString() + ":" + Util.Md5Hash(SecureSessionID.ToString());
@@ -590,13 +590,13 @@ namespace OpenSim.Services.LLLoginService
                     responseData["buddy-list"] = m_buddyList.ToArray();
                 }
 
-                if (currency != String.Empty)
+                if (!string.IsNullOrEmpty(currency))
                 {
                     // responseData["real_currency"] = currency;
                     responseData["currency"] = currency;
                 }
 
-                if (ClassifiedFee != String.Empty)
+                if (!string.IsNullOrEmpty(ClassifiedFee))
                     responseData["classified_fee"] = ClassifiedFee;
 
                 responseData["login"] = "true";
@@ -692,22 +692,22 @@ namespace OpenSim.Services.LLLoginService
                 map["region_x"] = OSD.FromInteger(RegionX);
                 map["region_y"] = OSD.FromInteger(RegionY);
 
-                if (mapTileURL != String.Empty)
+                if (!string.IsNullOrEmpty(mapTileURL))
                     map["map-server-url"] = OSD.FromString(mapTileURL);
 
-                if (profileURL != String.Empty)
+                if (!string.IsNullOrEmpty(profileURL))
                     map["profile-server-url"] = OSD.FromString(profileURL);
 
-                if (openIDURL != String.Empty)
+                if (!string.IsNullOrEmpty(openIDURL))
                 {
                     map["openid_url"] = OSD.FromString(openIDURL);
                     map["openid_token"] = OSD.FromString(AgentID.ToString() + ":" + Util.Md5Hash(SecureSessionID.ToString()));
                 }
 
-                if (searchURL != String.Empty)
+                if (!string.IsNullOrEmpty(searchURL))
                     map["search"] = OSD.FromString(searchURL);
 
-                if (ClassifiedFee != String.Empty)
+                if (!string.IsNullOrEmpty(ClassifiedFee))
                     map["classified_fee"] = OSD.FromString(ClassifiedFee);
 
                 if (m_buddyList != null)

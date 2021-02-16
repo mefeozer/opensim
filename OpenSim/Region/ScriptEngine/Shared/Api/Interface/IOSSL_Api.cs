@@ -25,10 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections;
-using OpenSim.Region.ScriptEngine.Interfaces;
-
 using key = OpenSim.Region.ScriptEngine.Shared.LSL_Types.LSLString;
 using rotation = OpenSim.Region.ScriptEngine.Shared.LSL_Types.Quaternion;
 using vector = OpenSim.Region.ScriptEngine.Shared.LSL_Types.Vector3;

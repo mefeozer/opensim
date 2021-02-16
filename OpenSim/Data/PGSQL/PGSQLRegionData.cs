@@ -26,14 +26,12 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Data;
 using RegionFlags = OpenSim.Framework.RegionFlags;
 using Npgsql;
 

@@ -26,14 +26,9 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-
-using OpenMetaverse;
 using NUnit.Framework;
 
 using OpenSim.Framework;
-using OpenSim.Services.Interfaces;
 using OpenSim.Services.Connectors.InstantMessage;
 
 namespace Robust.Tests

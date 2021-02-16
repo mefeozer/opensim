@@ -26,10 +26,8 @@
  */
 
 using System;
-using System.Text;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography; // for computing md5 hash
-using OpenSim.Framework;
 using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 

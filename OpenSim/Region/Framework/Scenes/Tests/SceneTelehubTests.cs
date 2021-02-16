@@ -22,14 +22,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenSim.Framework;
 using OpenSim.Region.CoreModules.World.Estate;
-using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Services.Interfaces;
 using OpenSim.Tests.Common;
 

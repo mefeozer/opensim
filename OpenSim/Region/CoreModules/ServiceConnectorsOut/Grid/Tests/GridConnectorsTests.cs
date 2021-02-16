@@ -25,18 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using log4net.Config;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
 
 using OpenSim.Framework;
-using OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid;
 using OpenSim.Region.Framework.Scenes;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using OpenSim.Tests.Common;

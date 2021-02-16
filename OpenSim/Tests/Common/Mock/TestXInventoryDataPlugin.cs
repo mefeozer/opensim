@@ -28,10 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using log4net;
 using OpenMetaverse;
-using OpenSim.Framework;
 using OpenSim.Data;
 using OpenSim.Data.Null;
 

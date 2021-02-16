@@ -26,7 +26,6 @@
  */
 
 using System.Collections.Generic;
-using OpenSim.Data;
 using OpenMetaverse;
 
 namespace OpenSim.Data

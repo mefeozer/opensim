@@ -26,11 +26,8 @@
  */
 
 using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using OpenMetaverse;
-using OpenMetaverse.Packets;
-using OpenMetaverse.Messages.Linden;
 using OpenMetaverse.StructuredData;
 using OpenSim.Framework;
 

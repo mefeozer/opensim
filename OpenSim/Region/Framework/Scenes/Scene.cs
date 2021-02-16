@@ -28,25 +28,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime;
 using System.Text;
 using System.Threading;
 using System.Timers;
-using System.Xml;
 using Nini.Config;
 using OpenMetaverse;
-using OpenMetaverse.Packets;
-using OpenMetaverse.Imaging;
 using OpenMetaverse.StructuredData;
 using OpenSim.Framework;
 using OpenSim.Framework.Monitoring;
 using OpenSim.Services.Interfaces;
-using OpenSim.Framework.Console;
 using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.Framework.Scenes.Scripting;
 using OpenSim.Region.Framework.Scenes.Serialization;
 using OpenSim.Region.PhysicsModules.SharedBase;
 using Timer = System.Timers.Timer;
@@ -1080,7 +1073,7 @@ namespace OpenSim.Region.Framework.Scenes
 
                 grant = Util.GetConfigVarFromSections<string>(config, "DeniedClients", possibleAccessControlConfigSections, String.Empty);
                 // Deal with the mess of someone having used a different word at some point
-                if (grant == String.Empty)
+                if (string.IsNullOrEmpty(grant))
                     grant = Util.GetConfigVarFromSections<string>(
                             config, "BannedClients", possibleAccessControlConfigSections, String.Empty);
 
@@ -1164,7 +1157,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 string markerPath = restartConfig.GetString("MarkerPath", String.Empty);
 
-                if (markerPath != String.Empty)
+                if (!string.IsNullOrEmpty(markerPath))
                 {
                     string path = Path.Combine(markerPath, RegionInfo.RegionID.ToString() + ".started");
                     try
@@ -1847,7 +1840,7 @@ namespace OpenSim.Region.Framework.Scenes
                             {
                                 string markerPath = restartConfig.GetString("MarkerPath", String.Empty);
 
-                                if (markerPath != String.Empty)
+                                if (!string.IsNullOrEmpty(markerPath))
                                 {
                                     string path = Path.Combine(markerPath, RegionInfo.RegionID.ToString() + ".ready");
                                     try
@@ -2304,7 +2297,7 @@ namespace OpenSim.Region.Framework.Scenes
             //                    RegionInfo.RegionLocX, RegionInfo.RegionLocY,
             //                    RegionInfo.RegionSizeX, RegionInfo.RegionSizeY);
 
-            if (error != String.Empty)
+            if (!string.IsNullOrEmpty(error))
                 throw new Exception(error);
         }
 
@@ -6112,7 +6105,7 @@ Environment.Exit(1);
             // We need to propagate the new image UUID to the grid service
             // so that all simulators can retrieve it
             string error = GridService.RegisterRegion(RegionInfo.ScopeID, new GridRegion(RegionInfo));
-            if (error != string.Empty)
+            if (!string.IsNullOrEmpty(error))
                 throw new Exception(error);
             if(m_generateMaptiles)
                 m_mapGenerationTimer.Start();

@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Text;
 using Mono.Data.SqliteClient;
 using OpenMetaverse;
-using OpenSim.Framework;
 
 namespace OpenSim.Region.UserStatistics
 {

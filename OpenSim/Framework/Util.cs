@@ -55,8 +55,6 @@ using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 using Amib.Threading;
 using System.Collections.Concurrent;
-using System.Collections.Specialized;
-using System.Web;
 
 namespace OpenSim.Framework
 {
@@ -2481,7 +2479,7 @@ namespace OpenSim.Framework
             // Glob
 
             path = vol;
-            if (vol != String.Empty)
+            if (!string.IsNullOrEmpty(vol))
                 path += new String(new char[] {Path.VolumeSeparatorChar, Path.DirectorySeparatorChar});
             else
                 path = new String(new char[] {Path.DirectorySeparatorChar});
@@ -2542,7 +2540,7 @@ namespace OpenSim.Framework
 
         public static string ServerURIasIP(string uri)
         {
-            if (uri == string.Empty)
+            if (string.IsNullOrEmpty(uri))
                 return string.Empty;
 
             // Get rid of eventual slashes at the end
@@ -3531,7 +3529,7 @@ namespace OpenSim.Framework
         /// <returns></returns>
         public static IPEndPoint GetClientIPFromXFF(string xff)
         {
-            if (xff == string.Empty)
+            if (string.IsNullOrEmpty(xff))
                 return null;
 
             string[] parts = xff.Split(new char[] { ',' });

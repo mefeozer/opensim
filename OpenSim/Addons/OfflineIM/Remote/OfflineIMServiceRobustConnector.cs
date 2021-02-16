@@ -27,7 +27,6 @@
 
 using System;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 using System.Collections.Generic;
 using System.IO;
@@ -53,7 +52,7 @@ namespace OpenSim.OfflineIM
         public OfflineIMServiceRobustConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)
         {
-            if (configName != String.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             m_log.DebugFormat("[OfflineIM.V2.RobustConnector]: Starting with config name {0}", m_ConfigName);

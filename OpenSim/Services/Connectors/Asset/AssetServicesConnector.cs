@@ -27,16 +27,11 @@
 
 using log4net;
 using System;
-using System.Threading;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
-using System.Timers;
 using Nini.Config;
 using OpenSim.Framework;
-using OpenSim.Framework.Monitoring;
-using OpenSim.Framework.ServiceAuth;
 using OpenSim.Services.Interfaces;
 using OpenMetaverse;
 
@@ -326,7 +321,7 @@ namespace OpenSim.Services.Connectors
             // trigger since current callers don't pass emtpy IDs
             // We need the asset ID to route the request to the proper
             // cluster member, so we can't have the server assign one.
-            if (asset.ID == string.Empty || asset.ID == stringUUIDZero)
+            if (string.IsNullOrEmpty(asset.ID) || asset.ID == stringUUIDZero)
             {
                 if (asset.FullID == UUID.Zero)
                 {

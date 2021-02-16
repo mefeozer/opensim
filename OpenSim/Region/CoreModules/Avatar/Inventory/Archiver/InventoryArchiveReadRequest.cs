@@ -30,9 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
-using System.Threading;
 using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 using log4net;
 using OpenMetaverse;
@@ -42,7 +40,6 @@ using OpenSim.Framework.Serialization.External;
 using OpenSim.Region.CoreModules.World.Archiver;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.Framework.Scenes.Serialization;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver

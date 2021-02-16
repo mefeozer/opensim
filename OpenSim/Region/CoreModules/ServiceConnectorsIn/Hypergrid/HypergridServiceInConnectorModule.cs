@@ -27,19 +27,15 @@
 
 using System;
 using System.Reflection;
-using System.Collections.Generic;
 using log4net;
 using Mono.Addins;
 using Nini.Config;
-using OpenSim.Framework;
 using OpenSim.Framework.Servers;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Server.Base;
-using OpenSim.Server.Handlers.Base;
 using OpenSim.Server.Handlers.Hypergrid;
 using OpenSim.Services.Interfaces;
-using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 
 namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Hypergrid
 {
@@ -71,7 +67,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Hypergrid
                     if (fconfig != null)
                     {
                         m_LocalServiceDll = fconfig.GetString("LocalServiceModule", m_LocalServiceDll);
-                        if (m_LocalServiceDll == string.Empty)
+                        if (string.IsNullOrEmpty(m_LocalServiceDll))
                             m_log.WarnFormat("[HGGRID IN CONNECTOR]: Friends LocalServiceModule config missing");
                     }
                 }

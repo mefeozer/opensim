@@ -26,10 +26,8 @@
  */
 
 using System;
-using System.Collections;
 using System.Net;
 using System.Text;
-using log4net;
 using Nini.Config;
 using Mono.Addins;
 using OpenMetaverse;

@@ -30,11 +30,9 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Data;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using log4net;
 using OpenMetaverse;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace OpenSim.Data.PGSQL
 {

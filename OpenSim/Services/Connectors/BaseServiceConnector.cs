@@ -1,5 +1,4 @@
-﻿using System;
-using OpenSim.Framework;
+﻿using OpenSim.Framework;
 using OpenSim.Framework.ServiceAuth;
 
 using Nini.Config;

@@ -26,17 +26,10 @@
  */
 
 using System;
-using System.IO;
-using System.Threading;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Region.CoreModules;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Interfaces;
-using OpenSim.Region.Framework.Interfaces;
 
 namespace OpenSim.Region.ScriptEngine.Shared
 {

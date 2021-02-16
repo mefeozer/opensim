@@ -27,13 +27,10 @@
 
 using log4net;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Nini.Config;
 using OpenSim.Framework;
 using OpenSim.Services.Interfaces;
-using OpenMetaverse;
 
 namespace OpenSim.Services.Connectors
 {
@@ -72,7 +69,7 @@ namespace OpenSim.Services.Connectors
             string serviceURI = authorizationConfig.GetString("AuthorizationServerURI",
                     String.Empty);
 
-            if (serviceURI == String.Empty)
+            if (string.IsNullOrEmpty(serviceURI))
             {
                 m_log.Error("[AUTHORIZATION CONNECTOR]: No Server URI named in section AuthorizationService");
                 throw new Exception("Authorization connector init error");

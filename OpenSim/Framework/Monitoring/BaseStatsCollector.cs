@@ -28,7 +28,6 @@
 using System;
 using System.Diagnostics;
 using System.Text;
-using OpenMetaverse;
 using OpenMetaverse.StructuredData;
 
 namespace OpenSim.Framework.Monitoring

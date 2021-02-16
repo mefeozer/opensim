@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Threading;
 
@@ -43,7 +42,6 @@ using log4net;
 using OpenMetaverse;
 
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Services.Interfaces;
 
 

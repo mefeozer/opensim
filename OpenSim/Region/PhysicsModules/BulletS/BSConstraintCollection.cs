@@ -26,14 +26,11 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using log4net;
-using OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
 
-public sealed class BSConstraintCollection : IDisposable
+    public sealed class BSConstraintCollection : IDisposable
 {
     // private static readonly ILog m_log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     // private static readonly string LogHeader = "[CONSTRAINT COLLECTION]";

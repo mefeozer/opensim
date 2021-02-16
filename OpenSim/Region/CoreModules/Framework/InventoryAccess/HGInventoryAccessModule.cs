@@ -30,12 +30,8 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using OpenSim.Framework;
-using OpenSim.Framework.Client;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Services.Connectors.Hypergrid;
-using OpenSim.Services.Interfaces;
-using OpenSim.Server.Base;
 
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 
@@ -218,7 +214,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
             if (type == AssetType.Link)
                 return;
 
-            if (IsForeignUser(avatarID, out string userAssetServer) && userAssetServer != string.Empty && m_OutboundPermission)
+            if (IsForeignUser(avatarID, out string userAssetServer) && !string.IsNullOrEmpty(userAssetServer) && m_OutboundPermission)
             {
                 m_assMapper.Post(assetID, avatarID, userAssetServer);
             }
@@ -356,10 +352,10 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 return;
             }
 
-            if (isForeignSender && senderAssetServer != string.Empty)
+            if (isForeignSender && !string.IsNullOrEmpty(senderAssetServer))
                 m_assMapper.Get(item.AssetID, sender, senderAssetServer);
 
-            if (isForeignReceiver && receiverAssetServer != string.Empty && m_OutboundPermission)
+            if (isForeignReceiver && !string.IsNullOrEmpty(receiverAssetServer) && m_OutboundPermission)
                 m_assMapper.Post(item.AssetID, receiver, receiverAssetServer);
         }
 
@@ -411,7 +407,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
         private bool IsLocalInventoryAssetsUser(UUID uuid, out string assetsURL)
         {
             assetsURL = UserManagementModule.GetUserServerURL(uuid, "AssetServerURI");
-            if (assetsURL == string.Empty)
+            if (string.IsNullOrEmpty(assetsURL))
             {
                 AgentCircuitData agent = m_Scene.AuthenticateHandler.GetAgentCircuitData(uuid);
                 if (agent != null)

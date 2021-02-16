@@ -50,7 +50,7 @@ namespace OpenSim.Server.Handlers.Avatar
             string avatarService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (avatarService == String.Empty)
+            if (string.IsNullOrEmpty(avatarService))
                 throw new Exception("No LocalServiceModule in config file");
 
             Object[] args = new Object[] { config };

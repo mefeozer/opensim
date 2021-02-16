@@ -38,13 +38,11 @@ using log4net;
 using Nini.Config;
 using OpenMetaverse.Packets;
 using OpenSim.Framework;
-using OpenSim.Framework.Console;
 using OpenSim.Framework.Monitoring;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Region.Framework.Interfaces;
 using OpenMetaverse;
 using Mono.Addins;
-using TokenBucket = OpenSim.Region.ClientStack.LindenUDP.TokenBucket;
 
 
 namespace OpenSim.Region.ClientStack.LindenUDP

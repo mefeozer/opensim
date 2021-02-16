@@ -26,17 +26,14 @@
  */
 
 using System;
-using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Timers;
 using System.Net;
 using log4net;
 using NDesk.Options;
@@ -99,7 +96,7 @@ namespace OpenSim
                 m_startupCommandsFile = startupConfig.GetString("startup_console_commands_file", "startup_commands.txt");
                 m_shutdownCommandsFile = startupConfig.GetString("shutdown_console_commands_file", "shutdown_commands.txt");
 
-                if (startupConfig.GetString("console", String.Empty) == String.Empty)
+                if (string.IsNullOrEmpty(startupConfig.GetString("console", String.Empty)))
                     m_gui = startupConfig.GetBoolean("gui", false);
                 else
                     m_consoleType= startupConfig.GetString("console", String.Empty);
@@ -180,12 +177,12 @@ namespace OpenSim
 
             MainServer.Instance.AddSimpleStreamHandler(new SimStatusHandler());
             MainServer.Instance.AddSimpleStreamHandler(new XSimStatusHandler(this));
-            if (userStatsURI != String.Empty)
+            if (!string.IsNullOrEmpty(userStatsURI))
                 MainServer.Instance.AddSimpleStreamHandler(new UXSimStatusHandler(this));
             MainServer.Instance.AddSimpleStreamHandler(new SimRobotsHandler());
             MainServer.Instance.AddSimpleStreamHandler(new IndexPHPHandler(MainServer.Instance));
 
-            if (managedStatsURI != String.Empty)
+            if (!string.IsNullOrEmpty(managedStatsURI))
             {
                 string urlBase = String.Format("/{0}/", managedStatsURI);
                 StatsManager.StatsPassword = managedStatsPassword;
@@ -454,7 +451,7 @@ namespace OpenSim
 
         protected override void ShutdownSpecific()
         {
-            if (m_shutdownCommandsFile != String.Empty)
+            if (!string.IsNullOrEmpty(m_shutdownCommandsFile))
             {
                 RunCommandScript(m_shutdownCommandsFile);
             }
@@ -1320,7 +1317,7 @@ namespace OpenSim
                     // send it off for processing.
                     IEstateModule estateModule = scene.RequestModuleInterface<IEstateModule>();
                     response = estateModule.CreateEstate(estateName, userID);
-                    if (response == String.Empty)
+                    if (string.IsNullOrEmpty(response))
                     {
                         List<int> estates = scene.EstateDataService.GetEstates(estateName);
                         response = String.Format("Estate {0} created as \"{1}\"", estates.ElementAt(0), estateName);
@@ -1391,7 +1388,7 @@ namespace OpenSim
                         if (account != null)
                             response = estateModule.SetEstateOwner(estateId, account);
 
-                        if (response == String.Empty)
+                        if (string.IsNullOrEmpty(response))
                         {
                             response = String.Format("Estate owner changed to {0} ({1} {2})", account.PrincipalID, account.FirstName, account.LastName);
                         }
@@ -1439,7 +1436,7 @@ namespace OpenSim
                         // send it off for processing.
                         response = estateModule.SetEstateName(estateId, estateName);
 
-                        if (response == String.Empty)
+                        if (string.IsNullOrEmpty(response))
                         {
                             response = String.Format("Estate {0} renamed to \"{1}\"", estateId, estateName);
                         }
@@ -1490,7 +1487,7 @@ namespace OpenSim
             // send it off for processing.
             IEstateModule estateModule = scene.RequestModuleInterface<IEstateModule>();
             response = estateModule.SetRegionEstate(scene.RegionInfo, estateId);
-            if (response == String.Empty)
+            if (string.IsNullOrEmpty(response))
             {
                 estateModule.TriggerRegionInfoChange();
                 estateModule.sendRegionHandshakeToAll();

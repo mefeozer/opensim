@@ -93,7 +93,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
             string serviceDll = userConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (serviceDll == String.Empty)
+            if (string.IsNullOrEmpty(serviceDll))
             {
                 m_log.Error("[MuteList LOCALCONNECTOR]: No LocalServiceModule named in section MuteListService");
                 return;

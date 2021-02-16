@@ -32,7 +32,6 @@ using System.Threading;
 using OpenMetaverse;
 using OpenMetaverse.Packets;
 using OpenSim.Framework;
-using OpenSim.Services.Interfaces;
 
 namespace OpenSim.Region.Framework.Scenes
 {

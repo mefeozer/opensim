@@ -27,8 +27,6 @@
 
 using System.Collections;
 using System.IO;
-using System.Text;
-using OpenSim.Framework.Servers;
 using OpenSim.Framework.Servers.HttpServer;
 
 namespace OpenSim.Framework.Capabilities

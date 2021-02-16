@@ -38,7 +38,6 @@ using OpenSim.Server.Base;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Interfaces;
-using OpenSim.Services.Connectors;
 using OpenMetaverse;
 
 namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
@@ -114,7 +113,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
                     string localDll = inventoryConfig.GetString("LocalGridInventoryService",
                             String.Empty);
  
-                    if (localDll == String.Empty)
+                    if (string.IsNullOrEmpty(localDll))
                     {
                         m_log.Error("[HG INVENTORY CONNECTOR]: No LocalGridInventoryService named in section InventoryService");
                         //return;
@@ -241,7 +240,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
                         if (aCircuit.ServiceURLs.ContainsKey("InventoryServerURI"))
                         {
                             inventoryURL = aCircuit.ServiceURLs["InventoryServerURI"].ToString();
-                            if (inventoryURL != null && inventoryURL != string.Empty)
+                            if (inventoryURL != null && !string.IsNullOrEmpty(inventoryURL))
                             {
                                 inventoryURL = inventoryURL.Trim(new char[] { '/' });
                                 m_InventoryURLs[userID] = inventoryURL;

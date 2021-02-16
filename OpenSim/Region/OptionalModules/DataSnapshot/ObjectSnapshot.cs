@@ -33,7 +33,6 @@ using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Region.DataSnapshot.Interfaces;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 
 namespace OpenSim.Region.DataSnapshot.Providers
@@ -161,7 +160,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
                         xmlobject.AppendChild(node);
 
                         string bestImage = GuessImage(obj);
-                        if (bestImage != string.Empty)
+                        if (!string.IsNullOrEmpty(bestImage))
                         {
                             node = nodeFactory.CreateNode(XmlNodeType.Element, "image", "");
                             node.InnerText = bestImage;

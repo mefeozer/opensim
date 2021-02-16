@@ -25,23 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Threading;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
-using OpenSim.Data;
 using OpenSim.Framework;
-using OpenSim.Framework.Serialization;
-using OpenSim.Framework.Serialization.External;
 using OpenSim.Region.CoreModules.Avatar.Inventory.Archiver;
-using OpenSim.Region.CoreModules.Framework.InventoryAccess;
 using OpenSim.Region.Framework.Scenes;
-using OpenSim.Region.Framework.Scenes.Serialization;
-using OpenSim.Services.Interfaces;
 using OpenSim.Tests.Common;
 
 namespace OpenSim.Region.CoreModules.Framework.InventoryAccess.Tests

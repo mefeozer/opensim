@@ -24,16 +24,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 using Nini.Config;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
 
-public struct MaterialAttributes
+    public struct MaterialAttributes
 {
     // Material type values that correspond with definitions for LSL
     public enum Material : int

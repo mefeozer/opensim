@@ -30,7 +30,6 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using OpenSim.Framework;
 using OpenMetaverse;
-using log4net;
 using GridRegion = OpenSim.Services.Interfaces.GridRegion;
 using Timer = System.Threading.Timer;
 using ReaderWriterLockSlim = System.Threading.ReaderWriterLockSlim;

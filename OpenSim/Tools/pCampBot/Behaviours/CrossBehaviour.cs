@@ -32,7 +32,6 @@ using System.Threading;
 using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
-using pCampBot.Interfaces;
 
 namespace pCampBot
 {

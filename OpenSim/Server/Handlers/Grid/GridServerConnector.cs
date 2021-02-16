@@ -50,7 +50,7 @@ namespace OpenSim.Server.Handlers.Grid
             string gridService = serverConfig.GetString("LocalServiceModule",
                     String.Empty);
 
-            if (gridService == String.Empty)
+            if (string.IsNullOrEmpty(gridService))
                 throw new Exception("No LocalServiceModule in config file");
 
             Object[] args = new Object[] { config };

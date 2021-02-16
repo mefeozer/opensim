@@ -26,7 +26,6 @@
  */
 
 using System;
-using System.IO;
 using System.Reflection;
 using OpenMetaverse;
 using log4net;
@@ -546,7 +545,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             Scene s = (Scene)ins;
 
-            if (objXMLData == String.Empty)
+            if (string.IsNullOrEmpty(objXMLData))
                 return;
 
             IScriptModule scriptModule = null;

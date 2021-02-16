@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -96,7 +95,7 @@ namespace OpenSim.Services.HypergridService
                 string gridUserService = serverConfig.GetString("GridUserService", string.Empty);
                 string bansService = serverConfig.GetString("BansService", string.Empty);
                 // These are mandatory, the others aren't
-                if (gridService == string.Empty || presenceService == string.Empty)
+                if (string.IsNullOrEmpty(gridService) || string.IsNullOrEmpty(presenceService))
                     throw new Exception("Incomplete specifications, Gatekeeper Service cannot function.");
 
                 string scope = serverConfig.GetString("ScopeID", UUID.Zero.ToString());
@@ -138,18 +137,18 @@ namespace OpenSim.Services.HypergridService
                 m_GridService = ServerUtils.LoadPlugin<IGridService>(gridService, args);
                 m_PresenceService = ServerUtils.LoadPlugin<IPresenceService>(presenceService, args);
 
-                if (accountService != string.Empty)
+                if (!string.IsNullOrEmpty(accountService))
                     m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(accountService, args);
-                if (homeUsersService != string.Empty)
+                if (!string.IsNullOrEmpty(homeUsersService))
                     m_UserAgentService = ServerUtils.LoadPlugin<IUserAgentService>(homeUsersService, args);
-                if (gridUserService != string.Empty)
+                if (!string.IsNullOrEmpty(gridUserService))
                     m_GridUserService = ServerUtils.LoadPlugin<IGridUserService>(gridUserService, args);
-                if (bansService != string.Empty)
+                if (!string.IsNullOrEmpty(bansService))
                     m_BansService = ServerUtils.LoadPlugin<IBansService>(bansService, args);
 
                 if (simService != null)
                     m_SimulationService = simService;
-                else if (simulationService != string.Empty)
+                else if (!string.IsNullOrEmpty(simulationService))
                         m_SimulationService = ServerUtils.LoadPlugin<ISimulationService>(simulationService, args);
 
                 string[] possibleAccessControlConfigSections = new string[] { "AccessControl", "GatekeeperService" };
@@ -200,13 +199,13 @@ namespace OpenSim.Services.HypergridService
             regionHandle = 0;
             sizeX = (int)Constants.RegionSize;
             sizeY = (int)Constants.RegionSize;
-            externalName = m_gatekeeperURL + ((regionName != string.Empty) ? " " + regionName : "");
+            externalName = m_gatekeeperURL + ((!string.IsNullOrEmpty(regionName)) ? " " + regionName : "");
             imageURL = string.Empty;
             reason = string.Empty;
             GridRegion region = null;
 
             //m_log.DebugFormat("[GATEKEEPER SERVICE]: Request to link to {0}", (regionName == string.Empty)? "default region" : regionName);
-            if (!m_AllowTeleportsToAnyRegion || regionName == string.Empty)
+            if (!m_AllowTeleportsToAnyRegion || string.IsNullOrEmpty(regionName))
             {
                 List<GridRegion> defs = m_GridService.GetDefaultHypergridRegions(m_ScopeID);
                 if (defs != null && defs.Count > 0)

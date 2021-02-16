@@ -25,11 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
-using log4net;
 using OpenMetaverse;
 using OpenSim.Framework;
 using OpenSim.Services.Interfaces;
@@ -176,7 +173,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         {
             List<InventoryFolderBase> foundFolders = new List<InventoryFolderBase>();
 
-            if (path == string.Empty)
+            if (string.IsNullOrEmpty(path))
             {
                 foundFolders.Add(startFolder);
                 return foundFolders;

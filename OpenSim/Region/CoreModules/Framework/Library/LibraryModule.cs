@@ -32,7 +32,6 @@ using System.Reflection;
 using OpenSim.Framework;
 
 using OpenSim.Region.CoreModules.Avatar.Inventory.Archiver;
-using OpenSim.Region.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using OpenSim.Services.Interfaces;
@@ -70,7 +69,7 @@ namespace OpenSim.Region.CoreModules.Framework.Library
                 {
                     string dllName = libConfig.GetString("LocalServiceModule", string.Empty);
                     m_log.Debug("[LIBRARY MODULE]: Library service dll is " + dllName);
-                    if (dllName != string.Empty)
+                    if (!string.IsNullOrEmpty(dllName))
                     {
                         Object[] args = new Object[] { config };
                         m_Library = ServerUtils.LoadPlugin<ILibraryService>(dllName, args);

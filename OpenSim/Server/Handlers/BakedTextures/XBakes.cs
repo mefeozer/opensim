@@ -27,14 +27,12 @@
 
 using System;
 using System.IO;
-using System.Text;
 using System.Reflection;
 using OpenSim.Framework;
 using OpenSim.Services.Base;
 using OpenSim.Services.Interfaces;
 using Nini.Config;
 using log4net;
-using OpenMetaverse;
 
 namespace OpenSim.Server.Handlers.BakedTextures
 {
@@ -58,7 +56,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
             }
 
             m_FSBase = assetConfig.GetString("BaseDirectory", string.Empty);
-            if (m_FSBase == string.Empty)
+            if (string.IsNullOrEmpty(m_FSBase))
             {
                 m_log.ErrorFormat("[BAKES]: BaseDirectory not specified");
                 throw new Exception("Configuration error");

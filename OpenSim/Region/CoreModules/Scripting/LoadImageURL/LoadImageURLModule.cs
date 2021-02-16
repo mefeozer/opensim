@@ -33,7 +33,6 @@ using Nini.Config;
 using OpenMetaverse;
 using OpenMetaverse.Imaging;
 using OpenSim.Framework;
-using OpenSim.Region.CoreModules.Scripting.DynamicTexture;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
 using log4net;

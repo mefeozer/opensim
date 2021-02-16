@@ -713,7 +713,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     seconds -= 15;
             }
 
-            if (msg == String.Empty)
+            if (string.IsNullOrEmpty(msg))
                 restartModule.ScheduleRestart(UUID.Zero, "Region: " + World.RegionInfo.RegionName + " is about to restart.\n\nIf you stay here you will be logged out.\n\n\nTime remaining: {0}.\n", times.ToArray(), true);
 
             else
@@ -785,7 +785,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.VeryHigh, "osSetDynamicTextureURL");
 
-            if (dynamicID == String.Empty)
+            if (string.IsNullOrEmpty(dynamicID))
             {
                 IDynamicTextureManager textureManager = World.RequestModuleInterface<IDynamicTextureManager>();
                 UUID createdTexture =
@@ -806,7 +806,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.VeryHigh, "osSetDynamicTextureURLBlend");
 
-            if (dynamicID == String.Empty)
+            if (string.IsNullOrEmpty(dynamicID))
             {
                 IDynamicTextureManager textureManager = World.RequestModuleInterface<IDynamicTextureManager>();
                 UUID createdTexture =
@@ -827,7 +827,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.VeryHigh, "osSetDynamicTextureURLBlendFace");
 
-            if (dynamicID == String.Empty)
+            if (string.IsNullOrEmpty(dynamicID))
             {
                 IDynamicTextureManager textureManager = World.RequestModuleInterface<IDynamicTextureManager>();
                 UUID createdTexture =
@@ -854,12 +854,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.VeryLow, "osSetDynamicTextureData");
 
-            if (dynamicID == String.Empty)
+            if (string.IsNullOrEmpty(dynamicID))
             {
                 IDynamicTextureManager textureManager = World.RequestModuleInterface<IDynamicTextureManager>();
                 if (textureManager != null)
                 {
-                    if (extraParams == String.Empty)
+                    if (string.IsNullOrEmpty(extraParams))
                     {
                         extraParams = "256";
                     }
@@ -883,12 +883,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.VeryLow, "osSetDynamicTextureDataBlend");
 
-            if (dynamicID == String.Empty)
+            if (string.IsNullOrEmpty(dynamicID))
             {
                 IDynamicTextureManager textureManager = World.RequestModuleInterface<IDynamicTextureManager>();
                 if (textureManager != null)
                 {
-                    if (extraParams == String.Empty)
+                    if (string.IsNullOrEmpty(extraParams))
                     {
                         extraParams = "256";
                     }
@@ -911,12 +911,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.VeryLow , "osSetDynamicTextureDataBlendFace");
 
-            if (dynamicID == String.Empty)
+            if (string.IsNullOrEmpty(dynamicID))
             {
                 IDynamicTextureManager textureManager = World.RequestModuleInterface<IDynamicTextureManager>();
                 if (textureManager != null)
                 {
-                    if (extraParams == String.Empty)
+                    if (string.IsNullOrEmpty(extraParams))
                     {
                         extraParams = "256";
                     }
@@ -2976,7 +2976,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             if((createFlags & NPCOptionsFlags.NoNPCGroup) == 0)
             {
-                if (firstname != String.Empty || lastname != String.Empty)
+                if (!string.IsNullOrEmpty(firstname) || !string.IsNullOrEmpty(lastname))
                 {
                     if (firstname != "Shown outfit:")
                         groupTitle = "- NPC -";

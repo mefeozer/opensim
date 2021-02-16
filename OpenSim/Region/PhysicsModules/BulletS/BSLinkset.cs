@@ -26,14 +26,13 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 using OMV = OpenMetaverse;
 
 namespace OpenSim.Region.PhysicsModule.BulletS
 {
 
-public abstract class BSLinkset
+    public abstract class BSLinkset
 {
     // private static string LogHeader = "[BULLETSIM LINKSET]";
 

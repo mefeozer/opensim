@@ -27,7 +27,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 using System.Net;
 using Nini.Config;
 using OpenSim.Server.Base;
@@ -45,7 +44,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
         public XBakesConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            if (configName != string.Empty)
+            if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
             IConfig serverConfig = config.Configs[m_ConfigName];

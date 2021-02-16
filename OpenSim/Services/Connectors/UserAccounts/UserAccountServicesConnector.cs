@@ -28,12 +28,9 @@
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Nini.Config;
 using OpenSim.Framework;
-
-using OpenSim.Framework.ServiceAuth;
 using OpenSim.Server.Base;
 using OpenSim.Services.Interfaces;
 using OpenMetaverse;
@@ -156,7 +153,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply == null || (reply != null && reply == string.Empty))
+                if (reply == null || (reply != null && string.IsNullOrEmpty(reply)))
                 {
                     m_log.DebugFormat("[ACCOUNT CONNECTOR]: GetUserAccounts received null or empty reply");
                     return null;
@@ -240,7 +237,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply == null || (reply != null && reply == string.Empty))
+                if (reply == null || (reply != null && string.IsNullOrEmpty(reply)))
                 {
                     m_log.DebugFormat("[ACCOUNT CONNECTOR]: GetMultiUserAccounts received null or empty reply");
                     return null;
@@ -364,7 +361,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply == null || (reply != null && reply == string.Empty))
+                if (reply == null || (reply != null && string.IsNullOrEmpty(reply)))
                 {
                     m_log.DebugFormat("[ACCOUNT CONNECTOR]: GetUserAccount received null or empty reply");
                     return null;
@@ -401,7 +398,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply != string.Empty)
+                if (!string.IsNullOrEmpty(reply))
                 {
                     //m_log.DebugFormat("[ACCOUNTS CONNECTOR]: reply = {0}", reply);
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);

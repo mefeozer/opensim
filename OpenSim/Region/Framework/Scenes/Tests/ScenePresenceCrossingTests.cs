@@ -27,20 +27,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Nini.Config;
 using NUnit.Framework;
 using OpenMetaverse;
 using OpenSim.Framework;
-using OpenSim.Framework.Servers;
-using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.CoreModules.Framework;
 using OpenSim.Region.CoreModules.Framework.EntityTransfer;
 using OpenSim.Region.CoreModules.ServiceConnectorsOut.Simulation;
 using OpenSim.Region.CoreModules.World.Permissions;
 using OpenSim.Tests.Common;
-using OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups;
-using System.Threading;
 
 namespace OpenSim.Region.Framework.Scenes.Tests
 {

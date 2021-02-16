@@ -30,13 +30,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Runtime;
-using System.Text;
 using System.Threading;
 
 using log4net;
 using OpenMetaverse;
 using OpenMetaverse.Packets;
-using OpenMetaverse.Messages.Linden;
 using OpenMetaverse.StructuredData;
 
 using OpenSim.Framework;
@@ -3707,7 +3705,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             reply.Data.ParcelID = parcelID;
             reply.Data.OwnerID = land.OwnerID;
             reply.Data.Name = Utils.StringToBytes(land.Name);
-            if (land.Description != null && land.Description != String.Empty)
+            if (land.Description != null && !string.IsNullOrEmpty(land.Description))
                 reply.Data.Desc = Utils.StringToBytes(land.Description.Substring(0, land.Description.Length > 254 ? 254: land.Description.Length));
             else
                 reply.Data.Desc = new Byte[0];

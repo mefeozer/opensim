@@ -28,12 +28,8 @@
 using System;
 using System.Collections.Generic;
 using OpenMetaverse;
-using log4net;
 using Nini.Config;
-using System.Reflection;
 using OpenSim.Services.Base;
-using OpenSim.Services.Interfaces;
-using OpenSim.Data;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Interfaces;
 using OpenSim.Region.Framework.Scenes;
@@ -71,7 +67,7 @@ namespace OpenSim.Services.SimulationService
             }
 
             // We tried, but this doesn't exist. We can't proceed
-            if (dllName == String.Empty)
+            if (string.IsNullOrEmpty(dllName))
                 throw new Exception("No StorageProvider configured");
 
             m_database = LoadPlugin<ISimulationDataStore>(dllName, new Object[] { connString });

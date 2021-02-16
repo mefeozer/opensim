@@ -26,10 +26,8 @@
  */
 
 using System;
-using System.Reflection;
 using Nini.Config;
 using OpenSim.Data;
-using OpenSim.Services.Interfaces;
 using OpenSim.Services.Base;
 
 namespace OpenSim.Services.UserAccountService
@@ -57,7 +55,7 @@ namespace OpenSim.Services.UserAccountService
 
             dllName = userConfig.GetString("StorageProvider", dllName);
 
-            if (dllName == String.Empty)
+            if (string.IsNullOrEmpty(dllName))
                 throw new Exception("No StorageProvider configured");
 
             connString = userConfig.GetString("ConnectionString", connString);

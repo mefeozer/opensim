@@ -3,7 +3,6 @@
  */
 
 using System;
-using System.Collections.Concurrent;
 using OpenSim.Framework;
 using OpenSim.Region.PhysicsModules.SharedBase;
 using log4net;

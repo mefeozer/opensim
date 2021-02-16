@@ -32,8 +32,6 @@ using System.Text.RegularExpressions;
 using log4net;
 using Nini.Config;
 using OpenSim.Framework;
-using OpenSim.Region.Framework.Interfaces;
-using OpenSim.Region.Framework.Scenes;
 
 namespace OpenSim.Region.OptionalModules.Avatar.Chat
 {

@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using OpenMetaverse;
 using OpenSimAssetType = OpenSim.Framework.SLUtil.OpenSimAssetType;
 
