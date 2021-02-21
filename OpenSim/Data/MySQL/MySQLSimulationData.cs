@@ -835,7 +835,7 @@ namespace OpenSim.Data.MySQL
                         if(!result.Read())
                         {
                             dbcon.Close();
-                            return String.Empty;
+                            return string.Empty;
                         }
                         else
                         {
@@ -1011,7 +1011,7 @@ namespace OpenSim.Data.MySQL
             if (row["Name"] != DBNull.Value)
                 prim.Name = (string)row["Name"];
             else
-                prim.Name = String.Empty;
+                prim.Name = string.Empty;
             // Various text fields
             prim.Text = (string)row["Text"];
             prim.Color = Color.FromArgb((int)row["ColorA"],
@@ -1151,7 +1151,7 @@ namespace OpenSim.Data.MySQL
 
             if (!(row["KeyframeMotion"] is DBNull))
             {
-                Byte[] data = (byte[])row["KeyframeMotion"];
+                byte[] data = (byte[])row["KeyframeMotion"];
                 if (data.Length > 0)
                     prim.KeyframeMotion = KeyframeMotion.FromData(null, data);
                 else
@@ -1185,7 +1185,7 @@ namespace OpenSim.Data.MySQL
 
             if (!(row["sopanims"] is DBNull))
             {
-                Byte[] data = (byte[])row["sopanims"];
+                byte[] data = (byte[])row["sopanims"];
                 if (data.Length > 0)
                     prim.DeSerializeAnimations(data);
                 else
@@ -1224,10 +1224,10 @@ namespace OpenSim.Data.MySQL
                 taskItem.InvType       = Convert.ToInt32(row["invType"]);
                 taskItem.Type          = Convert.ToInt32(row["assetType"]);
 
-                taskItem.Name          = (String)row["name"];
-                taskItem.Description   = (String)row["description"];
+                taskItem.Name          = (string)row["name"];
+                taskItem.Description   = (string)row["description"];
                 taskItem.CreationDate  = Convert.ToUInt32(row["creationDate"]);
-                taskItem.CreatorIdentification = (String)row["creatorID"];
+                taskItem.CreatorIdentification = (string)row["creatorID"];
                 taskItem.OwnerID       = DBGuid.FromDB(row["ownerID"]);
                 taskItem.LastOwnerID   = DBGuid.FromDB(row["lastOwnerID"]);
                 taskItem.GroupID       = DBGuid.FromDB(row["groupID"]);
@@ -1297,7 +1297,7 @@ namespace OpenSim.Data.MySQL
             if (row["loaded_creation_id"] is DBNull)
                 newSettings.LoadedCreationID = "";
             else
-                newSettings.LoadedCreationID = (String) row["loaded_creation_id"];
+                newSettings.LoadedCreationID = (string) row["loaded_creation_id"];
 
             newSettings.TerrainImageID = DBGuid.FromDB(row["map_tile_ID"]);
             newSettings.ParcelImageID = DBGuid.FromDB(row["parcel_tile_ID"]);
@@ -1326,10 +1326,10 @@ namespace OpenSim.Data.MySQL
             newData.LocalID = Convert.ToInt32(row["LocalLandID"]);
 
             // Bitmap is a byte[512]
-            newData.Bitmap = (Byte[]) row["Bitmap"];
+            newData.Bitmap = (byte[]) row["Bitmap"];
 
-            newData.Name = (String) row["Name"];
-            newData.Description = (String) row["Description"];
+            newData.Name = (string) row["Name"];
+            newData.Description = (string) row["Description"];
             newData.OwnerID = DBGuid.FromDB(row["OwnerUUID"]);
             newData.IsGroupOwned = Convert.ToBoolean(row["IsGroupOwned"]);
             newData.Area = Convert.ToInt32(row["Area"]);
@@ -1346,8 +1346,8 @@ namespace OpenSim.Data.MySQL
             newData.LandingType = Convert.ToByte(row["LandingType"]);
             newData.MediaAutoScale = Convert.ToByte(row["MediaAutoScale"]);
             newData.MediaID = DBGuid.FromDB(row["MediaTextureUUID"]);
-            newData.MediaURL = (String) row["MediaURL"];
-            newData.MusicURL = (String) row["MusicURL"];
+            newData.MediaURL = (string) row["MediaURL"];
+            newData.MusicURL = (string) row["MusicURL"];
             newData.PassHours = Convert.ToSingle(row["PassHours"]);
             newData.PassPrice = Convert.ToInt32(row["PassPrice"]);
             UUID authedbuyer = UUID.Zero;
@@ -1592,17 +1592,17 @@ namespace OpenSim.Data.MySQL
             if (prim.KeyframeMotion != null)
                 cmd.Parameters.AddWithValue("KeyframeMotion", prim.KeyframeMotion.Serialize());
             else
-                cmd.Parameters.AddWithValue("KeyframeMotion", new Byte[0]);
+                cmd.Parameters.AddWithValue("KeyframeMotion", new byte[0]);
 
             if (prim.PhysicsInertia != null)
                 cmd.Parameters.AddWithValue("PhysInertia", prim.PhysicsInertia.ToXml2());
             else
-                cmd.Parameters.AddWithValue("PhysInertia", String.Empty);
+                cmd.Parameters.AddWithValue("PhysInertia", string.Empty);
 
             if (prim.VehicleParams != null)
                 cmd.Parameters.AddWithValue("Vehicle", prim.VehicleParams.ToXml2());
             else
-                cmd.Parameters.AddWithValue("Vehicle", String.Empty);
+                cmd.Parameters.AddWithValue("Vehicle", string.Empty);
 
             if (prim.DynAttrs != null && prim.DynAttrs.CountNamespaces > 0)
                 cmd.Parameters.AddWithValue("DynAttrs", prim.DynAttrs.ToXml());

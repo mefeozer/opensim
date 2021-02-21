@@ -41,7 +41,7 @@ namespace OpenSim.Framework.Tests
             Assert.That(prime1 == 8419, "Prime Number Get Prime Failed, 7919 is prime");
             Assert.That(PrimeNumberHelper.IsPrime(prime1),"Prime1 should be prime");
             Assert.That(PrimeNumberHelper.IsPrime(7919), "7919 is prime but is falsely failing the prime test");
-            prime1 = PrimeNumberHelper.GetPrime(Int32.MaxValue - 1);
+            prime1 = PrimeNumberHelper.GetPrime(int.MaxValue - 1);
             Assert.That(prime1 == -1, "prime1 should have been -1 since there are no primes between Int32.MaxValue-1 and Int32.MaxValue");
 
         }

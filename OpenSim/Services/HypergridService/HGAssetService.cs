@@ -70,10 +70,10 @@ namespace OpenSim.Services.HypergridService
             if (string.IsNullOrEmpty(userAccountsDll))
                 throw new Exception("Please specify UserAccountsService in HGAssetService configuration");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userAccountsDll, args);
             if (m_UserAccountService == null)
-                throw new Exception(String.Format("Unable to create UserAccountService from {0}", userAccountsDll));
+                throw new Exception(string.Format("Unable to create UserAccountService from {0}", userAccountsDll));
 
             m_HomeURL = Util.GetConfigVarFromSections<string>(config, "HomeURI",
                 new string[] { "Startup", "Hypergrid", configName }, string.Empty);

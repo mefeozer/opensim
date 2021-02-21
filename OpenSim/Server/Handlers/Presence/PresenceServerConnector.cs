@@ -45,15 +45,15 @@ namespace OpenSim.Server.Handlers.Presence
         {
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
 
             string gridService = serverConfig.GetString("LocalServiceModule",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(gridService))
                 throw new Exception("No LocalServiceModule in config file");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_PresenceService = ServerUtils.LoadPlugin<IPresenceService>(gridService, args);
 
             IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);

@@ -416,10 +416,10 @@ namespace OpenSim.Region.Framework.Scenes
         {
 //            m_log.DebugFormat("[SCENE BASE]: Registering interface {0}", typeof(M));
 
-            List<Object> l = null;
+            List<object> l = null;
             if (!ModuleInterfaces.TryGetValue(typeof(M), out l))
             {
-                l = new List<Object>();
+                l = new List<object>();
                 ModuleInterfaces.Add(typeof(M), l);
             }
 
@@ -450,7 +450,7 @@ namespace OpenSim.Region.Framework.Scenes
             if (mod is IAgentStatefulModule)
                 return;
 
-            List<Object> l;
+            List<object> l;
             if (ModuleInterfaces.TryGetValue(typeof(M), out l))
             {
                 if (l.Remove(mod))
@@ -469,11 +469,11 @@ namespace OpenSim.Region.Framework.Scenes
 
         public void StackModuleInterface<M>(M mod)
         {
-            List<Object> l;
+            List<object> l;
             if (ModuleInterfaces.ContainsKey(typeof(M)))
                 l = ModuleInterfaces[typeof(M)];
             else
-                l = new List<Object>();
+                l = new List<object>();
 
             if (l.Contains(mod))
                 return;
@@ -517,7 +517,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 List<T> ret = new List<T>();
 
-                foreach (Object o in ModuleInterfaces[typeof(T)])
+                foreach (object o in ModuleInterfaces[typeof(T)])
                     ret.Add((T)o);
                 return ret.ToArray();
             }

@@ -48,21 +48,21 @@ namespace OpenSim.Region.CoreModules.World
                     "login enable",
                     "login enable",
                     "Enable simulator logins",
-                    String.Empty,
+                    string.Empty,
                     HandleLoginCommand);
 
             MainConsole.Instance.Commands.AddCommand("Users", true,
                     "login disable",
                     "login disable",
                     "Disable simulator logins",
-                    String.Empty,
+                    string.Empty,
                     HandleLoginCommand);
 
             MainConsole.Instance.Commands.AddCommand("Users", true,
                     "login status",
                     "login status",
                     "Show login status",
-                    String.Empty,
+                    string.Empty,
                     HandleLoginCommand);
         }
 
@@ -131,17 +131,17 @@ namespace OpenSim.Region.CoreModules.World
             {
             case "enable":
                 scene.LoginsEnabled = true;
-                MainConsole.Instance.Output(String.Format("Logins are enabled for region {0}", scene.RegionInfo.RegionName));
+                MainConsole.Instance.Output(string.Format("Logins are enabled for region {0}", scene.RegionInfo.RegionName));
                 break;
             case "disable":
                 scene.LoginsEnabled = false;
-                MainConsole.Instance.Output(String.Format("Logins are disabled for region {0}", scene.RegionInfo.RegionName));
+                MainConsole.Instance.Output(string.Format("Logins are disabled for region {0}", scene.RegionInfo.RegionName));
                 break;
             case "status":
                 if (scene.LoginsEnabled)
-                    MainConsole.Instance.Output(String.Format("Login in {0} are enabled", scene.RegionInfo.RegionName));
+                    MainConsole.Instance.Output(string.Format("Login in {0} are enabled", scene.RegionInfo.RegionName));
                 else
-                    MainConsole.Instance.Output(String.Format("Login in {0} are disabled", scene.RegionInfo.RegionName));
+                    MainConsole.Instance.Output(string.Format("Login in {0} are disabled", scene.RegionInfo.RegionName));
                 break;
             default:
                 MainConsole.Instance.Output("Syntax: login enable|disable|status");

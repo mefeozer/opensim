@@ -39,7 +39,7 @@ namespace OpenSim.Region.DataSnapshot.Interfaces
         XmlNode RequestSnapshotData(XmlDocument document);
         void Initialize(Scene scene, DataSnapshotManager parent);
         Scene GetParentScene { get; }
-        String Name { get; }
+        string Name { get; }
         bool Stale { get; set; }
         event ProviderStale OnStale;
     }

@@ -395,13 +395,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             }
         }
 
-        public static Object[] GetSerializationData(IScriptEngine engine, UUID itemID)
+        public static object[] GetSerializationData(IScriptEngine engine, UUID itemID)
         {
-            List<Object> data = new List<Object>();
+            List<object> data = new List<object>();
 
             lock (staticLock)
             {
-                Object[] listeners = m_Listener[engine].GetSerializationData(itemID);
+                object[] listeners = m_Listener[engine].GetSerializationData(itemID);
                 if (listeners.Length > 0)
                 {
                     data.Add("listener");
@@ -409,7 +409,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     data.AddRange(listeners);
                 }
 
-                Object[] timers=m_Timer[engine].GetSerializationData(itemID);
+                object[] timers=m_Timer[engine].GetSerializationData(itemID);
                 if (timers.Length > 0)
                 {
                     data.Add("timer");
@@ -417,7 +417,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     data.AddRange(timers);
                 }
 
-                Object[] sensors = m_SensorRepeat[engine].GetSerializationData(itemID);
+                object[] sensors = m_SensorRepeat[engine].GetSerializationData(itemID);
                 if (sensors.Length > 0)
                 {
                     data.Add("sensor");
@@ -430,7 +430,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         }
 
         public static void CreateFromData(IScriptEngine engine, uint localID,
-                UUID itemID, UUID hostID, Object[] data)
+                UUID itemID, UUID hostID, object[] data)
         {
             int idx = 0;
             int len;
@@ -443,7 +443,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
                 if (len > 0)
                 {
-                    Object[] item = new Object[len];
+                    object[] item = new object[len];
                     Array.Copy(data, idx, item, 0, len);
 
                     idx+=len;

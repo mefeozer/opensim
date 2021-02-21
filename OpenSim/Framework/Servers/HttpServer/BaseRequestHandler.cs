@@ -75,12 +75,12 @@ namespace OpenSim.Framework.Servers.HttpServer
                 return path.Substring(m_path.Length);
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         protected bool CheckParam(string path)
         {
-            if (String.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
             {
                 return false;
             }

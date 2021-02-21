@@ -33,7 +33,7 @@ namespace OpenSim.Region.Framework.Interfaces
 {
     public interface IWorldCommListenerInfo
     {
-        Object[] GetSerializationData();
+        object[] GetSerializationData();
         UUID GetItemID();
         UUID GetHostID();
         int GetChannel();
@@ -144,8 +144,8 @@ namespace OpenSim.Region.Framework.Interfaces
         void ListenControl(UUID itemID, int handle, int active);
         void ListenRemove(UUID itemID, int handle);
         void DeleteListener(UUID itemID);
-        Object[] GetSerializationData(UUID itemID);
+        object[] GetSerializationData(UUID itemID);
         void CreateFromData(uint localID, UUID itemID, UUID hostID,
-                            Object[] data);
+                            object[] data);
     }
 }

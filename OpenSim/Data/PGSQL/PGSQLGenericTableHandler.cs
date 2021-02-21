@@ -186,7 +186,7 @@ namespace OpenSim.Data.PGSQL
                 else
                     cmd.Parameters.Add(m_database.CreateParameter(field, key));
 
-                string query = String.Format("SELECT * FROM {0} WHERE \"{1}\" = :{1}", m_Realm, field, field);
+                string query = string.Format("SELECT * FROM {0} WHERE \"{1}\" = :{1}", m_Realm, field, field);
 
                 cmd.Connection = conn;
                 cmd.CommandText = query;
@@ -249,9 +249,9 @@ namespace OpenSim.Data.PGSQL
                     terms.Add(" \"" + fields[i] + "\" = :" + fields[i]);
                 }
 
-                string where = String.Join(" AND ", terms.ToArray());
+                string where = string.Join(" AND ", terms.ToArray());
 
-                string query = String.Format("SELECT * FROM {0} WHERE {1}",
+                string query = string.Format("SELECT * FROM {0} WHERE {1}",
                         m_Realm, where);
 
                 cmd.Connection = conn;
@@ -318,7 +318,7 @@ namespace OpenSim.Data.PGSQL
                             data[col] = reader[col].ToString();
 
                             if (data[col] == null)
-                                data[col] = String.Empty;
+                                data[col] = string.Empty;
                         }
 
                         m_DataField.SetValue(row, data);
@@ -336,7 +336,7 @@ namespace OpenSim.Data.PGSQL
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
 
-                string query = String.Format("SELECT * FROM {0} WHERE {1}",
+                string query = string.Format("SELECT * FROM {0} WHERE {1}",
                         m_Realm, where);
                 cmd.Connection = conn;
                 cmd.CommandText = query;
@@ -353,7 +353,7 @@ namespace OpenSim.Data.PGSQL
                 using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
 
-                string query = String.Format("SELECT * FROM {0} WHERE {1}",
+                string query = string.Format("SELECT * FROM {0} WHERE {1}",
                                              m_Realm, where);
                 cmd.Connection = conn;
                 cmd.CommandText = query;
@@ -376,8 +376,8 @@ namespace OpenSim.Data.PGSQL
             {
 
                 StringBuilder query = new StringBuilder();
-                List<String> names = new List<String>();
-                List<String> values = new List<String>();
+                List<string> names = new List<string>();
+                List<string> values = new List<string>();
 
                 foreach (FieldInfo fi in m_Fields.Values)
                 {
@@ -436,9 +436,9 @@ namespace OpenSim.Data.PGSQL
                     List<string> terms = new List<string>();
                     for (int j = 0; j < constraints.Count; j++)
                     {
-                        terms.Add(String.Format(" \"{0}\" = :{0}", constraints[j].Key));
+                        terms.Add(string.Format(" \"{0}\" = :{0}", constraints[j].Key));
                     }
-                    string where = String.Join(" AND ", terms.ToArray());
+                    string where = string.Join(" AND ", terms.ToArray());
                     query.AppendFormat(" WHERE {0} ", where);
 
                 }
@@ -457,8 +457,8 @@ namespace OpenSim.Data.PGSQL
 
                     query = new StringBuilder();
                     query.AppendFormat("INSERT INTO {0} (\"", m_Realm);
-                    query.Append(String.Join("\",\"", names.ToArray()));
-                    query.Append("\") values (" + String.Join(",", values.ToArray()) + ")");
+                    query.Append(string.Join("\",\"", names.ToArray()));
+                    query.Append("\") values (" + string.Join(",", values.ToArray()) + ")");
                     cmd.Connection = conn;
                     cmd.CommandText = query.ToString();
 
@@ -499,9 +499,9 @@ namespace OpenSim.Data.PGSQL
                     terms.Add(" \"" + fields[i] + "\" = :" + fields[i]);
                 }
 
-                string where = String.Join(" AND ", terms.ToArray());
+                string where = string.Join(" AND ", terms.ToArray());
 
-                string query = String.Format("DELETE FROM {0} WHERE {1}", m_Realm, where);
+                string query = string.Format("DELETE FROM {0} WHERE {1}", m_Realm, where);
 
                 cmd.Connection = conn;
                 cmd.CommandText = query;
@@ -535,14 +535,14 @@ namespace OpenSim.Data.PGSQL
                     terms.Add("\"" + fields[i] + "\" = :" + fields[i]);
                 }
 
-                string where = String.Join(" and ", terms.ToArray());
+                string where = string.Join(" and ", terms.ToArray());
 
-                string query = String.Format("select count(*) from {0} where {1}",
+                string query = string.Format("select count(*) from {0} where {1}",
                                              m_Realm, where);
 
                 cmd.CommandText = query;
 
-                Object result = DoQueryScalar(cmd);
+                object result = DoQueryScalar(cmd);
 
                 return Convert.ToInt64(result);
             }
@@ -552,7 +552,7 @@ namespace OpenSim.Data.PGSQL
         {
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
-                string query = String.Format("select count(*) from {0} where {1}",
+                string query = string.Format("select count(*) from {0} where {1}",
                                              m_Realm, where);
 
                 cmd.CommandText = query;

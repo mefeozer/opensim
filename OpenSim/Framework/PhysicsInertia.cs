@@ -228,7 +228,7 @@ namespace OpenSim.Framework
             m_XmlProcessors.Add("INERTIA", ProcessXR_Inertia);
             m_XmlProcessors.Add("IROT", ProcessXR_InertiaRotation);
 
-            reader.ReadStartElement("PhysicsInertia", String.Empty);
+            reader.ReadStartElement("PhysicsInertia", string.Empty);
 
             errors = EReadProcessors(
                 m_XmlProcessors,

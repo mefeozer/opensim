@@ -54,14 +54,14 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (!string.IsNullOrEmpty(configName))
                 m_ConfigName = configName;
 
-            Object[] args = new Object[] { config, m_ConfigName, localConn };
+            object[] args = new object[] { config, m_ConfigName, localConn };
 
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
 
             string theService = serverConfig.GetString("LocalServiceModule",
-                    String.Empty);
+                    string.Empty);
             if (string.IsNullOrEmpty(theService))
                 throw new Exception("No LocalServiceModule in config file");
             m_TheService = ServerUtils.LoadPlugin<IHGFriendsService>(theService, args);
@@ -69,7 +69,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             theService = serverConfig.GetString("UserAgentService", string.Empty);
             if (string.IsNullOrEmpty(theService))
                 throw new Exception("No UserAgentService in " + m_ConfigName);
-            m_UserAgentService = ServerUtils.LoadPlugin<IUserAgentService>(theService, new Object[] { config, localConn });
+            m_UserAgentService = ServerUtils.LoadPlugin<IUserAgentService>(theService, new object[] { config, localConn });
 
             server.AddStreamHandler(new HGFriendsServerPostHandler(m_TheService, m_UserAgentService, localConn));
         }

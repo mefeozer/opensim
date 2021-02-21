@@ -70,16 +70,16 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         public HashSet<BSPhysObject> ObjectsWithNoMoreCollisions = new HashSet<BSPhysObject>();
 
         // All the collision processing is protected with this lock object
-        public Object CollisionLock = new Object();
+        public object CollisionLock = new object();
 
         // Properties are updated here
-        public Object UpdateLock = new Object();
+        public object UpdateLock = new object();
         public HashSet<BSPhysObject> ObjectsWithUpdates = new HashSet<BSPhysObject>();
 
         // Keep track of all the avatars so we can send them a collision event
         //    every tick so OpenSim will update its animation.
         private HashSet<BSPhysObject> AvatarsInScene = new HashSet<BSPhysObject>();
-        private Object AvatarsInSceneLock = new Object();
+        private object AvatarsInSceneLock = new object();
 
         // let my minuions use my logger
         public ILog Logger { get { return m_log; } }
@@ -123,7 +123,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         private bool m_initialized = false;
 
         // Object locked whenever execution is inside the physics engine
-        public Object PhysicsEngineLock = new object();
+        public object PhysicsEngineLock = new object();
         // Flag that is true when the simulator is active and shouldn't be touched
         public bool InSimulationTime { get; private set; }
 
@@ -167,8 +167,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         public delegate void TaintCallback();
         private struct TaintCallbackEntry
         {
-            public String originator;
-            public String ident;
+            public string originator;
+            public string ident;
             public TaintCallback callback;
             public TaintCallbackEntry(string pIdent, TaintCallback pCallBack)
             {
@@ -183,7 +183,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 callback = pCallBack;
             }
         }
-        private Object _taintLock = new Object();   // lock for using the next object
+        private object _taintLock = new object();   // lock for using the next object
         private List<TaintCallbackEntry> _taintOperations;
         private Dictionary<string, TaintCallbackEntry> _postTaintOperations;
         private List<TaintCallbackEntry> _postStepOperations;
@@ -1213,11 +1213,11 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         //     TaintedObject(BSScene.DetailLogZero, pIdent, pCallback);
         // }
         // NOTE: 'inTaintTime' is no longer used. This entry exists so all the calls don't have to be changed.
-        public void TaintedObject(bool inTaintTime, uint pOriginator, String pIdent, TaintCallback pCallback)
+        public void TaintedObject(bool inTaintTime, uint pOriginator, string pIdent, TaintCallback pCallback)
         {
             TaintedObject(m_physicsLoggingEnabled ? pOriginator.ToString() : BSScene.DetailLogZero, pIdent, pCallback);
         }
-        public void TaintedObject(uint pOriginator, String pIdent, TaintCallback pCallback)
+        public void TaintedObject(uint pOriginator, string pIdent, TaintCallback pCallback)
         {
             TaintedObject(m_physicsLoggingEnabled ? pOriginator.ToString() : BSScene.DetailLogZero, pIdent, pCallback);
         }
@@ -1311,7 +1311,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         // Schedule an update to happen after all the regular taints are processed.
         // Note that new requests for the same operation ("ident") for the same object ("ID")
         //     will replace any previous operation by the same object.
-        public void PostTaintObject(String ident, uint ID, TaintCallback callback)
+        public void PostTaintObject(string ident, uint ID, TaintCallback callback)
         {
             string IDAsString = ID.ToString();
             string uniqueIdent = ident + "-" + IDAsString;
@@ -1440,7 +1440,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         // Return 'false' if not able to get the parameter.
         public bool GetPhysicsParameter(string parm, out string value)
         {
-            string val = String.Empty;
+            string val = string.Empty;
             bool ret = false;
             BSParam.ParameterDefnBase theParam;
             if (BSParam.TryGetParameter(parm, out theParam))
@@ -1455,7 +1455,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         #endregion IPhysicsParameters
 
         // Invoke the detailed logger and output something if it's enabled.
-        public void DetailLog(string msg, params Object[] args)
+        public void DetailLog(string msg, params object[] args)
         {
             PhysicsLogging.Write(msg, args);
         }

@@ -205,7 +205,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 m_log.Error(e);
             }
 
-            m_errorMessage = String.Empty;
+            m_errorMessage = string.Empty;
 
             m_merge = options.ContainsKey("merge");
             m_mergeReplaceObjects = options.ContainsKey("mReplaceObjects");
@@ -376,7 +376,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             catch (Exception e)
             {
                 m_log.Error(
-                    String.Format("[ARCHIVER]: Aborting load with error in archive file {0} ", fullPath), e);
+                    string.Format("[ARCHIVER]: Aborting load with error in archive file {0} ", fullPath), e);
                 m_errorMessage += e.ToString();
                 m_rootScene.EventManager.TriggerOarFileLoaded(m_requestId, new List<UUID>(), m_errorMessage);
                 return;
@@ -394,7 +394,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 if (failedAssetRestores > 0)
                 {
                     m_log.ErrorFormat("[ARCHIVER]: Failed to load {0} assets", failedAssetRestores);
-                    m_errorMessage += String.Format("Failed to load {0} assets", failedAssetRestores);
+                    m_errorMessage += string.Format("Failed to load {0} assets", failedAssetRestores);
                 }
             }
 
@@ -995,7 +995,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
                 //m_log.DebugFormat("[ARCHIVER]: Importing asset {0}, type {1}", uuid, assetType);
 
-                AssetBase asset = new AssetBase(new UUID(uuid), String.Empty, assetType, UUID.Zero.ToString());
+                AssetBase asset = new AssetBase(new UUID(uuid), string.Empty, assetType, UUID.Zero.ToString());
                 asset.Data = data;
 
                 // We're relying on the asset service to do the sensible thing and not store the asset if it already
@@ -1180,7 +1180,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                     else if (xtr.Name.ToString() == "datetime")
                     {
                         int value;
-                        if (Int32.TryParse(xtr.ReadElementContentAsString(), out value))
+                        if (int.TryParse(xtr.ReadElementContentAsString(), out value))
                             dearchivedScenes.LoadedCreationDateTime = value;
                     }
                     else if (xtr.Name.ToString() == "row")

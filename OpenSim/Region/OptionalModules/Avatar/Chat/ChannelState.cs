@@ -79,7 +79,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal int PingDelay = 15;
         internal string DefaultZone = "Sim";
 
-        internal string _accessPassword = String.Empty;
+        internal string _accessPassword = string.Empty;
         internal Regex AccessPasswordRegex = null;
         internal List<string> ExcludeList = new List<string>();
         internal string AccessPassword
@@ -88,7 +88,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             set
             {
                 _accessPassword = value;
-                AccessPasswordRegex = new Regex(String.Format(@"^{0},\s*(?<avatar>[^,]+),\s*(?<message>.+)$", _accessPassword),
+                AccessPasswordRegex = new Regex(string.Format(@"^{0},\s*(?<avatar>[^,]+),\s*(?<message>.+)$", _accessPassword),
                                                 RegexOptions.Compiled);
             }
         }
@@ -209,7 +209,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             m_log.DebugFormat("[IRC-Channel-{0}] PingDelay : <{1}>", cs.idn, cs.PingDelay);
             cs.AccessPassword = Substitute(rs, config.GetString("access_password", cs.AccessPassword));
             m_log.DebugFormat("[IRC-Channel-{0}] AccessPassword : <{1}>", cs.idn, cs.AccessPassword);
-            string[] excludes = config.GetString("exclude_list", "").Trim().Split(new Char[] { ',' });
+            string[] excludes = config.GetString("exclude_list", "").Trim().Split(new char[] { ',' });
             cs.ExcludeList = new List<string>(excludes.Length);
             foreach (string name in excludes)
             {
@@ -219,13 +219,13 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             // Fail if fundamental information is still missing
 
             if (cs.Server == null)
-                throw new Exception(String.Format("[IRC-Channel-{0}] Invalid configuration for region {1}: server missing", cs.idn, rs.Region));
+                throw new Exception(string.Format("[IRC-Channel-{0}] Invalid configuration for region {1}: server missing", cs.idn, rs.Region));
             else if (cs.IrcChannel == null)
-                throw new Exception(String.Format("[IRC-Channel-{0}] Invalid configuration for region {1}: channel missing", cs.idn, rs.Region));
+                throw new Exception(string.Format("[IRC-Channel-{0}] Invalid configuration for region {1}: channel missing", cs.idn, rs.Region));
             else if (cs.BaseNickname == null)
-                throw new Exception(String.Format("[IRC-Channel-{0}] Invalid configuration for region {1}: nick missing", cs.idn, rs.Region));
+                throw new Exception(string.Format("[IRC-Channel-{0}] Invalid configuration for region {1}: nick missing", cs.idn, rs.Region));
             else if (cs.User == null)
-                throw new Exception(String.Format("[IRC-Channel-{0}] Invalid configuration for region {1}: user missing", cs.idn, rs.Region));
+                throw new Exception(string.Format("[IRC-Channel-{0}] Invalid configuration for region {1}: user missing", cs.idn, rs.Region));
 
             m_log.InfoFormat("[IRC-Channel-{0}] Configuration for Region {1} is valid", cs.idn, rs.Region);
             m_log.InfoFormat("[IRC-Channel-{0}]    Server = {1}", cs.idn, cs.Server);
@@ -311,7 +311,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 }
                 else
                 {
-                    string txt = String.Format("[IRC-Channel-{0}] Region {1} failed to connect to channel {2} on server {3}:{4}",
+                    string txt = string.Format("[IRC-Channel-{0}] Region {1} failed to connect to channel {2} on server {3}:{4}",
                             cs.idn, rs.Region, cs.IrcChannel, cs.Server, cs.Port);
                     m_log.Error(txt);
                     throw new Exception(txt);

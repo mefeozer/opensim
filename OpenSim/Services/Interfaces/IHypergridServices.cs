@@ -101,7 +101,7 @@ namespace OpenSim.Services.Interfaces
         /// </summary>
         /// <returns>On success: the user's UUID. If the user doesn't exist: UUID.Zero.</returns>
         /// <remarks>Throws an exception if an error occurs (e.g., can't contact the server).</remarks>
-        UUID GetUUID(String first, String last);
+        UUID GetUUID(string first, string last);
 
         // Returns the local friends online
         [Obsolete]

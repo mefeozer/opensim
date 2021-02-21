@@ -730,7 +730,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid
         {
             return handle.GetHashCode();
         }
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if(obj == null)
                 return false;

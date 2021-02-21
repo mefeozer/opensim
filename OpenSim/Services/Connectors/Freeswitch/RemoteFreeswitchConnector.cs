@@ -42,7 +42,7 @@ namespace OpenSim.Services.Connectors
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         public RemoteFreeswitchConnector()
         {
@@ -68,7 +68,7 @@ namespace OpenSim.Services.Connectors
             }
 
             string serviceURI = freeswitchConfig.GetString("FreeswitchServiceURL",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceURI))
             {
@@ -94,7 +94,7 @@ namespace OpenSim.Services.Connectors
         {
             m_log.DebugFormat("[FREESWITCH CONNECTOR]: Requesting config from {0}", m_ServerURI);
             return SynchronousRestFormsRequester.MakeRequest("GET",
-                    m_ServerURI, String.Empty);
+                    m_ServerURI, string.Empty);
         }
     }
 }

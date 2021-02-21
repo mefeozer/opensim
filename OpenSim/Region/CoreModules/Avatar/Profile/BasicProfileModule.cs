@@ -132,17 +132,17 @@ namespace OpenSim.Region.CoreModules.Avatar.Profile
 
 //            Scene scene = (Scene)s;
 
-            string profileUrl = String.Empty;
-            string aboutText = String.Empty;
-            string firstLifeAboutText = String.Empty;
+            string profileUrl = string.Empty;
+            string aboutText = string.Empty;
+            string firstLifeAboutText = string.Empty;
             UUID image = UUID.Zero;
             UUID firstLifeImage = UUID.Zero;
             UUID partner = UUID.Zero;
             uint wantMask = 0;
-            string wantText = String.Empty;
+            string wantText = string.Empty;
             uint skillsMask = 0;
-            string skillsText = String.Empty;
-            string languages = String.Empty;
+            string skillsText = string.Empty;
+            string languages = string.Empty;
 
             UserAccount account = m_Scenes[0].UserAccountService.GetUserAccount(m_Scenes[0].RegionInfo.ScopeID, avatarID);
 
@@ -153,7 +153,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Profile
                 name = account.FirstName + " " + account.LastName;
                 created = account.Created;
             }
-            Byte[] membershipType = Utils.StringToBytes(name);
+            byte[] membershipType = Utils.StringToBytes(name);
 
             profileUrl = "No profile data";
             aboutText = string.Empty;

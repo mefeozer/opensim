@@ -249,7 +249,7 @@ namespace OpenSim.Framework
 
         #region ICloneable Members
 
-        public Object Clone()
+        public object Clone()
         {
             TaskInventoryDictionary clone = new TaskInventoryDictionary();
 

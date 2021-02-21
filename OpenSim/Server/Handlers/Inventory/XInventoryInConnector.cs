@@ -59,15 +59,15 @@ namespace OpenSim.Server.Handlers.Inventory
 
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
 
             string inventoryService = serverConfig.GetString("LocalServiceModule",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(inventoryService))
                 throw new Exception("No InventoryService in config file");
 
-            Object[] args = new Object[] { config, m_ConfigName };
+            object[] args = new object[] { config, m_ConfigName };
             m_InventoryService =
                     ServerUtils.LoadPlugin<IInventoryService>(inventoryService, args);
 
@@ -265,7 +265,7 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID principal = UUID.Zero;
             UUID.TryParse(request["PRINCIPAL"].ToString(), out principal);
             int type = 0;
-            Int32.TryParse(request["TYPE"].ToString(), out type);
+            int.TryParse(request["TYPE"].ToString(), out type);
             InventoryFolderBase folder = m_InventoryService.GetFolderForType(principal, (FolderType)type);
             if (folder != null)
                 result["folder"] = EncodeFolder(folder);
@@ -326,7 +326,7 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID.TryParse(request["PRINCIPAL"].ToString(), out principal);
             string folderIDstr = request["FOLDERS"].ToString();
             int count = 0;
-            Int32.TryParse(request["COUNT"].ToString(), out count);
+            int.TryParse(request["COUNT"].ToString(), out count);
 
             UUID[] fids = new UUID[count];
             string[] uuids = folderIDstr.Split(',');
@@ -584,7 +584,7 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID.TryParse(request["PRINCIPAL"].ToString(), out principal);
             string itemIDstr = request["ITEMS"].ToString();
             int count = 0;
-            Int32.TryParse(request["COUNT"].ToString(), out count);
+            int.TryParse(request["COUNT"].ToString(), out count);
 
             UUID[] fids = new UUID[count];
             string[] uuids = itemIDstr.Split(',');
@@ -697,11 +697,11 @@ namespace OpenSim.Server.Handlers.Inventory
             if (item.CreatorId != null)
                 ret["CreatorId"] = item.CreatorId.ToString();
             else
-                ret["CreatorId"] = String.Empty;
+                ret["CreatorId"] = string.Empty;
             if (item.CreatorData != null)
                 ret["CreatorData"] = item.CreatorData;
             else
-                ret["CreatorData"] = String.Empty;
+                ret["CreatorData"] = string.Empty;
             ret["CurrentPermissions"] = item.CurrentPermissions.ToString();
             ret["Description"] = item.Description.ToString();
             ret["EveryOnePermissions"] = item.EveryOnePermissions.ToString();

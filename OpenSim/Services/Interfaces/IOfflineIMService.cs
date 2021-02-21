@@ -80,7 +80,7 @@ namespace OpenSim.Services.Interfaces
                 im.offline = byte.Parse(dict["Offline"].ToString());
 
             if (dict.ContainsKey("EstateID") && dict["EstateID"] != null)
-                im.ParentEstateID = UInt32.Parse(dict["EstateID"].ToString());
+                im.ParentEstateID = uint.Parse(dict["EstateID"].ToString());
 
             if (dict.ContainsKey("Position") && dict["Position"] != null)
                 im.Position = Vector3.Parse(dict["Position"].ToString());
@@ -89,7 +89,7 @@ namespace OpenSim.Services.Interfaces
                 im.RegionID = new Guid(dict["RegionID"].ToString());
 
             if (dict.ContainsKey("Timestamp") && dict["Timestamp"] != null)
-                im.timestamp = UInt32.Parse(dict["Timestamp"].ToString());
+                im.timestamp = uint.Parse(dict["Timestamp"].ToString());
 
             if (dict.ContainsKey("ToAgentID") && dict["ToAgentID"] != null)
                 im.toAgentID = new Guid(dict["ToAgentID"].ToString());

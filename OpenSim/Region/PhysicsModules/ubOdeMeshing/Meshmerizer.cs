@@ -114,7 +114,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
 
                 CacheExpire = TimeSpan.FromHours(fcache);
 
-                if(String.IsNullOrEmpty(cachePath))
+                if(string.IsNullOrEmpty(cachePath))
                     doMeshFileCache = false;
 
                 if(doMeshFileCache)
@@ -991,7 +991,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
         public AMeshKey GetMeshUniqueKey(PrimitiveBaseShape primShape, Vector3 size, byte lod, bool convex)
         {
             AMeshKey key = new AMeshKey();
-            Byte[] someBytes;
+            byte[] someBytes;
 
             key.hashB = 5181;
             key.hashC = 5181;
@@ -1073,22 +1073,22 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
             return ((hash << 5) + hash) + (ulong)(c >> 8);
         }
 
-        public IMesh CreateMesh(String primName, PrimitiveBaseShape primShape, Vector3 size, float lod)
+        public IMesh CreateMesh(string primName, PrimitiveBaseShape primShape, Vector3 size, float lod)
         {
             return CreateMesh(primName, primShape, size, lod, false,false,false);
         }
 
-        public IMesh CreateMesh(String primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical)
+        public IMesh CreateMesh(string primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical)
         {
             return CreateMesh(primName, primShape, size, lod, false,false,false);
         }
 
-        public IMesh CreateMesh(String primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical, bool shouldCache, bool convex, bool forOde)
+        public IMesh CreateMesh(string primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical, bool shouldCache, bool convex, bool forOde)
         {
             return CreateMesh(primName, primShape, size, lod, false, false, false);
         }
 
-        public IMesh GetMesh(String primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical, bool convex)
+        public IMesh GetMesh(string primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical, bool convex)
         {
             Mesh mesh = null;
 
@@ -1129,7 +1129,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
 
         private static Vector3 m_MeshUnitSize = new Vector3(1.0f, 1.0f, 1.0f);
 
-        public IMesh CreateMesh(String primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical, bool convex, bool forOde)
+        public IMesh CreateMesh(string primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical, bool convex, bool forOde)
         {
 #if SPAM
             m_log.DebugFormat("[MESH]: Creating mesh for {0}", primName);
@@ -1362,8 +1362,8 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
             bool ok = false;
 
             // Make sure the target cache directory exists
-            string dir = String.Empty;
-            string filename = String.Empty;
+            string dir = string.Empty;
+            string filename = string.Empty;
 
             FileNames(key, out dir, out filename);
 

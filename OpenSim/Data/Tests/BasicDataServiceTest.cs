@@ -67,7 +67,7 @@ namespace OpenSim.Data.Tests
 
         public BasicDataServiceTest(string conn)
         {
-            m_connStr = !String.IsNullOrEmpty(conn) ? conn : DefaultTestConns.Get(typeof(TConn));
+            m_connStr = !string.IsNullOrEmpty(conn) ? conn : DefaultTestConns.Get(typeof(TConn));
 
             m_log = LogManager.GetLogger(this.GetType());
             OpenSim.Tests.Common.TestLogging.LogToConsole();    // TODO: Is that right?
@@ -97,16 +97,16 @@ namespace OpenSim.Data.Tests
                     Util.LoadArchSpecificWindowsDll("sqlite3.dll");
 
                 // for SQLite, if no explicit conn string is specified, use a temp file
-                if (String.IsNullOrEmpty(m_connStr))
+                if (string.IsNullOrEmpty(m_connStr))
                 {
                     m_file = Path.GetTempFileName() + ".db";
                     m_connStr = "URI=file:" + m_file + ",version=3";
                 }
             }
 
-            if (String.IsNullOrEmpty(m_connStr))
+            if (string.IsNullOrEmpty(m_connStr))
             {
-                string msg = String.Format("Connection string for {0} is not defined, ignoring tests", typeof(TConn).Name);
+                string msg = string.Format("Connection string for {0} is not defined, ignoring tests", typeof(TConn).Name);
                 m_log.Warn(msg);
                 Assert.Ignore(msg);
             }
@@ -122,7 +122,7 @@ namespace OpenSim.Data.Tests
                 }
                 catch
                 {
-                    string msg = String.Format("{0} is unable to connect to the database, ignoring tests", typeof(TConn).Name);
+                    string msg = string.Format("{0} is unable to connect to the database, ignoring tests", typeof(TConn).Name);
                     m_log.Warn(msg);
                     Assert.Ignore(msg);
                 }
@@ -154,7 +154,7 @@ namespace OpenSim.Data.Tests
                 m_service = null;
             }
 
-            if (!String.IsNullOrEmpty(m_file) && File.Exists(m_file))
+            if (!string.IsNullOrEmpty(m_file) && File.Exists(m_file))
                 File.Delete(m_file);
         }
 

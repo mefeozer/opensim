@@ -144,12 +144,12 @@ namespace OpenSim.Server.Handlers.Grid
 
             int versionNumberMin = 0, versionNumberMax = 0;
             if (request.ContainsKey("VERSIONMIN"))
-                Int32.TryParse(request["VERSIONMIN"].ToString(), out versionNumberMin);
+                int.TryParse(request["VERSIONMIN"].ToString(), out versionNumberMin);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no minimum protocol version in request to register region");
 
             if (request.ContainsKey("VERSIONMAX"))
-                Int32.TryParse(request["VERSIONMAX"].ToString(), out versionNumberMax);
+                int.TryParse(request["VERSIONMAX"].ToString(), out versionNumberMax);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no maximum protocol version in request to register region");
 
@@ -293,11 +293,11 @@ namespace OpenSim.Server.Handlers.Grid
 
             int x = 0, y = 0;
             if (request.ContainsKey("X"))
-                Int32.TryParse(request["X"].ToString(), out x);
+                int.TryParse(request["X"].ToString(), out x);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no X in request to get region by position");
             if (request.ContainsKey("Y"))
-                Int32.TryParse(request["Y"].ToString(), out y);
+                int.TryParse(request["Y"].ToString(), out y);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no Y in request to get region by position");
 
@@ -361,7 +361,7 @@ namespace OpenSim.Server.Handlers.Grid
 
             int max = 0;
             if (request.ContainsKey("MAX"))
-                Int32.TryParse(request["MAX"].ToString(), out max);
+                int.TryParse(request["MAX"].ToString(), out max);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no MAX in request to get regions by name");
 
@@ -399,19 +399,19 @@ namespace OpenSim.Server.Handlers.Grid
 
             int xmin = 0, xmax = 0, ymin = 0, ymax = 0;
             if (request.ContainsKey("XMIN"))
-                Int32.TryParse(request["XMIN"].ToString(), out xmin);
+                int.TryParse(request["XMIN"].ToString(), out xmin);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no XMIN in request to get region range");
             if (request.ContainsKey("XMAX"))
-                Int32.TryParse(request["XMAX"].ToString(), out xmax);
+                int.TryParse(request["XMAX"].ToString(), out xmax);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no XMAX in request to get region range");
             if (request.ContainsKey("YMIN"))
-                Int32.TryParse(request["YMIN"].ToString(), out ymin);
+                int.TryParse(request["YMIN"].ToString(), out ymin);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no YMIN in request to get region range");
             if (request.ContainsKey("YMAX"))
-                Int32.TryParse(request["YMAX"].ToString(), out ymax);
+                int.TryParse(request["YMAX"].ToString(), out ymax);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no YMAX in request to get region range");
 
@@ -508,11 +508,11 @@ namespace OpenSim.Server.Handlers.Grid
 
             int x = 0, y = 0;
             if (request.ContainsKey("X"))
-                Int32.TryParse(request["X"].ToString(), out x);
+                int.TryParse(request["X"].ToString(), out x);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no X in request to get fallback regions");
             if (request.ContainsKey("Y"))
-                Int32.TryParse(request["Y"].ToString(), out y);
+                int.TryParse(request["Y"].ToString(), out y);
             else
                 m_log.WarnFormat("[GRID HANDLER]: no Y in request to get fallback regions");
 
@@ -638,7 +638,7 @@ namespace OpenSim.Server.Handlers.Grid
 
         private byte[] FailureResult()
         {
-            return FailureResult(String.Empty);
+            return FailureResult(string.Empty);
         }
 
         private byte[] FailureResult(string msg)

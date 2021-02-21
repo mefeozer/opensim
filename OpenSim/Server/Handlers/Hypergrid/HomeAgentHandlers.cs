@@ -67,7 +67,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 if (args.ContainsKey("gatekeeper_host") && args["gatekeeper_host"] != null)
                     data.host = args["gatekeeper_host"].AsString();
                 if (args.ContainsKey("gatekeeper_port") && args["gatekeeper_port"] != null)
-                    Int32.TryParse(args["gatekeeper_port"].AsString(), out data.port);
+                    int.TryParse(args["gatekeeper_port"].AsString(), out data.port);
                 if (args.ContainsKey("gatekeeper_serveruri") && args["gatekeeper_serveruri"] != null)
                     data.gatekeeperServerURI = args["gatekeeper_serveruri"];
                 if (args.ContainsKey("destination_serveruri") && args["destination_serveruri"] != null)

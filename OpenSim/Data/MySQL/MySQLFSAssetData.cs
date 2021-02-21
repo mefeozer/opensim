@@ -137,7 +137,7 @@ namespace OpenSim.Data.MySQL
 
         public AssetMetadata Get(string id, out string hash)
         {
-            hash = String.Empty;
+            hash = string.Empty;
 
             AssetMetadata meta = new AssetMetadata();
 
@@ -155,7 +155,7 @@ namespace OpenSim.Data.MySQL
 
                 using (MySqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = String.Format("select id, name, description, type, hash, create_time, asset_flags, access_time from {0} where id = ?id", m_Table);
+                    cmd.CommandText = string.Format("select id, name, description, type, hash, create_time, asset_flags, access_time from {0} where id = ?id", m_Table);
                     cmd.Parameters.AddWithValue("?id", id);
 
                     using (IDataReader reader = cmd.ExecuteReader())
@@ -206,7 +206,7 @@ namespace OpenSim.Data.MySQL
 
                 using (MySqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = String.Format("UPDATE {0} SET `access_time` = UNIX_TIMESTAMP() WHERE `id` = ?id", m_Table);
+                    cmd.CommandText = string.Format("UPDATE {0} SET `access_time` = UNIX_TIMESTAMP() WHERE `id` = ?id", m_Table);
                     cmd.Parameters.AddWithValue("?id", AssetID);
                     cmd.ExecuteNonQuery();
                 }
@@ -233,7 +233,7 @@ namespace OpenSim.Data.MySQL
 
                     if (existingAsset == null)
                     {
-                        cmd.CommandText = String.Format("insert into {0} (id, name, description, type, hash, asset_flags, create_time, access_time) values ( ?id, ?name, ?description, ?type, ?hash, ?asset_flags, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())", m_Table);
+                        cmd.CommandText = string.Format("insert into {0} (id, name, description, type, hash, asset_flags, create_time, access_time) values ( ?id, ?name, ?description, ?type, ?hash, ?asset_flags, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())", m_Table);
 
                         ExecuteNonQuery(cmd);
 
@@ -330,7 +330,7 @@ namespace OpenSim.Data.MySQL
 
                 using(MySqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = String.Format("select count(*) as count from {0}",m_Table);
+                    cmd.CommandText = string.Format("select count(*) as count from {0}",m_Table);
 
                     using (IDataReader reader = cmd.ExecuteReader())
                     {
@@ -350,7 +350,7 @@ namespace OpenSim.Data.MySQL
             using(MySqlCommand cmd = new MySqlCommand())
             {
 
-                cmd.CommandText = String.Format("delete from {0} where id = ?id",m_Table);
+                cmd.CommandText = string.Format("delete from {0} where id = ?id",m_Table);
 
                 cmd.Parameters.AddWithValue("?id", id);
 
@@ -380,13 +380,13 @@ namespace OpenSim.Data.MySQL
 
                 using (MySqlCommand cmd = importConn.CreateCommand())
                 {
-                    string limit = String.Empty;
+                    string limit = string.Empty;
                     if (count != -1)
                     {
-                        limit = String.Format(" limit {0},{1}", start, count);
+                        limit = string.Format(" limit {0},{1}", start, count);
                     }
 
-                    cmd.CommandText = String.Format("select * from {0}{1}", table, limit);
+                    cmd.CommandText = string.Format("select * from {0}{1}", table, limit);
 
                     MainConsole.Instance.Output("Querying database");
                     using (IDataReader reader = cmd.ExecuteReader())
@@ -397,7 +397,7 @@ namespace OpenSim.Data.MySQL
                         {
                             if ((imported % 100) == 0)
                             {
-                                MainConsole.Instance.Output(String.Format("{0} assets imported so far", imported));
+                                MainConsole.Instance.Output(string.Format("{0} assets imported so far", imported));
                             }
 
                             AssetBase asset = new AssetBase();
@@ -424,7 +424,7 @@ namespace OpenSim.Data.MySQL
                 importConn.Close();
             }
 
-            MainConsole.Instance.Output(String.Format("Import done, {0} assets imported", imported));
+            MainConsole.Instance.Output(string.Format("Import done, {0} assets imported", imported));
         }
 
         #endregion

@@ -136,7 +136,7 @@ namespace OpenSim.Region.Framework.Tests
         {
             TestHelpers.InMethod();
 
-            List<Object> modules = new List<object>();
+            List<object> modules = new List<object>();
             IConfigSource config = DefaultConfig(modules);
             Scene scene = new SceneHelpers().SetupScene("Inventory Permissions", UUID.Random(), 1000, 1000, config);
             SceneHelpers.SetupSceneModules(scene, config, modules.ToArray());

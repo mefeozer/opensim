@@ -54,11 +54,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         // Runtime variables; these values are assigned when the
         // IrcState is created and remain constant thereafter.
 
-        internal string Region = String.Empty;
-        internal string Host = String.Empty;
-        internal string LocX = String.Empty;
-        internal string LocY = String.Empty;
-        internal string IDK = String.Empty;
+        internal string Region = string.Empty;
+        internal string Host = string.Empty;
+        internal string LocX = string.Empty;
+        internal string LocY = string.Empty;
+        internal string IDK = string.Empty;
 
         // System values - used only be the IRC classes themselves
 
@@ -69,7 +69,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         //AgentAlert
         internal bool showAlert = false;
-        internal string alertMessage = String.Empty;
+        internal string alertMessage = string.Empty;
         internal IDialogModule dialogModule = null;
 
         // This list is used to keep track of who is here, and by
@@ -91,20 +91,20 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             IDK = Convert.ToString(_idk_++);
 
             showAlert = config.GetBoolean("alert_show", false);
-            string alertServerInfo = String.Empty;
+            string alertServerInfo = string.Empty;
 
             if (showAlert)
             {
                 bool showAlertServerInfo = config.GetBoolean("alert_show_serverinfo", true);
 
                 if (showAlertServerInfo)
-                    alertServerInfo = String.Format("\nServer: {0}\nPort: {1}\nChannel: {2}\n\n",
+                    alertServerInfo = string.Format("\nServer: {0}\nPort: {1}\nChannel: {2}\n\n",
                         config.GetString("server", ""), config.GetString("port", ""), config.GetString("channel", ""));
 
                 string alertPreMessage = config.GetString("alert_msg_pre", "This region is linked to Irc.");
                 string alertPostMessage = config.GetString("alert_msg_post", "Everything you say in public chat can be listened.");
 
-                alertMessage = String.Format("{0}\n{1}{2}", alertPreMessage, alertServerInfo, alertPostMessage);
+                alertMessage = string.Format("{0}\n{1}{2}", alertPreMessage, alertServerInfo, alertPostMessage);
 
                 dialogModule = scene.RequestModuleInterface<IDialogModule>();
             }
@@ -168,7 +168,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                         //Check if this person is excluded from IRC
                         if (!cs.ExcludeList.Contains(client.Name.ToLower()))
                         {
-                            cs.irc.PrivMsg(cs.NoticeMessageFormat, cs.irc.Nick, Region, String.Format("{0} has left", client.Name));
+                            cs.irc.PrivMsg(cs.NoticeMessageFormat, cs.irc.Nick, Region, string.Format("{0} has left", client.Name));
                         }
                     }
                     client.OnLogout -= OnClientLoggedOut;
@@ -197,9 +197,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 {
                     if (enabled && (cs.irc.Enabled) && (cs.irc.Connected) && (cs.ClientReporting))
                     {
-                        string clientName = String.Format("{0} {1}", presence.Firstname, presence.Lastname);
+                        string clientName = string.Format("{0} {1}", presence.Firstname, presence.Lastname);
                         m_log.DebugFormat("[IRC-Region {0}] {1} has left", Region, clientName);
-                        cs.irc.PrivMsg(cs.NoticeMessageFormat, cs.irc.Nick, Region, String.Format("{0} has left", clientName));
+                        cs.irc.PrivMsg(cs.NoticeMessageFormat, cs.irc.Nick, Region, string.Format("{0} has left", clientName));
                     }
                     client.OnLogout -= OnClientLoggedOut;
                     client.OnConnectionClosed -= OnClientLoggedOut;
@@ -230,12 +230,12 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     clients.Add(client);
                     if (enabled && (cs.irc.Enabled) && (cs.irc.Connected) && (cs.ClientReporting))
                     {
-                        string clientName = String.Format("{0} {1}", presence.Firstname, presence.Lastname);
+                        string clientName = string.Format("{0} {1}", presence.Firstname, presence.Lastname);
                         m_log.DebugFormat("[IRC-Region {0}] {1} has arrived", Region, clientName);
                         //Check if this person is excluded from IRC
                         if (!cs.ExcludeList.Contains(clientName.ToLower()))
                         {
-                            cs.irc.PrivMsg(cs.NoticeMessageFormat, cs.irc.Nick, Region, String.Format("{0} has arrived", clientName));
+                            cs.irc.PrivMsg(cs.NoticeMessageFormat, cs.irc.Nick, Region, string.Format("{0} has arrived", clientName));
                         }
                     }
                 }
@@ -251,7 +251,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         }
 
         // This handler detects chat events int he virtual world.
-        public void OnSimChat(Object sender, OSChatMessage msg)
+        public void OnSimChat(object sender, OSChatMessage msg)
         {
 
             // early return if this comes from the IRC forwarder
@@ -394,7 +394,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             {
                 string txt = msg.Message;
                 if (txt.StartsWith("/me "))
-                    txt = String.Format("{0} {1}", fromName, msg.Message.Substring(4));
+                    txt = string.Format("{0} {1}", fromName, msg.Message.Substring(4));
 
                 cs.irc.PrivMsg(cs.PrivateMessageFormat, fromName, Region, txt);
                 return;
@@ -418,7 +418,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         // message delivery. For now we just enforce the enable/disable
         // flag.
 
-        internal void OSChat(Object irc, OSChatMessage msg)
+        internal void OSChat(object irc, OSChatMessage msg)
         {
             if (enabled)
             {

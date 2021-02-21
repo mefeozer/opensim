@@ -572,32 +572,32 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                             name = "rotation";  // see lslangtest1.lsl
                         if(keywords.ContainsKey(name))
                         {
-                            Object[] args = new Object[] { emsg, filNam, lineNo, i - bolIdx };
+                            object[] args = new object[] { emsg, filNam, lineNo, i - bolIdx };
                             AppendToken((Token)keywords[name].Invoke(args));
                         }
                         else if(options.arrays && arrayKeywords.ContainsKey(name))
                         {
-                            Object[] args = new Object[] { emsg, filNam, lineNo, i - bolIdx };
+                            object[] args = new object[] { emsg, filNam, lineNo, i - bolIdx };
                             AppendToken((Token)arrayKeywords[name].Invoke(args));
                         }
                         else if(options.advFlowCtl && advFlowCtlKeywords.ContainsKey(name))
                         {
-                            Object[] args = new Object[] { emsg, filNam, lineNo, i - bolIdx };
+                            object[] args = new object[] { emsg, filNam, lineNo, i - bolIdx };
                             AppendToken((Token)advFlowCtlKeywords[name].Invoke(args));
                         }
                         else if(options.tryCatch && tryCatchKeywords.ContainsKey(name))
                         {
-                            Object[] args = new Object[] { emsg, filNam, lineNo, i - bolIdx };
+                            object[] args = new object[] { emsg, filNam, lineNo, i - bolIdx };
                             AppendToken((Token)tryCatchKeywords[name].Invoke(args));
                         }
                         else if(options.objects && objectsKeywords.ContainsKey(name))
                         {
-                            Object[] args = new Object[] { emsg, filNam, lineNo, i - bolIdx };
+                            object[] args = new object[] { emsg, filNam, lineNo, i - bolIdx };
                             AppendToken((Token)objectsKeywords[name].Invoke(args));
                         }
                         else if(options.chars && charsKeywords.ContainsKey(name))
                         {
-                            Object[] args = new Object[] { emsg, filNam, lineNo, i - bolIdx };
+                            object[] args = new object[] { emsg, filNam, lineNo, i - bolIdx };
                             AppendToken((Token)charsKeywords[name].Invoke(args));
                         }
                         else
@@ -671,7 +671,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     }
                     if(j < delims.Length)
                     {
-                        Object[] args = { emsg, filNam, lineNo, i - bolIdx };
+                        object[] args = { emsg, filNam, lineNo, i - bolIdx };
                         Token kwToken = (Token)delims[j].ctorInfo.Invoke(args);
                         AppendToken(kwToken);
                         i += --len;
@@ -684,9 +684,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
         }
 
-        private static int strcasecmp(String s, String t)
+        private static int strcasecmp(string s, string t)
         {
-            return String.Compare(s, t, StringComparison.OrdinalIgnoreCase);
+            return string.Compare(s, t, StringComparison.OrdinalIgnoreCase);
         }
 
         /**

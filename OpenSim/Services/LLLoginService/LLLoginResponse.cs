@@ -162,7 +162,7 @@ namespace OpenSim.Services.LLLoginService
         private string simAddress;
         private string agentAccess;
         private string agentAccessMax;
-        private Int32 circuitCode;
+        private int circuitCode;
         private uint regionX;
         private uint regionY;
 
@@ -264,7 +264,7 @@ namespace OpenSim.Services.LLLoginService
             MaxAgentGroups = maxAgentGroups;
 
             FillOutHomeData(pinfo, home);
-            LookAt = String.Format("[r{0},r{1},r{2}]", lookAt.X, lookAt.Y, lookAt.Z);
+            LookAt = string.Format("[r{0},r{1},r{2}]", lookAt.X, lookAt.Y, lookAt.Z);
 
             FillOutRegionData(destination);
             m_log.DebugFormat("[LOGIN RESPONSE] LLLoginResponse create. sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);
@@ -445,7 +445,7 @@ namespace OpenSim.Services.LLLoginService
             ErrorMessage = "You have entered an invalid name/password combination.  Check Caps/lock.";
             ErrorReason = "key";
             welcomeMessage = "Welcome to OpenSim!";
-            seedCapability = String.Empty;
+            seedCapability = string.Empty;
             home = "{'region_handle':["
                     + "r" + Util.RegionToWorldLoc(1000).ToString()
                     + ","
@@ -468,15 +468,15 @@ namespace OpenSim.Services.LLLoginService
             RegionY = (uint) 254976;
 
             // Classifieds;
-            AddClassifiedCategory((Int32) 1, "Shopping");
-            AddClassifiedCategory((Int32) 2, "Land Rental");
-            AddClassifiedCategory((Int32) 3, "Property Rental");
-            AddClassifiedCategory((Int32) 4, "Special Attraction");
-            AddClassifiedCategory((Int32) 5, "New Products");
-            AddClassifiedCategory((Int32) 6, "Employment");
-            AddClassifiedCategory((Int32) 7, "Wanted");
-            AddClassifiedCategory((Int32) 8, "Service");
-            AddClassifiedCategory((Int32) 9, "Personal");
+            AddClassifiedCategory((int) 1, "Shopping");
+            AddClassifiedCategory((int) 2, "Land Rental");
+            AddClassifiedCategory((int) 3, "Property Rental");
+            AddClassifiedCategory((int) 4, "Special Attraction");
+            AddClassifiedCategory((int) 5, "New Products");
+            AddClassifiedCategory((int) 6, "Employment");
+            AddClassifiedCategory((int) 7, "Wanted");
+            AddClassifiedCategory((int) 8, "Service");
+            AddClassifiedCategory((int) 9, "Personal");
 
             SessionID = UUID.Random();
             SecureSessionID = UUID.Random();
@@ -487,12 +487,12 @@ namespace OpenSim.Services.LLLoginService
             InitialOutfitHash["folder_name"] = "Nightclub Female";
             InitialOutfitHash["gender"] = "female";
             initialOutfit.Add(InitialOutfitHash);
-            mapTileURL = String.Empty;
-            profileURL = String.Empty;
-            openIDURL = String.Empty;
-            searchURL = String.Empty;
+            mapTileURL = string.Empty;
+            profileURL = string.Empty;
+            openIDURL = string.Empty;
+            searchURL = string.Empty;
 
-            currency = String.Empty;
+            currency = string.Empty;
             ClassifiedFee = "0";
             MaxAgentGroups = 42;
         }
@@ -522,16 +522,16 @@ namespace OpenSim.Services.LLLoginService
                 AddToUIConfig("allow_first_life", allowFirstLife);
                 uiConfig.Add(uiConfigHash);
 
-                responseData["sim_port"] = (Int32) SimPort;
+                responseData["sim_port"] = (int) SimPort;
                 responseData["sim_ip"] = SimAddress;
-                responseData["http_port"] = (Int32)SimHttpPort;
+                responseData["http_port"] = (int)SimHttpPort;
 
                 responseData["agent_id"] = AgentID.ToString();
                 responseData["real_id"] = RealID.ToString();
                 responseData["session_id"] = SessionID.ToString();
                 responseData["secure_session_id"] = SecureSessionID.ToString();
                 responseData["circuit_code"] = CircuitCode;
-                responseData["seconds_since_epoch"] = (Int32) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                responseData["seconds_since_epoch"] = (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                 responseData["login-flags"] = loginFlags;
                 responseData["global-textures"] = globalTextures;
                 responseData["seed_capability"] = seedCapability;
@@ -557,10 +557,10 @@ namespace OpenSim.Services.LLLoginService
                 responseData["look_at"] = lookAt;
                 responseData["max-agent-groups"] = MaxAgentGroups;
                 responseData["message"] = welcomeMessage;
-                responseData["region_x"] = (Int32)(RegionX);
-                responseData["region_y"] = (Int32)(RegionY);
-                responseData["region_size_x"] = (Int32)RegionSizeX;
-                responseData["region_size_y"] = (Int32)RegionSizeY;
+                responseData["region_x"] = (int)(RegionX);
+                responseData["region_y"] = (int)(RegionY);
+                responseData["region_size_x"] = (int)RegionSizeX;
+                responseData["region_size_y"] = (int)RegionSizeY;
                 m_log.DebugFormat("[LOGIN RESPONSE] returning sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);
 
                 if (!string.IsNullOrEmpty(searchURL))
@@ -760,7 +760,7 @@ namespace OpenSim.Services.LLLoginService
             uiConfigHash[itemName] = item;
         }
 
-        public void AddClassifiedCategory(Int32 ID, string categoryName)
+        public void AddClassifiedCategory(int ID, string categoryName)
         {
             Hashtable hash = new Hashtable();
             hash["category_name"] = categoryName;
@@ -812,8 +812,8 @@ namespace OpenSim.Services.LLLoginService
                 TempHash = new Hashtable();
                 TempHash["name"] = InvFolder.Name;
                 TempHash["parent_id"] = InvFolder.ParentID.ToString();
-                TempHash["version"] = (Int32)InvFolder.Version;
-                TempHash["type_default"] = (Int32)InvFolder.Type;
+                TempHash["version"] = (int)InvFolder.Version;
+                TempHash["type_default"] = (int)InvFolder.Type;
                 TempHash["folder_id"] = InvFolder.ID.ToString();
                 AgentInventoryArray.Add(TempHash);
             }
@@ -838,8 +838,8 @@ namespace OpenSim.Services.LLLoginService
                 Hashtable TempHash = new Hashtable();
                 TempHash["name"] = folder.Name;
                 TempHash["parent_id"] = folder.ParentID.ToString();
-                TempHash["version"] = (Int32)folder.Version;
-                TempHash["type_default"] = (Int32)folder.Type;
+                TempHash["version"] = (int)folder.Version;
+                TempHash["type_default"] = (int)folder.Type;
                 TempHash["folder_id"] = folder.ID.ToString();
                 folderHashes.Add(TempHash);
             }
@@ -947,7 +947,7 @@ namespace OpenSim.Services.LLLoginService
             set { realID = value; }
         }
 
-        public Int32 CircuitCode
+        public int CircuitCode
         {
             get { return circuitCode; }
             set { circuitCode = value; }

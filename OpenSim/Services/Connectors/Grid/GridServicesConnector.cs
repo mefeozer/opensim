@@ -44,7 +44,7 @@ namespace OpenSim.Services.Connectors
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         public GridServicesConnector()
         {
@@ -70,7 +70,7 @@ namespace OpenSim.Services.Connectors
             }
 
             string serviceURI = gridConfig.GetString("GridServerURI",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceURI))
             {
@@ -109,7 +109,7 @@ namespace OpenSim.Services.Connectors
 
                     if (replyData.ContainsKey("Result")&& (replyData["Result"].ToString().ToLower() == "success"))
                     {
-                        return String.Empty;
+                        return string.Empty;
                     }
                     else if (replyData.ContainsKey("Result")&& (replyData["Result"].ToString().ToLower() == "failure"))
                     {
@@ -719,7 +719,7 @@ namespace OpenSim.Services.Connectors
 
                 if ((replyData != null) && replyData.ContainsKey("result") && (replyData["result"] != null))
                 {
-                    Int32.TryParse((string)replyData["result"], out flags);
+                    int.TryParse((string)replyData["result"], out flags);
                     //else
                     //    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionFlags {0}, {1} received wrong type {2}",
                     //        scopeID, regionID, replyData["result"].GetType());

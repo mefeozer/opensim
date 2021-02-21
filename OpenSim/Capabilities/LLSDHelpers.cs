@@ -45,7 +45,7 @@ namespace OpenSim.Framework.Capabilities
             using(XmlTextWriter writer = new XmlTextWriter(sw))
             {
                 writer.Formatting = Formatting.None;
-                writer.WriteStartElement(String.Empty, "llsd", String.Empty);
+                writer.WriteStartElement(string.Empty, "llsd", string.Empty);
                 SerializeOSDType(writer, obj);
                 writer.WriteEndElement();
                 writer.Flush();
@@ -78,7 +78,7 @@ namespace OpenSim.Framework.Capabilities
                 switch (llsdattributes[0].ObjectType)
                 {
                     case "MAP":
-                        writer.WriteStartElement(String.Empty, "map", String.Empty);
+                        writer.WriteStartElement(string.Empty, "map", string.Empty);
                         FieldInfo[] fields = myType.GetFields();
                         for (int i = 0; i < fields.Length; i++)
                         {
@@ -89,7 +89,7 @@ namespace OpenSim.Framework.Capabilities
                                     (LLSDType[]) fieldValue.GetType().GetCustomAttributes(typeof (LLSDType), false);
                                 if (fieldAttributes.Length > 0)
                                 {
-                                    writer.WriteStartElement(String.Empty, "key", String.Empty);
+                                    writer.WriteStartElement(string.Empty, "key", string.Empty);
                                     string fieldName = fields[i].Name;
                                     fieldName = fieldName.Replace("___", "-");
                                     writer.WriteString(fieldName);
@@ -98,7 +98,7 @@ namespace OpenSim.Framework.Capabilities
                                 }
                                 else
                                 {
-                                    writer.WriteStartElement(String.Empty, "key", String.Empty);
+                                    writer.WriteStartElement(string.Empty, "key", string.Empty);
                                     string fieldName = fields[i].Name;
                                     fieldName = fieldName.Replace("___", "-");
                                     writer.WriteString(fieldName);
@@ -123,7 +123,7 @@ namespace OpenSim.Framework.Capabilities
                         ArrayList a = (ArrayList) obj.GetType().GetField("Array").GetValue(obj);
                         if (a != null)
                         {
-                            writer.WriteStartElement(String.Empty, "array", String.Empty);
+                            writer.WriteStartElement(string.Empty, "array", string.Empty);
                             foreach (object item in a)
                             {
                                 SerializeOSDType(writer, item);
@@ -173,7 +173,7 @@ namespace OpenSim.Framework.Capabilities
                                     // the LLSD map/array types in the array need to be deserialised
                                     // but first we need to know the right class to deserialise them into.
                                 }
-                                else if(enumerator.Value is Boolean && field.FieldType == typeof(int) )
+                                else if(enumerator.Value is bool && field.FieldType == typeof(int) )
                                 {
                                     int i = (bool)enumerator.Value ? 1 : 0;
                                     field.SetValue(obj, i);

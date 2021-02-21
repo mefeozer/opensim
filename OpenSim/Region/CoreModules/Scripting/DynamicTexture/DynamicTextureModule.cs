@@ -475,7 +475,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                 if (part == null || data == null || data.Length <= 1)
                 {
                     string msg =
-                        String.Format("DynamicTextureModule: Error preparing image using URL {0}", Url);
+                        string.Format("DynamicTextureModule: Error preparing image using URL {0}", Url);
                     scene.SimChat(Utils.StringToBytes(msg), ChatTypeEnum.Say,
                                   0, part.ParentGroup.RootPart.AbsolutePosition, part.Name, part.UUID, false);
 
@@ -525,7 +525,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                         UUID.Random(), "DynamicImage" + Util.RandomClass.Next(1, 10000), (sbyte)AssetType.Texture,
                         scene.RegionInfo.RegionID.ToString());
                 asset.Data = assetData;
-                asset.Description = String.Format("URL image : {0}", Url);
+                asset.Description = string.Format("URL image : {0}", Url);
                 if (asset.Description.Length > 128)
                     asset.Description = asset.Description.Substring(0, 128);
                 asset.Local = true;     // dynamic images aren't saved in the assets server

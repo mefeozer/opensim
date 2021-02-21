@@ -52,7 +52,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
         private bool enabled = true;
         private bool m_UseNewAvnCode = false;
         private List<Scene> m_SceneList = new List<Scene>();
-        private string m_RestURL = String.Empty;
+        private string m_RestURL = string.Empty;
         IMessageTransferModule m_TransferModule = null;
         private bool m_ForwardOfflineGroupMessages = true;
         private Dictionary<IClientAPI, List<UUID>> m_repliesSent= new Dictionary<IClientAPI, List<UUID>>();

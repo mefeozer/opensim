@@ -155,7 +155,7 @@ namespace OpenSim.Region.ClientStack.Linden
     {
         // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_uploaderPath = String.Empty;
+        private string m_uploaderPath = string.Empty;
         private IHttpServer m_httpListener;
         private UUID m_agentID = UUID.Zero;
         private IPAddress m_remoteAddress;
@@ -176,7 +176,7 @@ namespace OpenSim.Region.ClientStack.Linden
             m_timeout.Start();
         }
 
-        private void Timeout(Object source, ElapsedEventArgs e)
+        private void Timeout(object source, ElapsedEventArgs e)
         {
             m_httpListener.RemoveSimpleStreamHandler(m_uploaderPath);
             m_timeout.Dispose();

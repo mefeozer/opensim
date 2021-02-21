@@ -95,7 +95,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcRouterModule
         {
             if (m_Enabled)
             {
-                scriptEngine.PostScriptEvent(itemID, "xmlrpc_uri", new Object[] { uri });
+                scriptEngine.PostScriptEvent(itemID, "xmlrpc_uri", new object[] { uri });
             }
         }
 

@@ -54,7 +54,7 @@ namespace OpenSim.Framework
         /// <summary>
         /// The IP address of the user
         /// </summary>
-        private string agentIP = String.Empty;
+        private string agentIP = string.Empty;
 
         /// <summary>
         /// The port of the user

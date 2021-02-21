@@ -128,7 +128,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                 {
                     OSDMap floaters = new OSDMap();
                     uint n = 0;
-                    foreach (String name in Directory.GetFiles(Path.Combine(VIEWER_SUPPORT_DIR, "Floaters"), "*.xml"))
+                    foreach (string name in Directory.GetFiles(Path.Combine(VIEWER_SUPPORT_DIR, "Floaters"), "*.xml"))
                     {
                         using (StreamReader s = new StreamReader(name))
                         {

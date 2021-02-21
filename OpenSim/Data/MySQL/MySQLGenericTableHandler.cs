@@ -154,7 +154,7 @@ namespace OpenSim.Data.MySQL
 
         public virtual T[] Get(string[] fields, string[] keys)
         {
-            return Get(fields, keys, String.Empty);
+            return Get(fields, keys, string.Empty);
         }
 
         public virtual T[] Get(string[] fields, string[] keys, string options)
@@ -267,7 +267,7 @@ namespace OpenSim.Data.MySQL
                         {
                             data[col] = reader[col].ToString();
                             if (data[col] == null)
-                                data[col] = String.Empty;
+                                data[col] = string.Empty;
                         }
 
                         m_DataField.SetValue(row, data);
@@ -284,7 +284,7 @@ namespace OpenSim.Data.MySQL
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                string query = String.Format("select * from {0} where {1}",
+                string query = string.Format("select * from {0} where {1}",
                                              m_Realm, where);
 
                 cmd.CommandText = query;
@@ -300,8 +300,8 @@ namespace OpenSim.Data.MySQL
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 string query = "";
-                List<String> names = new List<String>();
-                List<String> values = new List<String>();
+                List<string> names = new List<string>();
+                List<string> values = new List<string>();
 
                 foreach (FieldInfo fi in m_Fields.Values)
                 {
@@ -333,7 +333,7 @@ namespace OpenSim.Data.MySQL
                     }
                 }
 
-                query = String.Format("replace into {0} (`", m_Realm) + String.Join("`,`", names.ToArray()) + "`) values (" + String.Join(",", values.ToArray()) + ")";
+                query = string.Format("replace into {0} (`", m_Realm) + string.Join("`,`", names.ToArray()) + "`) values (" + string.Join(",", values.ToArray()) + ")";
 
                 cmd.CommandText = query;
 
@@ -416,7 +416,7 @@ namespace OpenSim.Data.MySQL
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                string query = String.Format("select count(*) from {0} where {1}",
+                string query = string.Format("select count(*) from {0} where {1}",
                                              m_Realm, where);
 
                 cmd.CommandText = query;

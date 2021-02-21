@@ -73,7 +73,7 @@ namespace OpenSim.Capabilities.Handlers
             if (request.ContainsKey("mesh_id"))
                 meshStr = request["mesh_id"].ToString();
 
-            if (String.IsNullOrEmpty(meshStr))
+            if (string.IsNullOrEmpty(meshStr))
                 return responsedata;
 
             UUID meshID = UUID.Zero;
@@ -88,13 +88,13 @@ namespace OpenSim.Capabilities.Handlers
                 return responsedata;
             }
 
-            if (mesh.Type != (SByte)AssetType.Mesh)
+            if (mesh.Type != (sbyte)AssetType.Mesh)
             {
                 responsedata["str_response_string"] = "Asset isn't a mesh.";
                 return responsedata;
             }
 
-            string range = String.Empty;
+            string range = string.Empty;
 
             if (((Hashtable)request["headers"])["range"] != null)
                range = (string)((Hashtable)request["headers"])["range"];
@@ -102,7 +102,7 @@ namespace OpenSim.Capabilities.Handlers
                 range = (string)((Hashtable)request["headers"])["Range"];
 
             responsedata["content_type"] = "application/vnd.ll.mesh";
-            if (String.IsNullOrEmpty(range))
+            if (string.IsNullOrEmpty(range))
             {
                 // full mesh
                 responsedata["str_response_string"] = Convert.ToBase64String(mesh.Data);
@@ -128,7 +128,7 @@ namespace OpenSim.Capabilities.Handlers
 
                 //m_log.Debug("Serving " + start + " to " + end + " of " + texture.Data.Length + " bytes for texture " + texture.ID);
                 Hashtable headers = new Hashtable();
-                headers["Content-Range"] = String.Format("bytes {0}-{1}/{2}", start, end, mesh.Data.Length);
+                headers["Content-Range"] = string.Format("bytes {0}-{1}/{2}", start, end, mesh.Data.Length);
                 responsedata["headers"] = headers;
                 responsedata["int_response_code"] = (int)System.Net.HttpStatusCode.PartialContent;
 

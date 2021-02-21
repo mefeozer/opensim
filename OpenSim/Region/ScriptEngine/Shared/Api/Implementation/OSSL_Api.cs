@@ -248,7 +248,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             }
         }
 
-        public override Object InitializeLifetimeService()
+        public override object InitializeLifetimeService()
         {
             ILease lease = (ILease)base.InitializeLifetimeService();
 
@@ -331,7 +331,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             }
 
             string reasonWhyNot = CheckThreatLevelTest(level, function);
-            if (!String.IsNullOrEmpty(reasonWhyNot))
+            if (!string.IsNullOrEmpty(reasonWhyNot))
             {
                 if (m_PermissionErrortoOwner)
                     throw new ScriptException("(OWNER)OSSL Permission Error: " + reasonWhyNot);
@@ -463,23 +463,23 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             {
                 // Allow / disallow by threat level
                 if (level <= m_MaxThreatLevel)
-                    return String.Empty;
+                    return string.Empty;
 
-                return String.Format(
+                return string.Format(
                             "{0} permission denied.  Allowed threat level is {1} but function threat level is {2}.",
                             function, m_MaxThreatLevel, level);
             }
 
             if (functionControl == 0)
-                return String.Format("{0} disabled in region configuration", function);
+                return string.Format("{0} disabled in region configuration", function);
 
             if (functionControl == AllowedControlFlags.ALL)
-                return String.Empty;
+                return string.Empty;
 
             if (((functionControl & AllowedControlFlags.OWNERUUID) != 0) && perms.AllowedOwners.Contains(m_host.OwnerID))
             {
                 // prim owner is in the list of allowed owners
-                return String.Empty;
+                return string.Empty;
             }
 
             UUID ownerID = m_item.OwnerID;
@@ -489,7 +489,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 ILandObject land = World.LandChannel.GetLandObject(m_host.AbsolutePosition);
                 if (land.LandData.OwnerID == ownerID)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
 
@@ -499,7 +499,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 ILandObject land = World.LandChannel.GetLandObject(m_host.AbsolutePosition);
                 if (land.LandData.GroupID == m_item.GroupID && land.LandData.GroupID != UUID.Zero)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
 
@@ -509,7 +509,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 //Only Estate Managers may use the function
                 if (World.RegionInfo.EstateSettings.IsEstateManagerOrOwner(ownerID) && World.RegionInfo.EstateSettings.EstateOwner != ownerID)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
 
@@ -518,7 +518,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             {
                 if (World.RegionInfo.EstateSettings.EstateOwner == ownerID)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
 
@@ -527,7 +527,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             {
                 if (World.Permissions.IsGridGod(ownerID))
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
 
@@ -536,7 +536,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             {
                 if (World.Permissions.IsAdministrator(ownerID))
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
 
@@ -546,27 +546,27 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 ScenePresence sp = World.GetScenePresence(ownerID);
                 if (sp != null && !sp.IsDeleted && sp.IsGod)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
 
             // else if no creators its denied
             if((functionControl & AllowedControlFlags.CREATORUUID) == 0)
-                return String.Format("{0} permission denied.", function);
+                return string.Format("{0} permission denied.", function);
 
             if (!perms.AllowedCreators.Contains(m_item.CreatorID))
                 return(
-                    String.Format("{0} permission denied. Script creator is not in the list of users allowed to execute this function and prim owner also has no permission.",
+                    string.Format("{0} permission denied. Script creator is not in the list of users allowed to execute this function and prim owner also has no permission.",
                     function));
 
             if (m_item.CreatorID != ownerID)
             {
                 if ((m_item.CurrentPermissions & (uint)PermissionMask.Modify) != 0)
-                    return String.Format("{0} permission denied. Script creator is not prim owner.", function);
+                    return string.Format("{0} permission denied. Script creator is not prim owner.", function);
 
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         internal void OSSLDeprecated(string function, string replacement)
@@ -664,7 +664,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     return 1;
                 }
 
-                RegionRestart(seconds, String.Empty);
+                RegionRestart(seconds, string.Empty);
                 return 1;
             }
             else
@@ -1025,7 +1025,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         private void TeleportAgent(string agent, string regionName,
             LSL_Types.Vector3 position, LSL_Types.Vector3 lookat)
         {
-            if(String.IsNullOrEmpty(regionName))
+            if(string.IsNullOrEmpty(regionName))
                 regionName = World.RegionInfo.RegionName;
 
             if (UUID.TryParse(agent, out UUID agentId))
@@ -1701,7 +1701,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 return module.WindActiveModelPluginName;
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         public void osSetWindParam(string plugin, string param, LSL_Float value)
@@ -2016,7 +2016,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             int scriptEngineNameIndex = 0;
 
-            if (!String.IsNullOrEmpty(m_ScriptEngine.ScriptEngineName))
+            if (!string.IsNullOrEmpty(m_ScriptEngine.ScriptEngineName))
             {
                 // parse off the "ScriptEngine."
                 scriptEngineNameIndex = m_ScriptEngine.ScriptEngineName.IndexOf(".", scriptEngineNameIndex);
@@ -2025,14 +2025,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 int scriptEngineNameLength = m_ScriptEngine.ScriptEngineName.Length - scriptEngineNameIndex;
 
                 // create char array then a string that is only the script engine name
-                Char[] scriptEngineNameCharArray = m_ScriptEngine.ScriptEngineName.ToCharArray(scriptEngineNameIndex, scriptEngineNameLength);
-                String scriptEngineName = new String(scriptEngineNameCharArray);
+                char[] scriptEngineNameCharArray = m_ScriptEngine.ScriptEngineName.ToCharArray(scriptEngineNameIndex, scriptEngineNameLength);
+                string scriptEngineName = new string(scriptEngineNameCharArray);
 
                 return scriptEngineName;
             }
             else
             {
-                return String.Empty;
+                return string.Empty;
             }
         }
 
@@ -2064,8 +2064,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             //    throwing an exception.
 
             m_host.AddScriptLPS(1);
-            string ret = String.Empty;
-            if (String.IsNullOrEmpty(CheckThreatLevelTest(ThreatLevel.High, "osGetPhysicsEngineType")))
+            string ret = string.Empty;
+            if (string.IsNullOrEmpty(CheckThreatLevelTest(ThreatLevel.High, "osGetPhysicsEngineType")))
             {
                 if (m_ScriptEngine.World.PhysicsScene != null)
                 {
@@ -2555,22 +2555,22 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
         private string GridUserInfo(InfoType type, string key)
         {
-            string retval = String.Empty;
+            string retval = string.Empty;
             IConfigSource config = m_ScriptEngine.ConfigSource;
             string url = null;
 
             IConfig gridInfoConfig = config.Configs["GridInfo"];
 
             if (gridInfoConfig != null)
-                url = gridInfoConfig.GetString("GridInfoURI", String.Empty);
+                url = gridInfoConfig.GetString("GridInfoURI", string.Empty);
 
-            if (String.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url))
                 return "Configuration Error!";
 
             string verb ="/json_grid_info";
             OSDMap json = new OSDMap();
 
-            OSDMap info =  WebUtil.GetFromService(String.Format("{0}{1}",url,verb), 3000);
+            OSDMap info =  WebUtil.GetFromService(string.Format("{0}{1}",url,verb), 3000);
 
             if (info["Success"] != true)
                 return "Get GridInfo Failed!";
@@ -2631,13 +2631,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.Moderate, "osGetGridNick");
 
-            string nick = String.Empty;
+            string nick = string.Empty;
             IConfigSource config = m_ScriptEngine.ConfigSource;
 
             if (config.Configs[GridInfoServiceConfigSectionName] != null)
                 nick = config.Configs[GridInfoServiceConfigSectionName].GetString("gridnick", nick);
 
-            if (String.IsNullOrEmpty(nick))
+            if (string.IsNullOrEmpty(nick))
                 nick = GridUserInfo(InfoType.Nick);
 
             return nick;
@@ -2657,13 +2657,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.Moderate, "osGetGridLoginURI");
 
-            string loginURI = String.Empty;
+            string loginURI = string.Empty;
             IConfigSource config = m_ScriptEngine.ConfigSource;
 
             if (config.Configs[GridInfoServiceConfigSectionName] != null)
                 loginURI = config.Configs[GridInfoServiceConfigSectionName].GetString("login", loginURI);
 
-            if (String.IsNullOrEmpty(loginURI))
+            if (string.IsNullOrEmpty(loginURI))
                 loginURI = GridUserInfo(InfoType.Login);
 
             return loginURI;
@@ -2687,13 +2687,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.Moderate, "osGetGridCustom");
 
-            string retval = String.Empty;
+            string retval = string.Empty;
             IConfigSource config = m_ScriptEngine.ConfigSource;
 
             if (config.Configs[GridInfoServiceConfigSectionName] != null)
                 retval = config.Configs[GridInfoServiceConfigSectionName].GetString(key, retval);
 
-            if (String.IsNullOrEmpty(retval))
+            if (string.IsNullOrEmpty(retval))
                 retval = GridUserInfo(InfoType.Custom, key);
 
             return retval;
@@ -2721,7 +2721,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             CheckThreatLevel(ThreatLevel.VeryLow, "osFormatString");
 
-            return String.Format(str, strings.Data);
+            return string.Format(str, strings.Data);
         }
 
         public LSL_List osMatchString(string src, string pattern, int start)
@@ -2932,7 +2932,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 return new LSL_Key(ScriptBaseClass.NULL_KEY);
             }
 
-            string groupTitle = String.Empty;
+            string groupTitle = string.Empty;
             UUID groupID = UUID.Zero;
 
             AvatarAppearance appearance = null;
@@ -3728,8 +3728,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             long pws = Util.GetPhysicalMemUse();
 
-            if (pws > Int32.MaxValue)
-                return Int32.MaxValue;
+            if (pws > int.MaxValue)
+                return int.MaxValue;
             if (pws < 0)
                 return 0;
 
@@ -3746,8 +3746,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 pws += 0x400L;
             pws >>= 10;
 
-            if (pws > Int32.MaxValue)
-                return Int32.MaxValue;
+            if (pws > int.MaxValue)
+                return int.MaxValue;
 
             return (int)pws;
         }
@@ -4228,7 +4228,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             if (item == null)
             {
                 m_LSL_Api.llSay(0, string.Format("Could not find object '{0}'", itemName));
-                throw new Exception(String.Format("The inventory item '{0}' could not be found", itemName));
+                throw new Exception(string.Format("The inventory item '{0}' could not be found", itemName));
             }
 
             if (item.InvType != (int)InventoryType.Object)
@@ -4238,7 +4238,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 if (m_LSL_Api != null)
                    m_LSL_Api.llSay(0, string.Format("Unable to attach, item '{0}' is not an object.", itemName));
 
-                throw new Exception(String.Format("The inventory item '{0}' is not an object", itemName));
+                throw new Exception(string.Format("The inventory item '{0}' is not an object", itemName));
             }
 
             ScenePresence sp = World.GetScenePresence(avatarId);
@@ -5263,13 +5263,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             CheckThreatLevel(ThreatLevel.Moderate, "osDetectedCountry");
 
             if (World.UserAccountService == null)
-                return String.Empty;
+                return string.Empty;
             DetectParams detectedParams = m_ScriptEngine.GetDetectParams(m_item.ItemID, number);
             if (detectedParams == null)
-                return String.Empty;
+                return string.Empty;
             UUID key = detectedParams.Key;
             if (key == UUID.Zero)
-                return String.Empty;
+                return string.Empty;
             UserAccount account = World.UserAccountService.GetUserAccount(World.RegionInfo.ScopeID, key);
             return account.UserCountry;
         }
@@ -5280,19 +5280,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             CheckThreatLevel(ThreatLevel.Moderate, "osGetAgentCountry");
 
             if (World.UserAccountService == null)
-                return String.Empty;
+                return string.Empty;
 
             if (!UUID.TryParse(id, out UUID key))
-                return String.Empty;
+                return string.Empty;
             if (key == UUID.Zero)
-                return String.Empty;
+                return string.Empty;
 
             //if owner is not god, target must be in region, or nearby regions
             if (!World.Permissions.IsGod(m_host.OwnerID))
             {
                 ScenePresence sp = World.GetScenePresence(key);
                 if(sp == null)
-                    return String.Empty;
+                    return string.Empty;
             }
 
             UserAccount account = World.UserAccountService.GetUserAccount(World.RegionInfo.ScopeID, key);
@@ -5618,7 +5618,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 item = m_host.Inventory.GetInventoryItem(itemID);
 
             if (item == null)
-                return String.Empty;
+                return string.Empty;
 
             return item.Name;
         }
@@ -5634,7 +5634,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 item = m_host.Inventory.GetInventoryItem(itemNameorid);
 
             if (item == null)
-                return String.Empty;
+                return string.Empty;
 
             return item.Description;
         }
@@ -5644,7 +5644,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             m_host.AddScriptLPS(1);
             DetectParams detectedParams = m_ScriptEngine.GetDetectParams(m_item.ItemID, 0);
             if (detectedParams == null)
-                return String.Empty;
+                return string.Empty;
             return detectedParams.Key.ToString();
         }
 

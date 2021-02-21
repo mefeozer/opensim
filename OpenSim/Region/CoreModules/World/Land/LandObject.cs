@@ -1101,10 +1101,10 @@ namespace OpenSim.Region.CoreModules.World.Land
         /// </summary>
         private void UpdateGeometryValues()
         {
-            int min_x = Int32.MaxValue;
-            int min_y = Int32.MaxValue;
-            int max_x = Int32.MinValue;
-            int max_y = Int32.MinValue;
+            int min_x = int.MaxValue;
+            int min_y = int.MaxValue;
+            int max_x = int.MinValue;
+            int max_y = int.MinValue;
             int tempArea = 0;
             int x, y;
 
@@ -1300,7 +1300,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                     || bitmap_base.GetLength(1) != bitmap_add.GetLength(1))
             {
                 throw new Exception(
-                    String.Format("{0} MergeLandBitmaps. merging maps not same size. baseSizeXY=<{1},{2}>, addSizeXY=<{3},{4}>",
+                    string.Format("{0} MergeLandBitmaps. merging maps not same size. baseSizeXY=<{1},{2}>, addSizeXY=<{3},{4}>",
                                 LogHeader, bitmap_base.GetLength(0), bitmap_base.GetLength(1), bitmap_add.GetLength(0), bitmap_add.GetLength(1))
                 );
             }
@@ -1477,7 +1477,7 @@ namespace OpenSim.Region.CoreModules.World.Land
             if (baseX != newX || baseY != newY)
             {
                 throw new Exception(
-                    String.Format("{0} RemoveFromLandBitmap: Land bitmaps are not the same size! baseX={1} baseY={2} newX={3} newY={4}", LogHeader, baseX, baseY, newX, newY));
+                    string.Format("{0} RemoveFromLandBitmap: Land bitmaps are not the same size! baseX={1} baseY={2} newX={3} newY={4}", LogHeader, baseX, baseY, newX, newY));
             }
 
             isEmptyNow = true;
@@ -1906,8 +1906,8 @@ namespace OpenSim.Region.CoreModules.World.Land
         /// <param name="url"></param>
         public void SetMediaUrl(string url)
         {
-            if (String.IsNullOrWhiteSpace(url))
-                LandData.MediaURL = String.Empty;
+            if (string.IsNullOrWhiteSpace(url))
+                LandData.MediaURL = string.Empty;
             else
             {
                 try
@@ -1931,8 +1931,8 @@ namespace OpenSim.Region.CoreModules.World.Land
         /// <param name="url"></param>
         public void SetMusicUrl(string url)
         {
-            if (String.IsNullOrWhiteSpace(url))
-                LandData.MusicURL =  String.Empty;
+            if (string.IsNullOrWhiteSpace(url))
+                LandData.MusicURL = string.Empty;
             else
             {
                 try

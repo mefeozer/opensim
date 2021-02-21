@@ -87,7 +87,7 @@ namespace OpenSim.Framework
         /// <summary>
         /// The about text listed in a users profile.
         /// </summary>
-        private string m_profileAboutText = String.Empty;
+        private string m_profileAboutText = string.Empty;
 
         /// <summary>
         /// A uint mask containing the "I can do" fields of the users profile
@@ -102,7 +102,7 @@ namespace OpenSim.Framework
         /// <summary>
         /// The first life about text listed in a users profile
         /// </summary>
-        private string m_profileFirstText = String.Empty;
+        private string m_profileFirstText = string.Empty;
 
         /// <summary>
         /// The profile image for an avatar stored on the asset server
@@ -127,17 +127,17 @@ namespace OpenSim.Framework
         /// <summary>
         /// A valid email address for the account.  Useful for password reset requests.
         /// </summary>
-        private string m_email = String.Empty;
+        private string m_email = string.Empty;
 
         /// <summary>
         /// A URI to the users asset server, used for foreigners and large grids.
         /// </summary>
-        private string m_userAssetUri = String.Empty;
+        private string m_userAssetUri = string.Empty;
 
         /// <summary>
         /// A URI to the users inventory server, used for foreigners and large grids
         /// </summary>
-        private string m_userInventoryUri = String.Empty;
+        private string m_userInventoryUri = string.Empty;
 
         /// <summary>
         /// The last used Web_login_key
@@ -218,7 +218,7 @@ namespace OpenSim.Framework
         /// </value>
         public string Name
         {
-            get { return String.Format("{0} {1}", m_firstname, m_surname); }
+            get { return string.Format("{0} {1}", m_firstname, m_surname); }
         }
 
         public string Email

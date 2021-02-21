@@ -61,11 +61,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
             rootElement.AppendChild(run);
 
-            Dictionary<string, Object> vars = instance.GetVars();
+            Dictionary<string, object> vars = instance.GetVars();
 
             XmlElement variables = xmldoc.CreateElement("", "Variables", "");
 
-            foreach (KeyValuePair<string, Object> var in vars)
+            foreach (KeyValuePair<string, object> var in vars)
                 WriteTypedValue(xmldoc, variables, "Variable", var.Key,
                                 var.Value);
 
@@ -89,8 +89,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
                 XmlElement parms = xmldoc.CreateElement("", "Params", "");
 
-                foreach (Object o in ep.Params)
-                    WriteTypedValue(xmldoc, parms, "Param", String.Empty, o);
+                foreach (object o in ep.Params)
+                    WriteTypedValue(xmldoc, parms, "Param", string.Empty, o);
 
                 item.AppendChild(parms);
 
@@ -185,7 +185,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
             Dictionary<string, object> vars = instance.GetVars();
 
-            instance.PluginData = new Object[0];
+            instance.PluginData = new object[0];
 
             doc.LoadXml(xml);
 
@@ -227,7 +227,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                         XmlNodeList itemL = part.ChildNodes;
                         foreach (XmlNode item in itemL)
                         {
-                            List<Object> parms = new List<Object>();
+                            List<object> parms = new List<object>();
                             List<DetectParams> detected =
                                     new List<DetectParams>();
 
@@ -256,7 +256,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
                                         int d_linkNum=0;
                                         UUID d_group = UUID.Zero;
-                                        string d_name = String.Empty;
+                                        string d_name = string.Empty;
                                         UUID d_owner = UUID.Zero;
                                         LSL_Types.Vector3 d_position =
                                             new LSL_Types.Vector3();
@@ -375,13 +375,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
         private static void DumpList(XmlDocument doc, XmlNode parent,
                 LSL_Types.list l)
         {
-            foreach (Object o in l.Data)
+            foreach (object o in l.Data)
                 WriteTypedValue(doc, parent, "ListItem", "", o);
         }
 
         private static LSL_Types.list ReadList(XmlNode parent)
         {
-            List<Object> olist = new List<Object>();
+            List<object> olist = new List<object>();
 
             XmlNodeList itemL = parent.ChildNodes;
             foreach (XmlNode item in itemL)
@@ -438,7 +438,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
         private static object ReadTypedValue(XmlNode tag)
         {
-            Object varValue;
+            object varValue;
             string assembly;
 
             string itemType = tag.Attributes.GetNamedItem("type").Value;
@@ -457,8 +457,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
             Type itemT = Type.GetType(itemType);
             if (itemT == null)
             {
-                Object[] args =
-                    new Object[] { tag.InnerText };
+                object[] args =
+                    new object[] { tag.InnerText };
 
                 assembly = itemType+", OpenSim.Region.ScriptEngine.Shared";
                 itemT = Type.GetType(assembly);

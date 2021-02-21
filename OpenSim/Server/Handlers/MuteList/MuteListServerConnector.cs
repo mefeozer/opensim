@@ -45,14 +45,14 @@ namespace OpenSim.Server.Handlers.GridUser
         {
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
 
-            string service = serverConfig.GetString("LocalServiceModule", String.Empty);
+            string service = serverConfig.GetString("LocalServiceModule", string.Empty);
 
             if (string.IsNullOrEmpty(service))
                 throw new Exception("LocalServiceModule not present in MuteListService config file MuteListService section");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_MuteListService = ServerUtils.LoadPlugin<IMuteListService>(service, args);
 
             IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);

@@ -86,7 +86,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                     else
                     {
                         if (uri.Scheme != "http")
-                            throw new Exception(String.Format("Unsupported URI scheme ({0})", path));
+                            throw new Exception(string.Format("Unsupported URI scheme ({0})", path));
 
                         // OK, now we know we have an HTTP URI to work with
                         return URIFetch(uri);
@@ -96,7 +96,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 {
                     // In many cases the user will put in a plain old filename that cannot be found so assume that
                     // this is the problem rather than confusing the issue with a UriFormatException
-                    throw new Exception(String.Format("Cannot find file {0}", path));
+                    throw new Exception(string.Format("Cannot find file {0}", path));
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             //    throw new Exception(String.Format("{0} does not identify an OAR file", uri.ToString()));
 
             if (response.ContentLength == 0)
-                throw new Exception(String.Format("{0} returned an empty file", uri.ToString()));
+                throw new Exception(string.Format("{0} returned an empty file", uri.ToString()));
 
             // return new BufferedStream(file, (int) response.ContentLength);
             return new BufferedStream(file, 1000000);

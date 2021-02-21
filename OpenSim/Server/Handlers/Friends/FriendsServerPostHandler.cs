@@ -229,7 +229,7 @@ namespace OpenSim.Server.Handlers.Friends
 
         private byte[] FailureResult()
         {
-            return FailureResult(String.Empty);
+            return FailureResult(string.Empty);
         }
 
         private byte[] FailureResult(string msg)
@@ -269,7 +269,7 @@ namespace OpenSim.Server.Handlers.Friends
                 friend = kvp["Friend"].ToString();
             flags = 0;
             if (kvp.ContainsKey("MyFlags") && kvp["MyFlags"] != null)
-                Int32.TryParse(kvp["MyFlags"].ToString(), out flags);
+                int.TryParse(kvp["MyFlags"].ToString(), out flags);
         }
 
         #endregion

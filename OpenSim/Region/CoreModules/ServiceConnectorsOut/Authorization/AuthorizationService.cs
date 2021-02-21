@@ -64,7 +64,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
 
             if (config != null)
             {
-                string accessStr = config.GetString("Region_" + scene.RegionInfo.RegionName.Replace(' ', '_'), String.Empty);
+                string accessStr = config.GetString("Region_" + scene.RegionInfo.RegionName.Replace(' ', '_'), string.Empty);
                 if (!string.IsNullOrEmpty(accessStr))
                 {
                     try

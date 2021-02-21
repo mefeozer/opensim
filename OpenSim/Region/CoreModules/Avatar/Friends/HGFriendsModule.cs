@@ -354,7 +354,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
         public override FriendInfo[] GetFriendsFromService(IClientAPI client)
         {
             //            m_log.DebugFormat("[HGFRIENDS MODULE]: Entering GetFriendsFromService for {0}", client.Name);
-            Boolean agentIsLocal = true;
+            bool agentIsLocal = true;
             if (UserManagementModule != null)
                 agentIsLocal = UserManagementModule.IsLocalGridUser(client.AgentId);
 
@@ -378,8 +378,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
         protected override bool StoreRights(UUID agentID, UUID friendID, int rights)
         {
-            Boolean agentIsLocal = true;
-            Boolean friendIsLocal = true;
+            bool agentIsLocal = true;
+            bool friendIsLocal = true;
             if (UserManagementModule != null)
             {
                 agentIsLocal = UserManagementModule.IsLocalGridUser(agentID);
@@ -444,8 +444,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
         protected override void StoreFriendships(UUID agentID, UUID friendID)
         {
-            Boolean agentIsLocal = true;
-            Boolean friendIsLocal = true;
+            bool agentIsLocal = true;
+            bool friendIsLocal = true;
             if (UserManagementModule != null)
             {
                 agentIsLocal = UserManagementModule.IsLocalGridUser(agentID);
@@ -514,9 +514,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                                 friendUUI = finfo.Friend;
                                 theFriendUUID = friendUUI;
                                 UUID utmp = UUID.Zero;
-                                string url = String.Empty;
-                                string first = String.Empty;
-                                string last = String.Empty;
+                                string url = string.Empty;
+                                string first = string.Empty;
+                                string last = string.Empty;
 
                                 // If it's confirming the friendship, we already have the full UUI with the secret
                                 if (Util.ParseUniversalUserIdentifier(theFriendUUID, out utmp, out url, out first, out last, out secret))
@@ -667,8 +667,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
         protected override bool DeleteFriendship(UUID agentID, UUID exfriendID)
         {
-            Boolean agentIsLocal = true;
-            Boolean friendIsLocal = true;
+            bool agentIsLocal = true;
+            bool friendIsLocal = true;
             if (UserManagementModule != null)
             {
                 agentIsLocal = UserManagementModule.IsLocalGridUser(agentID);

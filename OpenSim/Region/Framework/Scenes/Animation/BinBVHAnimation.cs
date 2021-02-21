@@ -50,8 +50,8 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// </summary>
         private int positionkeys;
 
-        public UInt16 unknown0; // Always 1
-        public UInt16 unknown1; // Always 0
+        public ushort unknown0; // Always 1
+        public ushort unknown1; // Always 0
 
         /// <summary>
         /// Animation Priority
@@ -61,7 +61,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// <summary>
         /// The animation length in seconds.
         /// </summary>
-        public Single Length;
+        public float Length;
 
         /// <summary>
         /// Expression set in the client.  Null if [None] is selected
@@ -71,12 +71,12 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// <summary>
         /// The time in seconds to start the animation
         /// </summary>
-        public Single InPoint;
+        public float InPoint;
 
         /// <summary>
         /// The time in seconds to end the animation
         /// </summary>
-        public Single OutPoint;
+        public float OutPoint;
 
         /// <summary>
         /// Loop the animation
@@ -86,12 +86,12 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// <summary>
         /// Meta data. Ease in Seconds.
         /// </summary>
-        public Single EaseInTime;
+        public float EaseInTime;
 
         /// <summary>
         /// Meta data. Ease out seconds.
         /// </summary>
-        public Single EaseOutTime;
+        public float EaseOutTime;
 
         /// <summary>
         /// Meta Data for the Hand Pose
@@ -513,11 +513,11 @@ namespace OpenSim.Region.Framework.Scenes.Animation
     }
     public static class BinBVHUtil
     {
-        public const float ONE_OVER_U16_MAX = 1.0f / UInt16.MaxValue;
+        public const float ONE_OVER_U16_MAX = 1.0f / ushort.MaxValue;
 
-        public static UInt16 FloatToUInt16(float val, float lower, float upper)
+        public static ushort FloatToUInt16(float val, float lower, float upper)
         {
-            UInt16 uival = 0;
+            ushort uival = 0;
             //m_parentGroup.GetTimeDilation() * (float)ushort.MaxValue
             //0-1
 
@@ -545,7 +545,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 val /= upper;
             }
 
-            uival = (UInt16)(val * UInt16.MaxValue);
+            uival = (ushort)(val * ushort.MaxValue);
 
             return uival;
         }
@@ -574,7 +574,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         public static byte[] WriteNullTerminatedString(string str)
         {
             byte[] output = new byte[str.Length + 1];
-            Char[] chr = str.ToCharArray();
+            char[] chr = str.ToCharArray();
             int i = 0;
             for (i = 0; i < chr.Length; i++)
             {

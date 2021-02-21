@@ -54,20 +54,20 @@ namespace OpenSim.Server.Handlers.Freeswitch
 
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
 
             string freeswitchService = serverConfig.GetString("LocalServiceModule",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(freeswitchService))
                 throw new Exception("No LocalServiceModule in config file");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_FreeswitchService =
                     ServerUtils.LoadPlugin<IFreeswitchService>(freeswitchService, args);
 
-            server.AddHTTPHandler(String.Format("{0}/freeswitch-config", m_freeSwitchAPIPrefix), FreeSwitchConfigHTTPHandler);
-            server.AddHTTPHandler(String.Format("{0}/region-config", m_freeSwitchAPIPrefix), RegionConfigHTTPHandler);
+            server.AddHTTPHandler(string.Format("{0}/freeswitch-config", m_freeSwitchAPIPrefix), FreeSwitchConfigHTTPHandler);
+            server.AddHTTPHandler(string.Format("{0}/region-config", m_freeSwitchAPIPrefix), RegionConfigHTTPHandler);
         }
 
         public Hashtable FreeSwitchConfigHTTPHandler(Hashtable request)
@@ -96,13 +96,13 @@ namespace OpenSim.Server.Handlers.Freeswitch
         {
             Hashtable bodyParams = new Hashtable();
             // split string
-            string [] nvps = body.Split(new Char [] {'&'});
+            string [] nvps = body.Split(new char[] {'&'});
 
             foreach (string s in nvps)
             {
                 if (s.Trim() != "")
                 {
-                    string [] nvp = s.Split(new Char [] {'='});
+                    string [] nvp = s.Split(new char[] {'='});
                     bodyParams.Add(HttpUtility.UrlDecode(nvp[0]), HttpUtility.UrlDecode(nvp[1]));
                 }
             }

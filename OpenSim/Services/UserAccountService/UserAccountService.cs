@@ -65,23 +65,23 @@ namespace OpenSim.Services.UserAccountService
 
             string gridServiceDll = userConfig.GetString("GridService", string.Empty);
             if (!string.IsNullOrEmpty(gridServiceDll))
-                m_GridService = LoadPlugin<IGridService>(gridServiceDll, new Object[] { config });
+                m_GridService = LoadPlugin<IGridService>(gridServiceDll, new object[] { config });
 
             string authServiceDll = userConfig.GetString("AuthenticationService", string.Empty);
             if (!string.IsNullOrEmpty(authServiceDll))
-                m_AuthenticationService = LoadPlugin<IAuthenticationService>(authServiceDll, new Object[] { config });
+                m_AuthenticationService = LoadPlugin<IAuthenticationService>(authServiceDll, new object[] { config });
 
             string presenceServiceDll = userConfig.GetString("GridUserService", string.Empty);
             if (!string.IsNullOrEmpty(presenceServiceDll))
-                m_GridUserService = LoadPlugin<IGridUserService>(presenceServiceDll, new Object[] { config });
+                m_GridUserService = LoadPlugin<IGridUserService>(presenceServiceDll, new object[] { config });
 
             string invServiceDll = userConfig.GetString("InventoryService", string.Empty);
             if (!string.IsNullOrEmpty(invServiceDll))
-                m_InventoryService = LoadPlugin<IInventoryService>(invServiceDll, new Object[] { config });
+                m_InventoryService = LoadPlugin<IInventoryService>(invServiceDll, new object[] { config });
 
             string avatarServiceDll = userConfig.GetString("AvatarService", string.Empty);
             if (!string.IsNullOrEmpty(avatarServiceDll))
-                m_AvatarService = LoadPlugin<IAvatarService>(avatarServiceDll, new Object[] { config });
+                m_AvatarService = LoadPlugin<IAvatarService>(avatarServiceDll, new object[] { config });
 
             m_CreateDefaultAvatarEntries = userConfig.GetBoolean("CreateDefaultAvatarEntries", false);
 
@@ -197,9 +197,9 @@ namespace OpenSim.Services.UserAccountService
             else
                 u.UserTitle = string.Empty;
             if (d.Data.ContainsKey("UserLevel") && d.Data["UserLevel"] != null)
-                Int32.TryParse(d.Data["UserLevel"], out u.UserLevel);
+                int.TryParse(d.Data["UserLevel"], out u.UserLevel);
             if (d.Data.ContainsKey("UserFlags") && d.Data["UserFlags"] != null)
-                Int32.TryParse(d.Data["UserFlags"], out u.UserFlags);
+                int.TryParse(d.Data["UserFlags"], out u.UserFlags);
             if (d.Data.ContainsKey("UserCountry") && d.Data["UserCountry"] != null)
                 u.UserCountry = d.Data["UserCountry"].ToString();
             else
@@ -291,7 +291,7 @@ namespace OpenSim.Services.UserAccountService
 
         public List<UserAccount> GetUserAccounts(UUID scopeID, List<string> IDs)
         {
-            UserAccountData[] ret = m_Database.GetUsersWhere(scopeID, "PrincipalID in ('" + String.Join("', '", IDs) + "')");
+            UserAccountData[] ret = m_Database.GetUsersWhere(scopeID, "PrincipalID in ('" + string.Join("', '", IDs) + "')");
             if(ret == null || ret.Length == 0)
                 return new List<UserAccount>();
             return new List<UserAccount>(ret.Select((x) => MakeUserAccount(x)));
@@ -399,7 +399,7 @@ namespace OpenSim.Services.UserAccountService
                 while(--retries >= 0)
                 {
                     password = MainConsole.Instance.Prompt("Password", null, null, false);
-                    if(String.IsNullOrWhiteSpace(password))
+                    if(string.IsNullOrWhiteSpace(password))
                         MainConsole.Instance.Output("  You must provide a Password");
                     else
                         break;
@@ -427,7 +427,7 @@ namespace OpenSim.Services.UserAccountService
                 model = cmdparams[7];
 
             UUID principalId = UUID.Zero;
-            if(String.IsNullOrWhiteSpace(rawPrincipalId))
+            if(string.IsNullOrWhiteSpace(rawPrincipalId))
                 principalId = UUID.Random();
             else if (!UUID.TryParse(rawPrincipalId, out principalId))
                 throw new Exception(string.Format("ID {0} is not a valid UUID", rawPrincipalId));
@@ -461,7 +461,7 @@ namespace OpenSim.Services.UserAccountService
             MainConsole.Instance.Output("Created: {0}", Utils.UnixTimeToDateTime(ua.Created));
             MainConsole.Instance.Output("Level:   {0}", ua.UserLevel);
             MainConsole.Instance.Output("Flags:   {0}", ua.UserFlags);
-            foreach (KeyValuePair<string, Object> kvp in ua.ServiceURLs)
+            foreach (KeyValuePair<string, object> kvp in ua.ServiceURLs)
                 MainConsole.Instance.Output("{0}: {1}", kvp.Key, kvp.Value);
         }
 
@@ -648,7 +648,7 @@ namespace OpenSim.Services.UserAccountService
 
                         if (m_CreateDefaultAvatarEntries)
                         {
-                            if (String.IsNullOrEmpty(model))
+                            if (string.IsNullOrEmpty(model))
                                 CreateDefaultAppearanceEntries(account.PrincipalID);
                             else
                                 EstablishAppearance(account.PrincipalID, model);

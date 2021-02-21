@@ -1071,11 +1071,11 @@ namespace OpenSim.Region.Framework.Scenes
                     }
                 }
 
-                grant = Util.GetConfigVarFromSections<string>(config, "DeniedClients", possibleAccessControlConfigSections, String.Empty);
+                grant = Util.GetConfigVarFromSections<string>(config, "DeniedClients", possibleAccessControlConfigSections, string.Empty);
                 // Deal with the mess of someone having used a different word at some point
                 if (string.IsNullOrEmpty(grant))
                     grant = Util.GetConfigVarFromSections<string>(
-                            config, "BannedClients", possibleAccessControlConfigSections, String.Empty);
+                            config, "BannedClients", possibleAccessControlConfigSections, string.Empty);
 
                 if (grant.Length > 0)
                 {
@@ -1155,7 +1155,7 @@ namespace OpenSim.Region.Framework.Scenes
             IConfig restartConfig = config.Configs["RestartModule"];
             if (restartConfig != null)
             {
-                string markerPath = restartConfig.GetString("MarkerPath", String.Empty);
+                string markerPath = restartConfig.GetString("MarkerPath", string.Empty);
 
                 if (!string.IsNullOrEmpty(markerPath))
                 {
@@ -1165,7 +1165,7 @@ namespace OpenSim.Region.Framework.Scenes
                         string pidstring = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
                         FileStream fs = File.Create(path);
                         System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-                        Byte[] buf = enc.GetBytes(pidstring);
+                        byte[] buf = enc.GetBytes(pidstring);
                         fs.Write(buf, 0, buf.Length);
                         fs.Close();
                     }
@@ -1838,7 +1838,7 @@ namespace OpenSim.Region.Framework.Scenes
                             IConfig restartConfig = m_config.Configs["RestartModule"];
                             if (restartConfig != null)
                             {
-                                string markerPath = restartConfig.GetString("MarkerPath", String.Empty);
+                                string markerPath = restartConfig.GetString("MarkerPath", string.Empty);
 
                                 if (!string.IsNullOrEmpty(markerPath))
                                 {
@@ -1848,7 +1848,7 @@ namespace OpenSim.Region.Framework.Scenes
                                         string pidstring = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
                                         FileStream fs = File.Create(path);
                                         System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-                                        Byte[] buf = enc.GetBytes(pidstring);
+                                        byte[] buf = enc.GetBytes(pidstring);
                                         fs.Write(buf, 0, buf.Length);
                                         fs.Close();
                                     }
@@ -2096,7 +2096,7 @@ namespace OpenSim.Region.Framework.Scenes
                             Position = Vector3.Zero,
                             RegionID = regionguid,
                             // We must fill in a null-terminated 'empty' string here since bytes[0] will crash viewer 3.
-                            binaryBucket = new Byte[1] {0}
+                            binaryBucket = new byte[1] {0}
                         };
 
                         if (ret.Value.count > 1)
@@ -2232,7 +2232,7 @@ namespace OpenSim.Region.Framework.Scenes
                         // This should be in the Terrain module, but it isn't because
                         // the heightmap is needed _way_ before the modules are initialized...
                         IConfig terrainConfig = m_config.Configs["Terrain"];
-                        String m_InitialTerrain = "pinhead-island";
+                        string m_InitialTerrain = "pinhead-island";
                         if (terrainConfig != null)
                             m_InitialTerrain = terrainConfig.GetString("InitialTerrain", m_InitialTerrain);
 
@@ -3736,7 +3736,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// </param>
         ///
 
-        private object m_removeClientPrivLock = new Object();
+        private object m_removeClientPrivLock = new object();
 
         public void RemoveClient(UUID agentID, bool closeChildAgents)
         {
@@ -3960,7 +3960,7 @@ namespace OpenSim.Region.Framework.Scenes
             bool viahome = (teleportFlags & (uint)TPFlags.ViaHome) != 0;
 //            bool godlike = ((teleportFlags & (uint)TPFlags.Godlike) != 0);
 
-            reason = String.Empty;
+            reason = string.Empty;
 
             //Teleport flags:
             //
@@ -4305,7 +4305,7 @@ namespace OpenSim.Region.Framework.Scenes
             else if (posY >= RegionInfo.RegionSizeY)
                 posY = RegionInfo.RegionSizeY - 0.5f;
 
-            reason = String.Empty;
+            reason = string.Empty;
             if (Permissions.IsGod(agentID))
                 return true;
 
@@ -4334,7 +4334,7 @@ namespace OpenSim.Region.Framework.Scenes
                     }
                     else
                     {
-                        reason = String.Format("Denied access to private region {0}: You are not on the access list for that region.",
+                        reason = string.Format("Denied access to private region {0}: You are not on the access list for that region.",
                             RegionInfo.RegionName);
                     }
                     return false;
@@ -4361,7 +4361,7 @@ namespace OpenSim.Region.Framework.Scenes
             IPresenceService presencesvc = RequestModuleInterface<IPresenceService>();
             if (presencesvc == null)
             {
-                reason = String.Format("Failed to verify user presence in the grid for {0} {1} in region {2}. Presence service does not exist.", agent.firstname, agent.lastname, RegionInfo.RegionName);
+                reason = string.Format("Failed to verify user presence in the grid for {0} {1} in region {2}. Presence service does not exist.", agent.firstname, agent.lastname, RegionInfo.RegionName);
                 return false;
             }
 
@@ -4369,13 +4369,13 @@ namespace OpenSim.Region.Framework.Scenes
 
             if (pinfo == null)
             {
-                reason = String.Format("Failed to verify user presence in the grid for {0} {1}, access denied to region {2}.", agent.firstname, agent.lastname, RegionInfo.RegionName);
+                reason = string.Format("Failed to verify user presence in the grid for {0} {1}, access denied to region {2}.", agent.firstname, agent.lastname, RegionInfo.RegionName);
                 return false;
             }
 
             if(pinfo.UserID != agent.AgentID.ToString())
             {
-                reason = String.Format("Failed to verify user presence in the grid for {0} {1}, access denied to region {2}.", agent.firstname, agent.lastname, RegionInfo.RegionName);
+                reason = string.Format("Failed to verify user presence in the grid for {0} {1}, access denied to region {2}.", agent.firstname, agent.lastname, RegionInfo.RegionName);
                 return false;
             }
 
@@ -4491,7 +4491,7 @@ Label_GroupsDone:
                 {
                     m_log.WarnFormat("[CONNECTION BEGIN]: Denied access to: {0} ({1} {2}) at {3} because the user does not have access to the estate",
                                      agent.AgentID, agent.firstname, agent.lastname, RegionInfo.RegionName);
-                    reason = String.Format("Denied access to private region {0}: You do not have access to that region.",
+                    reason = string.Format("Denied access to private region {0}: You do not have access to that region.",
                                      RegionInfo.RegionName);
                     return false;
                 }
@@ -5508,7 +5508,7 @@ Label_GroupsDone:
             int health = 1; // Start at 1, means we're up
 
             flags = 0;
-            message = String.Empty;
+            message = string.Empty;
 
             CheckHeartbeat();
 
@@ -6374,7 +6374,7 @@ Environment.Exit(1);
             AssetService.Get(assetID.ToString(), callback, PhysicsAssetReceived);
         }
 
-        private void PhysicsAssetReceived(string id, Object sender, AssetBase asset)
+        private void PhysicsAssetReceived(string id, object sender, AssetBase asset)
         {
             AssetReceivedDelegate callback = (AssetReceivedDelegate)sender;
 
@@ -6386,7 +6386,7 @@ Environment.Exit(1);
             if (m_extraSettings != null && m_extraSettings.TryGetValue(name, out string val))
                 return val;
 
-            return String.Empty;
+            return string.Empty;
         }
 
         public void StoreExtraSetting(string name, string val)
@@ -6419,7 +6419,7 @@ Environment.Exit(1);
 
             m_SimulationDataService.RemoveExtra(RegionInfo.RegionID, name);
 
-            m_eventManager.TriggerExtraSettingChanged(this, name, String.Empty);
+            m_eventManager.TriggerExtraSettingChanged(this, name, string.Empty);
         }
 
         public bool InTeleportTargetsCoolDown(UUID sourceID, UUID targetID, int timeout)

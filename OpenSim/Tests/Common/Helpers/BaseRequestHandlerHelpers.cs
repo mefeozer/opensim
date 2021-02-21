@@ -37,12 +37,12 @@ namespace OpenSim.Tests.Common
 
         public static void BaseTestGetParams(BaseRequestHandler handler, string assetsPath)
         {
-            Assert.AreEqual(String.Empty, handler.GetParam(null), "Failed on null path.");
-            Assert.AreEqual(String.Empty, handler.GetParam(""), "Failed on empty path.");
-            Assert.AreEqual(String.Empty, handler.GetParam("s"), "Failed on short url.");
-            Assert.AreEqual(String.Empty, handler.GetParam("corruptUrl"), "Failed on corruptUrl.");
+            Assert.AreEqual(string.Empty, handler.GetParam(null), "Failed on null path.");
+            Assert.AreEqual(string.Empty, handler.GetParam(""), "Failed on empty path.");
+            Assert.AreEqual(string.Empty, handler.GetParam("s"), "Failed on short url.");
+            Assert.AreEqual(string.Empty, handler.GetParam("corruptUrl"), "Failed on corruptUrl.");
 
-            Assert.AreEqual(String.Empty, handler.GetParam(assetsPath));
+            Assert.AreEqual(string.Empty, handler.GetParam(assetsPath));
             Assert.AreEqual("/", handler.GetParam(assetsPath + "/"));
             Assert.AreEqual("/a", handler.GetParam(assetsPath + "/a"));
             Assert.AreEqual("/b/", handler.GetParam(assetsPath + "/b/"));

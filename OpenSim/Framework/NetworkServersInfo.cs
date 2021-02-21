@@ -45,8 +45,8 @@ namespace OpenSim.Framework
         public bool ssl_listener = false;
         public bool ssl_external = false;
         public uint https_port = 0;
-        public string cert_path = String.Empty;
-        public string cert_pass = String.Empty;
+        public string cert_path = string.Empty;
+        public string cert_pass = string.Empty;
 
         public NetworkServersInfo()
         {
@@ -72,8 +72,8 @@ namespace OpenSim.Framework
             ssl_external = config.Configs["Network"].GetBoolean("https_external",false);
             if( ssl_listener)
             {
-                cert_path = config.Configs["Network"].GetString("cert_path",String.Empty);
-                cert_pass = config.Configs["Network"].GetString("cert_pass",String.Empty);
+                cert_path = config.Configs["Network"].GetString("cert_path", string.Empty);
+                cert_pass = config.Configs["Network"].GetString("cert_pass", string.Empty);
                 https_port = (uint)config.Configs["Network"].GetInt("https_port", 0);
             }
         }

@@ -1787,7 +1787,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         }
 
         // Invoke the detailed logger and output something if it's enabled.
-        private void VDetailLog(string msg, params Object[] args)
+        private void VDetailLog(string msg, params object[] args)
         {
             if (ControllingPrim.PhysScene.VehicleLoggingEnabled)
                 ControllingPrim.PhysScene.DetailLog(msg, args);

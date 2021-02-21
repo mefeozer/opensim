@@ -719,7 +719,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 if (m_debugEnabled)
                     m_log.DebugFormat("[xmlGroups]: Deny inventory from {0} to {1}", giver, remoteAgentID);
 
-                string message = String.Empty;
+                string message = string.Empty;
 
                 // check if we already have it
                 InventoryItemBase itemCopy = scene.InventoryService.GetItem(remoteAgentID, attachmentUUID);

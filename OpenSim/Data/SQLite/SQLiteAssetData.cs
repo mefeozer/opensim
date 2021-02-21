@@ -262,13 +262,13 @@ namespace OpenSim.Data.SQLite
             // interesting has to be done to actually get these values
             // back out.  Not enough time to figure it out yet.
             AssetBase asset = new AssetBase(
-                new UUID((String)row["UUID"]),
-                (String)row["Name"],
+                new UUID((string)row["UUID"]),
+                (string)row["Name"],
                 Convert.ToSByte(row["Type"]),
-                (String)row["CreatorID"]
+                (string)row["CreatorID"]
             );
 
-            asset.Description = (String) row["Description"];
+            asset.Description = (string) row["Description"];
             asset.Local = Convert.ToBoolean(row["Local"]);
             asset.Temporary = Convert.ToBoolean(row["Temporary"]);
             asset.Flags = (AssetFlags)Convert.ToInt32(row["asset_flags"]);

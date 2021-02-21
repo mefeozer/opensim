@@ -125,7 +125,7 @@ namespace OpenSim.Region.CoreModules.Scripting.ScriptModuleComms
             if (m_scriptModule == null)
                 return;
 
-            Object[] args = new Object[] {-1, code, text, k};
+            object[] args = new object[] {-1, code, text, k};
 
             m_scriptModule.PostScriptEvent(script, "link_message", args);
         }

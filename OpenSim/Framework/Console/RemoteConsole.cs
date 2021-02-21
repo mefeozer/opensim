@@ -135,9 +135,9 @@ namespace OpenSim.Framework.Console
         protected IHttpServer m_Server = null;
         protected IConfigSource m_Config = null;
 
-        protected string m_UserName = String.Empty;
-        protected string m_Password = String.Empty;
-        protected string m_AllowedOrigin = String.Empty;
+        protected string m_UserName = string.Empty;
+        protected string m_Password = string.Empty;
+        protected string m_AllowedOrigin = string.Empty;
 
 
         public RemoteConsole(string defaultPrompt) : base(defaultPrompt)
@@ -166,13 +166,13 @@ namespace OpenSim.Framework.Console
                 return;
 
             // Get the username and password.
-            m_UserName = netConfig.GetString("ConsoleUser", String.Empty);
-            m_Password = netConfig.GetString("ConsolePass", String.Empty);
+            m_UserName = netConfig.GetString("ConsoleUser", string.Empty);
+            m_Password = netConfig.GetString("ConsolePass", string.Empty);
 
             // Woefully underdocumented, this is what makes javascript
             // console clients work. Set to "*" for anywhere or (better)
             // to specific addresses.
-            m_AllowedOrigin = netConfig.GetString("ConsoleAllowedOrigin", String.Empty);
+            m_AllowedOrigin = netConfig.GetString("ConsoleAllowedOrigin", string.Empty);
         }
 
         public void SetServer(IHttpServer server)
@@ -217,7 +217,7 @@ namespace OpenSim.Framework.Console
             if (components == null || components.Length == 0)
                 text = format;
             else
-                text = String.Format(format, components);
+                text = string.Format(format, components);
 
             Output(text, level, false, false, false);
         }
@@ -225,7 +225,7 @@ namespace OpenSim.Framework.Console
         protected void Output(string text, string level, bool isPrompt, bool isCommand, bool isInput)
         {
             if (level == null)
-                level = String.Empty;
+                level = string.Empty;
 
             // Increment the line number. It was 0 and they start at 1
             // so we need to pre-increment.
@@ -270,13 +270,13 @@ namespace OpenSim.Framework.Console
             {
                 m_expectingInput = true;
                 m_expectingCommand = true;
-                Output(p, String.Empty, true, true, false);
+                Output(p, string.Empty, true, true, false);
                 m_lastPromptUsed = p;
             }
             else
             {
                 m_expectingInput = true;
-                Output(p, String.Empty, true, false, false);
+                Output(p, string.Empty, true, false, false);
             }
 
 
@@ -309,7 +309,7 @@ namespace OpenSim.Framework.Console
 
             // Echo to all the other users what we have done. This
             // will also go to ourselves.
-            Output (cmdinput, String.Empty, false, false, true);
+            Output (cmdinput, string.Empty, false, false, true);
 
             // If this is a command, we need to resolve and execute it.
             if (isCommand)
@@ -328,7 +328,7 @@ namespace OpenSim.Framework.Console
                         if (cmd[i].Contains(" "))
                             cmd[i] = "\"" + cmd[i] + "\"";
                     }
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
 
@@ -362,7 +362,7 @@ namespace OpenSim.Framework.Console
         }
         */
 
-        protected void DoExpire(Object sender, ElapsedEventArgs e)
+        protected void DoExpire(object sender, ElapsedEventArgs e)
         {
             // Iterate the list of console connections and find those we
             // haven't heard from for longer then the longpoll interval.
@@ -586,7 +586,7 @@ namespace OpenSim.Framework.Console
                     continue;
 
                 string name = System.Web.HttpUtility.UrlDecode(elems[0]);
-                string value = String.Empty;
+                string value = string.Empty;
 
                 if (elems.Length > 1)
                     value = System.Web.HttpUtility.UrlDecode(elems[1]);

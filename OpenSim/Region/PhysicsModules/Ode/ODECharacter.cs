@@ -178,7 +178,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <param name="walk_divisor"></param>
         /// <param name="rundivisor"></param>
         public OdeCharacter(
-            String avName, OdeScene parent_scene, Vector3 pos, Vector3 vel, Vector3 size, float pid_d, float pid_p,
+            string avName, OdeScene parent_scene, Vector3 pos, Vector3 vel, Vector3 size, float pid_d, float pid_p,
             float capsule_radius, float tensor, float density,
             float walk_divisor, float rundivisor)
         {

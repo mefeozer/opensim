@@ -64,7 +64,7 @@ namespace OpenSim.Framework
         /// <summary>
         /// Base Caps path for user
         /// </summary>
-        public string CapsPath = String.Empty;
+        public string CapsPath = string.Empty;
 
         /// <summary>
         /// Seed caps for neighbor regions that the user can see into
@@ -288,7 +288,7 @@ namespace OpenSim.Framework
                         OSDMap pair = (OSDMap)o;
                         if (pair.TryGetValue("handle", out tmpOSD))
                         {
-                            if (!UInt64.TryParse(tmpOSD.AsString(), out handle))
+                            if (!ulong.TryParse(tmpOSD.AsString(), out handle))
                                 continue;
                         }
                         if (!ChildrenCapSeeds.ContainsKey(handle))
@@ -308,7 +308,7 @@ namespace OpenSim.Framework
             if (args.TryGetValue("child", out tmpOSD))
                 child = tmpOSD.AsBoolean();
             if (args.TryGetValue("circuit_code", out tmpOSD))
-                UInt32.TryParse(tmpOSD.AsString(), out circuitcode);
+                uint.TryParse(tmpOSD.AsString(), out circuitcode);
             if (args.TryGetValue("first_name", out tmpOSD))
                 firstname = tmpOSD.AsString();
             if (args.TryGetValue("last_name", out tmpOSD))
@@ -372,7 +372,7 @@ namespace OpenSim.Framework
             if (args.TryGetValue("serviceurls", out tmpOSD) && (tmpOSD is OSDMap))
             {
                 OSDMap urls = (OSDMap)tmpOSD;
-                foreach (KeyValuePair<String, OSD> kvp in urls)
+                foreach (KeyValuePair<string, OSD> kvp in urls)
                 {
                     ServiceURLs[kvp.Key] = kvp.Value;
                     //System.Console.WriteLine("XXX " + kvp.Key + "=" + ServiceURLs[kvp.Key]);

@@ -53,7 +53,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     // Used only for outputting debug information. Might not be set so check for null.
     public BSScene PhysicsScene { get; set; }
-    protected void MDetailLog(string msg, params Object[] parms)
+    protected void MDetailLog(string msg, params object[] parms)
     {
         if (PhysicsScene != null)
         {
@@ -234,7 +234,7 @@ public class BSVMotor : BSMotor
 
     public override string ToString()
     {
-        return String.Format("<{0},curr={1},targ={2},lastErr={3},decayTS={4}>",
+        return string.Format("<{0},curr={1},targ={2},lastErr={3},decayTS={4}>",
             UseName, CurrentValue, TargetValue, LastError, TargetValueDecayTimeScale);
     }
 }
@@ -355,7 +355,7 @@ public class BSFMotor : BSMotor
 
     public override string ToString()
     {
-        return String.Format("<{0},curr={1},targ={2},lastErr={3},decayTS={4}>",
+        return string.Format("<{0},curr={1},targ={2},lastErr={3},decayTS={4}>",
             UseName, CurrentValue, TargetValue, LastError, TargetValueDecayTimeScale);
     }
 

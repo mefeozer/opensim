@@ -160,7 +160,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
             }
 
             m_enabled = true;
-            m_ErrorStr = String.Empty;
+            m_ErrorStr = string.Empty;
 
             IConfig llFunctionsConfig = config.Configs["LL-Functions"];
 
@@ -229,7 +229,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
 
             if(!m_enabled)
             {
-                engine.PostScriptEvent(itemID, "http_request", new Object[] { urlcode.ToString(), "URL_REQUEST_DENIED", m_ErrorStr });
+                engine.PostScriptEvent(itemID, "http_request", new object[] { urlcode.ToString(), "URL_REQUEST_DENIED", m_ErrorStr });
                 return urlcode;
             }
 
@@ -237,7 +237,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
             {
                 if (m_UrlMap.Count >= TotalUrls)
                 {
-                    engine.PostScriptEvent(itemID, "http_request", new Object[] { urlcode.ToString(), "URL_REQUEST_DENIED",
+                    engine.PostScriptEvent(itemID, "http_request", new object[] { urlcode.ToString(), "URL_REQUEST_DENIED",
                         "Too many URLs already open" });
                     return urlcode;
                 }
@@ -280,7 +280,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
                 //    "[URL MODULE]: Set up incoming request url {0} for {1} in {2} {3}",
                 //     uri, itemID, host.Name, host.LocalId);
 
-                engine.PostScriptEvent(itemID, "http_request", new Object[] { urlcode.ToString(), "URL_REQUEST_GRANTED", url + "/"});
+                engine.PostScriptEvent(itemID, "http_request", new object[] { urlcode.ToString(), "URL_REQUEST_GRANTED", url + "/"});
             }
 
             return urlcode;
@@ -292,13 +292,13 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
 
             if(!m_enabled)
             {
-                engine.PostScriptEvent(itemID, "http_request", new Object[] { urlcode.ToString(), "URL_REQUEST_DENIED",  m_ErrorStr });
+                engine.PostScriptEvent(itemID, "http_request", new object[] { urlcode.ToString(), "URL_REQUEST_DENIED",  m_ErrorStr });
                 return urlcode;
             }
 
             if (m_HttpsServer == null)
             {
-                engine.PostScriptEvent(itemID, "http_request", new Object[] { urlcode.ToString(), "URL_REQUEST_DENIED", "" });
+                engine.PostScriptEvent(itemID, "http_request", new object[] { urlcode.ToString(), "URL_REQUEST_DENIED", "" });
                 return urlcode;
             }
 
@@ -306,7 +306,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
             {
                 if (m_UrlMap.Count >= TotalUrls)
                 {
-                    engine.PostScriptEvent(itemID, "http_request", new Object[] { urlcode.ToString(), "URL_REQUEST_DENIED",
+                    engine.PostScriptEvent(itemID, "http_request", new object[] { urlcode.ToString(), "URL_REQUEST_DENIED",
                         "Too many URLs already open" });
                     return urlcode;
                 }
@@ -348,7 +348,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
                 //    "[URL MODULE]: Set up incoming secure request url {0} for {1} in {2} {3}",
                 //     uri, itemID, host.Name, host.LocalId);
                 // keep ending / because legacy
-                engine.PostScriptEvent(itemID, "http_request", new Object[] { urlcode.ToString(), "URL_REQUEST_GRANTED", url + "/"});
+                engine.PostScriptEvent(itemID, "http_request", new object[] { urlcode.ToString(), "URL_REQUEST_GRANTED", url + "/"});
             }
 
             return urlcode;
@@ -806,7 +806,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
 
                     request.InputStream.Dispose();
 
-                    url.engine.PostScriptEvent(url.itemID, "http_request", new Object[] { requestID.ToString(), request.HttpMethod, requestBody });
+                    url.engine.PostScriptEvent(url.itemID, "http_request", new object[] { requestID.ToString(), request.HttpMethod, requestBody });
 
                     return null;
 

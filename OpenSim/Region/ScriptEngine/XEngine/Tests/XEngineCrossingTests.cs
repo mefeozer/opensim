@@ -160,7 +160,7 @@ default
                 det[0].Key = userId;
                 det[0].Populate(sceneA);
 
-                EventParams ep = new EventParams("touch_start", new Object[] { new LSL_Types.LSLInteger(1) }, det);
+                EventParams ep = new EventParams("touch_start", new object[] { new LSL_Types.LSLInteger(1) }, det);
 
                 messageReceived = null;
                 chatEvent.Reset();
@@ -194,7 +194,7 @@ default
                 det[0].Key = userId;
                 det[0].Populate(sceneB);
 
-                EventParams ep = new EventParams("touch_start", new Object[] { new LSL_Types.LSLInteger(1) }, det);
+                EventParams ep = new EventParams("touch_start", new object[] { new LSL_Types.LSLInteger(1) }, det);
 
                 Thread.Sleep(250); // wait for other change messages to pass
                 messageReceived = null;

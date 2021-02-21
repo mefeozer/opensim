@@ -56,7 +56,7 @@ namespace OpenSim.Data.SQLite
             m_Folders = new SqliteFolderHandler(
                     conn, "inventoryfolders", "XInventoryStore");
             m_Items = new SqliteItemHandler(
-                    conn, "inventoryitems", String.Empty);
+                    conn, "inventoryitems", string.Empty);
         }
 
         public XInventoryFolder[] GetFolders(string[] fields, string[] vals)
@@ -189,7 +189,7 @@ namespace OpenSim.Data.SQLite
 
             using (SqliteCommand cmd = new SqliteCommand())
             {
-                cmd.CommandText = String.Format("update {0} set parentFolderID = :ParentFolderID where inventoryID = :InventoryID", m_Realm);
+                cmd.CommandText = string.Format("update {0} set parentFolderID = :ParentFolderID where inventoryID = :InventoryID", m_Realm);
                 cmd.Parameters.Add(new SqliteParameter(":ParentFolderID", newParent));
                 cmd.Parameters.Add(new SqliteParameter(":InventoryID", id));
 
@@ -207,7 +207,7 @@ namespace OpenSim.Data.SQLite
         {
             using (SqliteCommand cmd  = new SqliteCommand())
             {
-                cmd.CommandText = String.Format("select * from inventoryitems where avatarId = :uuid and assetType = :type and flags = 1", m_Realm);
+                cmd.CommandText = string.Format("select * from inventoryitems where avatarId = :uuid and assetType = :type and flags = 1", m_Realm);
 
                 cmd.Parameters.Add(new SqliteParameter(":uuid", principalID.ToString()));
                 cmd.Parameters.Add(new SqliteParameter(":type", (int)AssetType.Gesture));
@@ -222,7 +222,7 @@ namespace OpenSim.Data.SQLite
 
             using (SqliteCommand cmd = new SqliteCommand())
             {
-                cmd.CommandText = String.Format("select inventoryCurrentPermissions from inventoryitems where avatarID = :PrincipalID and assetID = :AssetID", m_Realm);
+                cmd.CommandText = string.Format("select inventoryCurrentPermissions from inventoryitems where avatarID = :PrincipalID and assetID = :AssetID", m_Realm);
                 cmd.Parameters.Add(new SqliteParameter(":PrincipalID", principalID.ToString()));
                 cmd.Parameters.Add(new SqliteParameter(":AssetID", assetID.ToString()));
 
@@ -271,7 +271,7 @@ namespace OpenSim.Data.SQLite
 
             using (SqliteCommand cmd = new SqliteCommand())
             {
-                cmd.CommandText = String.Format("update {0} set parentFolderID = :ParentFolderID where folderID = :FolderID", m_Realm);
+                cmd.CommandText = string.Format("update {0} set parentFolderID = :ParentFolderID where folderID = :FolderID", m_Realm);
                 cmd.Parameters.Add(new SqliteParameter(":ParentFolderID", newParentFolderID));
                 cmd.Parameters.Add(new SqliteParameter(":FolderID", id));
 

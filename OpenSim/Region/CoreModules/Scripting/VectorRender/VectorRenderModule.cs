@@ -300,7 +300,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
                      case "bgcolor":
                      case "bgcolour":
                           int hex = 0;
-                         if (Int32.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out hex))
+                         if (int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out hex))
                          {
                              bgColor = Color.FromArgb(hex);
                          }
@@ -775,7 +775,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
                         int hex = 0;
 
                         Color newColor;
-                        if (Int32.TryParse(nextLine, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out hex))
+                        if (int.TryParse(nextLine, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out hex))
                         {
                             newColor = Color.FromArgb(hex);
                         }

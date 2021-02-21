@@ -117,7 +117,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             client.AddGenericPacketHandler("requestonlinenotification", OnRequestOnlineNotification);
         }
 
-        public void OnRequestOnlineNotification(Object sender, string method, List<String> args)
+        public void OnRequestOnlineNotification(object sender, string method, List<string> args)
         {
             if (!(sender is IClientAPI))
                 return;

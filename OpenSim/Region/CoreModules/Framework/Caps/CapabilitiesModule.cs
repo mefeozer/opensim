@@ -129,7 +129,7 @@ namespace OpenSim.Region.CoreModules.Framework
                 return;
 */
             Caps caps;
-            String capsObjectPath = GetCapsPath(agentId);
+            string capsObjectPath = GetCapsPath(agentId);
 
             lock (m_capsObjects)
             {

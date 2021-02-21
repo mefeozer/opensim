@@ -41,6 +41,7 @@ namespace OpenSim
     /// </summary>
     public class ConfigurationLoader
     {
+
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
@@ -69,80 +70,28 @@ namespace OpenSim
         /// <param name="networkInfo"></param>
         /// <returns>A configuration that gets passed to modules</returns>
         public OpenSimConfigSource LoadConfigSettings(
-                IConfigSource argvSource, EnvConfigSource envConfigSource, out ConfigSettings configSettings,
+                IConfigSource argvSource, out ConfigSettings configSettings,
                 out NetworkServersInfo networkInfo)
         {
             m_configSettings = configSettings = new ConfigSettings();
             m_networkServersInfo = networkInfo = new NetworkServersInfo();
-
-            bool iniFileExists = false;
-
             IConfig startupConfig = argvSource.Configs["Startup"];
 
             List<string> sources = new List<string>();
 
-            string masterFileName = startupConfig.GetString("inimaster", "OpenSimDefaults.ini");
+            AddOpensimDefaultsIniToSource(startupConfig, sources);
+            AddOpenSimIniToSource(startupConfig, sources);
 
-            if (masterFileName == "none")
-                masterFileName = String.Empty;
-
-            if (IsUri(masterFileName))
+            m_config = new OpenSimConfigSource
             {
-                if (!sources.Contains(masterFileName))
-                    sources.Add(masterFileName);
-            }
-            else
-            {
-                string masterFilePath = Path.GetFullPath(
-                        Path.Combine(Util.configDir(), masterFileName));
-
-                if (!string.IsNullOrEmpty(masterFileName))
-                {
-                    if (File.Exists(masterFilePath))
-                    {
-                        if (!sources.Contains(masterFilePath))
-                            sources.Add(masterFilePath);
-                    }
-                    else
-                    {
-                        m_log.ErrorFormat("Master ini file {0} not found", Path.GetFullPath(masterFilePath));
-                        Environment.Exit(1);
-                    }
-                }
-            }
-
-            string iniFileName = startupConfig.GetString("inifile", "OpenSim.ini");
-
-            if (IsUri(iniFileName))
-            {
-                if (!sources.Contains(iniFileName))
-                    sources.Add(iniFileName);
-                Application.iniFilePath = iniFileName;
-            }
-            else
-            {
-                Application.iniFilePath = Path.GetFullPath(
-                    Path.Combine(Util.configDir(), iniFileName));
-
-                if (!File.Exists(Application.iniFilePath))
-                {
-                    iniFileName = "OpenSim.xml";
-                    Application.iniFilePath = Path.GetFullPath(Path.Combine(Util.configDir(), iniFileName));
-                }
-
-                if (File.Exists(Application.iniFilePath))
-                {
-                    if (!sources.Contains(Application.iniFilePath))
-                        sources.Add(Application.iniFilePath);
-                }
-            }
-
-            m_config = new OpenSimConfigSource();
-            m_config.Source = new IniConfigSource();
+                Source = new IniConfigSource()
+            };
 
             m_log.Info("[CONFIG]: Reading configuration settings");
 
-            for (int i = 0 ; i < sources.Count ; i++)
+
+            bool iniFileExists = false;
+            for (int i = 0; i < sources.Count; i++)
             {
                 if (ReadConfig(m_config, sources[i]))
                 {
@@ -177,10 +126,12 @@ namespace OpenSim
 
                 if (overrideSources.Count > 0)
                 {
-                    OpenSimConfigSource overrideConfig = new OpenSimConfigSource();
-                    overrideConfig.Source = new IniConfigSource();
+                    OpenSimConfigSource overrideConfig = new OpenSimConfigSource
+                    {
+                        Source = new IniConfigSource()
+                    };
 
-                    for (int i = 0 ; i < overrideSources.Count ; i++)
+                    for (int i = 0; i < overrideSources.Count; i++)
                     {
                         if (ReadConfig(overrideConfig, overrideSources[i]))
                         {
@@ -192,17 +143,7 @@ namespace OpenSim
                 }
             }
 
-            if (sources.Count == 0)
-            {
-                m_log.FatalFormat("[CONFIG]: Could not load any configuration");
-                Environment.Exit(1);
-            }
-            else if (!iniFileExists)
-            {
-                m_log.FatalFormat("[CONFIG]: Could not load any configuration");
-                m_log.FatalFormat("[CONFIG]: Configuration exists, but there was an error loading it!");
-                Environment.Exit(1);
-            }
+            ExitForNoConfig(iniFileExists, sources);
 
             // Merge OpSys env vars
             m_log.Info("[CONFIG]: Loading environment variables for Config");
@@ -216,6 +157,81 @@ namespace OpenSim
             ReadConfigSettings();
 
             return m_config;
+        }
+
+        private void AddOpensimDefaultsIniToSource(IConfig startupConfig, List<string> sources)
+        {
+            string masterFileName = startupConfig.GetString("inimaster", "OpenSimDefaults.ini");
+
+            if (masterFileName == "none")
+                masterFileName = string.Empty;
+
+            if (IsUri(masterFileName))
+            {
+                if (!sources.Contains(masterFileName))
+                    sources.Add(masterFileName);
+            }
+            else
+            {
+                string masterFilePath = Path.GetFullPath(
+                        Path.Combine(Util.configDir(), masterFileName));
+
+                if (!string.IsNullOrEmpty(masterFileName))
+                {
+                    if (File.Exists(masterFilePath))
+                    {
+                        if (!sources.Contains(masterFilePath))
+                            sources.Add(masterFilePath);
+                    }
+                    else
+                    {
+                        m_log.ErrorFormat("Master ini file {0} not found", Path.GetFullPath(masterFilePath));
+                        Environment.Exit(1);
+                    }
+                }
+            }
+        }
+
+        private static void ExitForNoConfig(bool iniFileExists, List<string> sources)
+        {
+            if (sources.Count == 0)
+            {
+                m_log.FatalFormat("[CONFIG]: Could not load any configuration");
+                Environment.Exit(1);
+            }
+            else if (!iniFileExists)
+            {
+                m_log.FatalFormat("[CONFIG]: Could not load any configuration");
+                m_log.FatalFormat("[CONFIG]: Configuration exists, but there was an error loading it!");
+                Environment.Exit(1);
+            }
+        }
+
+        private void AddOpenSimIniToSource(IConfig startupConfig, List<string> sources)
+        {
+            string iniFileName = startupConfig.GetString("inifile", "OpenSim.ini");
+            if (IsUri(iniFileName))
+            {
+                if (!sources.Contains(iniFileName))
+                    sources.Add(iniFileName);
+            }
+            else
+            {
+                string iniFilePath = Path.GetFullPath(
+                    Path.Combine(Util.configDir(), iniFileName));
+
+                if (!File.Exists(iniFilePath))
+                {
+                    iniFileName = "OpenSim.xml";
+                    iniFilePath = Path.GetFullPath(Path.Combine(Util.configDir(), iniFileName));
+                }
+
+                if (File.Exists(iniFilePath))
+                {
+                    if (!sources.Contains(iniFilePath))
+                        sources.Add(iniFilePath);
+                }
+            }
         }
 
         /// <summary>

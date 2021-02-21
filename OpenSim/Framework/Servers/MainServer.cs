@@ -241,7 +241,7 @@ namespace OpenSim.Framework.Servers
                     if (lst.Count > 0)
                     {
                         handlers.AppendFormat("* XMLRPC methods ({0}):\n",lst.Count);
-                        foreach (String s in lst)
+                        foreach (string s in lst)
                             handlers.AppendFormat("\t{0}\n", s);
                     }
 
@@ -249,7 +249,7 @@ namespace OpenSim.Framework.Servers
                     if (lst.Count > 0)
                     {
                         handlers.AppendFormat("* JSONRPC methods ({0}):\n", lst.Count);
-                        foreach (String s in lst)
+                        foreach (string s in lst)
                             handlers.AppendFormat("\t{0}\n", s);
                     }
 
@@ -257,7 +257,7 @@ namespace OpenSim.Framework.Servers
                     if (lst.Count > 0)
                     {
                         handlers.AppendFormat("* index.php methods ({0}):\n", lst.Count);
-                        foreach (String s in lst)
+                        foreach (string s in lst)
                             handlers.AppendFormat("\t{0}\n", s);
                     }
 
@@ -265,7 +265,7 @@ namespace OpenSim.Framework.Servers
                     if (lst.Count > 0)
                     {
                         handlers.AppendFormat("* HTTP ({0}):\n", lst.Count);
-                        foreach (String s in lst)
+                        foreach (string s in lst)
                             handlers.AppendFormat("\t{0}\n", s);
                     }
 
@@ -273,7 +273,7 @@ namespace OpenSim.Framework.Servers
                     if (lst.Count > 0)
                     {
                         handlers.AppendFormat("* HTTP poll ({0}):\n", lst.Count);
-                        foreach (String s in lst)
+                        foreach (string s in lst)
                             handlers.AppendFormat("\t{0}\n", s);
                     }
 
@@ -281,7 +281,7 @@ namespace OpenSim.Framework.Servers
                     if (lst.Count > 0)
                     {
                         handlers.AppendFormat("* LLSD ({0}):\n", lst.Count);
-                        foreach (String s in lst)
+                        foreach (string s in lst)
                             handlers.AppendFormat("\t{0}\n", s);
                     }
 
@@ -289,7 +289,7 @@ namespace OpenSim.Framework.Servers
                     if (lst.Count > 0)
                     {
                         handlers.AppendFormat("* StreamHandlers ({0}):\n", lst.Count);
-                        foreach (String s in lst)
+                        foreach (string s in lst)
                             handlers.AppendFormat("\t{0}\n", s);
                     }
 
@@ -297,7 +297,7 @@ namespace OpenSim.Framework.Servers
                     if (lst.Count > 0)
                     {
                         handlers.AppendFormat("* SimpleStreamHandlers ({0}):\n", lst.Count);
-                        foreach (String s in lst)
+                        foreach (string s in lst)
                             handlers.AppendFormat("\t***:{0}\n", s);
                     }
 

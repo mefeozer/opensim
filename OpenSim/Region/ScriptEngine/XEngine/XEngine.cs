@@ -283,7 +283,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
                 return;
 
             m_ScriptFailCount = 0;
-            m_ScriptErrorMessage = String.Empty;
+            m_ScriptErrorMessage = string.Empty;
 
             m_Enabled = m_ScriptConfig.GetBoolean("Enabled", true);
 
@@ -799,13 +799,13 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             if (m_SleepTime > 0)
             {
                 m_ThreadPool.QueueWorkItem(new WorkItemCallback(this.DoMaintenance),
-                                           new Object[]{ m_SleepTime });
+                                           new object[]{ m_SleepTime });
             }
 
             if (m_SaveTime > 0)
             {
                 m_ThreadPool.QueueWorkItem(new WorkItemCallback(this.DoBackup),
-                                           new Object[] { m_SaveTime });
+                                           new object[] { m_SaveTime });
             }
         }
 
@@ -831,7 +831,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
         public object DoBackup(object o)
         {
-            Object[] p = (Object[])o;
+            object[] p = (object[])o;
             int saveTime = (int)p[0];
 
             if (saveTime > 0)
@@ -874,7 +874,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
             if (saveTime > 0)
                 m_ThreadPool.QueueWorkItem(new WorkItemCallback(this.DoBackup),
-                                           new Object[] { saveTime });
+                                           new object[] { saveTime });
 
             return 0;
         }
@@ -902,7 +902,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             System.Threading.Thread.Sleep(sleepTime);
 
             m_ThreadPool.QueueWorkItem(new WorkItemCallback(this.DoMaintenance),
-                                       new Object[]{ sleepTime });
+                                       new object[]{ sleepTime });
 
             return 0;
         }
@@ -1008,7 +1008,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             if (engine != ScriptEngineName)
                 return;
 
-            Object[] parms = new Object[]{localID, itemID, script, startParam, postOnRez, (StateSource)stateSource};
+            object[] parms = new object[]{localID, itemID, script, startParam, postOnRez, (StateSource)stateSource};
 
             if (stateSource == (int)StateSource.ScriptedRez)
             {
@@ -1045,7 +1045,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             }
         }
 
-        public Object DoOnRezScriptQueue(Object dummy)
+        public object DoOnRezScriptQueue(object dummy)
         {
             try
             {
@@ -1129,7 +1129,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
         private bool DoOnRezScript(object[] parms)
         {
-            Object[] p = parms;
+            object[] p = parms;
             uint localID = (uint)p[0];
             UUID itemID = (UUID)p[1];
             string script =(string)p[2];
@@ -1800,9 +1800,9 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             return false;
         }
 
-        public bool PostScriptEvent(UUID itemID, string name, Object[] p)
+        public bool PostScriptEvent(UUID itemID, string name, object[] p)
         {
-            Object[] lsl_p = new Object[p.Length];
+            object[] lsl_p = new object[p.Length];
             for (int i = 0; i < p.Length ; i++)
             {
                 if (p[i] is int)
@@ -1822,13 +1822,13 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             return PostScriptEvent(itemID, new EventParams(name, lsl_p, new DetectParams[0]));
         }
 
-        public bool PostObjectEvent(UUID itemID, string name, Object[] p)
+        public bool PostObjectEvent(UUID itemID, string name, object[] p)
         {
             SceneObjectPart part = m_Scene.GetSceneObjectPart(itemID);
             if (part == null)
                 return false;
 
-            Object[] lsl_p = new Object[p.Length];
+            object[] lsl_p = new object[p.Length];
             for (int i = 0; i < p.Length ; i++)
             {
                 if (p[i] is int)
@@ -2035,7 +2035,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
                 i.Running = prevRunning;
             }
 
-            DoBackup(new Object[] {0});
+            DoBackup(new object[] {0});
         }
 
         public IScriptApi GetApi(UUID itemID, string name)
@@ -2126,7 +2126,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
             string fn = Path.GetFileName(assemName);
 
-            string assem = String.Empty;
+            string assem = string.Empty;
             string assemNameText = assemName + ".text";
 
             if (File.Exists(assemNameText))
@@ -2135,7 +2135,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
                 if (tfi != null)
                 {
-                    Byte[] tdata = new Byte[tfi.Length];
+                    byte[] tdata = new byte[tfi.Length];
 
                     try
                     {
@@ -2161,7 +2161,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
                 if (fi != null)
                 {
-                    Byte[] data = new Byte[fi.Length];
+                    byte[] data = new byte[fi.Length];
 
                     try
                     {
@@ -2180,7 +2180,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
                 }
             }
 
-            string map = String.Empty;
+            string map = string.Empty;
 
             if (File.Exists(fn + ".map"))
             {
@@ -2281,7 +2281,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
                 if (!File.Exists(path))
                 {
-                    Byte[] filedata = Convert.FromBase64String(base64);
+                    byte[] filedata = Convert.FromBase64String(base64);
 
                     try
                     {

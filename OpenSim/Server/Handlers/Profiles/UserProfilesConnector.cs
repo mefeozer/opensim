@@ -64,7 +64,7 @@ namespace OpenSim.Server.Handlers.Profiles
 
             IConfig serverConfig = config.Configs[ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section {0} in config file", ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", ConfigName));
 
             if(!serverConfig.GetBoolean("Enabled",false))
             {
@@ -76,9 +76,9 @@ namespace OpenSim.Server.Handlers.Profiles
 
             Server = server;
 
-            string service = serverConfig.GetString("LocalServiceModule", String.Empty);
+            string service = serverConfig.GetString("LocalServiceModule", string.Empty);
 
-            Object[] args = new Object[] { config, ConfigName };
+            object[] args = new object[] { config, ConfigName };
             ServiceModule = ServerUtils.LoadPlugin<IUserProfilesService>(service, args);
 
             JsonRpcProfileHandlers handler = new JsonRpcProfileHandlers(ServiceModule);

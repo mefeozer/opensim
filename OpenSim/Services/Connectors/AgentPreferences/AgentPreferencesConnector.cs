@@ -41,7 +41,7 @@ namespace OpenSim.Services.Connectors
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         public AgentPreferencesServicesConnector()
         {
@@ -86,7 +86,7 @@ namespace OpenSim.Services.Connectors
             Dictionary<string, object> sendData = new Dictionary<string, object>();
 
             string reply = string.Empty;
-            string uri = String.Concat(m_ServerURI, "/agentprefs");
+            string uri = string.Concat(m_ServerURI, "/agentprefs");
 
             sendData["METHOD"] = "getagentprefs";
             sendData["UserID"] = principalID;

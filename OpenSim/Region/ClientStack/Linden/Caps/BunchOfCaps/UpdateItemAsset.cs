@@ -239,7 +239,7 @@ namespace OpenSim.Region.ClientStack.Linden
             if (TaskScriptUpdatedCall != null)
             {
                 ArrayList e = TaskScriptUpdatedCall(m_HostCapsObj.AgentID, itemID, primID, isScriptRunning, data);
-                foreach (Object item in e)
+                foreach (object item in e)
                     errors.Add(item);
             }
         }
@@ -292,7 +292,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     return;
                 }
 
-                string res = String.Empty;
+                string res = string.Empty;
 
                 if (OnUpLoad == null)
                 {
@@ -392,7 +392,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
                 try
                 {
-                    string res = String.Empty;
+                    string res = string.Empty;
                     LLSDTaskScriptUploadComplete uploadComplete = new LLSDTaskScriptUploadComplete();
 
                     ArrayList errors = new ArrayList();

@@ -62,14 +62,14 @@ namespace OpenSim.Server.Handlers.Hypergrid
         }
 
         public InstantMessageServerConnector(IConfigSource config, IHttpServer server, IInstantMessageSimConnector simConnector) :
-                base(config, server, String.Empty)
+                base(config, server, string.Empty)
         {
             IConfig gridConfig = config.Configs["HGInstantMessageService"];
             if (gridConfig != null)
             {
                 string serviceDll = gridConfig.GetString("LocalServiceModule", string.Empty);
 
-                Object[] args = new Object[] { config, simConnector };
+                object[] args = new object[] { config, simConnector };
                 m_IMService = ServerUtils.LoadPlugin<IInstantMessage>(serviceDll, args);
             }
             if (m_IMService == null)
@@ -163,7 +163,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                         fromGroup = true;
 
                     string requestData2 = (string)requestData["offline"];
-                    if (String.IsNullOrEmpty(requestData2))
+                    if (string.IsNullOrEmpty(requestData2))
                     {
                         offline = 0;
                     }

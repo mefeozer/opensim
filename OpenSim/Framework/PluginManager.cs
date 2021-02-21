@@ -220,7 +220,7 @@ namespace OpenSim.Framework
 
             foreach (AddinRepositoryEntry entry in entries)
             {
-                Console.WriteLine(String.Format("{0}",entry.Addin.Id));
+                Console.WriteLine(string.Format("{0}",entry.Addin.Id));
             }
         }
 

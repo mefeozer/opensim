@@ -243,7 +243,7 @@ public class Vertex : IComparable<Vertex>
         return me.CompareTo(other) < 0;
     }
 
-    public String ToRaw()
+    public string ToRaw()
     {
         // Why this stuff with the number formatter?
         // Well, the raw format uses the english/US notation of numbers
@@ -255,7 +255,7 @@ public class Vertex : IComparable<Vertex>
         nfi.NumberDecimalSeparator = ".";
         nfi.NumberDecimalDigits = 3;
 
-        String s1 = X.ToString("N2", nfi) + " " + Y.ToString("N2", nfi) + " " + Z.ToString("N2", nfi);
+        string s1 = X.ToString("N2", nfi) + " " + Y.ToString("N2", nfi) + " " + Z.ToString("N2", nfi);
 
         return s1;
     }
@@ -379,15 +379,15 @@ public class Triangle
         radius_square = (float) (rx*rx + ry*ry);
     }
 
-    public override String ToString()
+    public override string ToString()
     {
         NumberFormatInfo nfi = new NumberFormatInfo();
         nfi.CurrencyDecimalDigits = 2;
         nfi.CurrencyDecimalSeparator = ".";
 
-        String s1 = "<" + v1.X.ToString(nfi) + "," + v1.Y.ToString(nfi) + "," + v1.Z.ToString(nfi) + ">";
-        String s2 = "<" + v2.X.ToString(nfi) + "," + v2.Y.ToString(nfi) + "," + v2.Z.ToString(nfi) + ">";
-        String s3 = "<" + v3.X.ToString(nfi) + "," + v3.Y.ToString(nfi) + "," + v3.Z.ToString(nfi) + ">";
+        string s1 = "<" + v1.X.ToString(nfi) + "," + v1.Y.ToString(nfi) + "," + v1.Z.ToString(nfi) + ">";
+        string s2 = "<" + v2.X.ToString(nfi) + "," + v2.Y.ToString(nfi) + "," + v2.Z.ToString(nfi) + ">";
+        string s3 = "<" + v3.X.ToString(nfi) + "," + v3.Y.ToString(nfi) + "," + v3.Z.ToString(nfi) + ">";
 
         return s1 + ";" + s2 + ";" + s3;
     }
@@ -425,9 +425,9 @@ public class Triangle
 
     // Dumps a triangle in the "raw faces" format, blender can import. This is for visualisation and
     // debugging purposes
-    public String ToStringRaw()
+    public string ToStringRaw()
     {
-        String output = v1.ToRaw() + " " + v2.ToRaw() + " " + v3.ToRaw();
+        string output = v1.ToRaw() + " " + v2.ToRaw() + " " + v3.ToRaw();
         return output;
     }
 }

@@ -79,7 +79,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
 
             int responsecode = 200;
-            string responseString = String.Empty;
+            string responseString = string.Empty;
             string contentType;
             byte[] buffer = null;
             int rangeStart = 0;
@@ -107,7 +107,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
                 contentType = (string)responsedata["content_type"];
                 if (responseString == null)
-                    responseString = String.Empty;
+                    responseString = string.Empty;
             }
             catch
             {

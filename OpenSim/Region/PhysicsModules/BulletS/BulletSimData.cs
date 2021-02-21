@@ -106,11 +106,11 @@ public class BulletShape
     public BulletShape()
     {
         shapeType = BSPhysicsShapeType.SHAPE_UNKNOWN;
-        shapeKey = (System.UInt64)FixedShapeKey.KEY_NONE;
+        shapeKey = (ulong)FixedShapeKey.KEY_NONE;
         isNativeShape = false;
     }
     public BSPhysicsShapeType shapeType;
-    public System.UInt64 shapeKey;
+    public ulong shapeKey;
     public bool isNativeShape;
 
     public virtual void Clear() { }

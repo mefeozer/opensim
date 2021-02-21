@@ -167,7 +167,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 return;
             }
 
-            Byte[] data = m_service.MuteListRequest(client.AgentId, crc);
+            byte[] data = m_service.MuteListRequest(client.AgentId, crc);
             if (data == null)
             {
                 if(crc == 0)

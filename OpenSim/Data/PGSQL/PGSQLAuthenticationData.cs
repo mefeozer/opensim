@@ -158,9 +158,9 @@ namespace OpenSim.Data.PGSQL
                     StringBuilder insertBuilder = new StringBuilder();
 
                     insertBuilder.AppendFormat("insert into {0} (uuid, \"", m_Realm);
-                    insertBuilder.Append(String.Join("\", \"", fields));
+                    insertBuilder.Append(string.Join("\", \"", fields));
                     insertBuilder.Append("\") values (:principalID, :");
-                    insertBuilder.Append(String.Join(", :", fields));
+                    insertBuilder.Append(string.Join(", :", fields));
                     insertBuilder.Append(")");
 
                     cmd.CommandText = insertBuilder.ToString();

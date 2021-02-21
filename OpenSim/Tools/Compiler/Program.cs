@@ -85,10 +85,10 @@ namespace OpenSim.Tools.LSL.Compiler
 
         private static string CreateCSCompilerScript(string compileScript)
         {
-            compileScript = String.Empty +
+            compileScript = string.Empty +
                 "using OpenSim.Region.ScriptEngine.Shared; using System.Collections.Generic;\r\n" +
-                String.Empty + "namespace SecondLife { " +
-                String.Empty + "public class Script : OpenSim.Region.ScriptEngine.Shared.ScriptBase.ScriptBaseClass { \r\n" +
+                string.Empty + "namespace SecondLife { " +
+                string.Empty + "public class Script : OpenSim.Region.ScriptEngine.Shared.ScriptBase.ScriptBaseClass { \r\n" +
                 @"public Script() { } " +
                 compileScript +
                 "} }\r\n";
@@ -135,7 +135,7 @@ namespace OpenSim.Tools.LSL.Compiler
 
             if (results.Errors.Count > 0)
             {
-                string errtext = String.Empty;
+                string errtext = string.Empty;
                 foreach (CompilerError CompErr in results.Errors)
                 {
                     string severity = CompErr.IsWarning ? "Warning" : "Error";
@@ -150,7 +150,7 @@ namespace OpenSim.Tools.LSL.Compiler
 
                     // The Second Life viewer's script editor begins
                     // countingn lines and columns at 0, so we subtract 1.
-                    errtext += String.Format("Line ({0},{1}): {4} {2}: {3}\n",
+                    errtext += string.Format("Line ({0},{1}): {4} {2}: {3}\n",
                                              lslPos.Key - 1, lslPos.Value - 1,
                                              CompErr.ErrorNumber, text, severity);
                 }
@@ -165,7 +165,7 @@ namespace OpenSim.Tools.LSL.Compiler
 
             if (!File.Exists(OutFile))
             {
-                string errtext = String.Empty;
+                string errtext = string.Empty;
                 errtext += "No compile error. But not able to locate compiled file.";
                 throw new Exception(errtext);
             }
@@ -179,12 +179,12 @@ namespace OpenSim.Tools.LSL.Compiler
 
             if (fi == null)
             {
-                string errtext = String.Empty;
+                string errtext = string.Empty;
                 errtext += "No compile error. But not able to stat file.";
                 throw new Exception(errtext);
             }
 
-            Byte[] data = new Byte[fi.Length];
+            byte[] data = new byte[fi.Length];
 
             try
             {
@@ -194,7 +194,7 @@ namespace OpenSim.Tools.LSL.Compiler
             }
             catch (Exception)
             {
-                string errtext = String.Empty;
+                string errtext = string.Empty;
                 errtext += "No compile error. But not able to open file.";
                 throw new Exception(errtext);
             }
@@ -202,12 +202,12 @@ namespace OpenSim.Tools.LSL.Compiler
             // Convert to base64
             //
             string filetext = System.Convert.ToBase64String(data);
-            Byte[] buf = Encoding.ASCII.GetBytes(filetext);
+            byte[] buf = Encoding.ASCII.GetBytes(filetext);
             FileStream sfs = File.Create(OutFile + ".text");
             sfs.Write(buf, 0, buf.Length);
             sfs.Close();
 
-            string posmap = String.Empty;
+            string posmap = string.Empty;
 //            if (m_positionMap != null)
 //            {
 //                foreach (KeyValuePair<KeyValuePair<int, int>, KeyValuePair<int, int>> kvp in m_positionMap)

@@ -38,7 +38,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     private BSScene m_physicsScene { get; set; }
 
-    private Object m_collectionActivityLock = new Object();
+    private object m_collectionActivityLock = new object();
 
     private bool DDetail = false;
 
@@ -410,7 +410,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         return ret;
     }
 
-    private void DetailLog(string msg, params Object[] args)
+    private void DetailLog(string msg, params object[] args)
     {
         if (m_physicsScene.PhysicsLogging.Enabled)
             m_physicsScene.DetailLog(msg, args);

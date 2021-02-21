@@ -40,7 +40,7 @@ namespace OpenSim.Framework
         public Vector3 posVector = Vector3.Zero;
         public Quaternion rotQuat = Quaternion.Identity;
         public Vector3 velVector = Vector3.Zero;
-        public string nameStr = String.Empty;
+        public string nameStr = string.Empty;
         public int colliderType = 0;
         public int linkNumber;
     }

@@ -91,7 +91,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
             if (generateMaptiles)
             {
-                if (String.IsNullOrEmpty(m_scene.RegionInfo.MaptileStaticFile))
+                if (string.IsNullOrEmpty(m_scene.RegionInfo.MaptileStaticFile))
                 {
                     if (textureTerrain)
                     {
@@ -387,8 +387,8 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                                         continue;
 
                                     // skip prim in non-finite position
-                                    if (Single.IsNaN(pos.X) || Single.IsNaN(pos.Y) ||
-                                        Single.IsInfinity(pos.X) || Single.IsInfinity(pos.Y))
+                                    if (float.IsNaN(pos.X) || float.IsNaN(pos.Y) ||
+                                        float.IsInfinity(pos.X) || float.IsInfinity(pos.Y))
                                         continue;
 
                                     // Figure out if object is under 256m above the height of the terrain

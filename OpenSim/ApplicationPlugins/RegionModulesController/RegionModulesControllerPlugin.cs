@@ -124,11 +124,11 @@ namespace OpenSim.ApplicationPlugins.RegionModulesController
             //
             foreach (TypeExtensionNode node in m_sharedModules)
             {
-                Object[] ctorArgs = new Object[] { (uint)0 };
+                object[] ctorArgs = new object[] { (uint)0 };
 
                 // Read the config again
                 string moduleString =
-                        modulesConfig.GetString("Setup_" + node.Id, String.Empty);
+                        modulesConfig.GetString("Setup_" + node.Id, string.Empty);
                 // Test to see if we want this module
                 if (moduleString == "disabled")
                     continue;
@@ -270,7 +270,7 @@ namespace OpenSim.ApplicationPlugins.RegionModulesController
         {
             // Get the config string
             string moduleString =
-                    modulesConfig.GetString("Setup_" + node.Id, String.Empty);
+                    modulesConfig.GetString("Setup_" + node.Id, string.Empty);
 
             // We have a selector
             if (!string.IsNullOrEmpty(moduleString))
@@ -360,11 +360,11 @@ namespace OpenSim.ApplicationPlugins.RegionModulesController
             List<INonSharedRegionModule> list = new List<INonSharedRegionModule>();
             foreach (TypeExtensionNode node in m_nonSharedModules)
             {
-                Object[] ctorArgs = new Object[] {0};
+                object[] ctorArgs = new object[] {0};
 
                 // Read the config
                 string moduleString =
-                        modulesConfig.GetString("Setup_" + node.Id, String.Empty);
+                        modulesConfig.GetString("Setup_" + node.Id, string.Empty);
 
                 // We may not want to load this at all
                 if (moduleString == "disabled")

@@ -60,7 +60,7 @@ namespace OpenSim.Services.AuthenticationService
         public string Authenticate(UUID principalID, string password, int lifetime, out UUID realID)
         {
             AuthenticationData data = m_Database.Get(principalID);
-            string result = String.Empty;
+            string result = string.Empty;
             realID = UUID.Zero;
             if (data != null && data.Data != null)
             {

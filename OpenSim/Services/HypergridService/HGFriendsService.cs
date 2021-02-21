@@ -65,7 +65,7 @@ namespace OpenSim.Services.HypergridService
 
         private static string m_ConfigName = "HGFriendsService";
 
-        public HGFriendsService(IConfigSource config, String configName, IFriendsSimConnector localSimConn)
+        public HGFriendsService(IConfigSource config, string configName, IFriendsSimConnector localSimConn)
         {
             if (m_FriendsLocalSimConnector == null)
                 m_FriendsLocalSimConnector = localSimConn;
@@ -77,11 +77,11 @@ namespace OpenSim.Services.HypergridService
                 if (!string.IsNullOrEmpty(configName))
                     m_ConfigName = configName;
 
-                Object[] args = new Object[] { config };
+                object[] args = new object[] { config };
 
                 IConfig serverConfig = config.Configs[m_ConfigName];
                 if (serverConfig == null)
-                    throw new Exception(String.Format("No section {0} in config file", m_ConfigName));
+                    throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
 
                 string theService = serverConfig.GetString("FriendsService", string.Empty);
                 if (string.IsNullOrEmpty(theService))
@@ -126,7 +126,7 @@ namespace OpenSim.Services.HypergridService
         public bool NewFriendship(FriendInfo friend, bool verified)
         {
             UUID friendID;
-            string tmp = string.Empty, url = String.Empty, first = String.Empty, last = String.Empty;
+            string tmp = string.Empty, url = string.Empty, first = string.Empty, last = string.Empty;
             if (!Util.ParseUniversalUserIdentifier(friend.Friend, out friendID, out url, out first, out last, out tmp))
                 return false;
 
@@ -303,7 +303,7 @@ namespace OpenSim.Services.HypergridService
 
         #region Aux
 
-        private void ProcessFriendshipOffered(UUID fromID, String fromName, UUID toID, String message)
+        private void ProcessFriendshipOffered(UUID fromID, string fromName, UUID toID, string message)
         {
             // Great, it's a genuine request. Let's proceed.
             // But now we need to confirm that the requester is who he says he is
@@ -343,7 +343,7 @@ namespace OpenSim.Services.HypergridService
             ForwardToSim("FriendshipOffered", fromID, fromName, fromUUI, toID, message);
         }
 
-        private bool ForwardToSim(string op, UUID fromID, string name, String fromUUI, UUID toID, string message)
+        private bool ForwardToSim(string op, UUID fromID, string name, string fromUUI, UUID toID, string message)
         {
             PresenceInfo session = null;
             GridRegion region = null;

@@ -104,7 +104,7 @@ namespace OpenSim.Framework
             if (m_animations.TryGetValue(index, out val))
                 return val.Key;
 
-            return String.Empty;
+            return string.Empty;
         }
 
         public void SetAnimation(string index, string name, UUID anim)
@@ -118,7 +118,7 @@ namespace OpenSim.Framework
             m_animations[index] = new KeyValuePair<string, UUID>(name, anim);
         }
 
-        public AnimationSet(Byte[] data)
+        public AnimationSet(byte[] data)
         {
             string assetData = System.Text.Encoding.ASCII.GetString(data);
             Console.WriteLine("--------------------");
@@ -127,7 +127,7 @@ namespace OpenSim.Framework
             Console.WriteLine("--------------------");
         }
 
-        public Byte[] ToBytes()
+        public byte[] ToBytes()
         {
             // If there was an error parsing the input, we give back an
             // empty set rather than the original data.
@@ -137,9 +137,9 @@ namespace OpenSim.Framework
                 return System.Text.Encoding.ASCII.GetBytes(dummy);
             }
 
-            string assetData = String.Format("version 1\ncount {0}\n", m_animations.Count);
+            string assetData = string.Format("version 1\ncount {0}\n", m_animations.Count);
             foreach (KeyValuePair<string, KeyValuePair<string, UUID>> kvp in m_animations)
-                assetData += String.Format("{0} {1} {2}\n", kvp.Key, kvp.Value.Value.ToString(), kvp.Value.Key);
+                assetData += string.Format("{0} {1} {2}\n", kvp.Key, kvp.Value.Value.ToString(), kvp.Value.Key);
             return System.Text.Encoding.ASCII.GetBytes(assetData);
         }
 /*

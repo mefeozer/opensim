@@ -86,7 +86,7 @@ namespace OpenSim.Framework
 
         public override string ToString()
         {
-            return String.Format("DiscardLevel: {0}, Priority: {1}, PacketNumber: {2}, AssetId:{3}, RequestType:{4}",
+            return string.Format("DiscardLevel: {0}, Priority: {1}, PacketNumber: {2}, AssetId:{3}, RequestType:{4}",
                                  m_discardLevel,
                                  m_priority, m_packetNumber, m_requestedAssetID, m_requestType);
         }

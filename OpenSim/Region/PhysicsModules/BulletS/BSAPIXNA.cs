@@ -2090,8 +2090,8 @@ private sealed class BulletConstraintXNA : BulletConstraint
     public static void DumpRaw(ObjectArray<int>indices, ObjectArray<float> vertices, int pIndicesCount,int pVerticesCount )
     {
 
-        String fileName = "objTest3.raw";
-        String completePath = System.IO.Path.Combine(Util.configDir(), fileName);
+            string fileName = "objTest3.raw";
+            string completePath = System.IO.Path.Combine(Util.configDir(), fileName);
         StreamWriter sw = new StreamWriter(completePath);
         IndexedMesh mesh = new IndexedMesh();
 
@@ -2124,8 +2124,8 @@ private sealed class BulletConstraintXNA : BulletConstraint
     public static void DumpRaw(int[] indices, float[] vertices, int pIndicesCount, int pVerticesCount)
     {
 
-        String fileName = "objTest6.raw";
-        String completePath = System.IO.Path.Combine(Util.configDir(), fileName);
+            string fileName = "objTest6.raw";
+            string completePath = System.IO.Path.Combine(Util.configDir(), fileName);
         StreamWriter sw = new StreamWriter(completePath);
         IndexedMesh mesh = new IndexedMesh();
 
@@ -2419,7 +2419,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
         return ent;
     }
 
-    public override bool UpdateParameter(BulletWorld world, uint localID, String parm, float value) { /* TODO */
+    public override bool UpdateParameter(BulletWorld world, uint localID, string parm, float value) { /* TODO */
         return false; }
 
     public override Vector3 GetLocalScaling(BulletShape pShape)

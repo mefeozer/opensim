@@ -44,7 +44,7 @@ namespace OpenSim.Data.PGSQL
             m_Folders = new PGSQLFolderHandler(
                     conn, "inventoryfolders", "InventoryStore");
             m_Items = new PGSQLItemHandler(
-                    conn, "inventoryitems", String.Empty);
+                    conn, "inventoryitems", string.Empty);
         }
 
         public static UUID str2UUID(string strUUID)
@@ -143,7 +143,7 @@ namespace OpenSim.Data.PGSQL
             {
                 using (NpgsqlCommand cmd = new NpgsqlCommand())
                 {
-                    cmd.CommandText = String.Format(@"update {0} set ""parentFolderID"" = :ParentFolderID where ""inventoryID"" = :InventoryID", m_Realm);
+                    cmd.CommandText = string.Format(@"update {0} set ""parentFolderID"" = :ParentFolderID where ""inventoryID"" = :InventoryID", m_Realm);
                     cmd.Parameters.Add(m_database.CreateParameter("ParentFolderID", newParent));
                     cmd.Parameters.Add(m_database.CreateParameter("InventoryID", id ));
                     cmd.Connection = conn;
@@ -168,7 +168,7 @@ namespace OpenSim.Data.PGSQL
                 {
 //                    cmd.CommandText = String.Format(@"select * from inventoryitems where ""avatarID"" = :uuid and ""assetType"" = :type and ""flags"" = 1", m_Realm);
 
-                    cmd.CommandText = String.Format(@"select * from inventoryitems where ""avatarID"" = :uuid and ""assetType"" = :type and ""flags"" = 1");
+                    cmd.CommandText = string.Format(@"select * from inventoryitems where ""avatarID"" = :uuid and ""assetType"" = :type and ""flags"" = 1");
 
                     UUID princID = UUID.Zero;
                     UUID.TryParse(principalID, out princID);
@@ -195,7 +195,7 @@ namespace OpenSim.Data.PGSQL
                                    and ""assetID"" = :AssetID
                                  group by ""assetID"" ", m_Realm);
 */
-                    cmd.CommandText = String.Format(@"select bit_or(""inventoryCurrentPermissions"") as ""inventoryCurrentPermissions""
+                    cmd.CommandText = string.Format(@"select bit_or(""inventoryCurrentPermissions"") as ""inventoryCurrentPermissions""
                                  from inventoryitems
                                  where ""avatarID""::uuid = :PrincipalID
                                    and ""assetID""::uuid = :AssetID
@@ -259,7 +259,7 @@ namespace OpenSim.Data.PGSQL
                     UUID newPar = UUID.Zero;
                     UUID.TryParse(newParentFolderID, out newPar);
 
-                    cmd.CommandText = String.Format(@"update {0} set ""parentFolderID"" = :ParentFolderID where ""folderID"" = :folderID", m_Realm);
+                    cmd.CommandText = string.Format(@"update {0} set ""parentFolderID"" = :ParentFolderID where ""folderID"" = :folderID", m_Realm);
                     cmd.Parameters.Add(m_database.CreateParameter("ParentFolderID", newPar));
                     cmd.Parameters.Add(m_database.CreateParameter("folderID", foldID));
                     cmd.Connection = conn;

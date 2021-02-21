@@ -486,7 +486,7 @@ namespace OpenSim.Region.Framework.Scenes
         private byte _objectSaleType;
         private int _salePrice;
         private uint _category;
-        private Int32 _creationDate;
+        private int _creationDate;
         private uint _parentID = 0;
         private uint _baseMask = (uint)(PermissionMask.All | PermissionMask.Export);
         private uint _ownerMask = (uint)(PermissionMask.All | PermissionMask.Export);
@@ -728,13 +728,13 @@ namespace OpenSim.Region.Framework.Scenes
             set { m_scriptAccessPin = (int)value; }
         }
 
-        public Byte[] TextureAnimation
+        public byte[] TextureAnimation
         {
             get { return m_TextureAnimation; }
             set { m_TextureAnimation = value; }
         }
 
-        public Byte[] ParticleSystem
+        public byte[] ParticleSystem
         {
             get
             {
@@ -3779,7 +3779,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             // The only way to get a deep copy/ If we don't do this, we can
             // never detect color changes further down.
-            Byte[] buf = Shape.Textures.GetBytes();
+            byte[] buf = Shape.Textures.GetBytes();
             Primitive.TextureEntry tex = new Primitive.TextureEntry(buf, 0, buf.Length);
             Color4 texcolor;
             int nsides = GetNumberOfSides();
@@ -5395,7 +5395,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         public override string ToString()
         {
-            return String.Format("{0} {1} (parent {2}))", Name, UUID, ParentGroup);
+            return string.Format("{0} {1} (parent {2}))", Name, UUID, ParentGroup);
         }
 
         #endregion Public Methods
@@ -5497,7 +5497,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// Logs the prim's permissions. Useful when debugging permission problems.
         /// </summary>
         /// <param name="message"></param>
-        private void LogPermissions(String message)
+        private void LogPermissions(string message)
         {
             PermissionsUtil.LogPermissions(Name, message, BaseMask, OwnerMask, NextOwnerMask);
         }
@@ -5807,7 +5807,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
         }
 
-        public Byte[] SerializeAnimations()
+        public byte[] SerializeAnimations()
         {
             if (AnimationsNames == null)
                 return null;
@@ -5841,7 +5841,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
         }
 
-        public void DeSerializeAnimations(Byte[] data)
+        public void DeSerializeAnimations(byte[] data)
         {
             if(data == null)
             {

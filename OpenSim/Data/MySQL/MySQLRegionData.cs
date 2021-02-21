@@ -338,8 +338,8 @@ namespace OpenSim.Data.MySQL
                 if (ExecuteNonQuery(cmd) < 1)
                 {
                     string insert = "insert into `" + m_Realm + "` (`uuid`, `ScopeID`, `locX`, `locY`, `sizeX`, `sizeY`, `regionName`, `" +
-                            String.Join("`, `", fields) +
-                            "`) values ( ?regionID, ?scopeID, ?posX, ?posY, ?sizeX, ?sizeY, ?regionName, ?" + String.Join(", ?", fields) + ")";
+                            string.Join("`, `", fields) +
+                            "`) values ( ?regionID, ?scopeID, ?posX, ?posY, ?sizeX, ?sizeY, ?regionName, ?" + string.Join(", ?", fields) + ")";
 
                     cmd.CommandText = insert;
 

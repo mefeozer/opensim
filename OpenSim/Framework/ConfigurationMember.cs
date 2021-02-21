@@ -50,8 +50,8 @@ namespace OpenSim.Framework
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private int cE = 0;
 
-        private string configurationDescription = String.Empty;
-        private string configurationFilename = String.Empty;
+        private string configurationDescription = string.Empty;
+        private string configurationFilename = string.Empty;
         private XmlNode configurationFromXMLNode = null;
         private List<ConfigurationOption> configurationOptions = new List<ConfigurationOption>();
         private IGenericConfig configurationPlugin = null;
@@ -79,7 +79,7 @@ namespace OpenSim.Framework
         public ConfigurationMember(XmlNode configuration_xml, string configuration_description,
                                    ConfigurationOptionsLoad load_function, ConfigurationOptionResult result_function, bool use_console_to_prompt_on_error)
         {
-            configurationFilename = String.Empty;
+            configurationFilename = string.Empty;
             configurationFromXMLNode = configuration_xml;
             configurationDescription = configuration_description;
             loadFunction = load_function;
@@ -229,11 +229,11 @@ namespace OpenSim.Framework
             {
                 bool convertSuccess = false;
                 object return_result = null;
-                string errorMessage = String.Empty;
+                string errorMessage = string.Empty;
                 bool ignoreNextFromConfig = false;
                 while (convertSuccess == false)
                 {
-                    string console_result = String.Empty;
+                    string console_result = string.Empty;
                     string attribute = null;
                     if (useFile || configurationFromXMLNode != null)
                     {
@@ -306,7 +306,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_BOOLEAN:
                             bool boolResult;
-                            if (Boolean.TryParse(console_result, out boolResult))
+                            if (bool.TryParse(console_result, out boolResult))
                             {
                                 convertSuccess = true;
                                 return_result = boolResult;
@@ -315,7 +315,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_BYTE:
                             byte byteResult;
-                            if (Byte.TryParse(console_result, out byteResult))
+                            if (byte.TryParse(console_result, out byteResult))
                             {
                                 convertSuccess = true;
                                 return_result = byteResult;
@@ -324,7 +324,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_CHARACTER:
                             char charResult;
-                            if (Char.TryParse(console_result, out charResult))
+                            if (char.TryParse(console_result, out charResult))
                             {
                                 convertSuccess = true;
                                 return_result = charResult;
@@ -333,7 +333,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_INT16:
                             short shortResult;
-                            if (Int16.TryParse(console_result, out shortResult))
+                            if (short.TryParse(console_result, out shortResult))
                             {
                                 convertSuccess = true;
                                 return_result = shortResult;
@@ -342,7 +342,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_INT32:
                             int intResult;
-                            if (Int32.TryParse(console_result, out intResult))
+                            if (int.TryParse(console_result, out intResult))
                             {
                                 convertSuccess = true;
                                 return_result = intResult;
@@ -351,7 +351,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_INT64:
                             long longResult;
-                            if (Int64.TryParse(console_result, out longResult))
+                            if (long.TryParse(console_result, out longResult))
                             {
                                 convertSuccess = true;
                                 return_result = longResult;
@@ -400,7 +400,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_UINT16:
                             ushort ushortResult;
-                            if (UInt16.TryParse(console_result, out ushortResult))
+                            if (ushort.TryParse(console_result, out ushortResult))
                             {
                                 convertSuccess = true;
                                 return_result = ushortResult;
@@ -409,7 +409,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_UINT32:
                             uint uintResult;
-                            if (UInt32.TryParse(console_result, out uintResult))
+                            if (uint.TryParse(console_result, out uintResult))
                             {
                                 convertSuccess = true;
                                 return_result = uintResult;
@@ -418,7 +418,7 @@ namespace OpenSim.Framework
                             break;
                         case ConfigurationOption.ConfigurationTypes.TYPE_UINT64:
                             ulong ulongResult;
-                            if (UInt64.TryParse(console_result, out ulongResult))
+                            if (ulong.TryParse(console_result, out ulongResult))
                             {
                                 convertSuccess = true;
                                 return_result = ulongResult;
@@ -439,7 +439,7 @@ namespace OpenSim.Framework
                         case ConfigurationOption.ConfigurationTypes.TYPE_DOUBLE:
                             double doubleResult;
                             if (
-                                Double.TryParse(console_result, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.NumberFormatInfo,
+                                double.TryParse(console_result, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, Culture.NumberFormatInfo,
                                                 out doubleResult))
                             {
                                 convertSuccess = true;

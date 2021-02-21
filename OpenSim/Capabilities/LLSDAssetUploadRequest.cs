@@ -36,21 +36,21 @@ namespace OpenSim.Framework.Capabilities
         public OSDArray instance_list = new OSDArray();
         public OSDArray texture_list = new OSDArray();
         public OSDArray mesh_list = new OSDArray();
-        public string metric = String.Empty;
+        public string metric = string.Empty;
     }
 
     [OSDMap]
     public class LLSDAssetUploadRequest
     {
-        public string asset_type = String.Empty;
-        public string description = String.Empty;
+        public string asset_type = string.Empty;
+        public string description = string.Empty;
         public UUID folder_id = UUID.Zero;
         public UUID texture_folder_id = UUID.Zero;
         public int next_owner_mask = 0;
         public int group_mask = 0;
         public int everyone_mask = 0;
-        public string inventory_type = String.Empty;
-        public string name = String.Empty;
+        public string inventory_type = string.Empty;
+        public string name = string.Empty;
         public LLSDAssetResource asset_resources = new LLSDAssetResource();
         public LLSDAssetUploadRequest()
         {

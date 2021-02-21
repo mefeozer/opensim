@@ -66,7 +66,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
         private bool m_InEvent;
         private string m_assemblyPath;
         private string m_dataPath;
-        private string m_CurrentEvent = String.Empty;
+        private string m_CurrentEvent = string.Empty;
         private bool m_InSelfDelete;
         private int m_MaxScriptQueue;
         private bool m_SaveState;
@@ -97,7 +97,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
         private Dictionary<string,IScriptApi> m_Apis = new Dictionary<string,IScriptApi>();
 
-        public Object[] PluginData = new Object[0];
+        public object[] PluginData = new object[0];
 
         /// <summary>
         /// Used by llMinEventDelay to suppress events happening any faster than this speed.
@@ -318,7 +318,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                 //                    "[SCRIPT INSTANCE]: Found state for script {0} for {1} ({2}) at {3} in {4}",
                 //                    ItemID, savedState, Part.Name, Part.ParentGroup.Name, Part.ParentGroup.Scene.Name);
 
-                string xml = String.Empty;
+                string xml = string.Empty;
 
                 try
                 {
@@ -329,7 +329,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                         using (FileStream fs = File.Open(savedState,
                                                          FileMode.Open, FileAccess.Read, FileShare.None))
                         {
-                            Byte[] data = new Byte[size];
+                            byte[] data = new byte[size];
                             fs.Read(data, 0, size);
 
                             xml = Encoding.UTF8.GetString(data);
@@ -405,7 +405,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                 if (m_postOnRez)
                 {
                     PostEvent(new EventParams("on_rez",
-                        new Object[] {new LSL_Types.LSLInteger(StartParam)}, new DetectParams[0]));
+                        new object[] {new LSL_Types.LSLInteger(StartParam)}, new DetectParams[0]));
                 }
                 if (m_stateSource == StateSource.AttachedRez)
                 {
@@ -416,18 +416,18 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                 {
                     //m_log.Debug("[Script] Posted changed(CHANGED_REGION_RESTART) to script");
                     PostEvent(new EventParams("changed",
-                        new Object[] { new LSL_Types.LSLInteger((int)Changed.REGION_RESTART) }, new DetectParams[0]));
+                        new object[] { new LSL_Types.LSLInteger((int)Changed.REGION_RESTART) }, new DetectParams[0]));
                 }
                 else if (m_stateSource == StateSource.PrimCrossing || m_stateSource == StateSource.Teleporting)
                 {
                     // CHANGED_REGION
                     PostEvent(new EventParams("changed",
-                        new Object[] { new LSL_Types.LSLInteger((int)Changed.REGION) }, new DetectParams[0]));
+                        new object[] { new LSL_Types.LSLInteger((int)Changed.REGION) }, new DetectParams[0]));
 
                     // CHANGED_TELEPORT
                     if (m_stateSource == StateSource.Teleporting)
                         PostEvent(new EventParams("changed",
-                            new Object[] { new LSL_Types.LSLInteger((int)Changed.TELEPORT) }, new DetectParams[0]));
+                            new object[] { new LSL_Types.LSLInteger((int)Changed.TELEPORT) }, new DetectParams[0]));
                 }
             }
             else
@@ -435,11 +435,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                 if (m_startOnInit)
                     Start();
                 PostEvent(new EventParams("state_entry",
-                                          new Object[0], new DetectParams[0]));
+                                          new object[0], new DetectParams[0]));
                 if (m_postOnRez)
                 {
                     PostEvent(new EventParams("on_rez",
-                        new Object[] {new LSL_Types.LSLInteger(StartParam)}, new DetectParams[0]));
+                        new object[] {new LSL_Types.LSLInteger(StartParam)}, new DetectParams[0]));
                 }
 
                 if (m_stateSource == StateSource.AttachedRez)
@@ -664,11 +664,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                 }
 
                 // Post events
-                PostEvent(new EventParams("state_exit", new Object[0],
+                PostEvent(new EventParams("state_exit", new object[0],
                                            new DetectParams[0]));
-                PostEvent(new EventParams("state", new Object[] { state },
+                PostEvent(new EventParams("state", new object[] { state },
                                            new DetectParams[0]));
-                PostEvent(new EventParams("state_entry", new Object[0],
+                PostEvent(new EventParams("state_entry", new object[0],
                                            new DetectParams[0]));
 
                 // Requeue the timer event after the state changing events
@@ -893,7 +893,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                         finally
                         {
                             m_InEvent = false;
-                            m_CurrentEvent = String.Empty;
+                            m_CurrentEvent = string.Empty;
                             lock (EventQueue)
                                 m_CurrentWorkItem = null; // no longer in a event that can be canceled
                         }
@@ -1087,7 +1087,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
             m_SaveState = StatePersistedHere;
 
             PostEvent(new EventParams("state_entry",
-                    new Object[0], new DetectParams[0]));
+                    new object[0], new DetectParams[0]));
         }
 
         [DebuggerNonUserCode] //Stops the VS debugger from farting in this function
@@ -1119,7 +1119,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
             {
                 m_SaveState = StatePersistedHere;
                 PostEvent(new EventParams("state_entry",
-                        new Object[0], new DetectParams[0]));
+                        new object[0], new DetectParams[0]));
                 throw new EventAbortException();
             }
         }
@@ -1201,7 +1201,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                     {
                         using (FileStream fs = File.Create(Path.Combine(m_dataPath, ItemID.ToString() + ".state")))
                         {
-                            Byte[] buf = Util.UTF8NoBomEncoding.GetBytes(xml);
+                            byte[] buf = Util.UTF8NoBomEncoding.GetBytes(xml);
                             fs.Write(buf, 0, buf.Length);
                         }
                     }
@@ -1236,7 +1236,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
         public override string ToString()
         {
-            return String.Format("{0} {1} on {2}", ScriptName, ItemID, PrimName);
+            return string.Format("{0} {1} on {2}", ScriptName, ItemID, PrimName);
         }
 
         string FormatException(Exception e)
@@ -1337,7 +1337,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
     {
         public XEngineEventWaitHandle(bool initialState, EventResetMode mode) : base(initialState, mode) {}
 
-        public override Object InitializeLifetimeService()
+        public override object InitializeLifetimeService()
         {
             return null;
         }

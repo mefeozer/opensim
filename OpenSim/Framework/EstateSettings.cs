@@ -217,7 +217,7 @@ namespace OpenSim.Framework
             set { m_PublicAccess = value; }
         }
 
-        private string m_AbuseEmail = String.Empty;
+        private string m_AbuseEmail = string.Empty;
 
         public string AbuseEmail
         {
@@ -476,7 +476,7 @@ namespace OpenSim.Framework
                             int index = 0;
                             foreach (object o in (Array)value)
                                 args[index++] = o.ToString();
-                            map[p.Name] = String.Join(",", args);
+                            map[p.Name] = string.Join(",", args);
                         }
                     }
                     else // simple types
@@ -504,7 +504,7 @@ namespace OpenSim.Framework
         public override string ToString()
         {
             Dictionary<string, object> map = ToMap();
-            String result = String.Empty;
+            string result = string.Empty;
 
             foreach (KeyValuePair<string, object> kvp in map)
             {
@@ -545,12 +545,12 @@ namespace OpenSim.Framework
                 else
                 {
                     object value = p.GetValue(this, null);
-                    if (value is String)
+                    if (value is string)
                         p.SetValue(this, map[p.Name], null);
-                    else if (value is UInt32)
-                        p.SetValue(this, UInt32.Parse((string)map[p.Name]), null);
-                    else if (value is Boolean)
-                        p.SetValue(this, Boolean.Parse((string)map[p.Name]), null);
+                    else if (value is uint)
+                        p.SetValue(this, uint.Parse((string)map[p.Name]), null);
+                    else if (value is bool)
+                        p.SetValue(this, bool.Parse((string)map[p.Name]), null);
                     else if (value is UUID)
                         p.SetValue(this, UUID.Parse((string)map[p.Name]), null);
                 }

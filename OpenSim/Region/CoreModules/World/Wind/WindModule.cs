@@ -144,7 +144,7 @@ namespace OpenSim.Region.CoreModules
 
                 foreach (KeyValuePair<string, string> kvp in windPlugin.WindParams())
                 {
-                    string windCommand = String.Format("wind {0} {1}", windPlugin.Name, kvp.Key);
+                    string windCommand = string.Format("wind {0} {1}", windPlugin.Name, kvp.Key);
                     m_scene.AddCommand("Regions", this, windCommand, string.Format("{0} [<value>]", windCommand), kvp.Value, "", HandleConsoleParamCommand);
                 }
             }
@@ -374,7 +374,7 @@ namespace OpenSim.Region.CoreModules
             }
             else
             {
-                throw new Exception(String.Format("Could not find plugin {0}", plugin));
+                throw new Exception(string.Format("Could not find plugin {0}", plugin));
             }
         }
 
@@ -387,7 +387,7 @@ namespace OpenSim.Region.CoreModules
             }
             else
             {
-                throw new Exception(String.Format("Could not find plugin {0}", plugin));
+                throw new Exception(string.Format("Could not find plugin {0}", plugin));
             }
         }
 
@@ -401,7 +401,7 @@ namespace OpenSim.Region.CoreModules
                 }
                 else
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
         }

@@ -104,7 +104,7 @@ namespace OpenSim.Server.Handlers.Base
             source = ServerUtils.LoadInitialConfig(ConfigURL);
 
             if (source == null)
-                System.Console.WriteLine(String.Format ("Config Url: {0} Not found!", ConfigURL));
+                System.Console.WriteLine(string.Format ("Config Url: {0} Not found!", ConfigURL));
 
             return source;
         }

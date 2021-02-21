@@ -41,7 +41,7 @@ namespace OpenSim.Services.Connectors
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         public PresenceServicesConnector()
         {
@@ -67,7 +67,7 @@ namespace OpenSim.Services.Connectors
             }
 
             string serviceURI = gridConfig.GetString("PresenceServerURI",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceURI))
             {

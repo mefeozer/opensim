@@ -120,7 +120,7 @@ namespace pCampBot
             }
         }
 
-        private static IConfig ParseConfig(String[] args)
+        private static IConfig ParseConfig(string[] args)
         {
             //Set up our nifty config..  thanks to nini
             ArgvConfigSource cs = new ArgvConfigSource(args);

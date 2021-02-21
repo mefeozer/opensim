@@ -403,12 +403,12 @@ namespace OpenSim.Groups
                 if (op == "ADD")
                     success = m_GroupsService.AddGroupRole(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
                         new UUID(request["RoleID"].ToString()), request["Name"].ToString(), request["Description"].ToString(),
-                        request["Title"].ToString(), UInt64.Parse(request["Powers"].ToString()), out reason);
+                        request["Title"].ToString(), ulong.Parse(request["Powers"].ToString()), out reason);
 
                 else if (op == "UPDATE")
                     success = m_GroupsService.UpdateGroupRole(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
                         new UUID(request["RoleID"].ToString()), request["Name"].ToString(), request["Description"].ToString(),
-                        request["Title"].ToString(), UInt64.Parse(request["Powers"].ToString()));
+                        request["Title"].ToString(), ulong.Parse(request["Powers"].ToString()));
 
                 result["RESULT"] = success.ToString();
             }

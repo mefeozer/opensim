@@ -47,15 +47,15 @@ namespace OpenSim.Services.SimulationService
         public SimulationDataService(IConfigSource config)
             : base(config)
         {
-            string dllName = String.Empty;
-            string connString = String.Empty;
+            string dllName = string.Empty;
+            string connString = string.Empty;
 
             // Try reading the [DatabaseService] section, if it exists
             IConfig dbConfig = config.Configs["DatabaseService"];
             if (dbConfig != null)
             {
-                dllName = dbConfig.GetString("StorageProvider", String.Empty);
-                connString = dbConfig.GetString("ConnectionString", String.Empty);
+                dllName = dbConfig.GetString("StorageProvider", string.Empty);
+                connString = dbConfig.GetString("ConnectionString", string.Empty);
             }
 
             // Try reading the [SimulationDataStore] section
@@ -70,7 +70,7 @@ namespace OpenSim.Services.SimulationService
             if (string.IsNullOrEmpty(dllName))
                 throw new Exception("No StorageProvider configured");
 
-            m_database = LoadPlugin<ISimulationDataStore>(dllName, new Object[] { connString });
+            m_database = LoadPlugin<ISimulationDataStore>(dllName, new object[] { connString });
             if (m_database == null)
                 throw new Exception("Could not find a storage interface in the given module");
         }

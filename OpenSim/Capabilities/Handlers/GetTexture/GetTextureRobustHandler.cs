@@ -79,7 +79,7 @@ namespace OpenSim.Capabilities.Handlers
             }
 
             UUID textureID;
-            if (!String.IsNullOrEmpty(textureStr) && UUID.TryParse(textureStr, out textureID))
+            if (!string.IsNullOrEmpty(textureStr) && UUID.TryParse(textureStr, out textureID))
             {
 //                m_log.DebugFormat("[GETTEXTURE]: Received request for texture id {0}", textureID);
 
@@ -127,7 +127,7 @@ namespace OpenSim.Capabilities.Handlers
         private bool FetchTexture(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, UUID textureID, string format)
         {
             // m_log.DebugFormat("[GETTEXTURE]: {0} with requested format {1}", textureID, format);
-            if(!String.IsNullOrEmpty(m_RedirectURL))
+            if(!string.IsNullOrEmpty(m_RedirectURL))
             {
                 string textureUrl = m_RedirectURL + "?texture_id=" + textureID.ToString();
                 m_log.Debug("[GETTEXTURE]: Redirecting texture request to " + textureUrl);
@@ -174,7 +174,7 @@ namespace OpenSim.Capabilities.Handlers
         {
             string range = request.Headers.GetOne("Range");
 
-            if (!String.IsNullOrEmpty(range)) // JP2's only
+            if (!string.IsNullOrEmpty(range)) // JP2's only
             {
                 // Range request
                 int start, end;
@@ -232,7 +232,7 @@ namespace OpenSim.Capabilities.Handlers
 
                         response.ContentLength = len;
                         response.ContentType = texture.Metadata.ContentType;
-                        response.AddHeader("Content-Range", String.Format("bytes {0}-{1}/{2}", start, end, texture.Data.Length));
+                        response.AddHeader("Content-Range", string.Format("bytes {0}-{1}/{2}", start, end, texture.Data.Length));
                         response.RawBuffer = texture.Data;
                         response.RawBufferStart = start;
                         response.RawBufferLen = len;
@@ -291,7 +291,7 @@ namespace OpenSim.Capabilities.Handlers
 
                 if (rangeValues.Length == 2)
                 {
-                    if (!Int32.TryParse(rangeValues[0], out start))
+                    if (!int.TryParse(rangeValues[0], out start))
                         return false;
 
                     string rawEnd = rangeValues[1];
@@ -301,7 +301,7 @@ namespace OpenSim.Capabilities.Handlers
                         end = -1;
                         return true;
                     }
-                    else if (Int32.TryParse(rawEnd, out end))
+                    else if (int.TryParse(rawEnd, out end))
                     {
                         return true;
                     }
@@ -373,7 +373,7 @@ namespace OpenSim.Capabilities.Handlers
         }
 
         // From msdn
-        private static ImageCodecInfo GetEncoderInfo(String mimeType)
+        private static ImageCodecInfo GetEncoderInfo(string mimeType)
         {
             ImageCodecInfo[] encoders;
             encoders = ImageCodecInfo.GetImageEncoders();

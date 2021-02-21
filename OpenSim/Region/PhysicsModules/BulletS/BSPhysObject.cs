@@ -697,7 +697,7 @@ public abstract class BSPhysObject : PhysicsActor
     #endregion // Per Simulation Step actions
 
     // High performance detailed logging routine used by the physical objects.
-    protected void DetailLog(string msg, params Object[] args)
+    protected void DetailLog(string msg, params object[] args)
     {
         if (PhysScene.PhysicsLogging.Enabled)
             PhysScene.DetailLog(msg, args);

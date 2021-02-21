@@ -47,7 +47,7 @@ namespace OpenSim.Framework.Client
         public UUID regionID;
     }
 
-    public delegate void ClientInstantMessage(Object sender, ClientInstantMessageArgs e);
+    public delegate void ClientInstantMessage(object sender, ClientInstantMessageArgs e);
 
     public class ClientInstantMessageParms
     {

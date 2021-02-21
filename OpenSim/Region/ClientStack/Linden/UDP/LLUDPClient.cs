@@ -259,7 +259,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             m_RTO = m_defaultRTO;
 
             // Initialize this to a sane value to prevent early disconnects
-            TickLastPacketReceived = Environment.TickCount & Int32.MaxValue;
+            TickLastPacketReceived = Environment.TickCount & int.MaxValue;
             m_pingMS = 20; // so filter doesnt start at 0;
         }
 

@@ -160,7 +160,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
     {
         public PhysicsActor actor;
         public changes what;
-        public Object arg;
+        public object arg;
     }
 
     public class ODEScene : PhysicsScene
@@ -565,7 +565,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             SharedTmpcontact.geom.pos = contactGeom.pos;
             SharedTmpcontact.geom.normal = contactGeom.normal;
 
-            IntPtr contact = new IntPtr(GlobalContactsArray.ToInt64() + (Int64)(m_global_contactcount * SafeNativeMethods.Contact.unmanagedSizeOf));
+            IntPtr contact = new IntPtr(GlobalContactsArray.ToInt64() + (long)(m_global_contactcount * SafeNativeMethods.Contact.unmanagedSizeOf));
             Marshal.StructureToPtr(SharedTmpcontact, contact, true);
             return SafeNativeMethods.JointCreateContactPtr(world, contactgroup, contact);
         }
@@ -575,7 +575,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if (ContactgeomsArray == IntPtr.Zero || index >= contactsPerCollision)
                 return false;
 
-            IntPtr contactptr = new IntPtr(ContactgeomsArray.ToInt64() + (Int64)(index * SafeNativeMethods.ContactGeom.unmanagedSizeOf));
+            IntPtr contactptr = new IntPtr(ContactgeomsArray.ToInt64() + (long)(index * SafeNativeMethods.ContactGeom.unmanagedSizeOf));
             newcontactgeom = (SafeNativeMethods.ContactGeom)Marshal.PtrToStructure(contactptr, typeof(SafeNativeMethods.ContactGeom));
             return true;
         }
@@ -1195,7 +1195,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
         }
 
-        private PhysicsActor AddPrim(String name, Vector3 position, Vector3 size, Quaternion rotation,
+        private PhysicsActor AddPrim(string name, Vector3 position, Vector3 size, Quaternion rotation,
                                      PrimitiveBaseShape pbs, bool isphysical, bool isPhantom, byte shapeType, uint localID)
         {
             OdePrim newPrim;
@@ -1384,7 +1384,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         /// to use in place of old taint mechanism so changes do have a time sequence
         /// </summary>
 
-        public void AddChange(PhysicsActor _actor, changes _what, Object _arg)
+        public void AddChange(PhysicsActor _actor, changes _what, object _arg)
         {
             if (world == IntPtr.Zero)
                 return;

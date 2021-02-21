@@ -114,7 +114,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             try
             {
                 bool success = false;
-                Boolean.TryParse((string)hash["result"], out success);
+                bool.TryParse((string)hash["result"], out success);
                 if (success)
                 {
                     UUID.TryParse((string)hash["uuid"], out regionID);
@@ -136,11 +136,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
                     }
                     if (hash["size_x"] != null)
                     {
-                        Int32.TryParse((string)hash["size_x"], out sizeX);
+                        int.TryParse((string)hash["size_x"], out sizeX);
                     }
                     if (hash["size_y"] != null)
                     {
-                        Int32.TryParse((string)hash["size_y"], out sizeY);
+                        int.TryParse((string)hash["size_y"], out sizeY);
                     }
                 }
             }
@@ -250,7 +250,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             try
             {
                 bool success = false;
-                Boolean.TryParse((string)hash["result"], out success);
+                bool.TryParse((string)hash["result"], out success);
 
                 if (hash["message"] != null)
                     message = (string)hash["message"];
@@ -268,25 +268,25 @@ namespace OpenSim.Services.Connectors.Hypergrid
                     int n = 0;
                     if (hash["x"] != null)
                     {
-                        Int32.TryParse((string)hash["x"], out n);
+                        int.TryParse((string)hash["x"], out n);
                         region.RegionLocX = n;
                         //m_log.Debug(">> HERE, x: " + region.RegionLocX);
                     }
                     if (hash["y"] != null)
                     {
-                        Int32.TryParse((string)hash["y"], out n);
+                        int.TryParse((string)hash["y"], out n);
                         region.RegionLocY = n;
                         //m_log.Debug(">> HERE, y: " + region.RegionLocY);
                     }
                     if (hash["size_x"] != null)
                     {
-                        Int32.TryParse((string)hash["size_x"], out n);
+                        int.TryParse((string)hash["size_x"], out n);
                         region.RegionSizeX = n;
                         //m_log.Debug(">> HERE, x: " + region.RegionLocX);
                     }
                     if (hash["size_y"] != null)
                     {
-                        Int32.TryParse((string)hash["size_y"], out n);
+                        int.TryParse((string)hash["size_y"], out n);
                         region.RegionSizeY = n;
                         //m_log.Debug(">> HERE, y: " + region.RegionLocY);
                     }
@@ -303,14 +303,14 @@ namespace OpenSim.Services.Connectors.Hypergrid
                     if (hash["http_port"] != null)
                     {
                         uint p = 0;
-                        UInt32.TryParse((string)hash["http_port"], out p);
+                        uint.TryParse((string)hash["http_port"], out p);
                         region.HttpPort = p;
                         //m_log.Debug(">> HERE, http_port: " + region.HttpPort);
                     }
                     if (hash["internal_port"] != null)
                     {
                         int p = 0;
-                        Int32.TryParse((string)hash["internal_port"], out p);
+                        int.TryParse((string)hash["internal_port"], out p);
                         region.InternalEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), p);
                         //m_log.Debug(">> HERE, internal_port: " + region.InternalEndPoint);
                     }

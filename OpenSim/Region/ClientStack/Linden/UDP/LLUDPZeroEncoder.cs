@@ -306,7 +306,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         // maxlen <= 255 and includes null termination byte
         public unsafe void AddShortString(string str, int maxlen)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
                 AddZeros(1);
                 return;
@@ -328,7 +328,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         // maxlen <= 255 and includes null termination byte, maxchars == max len of utf16 source
         public unsafe void AddShortString(string str, int maxchars, int maxlen)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
                 AddZeros(1);
                 return;

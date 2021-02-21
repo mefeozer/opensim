@@ -61,7 +61,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 return;
 
             m_capUrl = config.GetString("Cap_EstateChangeInfo", string.Empty);
-            if (!String.IsNullOrEmpty(m_capUrl) && m_capUrl.Equals("localhost"))
+            if (!string.IsNullOrEmpty(m_capUrl) && m_capUrl.Equals("localhost"))
                 m_Enabled = true;
         }
 

@@ -181,7 +181,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                                     FullID = UUID.Zero,
                                     ID = cacheName,
                                     Local = true,
-                                    Name = String.Empty,
+                                    Name = string.Empty,
                                     Temporary = true,
                                     Type = (sbyte)AssetType.Unknown
                                 };

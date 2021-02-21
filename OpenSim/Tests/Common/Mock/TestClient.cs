@@ -392,7 +392,7 @@ namespace OpenSim.Tests.Common
         }
         private string m_lastName;
 
-        public virtual String Name
+        public virtual string Name
         {
             get { return FirstName + " " + LastName; }
         }
@@ -415,7 +415,7 @@ namespace OpenSim.Tests.Common
 
         public string ActiveGroupName
         {
-            get { return String.Empty; }
+            get { return string.Empty; }
             set { }
         }
 
@@ -1003,7 +1003,7 @@ namespace OpenSim.Tests.Common
         {
         }
 
-        public void SendAvatarProperties(UUID avatarID, string aboutText, string bornOn, Byte[] membershipType,
+        public void SendAvatarProperties(UUID avatarID, string aboutText, string bornOn, byte[] membershipType,
                                          string flAbout, uint flags, UUID flImageID, UUID imageID, string profileURL,
                                          UUID partnerID)
         {
@@ -1054,7 +1054,7 @@ namespace OpenSim.Tests.Common
         {
         }
 
-        public void SendBlueBoxMessage(UUID FromAvatarID, String FromAvatarName, String Message)
+        public void SendBlueBoxMessage(UUID FromAvatarID, string FromAvatarName, string Message)
         {
 
         }

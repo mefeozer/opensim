@@ -92,7 +92,7 @@ namespace OpenSim.Services.Interfaces
         public int UserFlags;
         public string UserTitle;
         public string UserCountry;
-        public Boolean LocalToGrid = true;
+        public bool LocalToGrid = true;
 
         public Dictionary<string, object> ServiceURLs;
 
@@ -124,7 +124,7 @@ namespace OpenSim.Services.Interfaces
             if (kvp.ContainsKey("UserCountry"))
                 UserCountry = kvp["UserCountry"].ToString();
             if (kvp.ContainsKey("LocalToGrid"))
-                Boolean.TryParse(kvp["LocalToGrid"].ToString(), out LocalToGrid);
+                bool.TryParse(kvp["LocalToGrid"].ToString(), out LocalToGrid);
 
             if (kvp.ContainsKey("Created"))
                 Created = Convert.ToInt32(kvp["Created"].ToString());

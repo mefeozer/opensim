@@ -276,7 +276,7 @@ namespace OpenSim.Framework
                 if (we.Status == WebExceptionStatus.ProtocolError)
                 {
                     using (HttpWebResponse webResponse = (HttpWebResponse)we.Response)
-                        errorMessage = String.Format("[{0}] {1}", webResponse.StatusCode, webResponse.StatusDescription);
+                        errorMessage = string.Format("[{0}] {1}", webResponse.StatusCode, webResponse.StatusDescription);
                 }
             }
             catch (Exception ex)
@@ -436,7 +436,7 @@ namespace OpenSim.Framework
                 if (we.Status == WebExceptionStatus.ProtocolError)
                 {
                     using (HttpWebResponse webResponse = (HttpWebResponse)we.Response)
-                        errorMessage = String.Format("[{0}] {1}",webResponse.StatusCode,webResponse.StatusDescription);
+                        errorMessage = string.Format("[{0}] {1}",webResponse.StatusCode,webResponse.StatusDescription);
                 }
             }
             catch (Exception ex)
@@ -540,7 +540,7 @@ namespace OpenSim.Framework
         /// appended</returns>
         public static string AppendQuery(this Uri uri, string query)
         {
-            if (String.IsNullOrEmpty(query))
+            if (string.IsNullOrEmpty(query))
                 return uri.ToString();
 
             if (query[0] == '?' || query[0] == '&')
@@ -651,19 +651,19 @@ namespace OpenSim.Framework
 
         public class QBasedComparer : IComparer
         {
-            public int Compare(Object x, Object y)
+            public int Compare(object x, object y)
             {
                 float qx = GetQ(x);
                 float qy = GetQ(y);
                 return qy.CompareTo(qx); // descending order
             }
 
-            private float GetQ(Object o)
+            private float GetQ(object o)
             {
                 // Example: image/png;q=0.9
 
                 float qvalue = 1F;
-                if (o is String)
+                if (o is string)
                 {
                     string mime = (string)o;
                     string[] parts = mime.Split(';');
@@ -1019,7 +1019,7 @@ namespace OpenSim.Framework
             }
 
             int rcvlen = 0;
-            string respstring = String.Empty;
+            string respstring = string.Empty;
             try
             {
                 using (WebResponse resp = request.GetResponse())
@@ -1112,7 +1112,7 @@ namespace OpenSim.Framework
                 throw e;
             }
 
-            string respstring = String.Empty;
+            string respstring = string.Empty;
             int rcvlen = 0;
             try
             {
@@ -1399,7 +1399,7 @@ namespace OpenSim.Framework
                         {
                             curcount = respStream.Read(dataBuffer, 0, remaining);
                             if (curcount <= 0)
-                                throw new EndOfStreamException(String.Format("End of stream reached with {0} bytes left to read", remaining));
+                                throw new EndOfStreamException(string.Format("End of stream reached with {0} bytes left to read", remaining));
                             ms.Write(dataBuffer, 0, curcount);
                             remaining -= curcount;
                         }

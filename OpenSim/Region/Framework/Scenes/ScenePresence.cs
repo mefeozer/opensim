@@ -192,7 +192,7 @@ namespace OpenSim.Region.Framework.Scenes
         private UUID m_currentParcelUUID = UUID.Zero;
         private bool m_previusParcelHide = false;
         private bool m_currentParcelHide = false;
-        private readonly object parcelLock = new Object();
+        private readonly object parcelLock = new object();
         public double ParcelDwellTickMS;
 
         public UUID currentParcelUUID
@@ -284,7 +284,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// Server Side Animation Override
         /// </value>
         public MovementAnimationOverrides Overrides { get; private set; }
-        public String sitAnimation = "SIT";
+        public string sitAnimation = "SIT";
         /// <summary>
         /// Attachments recorded on this avatar.
         /// </summary>
@@ -294,7 +294,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// </remarks>
         private List<SceneObjectGroup> m_attachments = new List<SceneObjectGroup>();
 
-        public Object AttachmentsSyncLock { get; private set; }
+        public object AttachmentsSyncLock { get; private set; }
 
         private Dictionary<UUID, ScriptControllers> scriptedcontrols = new Dictionary<UUID, ScriptControllers>();
         private ScriptControlled IgnoredControls = ScriptControlled.CONTROL_ZERO;
@@ -429,7 +429,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         private bool CameraConstraintActive;
 
-        private readonly object m_collisionEventLock = new Object();
+        private readonly object m_collisionEventLock = new object();
 
         private int m_movementAnimationUpdateCounter = 0;
 
@@ -1099,7 +1099,7 @@ namespace OpenSim.Region.Framework.Scenes
         public ScenePresence(IClientAPI client, Scene world, AvatarAppearance appearance, PresenceType type)
         {
             m_scene = world;
-            AttachmentsSyncLock = new Object();
+            AttachmentsSyncLock = new object();
             AllowMovement = true;
             IsChildAgent = true;
             m_sendCoarseLocationsMethod = SendCoarseLocationsDefault;
@@ -1118,7 +1118,7 @@ namespace OpenSim.Region.Framework.Scenes
             ControllingClient = client;
             Firstname = ControllingClient.FirstName;
             Lastname = ControllingClient.LastName;
-            Name = String.Format("{0} {1}", Firstname, Lastname);
+            Name = string.Format("{0} {1}", Firstname, Lastname);
             m_uuid = client.AgentId;
             LocalId = m_scene.AllocateLocalId();
             LegacySitOffsets = m_scene.LegacySitOffsets;
@@ -3819,7 +3819,7 @@ namespace OpenSim.Region.Framework.Scenes
 
                 SendAvatarDataToAllAgents();
 
-                if (String.IsNullOrEmpty(part.SitAnimation))
+                if (string.IsNullOrEmpty(part.SitAnimation))
                     sitAnimation = "SIT";
                 else
                     sitAnimation = part.SitAnimation;
@@ -5069,7 +5069,7 @@ namespace OpenSim.Region.Framework.Scenes
                 cAgent.ActiveGroupID = ControllingClient.ActiveGroupId;
                 cAgent.ActiveGroupName = ControllingClient.ActiveGroupName;
                 if(Grouptitle == null)
-                    cAgent.ActiveGroupTitle = String.Empty;
+                    cAgent.ActiveGroupTitle = string.Empty;
                 else
                     cAgent.ActiveGroupTitle = Grouptitle;
             }

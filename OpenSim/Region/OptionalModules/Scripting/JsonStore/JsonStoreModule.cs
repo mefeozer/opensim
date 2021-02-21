@@ -47,7 +47,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         private IConfig m_config = null;
         private bool m_enabled = false;
         private bool m_enableObjectStore = false;
-        private int m_maxStringSpace = Int32.MaxValue;
+        private int m_maxStringSpace = int.MaxValue;
 
         private Scene m_scene = null;
 
@@ -89,7 +89,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 m_enableObjectStore = m_config.GetBoolean("EnableObjectStore", m_enableObjectStore);
                 m_maxStringSpace = m_config.GetInt("MaxStringSpace", m_maxStringSpace);
                 if (m_maxStringSpace == 0)
-                    m_maxStringSpace = Int32.MaxValue;
+                    m_maxStringSpace = int.MaxValue;
             }
             catch (Exception e)
             {
@@ -468,7 +468,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         // -----------------------------------------------------------------
         public bool GetValue(UUID storeID, string path, bool useJson, out string value)
         {
-            value = String.Empty;
+            value = string.Empty;
 
             if (! m_enabled) return false;
 
@@ -503,7 +503,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         {
             if (! m_enabled)
             {
-                cback(String.Empty);
+                cback(string.Empty);
                 return;
             }
 
@@ -512,7 +512,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
             {
                 if (! m_JsonValueStore.TryGetValue(storeID,out map))
                 {
-                    cback(String.Empty);
+                    cback(string.Empty);
                     return;
                 }
             }
@@ -530,7 +530,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 m_log.Error("[JsonStore] unable to retrieve value", e);
             }
 
-            cback(String.Empty);
+            cback(string.Empty);
         }
 
         // -----------------------------------------------------------------
@@ -542,7 +542,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         {
             if (! m_enabled)
             {
-                cback(String.Empty);
+                cback(string.Empty);
                 return;
             }
 
@@ -551,7 +551,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
             {
                 if (! m_JsonValueStore.TryGetValue(storeID,out map))
                 {
-                    cback(String.Empty);
+                    cback(string.Empty);
                     return;
                 }
             }
@@ -569,7 +569,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 m_log.Error("[JsonStore]: unable to retrieve value", e);
             }
 
-            cback(String.Empty);
+            cback(string.Empty);
         }
 
 #endregion

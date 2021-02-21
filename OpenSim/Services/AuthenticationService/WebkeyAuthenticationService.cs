@@ -94,7 +94,7 @@ namespace OpenSim.Services.AuthenticationService
                 }
                 m_log.DebugFormat("[AUTH SERVICE]: PrincipalID {0} or its data not found", principalID);
             }
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

@@ -436,7 +436,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public override string ToString()
         {
-            return String.Format("<{0}, {1}, {2}>", x, y, z);
+            return string.Format("<{0}, {1}, {2}>", x, y, z);
         }
 
         public static readonly float3 Zero = new float3();

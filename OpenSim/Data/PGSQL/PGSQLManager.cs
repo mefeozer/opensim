@@ -99,7 +99,7 @@ namespace OpenSim.Data.PGSQL
             {
                 return NpgsqlDbType.Double;
             }
-            if (type == typeof(Single))
+            if (type == typeof(float))
             {
                 return NpgsqlDbType.Double;
             }
@@ -123,7 +123,7 @@ namespace OpenSim.Data.PGSQL
             {
                 return NpgsqlDbType.Integer;
             }
-            if (type == typeof(Byte[]))
+            if (type == typeof(byte[]))
             {
                 return NpgsqlDbType.Bytea;
             }
@@ -203,7 +203,7 @@ namespace OpenSim.Data.PGSQL
             {
                 return (bool)value;
             }
-            if (valueType == typeof(Byte[]))
+            if (valueType == typeof(byte[]))
             {
                 return value;
             }

@@ -169,8 +169,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         {
             if (options.ContainsKey("exclude"))
             {
-                if (((List<String>)options["exclude"]).Contains(inventoryItem.Name) ||
-                    ((List<String>)options["exclude"]).Contains(inventoryItem.ID.ToString()))
+                if (((List<string>)options["exclude"]).Contains(inventoryItem.Name) ||
+                    ((List<string>)options["exclude"]).Contains(inventoryItem.ID.ToString()))
                 {
                     if (options.ContainsKey("verbose"))
                     {
@@ -264,8 +264,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         {
             if (options.ContainsKey("excludefolders"))
             {
-                if (((List<String>)options["excludefolders"]).Contains(inventoryFolder.Name) ||
-                    ((List<String>)options["excludefolders"]).Contains(inventoryFolder.ID.ToString()))
+                if (((List<string>)options["excludefolders"]).Contains(inventoryFolder.Name) ||
+                    ((List<string>)options["excludefolders"]).Contains(inventoryFolder.ID.ToString()))
                 {
                     if (options.ContainsKey("verbose"))
                     {
@@ -342,7 +342,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
             // Set Permission filter if flag is set
             if (options.ContainsKey("checkPermissions"))
             {
-                Object temp;
+                object temp;
                 if (options.TryGetValue("checkPermissions", out temp))
                     FilterContent = temp.ToString().ToUpper();
             }
@@ -376,7 +376,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
                     saveFolderContentsOnly = true;
                 }
 
-                m_invPath = String.Empty;
+                m_invPath = string.Empty;
                 for (int i = 0; i <= maxComponentIndex; i++)
                 {
                     m_invPath += components[i] + InventoryFolderImpl.PATH_DELIMITER;
@@ -597,7 +597,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
             xtw.Flush();
             xtw.Close();
 
-            String s = sw.ToString();
+            string s = sw.ToString();
             sw.Close();
 
             return s;

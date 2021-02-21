@@ -50,7 +50,7 @@ namespace OpenSim.Services.Connectors
         /// </summary>
         public int RequestsMade { get; private set; }
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         /// <summary>
         /// Timeout for remote requests.
@@ -96,7 +96,7 @@ namespace OpenSim.Services.Connectors
             }
 
             string serviceURI = config.GetString("InventoryServerURI",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceURI))
             {
@@ -173,7 +173,7 @@ namespace OpenSim.Services.Connectors
 
             try
             {
-                foreach (Object o in folders.Values)
+                foreach (object o in folders.Values)
                     fldrs.Add(BuildFolder((Dictionary<string, object>)o));
             }
             catch (Exception e)
@@ -238,10 +238,10 @@ namespace OpenSim.Services.Connectors
                     (Dictionary<string, object>)ret["ITEMS"] : null;
 
                 if (folders != null)
-                    foreach (Object o in folders.Values) // getting the values directly, we don't care about the keys folder_i
+                    foreach (object o in folders.Values) // getting the values directly, we don't care about the keys folder_i
                         inventory.Folders.Add(BuildFolder((Dictionary<string, object>)o));
                 if (items != null)
-                    foreach (Object o in items.Values) // getting the values directly, we don't care about the keys item_i
+                    foreach (object o in items.Values) // getting the values directly, we don't care about the keys item_i
                         inventory.Items.Add(BuildItem((Dictionary<string, object>)o));
             }
             catch (Exception e)
@@ -262,7 +262,7 @@ namespace OpenSim.Services.Connectors
                         new Dictionary<string, object> {
                             { "METHOD", "GETMULTIPLEFOLDERSCONTENT"},
                             { "PRINCIPAL", principalID.ToString() },
-                            { "FOLDERS", String.Join(",", folderIDs) },
+                            { "FOLDERS", string.Join(",", folderIDs) },
                             { "COUNT", folderIDs.Length.ToString() }
                         });
 
@@ -293,7 +293,7 @@ namespace OpenSim.Services.Connectors
 
                             inventory.Version = -1;
                             if (ret.ContainsKey("VERSION"))
-                                Int32.TryParse(ret["VERSION"].ToString(), out inventory.Version);
+                                int.TryParse(ret["VERSION"].ToString(), out inventory.Version);
                             if (ret.ContainsKey("OWNER"))
                                 UUID.TryParse(ret["OWNER"].ToString(), out inventory.OwnerID);
 
@@ -302,7 +302,7 @@ namespace OpenSim.Services.Connectors
                             if (ret.TryGetValue("FOLDERS", out object ofolders) && ofolders is Dictionary<string, object>)
                             {
                                 var folders = ofolders as Dictionary<string, object>;
-                                foreach (Object o in folders.Values) // getting the values directly, we don't care about the keys folder_i
+                                foreach (object o in folders.Values) // getting the values directly, we don't care about the keys folder_i
                                 {
                                     inventory.Folders.Add(BuildFolder((Dictionary<string, object>)o));
                                 }
@@ -311,7 +311,7 @@ namespace OpenSim.Services.Connectors
                             if (ret.TryGetValue("ITEMS", out object oitems) && oitems is Dictionary<string, object>)
                             {
                                 var items = oitems as Dictionary<string, object>;
-                                foreach (Object o in items.Values) // getting the values directly, we don't care about the keys item_i
+                                foreach (object o in items.Values) // getting the values directly, we don't care about the keys item_i
                                 {
                                     inventory.Items.Add(BuildItem((Dictionary<string, object>)o));
                                 }
@@ -322,7 +322,7 @@ namespace OpenSim.Services.Connectors
                         {
                             m_log.WarnFormat("[XINVENTORY SERVICES CONNECTOR]: Folder id does not match. Expected {0} got {1}",
                                 folderIDs[i], fid);
-                            m_log.WarnFormat("[XINVENTORY SERVICES CONNECTOR]: {0} {1}", String.Join(",", folderIDs), String.Join(",", resultSet.Keys));
+                            m_log.WarnFormat("[XINVENTORY SERVICES CONNECTOR]: {0} {1}", string.Join(",", folderIDs), string.Join(",", resultSet.Keys));
                         }
 
                         i += 1;
@@ -351,7 +351,7 @@ namespace OpenSim.Services.Connectors
 
             Dictionary<string, object> items = (Dictionary<string, object>)ret["ITEMS"];
             List<InventoryItemBase> fitems = new List<InventoryItemBase>();
-            foreach (Object o in items.Values) // getting the values directly, we don't care about the keys item_i
+            foreach (object o in items.Values) // getting the values directly, we don't care about the keys item_i
                 fitems.Add(BuildItem((Dictionary<string, object>)o));
 
             return fitems;
@@ -433,11 +433,11 @@ namespace OpenSim.Services.Connectors
         public bool AddItem(InventoryItemBase item)
         {
             if (item.Description == null)
-                item.Description = String.Empty;
+                item.Description = string.Empty;
             if (item.CreatorData == null)
-                item.CreatorData = String.Empty;
+                item.CreatorData = string.Empty;
             if (item.CreatorId == null)
-                item.CreatorId = String.Empty;
+                item.CreatorId = string.Empty;
             Dictionary<string, object> ret = MakeRequest(
                     new Dictionary<string,object> {
                         { "METHOD", "ADDITEM"},
@@ -470,7 +470,7 @@ namespace OpenSim.Services.Connectors
         public bool UpdateItem(InventoryItemBase item)
         {
             if (item.CreatorData == null)
-                item.CreatorData = String.Empty;
+                item.CreatorData = string.Empty;
             Dictionary<string,object> ret = MakeRequest(
                     new Dictionary<string,object> {
                         { "METHOD", "UPDATEITEM"},
@@ -604,7 +604,7 @@ namespace OpenSim.Services.Connectors
                         new Dictionary<string, object> {
                             { "METHOD", "GETMULTIPLEITEMS"},
                             { "PRINCIPAL", principalID.ToString() },
-                            { "ITEMS", String.Join(",", pending.ToArray()) },
+                            { "ITEMS", string.Join(",", pending.ToArray()) },
                             { "COUNT", pending.Count.ToString() }
                         });
 
@@ -678,7 +678,7 @@ namespace OpenSim.Services.Connectors
 
             List<InventoryItemBase> items = new List<InventoryItemBase>();
 
-            foreach (Object o in ((Dictionary<string,object>)ret["ITEMS"]).Values)
+            foreach (object o in ((Dictionary<string,object>)ret["ITEMS"]).Values)
                 items.Add(BuildItem((Dictionary<string, object>)o));
 
             return items;
@@ -722,7 +722,7 @@ namespace OpenSim.Services.Connectors
         {
             RequestsMade++;
 
-            string reply = String.Empty;
+            string reply = string.Empty;
   
             reply = SynchronousRestFormsRequester.MakePostRequest(
                      m_ServerURI + "/xinventory",

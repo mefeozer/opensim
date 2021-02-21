@@ -46,7 +46,7 @@ namespace OpenSim.Services.Connectors
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
         private ExpiringCache<string, List<EstateSettings>> m_EstateCache = new ExpiringCache<string, List<EstateSettings>>();
         private const int EXPIRATION = 5 * 60; // 5 minutes in secs
 
@@ -65,7 +65,7 @@ namespace OpenSim.Services.Connectors
             }
 
             string serviceURI = gridConfig.GetString("EstateServerURI",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceURI))
             {
@@ -85,7 +85,7 @@ namespace OpenSim.Services.Connectors
             string uri = m_ServerURI + "/estates";
 
             reply = MakeRequest("GET", uri, string.Empty);
-            if (String.IsNullOrEmpty(reply))
+            if (string.IsNullOrEmpty(reply))
                 return new List<EstateSettings>();
 
             Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -163,7 +163,7 @@ namespace OpenSim.Services.Connectors
             string uri = m_ServerURI + "/estates/regions/?eid=" + estateID.ToString();
 
             reply = MakeRequest("GET", uri, string.Empty);
-            if (String.IsNullOrEmpty(reply))
+            if (string.IsNullOrEmpty(reply))
                 return new List<UUID>();
 
             Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -201,7 +201,7 @@ namespace OpenSim.Services.Connectors
                 Environment.Exit(-1);
             }
 
-            if (String.IsNullOrEmpty(reply))
+            if (string.IsNullOrEmpty(reply))
                 return null;
 
             Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -225,7 +225,7 @@ namespace OpenSim.Services.Connectors
             string uri = m_ServerURI + string.Format("/estates/estate/?eid={0}", estateID);
 
             reply = MakeRequest("GET", uri, string.Empty);
-            if (String.IsNullOrEmpty(reply))
+            if (string.IsNullOrEmpty(reply))
                 return null;
 
             Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -266,7 +266,7 @@ namespace OpenSim.Services.Connectors
         public bool LinkRegion(UUID regionID, int estateID)
         {
             // /estates/estate/?eid=int&region=uuid
-            string uri = m_ServerURI + String.Format("/estates/estate/?eid={0}&region={1}", estateID, regionID);
+            string uri = m_ServerURI + string.Format("/estates/estate/?eid={0}&region={1}", estateID, regionID);
 
             Dictionary<string, object> formdata = new Dictionary<string, object>();
             formdata["OP"] = "LINK";
@@ -278,7 +278,7 @@ namespace OpenSim.Services.Connectors
             string reqString = ServerUtils.BuildQueryString(sendData);
 
             string reply = MakeRequest("POST", uri, reqString);
-            if (String.IsNullOrEmpty(reply))
+            if (string.IsNullOrEmpty(reply))
                 return false;
 
             Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -288,7 +288,7 @@ namespace OpenSim.Services.Connectors
             {
                 if (replyData.ContainsKey("Result"))
                 {
-                    if (Boolean.TryParse(replyData["Result"].ToString(), out result))
+                    if (bool.TryParse(replyData["Result"].ToString(), out result))
                         m_log.DebugFormat("[ESTATE CONNECTOR]: PostRequest {0} returned {1}", uri, result);
                 }
             }

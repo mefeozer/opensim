@@ -38,8 +38,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
         ulong GetStateEventFlags(string state);
         void ExecuteEvent(string state, string FunctionName, object[] args);
-        Dictionary<string,Object> GetVars();
-        void SetVars(Dictionary<string,Object> vars);
+        Dictionary<string, object> GetVars();
+        void SetVars(Dictionary<string, object> vars);
         void ResetVars();
 
         void Close();

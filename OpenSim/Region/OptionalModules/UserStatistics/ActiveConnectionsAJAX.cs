@@ -66,9 +66,9 @@ namespace OpenSim.Region.UserStatistics
             HTMLUtil.OL_O(ref output, "");
             foreach (Scene scene in all_scenes)
             {
-                HTMLUtil.LI_O(ref output, String.Empty);
+                HTMLUtil.LI_O(ref output, string.Empty);
                 output.Append(scene.RegionInfo.RegionName);
-                HTMLUtil.OL_O(ref output, String.Empty);
+                HTMLUtil.OL_O(ref output, string.Empty);
                 scene.ForEachScenePresence(delegate(ScenePresence av)
                 {
                     Dictionary<string, string> queues = new Dictionary<string, string>();
@@ -77,7 +77,7 @@ namespace OpenSim.Region.UserStatistics
                         IStatsCollector isClient = (IStatsCollector)av.ControllingClient;
                         queues = decodeQueueReport(isClient.Report());
                     }
-                    HTMLUtil.LI_O(ref output, String.Empty);
+                    HTMLUtil.LI_O(ref output, string.Empty);
                     output.Append(av.Name);
                     output.Append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
                     output.Append((av.IsChildAgent ? "Child" : "Root"));
@@ -93,11 +93,11 @@ namespace OpenSim.Region.UserStatistics
                     }
                     Dictionary<string, int> throttles = DecodeClientThrottles(av.ControllingClient.GetThrottlesPacked(1));
 
-                    HTMLUtil.UL_O(ref output, String.Empty);
+                    HTMLUtil.UL_O(ref output, string.Empty);
 
                     foreach (string throttlename in throttles.Keys)
                     {
-                        HTMLUtil.LI_O(ref output, String.Empty);
+                        HTMLUtil.LI_O(ref output, string.Empty);
                         output.Append(throttlename);
                         output.Append(":");
                         output.Append(throttles[throttlename].ToString());

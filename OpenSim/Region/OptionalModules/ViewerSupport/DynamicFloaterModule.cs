@@ -144,16 +144,16 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                 }
                 else
                 {
-                    xml = String.Empty;
+                    xml = string.Empty;
                 }
 
                 xparts.Add(x);
             }
 
             for (int i = 0 ; i < xparts.Count ; i++)
-                SendToClient(sp, String.Format("># floater {2} create {0}/{1} " + xparts[i], i + 1, xparts.Count, dialogData.FloaterName));
+                SendToClient(sp, string.Format("># floater {2} create {0}/{1} " + xparts[i], i + 1, xparts.Count, dialogData.FloaterName));
 
-            SendToClient(sp, String.Format("># floater {0} {{notify:1}} {{channel: {1}}} {{node:cancel {{notify:1}}}} {{node:ok {{notify:1}}}} {2}", dialogData.FloaterName, (uint)dialogData.Channel, configuration));
+            SendToClient(sp, string.Format("># floater {0} {{notify:1}} {{channel: {1}}} {{node:cancel {{notify:1}}}} {{node:ok {{notify:1}}}} {2}", dialogData.FloaterName, (uint)dialogData.Channel, configuration));
         }
 
         private void OnChatFromClient(object sender, OSChatMessage msg)
@@ -190,7 +190,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                         if(dd.Handler(client, dd, parts))
                         {
                             m_floaters[client.AgentId].Remove(dd.Channel);
-                            SendToClient(sp, String.Format("># floater {0} destroy", dd.FloaterName));
+                            SendToClient(sp, string.Format("># floater {0} destroy", dd.FloaterName));
                             break;
                         }
                     }
@@ -208,20 +208,20 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                 if (parts[1] == "cancel" || parts[1] == data.FloaterName)
                 {
                     m_floaters[client.AgentId].Remove(data.Channel);
-                    SendToClient(sp, String.Format("># floater {0} destroy", data.FloaterName));
+                    SendToClient(sp, string.Format("># floater {0} destroy", data.FloaterName));
                 }
             }
 
             if (data.Handler != null && data.Handler(client, data, parts))
             {
                 m_floaters[client.AgentId].Remove(data.Channel);
-                SendToClient(sp, String.Format("># floater {0} destroy", data.FloaterName));
+                SendToClient(sp, string.Format("># floater {0} destroy", data.FloaterName));
             }
         }
 
         public void FloaterControl(ScenePresence sp, FloaterData d, string msg)
         {
-            string sendData = String.Format("># floater {0} {1}", d.FloaterName, msg);
+            string sendData = string.Format("># floater {0} {1}", d.FloaterName, msg);
             SendToClient(sp, sendData);
 
         }

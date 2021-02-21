@@ -343,7 +343,7 @@ namespace OpenSim.Framework
 
         static int getField(string note, int start, string name, bool isString, out string value)
         {
-            value = String.Empty;
+            value = string.Empty;
             int end = -1;
             int limit = note.Length - start;
             if (limit > 64)
@@ -381,7 +381,7 @@ namespace OpenSim.Framework
                 return null;
 
             string note = Util.UTF8.GetString(data);
-            if (String.IsNullOrWhiteSpace(note))
+            if (string.IsNullOrWhiteSpace(note))
                 return null;
 
             // waste some time checking rigid versions
@@ -535,7 +535,7 @@ namespace OpenSim.Framework
                 return null;
 
             string note = Util.UTF8.GetString(data);
-            if (String.IsNullOrWhiteSpace(note))
+            if (string.IsNullOrWhiteSpace(note))
                 return null;
 
             // waste some time checking rigid versions
@@ -638,7 +638,7 @@ namespace OpenSim.Framework
                 return new string[0];
 
             string note = Util.UTF8.GetString(data);
-            if (String.IsNullOrWhiteSpace(note))
+            if (string.IsNullOrWhiteSpace(note))
                 return new string[0];
 
             // waste some time checking rigid versions
@@ -681,7 +681,7 @@ namespace OpenSim.Framework
                 end = indx;
                 for (; end < textLen && note[end] != '\n'; ++end);
                 if(end == indx)
-                    lines.Add(String.Empty);
+                    lines.Add(string.Empty);
                 else
                     lines.Add(note.Substring(indx, end - indx));
                 indx = end + 1;

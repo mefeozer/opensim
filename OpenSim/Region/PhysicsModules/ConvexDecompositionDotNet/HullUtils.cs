@@ -1567,8 +1567,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
             float[] recip = new float[3];
 
-            float[] bmin = { Single.MaxValue, Single.MaxValue, Single.MaxValue };
-            float[] bmax = { Single.MinValue, Single.MinValue, Single.MinValue };
+            float[] bmin = { float.MaxValue, float.MaxValue, float.MaxValue };
+            float[] bmax = { float.MinValue, float.MinValue, float.MinValue };
 
             for (int i = 0; i < svertices.Count; i++)
             {
@@ -1595,7 +1595,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
             if (dx < EPSILON || dy < EPSILON || dz < EPSILON || svertices.Count < 3)
             {
-                float len = Single.MaxValue;
+                float len = float.MaxValue;
 
                 if (dx > EPSILON && dx < len)
                     len = dx;
@@ -1604,7 +1604,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 if (dz > EPSILON && dz < len)
                     len = dz;
 
-                if (len == Single.MaxValue)
+                if (len == float.MaxValue)
                 {
                     dx = dy = dz = 0.01f; // one centimeter
                 }
@@ -1712,8 +1712,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             // ok..now make sure we didn't prune so many vertices it is now invalid.
             if (true)
             {
-                float[] bmin2 = { Single.MaxValue, Single.MaxValue, Single.MaxValue };
-                float[] bmax2 = { Single.MinValue, Single.MinValue, Single.MinValue };
+                float[] bmin2 = { float.MaxValue, float.MaxValue, float.MaxValue };
+                float[] bmax2 = { float.MinValue, float.MinValue, float.MinValue };
 
                 for (int i = 0; i < vcount; i++)
                 {
@@ -1737,7 +1737,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                     float cy = dy2 * 0.5f + bmin2[1];
                     float cz = dz2 * 0.5f + bmin2[2];
 
-                    float len = Single.MaxValue;
+                    float len = float.MaxValue;
 
                     if (dx2 >= EPSILON && dx2 < len)
                         len = dx2;
@@ -1746,7 +1746,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                     if (dz2 >= EPSILON && dz2 < len)
                         len = dz2;
 
-                    if (len == Single.MaxValue)
+                    if (len == float.MaxValue)
                     {
                         dx2 = dy2 = dz2 = 0.01f; // one centimeter
                     }

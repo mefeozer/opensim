@@ -99,7 +99,7 @@ namespace OpenSim.Tests.Clients.AssetsClient
             m_log.InfoFormat("[ASSET CLIENT]: Received responses {0}", m_NReceived);
         }
 
-        private static void ResponseReceived(string id, Object sender, AssetBase asset)
+        private static void ResponseReceived(string id, object sender, AssetBase asset)
         {
             if (Thread.CurrentThread.ManagedThreadId > m_MaxThreadID)
                 m_MaxThreadID = Thread.CurrentThread.ManagedThreadId;

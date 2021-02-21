@@ -215,8 +215,8 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
 
         public bool ObjectGiveMoney(UUID objectID, UUID fromID, UUID toID, int amount, UUID txn, out string result)
         {
-            result = String.Empty;
-            string description = String.Format("Object {0} pays {1}", resolveObjectName(objectID), resolveAgentName(toID));
+            result = string.Empty;
+            string description = string.Format("Object {0} pays {1}", resolveObjectName(objectID), resolveAgentName(toID));
 
             bool give_result = doMoneyTransfer(fromID, toID, amount, 2, description);
 
@@ -267,7 +267,7 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
                 if(economyConfig != null)
                 {
                     mmodule = economyConfig.GetString("economymodule", "");
-                    if (String.IsNullOrEmpty(mmodule))
+                    if (string.IsNullOrEmpty(mmodule))
                         mmodule = economyConfig.GetString("EconomyModule", "");
                 }
             }
@@ -356,7 +356,7 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
                     client.SendAlertMessage(e.Message + " ");
                 }
 
-                client.SendMoneyBalance(TransactionID, true, new byte[0], returnfunds, 0, UUID.Zero, false, UUID.Zero, false, 0, String.Empty);
+                client.SendMoneyBalance(TransactionID, true, new byte[0], returnfunds, 0, UUID.Zero, false, UUID.Zero, false, 0, string.Empty);
             }
             else
             {
@@ -387,7 +387,7 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
             {
                 return part.Name;
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         private string resolveAgentName(UUID agentID)
@@ -407,7 +407,7 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
                     agentID);
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         private void BalanceUpdate(UUID senderID, UUID receiverID, bool transactionresult, string description)
@@ -419,12 +419,12 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
             {
                 if (sender != null)
                 {
-                    sender.SendMoneyBalance(UUID.Random(), transactionresult, Utils.StringToBytes(description), GetFundsForAgentID(senderID), 0, UUID.Zero, false, UUID.Zero, false, 0, String.Empty);
+                    sender.SendMoneyBalance(UUID.Random(), transactionresult, Utils.StringToBytes(description), GetFundsForAgentID(senderID), 0, UUID.Zero, false, UUID.Zero, false, 0, string.Empty);
                 }
 
                 if (receiver != null)
                 {
-                    receiver.SendMoneyBalance(UUID.Random(), transactionresult, Utils.StringToBytes(description), GetFundsForAgentID(receiverID), 0, UUID.Zero, false, UUID.Zero, false, 0, String.Empty);
+                    receiver.SendMoneyBalance(UUID.Random(), transactionresult, Utils.StringToBytes(description), GetFundsForAgentID(receiverID), 0, UUID.Zero, false, UUID.Zero, false, 0, string.Empty);
                 }
             }
         }
@@ -738,7 +738,7 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
                                  TeleportMinPrice, TeleportPriceExponent);
         }
 
-        private void ValidateLandBuy(Object osender, EventManager.LandBuyArgs e)
+        private void ValidateLandBuy(object osender, EventManager.LandBuyArgs e)
         {
 
 
@@ -750,7 +750,7 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
 
         }
 
-        private void processLandBuy(Object osender, EventManager.LandBuyArgs e)
+        private void processLandBuy(object osender, EventManager.LandBuyArgs e)
         {
 
         }
@@ -760,7 +760,7 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
         /// </summary>
         /// <param name="osender"></param>
         /// <param name="e"></param>
-        private void MoneyTransferAction(Object osender, EventManager.MoneyTransferArgs e)
+        private void MoneyTransferAction(object osender, EventManager.MoneyTransferArgs e)
         {
 
         }

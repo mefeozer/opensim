@@ -206,7 +206,7 @@ public abstract class BSShape
 
     #region Common shape routines
     // Create a hash of all the shape parameters to be used as a key for this particular shape.
-    public static System.UInt64 ComputeShapeKey(OMV.Vector3 size, PrimitiveBaseShape pbs, out float retLod)
+    public static ulong ComputeShapeKey(OMV.Vector3 size, PrimitiveBaseShape pbs, out float retLod)
     {
         // level of detail based on size and type of the object
         float lod = BSParam.MeshLOD;
@@ -269,7 +269,7 @@ public abstract class BSShape
                     {
                         // physicsScene.DetailLog("{0},BSShape.VerifyMeshCreated,assetProviderCallback", xprim.LocalID);
                         bool assetFound = false;
-                        string mismatchIDs = String.Empty;  // DEBUG DEBUG
+                        string mismatchIDs = string.Empty;  // DEBUG DEBUG
                         if (asset != null && yprim.BaseShape.SculptEntry)
                         {
                             if (yprim.BaseShape.SculptTexture.ToString() == asset.ID)
@@ -328,7 +328,7 @@ public abstract class BSShape
         return fillShape.physShapeInfo;
      }
 
-    public static String UsefulPrimInfo(BSScene pScene, BSPhysObject prim)
+    public static string UsefulPrimInfo(BSScene pScene, BSPhysObject prim)
     {
         StringBuilder buff = new StringBuilder(prim.PhysObjectName);
         buff.Append("/pos=");
@@ -430,7 +430,7 @@ public class BSShapeNative : BSShape
         }
         newShape.shapeType = shapeType;
         newShape.isNativeShape = true;
-        newShape.shapeKey = (UInt64)shapeKey;
+        newShape.shapeKey = (ulong)shapeKey;
         return newShape;
     }
 
@@ -441,7 +441,7 @@ public class BSShapeNative : BSShape
 public class BSShapeMesh : BSShape
 {
     private static string LogHeader = "[BULLETSIM SHAPE MESH]";
-    public static Dictionary<System.UInt64, BSShapeMesh> Meshes = new Dictionary<System.UInt64, BSShapeMesh>();
+    public static Dictionary<ulong, BSShapeMesh> Meshes = new Dictionary<ulong, BSShapeMesh>();
 
     public BSShapeMesh(BulletShape pShape) : base(pShape)
     {
@@ -449,7 +449,7 @@ public class BSShapeMesh : BSShape
     public static BSShape GetReference(BSScene physicsScene, bool forceRebuild, BSPhysObject prim)
     {
         float lod;
-        System.UInt64 newMeshKey = BSShape.ComputeShapeKey(prim.Size, prim.BaseShape, out lod);
+            ulong newMeshKey = BSShape.ComputeShapeKey(prim.Size, prim.BaseShape, out lod);
 
         BSShapeMesh retMesh = null;
         lock (Meshes)
@@ -530,7 +530,7 @@ public class BSShapeMesh : BSShape
     }
 
     public delegate BulletShape CreateShapeCall(BulletWorld world, int indicesCount, int[] indices, int verticesCount, float[] vertices );
-    private BulletShape CreatePhysicalMesh(BSScene physicsScene, BSPhysObject prim, System.UInt64 newMeshKey,
+    private BulletShape CreatePhysicalMesh(BSScene physicsScene, BSPhysObject prim, ulong newMeshKey,
                                             PrimitiveBaseShape pbs, OMV.Vector3 size, float lod)
     {
         return BSShapeMesh.CreatePhysicalMeshShape(physicsScene, prim, newMeshKey, pbs, size, lod,
@@ -545,7 +545,7 @@ public class BSShapeMesh : BSShape
     // This is used by the passed 'makeShape' call to create the Bullet mesh shape.
     // The actual build call is passed so this logic can be used by several of the shapes that use a
     //     simple mesh as their base shape.
-    public static BulletShape CreatePhysicalMeshShape(BSScene physicsScene, BSPhysObject prim, System.UInt64 newMeshKey,
+    public static BulletShape CreatePhysicalMeshShape(BSScene physicsScene, BSPhysObject prim, ulong newMeshKey,
                                             PrimitiveBaseShape pbs, OMV.Vector3 size, float lod, CreateShapeCall makeShape)
     {
         BulletShape newShape = new BulletShape();
@@ -637,7 +637,7 @@ public class BSShapeHull : BSShape
     private static string LogHeader = "[BULLETSIM SHAPE HULL]";
 #pragma warning restore 414
 
-    public static Dictionary<System.UInt64, BSShapeHull> Hulls = new Dictionary<System.UInt64, BSShapeHull>();
+    public static Dictionary<ulong, BSShapeHull> Hulls = new Dictionary<ulong, BSShapeHull>();
 
 
     public BSShapeHull(BulletShape pShape) : base(pShape)
@@ -646,7 +646,7 @@ public class BSShapeHull : BSShape
     public static BSShape GetReference(BSScene physicsScene, bool forceRebuild, BSPhysObject prim)
     {
         float lod;
-        System.UInt64 newHullKey = BSShape.ComputeShapeKey(prim.Size, prim.BaseShape, out lod);
+            ulong newHullKey = BSShape.ComputeShapeKey(prim.Size, prim.BaseShape, out lod);
 
         BSShapeHull retHull = null;
         lock (Hulls)
@@ -704,7 +704,7 @@ public class BSShapeHull : BSShape
     }
 
     List<ConvexResult> m_hulls;
-    private BulletShape CreatePhysicalHull(BSScene physicsScene, BSPhysObject prim, System.UInt64 newHullKey,
+    private BulletShape CreatePhysicalHull(BSScene physicsScene, BSPhysObject prim, ulong newHullKey,
                                             PrimitiveBaseShape pbs, OMV.Vector3 size, float lod)
     {
         BulletShape newShape = new BulletShape();
@@ -1107,7 +1107,7 @@ public class BSShapeConvexHull : BSShape
     private static string LogHeader = "[BULLETSIM SHAPE CONVEX HULL]";
 #pragma warning restore 414
 
-    public static Dictionary<System.UInt64, BSShapeConvexHull> ConvexHulls = new Dictionary<System.UInt64, BSShapeConvexHull>();
+    public static Dictionary<ulong, BSShapeConvexHull> ConvexHulls = new Dictionary<ulong, BSShapeConvexHull>();
 
     public BSShapeConvexHull(BulletShape pShape) : base(pShape)
     {
@@ -1115,7 +1115,7 @@ public class BSShapeConvexHull : BSShape
     public static BSShape GetReference(BSScene physicsScene, bool forceRebuild, BSPhysObject prim)
     {
         float lod;
-        System.UInt64 newMeshKey = BSShape.ComputeShapeKey(prim.Size, prim.BaseShape, out lod);
+            ulong newMeshKey = BSShape.ComputeShapeKey(prim.Size, prim.BaseShape, out lod);
 
         physicsScene.DetailLog("{0},BSShapeConvexHull,getReference,newKey={1},size={2},lod={3}",
                                 prim.LocalID, newMeshKey.ToString("X"), prim.Size, lod);
@@ -1209,7 +1209,7 @@ public class BSShapeGImpact : BSShape
     private static string LogHeader = "[BULLETSIM SHAPE GIMPACT]";
 #pragma warning restore 414
 
-    public static Dictionary<System.UInt64, BSShapeGImpact> GImpacts = new Dictionary<System.UInt64, BSShapeGImpact>();
+    public static Dictionary<ulong, BSShapeGImpact> GImpacts = new Dictionary<ulong, BSShapeGImpact>();
 
     public BSShapeGImpact(BulletShape pShape) : base(pShape)
     {
@@ -1217,7 +1217,7 @@ public class BSShapeGImpact : BSShape
     public static BSShape GetReference(BSScene physicsScene, bool forceRebuild, BSPhysObject prim)
     {
         float lod;
-        System.UInt64 newMeshKey = BSShape.ComputeShapeKey(prim.Size, prim.BaseShape, out lod);
+            ulong newMeshKey = BSShape.ComputeShapeKey(prim.Size, prim.BaseShape, out lod);
 
         physicsScene.DetailLog("{0},BSShapeGImpact,getReference,newKey={1},size={2},lod={3}",
                                 prim.LocalID, newMeshKey.ToString("X"), prim.Size, lod);
@@ -1252,7 +1252,7 @@ public class BSShapeGImpact : BSShape
         return retGImpact;
     }
 
-    private BulletShape CreatePhysicalGImpact(BSScene physicsScene, BSPhysObject prim, System.UInt64 newMeshKey,
+    private BulletShape CreatePhysicalGImpact(BSScene physicsScene, BSPhysObject prim, ulong newMeshKey,
                                             PrimitiveBaseShape pbs, OMV.Vector3 size, float lod)
     {
         return BSShapeMesh.CreatePhysicalMeshShape(physicsScene, prim, newMeshKey, pbs, size, lod,

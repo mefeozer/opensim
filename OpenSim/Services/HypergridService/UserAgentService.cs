@@ -106,21 +106,21 @@ namespace OpenSim.Services.HypergridService
 
                 IConfig serverConfig = config.Configs["UserAgentService"];
                 if (serverConfig == null)
-                    throw new Exception(String.Format("No section UserAgentService in config file"));
+                    throw new Exception(string.Format("No section UserAgentService in config file"));
 
-                string gridService = serverConfig.GetString("GridService", String.Empty);
-                string gridUserService = serverConfig.GetString("GridUserService", String.Empty);
-                string gatekeeperService = serverConfig.GetString("GatekeeperService", String.Empty);
-                string friendsService = serverConfig.GetString("FriendsService", String.Empty);
-                string presenceService = serverConfig.GetString("PresenceService", String.Empty);
-                string userAccountService = serverConfig.GetString("UserAccountService", String.Empty);
+                string gridService = serverConfig.GetString("GridService", string.Empty);
+                string gridUserService = serverConfig.GetString("GridUserService", string.Empty);
+                string gatekeeperService = serverConfig.GetString("GatekeeperService", string.Empty);
+                string friendsService = serverConfig.GetString("FriendsService", string.Empty);
+                string presenceService = serverConfig.GetString("PresenceService", string.Empty);
+                string userAccountService = serverConfig.GetString("UserAccountService", string.Empty);
 
                 m_BypassClientVerification = serverConfig.GetBoolean("BypassClientVerification", false);
 
                 if (string.IsNullOrEmpty(gridService) || string.IsNullOrEmpty(gridUserService) || string.IsNullOrEmpty(gatekeeperService))
-                    throw new Exception(String.Format("Incomplete specifications, UserAgent Service cannot function."));
+                    throw new Exception(string.Format("Incomplete specifications, UserAgent Service cannot function."));
 
-                Object[] args = new Object[] { config };
+                object[] args = new object[] { config };
                 m_GridService = ServerUtils.LoadPlugin<IGridService>(gridService, args);
                 m_GridUserService = ServerUtils.LoadPlugin<IGridUserService>(gridUserService, args);
                 m_GatekeeperConnector = new GatekeeperServiceConnector();
@@ -137,7 +137,7 @@ namespace OpenSim.Services.HypergridService
                 LoadDomainExceptionsFromConfig(serverConfig, "DisallowExcept", m_TripsDisallowedExceptions);
 
                 m_GridName = Util.GetConfigVarFromSections<string>(config, "GatekeeperURI",
-                    new string[] { "Startup", "Hypergrid", "UserAgentService" }, String.Empty);
+                    new string[] { "Startup", "Hypergrid", "UserAgentService" }, string.Empty);
                 if (string.IsNullOrEmpty(m_GridName)) // Legacy. Remove soon.
                 {
                     m_GridName = serverConfig.GetString("ExternalName", string.Empty);
@@ -155,11 +155,11 @@ namespace OpenSim.Services.HypergridService
                         m_GridName = m_GridName + "/";
                     Uri gateURI;
                     if(!Uri.TryCreate(m_GridName, UriKind.Absolute, out gateURI))
-                        throw new Exception(String.Format("[UserAgentService] could not parse gatekeeper uri"));
+                        throw new Exception(string.Format("[UserAgentService] could not parse gatekeeper uri"));
                     string host = gateURI.DnsSafeHost;
                     IPAddress ip = Util.GetHostFromDNS(host);
                     if(ip == null)
-                        throw new Exception(String.Format("[UserAgentService] failed to resolve gatekeeper host"));
+                        throw new Exception(string.Format("[UserAgentService] failed to resolve gatekeeper host"));
                     m_MyExternalIP = ip.ToString();
                 }
                 // Finally some cleanup
@@ -175,7 +175,7 @@ namespace OpenSim.Services.HypergridService
                 if (keyName.StartsWith(variable + "_Level_"))
                 {
                     int level = 0;
-                    if (Int32.TryParse(keyName.Replace(variable + "_Level_", ""), out level))
+                    if (int.TryParse(keyName.Replace(variable + "_Level_", ""), out level))
                         m_ForeignTripsAllowed.Add(level, config.GetBoolean(keyName, true));
                 }
             }
@@ -188,7 +188,7 @@ namespace OpenSim.Services.HypergridService
                 if (keyName.StartsWith(variable + "_Level_"))
                 {
                     int level = 0;
-                    if (Int32.TryParse(keyName.Replace(variable + "_Level_", ""), out level) && !exceptions.ContainsKey(level))
+                    if (int.TryParse(keyName.Replace(variable + "_Level_", ""), out level) && !exceptions.ContainsKey(level))
                     {
                         exceptions.Add(level, new List<string>());
                         string value = config.GetString(keyName, string.Empty);
@@ -662,7 +662,7 @@ namespace OpenSim.Services.HypergridService
             return string.Empty;
         }
 
-        public UUID GetUUID(String first, String last)
+        public UUID GetUUID(string first, string last)
         {
             // Let's see if it's a local user
             UserAccount account = m_UserAccountService.GetUserAccount(UUID.Zero, first, last);

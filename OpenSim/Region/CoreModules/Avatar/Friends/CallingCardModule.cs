@@ -141,7 +141,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                         client.Scene, client.AgentId,
                         client.FirstName+" "+client.LastName,
                         destID, (byte)211, false,
-                        String.Empty,
+                        string.Empty,
                         transactionID, false, new Vector3(), new byte[0], true),
                         delegate(bool success) {} );
             }

@@ -84,7 +84,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <summary>
         /// Whether this archive uses the multi-region format.
         /// </summary>
-        public Boolean MultiRegionFormat { get; set; }
+        public bool MultiRegionFormat { get; set; }
 
         /// <summary>
         /// Maps (Region directory -> region)
@@ -208,7 +208,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             if (!fullPath.StartsWith(ArchiveConstants.REGIONS_PATH))
                 return true;    // this file doesn't belong to a region
 
-            string[] parts = fullPath.Split(new Char[] { '/' }, 3);
+            string[] parts = fullPath.Split(new char[] { '/' }, 3);
             if (parts.Length != 3)
                 return false;
             string regionDirectory = parts[1];

@@ -117,7 +117,7 @@ namespace OpenSim.Framework.Console
                             if(indx > 0)
                             {
                                 if(indx + 4 >= line.Length)
-                                    line = String.Empty;
+                                    line = string.Empty;
                                 else
                                    line = line.Substring(indx + 4);
                             }
@@ -162,7 +162,7 @@ namespace OpenSim.Framework.Console
             if (m_historyEnable)
             {
                 if (m_historytimestamps)
-                    text = String.Format("[{0} {1}]:> {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), text);
+                    text = string.Format("[{0} {1}]:> {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), text);
                 File.AppendAllText(m_historyPath, text + Environment.NewLine);
             }
         }
@@ -419,7 +419,7 @@ namespace OpenSim.Framework.Console
             if (components == null || components.Length == 0)
                 text = format;
             else
-                text = String.Format(format, components);
+                text = string.Format(format, components);
 
             FireOnOutput(text);
 
@@ -466,7 +466,7 @@ namespace OpenSim.Framework.Console
             if (opts[0].StartsWith("Command help:"))
                 Output(opts[0]);
             else
-                Output(String.Format("Options: {0}", String.Join(" ", opts)));
+                Output(string.Format("Options: {0}", string.Join(" ", opts)));
 
             return true;
         }
@@ -501,7 +501,7 @@ namespace OpenSim.Framework.Console
                 }
                 char enteredChar = key.KeyChar;
 
-                if (!Char.IsControl(enteredChar))
+                if (!char.IsControl(enteredChar))
                 {
                     if (m_cursorXPosition >= 318)
                         continue;
@@ -617,8 +617,8 @@ namespace OpenSim.Framework.Console
                                     if (cmd[index].Contains(" "))
                                         cmd[index] = "\"" + cmd[index] + "\"";
                                 }
-                                AddToHistory(String.Join(" ", cmd));
-                                return String.Empty;
+                                AddToHistory(string.Join(" ", cmd));
+                                return string.Empty;
                             }
                         }
 

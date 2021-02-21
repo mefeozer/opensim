@@ -46,15 +46,15 @@ namespace OpenSim.Server.Handlers.Authorization
                 m_ConfigName = configName;
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
 
             string authorizationService = serverConfig.GetString("LocalServiceModule",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(authorizationService))
                 throw new Exception("No AuthorizationService in config file");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_AuthorizationService =
                     ServerUtils.LoadPlugin<IAuthorizationService>(authorizationService, args);
 

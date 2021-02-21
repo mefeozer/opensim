@@ -212,7 +212,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
         protected override void ProcessRequest(
             string path, Stream request, Stream response, IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
-            Uri providerEndpoint = new Uri(String.Format("{0}://{1}{2}", httpRequest.Url.Scheme, httpRequest.Url.Authority, httpRequest.Url.AbsolutePath));
+            Uri providerEndpoint = new Uri(string.Format("{0}://{1}{2}", httpRequest.Url.Scheme, httpRequest.Url.Authority, httpRequest.Url.AbsolutePath));
 
             // Defult to returning HTML content
             httpResponse.ContentType = ContentType;
@@ -251,7 +251,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
                             {
                                 // Authentication was requested, send the client a login form
                                 using (StreamWriter writer = new StreamWriter(response))
-                                    writer.Write(String.Format(LOGIN_PAGE, account.FirstName, account.LastName));
+                                    writer.Write(string.Format(LOGIN_PAGE, account.FirstName, account.LastName));
                                 return;
                             }
                         }
@@ -290,7 +290,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
                         using (StreamWriter writer = new StreamWriter(response))
                         {
                             // TODO: Print out a full profile page for this avatar
-                            writer.Write(String.Format(OPENID_PAGE, httpRequest.Url.Scheme,
+                            writer.Write(string.Format(OPENID_PAGE, httpRequest.Url.Scheme,
                                 httpRequest.Url.Authority, account.FirstName, account.LastName));
                         }
                     }

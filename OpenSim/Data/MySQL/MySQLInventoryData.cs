@@ -307,8 +307,8 @@ namespace OpenSim.Data.MySQL
                 item.AssetID = DBGuid.FromDB(reader["assetID"]);
                 item.AssetType = (int) reader["assetType"];
                 item.Folder = DBGuid.FromDB(reader["parentFolderID"]);
-                item.Name = (string)(reader["inventoryName"] ?? String.Empty);
-                item.Description = (string)(reader["inventoryDescription"] ?? String.Empty);
+                item.Name = (string)(reader["inventoryName"] ?? string.Empty);
+                item.Description = (string)(reader["inventoryDescription"] ?? string.Empty);
                 item.NextPermissions = (uint) reader["inventoryNextPermissions"];
                 item.CurrentPermissions = (uint) reader["inventoryCurrentPermissions"];
                 item.InvType = (int) reader["invType"];

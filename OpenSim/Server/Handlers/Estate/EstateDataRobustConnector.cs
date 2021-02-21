@@ -52,15 +52,15 @@ namespace OpenSim.Server.Handlers
         {
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
 
             string service = serverConfig.GetString("LocalServiceModule",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(service))
                 throw new Exception("No LocalServiceModule in config file");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             IEstateDataService e_service = ServerUtils.LoadPlugin<IEstateDataService>(service, args);
 
             IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName); ;
@@ -199,14 +199,14 @@ namespace OpenSim.Server.Handlers
                 {
                     string create = (string)httpRequest.Query["create"];
                     bool createYN = false;
-                    Boolean.TryParse(create, out createYN);
+                    bool.TryParse(create, out createYN);
                     estate = m_EstateService.LoadEstateSettings(regionID, createYN);
                 }
             }
             else if (!string.IsNullOrEmpty(eid))
             {
                 int id = 0;
-                if (Int32.TryParse(eid, out id))
+                if (int.TryParse(eid, out id))
                     estate = m_EstateService.LoadEstateSettings(id);
             }
 
@@ -232,7 +232,7 @@ namespace OpenSim.Server.Handlers
             if (!string.IsNullOrEmpty(eid))
             {
                 int id = 0;
-                if (Int32.TryParse(eid, out id))
+                if (int.TryParse(eid, out id))
                 {
                     List<UUID> regions = m_EstateService.GetRegions(id);
                     if (regions != null && regions.Count > 0)
@@ -327,7 +327,7 @@ namespace OpenSim.Server.Handlers
             {
                 int id = 0;
                 UUID regionID = UUID.Zero;
-                if (UUID.TryParse(region, out regionID) && Int32.TryParse(eid, out id))
+                if (UUID.TryParse(region, out regionID) && int.TryParse(eid, out id))
                 {
                     m_log.DebugFormat("[EstateServerPostHandler]: Link region {0} to estate {1}", regionID, id);
                     httpResponse.StatusCode = (int)HttpStatusCode.OK;

@@ -83,7 +83,7 @@ namespace OpenSim.Services.Connectors.Simulation
                 args["source_y"] = OSD.FromString(source.RegionLocY.ToString());
                 args["source_name"] = OSD.FromString(source.RegionName);
                 args["source_uuid"] = OSD.FromString(source.RegionID.ToString());
-                if (!String.IsNullOrEmpty(source.RawServerURI))
+                if (!string.IsNullOrEmpty(source.RawServerURI))
                     args["source_server_uri"] = OSD.FromString(source.RawServerURI);
             }
 
@@ -96,7 +96,7 @@ namespace OpenSim.Services.Connectors.Simulation
 
         public bool CreateAgent(GridRegion source, GridRegion destination, AgentCircuitData aCircuit, uint flags, EntityTransferContext ctx, out string reason)
         {
-            reason = String.Empty;
+            reason = string.Empty;
 
             if (destination == null)
             {
@@ -299,7 +299,7 @@ namespace OpenSim.Services.Connectors.Simulation
             request.Add("position", OSD.FromString(position.ToString()));
             // To those who still understad this field, we're telling them
             // the lowest version just to be safe
-            request.Add("my_version", OSD.FromString(String.Format("SIMULATION/{0}", VersionInfo.SimulationServiceVersionSupportedMin)));
+            request.Add("my_version", OSD.FromString(string.Format("SIMULATION/{0}", VersionInfo.SimulationServiceVersionSupportedMin)));
             // New simulation service negotiation
             request.Add("simulation_service_supported_min", OSD.FromReal(VersionInfo.SimulationServiceVersionSupportedMin));
             request.Add("simulation_service_supported_max", OSD.FromReal(VersionInfo.SimulationServiceVersionSupportedMax));
@@ -347,7 +347,7 @@ namespace OpenSim.Services.Connectors.Simulation
                         string versionString = tmpOSD.AsString();
                         if(!string.IsNullOrEmpty(versionString))
                         {
-                            String[] parts = versionString.Split(new char[] {'/'});
+                            string[] parts = versionString.Split(new char[] {'/'});
                             if (parts.Length > 1)
                             {
                                 ctx.InboundVersion = float.Parse(parts[1], Culture.FormatProvider);

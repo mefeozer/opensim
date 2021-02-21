@@ -281,7 +281,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 LLSDxmlEncode2.AddEndMap(sb);
             }
             else
-                LLSDxmlEncode2.AddElem("error", String.IsNullOrEmpty(error) ? "" : error, sb);
+                LLSDxmlEncode2.AddElem("error", string.IsNullOrEmpty(error) ? "" : error, sb);
 
             Enqueue(EndEventToBytes(sb), toAgent);
         }

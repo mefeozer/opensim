@@ -52,7 +52,7 @@ namespace OpenSim.Region.Framework.Interfaces
         /// <remarks>
         /// All add and remove attachment operations must synchronize on this for the lifetime of their operations.
         /// </remarks>
-        Object AttachmentsSyncLock { get; }
+        object AttachmentsSyncLock { get; }
 
         int GetAttachmentsCount();
         /// <summary>

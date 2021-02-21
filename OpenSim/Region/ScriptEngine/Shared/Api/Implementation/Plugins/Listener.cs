@@ -83,16 +83,16 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
         }
 
-        public Object[] GetSerializationData(UUID itemID)
+        public object[] GetSerializationData(UUID itemID)
         {
             if (m_commsPlugin != null)
                 return m_commsPlugin.GetSerializationData(itemID);
             else
-                return new Object[]{};
+                return new object[]{};
         }
 
         public void CreateFromData(uint localID, UUID itemID, UUID hostID,
-                Object[] data)
+                object[] data)
         {
             if (m_commsPlugin != null)
                 m_commsPlugin.CreateFromData(localID, itemID, hostID, data);

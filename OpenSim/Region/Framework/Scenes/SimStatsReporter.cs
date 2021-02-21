@@ -468,7 +468,7 @@ namespace OpenSim.Region.Framework.Scenes
                 }
 
                 sb[0].StatID = (uint) Stats.TimeDilation;
-                sb[0].StatValue = (Single.IsNaN(timeDilation)) ? 0.0f : (float)Math.Round(timeDilation,3);
+                sb[0].StatValue = (float.IsNaN(timeDilation)) ? 0.0f : (float)Math.Round(timeDilation,3);
 
                 sb[1].StatID = (uint) Stats.SimFPS;
                 sb[1].StatValue = (float)Math.Round(reportedFPS,1);;
@@ -603,8 +603,8 @@ namespace OpenSim.Region.Framework.Scenes
                 lastReportedSimStats[38] = m_scriptLinesPerSecond * updateTimeFactor;
 
                 sbex[1].StatID = (uint)Stats.FrameDilation2;
-                sbex[1].StatValue = (Single.IsNaN(timeDilation)) ? 0.1f : timeDilation;
-                lastReportedSimStats[39] = (Single.IsNaN(timeDilation)) ? 0.1f : timeDilation;
+                sbex[1].StatValue = (float.IsNaN(timeDilation)) ? 0.1f : timeDilation;
+                lastReportedSimStats[39] = (float.IsNaN(timeDilation)) ? 0.1f : timeDilation;
 
                 sbex[2].StatID = (uint)Stats.UsersLoggingIn;
                 sbex[2].StatValue = m_usersLoggingIn;

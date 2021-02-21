@@ -384,7 +384,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// actor_name_map because terrain and water currently don't conceptually have a physics actor of their own
         /// apart from the singleton PANull
         /// </remarks>
-        public Dictionary<IntPtr, String> geom_name_map = new Dictionary<IntPtr, String>();
+        public Dictionary<IntPtr, string> geom_name_map = new Dictionary<IntPtr, string>();
 
         /// <summary>
         /// Maps a unique geometry id (a memory location) to a physics actor.
@@ -404,7 +404,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
         private bool m_NINJA_physics_joints_enabled = false;
         //private Dictionary<String, IntPtr> jointpart_name_map = new Dictionary<String,IntPtr>();
-        private readonly Dictionary<String, List<PhysicsJoint>> joints_connecting_actor = new Dictionary<String, List<PhysicsJoint>>();
+        private readonly Dictionary<string, List<PhysicsJoint>> joints_connecting_actor = new Dictionary<string, List<PhysicsJoint>>();
         private SafeNativeMethods.ContactGeom[] contacts;
 
         /// <summary>
@@ -427,9 +427,9 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// </summary>
         private readonly List<string> requestedJointsToBeDeleted = new List<string>();
 
-        private Object externalJointRequestsLock = new Object();
-        private readonly Dictionary<String, PhysicsJoint> SOPName_to_activeJoint = new Dictionary<String, PhysicsJoint>();
-        private readonly Dictionary<String, PhysicsJoint> SOPName_to_pendingJoint = new Dictionary<String, PhysicsJoint>();
+        private object externalJointRequestsLock = new object();
+        private readonly Dictionary<string, PhysicsJoint> SOPName_to_activeJoint = new Dictionary<string, PhysicsJoint>();
+        private readonly Dictionary<string, PhysicsJoint> SOPName_to_pendingJoint = new Dictionary<string, PhysicsJoint>();
         private readonly DoubleDictionary<Vector3, IntPtr, IntPtr> RegionTerrain = new DoubleDictionary<Vector3, IntPtr, IntPtr>();
         private readonly Dictionary<IntPtr,float[]> TerrainHeightFieldHeights = new Dictionary<IntPtr, float[]>();
 
@@ -461,7 +461,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <summary>
         /// Used to lock the entire physics scene.  Locked during the main part of Simulate()
         /// </summary>
-        internal Object OdeLock = new Object();
+        internal object OdeLock = new object();
 
         private bool _worldInitialized = false;
 
@@ -975,8 +975,8 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
             // d.GeomClassID id = d.GeomGetClass(g1);
 
-            String name1 = null;
-            String name2 = null;
+            string name1 = null;
+            string name2 = null;
 
             if (!geom_name_map.TryGetValue(g1, out name1))
             {
@@ -1159,7 +1159,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 // Note, that if *all* contacts are skipped (VolumeDetect)
                 // The prim still detects (and forwards) collision events but
                 // appears to be phantom for the world
-                Boolean skipThisContact = false;
+                bool skipThisContact = false;
 
                 if ((p1 is OdePrim) && (((OdePrim)p1).m_isVolumeDetect))
                     skipThisContact = true;   // No collision on volume detect prims
@@ -1772,7 +1772,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
             }
         }
 
-        private PhysicsActor AddPrim(String name, Vector3 position, Vector3 size, Quaternion rotation,
+        private PhysicsActor AddPrim(string name, Vector3 position, Vector3 size, Quaternion rotation,
                                      PrimitiveBaseShape pbs, bool isphysical, uint localID)
         {
             Vector3 pos = position;

@@ -511,7 +511,7 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
             m_ChannelKey = channelKey;
             m_MessageID = UUID.Random();
             m_processed = false;
-            m_respStr = String.Empty;
+            m_respStr = string.Empty;
             m_respInt = 0;
         }
 

@@ -165,7 +165,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         private float m_targetHoverHeight;
 
 
-        public OdeCharacter(uint localID,String avName,ODEScene parent_scene,Vector3 pos,Vector3 pSize,float pfeetOffset,float density,float walk_divisor,float rundivisor)
+        public OdeCharacter(uint localID, string avName,ODEScene parent_scene,Vector3 pos,Vector3 pSize,float pfeetOffset,float density,float walk_divisor,float rundivisor)
         {
             m_uuid = UUID.Random();
             m_localID = localID;
@@ -1179,7 +1179,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             // check outbounds forcing to be in world
             bool fixbody = false;
             float tmp = localpos.X;
-            if ((Single.IsNaN(tmp) || Single.IsInfinity(tmp)))
+            if ((float.IsNaN(tmp) || float.IsInfinity(tmp)))
             {
                 fixbody = true;
                 localpos.X = 128f;
@@ -1196,7 +1196,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
 
             tmp = localpos.Y;
-            if ((Single.IsNaN(tmp) || Single.IsInfinity(tmp)))
+            if ((float.IsNaN(tmp) || float.IsInfinity(tmp)))
             {
                 fixbody = true;
                 localpos.X = 128f;
@@ -1213,7 +1213,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
 
             tmp = localpos.Z;
-            if ((Single.IsNaN(tmp) || Single.IsInfinity(tmp)))
+            if ((float.IsNaN(tmp) || float.IsInfinity(tmp)))
             {
                 fixbody = true;
                 localpos.Z = 128f;

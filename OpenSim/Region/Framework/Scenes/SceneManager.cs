@@ -338,9 +338,9 @@ namespace OpenSim.Region.Framework.Scenes
 
         public bool TrySetCurrentScene(string regionName)
         {
-            if ((String.Compare(regionName, "root") == 0)
-                || (String.Compare(regionName, "..") == 0)
-                || (String.Compare(regionName, "/") == 0))
+            if ((string.Compare(regionName, "root") == 0)
+                || (string.Compare(regionName, "..") == 0)
+                || (string.Compare(regionName, "/") == 0))
             {
                 CurrentScene = null;
                 return true;

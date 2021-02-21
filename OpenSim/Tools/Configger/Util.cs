@@ -35,7 +35,7 @@ namespace OpenSim.Tools.Configger
     {
         public static string[] Glob(string path)
         {
-            string vol=String.Empty;
+            string vol= string.Empty;
 
             if (Path.VolumeSeparatorChar != Path.DirectorySeparatorChar)
             {
@@ -54,9 +54,9 @@ namespace OpenSim.Tools.Configger
 
             path = vol;
             if (!string.IsNullOrEmpty(vol))
-                path += new String(new char[] {Path.VolumeSeparatorChar, Path.DirectorySeparatorChar});
+                path += new string(new char[] {Path.VolumeSeparatorChar, Path.DirectorySeparatorChar});
             else
-                path = new String(new char[] {Path.DirectorySeparatorChar});
+                path = new string(new char[] {Path.DirectorySeparatorChar});
 
             List<string> paths = new List<string>();
             List<string> found = new List<string>();

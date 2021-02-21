@@ -487,12 +487,12 @@ namespace OpenSim.Framework
             Array ret = null;
             try
             {
-                using (MemoryStream str = new MemoryStream((2 * sizeof(Int32)) + (SizeX * SizeY * sizeof(float))))
+                using (MemoryStream str = new MemoryStream((2 * sizeof(int)) + (SizeX * SizeY * sizeof(float))))
                 {
                     using (BinaryWriter bw = new BinaryWriter(str))
                     {
-                        bw.Write((Int32)SizeX);
-                        bw.Write((Int32)SizeY);
+                        bw.Write((int)SizeX);
+                        bw.Write((int)SizeY);
                         for (int yy = 0; yy < SizeY; yy++)
                             for (int xx = 0; xx < SizeX; xx++)
                             {
@@ -517,12 +517,12 @@ namespace OpenSim.Framework
             Array ret = null;
             try
             {
-                using (MemoryStream inp = new MemoryStream((2 * sizeof(Int32)) + (SizeX * SizeY * sizeof(float))))
+                using (MemoryStream inp = new MemoryStream((2 * sizeof(int)) + (SizeX * SizeY * sizeof(float))))
                 {
                     using (BinaryWriter bw = new BinaryWriter(inp))
                     {
-                        bw.Write((Int32)SizeX);
-                        bw.Write((Int32)SizeY);
+                        bw.Write((int)SizeX);
+                        bw.Write((int)SizeY);
                         for (int yy = 0; yy < SizeY; yy++)
                             for (int xx = 0; xx < SizeX; xx++)
                             {
@@ -559,7 +559,7 @@ namespace OpenSim.Framework
         //    creation and any heights not initialized by theis blob are set to the default height.
         public void FromCompressedTerrainSerialization2D(byte[] pBlob)
         {
-            Int32 hmFormatCode, hmSizeX, hmSizeY, hmCompressionFactor;
+            int hmFormatCode, hmSizeX, hmSizeY, hmCompressionFactor;
 
             using (MemoryStream mstr = new MemoryStream(pBlob))
             {
@@ -599,7 +599,7 @@ namespace OpenSim.Framework
         //    creation and any heights not initialized by theis blob are set to the default height.
         public void FromCompressedTerrainSerializationV2D(byte[] pBlob)
         {
-            Int32 hmSizeX, hmSizeY;
+            int hmSizeX, hmSizeY;
             try
             {
                 using (MemoryStream mstr = new MemoryStream(pBlob))
@@ -644,7 +644,7 @@ namespace OpenSim.Framework
             m_log.InfoFormat("{0} VD2Gzip {1} bytes input",
                             LogHeader, pBlob.Length);
 
-            Int32 hmSizeX, hmSizeY;
+            int hmSizeX, hmSizeY;
 
             try
             {

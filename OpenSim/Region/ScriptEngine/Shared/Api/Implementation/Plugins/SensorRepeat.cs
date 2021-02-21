@@ -265,7 +265,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                     // send a "no_sensor"
                     // Add it to queue
                     m_CmdManager.m_ScriptEngine.PostScriptEvent(ts.itemID,
-                            new EventParams("no_sensor", new Object[0],
+                            new EventParams("no_sensor", new object[0],
                             new DetectParams[0]));
                 }
                 else
@@ -301,14 +301,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                         // like the object being deleted or the avatar leaving to have caused some
                         // difficulty during the Populate above so fire a no_sensor event
                         m_CmdManager.m_ScriptEngine.PostScriptEvent(ts.itemID,
-                                new EventParams("no_sensor", new Object[0],
+                                new EventParams("no_sensor", new object[0],
                                 new DetectParams[0]));
                     }
                     else
                     {
                         m_CmdManager.m_ScriptEngine.PostScriptEvent(ts.itemID,
                                 new EventParams("sensor",
-                                new Object[] {new LSL_Types.LSLInteger(detected.Count) },
+                                new object[] {new LSL_Types.LSLInteger(detected.Count) },
                                 detected.ToArray()));
                     }
                 }
@@ -658,9 +658,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             return sensedEntities;
         }
 
-        public Object[] GetSerializationData(UUID itemID)
+        public object[] GetSerializationData(UUID itemID)
         {
-            List<Object> data = new List<Object>();
+            List<object> data = new List<object>();
 
             foreach (SensorInfo ts in SenseRepeaters)
             {
@@ -679,7 +679,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         }
 
         public void CreateFromData(uint localID, UUID itemID, UUID objectID,
-                                   Object[] data)
+                                   object[] data)
         {
             SceneObjectPart part =
                 m_CmdManager.m_ScriptEngine.World.GetSceneObjectPart(

@@ -38,7 +38,7 @@ namespace OpenSim.Services.Connectors
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         public HeloServicesConnector()
         {
@@ -81,10 +81,10 @@ namespace OpenSim.Services.Connectors
 
         public virtual string Helo()
         {
-            if (String.IsNullOrEmpty(m_ServerURI))
+            if (string.IsNullOrEmpty(m_ServerURI))
             {
                 m_log.WarnFormat("[HELO SERVICE]: Unable to invoke HELO due to empty URL");
-                return String.Empty;
+                return string.Empty;
             }
 
             try

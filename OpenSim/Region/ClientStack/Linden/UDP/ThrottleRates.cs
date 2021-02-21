@@ -64,7 +64,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// can still throttle lower than this, but the adaptive throttles will
         /// never decrease rates below this no matter how many packets are dropped
         /// </summary>
-        public Int64 MinimumAdaptiveThrottleRate;
+        public long MinimumAdaptiveThrottleRate;
 
         public int ClientMaxRate = 640000; // 5,120,000 bps
         public float BurstTime = 10e-3f;

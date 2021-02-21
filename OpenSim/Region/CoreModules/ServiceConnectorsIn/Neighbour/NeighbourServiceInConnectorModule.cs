@@ -101,7 +101,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Neighbour
             if (!m_Registered)
             {
                 m_Registered = true;
-                Object[] args = new Object[] { m_Config, MainServer.Instance, this, scene };
+                object[] args = new object[] { m_Config, MainServer.Instance, this, scene };
                 ServerUtils.LoadPlugin<IServiceConnector>("OpenSim.Server.Handlers.dll:NeighbourServiceInConnector", args);
             }
 

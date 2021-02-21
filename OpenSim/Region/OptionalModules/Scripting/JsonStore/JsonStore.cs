@@ -126,7 +126,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
             // This is going to throw an exception if the value is not
             // a valid JSON chunk. Calling routines should catch the
             // exception and handle it appropriately
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 ValueStore = new OSDMap();
             else
                 ValueStore = OSDParser.DeserializeJson(value);
@@ -308,7 +308,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 return false;
             }
 
-            string value = String.Empty;
+            string value = string.Empty;
             if (! ConvertOutputValue(result,out value,useJson))
             {
                 // the structure does not match the request so i guess we'll wait
@@ -342,7 +342,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 return false;
             }
 
-            string value = String.Empty;
+            string value = string.Empty;
             if (! ConvertOutputValue(result,out value,useJson))
             {
                 // the structure does not match the request so i guess we'll wait
@@ -399,7 +399,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
 
                 if (akey == "+")
                 {
-                    string npkey = String.Format("[{0}]",amap.Count);
+                    string npkey = string.Format("[{0}]",amap.Count);
 
                     if (ovalue != null)
                     {
@@ -616,7 +616,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         // -----------------------------------------------------------------
         protected static bool ConvertOutputValue(OSD result, out string value, bool useJson)
         {
-            value = String.Empty;
+            value = string.Empty;
 
             // If we couldn't process the path
             if (result == null)

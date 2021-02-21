@@ -37,7 +37,7 @@ namespace OpenSim.Framework
             if (assetConfig == null)
                 return;
 
-            string perms = assetConfig.GetString(variable, String.Empty);
+            string perms = assetConfig.GetString(variable, string.Empty);
             string[] parts = perms.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in parts)
             {

@@ -47,9 +47,9 @@ namespace OpenSim.Framework
 
         public bool commFailTF = false;
         public ConfigurationMember configMember;
-        public string DataStore = String.Empty;
+        public string DataStore = string.Empty;
 
-        public string RegionFile = String.Empty;
+        public string RegionFile = string.Empty;
         public bool isSandbox = false;
         public bool Persistent = true;
 
@@ -75,10 +75,10 @@ namespace OpenSim.Framework
         private int m_objectCapacity = 15000;
         private int m_maxPrimsPerUser = -1;
         private int m_linksetCapacity = 0;
-        private string m_regionType = String.Empty;
+        private string m_regionType = string.Empty;
         protected uint m_httpPort;
         protected string m_serverURI;
-        protected string m_regionName = String.Empty;
+        protected string m_regionName = string.Empty;
         protected string m_externalHostName;
         protected IPEndPoint m_internalEndPoint;
         protected uint m_remotingPort;
@@ -119,7 +119,7 @@ namespace OpenSim.Framework
         // If entering avatar has no specific coords, this is where they land
         public Vector3 DefaultLandingPoint = new Vector3(128, 128, 30);
 
-        private Dictionary<String, String> m_extraSettings = new Dictionary<string, string>();
+        private Dictionary<string, string> m_extraSettings = new Dictionary<string, string>();
 
         // Apparently, we're applying the same estatesettings regardless of whether it's local or remote.
 
@@ -130,7 +130,7 @@ namespace OpenSim.Framework
 
         // File based loading
         //
-        public RegionInfo(string description, string filename, bool skipConsoleConfig, IConfigSource configSource) : this(description, filename, skipConsoleConfig, configSource, String.Empty)
+        public RegionInfo(string description, string filename, bool skipConsoleConfig, IConfigSource configSource) : this(description, filename, skipConsoleConfig, configSource, string.Empty)
         {
         }
 
@@ -474,7 +474,7 @@ namespace OpenSim.Framework
             // Track all of the keys in this config and remove as they are processed
             // The remaining keys will be added to generic key-value storage for
             // whoever might need it
-            HashSet<String> allKeys = new HashSet<String>();
+            HashSet<string> allKeys = new HashSet<string>();
             foreach (string s in config.GetKeys())
             {
                 allKeys.Add(s);
@@ -503,7 +503,7 @@ namespace OpenSim.Framework
             // Location
             //
             allKeys.Remove("Location");
-            string location = config.GetString("Location", String.Empty);
+            string location = config.GetString("Location", string.Empty);
             if (string.IsNullOrEmpty(location))
             {
                 location = MainConsole.Instance.Prompt("Region Location", "1000,1000");
@@ -538,7 +538,7 @@ namespace OpenSim.Framework
             allKeys.Remove("InternalAddress");
             if (config.Contains("InternalAddress"))
             {
-                address = IPAddress.Parse(config.GetString("InternalAddress", String.Empty));
+                address = IPAddress.Parse(config.GetString("InternalAddress", string.Empty));
             }
             else
             {
@@ -610,7 +610,7 @@ namespace OpenSim.Framework
             }
 
             // RegionType
-            m_regionType = config.GetString("RegionType", String.Empty);
+            m_regionType = config.GetString("RegionType", string.Empty);
             allKeys.Remove("RegionType");
 
             // Get Default Landing Location (Defaults to 128,128)
@@ -659,7 +659,7 @@ namespace OpenSim.Framework
                 config.Set("MaptileStaticUUID", m_maptileStaticUUID.ToString());
             }
 
-            MaptileStaticFile = config.GetString("MaptileStaticFile", String.Empty);
+            MaptileStaticFile = config.GetString("MaptileStaticFile", string.Empty);
             allKeys.Remove("MaptileStaticFile");
 
             #endregion
@@ -672,7 +672,7 @@ namespace OpenSim.Framework
             ScopeID = new UUID(config.GetString("ScopeID", UUID.Zero.ToString()));
             allKeys.Remove("ScopeID");
 
-            foreach (String s in allKeys)
+            foreach (string s in allKeys)
             {
                 SetExtraSetting(s, config.GetString(s));
             }
@@ -782,7 +782,7 @@ namespace OpenSim.Framework
 
             config.Set("RegionUUID", RegionID.ToString());
 
-            string location = String.Format("{0},{1}", RegionLocX, RegionLocY);
+            string location = string.Format("{0},{1}", RegionLocX, RegionLocY);
             config.Set("Location", location);
 
             if (!string.IsNullOrEmpty(DataStore))
@@ -927,7 +927,7 @@ namespace OpenSim.Framework
                                                 "Scope ID for this region", ScopeID.ToString(), true);
 
             configMember.addConfigurationOption("region_type", ConfigurationOption.ConfigurationTypes.TYPE_STRING,
-                                                "Free form string describing the type of region", String.Empty, true);
+                                                "Free form string describing the type of region", string.Empty, true);
 
             configMember.addConfigurationOption("region_static_maptile", ConfigurationOption.ConfigurationTypes.TYPE_UUID,
                                                 "UUID of a texture to use as the map for this region", m_maptileStaticUUID.ToString(), true);
@@ -988,10 +988,10 @@ namespace OpenSim.Framework
                                                 "Scope ID for this region", UUID.Zero.ToString(), true);
 
             configMember.addConfigurationOption("region_type", ConfigurationOption.ConfigurationTypes.TYPE_STRING,
-                                                "Region Type", String.Empty, true);
+                                                "Region Type", string.Empty, true);
 
             configMember.addConfigurationOption("region_static_maptile", ConfigurationOption.ConfigurationTypes.TYPE_UUID,
-                                                "UUID of a texture to use as the map for this region", String.Empty, true);
+                                                "UUID of a texture to use as the map for this region", string.Empty, true);
         }
 
         public bool handleIncomingConfiguration(string configuration_key, object configuration_result)
@@ -1123,19 +1123,19 @@ namespace OpenSim.Framework
             if (args["external_host_name"] != null)
                 ExternalHostName = args["external_host_name"].AsString();
             if (args["http_port"] != null)
-                UInt32.TryParse(args["http_port"].AsString(), out m_httpPort);
+                uint.TryParse(args["http_port"].AsString(), out m_httpPort);
             if (args["server_uri"] != null)
                 ServerURI = args["server_uri"].AsString();
             if (args["region_xloc"] != null)
             {
                 uint locx;
-                UInt32.TryParse(args["region_xloc"].AsString(), out locx);
+                uint.TryParse(args["region_xloc"].AsString(), out locx);
                 RegionLocX = locx;
             }
             if (args["region_yloc"] != null)
             {
                 uint locy;
-                UInt32.TryParse(args["region_yloc"].AsString(), out locy);
+                uint.TryParse(args["region_yloc"].AsString(), out locy);
                 RegionLocY = locy;
             }
             if (args.ContainsKey("region_size_x"))
@@ -1153,13 +1153,13 @@ namespace OpenSim.Framework
             int port = 0;
             if (args["internal_ep_port"] != null)
             {
-                Int32.TryParse(args["internal_ep_port"].AsString(), out port);
+                int.TryParse(args["internal_ep_port"].AsString(), out port);
             }
             InternalEndPoint = new IPEndPoint(ip_addr, port);
             if (args["remoting_address"] != null)
                 RemotingAddress = args["remoting_address"].AsString();
             if (args["remoting_port"] != null)
-                UInt32.TryParse(args["remoting_port"].AsString(), out m_remotingPort);
+                uint.TryParse(args["remoting_port"].AsString(), out m_remotingPort);
             if (args["proxy_url"] != null)
                 proxyUrl = args["proxy_url"].AsString();
             if (args["region_type"] != null)

@@ -290,14 +290,14 @@ namespace OpenSim.Framework.Servers.HttpServer
         public override string ToString()
         {
             StringBuilder me = new StringBuilder();
-            me.Append(String.Format("OSHttpRequest: {0} {1}\n", HttpMethod, RawUrl));
+            me.Append(string.Format("OSHttpRequest: {0} {1}\n", HttpMethod, RawUrl));
             foreach (string k in Headers.AllKeys)
             {
-                me.Append(String.Format("    {0}: {1}\n", k, Headers[k]));
+                me.Append(string.Format("    {0}: {1}\n", k, Headers[k]));
             }
             if (null != RemoteIPEndPoint)
             {
-                me.Append(String.Format("    IP: {0}\n", RemoteIPEndPoint));
+                me.Append(string.Format("    IP: {0}\n", RemoteIPEndPoint));
             }
 
             return me.ToString();

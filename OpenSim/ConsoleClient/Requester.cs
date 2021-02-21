@@ -57,7 +57,7 @@ namespace OpenSim.ConsoleClient
 
                 request.BeginGetResponse(delegate(IAsyncResult ar)
                 {
-                    string reply = String.Empty;
+                    string reply = string.Empty;
 
                     using (WebResponse response = request.EndGetResponse(ar))
                     {

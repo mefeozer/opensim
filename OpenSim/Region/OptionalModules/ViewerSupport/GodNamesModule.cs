@@ -46,8 +46,8 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         // Configuration
         private static bool m_enabled = false;
-        private static List<String> m_lastNames = new List<String>();
-        private static List<String> m_fullNames = new List<String>();
+        private static List<string> m_lastNames = new List<string>();
+        private static List<string> m_fullNames = new List<string>();
 
         public void Initialise(IConfigSource config)
         {
@@ -64,7 +64,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
             m_log.Info("[GODNAMES]: Enabled");
             m_enabled = true;
-            string conf_str = moduleConfig.GetString("FullNames", String.Empty);
+            string conf_str = moduleConfig.GetString("FullNames", string.Empty);
             if (!string.IsNullOrEmpty(conf_str))
             {
                 foreach (string strl in conf_str.Split(',')) {
@@ -74,7 +74,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                 }
             }
 
-            conf_str = moduleConfig.GetString("Surnames", String.Empty);
+            conf_str = moduleConfig.GetString("Surnames", string.Empty);
             if (!string.IsNullOrEmpty(conf_str))
             {
                 foreach (string strl in conf_str.Split(',')) {

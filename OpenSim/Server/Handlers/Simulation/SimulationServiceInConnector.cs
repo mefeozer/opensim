@@ -40,7 +40,7 @@ namespace OpenSim.Server.Handlers.Simulation
 //        private IAuthenticationService m_AuthenticationService;
 
         public SimulationServiceInConnector(IConfigSource config, IHttpServer server, IScene scene) :
-                base(config, server, String.Empty)
+                base(config, server, string.Empty)
         {
             m_LocalSimulationService = scene.RequestModuleInterface<ISimulationService>();
             m_LocalSimulationService = m_LocalSimulationService.GetInnerService();

@@ -213,7 +213,7 @@ namespace OpenSim.Framework.Tests
                 else
                     expected = assettypes[i];
                 Assert.AreEqual(expected, SLUtil.ContentTypeToSLAssetType(contenttypes[i]),
-                            String.Format("Incorrect AssetType mapped from Content-Type {0}", contenttypes[i]));
+                            string.Format("Incorrect AssetType mapped from Content-Type {0}", contenttypes[i]));
             }
 
             int[] inventorytypes = new int[] {-1,0,1,2,3,6,7,8,10,15,17,18,20};
@@ -237,7 +237,7 @@ namespace OpenSim.Framework.Tests
             for (int i=0;i<inventorytypes.Length;i++)
             {
                 Assert.AreEqual(invcontenttypes[i], SLUtil.SLInvTypeToContentType(inventorytypes[i]),
-                    String.Format("Incorrect Content-Type mapped from InventoryType {0}", inventorytypes[i]));
+                    string.Format("Incorrect Content-Type mapped from InventoryType {0}", inventorytypes[i]));
             }
 
             invcontenttypes = new string[]
@@ -271,7 +271,7 @@ namespace OpenSim.Framework.Tests
             for (int i = 0; i < invtypes.Length; i++)
             {
                 Assert.AreEqual(invtypes[i], SLUtil.ContentTypeToSLInvType(invcontenttypes[i]),
-                    String.Format("Incorrect InventoryType mapped from Content-Type {0}", invcontenttypes[i]));
+                    string.Format("Incorrect InventoryType mapped from Content-Type {0}", invcontenttypes[i]));
             }
         }
 
@@ -282,7 +282,7 @@ namespace OpenSim.Framework.Tests
             byte[] hexBytes16 = {
                         0xf0, 0xe1, 0xd2, 0xc3, 0xb4, 0xa5, 0x96, 0x87,
                         0x77, 0x69, 0x5a, 0x4b, 0x3c, 0x2d, 0x1e, 0x0f };
-            UInt64 var64Bit = (UInt64)0xfedcba9876543210;
+            ulong var64Bit = (ulong)0xfedcba9876543210;
 
             //Region handle is for location 255000,256000.
             ulong regionHandle1 = 1095216660736000;

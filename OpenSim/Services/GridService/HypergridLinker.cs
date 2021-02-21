@@ -140,7 +140,7 @@ namespace OpenSim.Services.GridService
         public GridRegion LinkRegion(UUID scopeID, string regionDescriptor)
         {
             string reason = string.Empty;
-            uint xloc = Util.RegionToWorldLoc((uint)random.Next(0, Int16.MaxValue));
+            uint xloc = Util.RegionToWorldLoc((uint)random.Next(0, short.MaxValue));
             return TryLinkRegionToCoords(scopeID, regionDescriptor, (int)xloc, 0, out reason);
         }
 
@@ -537,9 +537,9 @@ namespace OpenSim.Services.GridService
             foreach (RegionData r in regions)
             {
                 MainConsole.Instance.Output(
-                    String.Format("{0}\n{2,-32} {1}\n",
+                    string.Format("{0}\n{2,-32} {1}\n",
                         r.RegionName, r.RegionID,
-                        String.Format("{0},{1} ({2},{3})", r.posX, r.posY,
+                        string.Format("{0},{1} ({2},{3})", r.posX, r.posY,
                                     Util.WorldToRegionLoc((uint)r.posX), Util.WorldToRegionLoc((uint)r.posY)
                         )
                     )

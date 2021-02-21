@@ -42,6 +42,6 @@ namespace OpenSim.Region.Framework.Interfaces
         /// <param name="caps">Internal caps registry, where the external handler will be registered</param>
         /// <param name="capName">Name of the specific cap we are registering</param>
         /// <param name="urlSkel">The skeleton URL provided in the caps configuration</param>
-        bool RegisterExternalUserCapsHandler(UUID agentID, Caps caps, String capName, String urlSkel);
+        bool RegisterExternalUserCapsHandler(UUID agentID, Caps caps, string capName, string urlSkel);
     }
 }

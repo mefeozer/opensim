@@ -57,7 +57,7 @@ namespace OpenSim.Framework
         private UUID _groupID = UUID.Zero;
         private bool _isGroupOwned = false;
         private byte[] _bitmap = new byte[512];
-        private string _description = String.Empty;
+        private string _description = string.Empty;
 
         private uint _flags = (uint)ParcelFlags.AllowFly | (uint)ParcelFlags.AllowLandmark |
                                 (uint)ParcelFlags.AllowAPrimitiveEntry |
@@ -71,8 +71,8 @@ namespace OpenSim.Framework
         private int _localID = 0;
         private byte _mediaAutoScale = 0;
         private UUID _mediaID = UUID.Zero;
-        private string _mediaURL = String.Empty;
-        private string _musicURL = String.Empty;
+        private string _mediaURL = string.Empty;
+        private string _musicURL = string.Empty;
         private UUID _ownerID = UUID.Zero;
         private List<LandAccessEntry> _parcelAccessList = new List<LandAccessEntry>();
         private float _passHours = 0;

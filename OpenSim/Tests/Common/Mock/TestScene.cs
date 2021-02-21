@@ -61,7 +61,7 @@ namespace OpenSim.Tests.Common
         /// <returns></returns>
         public override bool VerifyUserPresence(AgentCircuitData agent, out string reason)
         {
-            reason = String.Empty;
+            reason = string.Empty;
             return true;
         }
 

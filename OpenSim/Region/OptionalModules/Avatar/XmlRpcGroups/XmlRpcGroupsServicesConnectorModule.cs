@@ -1118,13 +1118,13 @@ namespace Nwc.XmlRpc
         private XmlRpcResponseDeserializer _deserializer = new XmlRpcResponseDeserializer();
         private bool _disableKeepAlive = true;
 
-        public string RequestResponse = String.Empty;
+        public string RequestResponse = string.Empty;
 
         /// <summary>Instantiate an <c>XmlRpcRequest</c> for a specified method and parameters.</summary>
         /// <param name="methodName"><c>String</c> designating the <i>object.method</i> on the server the request
         /// should be directed to.</param>
         /// <param name="parameters"><c>ArrayList</c> of XML-RPC type parameters to invoke the request with.</param>
-        public ConfigurableKeepAliveXmlRpcRequest(String methodName, IList parameters, bool disableKeepAlive)
+        public ConfigurableKeepAliveXmlRpcRequest(string methodName, IList parameters, bool disableKeepAlive)
         {
             MethodName = methodName;
             _params = parameters;
@@ -1134,7 +1134,7 @@ namespace Nwc.XmlRpc
         /// <summary>Send the request to the server.</summary>
         /// <param name="url"><c>String</c> The url of the XML-RPC server.</param>
         /// <returns><c>XmlRpcResponse</c> The response generated.</returns>
-        public XmlRpcResponse Send(String url)
+        public XmlRpcResponse Send(string url)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             if (request == null)

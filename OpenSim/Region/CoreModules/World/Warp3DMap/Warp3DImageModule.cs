@@ -589,7 +589,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                     {
                         // materialName = GetOrCreateMaterial(renderer, faceColor, teFace.TextureID, lod == DetailLevel.Low);
                         materialName = GetOrCreateMaterial(renderer, faceColor, teFace.TextureID, false, prim);
-                        if (String.IsNullOrEmpty(materialName))
+                        if (string.IsNullOrEmpty(materialName))
                             continue;
                         int c = renderer.Scene.material(materialName).getColor();
                         if ((c & warp_Color.MASKALPHA) == 0)
@@ -727,7 +727,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                             ID = cacheName,
                             Local = true,
                             Temporary = true,
-                            Name = String.Empty,
+                            Name = string.Empty,
                             Type = (sbyte)AssetType.Unknown
                         };
                         m_scene.AssetService.Store(metadata);

@@ -63,7 +63,7 @@ namespace OpenSim.Framework.Servers
         protected DateTime m_startuptime;
         protected string m_startupDirectory = Environment.CurrentDirectory;
 
-        protected string m_pidFile = String.Empty;
+        protected string m_pidFile = string.Empty;
 
         protected ServerStatsCollector m_serverStatsCollector;
 
@@ -88,11 +88,11 @@ namespace OpenSim.Framework.Servers
 
             try
             {
-                string pidstring = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
+                string pidstring = Process.GetCurrentProcess().Id.ToString();
 
                 using (FileStream fs = File.Create(path))
                 {
-                    Byte[] buf = Encoding.ASCII.GetBytes(pidstring);
+                    byte[] buf = Encoding.ASCII.GetBytes(pidstring);
                     fs.Write(buf, 0, buf.Length);
                 }
 
@@ -119,7 +119,7 @@ namespace OpenSim.Framework.Servers
                     m_log.Error(string.Format("[SERVER BASE]: Error whilst removing {0} ", m_pidFile), e);
                 }
 
-                m_pidFile = String.Empty;
+                m_pidFile = string.Empty;
             }
         }
 
@@ -177,7 +177,7 @@ namespace OpenSim.Framework.Servers
                 if (null == m_consoleAppender.Threshold)
                     m_consoleAppender.Threshold = Level.All;
 
-                Notice(String.Format("Console log level is {0}", m_consoleAppender.Threshold));
+                Notice(string.Format("Console log level is {0}", m_consoleAppender.Threshold));
             }
 
             if (m_logFileAppender != null && startupConfig != null)
@@ -576,7 +576,7 @@ namespace OpenSim.Framework.Servers
                             c = source.AddConfig(cmdparams[1]);
                             if (c != null)
                             {
-                                string _value = String.Join(" ", cmdparams, 3, cmdparams.Length - 3);
+                                string _value = string.Join(" ", cmdparams, 3, cmdparams.Length - 3);
                                 c.Set(cmdparams[2], _value);
                                 Config.Merge(source);
 
@@ -755,7 +755,7 @@ namespace OpenSim.Framework.Servers
             Notice(GetVersionText());
             Notice("Startup directory: " + m_startupDirectory);
             if (null != m_consoleAppender)
-                Notice(String.Format("Console log level: {0}", m_consoleAppender.Threshold));
+                Notice(string.Format("Console log level: {0}", m_consoleAppender.Threshold));
         }
 
         /// <summary>
@@ -812,7 +812,7 @@ namespace OpenSim.Framework.Servers
 
         public string GetVersionText()
         {
-            return String.Format("Version: {0} (SIMULATION/{1} - SIMULATION/{2})",
+            return string.Format("Version: {0} (SIMULATION/{1} - SIMULATION/{2})",
                 m_version, VersionInfo.SimulationServiceVersionSupportedMin, VersionInfo.SimulationServiceVersionSupportedMax);
         }
 
@@ -829,7 +829,7 @@ namespace OpenSim.Framework.Servers
 
             sb.Append(threads.Length + " threads are being tracked:" + Environment.NewLine);
 
-            int timeNow = Environment.TickCount & Int32.MaxValue;
+            int timeNow = Environment.TickCount & int.MaxValue;
 
             sb.AppendFormat(reportFormat, "ID", "NAME", "LAST UPDATE (MS)", "LIFETIME (MS)", "PRIORITY", "STATE");
             sb.Append(Environment.NewLine);

@@ -45,7 +45,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// </summary>
         private readonly Dictionary<PacketType, Stack<Packet>> pool = new Dictionary<PacketType, Stack<Packet>>();
 
-        private static Dictionary<Type, Stack<Object>> DataBlocks = new Dictionary<Type, Stack<Object>>();
+        private static Dictionary<Type, Stack<object>> DataBlocks = new Dictionary<Type, Stack<object>>();
 
         public static PacketPool Instance
         {
@@ -252,7 +252,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             {
                 BlocksRequested++;
 
-                Stack<Object> s;
+                Stack<object> s;
 
                 if (DataBlocks.TryGetValue(typeof(T), out s))
                 {
@@ -264,7 +264,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 }
                 else
                 {
-                    DataBlocks[typeof(T)] = new Stack<Object>();
+                    DataBlocks[typeof(T)] = new Stack<object>();
                 }
 
                 return new T();
@@ -279,7 +279,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             lock (DataBlocks)
             {
                 if (!DataBlocks.ContainsKey(typeof(T)))
-                    DataBlocks[typeof(T)] = new Stack<Object>();
+                    DataBlocks[typeof(T)] = new Stack<object>();
 
                 if (DataBlocks[typeof(T)].Count < 50)
                     DataBlocks[typeof(T)].Push(block);

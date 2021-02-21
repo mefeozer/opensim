@@ -58,9 +58,6 @@ namespace OpenSim
         // class during system startup.
         //
 
-        private const string PLUGIN_ASSET_CACHE = "/OpenSim/AssetCache";
-        private const string PLUGIN_ASSET_SERVER_CLIENT = "/OpenSim/AssetClient";
-
         // OpenSim.ini Section name for ESTATES Settings
         public const string ESTATE_SECTION_NAME = "Estates";
 
@@ -81,9 +78,9 @@ namespace OpenSim
         protected string proxyUrl;
         protected int proxyOffset = 0;
 
-        public string userStatsURI = String.Empty;
-        public string managedStatsURI = String.Empty;
-        public string managedStatsPassword = String.Empty;
+        public string userStatsURI = string.Empty;
+        public string managedStatsURI = string.Empty;
+        public string managedStatsPassword = string.Empty;
 
         protected bool m_autoCreateClientStack = true;
 
@@ -117,11 +114,6 @@ namespace OpenSim
 
         protected EnvConfigSource m_EnvConfigSource = new EnvConfigSource();
 
-        public EnvConfigSource envConfigSource
-        {
-            get { return m_EnvConfigSource; }
-        }
-
         public uint HttpServerPort
         {
             get { return m_httpServerPort; }
@@ -148,7 +140,7 @@ namespace OpenSim
         protected virtual void LoadConfigSettings(IConfigSource configSource)
         {
             m_configLoader = new ConfigurationLoader();
-            ConfigSource = m_configLoader.LoadConfigSettings(configSource, envConfigSource, out m_configSettings, out m_networkServersInfo);
+            ConfigSource = m_configLoader.LoadConfigSettings(configSource, out m_configSettings, out m_networkServersInfo);
             Config = ConfigSource.Source;
             ReadExtraConfigSettings();
         }
@@ -159,7 +151,7 @@ namespace OpenSim
             if (networkConfig != null)
             {
                 proxyUrl = networkConfig.GetString("proxy_url", "");
-                proxyOffset = Int32.Parse(networkConfig.GetString("proxy_offset", "0"));
+                proxyOffset = int.Parse(networkConfig.GetString("proxy_offset", "0"));
             }
 
             IConfig startupConfig = Config.Configs["Startup"];
@@ -172,7 +164,7 @@ namespace OpenSim
         protected virtual void LoadPlugins()
         {
             IConfig startupConfig = Config.Configs["Startup"];
-            string registryLocation = (startupConfig != null) ? startupConfig.GetString("RegistryLocation", String.Empty) : String.Empty;
+            string registryLocation = (startupConfig != null) ? startupConfig.GetString("RegistryLocation", string.Empty) : string.Empty;
 
             // The location can also be specified in the environment. If there
             // is no location in the configuration, we must call the constructor
@@ -221,11 +213,11 @@ namespace OpenSim
                     throw new Exception("CombineContiguousRegions not suported");
                 }
 
-                string pidFile = startupConfig.GetString("PIDFile", String.Empty);
+                string pidFile = startupConfig.GetString("PIDFile", string.Empty);
                 if (!string.IsNullOrEmpty(pidFile))
                     CreatePIDFile(pidFile);
 
-                userStatsURI = startupConfig.GetString("Stats_URI", String.Empty);
+                userStatsURI = startupConfig.GetString("Stats_URI", string.Empty);
 
                 m_securePermissionsLoading = startupConfig.GetBoolean("SecurePermissionsLoading", true);
 
@@ -234,8 +226,8 @@ namespace OpenSim
 
                 m_permsModules =  new List<string>(permissionModules.Split(',').Select(m => m.Trim()));
 
-                managedStatsURI = startupConfig.GetString("ManagedStatsRemoteFetchURI", String.Empty);
-                managedStatsPassword = startupConfig.GetString("ManagedStatsRemoteFetchPassword", String.Empty);
+                managedStatsURI = startupConfig.GetString("ManagedStatsRemoteFetchURI", string.Empty);
+                managedStatsPassword = startupConfig.GetString("ManagedStatsRemoteFetchPassword", string.Empty);
             }
 
             // Load the simulation data service
@@ -243,8 +235,8 @@ namespace OpenSim
             if (simDataConfig == null)
                 throw new Exception("Configuration file is missing the [SimulationDataStore] section.  Have you copied OpenSim.ini.example to OpenSim.ini to reference config-include/ files?");
 
-            string module = simDataConfig.GetString("LocalServiceModule", String.Empty);
-            if (String.IsNullOrEmpty(module))
+            string module = simDataConfig.GetString("LocalServiceModule", string.Empty);
+            if (string.IsNullOrEmpty(module))
                 throw new Exception("Configuration file is missing the LocalServiceModule parameter in the [SimulationDataStore] section.");
 
             m_simulationDataService = ServerUtils.LoadPlugin<ISimulationDataService>(module, new object[] { Config });
@@ -255,8 +247,8 @@ namespace OpenSim
                         module));
 
             // Load the estate data service
-            module = Util.GetConfigVarFromSections<string>(Config, "LocalServiceModule", new string[]{"EstateDataStore", "EstateService"}, String.Empty);
-            if (String.IsNullOrEmpty(module))
+            module = Util.GetConfigVarFromSections<string>(Config, "LocalServiceModule", new string[]{"EstateDataStore", "EstateService"}, string.Empty);
+            if (string.IsNullOrEmpty(module))
                 throw new Exception("Configuration file is missing the LocalServiceModule parameter in the [EstateDataStore] or [EstateService] section");
 
             if (LoadEstateDataService)
@@ -320,7 +312,7 @@ namespace OpenSim
                     console.Commands.AddCommand(capitalizedTopic, false,
                                                   topic + " " + command,
                                                   topic + " " + commander.Commands[command].ShortHelp(),
-                                                  String.Empty, HandleCommanderCommand);
+                                                  string.Empty, HandleCommanderCommand);
                 }
             }
         }
@@ -458,7 +450,7 @@ namespace OpenSim
                     }
                 }
 
-                m_log.InfoFormat("[SCENE]: Secure permissions loading enabled, modules loaded: {0}", String.Join(" ", m_permsModules.ToArray()));
+                m_log.InfoFormat("[SCENE]: Secure permissions loading enabled, modules loaded: {0}", string.Join(" ", m_permsModules.ToArray()));
             }
 
             scene.SetModuleInterfaces();
@@ -691,7 +683,7 @@ namespace OpenSim
             if (!cleanup)
                 return;
 
-            if (!String.IsNullOrEmpty(scene.RegionInfo.RegionFile))
+            if (!string.IsNullOrEmpty(scene.RegionInfo.RegionFile))
             {
                 if (scene.RegionInfo.RegionFile.ToLower().EndsWith(".xml"))
                 {
@@ -1043,7 +1035,7 @@ namespace OpenSim
             {
                 bool targetEstateJoined = false;
 
-                if (Int32.TryParse(targetEstateIDstr, out int targetEstateID) && targetEstateID > 99)
+                if (int.TryParse(targetEstateIDstr, out int targetEstateID) && targetEstateID > 99)
                 {
                     // Attempt to join the target estate given in Config by ID
                     foreach (EstateSettings estate in estates)

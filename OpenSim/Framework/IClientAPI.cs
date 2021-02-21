@@ -37,11 +37,11 @@ namespace OpenSim.Framework
 
     public delegate void ViewerEffectEventHandler(IClientAPI sender, List<ViewerEffectEventHandlerArg> args);
 
-    public delegate void ChatMessage(Object sender, OSChatMessage e);
+    public delegate void ChatMessage(object sender, OSChatMessage e);
 
-    public delegate void GenericMessage(Object sender, string method, List<String> args);
+    public delegate void GenericMessage(object sender, string method, List<string> args);
 
-    public delegate void TextureRequest(Object sender, TextureRequestArgs e);
+    public delegate void TextureRequest(object sender, TextureRequestArgs e);
 
     public delegate void AvatarNowWearing(IClientAPI sender, AvatarWearingArgs e);
 
@@ -363,9 +363,9 @@ namespace OpenSim.Framework
         float waterHeight, float terrainRaiseLimit, float terrainLowerLimit, bool estateSun, bool fixedSun,
         float sunHour, bool globalSun, bool estateFixed, float estateSunHour);
 
-    public delegate void EstateChangeInfo(IClientAPI client, UUID invoice, UUID senderID, UInt32 param1, UInt32 param2);
+    public delegate void EstateChangeInfo(IClientAPI client, UUID invoice, UUID senderID, uint param1, uint param2);
 
-    public delegate void EstateManageTelehub(IClientAPI client, UUID invoice, UUID senderID, string cmd, UInt32 param1);
+    public delegate void EstateManageTelehub(IClientAPI client, UUID invoice, UUID senderID, string cmd, uint param1);
 
     public delegate void RequestTerrain(IClientAPI remoteClient, string clientFileName);
 
@@ -440,7 +440,7 @@ namespace OpenSim.Framework
     public delegate void DeclineCallingCard(IClientAPI remoteClient, UUID transactionID);
 
     public delegate void SoundTrigger(
-        UUID soundId, UUID ownerid, UUID objid, UUID parentid, double Gain, Vector3 Position, UInt64 Handle);
+        UUID soundId, UUID ownerid, UUID objid, UUID parentid, double Gain, Vector3 Position, ulong Handle);
 
     public delegate void StartLure(byte lureType, string message, UUID targetID, IClientAPI client);
     public delegate void TeleportLureRequest(UUID lureID, uint teleportFlags, IClientAPI client);
@@ -1229,7 +1229,7 @@ namespace OpenSim.Framework
         void SendViewerTime(Vector3 sunDir, float sunphase);
         void SendViewerEffect(ViewerEffectPacket.EffectBlock[] effectBlocks);
 
-        void SendAvatarProperties(UUID avatarID, string aboutText, string bornOn, Byte[] membershipType, string flAbout,
+        void SendAvatarProperties(UUID avatarID, string aboutText, string bornOn, byte[] membershipType, string flAbout,
                                   uint flags, UUID flImageID, UUID imageID, string profileURL, UUID partnerID);
 
         void SendScriptQuestion(UUID taskID, string taskName, string ownerName, UUID itemID, int question);
@@ -1359,7 +1359,7 @@ namespace OpenSim.Framework
         event Action<IClientAPI> OnLogout;
         event Action<IClientAPI> OnConnectionClosed;
 
-        void SendBlueBoxMessage(UUID FromAvatarID, String FromAvatarName, String Message);
+        void SendBlueBoxMessage(UUID FromAvatarID, string FromAvatarName, string Message);
 
         void SendLogoutPacket();
 

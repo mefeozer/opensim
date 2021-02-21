@@ -60,10 +60,10 @@ namespace OpenSim.Services.Interfaces
                 Friend = kvp["Friend"].ToString();
             MyFlags = (int)FriendRights.None;
             if (kvp.ContainsKey("MyFlags") && kvp["MyFlags"] != null)
-                Int32.TryParse(kvp["MyFlags"].ToString(), out MyFlags);
+                int.TryParse(kvp["MyFlags"].ToString(), out MyFlags);
             TheirFlags = 0;
             if (kvp.ContainsKey("TheirFlags") && kvp["TheirFlags"] != null)
-                Int32.TryParse(kvp["TheirFlags"].ToString(), out TheirFlags);
+                int.TryParse(kvp["TheirFlags"].ToString(), out TheirFlags);
         }
 
         public Dictionary<string, object> ToKeyValuePairs()

@@ -334,7 +334,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                     int yr = (hm.Height - 1) - y;
 
                     float heightvalue = getHeight(m_scene.Heightmap, x, y);
-                    if (Single.IsInfinity(heightvalue) || Single.IsNaN(heightvalue))
+                    if (float.IsInfinity(heightvalue) || float.IsNaN(heightvalue))
                         heightvalue = 0;
 
                     if (heightvalue > waterHeight)
@@ -386,7 +386,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                         if (x < (hm.Width - 1) && y < (hm.Height - 1))
                         {
                             float hfvaluecompare = getHeight(m_scene.Heightmap, x + 1, y + 1); // light from north-east => look at land height there
-                            if (Single.IsInfinity(hfvaluecompare) || Single.IsNaN(hfvaluecompare))
+                            if (float.IsInfinity(hfvaluecompare) || float.IsNaN(hfvaluecompare))
                                 hfvaluecompare = 0f;
 
                             float hfdiff = heightvalue - hfvaluecompare;  // => positive if NE is lower, negative if here is lower
@@ -414,7 +414,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                         // We're under the water level with the terrain, so paint water instead of land
 
                         heightvalue = waterHeight - heightvalue;
-                        if (Single.IsInfinity(heightvalue) || Single.IsNaN(heightvalue))
+                        if (float.IsInfinity(heightvalue) || float.IsNaN(heightvalue))
                             heightvalue = 0f;
                         else if (heightvalue > 19f)
                             heightvalue = 19f;

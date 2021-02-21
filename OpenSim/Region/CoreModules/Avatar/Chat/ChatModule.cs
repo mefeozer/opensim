@@ -170,7 +170,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
             return c;
         }
 
-        public virtual void OnChatFromClient(Object sender, OSChatMessage c)
+        public virtual void OnChatFromClient(object sender, OSChatMessage c)
         {
             c = FixPositionOfChatMessage(c);
 
@@ -199,7 +199,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
             }
         }
 
-        public virtual void OnChatFromWorld(Object sender, OSChatMessage c)
+        public virtual void OnChatFromWorld(object sender, OSChatMessage c)
         {
             // early return if not on public or debug channel
             if (c.Channel != 0 && c.Channel != DEBUG_CHANNEL) return;
@@ -336,7 +336,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
 
         static protected Vector3 CenterOfRegion = new Vector3(128, 128, 30);
 
-        public virtual void OnChatBroadcast(Object sender, OSChatMessage c)
+        public virtual void OnChatBroadcast(object sender, OSChatMessage c)
         {
             if (c.Channel != 0 && c.Channel != DEBUG_CHANNEL) return;
 

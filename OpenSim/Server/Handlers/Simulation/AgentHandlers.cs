@@ -133,8 +133,8 @@ namespace OpenSim.Server.Handlers.Simulation
             {
                 source = new GridRegion();
                 source.RegionID = UUID.Parse(tmpOSD.AsString());
-                source.RegionLocX = Int32.Parse(args["source_x"].AsString());
-                source.RegionLocY = Int32.Parse(args["source_y"].AsString());
+                source.RegionLocX = int.Parse(args["source_x"].AsString());
+                source.RegionLocY = int.Parse(args["source_y"].AsString());
                 source.RegionName = args["source_name"].AsString();
 
                 if (args.TryGetValue("source_server_uri", out tmpOSD))
@@ -167,12 +167,12 @@ namespace OpenSim.Server.Handlers.Simulation
             OSD tmpOSD;
             // retrieve the input arguments
             if (args.TryGetValue("destination_x", out tmpOSD) && tmpOSD != null)
-                Int32.TryParse(tmpOSD.AsString(), out data.x);
+                int.TryParse(tmpOSD.AsString(), out data.x);
             else
                 m_log.WarnFormat("  -- request didn't have destination_x");
 
             if (args.TryGetValue("destination_y", out tmpOSD) && tmpOSD != null)
-                Int32.TryParse(tmpOSD.AsString(), out data.y);
+                int.TryParse(tmpOSD.AsString(), out data.y);
             else
                 m_log.WarnFormat("  -- request didn't have destination_y");
 
@@ -379,7 +379,7 @@ namespace OpenSim.Server.Handlers.Simulation
                     version > VersionInfo.SimulationServiceVersionAcceptedMax)
                 {
                     resp["success"] = OSD.FromBoolean(false);
-                    resp["reason"] = OSD.FromString(String.Format("Your region protocol version is {0} and we accept only {1} - {2}. No version overlap.", theirVersion, VersionInfo.SimulationServiceVersionAcceptedMin, VersionInfo.SimulationServiceVersionAcceptedMax));
+                    resp["reason"] = OSD.FromString(string.Format("Your region protocol version is {0} and we accept only {1} - {2}. No version overlap.", theirVersion, VersionInfo.SimulationServiceVersionAcceptedMin, VersionInfo.SimulationServiceVersionAcceptedMax));
                     httpResponse.RawBuffer = Util.UTF8.GetBytes(OSDParser.SerializeJsonString(resp, true));
                     return;
                 }
@@ -391,7 +391,7 @@ namespace OpenSim.Server.Handlers.Simulation
                     maxVersionProvided < VersionInfo.SimulationServiceVersionAcceptedMin)
                 {
                     resp["success"] = OSD.FromBoolean(false);
-                    resp["reason"] = OSD.FromString(String.Format("Your region provide protocol versions {0} - {1} and we accept only {2} - {3}. No version overlap.", minVersionProvided, maxVersionProvided, VersionInfo.SimulationServiceVersionAcceptedMin, VersionInfo.SimulationServiceVersionAcceptedMax));
+                    resp["reason"] = OSD.FromString(string.Format("Your region provide protocol versions {0} - {1} and we accept only {2} - {3}. No version overlap.", minVersionProvided, maxVersionProvided, VersionInfo.SimulationServiceVersionAcceptedMin, VersionInfo.SimulationServiceVersionAcceptedMax));
                     httpResponse.RawBuffer = Util.UTF8.GetBytes(OSDParser.SerializeJsonString(resp, true));
                     return;
                 }
@@ -399,7 +399,7 @@ namespace OpenSim.Server.Handlers.Simulation
                     maxVersionRequired < VersionInfo.SimulationServiceVersionSupportedMin)
                 {
                     resp["success"] = OSD.FromBoolean(false);
-                    resp["reason"] = OSD.FromString(String.Format("You require region protocol versions {0} - {1} and we provide only {2} - {3}. No version overlap.", minVersionRequired, maxVersionRequired, VersionInfo.SimulationServiceVersionSupportedMin, VersionInfo.SimulationServiceVersionSupportedMax));
+                    resp["reason"] = OSD.FromString(string.Format("You require region protocol versions {0} - {1} and we provide only {2} - {3}. No version overlap.", minVersionRequired, maxVersionRequired, VersionInfo.SimulationServiceVersionSupportedMin, VersionInfo.SimulationServiceVersionSupportedMax));
                     httpResponse.RawBuffer = Util.UTF8.GetBytes(OSDParser.SerializeJsonString(resp, true));
                     return;
                 }
@@ -441,7 +441,7 @@ namespace OpenSim.Server.Handlers.Simulation
 
             resp["success"] = OSD.FromBoolean(result);
             resp["reason"] = OSD.FromString(reason);
-            string legacyVersion = String.Format(Culture.FormatProvider, "SIMULATION/{0}", version);
+            string legacyVersion = string.Format(Culture.FormatProvider, "SIMULATION/{0}", version);
             resp["version"] = OSD.FromString(legacyVersion);
             resp["negotiated_inbound_version"] = OSD.FromReal(inboundVersion);
             resp["negotiated_outbound_version"] = OSD.FromReal(outboundVersion);
@@ -522,8 +522,8 @@ namespace OpenSim.Server.Handlers.Simulation
             {
                 source = new GridRegion();
                 source.RegionID = UUID.Parse(tmpOSD.AsString());
-                source.RegionLocX = Int32.Parse(args["source_x"].AsString());
-                source.RegionLocY = Int32.Parse(args["source_y"].AsString());
+                source.RegionLocX = int.Parse(args["source_x"].AsString());
+                source.RegionLocY = int.Parse(args["source_y"].AsString());
                 source.RegionName = args["source_name"].AsString();
 
                 if (args.TryGetValue("source_server_uri", out tmpOSD))
@@ -557,12 +557,12 @@ namespace OpenSim.Server.Handlers.Simulation
             OSD tmpOSD;
             // retrieve the input arguments
             if (args.TryGetValue("destination_x", out tmpOSD) && tmpOSD != null)
-                Int32.TryParse(tmpOSD.AsString(), out data.x);
+                int.TryParse(tmpOSD.AsString(), out data.x);
             else
                 m_log.WarnFormat("  -- request didn't have destination_x");
 
             if (args.TryGetValue("destination_y", out tmpOSD) && tmpOSD != null)
-                Int32.TryParse(tmpOSD.AsString(), out data.y);
+                int.TryParse(tmpOSD.AsString(), out data.y);
             else
                 m_log.WarnFormat("  -- request didn't have destination_y");
 
@@ -600,9 +600,9 @@ namespace OpenSim.Server.Handlers.Simulation
             UUID uuid = UUID.Zero;
             string regionname = string.Empty;
             if (args.TryGetValue("destination_x", out tmpOSD) && tmpOSD != null)
-                Int32.TryParse(tmpOSD.AsString(), out x);
+                int.TryParse(tmpOSD.AsString(), out x);
             if (args.TryGetValue("destination_y", out tmpOSD) && tmpOSD != null)
-                Int32.TryParse(tmpOSD.AsString(), out y);
+                int.TryParse(tmpOSD.AsString(), out y);
             if (args.TryGetValue("destination_uuid", out tmpOSD) && tmpOSD != null)
                 UUID.TryParse(tmpOSD.AsString(), out uuid);
             if (args.TryGetValue("destination_name", out tmpOSD) && tmpOSD != null)

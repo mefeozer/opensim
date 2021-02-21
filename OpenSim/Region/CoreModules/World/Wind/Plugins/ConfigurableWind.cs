@@ -212,7 +212,7 @@ namespace OpenSim.Region.CoreModules.World.Wind.Plugins
                 case "rateChange":
                     return m_rateChange;
                 default:
-                    throw new Exception(String.Format("Unknown {0} parameter {1}", this.Name, param));
+                    throw new Exception(string.Format("Unknown {0} parameter {1}", this.Name, param));
 
             }
         }

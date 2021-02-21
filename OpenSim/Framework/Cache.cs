@@ -32,7 +32,7 @@ namespace OpenSim.Framework
 {
     // The delegate we will use for performing fetch from backing store
     //
-    public delegate Object FetchDelegate(string index);
+    public delegate object FetchDelegate(string index);
     public delegate bool ExpireDelegate(string index);
 
     // Strategy
@@ -76,12 +76,12 @@ namespace OpenSim.Framework
         public DateTime expires = new DateTime(0);
         public int hits = 0;
 
-        public virtual Object Retrieve()
+        public virtual object Retrieve()
         {
             return null;
         }
 
-        public virtual void Store(Object data)
+        public virtual void Store(object data)
         {
         }
 
@@ -120,7 +120,7 @@ namespace OpenSim.Framework
     //
     public class MemoryCacheItem : CacheItemBase
     {
-        private Object m_Data;
+        private object m_Data;
 
         public MemoryCacheItem(string index) :
             base(index)
@@ -132,24 +132,24 @@ namespace OpenSim.Framework
         {
         }
 
-        public MemoryCacheItem(string index, Object data) :
+        public MemoryCacheItem(string index, object data) :
             base(index)
         {
             Store(data);
         }
 
-        public MemoryCacheItem(string index, DateTime ttl, Object data) :
+        public MemoryCacheItem(string index, DateTime ttl, object data) :
             base(index, ttl)
         {
             Store(data);
         }
 
-        public override Object Retrieve()
+        public override object Retrieve()
         {
             return m_Data;
         }
 
-        public override void Store(Object data)
+        public override void Store(object data)
         {
             m_Data = data;
         }
@@ -169,25 +169,25 @@ namespace OpenSim.Framework
         {
         }
 
-        public FileCacheItem(string index, Object data) :
+        public FileCacheItem(string index, object data) :
             base(index)
         {
             Store(data);
         }
 
-        public FileCacheItem(string index, DateTime ttl, Object data) :
+        public FileCacheItem(string index, DateTime ttl, object data) :
             base(index, ttl)
         {
             Store(data);
         }
 
-        public override Object Retrieve()
+        public override object Retrieve()
         {
             //TODO: Add file access code
             return null;
         }
 
-        public override void Store(Object data)
+        public override void Store(object data)
         {
             //TODO: Add file access code
         }
@@ -368,7 +368,7 @@ namespace OpenSim.Framework
         // Get an item from cache. Do not try to fetch from source if not
         // present. Just return null
         //
-        public virtual Object Get(string index)
+        public virtual object Get(string index)
         {
             CacheItemBase item = GetItem(index);
 
@@ -381,13 +381,13 @@ namespace OpenSim.Framework
         // Fetch an object from backing store if not cached, serve from
         // cache if it is.
         //
-        public virtual Object Get(string index, FetchDelegate fetch)
+        public virtual object Get(string index, FetchDelegate fetch)
         {
             CacheItemBase item = GetItem(index);
             if (item != null)
                 return item.Retrieve();
 
-            Object data = fetch(index);
+            object data = fetch(index);
 
             if (data == null)
             {
@@ -412,7 +412,7 @@ namespace OpenSim.Framework
 
         // Find an object in cache by delegate.
         //
-        public Object Find(Predicate<CacheItemBase> d)
+        public object Find(Predicate<CacheItemBase> d)
         {
             CacheItemBase item;
 
@@ -425,7 +425,7 @@ namespace OpenSim.Framework
             return item.Retrieve();
         }
 
-        public virtual void Store(string index, Object data)
+        public virtual void Store(string index, object data)
         {
             Type container;
 
@@ -443,13 +443,13 @@ namespace OpenSim.Framework
             Store(index, data, container);
         }
 
-        public virtual void Store(string index, Object data, Type container)
+        public virtual void Store(string index, object data, Type container)
         {
-            Store(index, data, container, new Object[] { index });
+            Store(index, data, container, new object[] { index });
         }
 
-        public virtual void Store(string index, Object data, Type container,
-                Object[] parameters)
+        public virtual void Store(string index, object data, Type container,
+                object[] parameters)
         {
             CacheItemBase item;
 

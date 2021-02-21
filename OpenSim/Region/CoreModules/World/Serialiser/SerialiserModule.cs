@@ -224,7 +224,7 @@ namespace OpenSim.Region.CoreModules.World.Serialiser
 //            }
 //        }
 
-        private void InterfaceSaveRegion(Object[] args)
+        private void InterfaceSaveRegion(object[] args)
         {
             foreach (Scene region in m_regions)
             {
@@ -236,7 +236,7 @@ namespace OpenSim.Region.CoreModules.World.Serialiser
             }
         }
 
-        private void InterfaceSaveAllRegions(Object[] args)
+        private void InterfaceSaveAllRegions(object[] args)
         {
             foreach (Scene region in m_regions)
             {

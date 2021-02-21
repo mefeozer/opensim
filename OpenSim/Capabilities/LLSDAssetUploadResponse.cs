@@ -33,7 +33,7 @@ namespace OpenSim.Framework.Capabilities
     [OSDMap]
     public class LLSDAssetUploadError
     {
-        public string message = String.Empty;
+        public string message = string.Empty;
         public UUID identifier = UUID.Zero;
     }
 
@@ -60,8 +60,8 @@ namespace OpenSim.Framework.Capabilities
     [OSDMap]
     public class LLSDAssetUploadResponse
     {
-        public string uploader = String.Empty;
-        public string state = String.Empty;
+        public string uploader = string.Empty;
+        public string state = string.Empty;
         public int upload_price = 0;
         public LLSDAssetUploadResponseData data = null;
         public LLSDAssetUploadError error = null;

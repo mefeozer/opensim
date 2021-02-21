@@ -33,7 +33,7 @@ namespace OpenSim.Services.Interfaces
 {
     public interface  IMuteListService
     {
-        Byte[] MuteListRequest(UUID agent, uint crc);
+        byte[] MuteListRequest(UUID agent, uint crc);
         bool UpdateMute(MuteData mute);
         bool RemoveMute(UUID agentID, UUID muteID, string muteName);
     }

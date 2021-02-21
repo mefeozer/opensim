@@ -769,7 +769,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             Type ot = o.GetType();
             if(o is Delegate)
             {
-                String os;
+                string os;
                 if(m_ObjCode.sdDelTypes.TryGetValue(ot, out os))
                     return os;
             }

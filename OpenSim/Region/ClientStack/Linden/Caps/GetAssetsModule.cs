@@ -354,7 +354,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 hgassets = m_UserManagement.GetUserServerURL(agentID, "AssetServerURI");
 
             IExternalCapsModule handler = m_scene.RequestModuleInterface<IExternalCapsModule>();
-            string baseURL = String.Format("{0}://{1}:{2}", protocol, hostName, port);
+            string baseURL = string.Format("{0}://{1}:{2}", protocol, hostName, port);
 
             if (m_GetTextureURL == "localhost")
             {

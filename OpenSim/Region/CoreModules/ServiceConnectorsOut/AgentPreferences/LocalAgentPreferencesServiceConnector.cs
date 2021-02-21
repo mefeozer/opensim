@@ -74,15 +74,15 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
                         return;
                     }
 
-                    string serviceDll = userConfig.GetString("LocalServiceModule", String.Empty);
+                    string serviceDll = userConfig.GetString("LocalServiceModule", string.Empty);
 
-                    if (String.IsNullOrEmpty(serviceDll))
+                    if (string.IsNullOrEmpty(serviceDll))
                     {
                         m_log.Error("[AGENT PREFERENCES CONNECTOR]: No AgentPreferencesModule named in section AgentPreferencesService");
                         return;
                     }
 
-                    Object[] args = new Object[] { source };
+                    object[] args = new object[] { source };
                     m_AgentPreferencesService = ServerUtils.LoadPlugin<IAgentPreferencesService>(serviceDll, args);
 
                     if (m_AgentPreferencesService == null)

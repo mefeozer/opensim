@@ -51,7 +51,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal static List<ChannelState> m_channels = new List<ChannelState>();
         internal static List<RegionState> m_regions = new List<RegionState>();
 
-        internal static string m_password = String.Empty;
+        internal static string m_password = string.Empty;
         internal RegionState m_region = null;
 
         #region INonSharedRegionModule Members
@@ -100,7 +100,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 {
                     m_log.InfoFormat("[IRC-Bridge] Connecting region {0}", scene.RegionInfo.RegionName);
 
-                    if (!String.IsNullOrEmpty(m_password))
+                    if (!string.IsNullOrEmpty(m_password))
                         MainServer.Instance.AddXmlRPCHandler("irc_admin", XmlRpcAdminMethod, false);
 
                     m_region = new RegionState(scene, m_config);
@@ -133,7 +133,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             if (m_region == null)
                 return;
 
-            if (!String.IsNullOrEmpty(m_password))
+            if (!string.IsNullOrEmpty(m_password))
                 MainServer.Instance.RemoveXmlRPCHandler("irc_admin");
 
             m_region.Close();
@@ -160,7 +160,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             {
                 Hashtable requestData = (Hashtable)request.Params[0];
                 bool found = false;
-                string region = String.Empty;
+                string region = string.Empty;
 
                 if (!string.IsNullOrEmpty(m_password))
                 {
@@ -190,7 +190,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     }
                 }
 
-                if (!found) throw new Exception(String.Format("Region <{0}> not found", region));
+                if (!found) throw new Exception(string.Format("Region <{0}> not found", region));
 
                 responseData["success"] = true;
             }

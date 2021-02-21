@@ -89,7 +89,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
         private Scene m_scene;
         private volatile bool m_tainted;
 
-        private String m_InitialTerrain = "pinhead-island";
+        private string m_InitialTerrain = "pinhead-island";
 
         // If true, send terrain patch updates to clients based on their view distance
         private bool m_sendTerrainUpdatesByViewDistance = true;
@@ -253,7 +253,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     || ysize != (terrData.SizeY / Constants.TerrainPatchSize))
                 {
                     throw new Exception(
-                        String.Format("{0} PatchUpdates.SetAll: patch array not same size as terrain. arr=<{1},{2}>, terr=<{3},{4}>",
+                        string.Format("{0} PatchUpdates.SetAll: patch array not same size as terrain. arr=<{1},{2}>, terr=<{3},{4}>",
                                 LogHeader, xsize, ysize,
                                 terrData.SizeX / Constants.TerrainPatchSize, terrData.SizeY / Constants.TerrainPatchSize)
                     );
@@ -428,7 +428,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                             if (channel.Width != m_scene.RegionInfo.RegionSizeX || channel.Height != m_scene.RegionInfo.RegionSizeY)
                             {
                                 // TerrainChannel expects a RegionSize x RegionSize map, currently
-                                throw new ArgumentException(String.Format("wrong size, use a file with size {0} x {1}",
+                                throw new ArgumentException(string.Format("wrong size, use a file with size {0} x {1}",
                                                                           m_scene.RegionInfo.RegionSizeX, m_scene.RegionInfo.RegionSizeY));
                             }
                             m_log.DebugFormat("[TERRAIN]: Loaded terrain, wd/ht: {0}/{1}", channel.Width, channel.Height);
@@ -440,20 +440,20 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                         {
                             m_log.Error("[TERRAIN]: Unable to load heightmap, the " + loader.Value +
                                         " parser does not support file loading. (May be save only)");
-                            throw new TerrainException(String.Format("unable to load heightmap: parser {0} does not support loading", loader.Value));
+                            throw new TerrainException(string.Format("unable to load heightmap: parser {0} does not support loading", loader.Value));
                         }
                         catch(FileNotFoundException)
                         {
                             m_log.Error(
                                 "[TERRAIN]: Unable to load heightmap, file not found. (A directory permissions error may also cause this)");
                             throw new TerrainException(
-                                String.Format("unable to load heightmap: file {0} not found (or permissions do not allow access", filename));
+                                string.Format("unable to load heightmap: file {0} not found (or permissions do not allow access", filename));
                         }
                         catch(ArgumentException e)
                         {
                             m_log.ErrorFormat("[TERRAIN]: Unable to load heightmap: {0}", e.Message);
                             throw new TerrainException(
-                                String.Format("Unable to load heightmap: {0}", e.Message));
+                                string.Format("Unable to load heightmap: {0}", e.Message));
                         }
                     }
                     m_log.Info("[TERRAIN]: File (" + filename + ") loaded successfully");
@@ -462,7 +462,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             }
 
             m_log.Error("[TERRAIN]: Unable to load heightmap, no file loader available for that format.");
-            throw new TerrainException(String.Format("unable to load heightmap from file {0}: no loader available for that format", filename));
+            throw new TerrainException(string.Format("unable to load heightmap from file {0}: no loader available for that format", filename));
         }
 
         /// <summary>
@@ -485,7 +485,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             }
             catch(IOException ioe)
             {
-                m_log.Error(String.Format("[TERRAIN]: Unable to save to {0}, {1}", filename, ioe.Message));
+                m_log.Error(string.Format("[TERRAIN]: Unable to save to {0}, {1}", filename, ioe.Message));
             }
 
             m_log.ErrorFormat(
@@ -532,7 +532,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                         {
                             m_log.Error("[TERRAIN]: Unable to load heightmap, the " + loader.Value +
                                         " parser does not support file loading. (May be save only)");
-                            throw new TerrainException(String.Format("unable to load heightmap: parser {0} does not support loading", loader.Value));
+                            throw new TerrainException(string.Format("unable to load heightmap: parser {0} does not support loading", loader.Value));
                         }
                     }
 
@@ -541,7 +541,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                 }
             }
             m_log.Error("[TERRAIN]: Unable to load heightmap, no file loader available for that format.");
-            throw new TerrainException(String.Format("unable to load heightmap from file {0}: no loader available for that format", filename));
+            throw new TerrainException(string.Format("unable to load heightmap from file {0}: no loader available for that format", filename));
         }
 
         public void LoadFromStream(string filename, Vector3 displacement,
@@ -563,7 +563,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                         {
                             m_log.Error("[TERRAIN]: Unable to load heightmap, the " + loader.Value +
                                         " parser does not support file loading. (May be save only)");
-                            throw new TerrainException(String.Format("unable to load heightmap: parser {0} does not support loading", loader.Value));
+                            throw new TerrainException(string.Format("unable to load heightmap: parser {0} does not support loading", loader.Value));
                         }
                     }
 
@@ -572,7 +572,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                 }
             }
             m_log.Error("[TERRAIN]: Unable to load heightmap, no file loader available for that format.");
-            throw new TerrainException(String.Format("unable to load heightmap from file {0}: no loader available for that format", filename));
+            throw new TerrainException(string.Format("unable to load heightmap from file {0}: no loader available for that format", filename));
         }
 
         private static Stream URIFetch(Uri uri)
@@ -588,7 +588,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             Stream file = response.GetResponseStream();
 
             if (response.ContentLength == 0)
-                throw new Exception(String.Format("{0} returned an empty file", uri.ToString()));
+                throw new Exception(string.Format("{0} returned an empty file", uri.ToString()));
 
             // return new BufferedStream(file, (int) response.ContentLength);
             return new BufferedStream(file, 1000000);
@@ -657,7 +657,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             catch(NotImplementedException)
             {
                 m_log.Error("Unable to save to " + filename + ", saving of this file format has not been implemented.");
-                throw new TerrainException(String.Format("Unable to save heightmap: saving of this file format not implemented"));
+                throw new TerrainException(string.Format("Unable to save heightmap: saving of this file format not implemented"));
             }
         }
 
@@ -1593,12 +1593,12 @@ namespace OpenSim.Region.CoreModules.World.Terrain
 
         #region Console Commands
 
-        private void InterfaceLoadFile(Object[] args)
+        private void InterfaceLoadFile(object[] args)
         {
             LoadFromFile((string) args[0]);
         }
 
-        private void InterfaceLoadTileFile(Object[] args)
+        private void InterfaceLoadTileFile(object[] args)
         {
             LoadFromFile((string) args[0],
                          (int) args[1],
@@ -1607,12 +1607,12 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                          (int) args[4]);
         }
 
-        private void InterfaceSaveFile(Object[] args)
+        private void InterfaceSaveFile(object[] args)
         {
             SaveToFile((string)args[0]);
         }
 
-        private void InterfaceSaveTileFile(Object[] args)
+        private void InterfaceSaveTileFile(object[] args)
         {
             SaveToFile((string)args[0],
                          (int)args[1],
@@ -1621,12 +1621,12 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                          (int)args[4]);
         }
 
-        private void InterfaceBakeTerrain(Object[] args)
+        private void InterfaceBakeTerrain(object[] args)
         {
             UpdateBakedMap();
         }
 
-        private void InterfaceRevertTerrain(Object[] args)
+        private void InterfaceRevertTerrain(object[] args)
         {
             int x, y;
             for (x = 0; x < m_channel.Width; x++)
@@ -1635,9 +1635,9 @@ namespace OpenSim.Region.CoreModules.World.Terrain
 
         }
 
-        private void InterfaceFlipTerrain(Object[] args)
+        private void InterfaceFlipTerrain(object[] args)
         {
-            String direction = (String)args[0];
+            string direction = (string)args[0];
 
             if (direction.ToLower().StartsWith("y"))
             {
@@ -1673,7 +1673,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             }
         }
 
-        private void InterfaceRescaleTerrain(Object[] args)
+        private void InterfaceRescaleTerrain(object[] args)
         {
             float desiredMin = (float)args[0];
             float desiredMax = (float)args[1];
@@ -1685,7 +1685,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             if (desiredRange == 0d)
             {
                 // delta is zero so flatten at requested height
-                InterfaceFillTerrain(new Object[] { args[1] });
+                InterfaceFillTerrain(new object[] { args[1] });
             }
             else
             {
@@ -1731,7 +1731,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             }
         }
 
-        private void InterfaceElevateTerrain(Object[] args)
+        private void InterfaceElevateTerrain(object[] args)
         {
             float val = (float)args[0];
 
@@ -1741,7 +1741,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     m_channel[x, y] += val;
         }
 
-        private void InterfaceMultiplyTerrain(Object[] args)
+        private void InterfaceMultiplyTerrain(object[] args)
         {
             int x, y;
             float val = (float)args[0];
@@ -1751,7 +1751,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     m_channel[x, y] *= val;
         }
 
-        private void InterfaceLowerTerrain(Object[] args)
+        private void InterfaceLowerTerrain(object[] args)
         {
             int x, y;
             float val = (float)args[0];
@@ -1761,7 +1761,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     m_channel[x, y] -= val;
         }
 
-        public void InterfaceFillTerrain(Object[] args)
+        public void InterfaceFillTerrain(object[] args)
         {
             int x, y;
             float val = (float)args[0];
@@ -1771,7 +1771,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     m_channel[x, y] = val;
         }
 
-        private void InterfaceMinTerrain(Object[] args)
+        private void InterfaceMinTerrain(object[] args)
         {
             int x, y;
             float val = (float)args[0];
@@ -1784,7 +1784,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             }
         }
 
-        private void InterfaceMaxTerrain(Object[] args)
+        private void InterfaceMaxTerrain(object[] args)
         {
             int x, y;
             float val = (float)args[0];
@@ -1797,7 +1797,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             }
         }
 
-        private void InterfaceShow(Object[] args)
+        private void InterfaceShow(object[] args)
         {
             Vector2 point;
 
@@ -1812,7 +1812,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             Console.WriteLine("Terrain height at {0} is {1}", point, height);
         }
 
-        private void InterfaceShowDebugStats(Object[] args)
+        private void InterfaceShowDebugStats(object[] args)
         {
             float max = float.MinValue;
             float min = float.MaxValue;
@@ -1838,7 +1838,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             MainConsole.Instance.Output("max/min/avg/sum: {0}/{1}/{2}/{3}", max, min, avg, sum);
         }
 
-        private void InterfaceRunPluginEffect(Object[] args)
+        private void InterfaceRunPluginEffect(object[] args)
         {
             string firstArg = (string)args[0];
 
@@ -2005,7 +2005,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             Scene scene = SceneManager.Instance.CurrentScene;
             if ((scene != null) && (scene != m_scene))
             {
-                result = String.Empty;
+                result = string.Empty;
             }
             else if (cmd.Length > 2)
             {
@@ -2015,7 +2015,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                 ITerrainModifier operation;
                 if (!m_modifyOperations.TryGetValue(operationType, out operation))
                 {
-                    result = String.Format("Terrain Modify \"{0}\" not found.", operationType);
+                    result = string.Format("Terrain Modify \"{0}\" not found.", operationType);
                 }
                 else if ((cmd.Length > 3) && (cmd[3] == "usage"))
                 {

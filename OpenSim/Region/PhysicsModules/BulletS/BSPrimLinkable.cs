@@ -51,7 +51,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public BSLinkset.LinksetImplementation LinksetType { get; set; }
 
-    public BSPrimLinkable(uint localID, String primName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 size,
+    public BSPrimLinkable(uint localID, string primName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 size,
                        OMV.Quaternion rotation, PrimitiveBaseShape pbs, bool pisPhysical)
         : base(localID, primName, parent_scene, pos, size, rotation, pbs, pisPhysical)
     {

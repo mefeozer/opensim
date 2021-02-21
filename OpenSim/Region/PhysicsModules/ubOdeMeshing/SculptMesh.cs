@@ -195,12 +195,12 @@ namespace PrimMesher
                 this.coords[i] *= m;
         }
 
-        public void DumpRaw(String path, String name, String title)
+        public void DumpRaw(string path, string name, string title)
         {
             if (path == null)
                 return;
-            String fileName = name + "_" + title + ".raw";
-            String completePath = System.IO.Path.Combine(path, fileName);
+            string fileName = name + "_" + title + ".raw";
+            string completePath = System.IO.Path.Combine(path, fileName);
             using(StreamWriter sw = new StreamWriter(completePath))
             {
                 for (int i = 0; i < faces.Count; i++)

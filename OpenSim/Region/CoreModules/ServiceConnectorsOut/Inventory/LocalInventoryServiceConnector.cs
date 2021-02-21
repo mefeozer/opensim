@@ -96,7 +96,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
                         return;
                     }
 
-                    string serviceDll = inventoryConfig.GetString("LocalServiceModule", String.Empty);
+                    string serviceDll = inventoryConfig.GetString("LocalServiceModule", string.Empty);
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
@@ -104,7 +104,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
                         return;
                     }
 
-                    Object[] args = new Object[] { source };
+                    object[] args = new object[] { source };
                     m_log.DebugFormat("[LOCAL INVENTORY SERVICES CONNECTOR]: Service dll = {0}", serviceDll);
 
                     m_InventoryService = ServerUtils.LoadPlugin<IInventoryService>(serviceDll, args);

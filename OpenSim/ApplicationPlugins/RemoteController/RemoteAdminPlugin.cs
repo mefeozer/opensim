@@ -57,14 +57,14 @@ namespace OpenSim.ApplicationPlugins.RemoteController
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static bool m_defaultAvatarsLoaded = false;
-        private static Object   m_requestLock = new Object();
-        private static Object   m_saveOarLock = new Object();
+        private static object m_requestLock = new object();
+        private static object m_saveOarLock = new object();
 
         private OpenSimBase m_application;
         private IHttpServer m_httpServer;
         private IConfig m_config;
         private IConfigSource m_configSource;
-        private string m_requiredPassword = String.Empty;
+        private string m_requiredPassword = string.Empty;
         private HashSet<string> m_accessIP;
 
         private string m_name = "RemoteAdminPlugin";
@@ -103,10 +103,10 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 {
                     m_config = m_configSource.Configs["RemoteAdmin"];
                     m_log.Debug("[RADMIN]: Remote Admin Plugin Enabled");
-                    m_requiredPassword = m_config.GetString("access_password", String.Empty);
+                    m_requiredPassword = m_config.GetString("access_password", string.Empty);
                     int port = m_config.GetInt("port", 0);
 
-                    string accessIP = m_config.GetString("access_ip_addresses", String.Empty);
+                    string accessIP = m_config.GetString("access_ip_addresses", string.Empty);
                     m_accessIP = new HashSet<string>();
                     if (!string.IsNullOrEmpty(accessIP))
                     {
@@ -177,12 +177,12 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     // mention it in a whitelist. It won't be available
                     // If you just leave the option out!
                     //
-                    if (!String.IsNullOrEmpty(enabledMethods))
+                    if (!string.IsNullOrEmpty(enabledMethods))
                         availableMethods["admin_console_command"] = (req, ep) => InvokeXmlRpcMethod(req, ep, XmlRpcConsoleCommandMethod);
 
                     // The assumption here is that simply enabling Remote Admin as before will produce the same
                     // behavior - enable all methods unless the whitelist is in place for backward-compatibility.
-                    if (enabledMethods.ToLower() == "all" || String.IsNullOrEmpty(enabledMethods))
+                    if (enabledMethods.ToLower() == "all" || string.IsNullOrEmpty(enabledMethods))
                     {
                         foreach (string method in availableMethods.Keys)
                         {
@@ -327,7 +327,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 {
                     int timeout = 30;
                     if (requestData.ContainsKey("milliseconds"))
-                        timeout = Int32.Parse(requestData["milliseconds"].ToString()) / 1000;
+                        timeout = int.Parse(requestData["milliseconds"].ToString()) / 1000;
                     while (timeout > 0)
                     {
                         times.Add(timeout);
@@ -558,7 +558,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 && ((string) requestData["shutdown"] == "delayed")
                 && requestData.ContainsKey("milliseconds"))
             {
-                timeout = Int32.Parse(requestData["milliseconds"].ToString());
+                timeout = int.Parse(requestData["milliseconds"].ToString());
 
                 message
                     = "Region is going down in " + ((int) (timeout/1000)).ToString()
@@ -701,18 +701,18 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
                 // check whether we still have space left (iff we are using limits)
                 if (m_regionLimit != 0 && m_application.SceneManager.Scenes.Count >= m_regionLimit)
-                    throw new Exception(String.Format("cannot instantiate new region, server capacity {0} already reached; delete regions first",
+                    throw new Exception(string.Format("cannot instantiate new region, server capacity {0} already reached; delete regions first",
                                                       m_regionLimit));
                 // extract or generate region ID now
                 Scene scene = null;
                 UUID regionID = UUID.Zero;
                 if (requestData.ContainsKey("region_id") &&
-                    !String.IsNullOrEmpty((string) requestData["region_id"]))
+                    !string.IsNullOrEmpty((string) requestData["region_id"]))
                 {
                     regionID = (UUID) (string) requestData["region_id"];
                     if (m_application.SceneManager.TryGetScene(regionID, out scene))
                         throw new Exception(
-                            String.Format("region UUID already in use by region {0}, UUID {1}, <{2},{3}>",
+                            string.Format("region UUID already in use by region {0}, UUID {1}, <{2},{3}>",
                                           scene.RegionInfo.RegionName, scene.RegionInfo.RegionID,
                                           scene.RegionInfo.RegionLocX, scene.RegionInfo.RegionLocY));
                 }
@@ -735,13 +735,13 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 // region location
                 if (m_application.SceneManager.TryGetScene(region.RegionName, out scene))
                     throw new Exception(
-                        String.Format("region name already in use by region {0}, UUID {1}, <{2},{3}>",
+                        string.Format("region name already in use by region {0}, UUID {1}, <{2},{3}>",
                                       scene.RegionInfo.RegionName, scene.RegionInfo.RegionID,
                                       scene.RegionInfo.RegionLocX, scene.RegionInfo.RegionLocY));
 
                 if (m_application.SceneManager.TryGetScene(region.RegionLocX, region.RegionLocY, out scene))
                     throw new Exception(
-                        String.Format("region location <{0},{1}> already in use by region {2}, UUID {3}, <{4},{5}>",
+                        string.Format("region location <{0},{1}> already in use by region {2}, UUID {3}, <{4},{5}>",
                                       region.RegionLocX, region.RegionLocY,
                                       scene.RegionInfo.RegionName, scene.RegionInfo.RegionID,
                                       scene.RegionInfo.RegionLocX, scene.RegionInfo.RegionLocY));
@@ -753,7 +753,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 if (0 == region.InternalEndPoint.Port) throw new Exception("listen_port is 0");
                 if (m_application.SceneManager.TryGetScene(region.InternalEndPoint, out scene))
                     throw new Exception(
-                        String.Format(
+                        string.Format(
                             "region internal IP {0} and port {1} already in use by region {2}, UUID {3}, <{4},{5}>",
                             region.InternalEndPoint.Address,
                             region.InternalEndPoint.Port,
@@ -794,7 +794,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     else
                     {
                         regionIniPath = Path.Combine(regionConfigPath,
-                                                        String.Format(
+                                                        string.Format(
                                                             m_config.GetString("region_file_template",
                                                                                "{0}x{1}-{2}.ini"),
                                                             region.RegionLocX.ToString(),
@@ -1185,7 +1185,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     UserAccount account = CreateUser(scopeID, firstName, lastName, password, email);
 
                     if (null == account)
-                        throw new Exception(String.Format("failed to create new user {0} {1}",
+                        throw new Exception(string.Format("failed to create new user {0} {1}",
                                                           firstName, lastName));
 
                     // Set home position
@@ -1356,7 +1356,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     string firstName = (string) requestData["user_firstname"];
                     string lastName = (string) requestData["user_lastname"];
 
-                    string password = String.Empty;
+                    string password = string.Empty;
                     uint? regionXLocation = null;
                     uint? regionYLocation = null;
             //        uint? ulaX = null;
@@ -1397,9 +1397,9 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     UserAccount account = scene.UserAccountService.GetUserAccount(scopeID, firstName, lastName);
 
                     if (null == account)
-                        throw new Exception(String.Format("avatar {0} {1} does not exist", firstName, lastName));
+                        throw new Exception(string.Format("avatar {0} {1} does not exist", firstName, lastName));
 
-                    if (!String.IsNullOrEmpty(password))
+                    if (!string.IsNullOrEmpty(password))
                     {
                         m_log.DebugFormat("[RADMIN]: UpdateUserAccount: updating password for avatar {0} {1}", firstName, lastName);
                         ChangeUserPassword(firstName, lastName, password);
@@ -1522,14 +1522,14 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     if (account.Equals(null) || account.PrincipalID.Equals(UUID.Zero))
                     {
                         m_log.DebugFormat("avatar {0} {1} does not exist", firstName, lastName);
-                        throw new Exception(String.Format("avatar {0} {1} does not exist", firstName, lastName));
+                        throw new Exception(string.Format("avatar {0} {1} does not exist", firstName, lastName));
                     }
 
-                    if (String.IsNullOrEmpty(password))
+                    if (string.IsNullOrEmpty(password))
                     {
                         m_log.DebugFormat("[RADMIN]: AuthenticateUser: no password provided for {0} {1}", firstName,
                                           lastName);
-                        throw new Exception(String.Format("no password provided for {0} {1}", firstName,
+                        throw new Exception(string.Format("no password provided for {0} {1}", firstName,
                                           lastName));
                     }
 
@@ -1538,7 +1538,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     {
                         m_log.DebugFormat("[RADMIN]: AuthenticateUser: no token lifetime provided for {0} {1}", firstName,
                                           lastName);
-                        throw new Exception(String.Format("no token lifetime provided for {0} {1}", firstName,
+                        throw new Exception(string.Format("no token lifetime provided for {0} {1}", firstName,
                                           lastName));
                     }
 
@@ -1547,7 +1547,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     {
                         m_log.DebugFormat("[RADMIN]: AuthenticateUser: token lifetime longer than 30s for {0} {1}", firstName,
                                           lastName);
-                        throw new Exception(String.Format("token lifetime longer than 30s for {0} {1}", firstName,
+                        throw new Exception(string.Format("token lifetime longer than 30s for {0} {1}", firstName,
                                           lastName));
                     }
 
@@ -1559,11 +1559,11 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     }
 
                     var token = authModule.Authenticate(account.PrincipalID, password, lifetime);
-                    if (String.IsNullOrEmpty(token))
+                    if (string.IsNullOrEmpty(token))
                     {
                         m_log.DebugFormat("[RADMIN]: AuthenticateUser: authentication failed for {0} {1}", firstName,
                             lastName);
-                        throw new Exception(String.Format("authentication failed for {0} {1}", firstName,
+                        throw new Exception(string.Format("authentication failed for {0} {1}", firstName,
                             lastName));
                     }
 
@@ -1842,7 +1842,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                             break;
 
                         default:
-                            throw new Exception(String.Format("unknown Xml{0} format", xml_version));
+                            throw new Exception(string.Format("unknown Xml{0} format", xml_version));
                     }
 
                     responseData["loaded"] = true;
@@ -1895,7 +1895,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                         break;
 
                     default:
-                        throw new Exception(String.Format("unknown Xml{0} format", xml_version));
+                        throw new Exception(string.Format("unknown Xml{0} format", xml_version));
                 }
 
                 responseData["saved"] = true;
@@ -1917,7 +1917,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             Hashtable requestData = (Hashtable)request.Params[0];
 
             int flags = 0;
-            string text = String.Empty;
+            string text = string.Empty;
             int health = 0;
             responseData["success"] = true;
 
@@ -2261,7 +2261,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             }
 
             if (requestData.Contains("flags") && requestData["flags"] != null)
-                set_flags = UInt32.TryParse(requestData["flags"].ToString(), out flags);
+                set_flags = uint.TryParse(requestData["flags"].ToString(), out flags);
 
             m_log.InfoFormat("[RADMIN]: Received Reset Land Request group={0} musicURL={1} flags={2}",
                 (set_group ? groupID.ToString() : "unchanged"),
@@ -2415,12 +2415,12 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 if (!requestData.Contains(parameter))
                 {
                     responseData["accepted"] = false;
-                    throw new Exception(String.Format("missing string parameter {0}", parameter));
+                    throw new Exception(string.Format("missing string parameter {0}", parameter));
                 }
-                if (String.IsNullOrEmpty((string) requestData[parameter]))
+                if (string.IsNullOrEmpty((string) requestData[parameter]))
                 {
                     responseData["accepted"] = false;
-                    throw new Exception(String.Format("parameter {0} is empty", parameter));
+                    throw new Exception(string.Format("parameter {0} is empty", parameter));
                 }
             }
         }
@@ -2432,7 +2432,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 if (!requestData.Contains(parameter))
                 {
                     responseData["accepted"] = false;
-                    throw new Exception(String.Format("missing integer parameter {0}", parameter));
+                    throw new Exception(string.Format("missing integer parameter {0}", parameter));
                 }
             }
         }
@@ -2440,8 +2440,8 @@ namespace OpenSim.ApplicationPlugins.RemoteController
         private void CheckRegionParams(Hashtable requestData, Hashtable responseData)
         {
             //Checks if region parameters exist and gives exeption if no parameters are given
-            if ((requestData.ContainsKey("region_id") && !String.IsNullOrEmpty((string)requestData["region_id"])) ||
-                (requestData.ContainsKey("region_name") && !String.IsNullOrEmpty((string)requestData["region_name"])))
+            if ((requestData.ContainsKey("region_id") && !string.IsNullOrEmpty((string)requestData["region_id"])) ||
+                (requestData.ContainsKey("region_name") && !string.IsNullOrEmpty((string)requestData["region_name"])))
             {
                 return;
             }
@@ -2457,23 +2457,23 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             scene = null;
 
             if (requestData.ContainsKey("region_id") &&
-                !String.IsNullOrEmpty((string)requestData["region_id"]))
+                !string.IsNullOrEmpty((string)requestData["region_id"]))
             {
                 UUID regionID = (UUID)(string)requestData["region_id"];
                 if (!m_application.SceneManager.TryGetScene(regionID, out scene))
                 {
-                    responseData["error"] = String.Format("Region ID {0} not found", regionID);
-                    throw new Exception(String.Format("Region ID {0} not found", regionID));
+                    responseData["error"] = string.Format("Region ID {0} not found", regionID);
+                    throw new Exception(string.Format("Region ID {0} not found", regionID));
                 }
             }
             else if (requestData.ContainsKey("region_name") &&
-                !String.IsNullOrEmpty((string)requestData["region_name"]))
+                !string.IsNullOrEmpty((string)requestData["region_name"]))
             {
                 string regionName = (string)requestData["region_name"];
                 if (!m_application.SceneManager.TryGetScene(regionName, out scene))
                 {
-                    responseData["error"] = String.Format("Region {0} not found", regionName);
-                    throw new Exception(String.Format("Region {0} not found", regionName));
+                    responseData["error"] = string.Format("Region {0} not found", regionName);
+                    throw new Exception(string.Format("Region {0} not found", regionName));
                 }
             }
             else
@@ -2691,7 +2691,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             string defaultMale   = m_config.GetString("default_male", "Default Male");
             string defaultFemale = m_config.GetString("default_female", "Default Female");
             string defaultNeutral   = m_config.GetString("default_female", "Default Default");
-            string model   = String.Empty;
+            string model   = string.Empty;
 
             // Has a gender preference been supplied?
 
@@ -2717,14 +2717,14 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
             // Has an explicit model been specified?
 
-            if (requestData.Contains("model") && (String.IsNullOrEmpty((string)requestData["gender"])))
+            if (requestData.Contains("model") && (string.IsNullOrEmpty((string)requestData["gender"])))
             {
                 model = (string)requestData["model"];
             }
 
             // No appearance attributes were set
 
-            if (String.IsNullOrEmpty(model))
+            if (string.IsNullOrEmpty(model))
             {
                 m_log.DebugFormat("[RADMIN]: Appearance update not requested");
                 return;
@@ -3156,10 +3156,10 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     assets = doc.GetElementsByTagName("RequiredAsset");
                     foreach (XmlNode assetNode in assets)
                     {
-                        AssetBase asset = new AssetBase(UUID.Random(), GetStringAttribute(assetNode, "name", ""), SByte.Parse(GetStringAttribute(assetNode, "type", "")), UUID.Zero.ToString());
+                        AssetBase asset = new AssetBase(UUID.Random(), GetStringAttribute(assetNode, "name", ""), sbyte.Parse(GetStringAttribute(assetNode, "type", "")), UUID.Zero.ToString());
                         asset.Description = GetStringAttribute(assetNode,"desc","");
-                        asset.Local       = Boolean.Parse(GetStringAttribute(assetNode,"local",""));
-                        asset.Temporary   = Boolean.Parse(GetStringAttribute(assetNode,"temporary",""));
+                        asset.Local       = bool.Parse(GetStringAttribute(assetNode,"local",""));
+                        asset.Temporary   = bool.Parse(GetStringAttribute(assetNode,"temporary",""));
                         asset.Data        = Convert.FromBase64String(assetNode.InnerText);
                         assetService.Store(asset);
                     }

@@ -46,12 +46,12 @@ namespace OpenSim.Framework
 
         private string m_logDirectory = ".";
         private int m_logMaxFileTimeMin = 5;    // 5 minutes
-        public String LogFileHeader { get; set; }
+        public string LogFileHeader { get; set; }
 
         private StreamWriter m_logFile = null;
         private TimeSpan m_logFileLife;
         private DateTime m_logFileEndTime;
-        private Object m_logFileWriteLock = new Object();
+        private object m_logFileWriteLock = new object();
         private bool m_flushWrite;
 
         // set externally when debugging. If let 'null', this does not write any error messages.
@@ -117,7 +117,7 @@ namespace OpenSim.Framework
         public void Write(string line, params object[] args)
         {
             if (!Enabled) return;
-            Write(String.Format(line, args));
+            Write(string.Format(line, args));
         }
 
         public void Flush()
@@ -150,7 +150,7 @@ namespace OpenSim.Framework
                         m_logFileEndTime = now + m_logFileLife;
                         string path = (m_logDirectory.Length > 0 ? m_logDirectory
                                     + System.IO.Path.DirectorySeparatorChar.ToString() : "")
-                                + String.Format("{0}{1}.log", LogFileHeader, now.ToString("yyyyMMddHHmmss"));
+                                + string.Format("{0}{1}.log", LogFileHeader, now.ToString("yyyyMMddHHmmss"));
                         m_logFile = new StreamWriter(File.Open(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite));
                     }
                     if (m_logFile != null)
@@ -160,7 +160,7 @@ namespace OpenSim.Framework
                         // buff.Append(now.ToString("yyyyMMddHHmmss"));
                         buff.Append(",");
                         buff.Append(line);
-                        buff.Append("\r\n");
+                        buff.Append(Environment.NewLine);
                         m_logFile.Write(buff.ToString());
                         if (m_flushWrite)
                             m_logFile.Flush();

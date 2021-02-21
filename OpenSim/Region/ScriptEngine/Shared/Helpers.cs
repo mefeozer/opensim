@@ -107,7 +107,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
             OffsetPos = new LSL_Types.Vector3();
             LinkNum = 0;
             Group = UUID.Zero;
-            Name = String.Empty;
+            Name = string.Empty;
             Owner = UUID.Zero;
             Position = new LSL_Types.Vector3();
             Rotation = new LSL_Types.Quaternion();
@@ -309,7 +309,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
     /// </summary>
     public class EventParams
     {
-        public EventParams(string eventName, Object[] eventParams, DetectParams[] detectParams)
+        public EventParams(string eventName, object[] eventParams, DetectParams[] detectParams)
         {
             EventName = eventName;
             Params = eventParams;
@@ -317,7 +317,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
         }
 
         public string EventName;
-        public Object[] Params;
+        public object[] Params;
         public DetectParams[] DetectParams;
     }
 }

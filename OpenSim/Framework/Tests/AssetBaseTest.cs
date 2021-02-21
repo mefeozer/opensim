@@ -62,7 +62,7 @@ namespace OpenSim.Framework.Tests
 
         private void CheckContainsReferences(AssetType assetType, bool expected)
         {
-            AssetBase asset = new AssetBase(UUID.Zero, String.Empty, (sbyte)assetType, UUID.Zero.ToString());
+            AssetBase asset = new AssetBase(UUID.Zero, string.Empty, (sbyte)assetType, UUID.Zero.ToString());
             bool actual = asset.ContainsReferences;
             Assert.AreEqual(expected, actual, "Expected "+assetType+".ContainsReferences to be "+expected+" but was "+actual+".");
         }

@@ -378,7 +378,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
         private string Replace(string url, string substring, string replacement)
         {
-            if (!String.IsNullOrEmpty(url) && url.Contains(substring))
+            if (!string.IsNullOrEmpty(url) && url.Contains(substring))
                 return url.Replace(substring, replacement);
 
             return url;
@@ -414,7 +414,7 @@ namespace OpenSim.Region.ClientStack.Linden
                         while ((s = sr.ReadLine()) != null)
                         {
                             s = s.Trim(trimc);
-                            if (String.IsNullOrEmpty(s) || s.StartsWith("<!--"))
+                            if (string.IsNullOrEmpty(s) || s.StartsWith("<!--"))
                                 continue;
                             sb.Append(s);
                         }

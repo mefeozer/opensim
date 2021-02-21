@@ -405,7 +405,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             RunUpdate();
         }
 
-        private void AssetReceived(string id, Object sender, AssetBase asset)
+        private void AssetReceived(string id, object sender, AssetBase asset)
         {
 //            m_log.DebugFormat(
 //                "[J2KIMAGE]: Received asset {0} ({1} bytes)", id, asset != null ? asset.Data.Length.ToString() : "n/a");

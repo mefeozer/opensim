@@ -1108,7 +1108,7 @@ namespace OpenSim.Services.LLLoginService
                     //
                     if (cmd.Length > 2)
                     {
-                        if (Int32.TryParse(cmd[2], out m_MinLoginLevel))
+                        if (int.TryParse(cmd[2], out m_MinLoginLevel))
                             MainConsole.Instance.Output("Set minimum login level to {0}", m_MinLoginLevel);
                         else
                             MainConsole.Instance.Output("ERROR: {0} is not a valid login level",  cmd[2]);

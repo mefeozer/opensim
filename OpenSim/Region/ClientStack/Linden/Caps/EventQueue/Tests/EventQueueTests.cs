@@ -133,7 +133,7 @@ namespace OpenSim.Region.ClientStack.Linden.Tests
             Assert.That((int)eventsResponse["int_response_code"], Is.EqualTo((int)HttpStatusCode.OK));
 
 //            Console.WriteLine("Response [{0}]", (string)eventsResponse["str_response_string"]);
-            string data = String.Empty;
+            string data = string.Empty;
             if(eventsResponse["bin_response_data"] != null)
                 data = Encoding.UTF8.GetString((byte[])eventsResponse["bin_response_data"]);
 

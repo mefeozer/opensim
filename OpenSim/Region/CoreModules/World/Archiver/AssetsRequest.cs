@@ -202,7 +202,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 return;
             Culture.SetCurrentCulture();
 
-            Boolean timedOut = (Boolean)o;
+            bool timedOut = (bool)o;
 
             try
             {

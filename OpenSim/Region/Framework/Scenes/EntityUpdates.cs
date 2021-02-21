@@ -151,7 +151,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         public override string ToString()
         {
-            return String.Format("[{0},{1},{2}]", PriorityQueue, EntryOrder, m_entity.LocalId);
+            return string.Format("[{0},{1},{2}]", PriorityQueue, EntryOrder, m_entity.LocalId);
         }
     }
 

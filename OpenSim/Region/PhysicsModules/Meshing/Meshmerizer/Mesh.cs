@@ -384,16 +384,16 @@ namespace OpenSim.Region.PhysicsModule.Meshing
             }
         }
 
-        public void DumpRaw(String path, String name, String title)
+        public void DumpRaw(string path, string name, string title)
         {
             if (path == null)
                 return;
-            String fileName = name + "_" + title + ".raw";
-            String completePath = System.IO.Path.Combine(path, fileName);
+            string fileName = name + "_" + title + ".raw";
+            string completePath = System.IO.Path.Combine(path, fileName);
             StreamWriter sw = new StreamWriter(completePath);
             foreach (Triangle t in m_triangles)
             {
-                String s = t.ToStringRaw();
+                string s = t.ToStringRaw();
                 sw.WriteLine(s);
             }
             sw.Close();

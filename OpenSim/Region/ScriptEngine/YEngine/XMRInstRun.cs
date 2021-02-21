@@ -673,7 +673,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     if(line.StartsWith("at (wrapper"))
                         continue;  // at (wrapper ...
                     int k = line.LastIndexOf(".cs:");  // ... .cs:linenumber
-                    if(Int32.TryParse(line.Substring(k + 4), out k))
+                    if(int.TryParse(line.Substring(k + 4), out k))
                         continue;
                 }
                 this.llOwnerSay(line);

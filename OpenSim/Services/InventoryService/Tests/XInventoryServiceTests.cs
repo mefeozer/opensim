@@ -52,7 +52,7 @@ namespace OpenSim.Services.InventoryService.Tests
             config.Configs["InventoryService"].Set("StorageProvider", "OpenSim.Tests.Common.dll");
 
             return ServerUtils.LoadPlugin<IInventoryService>(
-                "OpenSim.Services.InventoryService.dll:XInventoryService", new Object[] { config });
+                "OpenSim.Services.InventoryService.dll:XInventoryService", new object[] { config });
         }
 
         /// <summary>

@@ -1254,7 +1254,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
         }
 
         // From msdn
-        private static ImageCodecInfo GetEncoderInfo(String mimeType)
+        private static ImageCodecInfo GetEncoderInfo(string mimeType)
         {
             ImageCodecInfo[] encoders;
             encoders = ImageCodecInfo.GetImageEncoders();
@@ -1401,7 +1401,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
 
             if(m_exportPrintScale)
             {
-                String drawString = string.Format("{0}m x {1}m", spanX, spanY);
+                string drawString = string.Format("{0}m x {1}m", spanX, spanY);
                 g.DrawString(drawString, drawFont, drawBrush, 30, 30);
             }
 
@@ -1706,7 +1706,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
              m_blacklistedurls.Remove(httpserver);
         }
 
-        private Byte[] GenerateOverlay()
+        private byte[] GenerateOverlay()
         {
             int landTileSize = LandManagementModule.LandUnit;
 

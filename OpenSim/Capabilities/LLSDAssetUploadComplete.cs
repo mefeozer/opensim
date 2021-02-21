@@ -34,10 +34,10 @@ namespace OpenSim.Framework.Capabilities
     [LLSDType("MAP")]
     public class LLSDAssetUploadComplete
     {
-        public string new_asset = String.Empty;
+        public string new_asset = string.Empty;
         public UUID new_inventory_item = UUID.Zero;
 //        public UUID new_texture_folder_id = UUID.Zero;
-        public string state = String.Empty;
+        public string state = string.Empty;
         public LLSDAssetUploadError error = null;
         //public bool success = false;
         public int new_next_owner_mask = 0;

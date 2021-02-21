@@ -100,7 +100,7 @@ namespace OpenSim.Server.Handlers.GridUser
 
         byte[] LoggedIn(Dictionary<string, object> request)
         {
-            string user = String.Empty;
+            string user = string.Empty;
 
             if (!request.ContainsKey("UserID"))
                 return FailureResult();
@@ -171,7 +171,7 @@ namespace OpenSim.Server.Handlers.GridUser
 
         byte[] GetGridUserInfo(Dictionary<string, object> request)
         {
-            string user = String.Empty;
+            string user = string.Empty;
 
             if (!request.ContainsKey("UserID"))
                 return FailureResult();

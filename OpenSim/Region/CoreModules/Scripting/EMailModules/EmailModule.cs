@@ -225,7 +225,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
 
         private bool resolveNamePositionRegionName(UUID objectID, out string ObjectName, out string ObjectAbsolutePosition, out string ObjectRegionName)
         {
-            ObjectName = ObjectAbsolutePosition = ObjectRegionName = String.Empty;
+            ObjectName = ObjectAbsolutePosition = ObjectRegionName = string.Empty;
             string m_ObjectRegionName;
             int objectLocX;
             int objectLocY;

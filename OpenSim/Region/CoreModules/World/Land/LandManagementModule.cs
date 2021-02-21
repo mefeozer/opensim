@@ -649,11 +649,11 @@ namespace OpenSim.Region.CoreModules.World.Land
 
                     if (!mm.AmountCovered(remote_client.AgentId, cost))
                     {
-                        remote_client.SendAgentAlertMessage(String.Format("Insufficient funds in region '{0}' money system", regionName), true); 
+                        remote_client.SendAgentAlertMessage(string.Format("Insufficient funds in region '{0}' money system", regionName), true); 
                         return;
                     }
 
-                    string payDescription = String.Format("Parcel '{0}' at region '{1} {2:0.###} hours access pass", ldata.Name, regionName, ldata.PassHours);
+                    string payDescription = string.Format("Parcel '{0}' at region '{1} {2:0.###} hours access pass", ldata.Name, regionName, ldata.PassHours);
 
                     if(!mm.MoveMoney(remote_client.AgentId, ldata.OwnerID, cost,MoneyTransactionType.LandPassSale, payDescription))
                     {
@@ -1747,7 +1747,7 @@ namespace OpenSim.Region.CoreModules.World.Land
         // and land has been validated as well, this method transfers
         // the land ownership
 
-        public void EventManagerOnLandBuy(Object o, EventManager.LandBuyArgs e)
+        public void EventManagerOnLandBuy(object o, EventManager.LandBuyArgs e)
         {
             if (e.economyValidated && e.landValidated)
             {
@@ -1770,7 +1770,7 @@ namespace OpenSim.Region.CoreModules.World.Land
         // be validated. This method validates the right to buy the
         // parcel
 
-        public void EventManagerOnValidateLandBuy(Object o, EventManager.LandBuyArgs e)
+        public void EventManagerOnValidateLandBuy(object o, EventManager.LandBuyArgs e)
         {
             if (e.landValidated == false)
             {
@@ -2359,7 +2359,7 @@ namespace OpenSim.Region.CoreModules.World.Land
             land.LandData.AuthBuyerID = UUID.Zero;
             land.LandData.Category = ParcelCategory.None;
             land.LandData.ClaimDate = Util.UnixTimeSinceEpoch();
-            land.LandData.Description = String.Empty;
+            land.LandData.Description = string.Empty;
             land.LandData.Dwell = 0;
             land.LandData.Flags = (uint)ParcelFlags.AllowFly | (uint)ParcelFlags.AllowLandmark |
                                 (uint)ParcelFlags.AllowAPrimitiveEntry |
@@ -2374,9 +2374,9 @@ namespace OpenSim.Region.CoreModules.World.Land
             land.LandData.MediaID = UUID.Zero;
             land.LandData.MediaLoop = false;
             land.LandData.MediaType = "none/none";
-            land.LandData.MediaURL = String.Empty;
+            land.LandData.MediaURL = string.Empty;
             land.LandData.MediaWidth = 0;
-            land.LandData.MusicURL = String.Empty;
+            land.LandData.MusicURL = string.Empty;
             land.LandData.ObscureMedia = false;
             land.LandData.ObscureMusic = false;
             land.LandData.OtherCleanTime = 0;

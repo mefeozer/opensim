@@ -45,7 +45,7 @@ namespace OpenSim.Services.Connectors.Friends
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         public FriendsServicesConnector()
         {
@@ -71,7 +71,7 @@ namespace OpenSim.Services.Connectors.Friends
             }
 
             string serviceURI = gridConfig.GetString("FriendsServerURI",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceURI))
             {
@@ -183,7 +183,7 @@ namespace OpenSim.Services.Connectors.Friends
                 if ((replyData != null) && replyData.ContainsKey("Result") && (replyData["Result"] != null))
                 {
                     bool success = false;
-                    Boolean.TryParse(replyData["Result"].ToString(), out success);
+                    bool.TryParse(replyData["Result"].ToString(), out success);
                     return success;
                 }
                 else
@@ -238,7 +238,7 @@ namespace OpenSim.Services.Connectors.Friends
                 if ((replyData != null) && replyData.ContainsKey("Result") && (replyData["Result"] != null))
                 {
                     bool success = false;
-                    Boolean.TryParse(replyData["Result"].ToString(), out success);
+                    bool.TryParse(replyData["Result"].ToString(), out success);
                     return success;
                 }
                 else

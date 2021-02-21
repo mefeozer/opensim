@@ -38,8 +38,8 @@ namespace OpenSim.Services.AuthorizationService
 
         public AuthorizationServiceBase(IConfigSource config) : base(config)
         {
-            string dllName = String.Empty;
-            string connString = String.Empty;
+            string dllName = string.Empty;
+            string connString = string.Empty;
 
             //
             // Try reading the [AuthorizationService] section first, if it exists
@@ -58,15 +58,15 @@ namespace OpenSim.Services.AuthorizationService
             if (dbConfig != null)
             {
                 if (string.IsNullOrEmpty(dllName))
-                    dllName = dbConfig.GetString("StorageProvider", String.Empty);
+                    dllName = dbConfig.GetString("StorageProvider", string.Empty);
                 if (string.IsNullOrEmpty(connString))
-                    connString = dbConfig.GetString("ConnectionString", String.Empty);
+                    connString = dbConfig.GetString("ConnectionString", string.Empty);
             }
 
             //
             // We tried, but this doesn't exist. We can't proceed.
             //
-            if (dllName.Equals(String.Empty))
+            if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
             m_Database = LoadPlugin<IAssetDataPlugin>(dllName);

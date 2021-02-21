@@ -397,7 +397,7 @@ namespace OpenSim.Region.Framework.Scenes
                 if (e != null)
                 {
                     ArrayList errors = e.GetScriptErrors(itemID);
-                    foreach (Object line in errors)
+                    foreach (object line in errors)
                         ret.Add(line);
                 }
             }
@@ -476,7 +476,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 m_items.LockItemsForRead(false);
 
-                StoreScriptError(itemID, String.Format("TaskItem ID {0} could not be found", item.ItemID));
+                StoreScriptError(itemID, string.Format("TaskItem ID {0} could not be found", item.ItemID));
                 m_log.ErrorFormat(
                     "[PRIM INVENTORY]: Couldn't start script {0}, {1} at {2} in {3} since taskitem ID {4} could not be found",
                     item.Name, item.ItemID, m_part.AbsolutePosition,
@@ -494,7 +494,7 @@ namespace OpenSim.Region.Framework.Scenes
                 m_items.LockItemsForWrite(false);
 
                 m_part.ParentGroup.Scene.EventManager.TriggerRezScript(
-                    m_part.LocalId, itemID, String.Empty, startParam, postOnRez, engine, stateSource);
+                    m_part.LocalId, itemID, string.Empty, startParam, postOnRez, engine, stateSource);
                 StoreScriptErrors(itemID, null);
                 m_part.ParentGroup.AddActiveScriptCount(1);
                 m_part.ScheduleFullUpdate();
@@ -504,7 +504,7 @@ namespace OpenSim.Region.Framework.Scenes
             AssetBase asset = m_part.ParentGroup.Scene.AssetService.Get(item.AssetID.ToString());
             if (asset == null)
             {
-                StoreScriptError(itemID, String.Format("asset ID {0} could not be found", item.AssetID));
+                StoreScriptError(itemID, string.Format("asset ID {0} could not be found", item.AssetID));
                 m_log.ErrorFormat(
                     "[PRIM INVENTORY]: Couldn't start script {0}, {1} at {2} in {3} since asset ID {4} could not be found",
                     item.Name, item.ItemID, m_part.AbsolutePosition,
@@ -630,7 +630,7 @@ namespace OpenSim.Region.Framework.Scenes
             else
             {
                 m_items.LockItemsForRead(false);
-                string msg = String.Format("couldn't be found for prim {0}, {1} at {2} in {3}", m_part.Name, m_part.UUID,
+                string msg = string.Format("couldn't be found for prim {0}, {1} at {2} in {3}", m_part.Name, m_part.UUID,
                     m_part.AbsolutePosition, m_part.ParentGroup.Scene.RegionInfo.RegionName);
                 StoreScriptError(itemId, msg);
                 m_log.ErrorFormat(
@@ -950,12 +950,12 @@ namespace OpenSim.Region.Framework.Scenes
             int suffix=1;
             while (suffix < 256)
             {
-                string tryName=String.Format("{0} {1}", name, suffix);
+                string tryName= string.Format("{0} {1}", name, suffix);
                 if (!InventoryContainsName(tryName))
                     return tryName;
                 suffix++;
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
@@ -1557,7 +1557,7 @@ namespace OpenSim.Region.Framework.Scenes
                 BuildString.Append("\n");
             }
 
-            public String GetString()
+            public string GetString()
             {
                 return BuildString.ToString();
             }
@@ -1822,7 +1822,7 @@ namespace OpenSim.Region.Framework.Scenes
                             continue;
 
                         if (item.OwnerChanged)
-                            engine.PostScriptEvent(item.ItemID, "changed", new Object[] { (int)Changed.OWNER });
+                            engine.PostScriptEvent(item.ItemID, "changed", new object[] { (int)Changed.OWNER });
 
                         item.OwnerChanged = false;
                     }

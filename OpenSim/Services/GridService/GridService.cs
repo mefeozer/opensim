@@ -73,11 +73,11 @@ namespace OpenSim.Services.GridService
             {
                 m_DeleteOnUnregister = gridConfig.GetBoolean("DeleteOnUnregister", true);
 
-                string authService = gridConfig.GetString("AuthenticationService", String.Empty);
+                string authService = gridConfig.GetString("AuthenticationService", string.Empty);
 
                 if (!string.IsNullOrEmpty(authService))
                 {
-                    Object[] args = new Object[] { config };
+                    object[] args = new object[] { config };
                     m_AuthenticationService = ServerUtils.LoadPlugin<IAuthenticationService>(authService, args);
                 }
                 m_AllowDuplicateNames = gridConfig.GetBoolean("AllowDuplicateNames", m_AllowDuplicateNames);
@@ -98,21 +98,21 @@ namespace OpenSim.Services.GridService
                             "deregister region id",
                             "deregister region id <region-id>+",
                             "Deregister a region manually.",
-                            String.Empty,
+                            string.Empty,
                             HandleDeregisterRegion);
 
                     MainConsole.Instance.Commands.AddCommand("Regions", true,
                             "show regions",
                             "show regions",
                             "Show details on all regions",
-                            String.Empty,
+                            string.Empty,
                             HandleShowRegions);
 
                     MainConsole.Instance.Commands.AddCommand("Regions", true,
                             "show region name",
                             "show region name <Region name>",
                             "Show details on a region",
-                            String.Empty,
+                            string.Empty,
                             HandleShowRegion);
 
                     MainConsole.Instance.Commands.AddCommand("Regions", true,
@@ -126,14 +126,14 @@ namespace OpenSim.Services.GridService
                             "show grid size",
                             "show grid size",
                             "Show the current grid size (excluding hyperlink references)",
-                            String.Empty,
+                            string.Empty,
                             HandleShowGridSize);
 
                     MainConsole.Instance.Commands.AddCommand("Regions", true,
                              "set region flags",
                              "set region flags <Region name> <flags>",
                              "Set database flags for region",
-                             String.Empty,
+                             string.Empty,
                              HandleSetFlags);
                 }
 
@@ -245,7 +245,7 @@ namespace OpenSim.Services.GridService
             if (regionInfos.RegionLocY <= Constants.MaximumRegionSize)
                 return "Region location reserved for HG links coord Y must be higher than " + (Constants.MaximumRegionSize/256).ToString();
 
-            String reason = "Region overlaps another region";
+            string reason = "Region overlaps another region";
 
             List<RegionData> rdatas = m_Database.Get(
                         regionInfos.RegionLocX,
@@ -369,9 +369,9 @@ namespace OpenSim.Services.GridService
                 {
                     int newFlags = 0;
                     string regionName = rdata.RegionName.Trim().Replace(' ', '_');
-                    newFlags = ParseFlags(newFlags, gridConfig.GetString("DefaultRegionFlags", String.Empty));
-                    newFlags = ParseFlags(newFlags, gridConfig.GetString("Region_" + regionName, String.Empty));
-                    newFlags = ParseFlags(newFlags, gridConfig.GetString("Region_" + rdata.RegionID.ToString(), String.Empty));
+                    newFlags = ParseFlags(newFlags, gridConfig.GetString("DefaultRegionFlags", string.Empty));
+                    newFlags = ParseFlags(newFlags, gridConfig.GetString("Region_" + regionName, string.Empty));
+                    newFlags = ParseFlags(newFlags, gridConfig.GetString("Region_" + rdata.RegionID.ToString(), string.Empty));
                     rdata.Data["flags"] = newFlags.ToString();
                 }
             }
@@ -396,20 +396,20 @@ namespace OpenSim.Services.GridService
                 regionInfos.RegionCoordX, regionInfos.RegionCoordY,
                 (OpenSim.Framework.RegionFlags)flags);
 
-            return String.Empty;
+            return string.Empty;
         }
 
         // String describing name and region location of passed region
-        private String RegionString(RegionData reg)
+        private string RegionString(RegionData reg)
         {
-            return String.Format("{0}/{1} at <{2},{3}>",
+            return string.Format("{0}/{1} at <{2},{3}>",
                 reg.RegionName, reg.RegionID, reg.coordX, reg.coordY);
         }
 
         // String describing name and region location of passed region
-        private String RegionString(GridRegion reg)
+        private string RegionString(GridRegion reg)
         {
-            return String.Format("{0}/{1} at <{2},{3}>",
+            return string.Format("{0}/{1} at <{2},{3}>",
                 reg.RegionName, reg.RegionID, reg.RegionCoordX, reg.RegionCoordY);
         }
 
@@ -1061,7 +1061,7 @@ namespace OpenSim.Services.GridService
                 r.Data["flags"] = flags.ToString();
                 OpenSim.Framework.RegionFlags f = (OpenSim.Framework.RegionFlags)flags;
 
-                MainConsole.Instance.Output(String.Format("Set region {0} to {1}", r.RegionName, f));
+                MainConsole.Instance.Output(string.Format("Set region {0} to {1}", r.RegionName, f));
                 m_Database.Store(r);
             }
         }

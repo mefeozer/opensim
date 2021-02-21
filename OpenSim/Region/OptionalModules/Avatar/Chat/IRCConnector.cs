@@ -105,7 +105,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         internal int m_resetk = 0;
 
-        private Object msyncConnect = new Object();
+        private object msyncConnect = new object();
 
         internal bool m_randomizeNick = true; // add random suffix
         internal string m_baseNick = null;      // base name for randomizing
@@ -173,9 +173,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         // Channel characteristic info (if available)
 
-        internal string usermod = String.Empty;
-        internal string chanmod = String.Empty;
-        internal string version = String.Empty;
+        internal string usermod = string.Empty;
+        internal string chanmod = string.Empty;
+        internal string version = string.Empty;
         internal bool motd = false;
 
         #endregion
@@ -284,7 +284,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
                         try
                         {
-                            m_writer.WriteLine(String.Format("QUIT :{0} to {1} wormhole to {2} closing",
+                            m_writer.WriteLine(string.Format("QUIT :{0} to {1} wormhole to {2} closing",
                                 m_nick, m_ircChannel, m_server));
                             m_writer.Flush();
                         }
@@ -351,10 +351,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
                     // This is the message order recommended by RFC 2812
                     if (m_password != null)
-                        m_writer.WriteLine(String.Format("PASS {0}", m_password));
-                    m_writer.WriteLine(String.Format("NICK {0}", m_nick));
+                        m_writer.WriteLine(string.Format("PASS {0}", m_password));
+                    m_writer.WriteLine(string.Format("NICK {0}", m_nick));
                     m_writer.Flush();
-                    m_writer.WriteLine(String.Format("USER {0} 0 * :OpenSim Relay",m_user));
+                    m_writer.WriteLine(string.Format("USER {0} 0 * :OpenSim Relay",m_user));
                     m_writer.Flush();
                 }
                 catch (Exception e)
@@ -510,7 +510,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                             // Then change to: "/me foo bar"
 
                             if ((1 == c.Message[0]) && c.Message.Substring(1).StartsWith("ACTION"))
-                                c.Message = String.Format("/me {0}", c.Message.Substring(8, c.Message.Length - 9));
+                                c.Message = string.Format("/me {0}", c.Message.Substring(8, c.Message.Length - 9));
 
                             ChannelState.OSChat(this, c, false);
                         }
@@ -576,7 +576,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             {
                 OSChatMessage c = new OSChatMessage();
                 c.From = sender;
-                c.Message = String.Format(format, args);
+                c.Message = string.Format(format, args);
                 c.Type = ChatTypeEnum.Region; // ChatTypeEnum.Say;
                 c.Position = CenterOfRegion;
                 c.Sender = null;
@@ -599,9 +599,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             string[] commArgs;
             string c_server = m_server;
 
-            string pfx = String.Empty;
-            string cmd = String.Empty;
-            string parms = String.Empty;
+            string pfx = string.Empty;
+            string cmd = string.Empty;
+            string parms = string.Empty;
 
             // ":" indicates that a prefix is present
             // There are NEVER more than 17 real
@@ -642,7 +642,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     usermod = commArgs[3];
                     chanmod = commArgs[4];
 
-                    m_writer.WriteLine(String.Format("JOIN {0}", m_ircChannel));
+                    m_writer.WriteLine(string.Format("JOIN {0}", m_ircChannel));
                     m_writer.Flush();
                     m_log.InfoFormat("[IRC-Connector-{0}]: sent request to join {1} ", idn, m_ircChannel);
 
@@ -676,11 +676,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     m_nick = m_baseNick + Util.RandomClass.Next(1, 99);
                     m_log.ErrorFormat("[IRC-Connector-{0}]: [{1}] IRC SERVER reports NicknameInUse, trying {2}", idn, cmd, m_nick);
                     // Retry
-                    m_writer.WriteLine(String.Format("NICK {0}", m_nick));
+                    m_writer.WriteLine(string.Format("NICK {0}", m_nick));
                     m_writer.Flush();
                     m_writer.WriteLine(m_user);
                     m_writer.Flush();
-                    m_writer.WriteLine(String.Format("JOIN {0}", m_ircChannel));
+                    m_writer.WriteLine(string.Format("JOIN {0}", m_ircChannel));
                     m_writer.Flush();
                     break;
                 case "479": // Bad channel name, etc. This will never work, so disable the connection
@@ -702,7 +702,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     break;
                 case "PING":
                     m_log.DebugFormat("[IRC-Connector-{0}] [{1}] parms = <{2}>", idn, cmd, parms);
-                    m_writer.WriteLine(String.Format("PONG {0}", parms));
+                    m_writer.WriteLine(string.Format("PONG {0}", parms));
                     m_writer.Flush();
                     break;
                 case "PONG":
@@ -827,7 +827,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         // are re-connected as necessary. If a connector IS connected, then it is
         // pinged, but only if a PING period has elapsed.
 
-        protected static void WatchdogHandler(Object source, ElapsedEventArgs args)
+        protected static void WatchdogHandler(object source, ElapsedEventArgs args)
         {
 
             // m_log.InfoFormat("[IRC-Watchdog] Status scan, pdk = {0}, icc = {1}", _pdk_, _icc_);
@@ -877,7 +877,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                             {
                                 try
                                 {
-                                    connector.m_writer.WriteLine(String.Format("PING :{0}", connector.m_server));
+                                    connector.m_writer.WriteLine(string.Format("PING :{0}", connector.m_server));
                                     connector.m_writer.Flush();
                                 }
                                 catch (Exception e)

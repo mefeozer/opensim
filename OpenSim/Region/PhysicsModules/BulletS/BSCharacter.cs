@@ -76,7 +76,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public override bool IsIncomplete { get { return false; } }
 
     public BSCharacter(
-            uint localID, String avName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 vel, OMV.Vector3 size, float footOffset, bool isFlying)
+            uint localID, string avName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 vel, OMV.Vector3 size, float footOffset, bool isFlying)
 
             : base(parent_scene, localID, avName, "BSCharacter")
     {

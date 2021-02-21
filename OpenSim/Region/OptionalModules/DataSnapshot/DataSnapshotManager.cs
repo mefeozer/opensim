@@ -114,7 +114,7 @@ namespace OpenSim.Region.DataSnapshot
                     {
                         m_enabled = config.Configs["DataSnapshot"].GetBoolean("index_sims", m_enabled);
                         string gatekeeper = Util.GetConfigVarFromSections<string>(config, "GatekeeperURI",
-                            new string[] { "Startup", "Hypergrid", "GridService" }, String.Empty);
+                            new string[] { "Startup", "Hypergrid", "GridService" }, string.Empty);
                         // Legacy. Remove soon!
                         if (string.IsNullOrEmpty(gatekeeper))
                         {
@@ -145,8 +145,8 @@ namespace OpenSim.Region.DataSnapshot
                         // New way of spec'ing data services, one per line
                         AddDataServicesVars(config.Configs["DataSnapshot"]);
 
-                        String[] annoying_string_array = config.Configs["DataSnapshot"].GetString("disable_modules", "").Split(".".ToCharArray());
-                        foreach (String bloody_wanker in annoying_string_array)
+                        string[] annoying_string_array = config.Configs["DataSnapshot"].GetString("disable_modules", "").Split(".".ToCharArray());
+                        foreach (string bloody_wanker in annoying_string_array)
                         {
                             m_disabledModules.Add(bloody_wanker);
                         }
@@ -336,7 +336,7 @@ namespace OpenSim.Region.DataSnapshot
 
             XmlDocument requestedSnap = new XmlDocument();
             requestedSnap.AppendChild(requestedSnap.CreateXmlDeclaration("1.0", null, null));
-            requestedSnap.AppendChild(requestedSnap.CreateWhitespace("\r\n"));
+            requestedSnap.AppendChild(requestedSnap.CreateWhitespace(Environment.NewLine));
 
             XmlNode regiondata = requestedSnap.CreateNode(XmlNodeType.Element, "regiondata", "");
             try
@@ -347,7 +347,7 @@ namespace OpenSim.Region.DataSnapshot
                     timerblock.InnerText = m_period.ToString();
                     regiondata.AppendChild(timerblock);
 
-                    regiondata.AppendChild(requestedSnap.CreateWhitespace("\r\n"));
+                    regiondata.AppendChild(requestedSnap.CreateWhitespace(Environment.NewLine));
                     foreach (Scene scene in m_scenes)
                     {
                         regiondata.AppendChild(m_snapStore.GetScene(scene, requestedSnap));
@@ -359,7 +359,7 @@ namespace OpenSim.Region.DataSnapshot
                     regiondata.AppendChild(m_snapStore.GetScene(scene, requestedSnap));
                 }
                 requestedSnap.AppendChild(regiondata);
-                regiondata.AppendChild(requestedSnap.CreateWhitespace("\r\n"));
+                regiondata.AppendChild(requestedSnap.CreateWhitespace(Environment.NewLine));
             }
             catch (XmlException e)
             {

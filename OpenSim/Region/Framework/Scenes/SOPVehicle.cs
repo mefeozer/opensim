@@ -669,7 +669,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             vd = new VehicleData();
 
-            reader.ReadStartElement("Vehicle", String.Empty);
+            reader.ReadStartElement("Vehicle", string.Empty);
 
             errors = EReadProcessors(
                 m_VehicleXmlProcessors,

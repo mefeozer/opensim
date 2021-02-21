@@ -66,7 +66,7 @@ namespace OpenSim.Framework.Servers
         /// <summary>
         /// Random uuid for private data
         /// </summary>
-        protected string m_osSecret = String.Empty;
+        protected string m_osSecret = string.Empty;
 
         protected BaseHttpServer m_httpServer;
         public BaseHttpServer HttpServer

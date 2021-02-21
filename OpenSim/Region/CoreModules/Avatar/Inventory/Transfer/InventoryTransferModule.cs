@@ -506,8 +506,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
                         }
                     }
 
-                    // Fix up binary bucket since this may be 17 chars long here
-                    Byte[] bucket = new Byte[1];
+                        // Fix up binary bucket since this may be 17 chars long here
+                        byte[] bucket = new byte[1];
                     bucket[0] = im.binaryBucket[0];
                     im.binaryBucket = bucket;
 

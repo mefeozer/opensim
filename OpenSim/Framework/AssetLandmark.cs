@@ -57,11 +57,11 @@ namespace OpenSim.Framework
             // Parse each scalar separately to take into account the system's culture setting.
             string[] scalars = parts[2].Substring(10, parts[2].Length - 10).Split(' ');
             if (scalars.Length > 0)
-                System.Single.TryParse(scalars[0], out Position.X);
+                float.TryParse(scalars[0], out Position.X);
             if (scalars.Length > 1)
-                System.Single.TryParse(scalars[1], out Position.Y);
+                float.TryParse(scalars[1], out Position.Y);
             if (scalars.Length > 2)
-                System.Single.TryParse(scalars[2], out Position.Z);
+                float.TryParse(scalars[2], out Position.Z);
 
             ulong.TryParse(parts[3].Substring(14, parts[3].Length - 14), out RegionHandle);
         }

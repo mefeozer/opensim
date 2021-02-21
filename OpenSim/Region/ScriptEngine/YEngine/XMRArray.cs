@@ -355,7 +355,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // Use short type name (eg, String, Int32, XMRArrayListKey) as most significant part of key.
             string xtn = x.GetType().Name;
             string ytn = y.GetType().Name;
-            int ctn = String.CompareOrdinal(xtn, ytn);
+            int ctn = string.CompareOrdinal(xtn, ytn);
             if(ctn != 0)
                 return ctn;
 
@@ -427,7 +427,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         private static int MyStringComparer(object a, object b)
         {
-            return String.CompareOrdinal((string)a, (string)b);
+            return string.CompareOrdinal((string)a, (string)b);
         }
         private static int MyVectorComparer(object a, object b)
         {

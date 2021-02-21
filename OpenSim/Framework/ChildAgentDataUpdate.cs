@@ -151,10 +151,10 @@ namespace OpenSim.Framework
         public void Unpack(OSDMap args, IScene scene, EntityTransferContext ctx)
         {
             if (args.ContainsKey("region_handle"))
-                UInt64.TryParse(args["region_handle"].AsString(), out RegionHandle);
+                ulong.TryParse(args["region_handle"].AsString(), out RegionHandle);
 
             if (args["circuit_code"] != null)
-                UInt32.TryParse((string)args["circuit_code"].AsString(), out CircuitCode);
+                uint.TryParse((string)args["circuit_code"].AsString(), out CircuitCode);
 
             if (args["agent_uuid"] != null)
                 AgentID = args["agent_uuid"].AsUUID();
@@ -210,7 +210,7 @@ namespace OpenSim.Framework
                         string seed = "";
                         OSDMap pair = (OSDMap)o;
                         if (pair["handle"] != null)
-                            if (!UInt64.TryParse(pair["handle"].AsString(), out handle))
+                            if (!ulong.TryParse(pair["handle"].AsString(), out handle))
                                 continue;
                         if (pair["seed"] != null)
                             seed = pair["seed"].AsString();
@@ -277,7 +277,7 @@ namespace OpenSim.Framework
             if (args["group_id"] != null)
                 GroupID = args["group_id"].AsUUID();
             if (args["group_powers"] != null)
-                UInt64.TryParse((string)args["group_powers"].AsString(), out GroupPowers);
+                ulong.TryParse((string)args["group_powers"].AsString(), out GroupPowers);
             if (args["accept_notices"] != null)
                 AcceptNotices = args["accept_notices"].AsBoolean();
         }
@@ -369,7 +369,7 @@ namespace OpenSim.Framework
         //public Byte GodLevel;
         public bool AlwaysRun;
         public UUID PreyAgent;
-        public Byte AgentAccess;
+        public byte AgentAccess;
         public UUID ActiveGroupID;
         public string ActiveGroupName;
         public string ActiveGroupTitle = null;
@@ -381,7 +381,7 @@ namespace OpenSim.Framework
         public Animation[] Anims;
         public Animation DefaultAnim = null;
         public Animation AnimState = null;
-        public Byte MotionState = 0;
+        public byte MotionState = 0;
 
         public UUID ParentPart;
         public Vector3 SitOffset;
@@ -576,7 +576,7 @@ namespace OpenSim.Framework
                 UUID.TryParse(tmp.AsString(), out RegionID);
 
             if (args.TryGetValue("circuit_code", out tmp) && tmp != null)
-                UInt32.TryParse(tmp.AsString(), out CircuitCode);
+                uint.TryParse(tmp.AsString(), out CircuitCode);
 
             if (args.TryGetValue("agent_uuid", out tmp) && tmp != null)
                 AgentID = tmp.AsUUID();
@@ -618,7 +618,7 @@ namespace OpenSim.Framework
                 Throttles = tmp.AsBinary();
 
             if (args.TryGetValue("locomotion_state", out tmp) && tmp != null)
-                UInt32.TryParse(tmp.AsString(), out LocomotionState);
+                uint.TryParse(tmp.AsString(), out LocomotionState);
 
             if (args.TryGetValue("head_rotation", out tmp) && tmp != null)
                 Quaternion.TryParse(tmp.AsString(), out HeadRotation);
@@ -627,7 +627,7 @@ namespace OpenSim.Framework
                 Quaternion.TryParse(tmp.AsString(), out BodyRotation);
 
             if (args.TryGetValue("control_flags", out tmp) && tmp != null)
-                UInt32.TryParse(tmp.AsString(), out ControlFlags);
+                uint.TryParse(tmp.AsString(), out ControlFlags);
 
             if (args.TryGetValue("energy_level", out tmp) && tmp != null)
                 EnergyLevel = (float)(tmp.AsReal());
@@ -642,7 +642,7 @@ namespace OpenSim.Framework
                 PreyAgent = tmp.AsUUID();
 
             if (args.TryGetValue("agent_access", out tmp) && tmp != null)
-                Byte.TryParse(tmp.AsString(), out AgentAccess);
+                byte.TryParse(tmp.AsString(), out AgentAccess);
 
             if (args.TryGetValue("agent_cof", out tmp) && tmp != null)
                 agentCOF = tmp.AsUUID();
@@ -677,7 +677,7 @@ namespace OpenSim.Framework
                         string seed = "";
                         OSDMap pair = (OSDMap)o;
                         if (pair.TryGetValue("handle", out tmp))
-                            if (!UInt64.TryParse(tmp.AsString(), out handle))
+                            if (!ulong.TryParse(tmp.AsString(), out handle))
                                 continue;
                         if (pair.TryGetValue("seed", out tmp))
                             seed = tmp.AsString();

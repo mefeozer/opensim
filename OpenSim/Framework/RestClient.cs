@@ -464,7 +464,7 @@ namespace OpenSim.Framework
             return ar.EndInvoke();
         }
 
-        private void RequestHelper(Object asyncResult)
+        private void RequestHelper(object asyncResult)
         {
             // We know that it's really an AsyncResult<DateTime> object
             AsyncResult<Stream> ar = (AsyncResult<Stream>) asyncResult;
@@ -615,7 +615,7 @@ namespace OpenSim.Framework
     {
         private T m_result = default(T);
 
-        public AsyncResult(AsyncCallback asyncCallback, Object state) :
+        public AsyncResult(AsyncCallback asyncCallback, object state) :
             base(asyncCallback, state)
         {
         }

@@ -116,7 +116,7 @@ namespace OpenSim.Services.Interfaces
             Data = new Dictionary<string, string>();
 
             if (kvp.ContainsKey("AvatarType"))
-                Int32.TryParse(kvp["AvatarType"].ToString(), out AvatarType);
+                int.TryParse(kvp["AvatarType"].ToString(), out AvatarType);
 
             foreach (KeyValuePair<string, object> _kvp in kvp)
             {
@@ -154,8 +154,8 @@ namespace OpenSim.Services.Interfaces
             {
                 for (int j = 0 ; j < appearance.Wearables[i].Count ; j++)
                 {
-                    string fieldName = String.Format("Wearable {0}:{1}", i, j);
-                    Data[fieldName] = String.Format("{0}:{1}",
+                    string fieldName = string.Format("Wearable {0}:{1}", i, j);
+                    Data[fieldName] = string.Format("{0}:{1}",
                             appearance.Wearables[i][j].ItemID.ToString(),
                             appearance.Wearables[i][j].AssetID.ToString());
                 }
@@ -201,7 +201,7 @@ namespace OpenSim.Services.Interfaces
             try
             {
                 if (Data.ContainsKey("Serial"))
-                    appearance.Serial = Int32.Parse(Data["Serial"]);
+                    appearance.Serial = int.Parse(Data["Serial"]);
 
                 if (Data.ContainsKey("AvatarHeight"))
                 {
@@ -317,7 +317,7 @@ namespace OpenSim.Services.Interfaces
                     {
                         string pointStr = _kvp.Key.Substring(4);
                         int point = 0;
-                        if (Int32.TryParse(pointStr, out point))
+                        if (int.TryParse(pointStr, out point))
                         {
                             List<string> idList = new List<string>(_kvp.Value.Split(new char[] {','}));
 

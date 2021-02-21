@@ -38,8 +38,8 @@ namespace OpenSim.Services.Friends
 
         public FriendsServiceBase(IConfigSource config) : base(config)
         {
-            string dllName = String.Empty;
-            string connString = String.Empty;
+            string dllName = string.Empty;
+            string connString = string.Empty;
 
             //
             // Try reading the [FriendsService] section first, if it exists
@@ -58,22 +58,22 @@ namespace OpenSim.Services.Friends
             if (dbConfig != null)
             {
                 if (string.IsNullOrEmpty(dllName))
-                    dllName = dbConfig.GetString("StorageProvider", String.Empty);
+                    dllName = dbConfig.GetString("StorageProvider", string.Empty);
                 if (string.IsNullOrEmpty(connString))
-                    connString = dbConfig.GetString("ConnectionString", String.Empty);
+                    connString = dbConfig.GetString("ConnectionString", string.Empty);
             }
 
             //
             // We tried, but this doesn't exist. We can't proceed.
             //
-            if (String.Empty.Equals(dllName))
+            if (string.Empty.Equals(dllName))
                 throw new Exception("No StorageProvider configured");
 
             string realm = "Friends";
             if (friendsConfig != null)
                 realm = friendsConfig.GetString("Realm", realm);
 
-            m_Database = LoadPlugin<IFriendsData>(dllName, new Object[] { connString, realm });
+            m_Database = LoadPlugin<IFriendsData>(dllName, new object[] { connString, realm });
             if (m_Database == null)
             {
                 throw new Exception(

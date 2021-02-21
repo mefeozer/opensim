@@ -178,8 +178,8 @@ namespace OpenSim.Data.SQLite
                 else
                 {
                     string insert = "insert into `" + m_Realm + "` (`UUID`, `" +
-                            String.Join("`, `", fields) +
-                            "`) values (:UUID, :" + String.Join(", :", fields) + ")";
+                            string.Join("`, `", fields) +
+                            "`) values (:UUID, :" + string.Join(", :", fields) + ")";
 
                     cmd.Parameters.Add(new SqliteParameter(":UUID", data.PrincipalID.ToString()));
                     foreach (string field in fields)

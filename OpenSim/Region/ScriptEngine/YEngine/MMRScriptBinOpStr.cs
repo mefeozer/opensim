@@ -117,9 +117,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private static MethodInfo infoMethVecDivInt = GetBinOpsMethod("MethVecDivInt", new Type[] { typeof(LSL_Vector), typeof(int) });
         private static MethodInfo infoMethVecMulRot = GetBinOpsMethod("MethVecMulRot", new Type[] { typeof(LSL_Vector), typeof(LSL_Rotation) });
         private static MethodInfo infoMethVecDivRot = GetBinOpsMethod("MethVecDivRot", new Type[] { typeof(LSL_Vector), typeof(LSL_Rotation) });
-        private static MethodInfo infoMethDoubleDivDouble = GetBinOpsMethod("MethDoubleDivDouble", new Type[] { typeof(Double), typeof(Double) });
+        private static MethodInfo infoMethDoubleDivDouble = GetBinOpsMethod("MethDoubleDivDouble", new Type[] { typeof(double), typeof(double) });
         private static MethodInfo infoMethLongDivLong = GetBinOpsMethod("MethLongDivLong", new Type[] { typeof(long), typeof(long) });
-        private static MethodInfo infoMethDoubleModDouble = GetBinOpsMethod("MethDoubleModDouble", new Type[] { typeof(Double), typeof(Double) });
+        private static MethodInfo infoMethDoubleModDouble = GetBinOpsMethod("MethDoubleModDouble", new Type[] { typeof(double), typeof(double) });
         private static MethodInfo infoMethLongModLong = GetBinOpsMethod("MethLongModLong", new Type[] { typeof(long), typeof(long) });
 
         private static MethodInfo GetBinOpsMethod(string name, Type[] types)

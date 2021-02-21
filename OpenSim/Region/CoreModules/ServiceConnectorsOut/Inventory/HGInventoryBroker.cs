@@ -111,7 +111,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
                     }
 
                     string localDll = inventoryConfig.GetString("LocalGridInventoryService",
-                            String.Empty);
+                            string.Empty);
  
                     if (string.IsNullOrEmpty(localDll))
                     {
@@ -120,7 +120,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
                         throw new Exception("Unable to proceed. Please make sure your ini files in config-include are updated according to .example's");
                     }
 
-                    Object[] args = new Object[] { source };
+                    object[] args = new object[] { source };
                     m_LocalGridInventoryService =
                             ServerUtils.LoadPlugin<IInventoryService>(localDll,
                             args);

@@ -74,7 +74,7 @@ namespace OpenSim.Framework.Serialization.External
         #region InventoryItemBase Processors
         private static void ProcessName(InventoryItemBase item, XmlReader reader)
         {
-            item.Name = reader.ReadElementContentAsString("Name", String.Empty);
+            item.Name = reader.ReadElementContentAsString("Name", string.Empty);
         }
 
         private static void ProcessID(InventoryItemBase item, XmlReader reader)
@@ -84,23 +84,23 @@ namespace OpenSim.Framework.Serialization.External
 
         private static void ProcessInvType(InventoryItemBase item, XmlReader reader)
         {
-            item.InvType = reader.ReadElementContentAsInt("InvType", String.Empty);
+            item.InvType = reader.ReadElementContentAsInt("InvType", string.Empty);
         }
 
         private static void ProcessCreatorUUID(InventoryItemBase item, XmlReader reader)
         {
-            item.CreatorId = reader.ReadElementContentAsString("CreatorUUID", String.Empty);
+            item.CreatorId = reader.ReadElementContentAsString("CreatorUUID", string.Empty);
         }
 
         private static void ProcessCreatorID(InventoryItemBase item, XmlReader reader)
         {
             // when it exists, this overrides the previous
-            item.CreatorId = reader.ReadElementContentAsString("CreatorID", String.Empty);
+            item.CreatorId = reader.ReadElementContentAsString("CreatorID", string.Empty);
         }
 
         private static void ProcessCreationDate(InventoryItemBase item, XmlReader reader)
         {
-            item.CreationDate = reader.ReadElementContentAsInt("CreationDate", String.Empty);
+            item.CreationDate = reader.ReadElementContentAsInt("CreationDate", string.Empty);
         }
 
         private static void ProcessOwner(InventoryItemBase item, XmlReader reader)
@@ -110,12 +110,12 @@ namespace OpenSim.Framework.Serialization.External
 
         private static void ProcessDescription(InventoryItemBase item, XmlReader reader)
         {
-            item.Description = reader.ReadElementContentAsString("Description", String.Empty);
+            item.Description = reader.ReadElementContentAsString("Description", string.Empty);
         }
 
         private static void ProcessAssetType(InventoryItemBase item, XmlReader reader)
         {
-            item.AssetType = reader.ReadElementContentAsInt("AssetType", String.Empty);
+            item.AssetType = reader.ReadElementContentAsInt("AssetType", string.Empty);
         }
 
         private static void ProcessAssetID(InventoryItemBase item, XmlReader reader)
@@ -125,37 +125,37 @@ namespace OpenSim.Framework.Serialization.External
 
         private static void ProcessSaleType(InventoryItemBase item, XmlReader reader)
         {
-            item.SaleType = (byte)reader.ReadElementContentAsInt("SaleType", String.Empty);
+            item.SaleType = (byte)reader.ReadElementContentAsInt("SaleType", string.Empty);
         }
 
         private static void ProcessSalePrice(InventoryItemBase item, XmlReader reader)
         {
-            item.SalePrice = reader.ReadElementContentAsInt("SalePrice", String.Empty);
+            item.SalePrice = reader.ReadElementContentAsInt("SalePrice", string.Empty);
         }
 
         private static void ProcessBasePermissions(InventoryItemBase item, XmlReader reader)
         {
-            item.BasePermissions = (uint)reader.ReadElementContentAsInt("BasePermissions", String.Empty);
+            item.BasePermissions = (uint)reader.ReadElementContentAsInt("BasePermissions", string.Empty);
         }
 
         private static void ProcessCurrentPermissions(InventoryItemBase item, XmlReader reader)
         {
-            item.CurrentPermissions = (uint)reader.ReadElementContentAsInt("CurrentPermissions", String.Empty);
+            item.CurrentPermissions = (uint)reader.ReadElementContentAsInt("CurrentPermissions", string.Empty);
         }
 
         private static void ProcessEveryOnePermissions(InventoryItemBase item, XmlReader reader)
         {
-            item.EveryOnePermissions = (uint)reader.ReadElementContentAsInt("EveryOnePermissions", String.Empty);
+            item.EveryOnePermissions = (uint)reader.ReadElementContentAsInt("EveryOnePermissions", string.Empty);
         }
 
         private static void ProcessNextPermissions(InventoryItemBase item, XmlReader reader)
         {
-            item.NextPermissions = (uint)reader.ReadElementContentAsInt("NextPermissions", String.Empty);
+            item.NextPermissions = (uint)reader.ReadElementContentAsInt("NextPermissions", string.Empty);
         }
 
         private static void ProcessFlags(InventoryItemBase item, XmlReader reader)
         {
-            item.Flags = (uint)reader.ReadElementContentAsInt("Flags", String.Empty);
+            item.Flags = (uint)reader.ReadElementContentAsInt("Flags", string.Empty);
         }
 
         private static void ProcessGroupID(InventoryItemBase item, XmlReader reader)
@@ -170,7 +170,7 @@ namespace OpenSim.Framework.Serialization.External
 
         private static void ProcessCreatorData(InventoryItemBase item, XmlReader reader)
         {
-            item.CreatorData = reader.ReadElementContentAsString("CreatorData", String.Empty);
+            item.CreatorData = reader.ReadElementContentAsString("CreatorData", string.Empty);
         }
 
         #endregion

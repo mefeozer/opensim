@@ -53,7 +53,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // PositionDisplacement is the vehicle relative distance from the root prim position to the center-of-mass.
     public virtual OMV.Vector3 PositionDisplacement { get; set; }
 
-    public BSPrimDisplaced(uint localID, String primName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 size,
+    public BSPrimDisplaced(uint localID, string primName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 size,
                        OMV.Quaternion rotation, PrimitiveBaseShape pbs, bool pisPhysical)
         : base(localID, primName, parent_scene, pos, size, rotation, pbs, pisPhysical)
     {

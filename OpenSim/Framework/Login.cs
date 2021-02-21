@@ -34,7 +34,7 @@ namespace OpenSim.Framework
     {
         public UUID Agent;
         public UUID BaseFolder;
-        public string CapsPath = String.Empty;
+        public string CapsPath = string.Empty;
         public uint CircuitCode;
         public string First = "Test";
         public UUID InventoryFolder;

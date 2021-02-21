@@ -290,7 +290,7 @@ namespace OpenSim.Groups
                     isInGroup = true;
 
                 if (!isInGroup) // reduce the roles to the visible ones
-                    rolesList = rolesList.FindAll(r => (UInt64.Parse(r.Data["Powers"]) & (ulong)GroupPowers.MemberVisible) != 0);
+                    rolesList = rolesList.FindAll(r => (ulong.Parse(r.Data["Powers"]) & (ulong)GroupPowers.MemberVisible) != 0);
             }
 
             MembershipData[] datas = m_Database.RetrieveMembers(GroupID);
@@ -313,12 +313,12 @@ namespace OpenSim.Groups
                 if (selected != null)
                 {
                     m.Title = selected.Data["Title"];
-                    m.AgentPowers = UInt64.Parse(selected.Data["Powers"]);
+                    m.AgentPowers = ulong.Parse(selected.Data["Powers"]);
                 }
 
                 m.AgentID = d.PrincipalID;
                 m.AcceptNotices = d.Data["AcceptNotices"] == "1" ? true : false;
-                m.Contribution = Int32.Parse(d.Data["Contribution"]);
+                m.Contribution = int.Parse(d.Data["Contribution"]);
                 m.ListInProfile = d.Data["ListInProfile"] == "1" ? true : false;
 
                 GridUserData gud = m_GridUserService.Get(d.PrincipalID);
@@ -597,7 +597,7 @@ namespace OpenSim.Groups
 
                 GroupRolesData r = new GroupRolesData();
                 r.Name = rdata.Data["Name"];
-                r.Powers = UInt64.Parse(rdata.Data["Powers"]);
+                r.Powers = ulong.Parse(rdata.Data["Powers"]);
                 r.RoleID = rdata.RoleID;
                 r.Title = rdata.Data["Title"];
 
@@ -659,19 +659,19 @@ namespace OpenSim.Groups
             data.ActiveRole = activeRoleID;
             data.AllowPublish = group.Data["AllowPublish"] == "1" ? true : false;
             data.Charter = group.Data["Charter"];
-            data.Contribution = Int32.Parse(membership.Data["Contribution"]);
+            data.Contribution = int.Parse(membership.Data["Contribution"]);
             data.FounderID = new UUID(group.Data["FounderID"]);
             data.GroupID = new UUID(group.GroupID);
             data.GroupName = group.Data["Name"];
             data.GroupPicture = new UUID(group.Data["InsigniaID"]);
             if (role != null)
             {
-                data.GroupPowers = UInt64.Parse(role.Data["Powers"]);
+                data.GroupPowers = ulong.Parse(role.Data["Powers"]);
                 data.GroupTitle = role.Data["Title"];
             }
             data.ListInProfile = membership.Data["ListInProfile"] == "1" ? true : false;
             data.MaturePublish = group.Data["MaturePublish"] == "1" ? true : false;
-            data.MembershipFee = Int32.Parse(group.Data["MembershipFee"]);
+            data.MembershipFee = int.Parse(group.Data["MembershipFee"]);
             data.OpenEnrollment = group.Data["OpenEnrollment"] == "1" ? true : false;
             data.ShowInList = group.Data["ShowInList"] == "1" ? true : false;
 
@@ -922,7 +922,7 @@ namespace OpenSim.Groups
                 r.Description = d.Data["Description"];
                 r.Members = m_Database.RoleMemberCount(groupID, d.RoleID);
                 r.Name = d.Data["Name"];
-                r.Powers = UInt64.Parse(d.Data["Powers"]);
+                r.Powers = ulong.Parse(d.Data["Powers"]);
                 r.RoleID = d.RoleID;
                 r.Title = d.Data["Title"];
 
@@ -945,7 +945,7 @@ namespace OpenSim.Groups
             }
             List<RoleData> rlist = new List<RoleData>(rdata);
             if (!isInGroup)
-                rlist = rlist.FindAll(r => (UInt64.Parse(r.Data["Powers"]) & (ulong)GroupPowers.MemberVisible) != 0);
+                rlist = rlist.FindAll(r => (ulong.Parse(r.Data["Powers"]) & (ulong)GroupPowers.MemberVisible) != 0);
 
             RoleMembershipData[] data = m_Database.RetrieveRolesMembers(GroupID);
 
@@ -1010,7 +1010,7 @@ namespace OpenSim.Groups
             rec.GroupName = data.Data["Name"];
             rec.GroupPicture = new UUID(data.Data["InsigniaID"]);
             rec.MaturePublish = data.Data["MaturePublish"] == "1" ? true : false;
-            rec.MembershipFee = Int32.Parse(data.Data["MembershipFee"]);
+            rec.MembershipFee = int.Parse(data.Data["MembershipFee"]);
             rec.OpenEnrollment = data.Data["OpenEnrollment"] == "1" ? true : false;
             rec.OwnerRoleID = new UUID(data.Data["OwnerRoleID"]);
             rec.ShowInList = data.Data["ShowInList"] == "1" ? true : false;
@@ -1063,7 +1063,7 @@ namespace OpenSim.Groups
             foreach (RoleMembershipData rdata in rmembership)
             {
                 RoleData role = m_Database.RetrieveRole(groupID, rdata.RoleID);
-                if ( (UInt64.Parse(role.Data["Powers"]) & (ulong)power) != 0 )
+                if ( (ulong.Parse(role.Data["Powers"]) & (ulong)power) != 0 )
                     return true;
             }
             return false;

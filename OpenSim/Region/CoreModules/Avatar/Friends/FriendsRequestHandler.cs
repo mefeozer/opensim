@@ -250,10 +250,10 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (!UUID.TryParse(request["ToID"].ToString(), out toID))
                 return FailureResult();
 
-            if (!Int32.TryParse(request["UserFlags"].ToString(), out oldRights))
+            if (!int.TryParse(request["UserFlags"].ToString(), out oldRights))
                 return FailureResult();
 
-            if (!Int32.TryParse(request["Rights"].ToString(), out newRights))
+            if (!int.TryParse(request["Rights"].ToString(), out newRights))
                 return FailureResult();
 
             if (m_FriendsModule.LocalGrantRights(fromID, toID, oldRights, newRights))
@@ -277,7 +277,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (!UUID.TryParse(request["ToID"].ToString(), out toID))
                 return FailureResult();
 
-            if (!Boolean.TryParse(request["Online"].ToString(), out online))
+            if (!bool.TryParse(request["Online"].ToString(), out online))
                 return FailureResult();
 
             if (m_FriendsModule.LocalStatusNotification(fromID, toID, online))

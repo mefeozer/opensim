@@ -135,7 +135,7 @@ namespace OpenSim.Services.MapImageService
 
         public bool RemoveMapTile(int x, int y, UUID scopeID, out string reason)
         {
-            reason = String.Empty;
+            reason = string.Empty;
             string fileName = GetFileName(1, x, y, scopeID);
 
             lock (m_Sync)
@@ -176,7 +176,7 @@ namespace OpenSim.Services.MapImageService
 
         private bool UpdateMultiResolutionFiles(int x, int y, UUID scopeID, out string reason)
         {
-            reason = String.Empty;
+            reason = string.Empty;
 
             lock (multiRezToBuild)
             {

@@ -64,7 +64,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                                 rInfo.GetChannelKey().ToString()),
                         new LSL_Types.LSLString(
                                 rInfo.GetMessageID().ToString()),
-                        new LSL_Types.LSLString(String.Empty),
+                        new LSL_Types.LSLString(string.Empty),
                         new LSL_Types.LSLInteger(rInfo.GetIntValue()),
                         new LSL_Types.LSLString(rInfo.GetStrVal())
                     };
@@ -93,7 +93,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                         new LSL_Types.LSLInteger(3),
                         new LSL_Types.LSLString(srdInfo.Channel.ToString()),
                         new LSL_Types.LSLString(srdInfo.GetReqID().ToString()),
-                        new LSL_Types.LSLString(String.Empty),
+                        new LSL_Types.LSLString(string.Empty),
                         new LSL_Types.LSLInteger(srdInfo.Idata),
                         new LSL_Types.LSLString(srdInfo.Sdata)
                     };

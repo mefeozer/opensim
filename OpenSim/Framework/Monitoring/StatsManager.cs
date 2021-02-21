@@ -125,7 +125,7 @@ namespace OpenSim.Framework.Monitoring
                         }
                         else
                         {
-                            if (String.IsNullOrEmpty(containerName))
+                            if (string.IsNullOrEmpty(containerName))
                             {
                                 OutputCategoryStatsToConsole(con, category);
                             }
@@ -134,7 +134,7 @@ namespace OpenSim.Framework.Monitoring
                                 SortedDictionary<string, Stat> container;
                                 if (category.TryGetValue(containerName, out container))
                                 {
-                                    if (String.IsNullOrEmpty(statName))
+                                    if (string.IsNullOrEmpty(statName))
                                     {
                                         OutputContainerStatsToConsole(con, container);
                                     }
@@ -265,7 +265,7 @@ namespace OpenSim.Framework.Monitoring
                 {
                     // Do this category if null spec, "all" subcommand or category name matches passed parameter.
                     // Skip category if none of the above.
-                    if (!(String.IsNullOrEmpty(pCategoryName) || pCategoryName == AllSubCommand || pCategoryName == catName))
+                    if (!(string.IsNullOrEmpty(pCategoryName) || pCategoryName == AllSubCommand || pCategoryName == catName))
                         continue;
 
                     OSDMap contMap = new OSDMap();
@@ -279,7 +279,7 @@ namespace OpenSim.Framework.Monitoring
                         SortedDictionary<string, Stat> theStats = RegisteredStats[catName][contName];
                         foreach (string statName in theStats.Keys)
                         {
-                            if (!(String.IsNullOrEmpty(pStatName) || pStatName == AllSubCommand || pStatName == statName))
+                            if (!(string.IsNullOrEmpty(pStatName) || pStatName == AllSubCommand || pStatName == statName))
                                 continue;
 
                             statMap.Add(statName, theStats[statName].ToBriefOSDMap());

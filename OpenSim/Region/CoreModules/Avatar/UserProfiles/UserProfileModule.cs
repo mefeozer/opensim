@@ -108,7 +108,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                             if(string.IsNullOrEmpty(serverURI))
                                 ok = false;
 
-                            Byte[] membershipType = new Byte[1];
+                            byte[] membershipType = new byte[1];
                             string born = string.Empty;
                             uint flags = 0x00;
 
@@ -493,7 +493,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         /// <param name='args'>
         /// Arguments.
         /// </param>
-        public void ClassifiedsRequest(Object sender, string method, List<String> args)
+        public void ClassifiedsRequest(object sender, string method, List<string> args)
         {
             if (!(sender is IClientAPI))
                 return;
@@ -893,7 +893,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         /// <param name='args'>
         /// Arguments.
         /// </param>
-        public void PicksRequest(Object sender, string method, List<String> args)
+        public void PicksRequest(object sender, string method, List<string> args)
         {
             if (!(sender is IClientAPI))
                 return;
@@ -989,7 +989,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         /// <param name='args'>
         /// Arguments.
         /// </param>
-        public void PickInfoRequest(Object sender, string method, List<String> args)
+        public void PickInfoRequest(object sender, string method, List<string> args)
         {
             if (!(sender is IClientAPI))
                 return;
@@ -1277,7 +1277,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         /// <param name='args'>
         /// Arguments.
         /// </param>
-        public void NotesRequest(Object sender, string method, List<String> args)
+        public void NotesRequest(object sender, string method, List<string> args)
         {
             UserProfileNotes note = new UserProfileNotes();
 
@@ -1736,7 +1736,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         /// </returns>
         bool GetProfileData(ref UserProfileProperties properties, bool foreign, string serverURI, out string message)
         {
-            if (String.IsNullOrEmpty(serverURI))
+            if (string.IsNullOrEmpty(serverURI))
             {
                 message = "User profile service unknown at this time";
                 return false;
@@ -1817,7 +1817,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
             {
                 // Is Foreign
                 string home_url = UserManagementModule.GetUserServerURL(userID, "HomeURI", out bool recentFailedWeb);
-                if (recentFailedWeb || String.IsNullOrEmpty(home_url))
+                if (recentFailedWeb || string.IsNullOrEmpty(home_url))
                     return false;
 
                 UserAgentServiceConnector uConn = new UserAgentServiceConnector(home_url);

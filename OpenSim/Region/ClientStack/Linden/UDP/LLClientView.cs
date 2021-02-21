@@ -309,7 +309,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         #region Class Members
 
         // LLClientView Only
-        public delegate void BinaryGenericMessage(Object sender, string method, byte[][] args);
+        public delegate void BinaryGenericMessage(object sender, string method, byte[][] args);
 
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static string LogHeader = "[LLCLIENTVIEW]";
@@ -377,7 +377,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         protected string m_lastName;
         protected Vector3 m_startpos;
         protected UUID m_activeGroupID;
-        protected string m_activeGroupName = String.Empty;
+        protected string m_activeGroupName = string.Empty;
         protected ulong m_activeGroupPowers;
         protected Dictionary<UUID, ulong> m_groupPowers = new Dictionary<UUID, ulong>();
         protected int m_terrainCheckerCount;
@@ -788,7 +788,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         }
 
         // Sound
-        public void SoundTrigger(UUID soundId, UUID owerid, UUID Objectid, UUID ParentId, float Gain, Vector3 Position, UInt64 Handle)
+        public void SoundTrigger(UUID soundId, UUID owerid, UUID Objectid, UUID ParentId, float Gain, Vector3 Position, ulong Handle)
         {
         }
 
@@ -1700,8 +1700,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 string Ys = "";
                 for (int pp = 0; pp < numPatches; pp++)
                 {
-                    Xs += String.Format("{0}", (int)pX[pp]) + ",";
-                    Ys += String.Format("{0}", (int)pY[pp]) + ",";
+                    Xs += string.Format("{0}", (int)pX[pp]) + ",";
+                    Ys += string.Format("{0}", (int)pY[pp]) + ",";
                 }
                 m_log.DebugFormat("{0} {1}: numPatches={2}, X={3}, Y={4}", LogHeader, pWho, numPatches, Xs, Ys);
             }
@@ -3098,7 +3098,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             alertPack.AlertInfo = new AlertMessagePacket.AlertInfoBlock[1];
             alertPack.AlertInfo[0] = new AlertMessagePacket.AlertInfoBlock();
             alertPack.AlertInfo[0].Message = Util.StringToBytes256(info);
-            alertPack.AlertInfo[0].ExtraParams = new Byte[0];
+            alertPack.AlertInfo[0].ExtraParams = new byte[0];
             OutPacket(alertPack, ThrottleOutPacketType.Task);
         }
 
@@ -3251,7 +3251,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             OutPacket(packet, ThrottleOutPacketType.Task);
         }
 
-        public void SendAvatarProperties(UUID avatarID, string aboutText, string bornOn, Byte[] membershipType,
+        public void SendAvatarProperties(UUID avatarID, string aboutText, string bornOn, byte[] membershipType,
                                          string flAbout, uint flags, UUID flImageID, UUID imageID, string profileURL,
                                          UUID partnerID)
         {
@@ -3283,7 +3283,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// <param name="fromSessionID"></param>
         /// <param name="FromAvatarName"></param>
         /// <param name="Message"></param>
-        public void SendBlueBoxMessage(UUID FromAvatarID, String FromAvatarName, String Message)
+        public void SendBlueBoxMessage(UUID FromAvatarID, string FromAvatarName, string Message)
         {
             if (!SceneAgent.IsChildAgent)
                 SendInstantMessage(new GridInstantMessage(null, FromAvatarID, FromAvatarName, AgentId, 1, Message, false, new Vector3()));
@@ -3708,7 +3708,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             if (land.Description != null && !string.IsNullOrEmpty(land.Description))
                 reply.Data.Desc = Utils.StringToBytes(land.Description.Substring(0, land.Description.Length > 254 ? 254: land.Description.Length));
             else
-                reply.Data.Desc = new Byte[0];
+                reply.Data.Desc = new byte[0];
             reply.Data.ActualArea = land.Area;
             reply.Data.BillableArea = land.Area; // TODO: what is this?
 
@@ -4877,7 +4877,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             // Check to see if this is a flush
             if (maxUpdatesBytes <= 0)
             {
-                maxUpdatesBytes = Int32.MaxValue;
+                maxUpdatesBytes = int.MaxValue;
             }
 
             EntityUpdate update;
@@ -8638,7 +8638,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             if (inchatpack.AgentData.SessionID != SessionId || inchatpack.AgentData.AgentID != AgentId)
                 return;
 
-            string fromName = String.Empty; //ClientAvatar.firstname + " " + ClientAvatar.lastname;
+            string fromName = string.Empty; //ClientAvatar.firstname + " " + ClientAvatar.lastname;
             byte[] message = inchatpack.ChatData.Message;
             byte type = inchatpack.ChatData.Type;
             Vector3 fromPos = new Vector3(); // ClientAvatar.Pos;
@@ -8700,7 +8700,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             OSChatMessage args = new OSChatMessage();
             args.Channel = ch;
-            args.From = String.Empty;
+            args.From = string.Empty;
             args.Message = Utils.BytesToString(msg);
             args.Type = ChatTypeEnum.Region; //Behaviour in SL is that the response can be heard from any distance
             args.Position = new Vector3();
@@ -10869,7 +10869,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         #endregion Parcel related packets
 
         #region Estate Packets
-        private static double m_lastMapRegenTime = Double.MinValue;
+        private static double m_lastMapRegenTime = double.MinValue;
 
         private void HandleEstateOwnerMessage(Packet Pack)
         {
@@ -10921,7 +10921,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                             string[] splitField = s.Split(' ');
                             if (splitField.Length == 2)
                             {
-                                Int16 corner = Convert.ToInt16(splitField[0]);
+                                short corner = Convert.ToInt16(splitField[0]);
                                 UUID textureUUID = new UUID(splitField[1]);
 
                                 OnSetEstateTerrainDetailTexture?.Invoke(this, corner, textureUUID);
@@ -10939,7 +10939,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                             string[] splitField = s.Split(' ');
                             if (splitField.Length == 3)
                             {
-                                Int16 corner = Convert.ToInt16(splitField[0]);
+                                short corner = Convert.ToInt16(splitField[0]);
                                 float lowValue = (float)Convert.ToDecimal(splitField[1], Culture.NumberFormatInfo);
                                 float highValue = (float)Convert.ToDecimal(splitField[2], Culture.NumberFormatInfo);
 
@@ -11131,8 +11131,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     {
                         UUID invoice = messagePacket.MethodData.Invoice;
                         UUID SenderID = messagePacket.AgentData.AgentID;
-                        UInt32 param1 = Convert.ToUInt32(Utils.BytesToString(messagePacket.ParamList[1].Parameter));
-                        UInt32 param2 = Convert.ToUInt32(Utils.BytesToString(messagePacket.ParamList[2].Parameter));
+                        uint param1 = Convert.ToUInt32(Utils.BytesToString(messagePacket.ParamList[1].Parameter));
+                        uint param2 = Convert.ToUInt32(Utils.BytesToString(messagePacket.ParamList[2].Parameter));
 
                         OnEstateChangeInfo?.Invoke(this, invoice, SenderID, param1, param2);
                     }
@@ -11143,7 +11143,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     {
                         UUID invoice = messagePacket.MethodData.Invoice;
                         UUID SenderID = messagePacket.AgentData.AgentID;
-                        UInt32 param1 = 0u;
+                        uint param1 = 0u;
 
                         string command = Utils.BytesToString(messagePacket.ParamList[0].Parameter);
 
@@ -11171,7 +11171,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                             SendAlertMessage("Terrain map generator not avaiable");
                             return;
                         }
-                        if (m_lastMapRegenTime == Double.MaxValue)
+                        if (m_lastMapRegenTime == double.MaxValue)
                         {
                             SendAlertMessage("Terrain map generation still in progress");
                             return;
@@ -11184,7 +11184,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                             return;
                         }
 
-                        m_lastMapRegenTime = Double.MaxValue;
+                        m_lastMapRegenTime = double.MaxValue;
                         m_scene.RegenerateMaptileAndReregister(this, null);
                         SendAlertMessage("Terrain map generated");
                         m_lastMapRegenTime = now;
@@ -12494,7 +12494,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     GrantUserRights.Rights[0].RelatedRights);
         }
 
-        private double m_nextRevokePermissionsTime = Double.MinValue;
+        private double m_nextRevokePermissionsTime = double.MinValue;
         private uint m_lastRevokePermissionsSeq = uint.MinValue;
 
         private void HandleRevokePermissions(Packet Pack)
@@ -13056,7 +13056,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             m_udpServer.SendPacket(m_udpClient, packet, throttlePacketType, doAutomaticSplitting, method);
         }
 
-        protected void HandleAutopilot(Object sender, string method, List<String> args)
+        protected void HandleAutopilot(object sender, string method, List<string> args)
         {
             if(OnAutoPilotGo == null)
                 return;
@@ -13372,7 +13372,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         public string XReport(string uptime, string version)
         {
-            return String.Empty;
+            return string.Empty;
         }
 
         public OSDMap OReport(string uptime, string version)
@@ -13419,7 +13419,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// <param name="id"></param>
         /// <param name="sender"></param>
         /// <param name="asset"></param>
-        protected void AssetReceived(string id, Object sender, AssetBase asset)
+        protected void AssetReceived(string id, object sender, AssetBase asset)
         {
             TransferRequestPacket transferRequest = (TransferRequestPacket)sender;
 

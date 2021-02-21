@@ -43,7 +43,7 @@ namespace OpenSim.Services.Connectors
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         public AuthenticationServicesConnector()
         {
@@ -70,7 +70,7 @@ namespace OpenSim.Services.Connectors
             }
 
             string serviceURI = assetConfig.GetString("AuthenticationServerURI",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceURI))
             {
@@ -106,7 +106,7 @@ namespace OpenSim.Services.Connectors
                     reply);
 
             if (replyData["Result"].ToString() != "Success")
-                return String.Empty;
+                return string.Empty;
 
             return replyData["Token"].ToString();
         }

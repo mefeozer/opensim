@@ -1166,21 +1166,21 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
                 "show name",
                 "show name <uuid>",
                 "Show the bindings between a single user UUID and a user name",
-                String.Empty,
+                string.Empty,
                 HandleShowUser);
 
             MainConsole.Instance.Commands.AddCommand("Users", true,
                 "show names",
                 "show names",
                 "Show the bindings between user UUIDs and user names",
-                String.Empty,
+                string.Empty,
                 HandleShowUsers);
 
             MainConsole.Instance.Commands.AddCommand("Users", true,
                 "reset user cache",
                 "reset user cache",
                 "reset user cache to allow changed settings to be applied",
-                String.Empty,
+                string.Empty,
                 HandleResetUserCache);
         }
 

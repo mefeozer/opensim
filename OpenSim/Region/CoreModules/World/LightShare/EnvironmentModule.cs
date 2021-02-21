@@ -85,7 +85,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
             if (null == config)
                 return;
 
-            if (config.GetString("Cap_EnvironmentSettings", String.Empty) != "localhost")
+            if (config.GetString("Cap_EnvironmentSettings", string.Empty) != "localhost")
             {
                 m_log.InfoFormat("[{0}]: Module is disabled.", Name);
                 return;
@@ -423,7 +423,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
             {
                 if (httpRequest.Query.ContainsKey("parcelid"))
                 {
-                    Int32.TryParse((string)httpRequest.Query["parcelid"], out parcel);
+                    int.TryParse((string)httpRequest.Query["parcelid"], out parcel);
                 }
             }
 
@@ -459,7 +459,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
             {
                 if (httpRequest.Query.ContainsKey("parcelid"))
                 {
-                    Int32.TryParse((string)httpRequest.Query["parcelid"], out parcelid);
+                    int.TryParse((string)httpRequest.Query["parcelid"], out parcelid);
                 }
             }
 
@@ -531,7 +531,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
             {
                 if (httpRequest.Query.ContainsKey("parcelid"))
                 {
-                    if (!Int32.TryParse((string)httpRequest.Query["parcelid"], out parcel))
+                    if (!int.TryParse((string)httpRequest.Query["parcelid"], out parcel))
                     {
                         message = "Failed to decode request";
                         goto Error;
@@ -539,7 +539,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
                 }
                 if (httpRequest.Query.ContainsKey("trackno"))
                 {
-                    if (!Int32.TryParse((string)httpRequest.Query["trackno"], out track))
+                    if (!int.TryParse((string)httpRequest.Query["trackno"], out track))
                     {
                         message = "Failed to decode request";
                         goto Error;
@@ -667,7 +667,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
                     Name, caps.RegionName, e.Message, e.StackTrace);
 
                 success = false;
-                message = String.Format("ExtEnvironment Set for region {0} has failed, settings not saved.", caps.RegionName);
+                message = string.Format("ExtEnvironment Set for region {0} has failed, settings not saved.", caps.RegionName);
             }
 
         Error:
@@ -780,7 +780,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
                     Name, m_scene.Name, e.Message, e.StackTrace);
 
                 success = false;
-                fail_reason = String.Format("Environment Set for region {0} has failed, settings not saved.", m_scene.Name);
+                fail_reason = string.Format("Environment Set for region {0} has failed, settings not saved.", m_scene.Name);
             }
 
             Error:
@@ -859,7 +859,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
                 return null;
 
             RegionLightShareData wl = ToLightShare();
-            byte[] mBlock = new Byte[249];
+            byte[] mBlock = new byte[249];
             int pos = 0;
 
             wl.waterColor.ToBytes(mBlock, 0); pos += 12;

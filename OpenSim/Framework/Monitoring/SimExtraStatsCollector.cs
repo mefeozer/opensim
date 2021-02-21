@@ -463,45 +463,45 @@ Asset service request failures: {3}" + Environment.NewLine,
 //                    abnormalClientThreadTerminations));
 //            args["InventoryServiceRetrievalFailures"] = OSD.FromString (String.Format ("{0:0.##}",
 //                    InventoryServiceRetrievalFailures));
-            args["Dilatn"] = OSD.FromString (String.Format ("{0:0.##}", timeDilation));
-            args["SimFPS"] = OSD.FromString (String.Format ("{0:0.##}", simFps));
-            args["PhyFPS"] = OSD.FromString (String.Format ("{0:0.##}", physicsFps));
-            args["AgntUp"] = OSD.FromString (String.Format ("{0:0.##}", agentUpdates));
-            args["RootAg"] = OSD.FromString (String.Format ("{0:0.##}", rootAgents));
-            args["ChldAg"] = OSD.FromString (String.Format ("{0:0.##}", childAgents));
-            args["Prims"] = OSD.FromString (String.Format ("{0:0.##}", totalPrims));
-            args["AtvPrm"] = OSD.FromString (String.Format ("{0:0.##}", activePrims));
-            args["AtvScr"] = OSD.FromString (String.Format ("{0:0.##}", activeScripts));
-            args["ScrLPS"] = OSD.FromString (String.Format ("{0:0.##}", scriptLinesPerSecond));
-            args["PktsIn"] = OSD.FromString (String.Format ("{0:0.##}", inPacketsPerSecond));
-            args["PktOut"] = OSD.FromString (String.Format ("{0:0.##}", outPacketsPerSecond));
-            args["PendDl"] = OSD.FromString (String.Format ("{0:0.##}", pendingDownloads));
-            args["PendUl"] = OSD.FromString (String.Format ("{0:0.##}", pendingUploads));
-            args["UnackB"] = OSD.FromString (String.Format ("{0:0.##}", unackedBytes));
-            args["TotlFt"] = OSD.FromString (String.Format ("{0:0.##}", totalFrameTime));
-            args["NetFt"] = OSD.FromString (String.Format ("{0:0.##}", netFrameTime));
-            args["PhysFt"] = OSD.FromString (String.Format ("{0:0.##}", physicsFrameTime));
-            args["OthrFt"] = OSD.FromString (String.Format ("{0:0.##}", otherFrameTime));
-            args["AgntFt"] = OSD.FromString (String.Format ("{0:0.##}", agentFrameTime));
-            args["ImgsFt"] = OSD.FromString (String.Format ("{0:0.##}", imageFrameTime));
+            args["Dilatn"] = OSD.FromString (string.Format ("{0:0.##}", timeDilation));
+            args["SimFPS"] = OSD.FromString (string.Format ("{0:0.##}", simFps));
+            args["PhyFPS"] = OSD.FromString (string.Format ("{0:0.##}", physicsFps));
+            args["AgntUp"] = OSD.FromString (string.Format ("{0:0.##}", agentUpdates));
+            args["RootAg"] = OSD.FromString (string.Format ("{0:0.##}", rootAgents));
+            args["ChldAg"] = OSD.FromString (string.Format ("{0:0.##}", childAgents));
+            args["Prims"] = OSD.FromString (string.Format ("{0:0.##}", totalPrims));
+            args["AtvPrm"] = OSD.FromString (string.Format ("{0:0.##}", activePrims));
+            args["AtvScr"] = OSD.FromString (string.Format ("{0:0.##}", activeScripts));
+            args["ScrLPS"] = OSD.FromString (string.Format ("{0:0.##}", scriptLinesPerSecond));
+            args["PktsIn"] = OSD.FromString (string.Format ("{0:0.##}", inPacketsPerSecond));
+            args["PktOut"] = OSD.FromString (string.Format ("{0:0.##}", outPacketsPerSecond));
+            args["PendDl"] = OSD.FromString (string.Format ("{0:0.##}", pendingDownloads));
+            args["PendUl"] = OSD.FromString (string.Format ("{0:0.##}", pendingUploads));
+            args["UnackB"] = OSD.FromString (string.Format ("{0:0.##}", unackedBytes));
+            args["TotlFt"] = OSD.FromString (string.Format ("{0:0.##}", totalFrameTime));
+            args["NetFt"] = OSD.FromString (string.Format ("{0:0.##}", netFrameTime));
+            args["PhysFt"] = OSD.FromString (string.Format ("{0:0.##}", physicsFrameTime));
+            args["OthrFt"] = OSD.FromString (string.Format ("{0:0.##}", otherFrameTime));
+            args["AgntFt"] = OSD.FromString (string.Format ("{0:0.##}", agentFrameTime));
+            args["ImgsFt"] = OSD.FromString (string.Format ("{0:0.##}", imageFrameTime));
             args["Memory"] = OSD.FromString (base.XReport (uptime, version));
             args["Uptime"] = OSD.FromString (uptime);
             args["Version"] = OSD.FromString (version);
 
-            args["FrameDilatn"] = OSD.FromString(String.Format("{0:0.##}", m_frameDilation));
-            args["Logging in Users"] = OSD.FromString(String.Format("{0:0.##}",
+            args["FrameDilatn"] = OSD.FromString(string.Format("{0:0.##}", m_frameDilation));
+            args["Logging in Users"] = OSD.FromString(string.Format("{0:0.##}",
                 m_usersLoggingIn));
-            args["GeoPrims"] = OSD.FromString(String.Format("{0:0.##}",
+            args["GeoPrims"] = OSD.FromString(string.Format("{0:0.##}",
                 m_totalGeoPrims));
-            args["Mesh Objects"] = OSD.FromString(String.Format("{0:0.##}",
+            args["Mesh Objects"] = OSD.FromString(string.Format("{0:0.##}",
                 m_totalMeshes));
-            args["XEngine Thread Count"] = OSD.FromString(String.Format("{0:0.##}",
+            args["XEngine Thread Count"] = OSD.FromString(string.Format("{0:0.##}",
                 m_inUseThreads));
-            args["Util Thread Count"] = OSD.FromString(String.Format("{0:0.##}",
+            args["Util Thread Count"] = OSD.FromString(string.Format("{0:0.##}",
                 Util.GetSmartThreadPoolInfo().InUseThreads));
-            args["System Thread Count"] = OSD.FromString(String.Format(
+            args["System Thread Count"] = OSD.FromString(string.Format(
                 "{0:0.##}", numberThreadsRunning));
-            args["ProcMem"] = OSD.FromString(String.Format("{0:#,###,###.##}",
+            args["ProcMem"] = OSD.FromString(string.Format("{0:#,###,###.##}",
                 memUsage));
 
             return args;

@@ -39,7 +39,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
         private Dictionary<string, MethodInfo> inits = new Dictionary<string, MethodInfo>();
 //        private ScriptSponsor m_sponser;
 
-        public override Object InitializeLifetimeService()
+        public override object InitializeLifetimeService()
         {
             ILease lease = (ILease)base.InitializeLifetimeService();
             if (lease.CurrentState == LeaseState.Initial)
@@ -114,7 +114,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
             MethodInfo mi = inits[api];
 
-            Object[] args = new Object[1];
+            object[] args = new object[1];
             args[0] = data;
 
             mi.Invoke(this, args);
@@ -154,7 +154,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
                 if (field.FieldType == typeof(LSL_Types.list)) // ref type, copy
                 {
                     LSL_Types.list v = (LSL_Types.list)field.GetValue(this);
-                    Object[] data = new Object[v.Data.Length];
+                    object[] data = new object[v.Data.Length];
                     Array.Copy(v.Data, 0, data, 0, v.Data.Length);
                     LSL_Types.list c = new LSL_Types.list();
                     c.Data = data;
@@ -163,11 +163,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
                 else if (field.FieldType == typeof(LSL_Types.LSLInteger) ||
                         field.FieldType == typeof(LSL_Types.LSLString) ||
                         field.FieldType == typeof(LSL_Types.LSLFloat) ||
-                        field.FieldType == typeof(Int32) ||
-                        field.FieldType == typeof(Double) ||
-                        field.FieldType == typeof(Single) ||
-                        field.FieldType == typeof(String) ||
-                        field.FieldType == typeof(Byte) ||
+                        field.FieldType == typeof(int) ||
+                        field.FieldType == typeof(double) ||
+                        field.FieldType == typeof(float) ||
+                        field.FieldType == typeof(string) ||
+                        field.FieldType == typeof(byte) ||
                         field.FieldType == typeof(short) ||
                         field.FieldType == typeof(LSL_Types.Vector3) ||
                         field.FieldType == typeof(LSL_Types.Quaternion))
@@ -188,19 +188,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
                     if (m_Fields[var.Key].FieldType == typeof(LSL_Types.list))
                     {
                         LSL_Types.list v = (LSL_Types.list)m_Fields[var.Key].GetValue(this);
-                        Object[] data = ((LSL_Types.list)var.Value).Data;
-                        v.Data = new Object[data.Length];
+                        object[] data = ((LSL_Types.list)var.Value).Data;
+                        v.Data = new object[data.Length];
                         Array.Copy(data, 0, v.Data, 0, data.Length);
                         m_Fields[var.Key].SetValue(this, v);
                     }
                     else if (m_Fields[var.Key].FieldType == typeof(LSL_Types.LSLInteger) ||
                             m_Fields[var.Key].FieldType == typeof(LSL_Types.LSLString) ||
                             m_Fields[var.Key].FieldType == typeof(LSL_Types.LSLFloat) ||
-                            m_Fields[var.Key].FieldType == typeof(Int32) ||
-                            m_Fields[var.Key].FieldType == typeof(Double) ||
-                            m_Fields[var.Key].FieldType == typeof(Single) ||
-                            m_Fields[var.Key].FieldType == typeof(String) ||
-                            m_Fields[var.Key].FieldType == typeof(Byte) ||
+                            m_Fields[var.Key].FieldType == typeof(int) ||
+                            m_Fields[var.Key].FieldType == typeof(double) ||
+                            m_Fields[var.Key].FieldType == typeof(float) ||
+                            m_Fields[var.Key].FieldType == typeof(string) ||
+                            m_Fields[var.Key].FieldType == typeof(byte) ||
                             m_Fields[var.Key].FieldType == typeof(short) ||
                             m_Fields[var.Key].FieldType == typeof(LSL_Types.Vector3) ||
                             m_Fields[var.Key].FieldType == typeof(LSL_Types.Quaternion)

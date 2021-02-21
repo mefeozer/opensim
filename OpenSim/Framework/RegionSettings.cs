@@ -420,7 +420,7 @@ namespace OpenSim.Framework
             set { m_LoadedCreationDateTime = value; }
         }
 
-        public String LoadedCreationDate
+        public string LoadedCreationDate
         {
             get
             {
@@ -430,7 +430,7 @@ namespace OpenSim.Framework
             }
         }
 
-        public String LoadedCreationTime
+        public string LoadedCreationTime
         {
             get
             {
@@ -440,8 +440,8 @@ namespace OpenSim.Framework
             }
         }
 
-        private String m_LoadedCreationID;
-        public String LoadedCreationID
+        private string m_LoadedCreationID;
+        public string LoadedCreationID
         {
             get { return m_LoadedCreationID; }
             set { m_LoadedCreationID = value; }

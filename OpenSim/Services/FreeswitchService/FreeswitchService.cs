@@ -67,7 +67,7 @@ namespace OpenSim.Services.FreeswitchService
             }
             else
             {
-                response["str_response_string"] = String.Format(@"<?xml version=""1.0"" encoding=""utf-8""?>
+                response["str_response_string"] = string.Format(@"<?xml version=""1.0"" encoding=""utf-8""?>
                    <document type=""freeswitch/xml"">
                      <section name=""dialplan"">
                      <context name=""{0}"">" +
@@ -226,7 +226,7 @@ namespace OpenSim.Services.FreeswitchService
             response["keepalive"] = false;
             response["int_response_code"] = 200;
 
-            response["str_response_string"] = String.Format(
+            response["str_response_string"] = string.Format(
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                 "<document type=\"freeswitch/xml\">\r\n" +
                     "<section name=\"directory\" description=\"User Directory\">\r\n" +
@@ -263,7 +263,7 @@ namespace OpenSim.Services.FreeswitchService
             response["content_type"] = "text/xml";
             response["keepalive"] = false;
             response["int_response_code"] = 200;
-            response["str_response_string"] = String.Format(
+            response["str_response_string"] = string.Format(
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                 "<document type=\"freeswitch/xml\">\r\n" +
                     "<section name=\"directory\" description=\"User Directory\">\r\n" +
@@ -296,7 +296,7 @@ namespace OpenSim.Services.FreeswitchService
             return response;
         }
 
-        private Hashtable HandleLocateUser(String Realm, Hashtable request)
+        private Hashtable HandleLocateUser(string Realm, Hashtable request)
         {
             m_log.Info("[FreeSwitchDirectory]: HandleLocateUser called");
 
@@ -308,7 +308,7 @@ namespace OpenSim.Services.FreeswitchService
             response["content_type"] = "text/xml";
             response["keepalive"] = false;
             response["int_response_code"] = 200;
-            response["str_response_string"] = String.Format(
+            response["str_response_string"] = string.Format(
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                 "<document type=\"freeswitch/xml\">\r\n" +
                     "<section name=\"directory\" description=\"User Directory\">\r\n" +
@@ -341,7 +341,7 @@ namespace OpenSim.Services.FreeswitchService
             response["content_type"] = "text/xml";
             response["keepalive"] = false;
             response["int_response_code"] = 200;
-            response["str_response_string"] = String.Format(
+            response["str_response_string"] = string.Format(
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                 "<document type=\"freeswitch/xml\">\r\n" +
                     "<section name=\"directory\" description=\"User Directory\">\r\n" +

@@ -62,19 +62,19 @@ namespace OpenSim.Server.Handlers.Inventory
 
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
 
             string inventoryService = serverConfig.GetString("LocalServiceModule",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(inventoryService))
                 throw new Exception("No LocalServiceModule in config file");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_InventoryService =
                     ServerUtils.LoadPlugin<IInventoryService>(inventoryService, args);
 
-            m_userserver_url = serverConfig.GetString("UserServerURI", String.Empty);
+            m_userserver_url = serverConfig.GetString("UserServerURI", string.Empty);
             m_doLookup = serverConfig.GetBoolean("SessionAuthentication", false);
 
             AddHttpHandlers(server);

@@ -39,7 +39,7 @@ namespace OpenSim.Framework
         /// Logs permissions flags. Useful when debugging permission problems.
         /// </summary>
         /// <param name="message"></param>
-        public static void LogPermissions(String name, String message, uint basePerm, uint curPerm, uint nextPerm)
+        public static void LogPermissions(string name, string message, uint basePerm, uint curPerm, uint nextPerm)
         {
             m_log.DebugFormat("Permissions of \"{0}\" at \"{1}\": Base {2} ({3:X4}), Current {4} ({5:X4}), NextOwner {6} ({7:X4})",
                 name, message,

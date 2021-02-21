@@ -92,9 +92,9 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
         private bool m_updateTaskItem;
         private TaskInventoryItem m_updateTaskItemData;
 
-        private string m_description = String.Empty;
+        private string m_description = string.Empty;
         private bool m_dumpAssetToFile;
-        private string m_name = String.Empty;
+        private string m_name = string.Empty;
 //        private bool m_storeLocal;
         private uint nextPerm = 0;
         private IClientAPI ourClient;
@@ -284,7 +284,7 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
             {
                 DateTime now = DateTime.Now;
                 string filename =
-                        String.Format("{6}_{7}_{0:d2}{1:d2}{2:d2}_{3:d2}{4:d2}{5:d2}.dat",
+                        string.Format("{6}_{7}_{0:d2}{1:d2}{2:d2}_{3:d2}{4:d2}{5:d2}.dat",
                         now.Year, now.Month, now.Day, now.Hour, now.Minute,
                         now.Second, m_asset.Name, m_asset.Type);
                 SaveAssetToFile(filename, m_asset.Data);

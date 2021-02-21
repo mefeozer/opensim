@@ -100,7 +100,7 @@ namespace OpenSim.Server.Handlers.Presence
 
         byte[] LoginAgent(Dictionary<string, object> request)
         {
-            string user = String.Empty;
+            string user = string.Empty;
             UUID session = UUID.Zero;
             UUID ssession = UUID.Zero;
 

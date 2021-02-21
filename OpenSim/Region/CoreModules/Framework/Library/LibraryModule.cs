@@ -71,7 +71,7 @@ namespace OpenSim.Region.CoreModules.Framework.Library
                     m_log.Debug("[LIBRARY MODULE]: Library service dll is " + dllName);
                     if (!string.IsNullOrEmpty(dllName))
                     {
-                        Object[] args = new Object[] { config };
+                        object[] args = new object[] { config };
                         m_Library = ServerUtils.LoadPlugin<ILibraryService>(dllName, args);
                     }
                 }

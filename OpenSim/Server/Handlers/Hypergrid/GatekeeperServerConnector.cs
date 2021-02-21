@@ -49,13 +49,13 @@ namespace OpenSim.Server.Handlers.Hypergrid
         bool m_Proxy = false;
 
         public GatekeeperServiceInConnector(IConfigSource config, IHttpServer server, ISimulationService simService) :
-                base(config, server, String.Empty)
+                base(config, server, string.Empty)
         {
             IConfig gridConfig = config.Configs["GatekeeperService"];
             if (gridConfig != null)
             {
                 string serviceDll = gridConfig.GetString("LocalServiceModule", string.Empty);
-                Object[] args = new Object[] { config, simService };
+                object[] args = new object[] { config, simService };
                 m_GatekeeperService = ServerUtils.LoadPlugin<IGatekeeperService>(serviceDll, args);
 
             }
@@ -77,7 +77,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
         }
 
         public GatekeeperServiceInConnector(IConfigSource config, IHttpServer server)
-            : this(config, server, String.Empty)
+            : this(config, server, string.Empty)
         {
         }
     }

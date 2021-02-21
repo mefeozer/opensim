@@ -112,7 +112,7 @@ namespace OpenSim.Framework.Capabilities
             {
                 writer.Formatting = Formatting.None;
 
-                writer.WriteStartElement(String.Empty, "llsd", String.Empty);
+                writer.WriteStartElement(string.Empty, "llsd", string.Empty);
                 LLSDWriteOne(writer, obj);
                 writer.WriteEndElement();
                 writer.Flush();
@@ -129,33 +129,33 @@ namespace OpenSim.Framework.Capabilities
         {
             if (obj == null)
             {
-                writer.WriteStartElement(String.Empty, "undef", String.Empty);
+                writer.WriteStartElement(string.Empty, "undef", string.Empty);
                 writer.WriteEndElement();
                 return;
             }
 
             if (obj is string)
             {
-                writer.WriteStartElement(String.Empty, "string", String.Empty);
+                writer.WriteStartElement(string.Empty, "string", string.Empty);
                 writer.WriteString((string) obj);
                 writer.WriteEndElement();
             }
             else if (obj is int)
             {
-                writer.WriteStartElement(String.Empty, "integer", String.Empty);
+                writer.WriteStartElement(string.Empty, "integer", string.Empty);
                 writer.WriteString(obj.ToString());
                 writer.WriteEndElement();
             }
             else if (obj is double)
             {
-                writer.WriteStartElement(String.Empty, "real", String.Empty);
+                writer.WriteStartElement(string.Empty, "real", string.Empty);
                 writer.WriteString(obj.ToString());
                 writer.WriteEndElement();
             }
             else if (obj is bool)
             {
                 bool b = (bool) obj;
-                writer.WriteStartElement(String.Empty, "boolean", String.Empty);
+                writer.WriteStartElement(string.Empty, "boolean", string.Empty);
                 writer.WriteString(b ? "1" : "0");
                 writer.WriteEndElement();
             }
@@ -166,17 +166,17 @@ namespace OpenSim.Framework.Capabilities
             else if (obj is UUID)
             {
                 UUID u = (UUID) obj;
-                writer.WriteStartElement(String.Empty, "uuid", String.Empty);
+                writer.WriteStartElement(string.Empty, "uuid", string.Empty);
                 writer.WriteString(u.ToString());
                 writer.WriteEndElement();
             }
             else if (obj is Hashtable)
             {
                 Hashtable h = obj as Hashtable;
-                writer.WriteStartElement(String.Empty, "map", String.Empty);
+                writer.WriteStartElement(string.Empty, "map", string.Empty);
                 foreach (string key in h.Keys)
                 {
-                    writer.WriteStartElement(String.Empty, "key", String.Empty);
+                    writer.WriteStartElement(string.Empty, "key", string.Empty);
                     writer.WriteString(key);
                     writer.WriteEndElement();
                     LLSDWriteOne(writer, h[key]);
@@ -186,7 +186,7 @@ namespace OpenSim.Framework.Capabilities
             else if (obj is ArrayList)
             {
                 ArrayList a = obj as ArrayList;
-                writer.WriteStartElement(String.Empty, "array", String.Empty);
+                writer.WriteStartElement(string.Empty, "array", string.Empty);
                 foreach (object item in a)
                 {
                     LLSDWriteOne(writer, item);
@@ -196,9 +196,9 @@ namespace OpenSim.Framework.Capabilities
             else if (obj is byte[])
             {
                 byte[] b = obj as byte[];
-                writer.WriteStartElement(String.Empty, "binary", String.Empty);
+                writer.WriteStartElement(string.Empty, "binary", string.Empty);
 
-                writer.WriteStartAttribute(String.Empty, "encoding", String.Empty);
+                writer.WriteStartAttribute(string.Empty, "encoding", string.Empty);
                 writer.WriteString("base64");
                 writer.WriteEndAttribute();
 
@@ -311,7 +311,7 @@ namespace OpenSim.Framework.Capabilities
                         if (reader.IsEmptyElement)
                         {
                             reader.Read();
-                            return String.Empty;
+                            return string.Empty;
                         }
 
                         reader.Read();
@@ -463,7 +463,7 @@ namespace OpenSim.Framework.Capabilities
         /// <param name="obj"></param>
         /// <param name="indent"></param>
         /// <returns></returns>
-        public static String LLSDDump(object obj, int indent)
+        public static string LLSDDump(object obj, int indent)
         {
             if (obj == null)
             {
@@ -554,7 +554,7 @@ namespace OpenSim.Framework.Capabilities
                         int value;
                         endPos = FindEnd(llsd, 1);
 
-                        if (Int32.TryParse(llsd.Substring(1, endPos - 1), out value))
+                        if (int.TryParse(llsd.Substring(1, endPos - 1), out value))
                             return value;
                         else
                             throw new LLSDParseException("Failed to parse integer value type");
@@ -565,7 +565,7 @@ namespace OpenSim.Framework.Capabilities
                         double value;
                         endPos = FindEnd(llsd, 1);
 
-                        if (Double.TryParse(llsd.Substring(1, endPos - 1), NumberStyles.Float,
+                        if (double.TryParse(llsd.Substring(1, endPos - 1), NumberStyles.Float,
                                             Culture.NumberFormatInfo, out value))
                             return value;
                         else
@@ -642,7 +642,7 @@ namespace OpenSim.Framework.Capabilities
                             if (endquote == -1 || (endquote + 1) >= llsd.Length || llsd[endquote + 1] != ':')
                                 throw new LLSDParseException("Invalid map format");
                             string key = llsd.Substring(pos, endquote - pos);
-                            key = key.Replace("'", String.Empty);
+                            key = key.Replace("'", string.Empty);
                             pos += (endquote - pos) + 2;
 
                             int end;

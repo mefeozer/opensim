@@ -69,7 +69,7 @@ namespace OpenSim.Region.CoreModules.World.Land
         /// </value>
         private bool m_Tainted = true;
 
-        private Object m_TaintLock = new Object();
+        private object m_TaintLock = new object();
 
         public Type ReplaceableInterface
         {

@@ -298,7 +298,7 @@ namespace OpenSim.Region.Framework.Scenes
                 m_timerStopped = true;
         }
 
-        public static KeyframeMotion FromData(SceneObjectGroup grp, Byte[] data)
+        public static KeyframeMotion FromData(SceneObjectGroup grp, byte[] data)
         {
             KeyframeMotion newMotion = null;
 
@@ -810,7 +810,7 @@ namespace OpenSim.Region.Framework.Scenes
 //            }
         }
 
-        public Byte[] Serialize()
+        public byte[] Serialize()
         {
             bool timerWasStopped;
             lock (m_frames)

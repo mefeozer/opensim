@@ -40,6 +40,6 @@ namespace OpenSim.Framework
     {
         public int BakedTextureIndex;
         public UUID BakedTextureID;
-        public String HostName;
+        public string HostName;
     }
 }

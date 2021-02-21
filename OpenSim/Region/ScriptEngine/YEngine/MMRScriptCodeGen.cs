@@ -127,10 +127,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private static MethodInfo xmrArrPubValueMethod = typeof(XMR_Array).GetMethod("__pub_value", new Type[] { typeof(int) });
         private static MethodInfo captureStackFrameMethodInfo = typeof(XMRInstAbstract).GetMethod("CaptureStackFrame", new Type[] { typeof(string), typeof(int), typeof(int) });
         private static MethodInfo restoreStackFrameMethodInfo = typeof(XMRInstAbstract).GetMethod("RestoreStackFrame", new Type[] { typeof(string), typeof(int).MakeByRefType() });
-        private static MethodInfo stringCompareMethodInfo = GetStaticMethod(typeof(String), "Compare", new Type[] { typeof(string), typeof(string), typeof(StringComparison) });
-        private static MethodInfo stringConcat2MethodInfo = GetStaticMethod(typeof(String), "Concat", new Type[] { typeof(string), typeof(string) });
-        private static MethodInfo stringConcat3MethodInfo = GetStaticMethod(typeof(String), "Concat", new Type[] { typeof(string), typeof(string), typeof(string) });
-        private static MethodInfo stringConcat4MethodInfo = GetStaticMethod(typeof(String), "Concat", new Type[] { typeof(string), typeof(string), typeof(string), typeof(string) });
+        private static MethodInfo stringCompareMethodInfo = GetStaticMethod(typeof(string), "Compare", new Type[] { typeof(string), typeof(string), typeof(StringComparison) });
+        private static MethodInfo stringConcat2MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string) });
+        private static MethodInfo stringConcat3MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string), typeof(string) });
+        private static MethodInfo stringConcat4MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string), typeof(string), typeof(string) });
         private static MethodInfo lslRotationNegateMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "LSLRotationNegate", new Type[] { typeof(LSL_Rotation) });
         private static MethodInfo lslVectorNegateMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "LSLVectorNegate", new Type[] { typeof(LSL_Vector) });
         private static MethodInfo scriptRestoreCatchExceptionUnwrap = GetStaticMethod(typeof(ScriptRestoreCatchException), "Unwrap", new Type[] { typeof(Exception) });
@@ -2793,7 +2793,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         continue;
                     }
                 }
-                if(String.Compare(thisCase.str2, thisCase.str1, StringComparison.Ordinal) < 0)
+                if(string.Compare(thisCase.str2, thisCase.str1, StringComparison.Ordinal) < 0)
                 {
                     ErrorMsg(thisCase.rVal2, "must be .ge. first value for the case");
                     continue;
@@ -2857,7 +2857,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             TokenSwitchCase t = r;
             while(true)
             {
-                if(String.Compare(n.str2, t.str1, StringComparison.Ordinal) < 0)
+                if(string.Compare(n.str2, t.str1, StringComparison.Ordinal) < 0)
                 {
                     if(t.lowerCase == null)
                     {
@@ -2867,7 +2867,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     t = t.lowerCase;
                     continue;
                 }
-                if(String.Compare(n.str1, t.str2, StringComparison.Ordinal) > 0)
+                if(string.Compare(n.str1, t.str2, StringComparison.Ordinal) > 0)
                 {
                     if(t.higherCase == null)
                     {
@@ -3214,12 +3214,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 catchVarLocExc = new CompValuLocalVar(tryStmt.catchVar.type, tryStmt.catchVar.name.val, this);
             }
-            else if(tryStmt.catchVar.type.ToSysType() == typeof(String))
+            else if(tryStmt.catchVar.type.ToSysType() == typeof(string))
             {
                 catchVarLocStr = new CompValuTemp(tryStmt.catchVar.type, this);
             }
 
-            ScriptMyLocal excLocal = ilGen.DeclareLocal(typeof(String), "catchstr_" + tryStmt.Unique);
+            ScriptMyLocal excLocal = ilGen.DeclareLocal(typeof(string), "catchstr_" + tryStmt.Unique);
 
             ilGen.BeginCatchBlock(typeof(Exception));     // start of the catch block that can catch any exception
             ilGen.Emit(tryStmt.catchStmt, OpCodes.Call, scriptRestoreCatchExceptionUnwrap);
@@ -3233,7 +3233,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 catThrown.Pop(this, tryStmt);              // store exception object in catThrown
                 catchVarLocExc.Pop(this, tryStmt.catchVar.name);      // also store in script-visible variable
             }
-            else if(tryStmt.catchVar.type.ToSysType() == typeof(String))
+            else if(tryStmt.catchVar.type.ToSysType() == typeof(string))
             {
                 tryStmt.catchVar.location = catchVarLocStr;
                 ilGen.Emit(tryStmt.catchStmt, OpCodes.Dup);

@@ -7564,7 +7564,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      */
     public class TokenScript: Token
     {
-        public int expiryDays = Int32.MaxValue;
+        public int expiryDays = int.MaxValue;
         public TokenDeclState defaultState;
         public Dictionary<string, TokenDeclState> states = new Dictionary<string, TokenDeclState>();
         public VarDict variablesStack = new VarDict(false);  // initial one is used for global functions and variables

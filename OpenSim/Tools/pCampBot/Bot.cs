@@ -446,7 +446,7 @@ namespace pCampBot
                 {
                     if (asset.Decode())
                     {
-                        File.WriteAllBytes(Path.Combine(saveDir, String.Format("{1}.{0}",
+                        File.WriteAllBytes(Path.Combine(saveDir, string.Format("{1}.{0}",
                         asset.AssetType.ToString().ToLower(),
                         asset.WearableType)), asset.AssetData);
                     }

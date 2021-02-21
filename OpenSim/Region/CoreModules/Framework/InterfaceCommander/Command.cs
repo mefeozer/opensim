@@ -46,7 +46,7 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
         private string m_name;
         private CommandIntentions m_intentions; //A permission type system could implement this and know what a command intends on doing.
 
-        public Command(string name, CommandIntentions intention, Action<Object[]> command, string help)
+        public Command(string name, CommandIntentions intention, Action<object[]> command, string help)
         {
             m_name = name;
             m_command = command;
@@ -113,9 +113,9 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
             }
         }
 
-        public void Run(Object[] args)
+        public void Run(object[] args)
         {
-            Object[] cleanArgs = new Object[m_args.Count];
+            object[] cleanArgs = new object[m_args.Count];
 
             if (args.Length < cleanArgs.Length)
             {
@@ -130,7 +130,7 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
             }
 
             int i = 0;
-            foreach (Object arg in args)
+            foreach (object arg in args)
             {
                 if (string.IsNullOrEmpty(arg.ToString()))
                 {
@@ -145,16 +145,16 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
                             m_args[i].ArgumentValue = arg.ToString();
                             break;
                         case "Integer":
-                            m_args[i].ArgumentValue = Int32.Parse(arg.ToString());
+                            m_args[i].ArgumentValue = int.Parse(arg.ToString());
                             break;
                         case "Float":
                             m_args[i].ArgumentValue = float.Parse(arg.ToString(), OpenSim.Framework.Culture.NumberFormatInfo);
                             break;
                         case "Double":
-                            m_args[i].ArgumentValue = Double.Parse(arg.ToString(), OpenSim.Framework.Culture.NumberFormatInfo);
+                            m_args[i].ArgumentValue = double.Parse(arg.ToString(), OpenSim.Framework.Culture.NumberFormatInfo);
                             break;
                         case "Boolean":
-                            m_args[i].ArgumentValue = Boolean.Parse(arg.ToString());
+                            m_args[i].ArgumentValue = bool.Parse(arg.ToString());
                             break;
                         case "UUID":
                             m_args[i].ArgumentValue = UUID.Parse(arg.ToString());
@@ -190,7 +190,7 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
         private string m_help;
         private string m_name;
         private string m_type;
-        private Object m_val;
+        private object m_val;
 
         public CommandArgument(string name, string help, string type)
         {
@@ -214,7 +214,7 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
             get { return m_type; }
         }
 
-        public Object ArgumentValue
+        public object ArgumentValue
         {
             get { return m_val; }
             set { m_val = value; }

@@ -227,10 +227,10 @@ namespace OpenSim.Framework.Servers.HttpServer
                     string[] lines = datastr.Split(new char[] {'\n','\r'});
                     foreach(string s in lines)
                     {
-                        if(String.IsNullOrEmpty(s))
+                        if(string.IsNullOrEmpty(s))
                             continue;
                         string[] parts = s.Split(new char[] {'='});
-                        if(String.IsNullOrEmpty(parts[0]))
+                        if(string.IsNullOrEmpty(parts[0]))
                             continue;
                         string entryName = parts[0].Replace(" ","");
                         if(entryName == "DNSName")
@@ -266,7 +266,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             int indx = dns.IndexOf('*');
             if (indx == -1)
-                return (String.Compare(hostname, dns, true, CultureInfo.InvariantCulture) == 0);
+                return (string.Compare(hostname, dns, true, CultureInfo.InvariantCulture) == 0);
 
             int dnslen = dns.Length;
             dnslen--;
@@ -290,7 +290,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             if (length <= 0)
                 return false;
 
-            if (String.Compare(hostname, length, end, 0, endlen, true, CultureInfo.InvariantCulture) != 0)
+            if (string.Compare(hostname, length, end, 0, endlen, true, CultureInfo.InvariantCulture) != 0)
                 return false;
 
             if (indx == 0)
@@ -300,7 +300,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
 
             string start = dns.Substring(0, indx);
-            return (String.Compare(hostname, 0, start, 0, start.Length, true, CultureInfo.InvariantCulture) == 0);
+            return (string.Compare(hostname, 0, start, 0, start.Length, true, CultureInfo.InvariantCulture) == 0);
         }
 
         public bool CheckSSLCertHost(string hostname)
@@ -323,7 +323,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             {
                 foreach(string ip in m_certIPs)
                 {
-                    if (String.Compare(hostname, ip, true, CultureInfo.InvariantCulture) == 0)
+                    if (string.Compare(hostname, ip, true, CultureInfo.InvariantCulture) == 0)
                         return true;
                 }               
             }
@@ -355,7 +355,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         public void AddGenericStreamHandler(IRequestHandler handler)
         {
-            if(String.IsNullOrWhiteSpace(handler.Path))
+            if(string.IsNullOrWhiteSpace(handler.Path))
                 return;
 
             // m_log.DebugFormat("[BASE HTTP SERVER]: Adding handler key {0}", handlerKey);
@@ -909,7 +909,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 //
                 // An alternative may be to turn off all response write exceptions on the HttpListener, but let's go
                 // with the minimum first
-                m_log.Warn(String.Format("[BASE HTTP SERVER]: HandleRequest threw {0}.\nNOTE: this may be spurious on Linux ", e.Message), e);
+                m_log.Warn(string.Format("[BASE HTTP SERVER]: HandleRequest threw {0}.\nNOTE: this may be spurious on Linux ", e.Message), e);
             }
             catch (IOException e)
             {
@@ -1259,7 +1259,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 catch(Exception e)
                 {
                     string errorMessage
-                        = String.Format(
+                        = string.Format(
                             "Requested method [{0}] from {1} threw exception: {2} {3}",
                             methodName, request.RemoteIPEndPoint.Address, e.Message, e.StackTrace);
 
@@ -1279,7 +1279,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 // Code set in accordance with http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
                 xmlRpcResponse.SetFault(
                     XmlRpcErrorCodes.SERVER_ERROR_METHOD,
-                    String.Format("Requested method [{0}] not found", methodName));
+                    string.Format("Requested method [{0}] not found", methodName));
             }
 
             using (MemoryStream outs = new MemoryStream(64 * 1024))
@@ -1421,7 +1421,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 // Code set in accordance with http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
                 xmlRpcResponse.SetFault(
                     XmlRpcErrorCodes.SERVER_ERROR_METHOD,
-                    String.Format("Requested method [{0}] not found", methodName));
+                    string.Format("Requested method [{0}] not found", methodName));
             }
 
             using (MemoryStream outs = new MemoryStream(64 * 1024))
@@ -1621,7 +1621,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 }
             }
 
-            if (!String.IsNullOrEmpty(request.ContentType))
+            if (!string.IsNullOrEmpty(request.ContentType))
             {
                 switch (request.ContentType)
                 {
@@ -1674,7 +1674,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 }
             }
 
-            if (String.IsNullOrEmpty(bestMatch))
+            if (string.IsNullOrEmpty(bestMatch))
             {
                 return false;
             }
@@ -1718,7 +1718,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                     }
                 }
 
-                if (String.IsNullOrEmpty(bestMatch))
+                if (string.IsNullOrEmpty(bestMatch))
                 {
                     return false;
                 }
@@ -1766,7 +1766,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 {
                     if (searchquery.ToLower().StartsWith(pattern.ToLower()))
                     {
-                        if (String.IsNullOrEmpty(bestMatch) || searchquery.Length > bestMatch.Length)
+                        if (string.IsNullOrEmpty(bestMatch) || searchquery.Length > bestMatch.Length)
                         {
                             // You have to specifically register for '/' and to get it, you must specificaly request it
                             //
@@ -1776,7 +1776,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                     }
                 }
 
-                if (String.IsNullOrEmpty(bestMatch))
+                if (string.IsNullOrEmpty(bestMatch))
                 {
                     llsdHandler = null;
                     return false;
@@ -1825,7 +1825,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             Hashtable requestVars = new Hashtable();
 
-            string host = String.Empty;
+            string host = string.Empty;
 
             string[] querystringkeys = request.QueryString.AllKeys;
             string[] rHeaders = request.Headers.AllKeys;
@@ -1899,7 +1899,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 {
                     if (searchquery.ToLower().StartsWith(pattern.ToLower()))
                     {
-                        if (String.IsNullOrEmpty(bestMatch) || searchquery.Length > bestMatch.Length)
+                        if (string.IsNullOrEmpty(bestMatch) || searchquery.Length > bestMatch.Length)
                         {
                             // You have to specifically register for '/' and to get it, you must specifically request it
                             if (pattern == "/" && searchquery == "/" || pattern != "/")
@@ -1908,7 +1908,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                     }
                 }
 
-                if (String.IsNullOrEmpty(bestMatch))
+                if (string.IsNullOrEmpty(bestMatch))
                 {
                     httpHandler = null;
                     return false;
@@ -1927,7 +1927,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         internal byte[] DoHTTPGruntWork(Hashtable responsedata, OSHttpResponse response)
         {
             int responsecode;
-            string responseString = String.Empty;
+            string responseString = string.Empty;
             byte[] responseData = null;
             string contentType;
 
@@ -1950,7 +1950,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                         responseString = (string)responsedata["str_response_string"];
                     contentType = (string)responsedata["content_type"];
                     if (responseString == null)
-                        responseString = String.Empty;
+                        responseString = string.Empty;
                 }
                 catch
                 {

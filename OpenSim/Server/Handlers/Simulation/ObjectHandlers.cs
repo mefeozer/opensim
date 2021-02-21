@@ -104,9 +104,9 @@ namespace OpenSim.Server.Handlers.Simulation
             Vector3 newPosition = Vector3.Zero;
 
             if (args.ContainsKey("destination_x") && args["destination_x"] != null)
-                Int32.TryParse(args["destination_x"].AsString(), out x);
+                int.TryParse(args["destination_x"].AsString(), out x);
             if (args.ContainsKey("destination_y") && args["destination_y"] != null)
-                Int32.TryParse(args["destination_y"].AsString(), out y);
+                int.TryParse(args["destination_y"].AsString(), out y);
             if (args.ContainsKey("destination_uuid") && args["destination_uuid"] != null)
                 UUID.TryParse(args["destination_uuid"].AsString(), out uuid);
             if (args.ContainsKey("destination_name") && args["destination_name"] != null)

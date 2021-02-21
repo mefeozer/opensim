@@ -76,7 +76,7 @@ namespace OpenSim.Services.Interfaces
             if (kvp.ContainsKey("Logout"))
                 DateTime.TryParse(kvp["Logout"].ToString(), out Logout);
             if (kvp.ContainsKey("Online"))
-                Boolean.TryParse(kvp["Online"].ToString(), out Online);
+                bool.TryParse(kvp["Online"].ToString(), out Online);
 
         }
 

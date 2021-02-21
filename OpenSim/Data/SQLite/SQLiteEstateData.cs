@@ -101,7 +101,7 @@ namespace OpenSim.Data.SQLite
 
         public EstateSettings LoadEstateSettings(UUID regionID, bool create)
         {
-            string sql = "select estate_settings."+String.Join(",estate_settings.", FieldList)+" from estate_map left join estate_settings on estate_map.EstateID = estate_settings.EstateID where estate_settings.EstateID is not null and RegionID = :RegionID";
+            string sql = "select estate_settings."+ string.Join(",estate_settings.", FieldList)+" from estate_map left join estate_settings on estate_map.EstateID = estate_settings.EstateID where estate_settings.EstateID is not null and RegionID = :RegionID";
 
             using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
             {
@@ -194,7 +194,7 @@ namespace OpenSim.Data.SQLite
 
             using (SqliteCommand cmd = m_connection.CreateCommand())
             {
-                string sql = "insert into estate_settings ("+String.Join(",", names.ToArray())+") values ( :"+String.Join(", :", names.ToArray())+")";
+                string sql = "insert into estate_settings ("+ string.Join(",", names.ToArray())+") values ( :"+ string.Join(", :", names.ToArray())+")";
 
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
@@ -242,7 +242,7 @@ namespace OpenSim.Data.SQLite
 
             using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
             {
-                cmd.CommandText = "update estate_settings set " + String.Join(", ", terms.ToArray()) + " where EstateID = :EstateID"; ;
+                cmd.CommandText = "update estate_settings set " + string.Join(", ", terms.ToArray()) + " where EstateID = :EstateID"; ;
                 cmd.Parameters.AddWithValue(":EstateID", es.EstateID);
 
                 foreach (string name in FieldList)
@@ -376,7 +376,7 @@ namespace OpenSim.Data.SQLite
 
         public EstateSettings LoadEstateSettings(int estateID)
         {
-            string sql = "select estate_settings."+String.Join(",estate_settings.", FieldList)+" from estate_settings where estate_settings.EstateID = :EstateID";
+            string sql = "select estate_settings."+ string.Join(",estate_settings.", FieldList)+" from estate_settings where estate_settings.EstateID = :EstateID";
 
             using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
             {

@@ -107,7 +107,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
             try
             {
                 string serviceDll = m_Config.GetString("LocalServiceModule",
-                        String.Empty);
+                        string.Empty);
 
                 if (string.IsNullOrEmpty(serviceDll))
                 {
@@ -115,7 +115,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
                     return;
                 }
 
-                Object[] args = new Object[] { config };
+                object[] args = new object[] { config };
                 m_FreeswitchService = ServerUtils.LoadPlugin<IFreeswitchService>(serviceDll, args);
 
                 string jsonConfig = m_FreeswitchService.GetJsonConfig();
@@ -130,11 +130,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
                 m_freeSwitchEchoPort = map["EchoPort"].AsInteger();
                 m_freeSwitchDefaultWellKnownIP = map["DefaultWellKnownIP"].AsString();
                 m_freeSwitchDefaultTimeout = map["DefaultTimeout"].AsInteger();
-                m_freeSwitchUrlResetPassword = String.Empty;
+                m_freeSwitchUrlResetPassword = string.Empty;
 //                m_freeSwitchContext = map["Context"].AsString();
 
-                if (String.IsNullOrEmpty(m_freeSwitchRealm) ||
-                    String.IsNullOrEmpty(m_freeSwitchAPIPrefix))
+                if (string.IsNullOrEmpty(m_freeSwitchRealm) ||
+                    string.IsNullOrEmpty(m_freeSwitchAPIPrefix))
                 {
                     m_log.Error("[FreeSwitchVoice]: Freeswitch service mis-configured.  Not starting.");
                     return;
@@ -146,23 +146,23 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
                 // - buddies: viv_buddy.php
                 // - ???: viv_watcher.php
                 // - signout: viv_signout.php
-                MainServer.Instance.AddHTTPHandler(String.Format("{0}/viv_get_prelogin.php", m_freeSwitchAPIPrefix),
+                MainServer.Instance.AddHTTPHandler(string.Format("{0}/viv_get_prelogin.php", m_freeSwitchAPIPrefix),
                                                      FreeSwitchSLVoiceGetPreloginHTTPHandler);
 
-                MainServer.Instance.AddHTTPHandler(String.Format("{0}/freeswitch-config", m_freeSwitchAPIPrefix), FreeSwitchConfigHTTPHandler);
+                MainServer.Instance.AddHTTPHandler(string.Format("{0}/freeswitch-config", m_freeSwitchAPIPrefix), FreeSwitchConfigHTTPHandler);
 
                 // RestStreamHandler h = new
                 // RestStreamHandler("GET",
                 // String.Format("{0}/viv_get_prelogin.php", m_freeSwitchAPIPrefix), FreeSwitchSLVoiceGetPreloginHTTPHandler);
                 //  MainServer.Instance.AddStreamHandler(h);
 
-                MainServer.Instance.AddHTTPHandler(String.Format("{0}/viv_signin.php", m_freeSwitchAPIPrefix),
+                MainServer.Instance.AddHTTPHandler(string.Format("{0}/viv_signin.php", m_freeSwitchAPIPrefix),
                                  FreeSwitchSLVoiceSigninHTTPHandler);
 
-                MainServer.Instance.AddHTTPHandler(String.Format("{0}/viv_buddy.php", m_freeSwitchAPIPrefix),
+                MainServer.Instance.AddHTTPHandler(string.Format("{0}/viv_buddy.php", m_freeSwitchAPIPrefix),
                                  FreeSwitchSLVoiceBuddyHTTPHandler);
 
-                MainServer.Instance.AddHTTPHandler(String.Format("{0}/viv_watcher.php", m_freeSwitchAPIPrefix),
+                MainServer.Instance.AddHTTPHandler(string.Format("{0}/viv_watcher.php", m_freeSwitchAPIPrefix),
                                  FreeSwitchSLVoiceWatcherHTTPHandler);
 
                 m_log.InfoFormat("[FreeSwitchVoice]: using FreeSwitch server {0}", m_freeSwitchRealm);
@@ -359,7 +359,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
                     }
                 }
 
-                string accounturl = String.Format("http://{0}:{1}{2}/", m_openSimWellKnownHTTPAddress,
+                string accounturl = string.Format("http://{0}:{1}{2}/", m_openSimWellKnownHTTPAddress,
                                                               m_freeSwitchServicePort, m_freeSwitchAPIPrefix);
                 // fast foward encode
                 osUTF8 lsl = LLSDxmlEncode2.Start();
@@ -444,7 +444,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
                  {
                      m_log.DebugFormat("[FreeSwitchVoice][PARCELVOICE]: region \"{0}\": voice not enabled in estate settings",
                                        scene.RegionInfo.RegionName);
-                    channelUri = String.Empty;
+                    channelUri = string.Empty;
                 }
                 else
 
@@ -452,7 +452,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
                 {
 //                    m_log.DebugFormat("[FreeSwitchVoice][PARCELVOICE]: region \"{0}\": Parcel \"{1}\" ({2}): avatar \"{3}\": voice not enabled for parcel",
 //                                      scene.RegionInfo.RegionName, land.Name, land.LocalID, avatarName);
-                    channelUri = String.Empty;
+                    channelUri = string.Empty;
                 }
                 else
                 {
@@ -571,7 +571,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
             response["content_type"] = "text/xml";
             response["keepalive"] = false;
 
-            response["str_response_string"] = String.Format(
+            response["str_response_string"] = string.Format(
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                 "<VCConfiguration>\r\n"+
                     "<DefaultRealm>{0}</DefaultRealm>\r\n" +
@@ -772,13 +772,13 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
         {
             Hashtable bodyParams = new Hashtable();
             // split string
-            string [] nvps = body.Split(new Char [] {'&'});
+            string [] nvps = body.Split(new char[] {'&'});
 
             foreach (string s in nvps)
             {
                 if (s.Trim() != "")
                 {
-                    string [] nvp = s.Split(new Char [] {'='});
+                    string [] nvp = s.Split(new char[] {'='});
                     bodyParams.Add(HttpUtility.UrlDecode(nvp[0]), HttpUtility.UrlDecode(nvp[1]));
                 }
             }
@@ -808,14 +808,14 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
 
             if (land.LocalID != 1 && (land.Flags & (uint)ParcelFlags.UseEstateVoiceChan) == 0)
             {
-                landName = String.Format("{0}:{1}", scene.RegionInfo.RegionName, land.Name);
+                landName = string.Format("{0}:{1}", scene.RegionInfo.RegionName, land.Name);
                 landUUID = land.GlobalID.ToString();
                 m_log.DebugFormat("[FreeSwitchVoice]: Region:Parcel \"{0}\": parcel id {1}: using channel name {2}",
                                   landName, land.LocalID, landUUID);
             }
             else
             {
-                landName = String.Format("{0}:{1}", scene.RegionInfo.RegionName, scene.RegionInfo.RegionName);
+                landName = string.Format("{0}:{1}", scene.RegionInfo.RegionName, scene.RegionInfo.RegionName);
                 landUUID = scene.RegionInfo.RegionID.ToString();
                 m_log.DebugFormat("[FreeSwitchVoice]: Region:Parcel \"{0}\": parcel id {1}: using channel name {2}",
                                   landName, land.LocalID, landUUID);
@@ -823,7 +823,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
 
             // slvoice handles the sip address differently if it begins with confctl, hiding it from the user in the friends list. however it also disables
             // the personal speech indicators as well unless some siren14-3d codec magic happens. we dont have siren143d so we'll settle for the personal speech indicator.
-            channelUri = String.Format("sip:conf-{0}@{1}", "x" + Convert.ToBase64String(Encoding.ASCII.GetBytes(landUUID)), m_freeSwitchRealm);
+            channelUri = string.Format("sip:conf-{0}@{1}", "x" + Convert.ToBase64String(Encoding.ASCII.GetBytes(landUUID)), m_freeSwitchRealm);
 
             lock (m_ParcelAddress)
             {

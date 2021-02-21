@@ -79,7 +79,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
                     }
 
                     string serviceDll = userConfig.GetString("LocalServiceModule",
-                            String.Empty);
+                            string.Empty);
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
@@ -87,7 +87,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
                         return;
                     }
 
-                    Object[] args = new Object[] { source };
+                    object[] args = new object[] { source };
                     m_AvatarService =
                             ServerUtils.LoadPlugin<IAvatarService>(serviceDll,
                             args);

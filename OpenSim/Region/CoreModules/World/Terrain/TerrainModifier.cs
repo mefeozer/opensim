@@ -48,14 +48,14 @@ namespace OpenSim.Region.CoreModules.World.Terrain
 
         public abstract float operate(float[,] map, TerrainModifierData data, int x, int y);
 
-        protected String parseParameters(string[] args, out TerrainModifierData data)
+        protected string parseParameters(string[] args, out TerrainModifierData data)
         {
             string val;
             string arg;
             string result;
             data = new TerrainModifierData();
-            data.shape = String.Empty;
-            data.bevel = String.Empty;
+            data.shape = string.Empty;
+            data.bevel = string.Empty;
             data.dx = 0;
             data.dy = 0;
             if (args.Length < 4)
@@ -86,7 +86,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                             string[] coords = val.Split(new char[] {','});
                             if ((coords.Length < 3) || (coords.Length > 4))
                             {
-                                result = String.Format("Bad format for shape parameter {0}", arg);
+                                result = string.Format("Bad format for shape parameter {0}", arg);
                             }
                             else
                             {
@@ -119,7 +119,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                                 }
                                 else
                                 {
-                                    result = String.Format("Bad value in shape parameters {0}", arg);
+                                    result = string.Format("Bad value in shape parameters {0}", arg);
                                 }
                             }
                         }
@@ -137,20 +137,20 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                             result = this.parseFloat(val, out data.bevelevation);
                             if (!string.IsNullOrEmpty(result))
                             {
-                                result = String.Format("Bad format for taper parameter {0}", arg);
+                                result = string.Format("Bad format for taper parameter {0}", arg);
                             }
                         }
                     }
                     else
                     {
-                        result = String.Format("Unrecognized parameter {0}", arg);
+                        result = string.Format("Unrecognized parameter {0}", arg);
                     }
                 }
             }
             return result;
         }
 
-        protected string parseFloat(String s, out float f)
+        protected string parseFloat(string s, out float f)
         {
             string result;
             float d;
@@ -159,32 +159,32 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                 try
                 {
                     f = (float)d;
-                    result = String.Empty;
+                    result = string.Empty;
                 }
                 catch(InvalidCastException)
                 {
-                    result = String.Format("{0} is invalid", s);
+                    result = string.Format("{0} is invalid", s);
                     f = -1.0f;
                 }
             }
             else
             {
                 f = -1.0f;
-                result = String.Format("{0} is invalid", s);
+                result = string.Format("{0} is invalid", s);
             }
             return result;
         }
 
-        protected string parseInt(String s, out int i)
+        protected string parseInt(string s, out int i)
         {
             string result;
-            if (Int32.TryParse(s, out i))
+            if (int.TryParse(s, out i))
             {
-                result = String.Empty;
+                result = string.Empty;
             }
             else
             {
-                result = String.Format("{0} is invalid", s);
+                result = string.Format("{0} is invalid", s);
             }
             return result;
         }

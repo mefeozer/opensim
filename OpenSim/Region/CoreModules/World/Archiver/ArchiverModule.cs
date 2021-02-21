@@ -106,7 +106,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             bool mergeParcels = false;
             bool noObjects = false;
             Vector3 displacement = new Vector3(0f, 0f, 0f);
-            String defaultUser = "";
+            string defaultUser = "";
             float rotation = 0f;
             Vector3 rotationCenter = new Vector3(Scene.RegionInfo.RegionSizeX / 2f, Scene.RegionInfo.RegionSizeY / 2f, 0);
             Vector3 boundingOrigin = new Vector3(0f, 0f, Constants.MinSimulationHeight);

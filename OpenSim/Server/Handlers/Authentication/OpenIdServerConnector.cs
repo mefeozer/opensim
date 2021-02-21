@@ -51,17 +51,17 @@ namespace OpenSim.Server.Handlers.Authentication
         {
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
 
             string authService = serverConfig.GetString("AuthenticationServiceModule",
-                    String.Empty);
+                    string.Empty);
             string userService = serverConfig.GetString("UserAccountServiceModule",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(authService) || string.IsNullOrEmpty(userService))
                 throw new Exception("No AuthenticationServiceModule or no UserAccountServiceModule in config file for OpenId authentication");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_AuthenticationService = ServerUtils.LoadPlugin<IAuthenticationService>(authService, args);
             m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userService, args);
 

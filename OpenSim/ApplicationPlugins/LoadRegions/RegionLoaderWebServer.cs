@@ -60,7 +60,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
             else
             {
                 IConfig startupConfig = (IConfig)m_configSource.Configs["Startup"];
-                string url = startupConfig.GetString("regionload_webserver_url", String.Empty).Trim();
+                string url = startupConfig.GetString("regionload_webserver_url", string.Empty).Trim();
                 bool allowRegionless = startupConfig.GetBoolean("allow_regionless", false);
 
                 if (string.IsNullOrEmpty(url))
@@ -83,7 +83,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
                             HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
                             m_log.Debug("[WEBLOADER]: Downloading region information...");
                             StreamReader reader = new StreamReader(webResponse.GetResponseStream());
-                            string xmlSource = String.Empty;
+                            string xmlSource = string.Empty;
                             string tempStr = reader.ReadLine();
                             while (tempStr != null)
                             {

@@ -42,7 +42,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static Int32 m_counter = 0;
+        private static int m_counter = 0;
 
          /// <summary>
         /// minimum recovery rate, ie bandwith
@@ -378,17 +378,17 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// Reliable packets sent to the client for which we never received an ack adjust the drip rate down.
         /// <param name="packets">Number of packets that expired without successful delivery</param>
         /// </summary>
-        public void ExpirePackets(Int32 count)
+        public void ExpirePackets(int count)
         {
             // m_log.WarnFormat("[ADAPTIVEBUCKET] drop {0} by {1} expired packets",AdjustedDripRate,count);
             if (m_enabled)
-                AdjustedDripRate = (Int64)(AdjustedDripRate / Math.Pow(2, count));
+                AdjustedDripRate = (long)(AdjustedDripRate / Math.Pow(2, count));
         }
 
         // <summary>
         //
         // </summary>
-        public void AcknowledgePackets(Int32 count)
+        public void AcknowledgePackets(int count)
         {
             if (m_enabled)
                 AdjustedDripRate = AdjustedDripRate + count;

@@ -79,7 +79,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
         {
             // A couple of quick filters to weed out single characters, ll functions and
             // anything that starts with an uppercase letter
-            if (String.IsNullOrEmpty(word)) return false;
+            if (string.IsNullOrEmpty(word)) return false;
             if (word.Length < 2) return false;
             if (word.StartsWith("ll")) return false;
             char first = word.ToCharArray(0,1)[0];

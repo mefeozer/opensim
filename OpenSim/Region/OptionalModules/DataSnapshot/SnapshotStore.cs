@@ -41,15 +41,15 @@ namespace OpenSim.Region.DataSnapshot
     public class SnapshotStore
     {
         #region Class Members
-        private String m_directory = "unyuu"; //not an attempt at adding RM references to core SVN, honest
+        private string m_directory = "unyuu"; //not an attempt at adding RM references to core SVN, honest
         private Dictionary<Scene, bool> m_scenes = null;
         private List<IDataSnapshotProvider> m_providers = null;
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private Dictionary<String, String> m_gridinfo = null;
+        private Dictionary<string, string> m_gridinfo = null;
         private bool m_cacheEnabled = true;
         #endregion
 
-        public SnapshotStore(string directory, Dictionary<String, String> gridinfo) {
+        public SnapshotStore(string directory, Dictionary<string, string> gridinfo) {
             m_directory = directory;
             m_scenes = new Dictionary<Scene, bool>();
             m_providers = new List<IDataSnapshotProvider>();
@@ -99,7 +99,7 @@ namespace OpenSim.Region.DataSnapshot
 
                 if (m_cacheEnabled)
                 {
-                    String path = DataFileNameFragment(provider.GetParentScene, provider.Name);
+                    string path = DataFileNameFragment(provider.GetParentScene, provider.Name);
 
                     try
                     {
@@ -127,7 +127,7 @@ namespace OpenSim.Region.DataSnapshot
             }
             else
             {
-                String path = DataFileNameFragment(provider.GetParentScene, provider.Name);
+                string path = DataFileNameFragment(provider.GetParentScene, provider.Name);
 
                 XmlDocument fragDocument = new XmlDocument();
                 fragDocument.PreserveWhitespace = true;
@@ -159,7 +159,7 @@ namespace OpenSim.Region.DataSnapshot
             {
                 m_log.Debug("[DATASNAPSHOT]: Attempting to retrieve snapshot from cache.");
                 //get snapshot from cache
-                String path = DataFileNameScene(scene);
+                string path = DataFileNameScene(scene);
 
                 XmlDocument fragDocument = new XmlDocument();
                 fragDocument.PreserveWhitespace = true;
@@ -195,7 +195,7 @@ namespace OpenSim.Region.DataSnapshot
                 factory.AppendChild(regionElement);
 
                 //save snapshot
-                String path = DataFileNameScene(scene);
+                string path = DataFileNameScene(scene);
 
                 try
                 {
@@ -223,7 +223,7 @@ namespace OpenSim.Region.DataSnapshot
         #endregion
 
         #region Helpers
-        private string DataFileNameFragment(Scene scene, String fragmentName)
+        private string DataFileNameFragment(Scene scene, string fragmentName)
         {
             return Path.Combine(m_directory, Path.ChangeExtension(Sanitize(scene.RegionInfo.RegionName + "_" + fragmentName), "xml"));
         }
@@ -283,7 +283,7 @@ namespace OpenSim.Region.DataSnapshot
             return docElement;
         }
 
-        private String GetRegionCategory(Scene scene)
+        private string GetRegionCategory(Scene scene)
         {
             if (scene.RegionInfo.RegionSettings.Maturity == 0)
                 return "PG";
@@ -301,7 +301,7 @@ namespace OpenSim.Region.DataSnapshot
         {
             XmlNode griddata = factory.CreateNode(XmlNodeType.Element, "grid", "");
 
-            foreach (KeyValuePair<String, String> GridData in m_gridinfo)
+            foreach (KeyValuePair<string, string> GridData in m_gridinfo)
             {
                 //TODO: make it lowercase tag names for diva
                 XmlNode childnode = factory.CreateNode(XmlNodeType.Element, GridData.Key, "");

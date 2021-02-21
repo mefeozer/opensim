@@ -1073,12 +1073,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             XMRInstance instance = GetInstance(itemID);
             if(instance == null)
-                return String.Empty;
+                return string.Empty;
 
             TraceCalls("[YEngine]: YEngine.GetXMLState({0})", itemID.ToString());
 
             if(!instance.m_HasRun)
-                return String.Empty;
+                return string.Empty;
 
             XmlDocument doc = new XmlDocument();
 
@@ -1170,7 +1170,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             return true;
         }
 
-        public bool PostScriptEvent(UUID itemID, string name, Object[] p)
+        public bool PostScriptEvent(UUID itemID, string name, object[] p)
         {
             if(!m_Enabled)
                 return false;
@@ -1180,7 +1180,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             return PostScriptEvent(itemID, new EventParams(name, p, zeroDetectParams));
         }
 
-        public bool PostObjectEvent(UUID itemID, string name, Object[] p)
+        public bool PostObjectEvent(UUID itemID, string name, object[] p)
         {
             if(!m_Enabled)
                 return false;
@@ -1382,7 +1382,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     errors.Add(initerr.Message);
                 else
                 {
-                    foreach(Object err in errors)
+                    foreach(object err in errors)
                     {
                         if(m_ScriptDebug)
                             m_log.DebugFormat("[YEngine]:   {0}", err.ToString());
@@ -1758,8 +1758,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         deltaTS = (inst.m_SleepUntil - DateTime.UtcNow).TotalMilliseconds;
                         if(deltaTS <= 0.0)
                             break;
-                        deltaMS = Int32.MaxValue;
-                        if(deltaTS < Int32.MaxValue)
+                        deltaMS = int.MaxValue;
+                        if(deltaTS < int.MaxValue)
                             deltaMS = (int)deltaTS;
                         if(deltaMS > Watchdog.DEFAULT_WATCHDOG_TIMEOUT_MS / 2)
                             deltaMS = Watchdog.DEFAULT_WATCHDOG_TIMEOUT_MS / 2;

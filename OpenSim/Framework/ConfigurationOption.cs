@@ -62,10 +62,10 @@ namespace OpenSim.Framework
 
         #endregion
 
-        public string configurationDefault = String.Empty;
+        public string configurationDefault = string.Empty;
 
-        public string configurationKey = String.Empty;
-        public string configurationQuestion = String.Empty;
+        public string configurationKey = string.Empty;
+        public string configurationQuestion = string.Empty;
 
         public ConfigurationTypes configurationType = ConfigurationTypes.TYPE_STRING;
         public bool configurationUseDefaultNoPrompt = false;

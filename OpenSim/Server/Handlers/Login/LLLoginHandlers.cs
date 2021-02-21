@@ -164,7 +164,7 @@ namespace OpenSim.Server.Handlers.Login
                     string first = requestData["first"].ToString();
                     string last = requestData["last"].ToString();
                     string passwd = requestData["passwd"].ToString();
-                    int level = Int32.Parse(requestData["level"].ToString());
+                    int level = int.Parse(requestData["level"].ToString());
 
                     m_log.InfoFormat("[LOGIN]: XMLRPC Set Level to {2} Requested by {0} {1}", first, last, level);
 

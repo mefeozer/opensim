@@ -55,9 +55,9 @@ namespace OpenSim.Region.CoreModules.Agent.IPBan
             {
                 foreach (EstateBan ban in scene.RegionInfo.EstateSettings.EstateBans)
                 {
-                    if (!String.IsNullOrEmpty(ban.BannedHostIPMask))
+                    if (!string.IsNullOrEmpty(ban.BannedHostIPMask))
                         m_bans.Add(ban.BannedHostIPMask);
-                    if (!String.IsNullOrEmpty(ban.BannedHostNameMask))
+                    if (!string.IsNullOrEmpty(ban.BannedHostNameMask))
                         m_bans.Add(ban.BannedHostNameMask);
                 }
             }

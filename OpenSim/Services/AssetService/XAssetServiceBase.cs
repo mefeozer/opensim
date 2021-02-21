@@ -49,8 +49,8 @@ namespace OpenSim.Services.AssetService
 
         public XAssetServiceBase(IConfigSource config, string configName) : base(config)
         {
-            string dllName = String.Empty;
-            string connString = String.Empty;
+            string dllName = string.Empty;
+            string connString = string.Empty;
 
             //
             // Try reading the [AssetService] section first, if it exists
@@ -69,15 +69,15 @@ namespace OpenSim.Services.AssetService
             if (dbConfig != null)
             {
                 if (string.IsNullOrEmpty(dllName))
-                    dllName = dbConfig.GetString("StorageProvider", String.Empty);
+                    dllName = dbConfig.GetString("StorageProvider", string.Empty);
                 if (string.IsNullOrEmpty(connString))
-                    connString = dbConfig.GetString("ConnectionString", String.Empty);
+                    connString = dbConfig.GetString("ConnectionString", string.Empty);
             }
 
             //
             // We tried, but this doesn't exist. We can't proceed.
             //
-            if (dllName.Equals(String.Empty))
+            if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
             m_Database = LoadPlugin<IXAssetDataPlugin>(dllName);
@@ -91,12 +91,12 @@ namespace OpenSim.Services.AssetService
                 m_log.InfoFormat(
                     "[XASSET SERVICE BASE]: Loading chained asset service from {0}", chainedAssetServiceDesignator);
 
-                Object[] args = new Object[] { config, configName };
+                object[] args = new object[] { config, configName };
                 m_ChainedAssetService = ServerUtils.LoadPlugin<IAssetService>(chainedAssetServiceDesignator, args);
 
                 if (!HasChainedAssetService)
                     throw new Exception(
-                        String.Format("Failed to load ChainedAssetService from {0}", chainedAssetServiceDesignator));
+                        string.Format("Failed to load ChainedAssetService from {0}", chainedAssetServiceDesignator));
             }
 
             m_Database.Initialise(connString);
@@ -104,7 +104,7 @@ namespace OpenSim.Services.AssetService
             if (HasChainedAssetService)
             {
                 string loaderName = assetConfig.GetString("DefaultAssetLoader",
-                        String.Empty);
+                        string.Empty);
 
                 if (!string.IsNullOrEmpty(loaderName))
                 {

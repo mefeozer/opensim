@@ -52,7 +52,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Effects
 
         private void SmoothMap(ITerrainChannel map, int rounds)
         {
-            Boolean[,] bitmap = new bool[map.Width,map.Height];
+            bool[,] bitmap = new bool[map.Width,map.Height];
             for (int x = 0; x < map.Width; x++)
             {
                 for (int y = 0; y < map.Height; y++)
@@ -90,7 +90,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Effects
                     int xoff = ((channelXOffset + channelWidth) * x) + (channelXOffset / 2);
                     int yoff = ((channelYOffset + channelHeight) * y) + (channelYOffset / 2);
 
-                    Boolean[,] bitmap = new bool[map.Width,map.Height];
+                    bool[,] bitmap = new bool[map.Width,map.Height];
 
                     for (int dx = 0; dx < channelWidth; dx++)
                     {

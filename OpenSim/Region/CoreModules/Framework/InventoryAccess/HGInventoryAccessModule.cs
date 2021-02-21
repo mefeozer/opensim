@@ -232,7 +232,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 prefix = string.Empty;
             suffix = " @ " + m_thisGridInfo.GateKeeperURLNoEndSlash;
             Vector3 pos = presence.AbsolutePosition;
-            return String.Format(Culture.FormatProvider, "Landmark version 2\nregion_id {0}\nlocal_pos {1} {2} {3}\nregion_handle {4}\ngatekeeper {5}\n",
+            return string.Format(Culture.FormatProvider, "Landmark version 2\nregion_id {0}\nlocal_pos {1} {2} {3}\nregion_handle {4}\ngatekeeper {5}\n",
                                 presence.Scene.RegionInfo.RegionID,
                                 pos.X, pos.Y, pos.Z,
                                 presence.RegionHandle,
@@ -253,7 +253,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
             item.Owner = remoteClient.AgentId;
             item.AssetType = (int)AssetType.Unknown;
             item.AssetID = newAssetID;
-            item.Name = String.Empty;
+            item.Name = string.Empty;
 
             PostInventoryAsset(item, 0);
 
@@ -285,7 +285,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 item.Owner = agentID;
                 item.AssetType = (int)AssetType.Unknown;
                 item.AssetID = assetID;
-                item.Name = String.Empty;
+                item.Name = string.Empty;
 
                 PostInventoryAsset(item, 0);
             }

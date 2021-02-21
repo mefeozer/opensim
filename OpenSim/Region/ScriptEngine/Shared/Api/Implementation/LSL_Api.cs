@@ -452,7 +452,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             m_sleepMsOnEmail = EMAIL_PAUSE_TIME * 1000;
         }
 
-        public override Object InitializeLifetimeService()
+        public override object InitializeLifetimeService()
         {
             ILease lease = (ILease)base.InitializeLifetimeService();
 
@@ -852,7 +852,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             // changed to replicate LSL behaviour whereby minimum int value is returned untouched.
             m_host.AddScriptLPS(1);
-            if (i == Int32.MinValue)
+            if (i == int.MinValue)
                 return i;
             else
                 return (int)Math.Abs(i);
@@ -1358,7 +1358,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     if (gr != null)
                         return gr.GroupName;
                 }
-                return String.Empty;
+                return string.Empty;
             }
 
             return SensedObject.Name;
@@ -1369,7 +1369,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             m_host.AddScriptLPS(1);
             DetectParams detectedParams = m_ScriptEngine.GetDetectParams(m_item.ItemID, number);
             if (detectedParams == null)
-                return String.Empty;
+                return string.Empty;
             return detectedParams.Name;
         }
 
@@ -1378,7 +1378,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             m_host.AddScriptLPS(1);
             DetectParams detectedParams = m_ScriptEngine.GetDetectParams(m_item.ItemID, number);
             if (detectedParams == null)
-                return String.Empty;
+                return string.Empty;
             return detectedParams.Key.ToString();
         }
 
@@ -1387,7 +1387,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             m_host.AddScriptLPS(1);
             DetectParams detectedParams = m_ScriptEngine.GetDetectParams(m_item.ItemID, number);
             if (detectedParams == null)
-                return String.Empty;
+                return string.Empty;
             return detectedParams.Owner.ToString();
         }
 
@@ -2379,7 +2379,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             UUID textureID = new UUID();
             bool dotexture = true;
-            if(String.IsNullOrEmpty(texture) || texture == ScriptBaseClass.NULL_KEY)
+            if(string.IsNullOrEmpty(texture) || texture == ScriptBaseClass.NULL_KEY)
                 dotexture = false;
             else
             {
@@ -3294,7 +3294,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 // Implies both bounds are out-of-range.
                 if (end < 0 || start >= src.Length)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
                 // If end is positive, then it directly
                 // corresponds to the lengt of the substring
@@ -3340,7 +3340,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     }
                     else
                     {
-                        return String.Empty;
+                        return string.Empty;
                     }
                 }
                 else
@@ -3410,7 +3410,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 // the existing string is part of the cut.
                 if (start < 0 || end >= src.Length)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
 
                 if (end > 0)
@@ -3567,7 +3567,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         public void doObjectRez(string inventory, LSL_Vector pos, LSL_Vector vel, LSL_Rotation rot, int param, bool atRoot)
         {
             m_host.AddScriptLPS(1);
-            if (string.IsNullOrEmpty(inventory) || Double.IsNaN(rot.x) || Double.IsNaN(rot.y) || Double.IsNaN(rot.z) || Double.IsNaN(rot.s))
+            if (string.IsNullOrEmpty(inventory) || double.IsNaN(rot.x) || double.IsNaN(rot.y) || double.IsNaN(rot.z) || double.IsNaN(rot.s))
                 return;
 
             float dist = (float)llVecDist(llGetPos(), pos);
@@ -3610,7 +3610,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     group.ResumeScripts();
 
                     m_ScriptEngine.PostObjectEvent(m_host.LocalId, new EventParams(
-                            "object_rez", new Object[] {
+                            "object_rez", new object[] {
                             new LSL_String(
                             group.RootPart.UUID.ToString()) },
                             new DetectParams[0]));
@@ -4026,7 +4026,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     if (account == null)
                         return;
 
-                    if (String.IsNullOrEmpty(account.Email))
+                    if (string.IsNullOrEmpty(account.Email))
                         return;
                     address = account.Email;
                 }
@@ -4057,7 +4057,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             m_ScriptEngine.PostObjectEvent(m_host.LocalId,
                     new EventParams("email",
-                    new Object[] {
+                    new object[] {
                         new LSL_String(email.time),
                         new LSL_String(email.sender),
                         new LSL_String(email.subject),
@@ -4116,7 +4116,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
 
                 string address = account.Email;
-                if (String.IsNullOrEmpty(address))
+                if (string.IsNullOrEmpty(address))
                 {
                     return;
                 }
@@ -4347,7 +4347,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 m_item.PermsMask = 0;
 
                 m_ScriptEngine.PostScriptEvent(m_item.ItemID, new EventParams(
-                        "run_time_permissions", new Object[] {
+                        "run_time_permissions", new object[] {
                         new LSL_Integer(0) },
                         new DetectParams[0]));
 
@@ -4400,7 +4400,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 m_host.TaskInventory.LockItemsForWrite(false);
 
                 m_ScriptEngine.PostScriptEvent(m_item.ItemID, new EventParams(
-                        "run_time_permissions", new Object[] {
+                        "run_time_permissions", new object[] {
                         new LSL_Integer(perm) },
                         new DetectParams[0]));
 
@@ -4427,7 +4427,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                         m_ScriptEngine.PostScriptEvent(
                             m_item.ItemID,
                             new EventParams(
-                                "run_time_permissions", new Object[] { new LSL_Integer(perm) }, new DetectParams[0]));
+                                "run_time_permissions", new object[] { new LSL_Integer(perm) }, new DetectParams[0]));
                     }
 
                     // it is an NPC, exit even if the permissions werent granted above, they are not going to answer
@@ -4459,7 +4459,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             // Requested agent is not in range, refuse perms
             m_ScriptEngine.PostScriptEvent(
                 m_item.ItemID,
-                new EventParams("run_time_permissions", new Object[] { new LSL_Integer(0) }, new DetectParams[0]));
+                new EventParams("run_time_permissions", new object[] { new LSL_Integer(0) }, new DetectParams[0]));
         }
 
         void handleScriptAnswer(IClientAPI client, UUID taskID, UUID itemID, int answer)
@@ -4478,7 +4478,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             m_host.TaskInventory.LockItemsForWrite(false);
 
             m_ScriptEngine.PostScriptEvent(m_item.ItemID, new EventParams(
-                    "run_time_permissions", new Object[] {
+                    "run_time_permissions", new object[] {
                     new LSL_Integer(answer) },
                     new DetectParams[0]));
         }
@@ -4845,14 +4845,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             if (keys.Count == 0)
             {
-                return String.Empty;
+                return string.Empty;
             }
             keys.Sort();
             if (keys.Count > number)
             {
                 return (string)keys[number];
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         public LSL_Float llGetEnergy()
@@ -5106,7 +5106,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Action<string> act = eventID =>
             {
-                string reply = String.Empty;
+                string reply = string.Empty;
                 foreach (TaskInventoryItem item in m_host.Inventory.GetInventoryItems())
                 {
                     if (item.Type == 3 && item.Name == name)
@@ -5371,7 +5371,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         public void llMessageLinked(int linknumber, int num, string msg, string id)
@@ -5589,7 +5589,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             m_host.AddScriptLPS(1);
 
-            return m_item.Name ?? String.Empty;
+            return m_item.Name ?? string.Empty;
         }
 
         public LSL_Integer llGetLinkNumberOfSides(int link)
@@ -5952,7 +5952,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     if (m != Match.Empty)
                     {
                         str = m.Value;
-                        if (!Double.TryParse(str, out double d))
+                        if (!double.TryParse(str, out double d))
                             return 0.0;
                         return d;
                     }
@@ -5973,7 +5973,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 index = src.Length + index;
 
             if (index >= src.Length || index < 0)
-                return String.Empty;
+                return string.Empty;
 
             return src.Data[index].ToString();
         }
@@ -5985,7 +5985,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 index = src.Length + index;
 
             if (index >= src.Length || index < 0)
-                return String.Empty;
+                return string.Empty;
 
             object item = src.Data[index];
 
@@ -6000,7 +6000,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                        item is LSL_Key ||
                        item.ToString() == "00000000-0000-0000-0000-000000000000"))
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             return item.ToString();
@@ -6085,11 +6085,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 return 0;
             }
 
-            if (src.Data[index] is LSL_Integer || src.Data[index] is Int32)
+            if (src.Data[index] is LSL_Integer || src.Data[index] is int)
                 return 1;
-            if (src.Data[index] is LSL_Float || src.Data[index] is Single || src.Data[index] is Double)
+            if (src.Data[index] is LSL_Float || src.Data[index] is float || src.Data[index] is double)
                 return 2;
-            if (src.Data[index] is LSL_String || src.Data[index] is String)
+            if (src.Data[index] is LSL_String || src.Data[index] is string)
             {
                 if (UUID.TryParse(src.Data[index].ToString(), out UUID tuuid))
                 {
@@ -6557,7 +6557,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         public void llSetObjectName(string name)
         {
             m_host.AddScriptLPS(1);
-            m_host.Name = name ?? String.Empty;
+            m_host.Name = name ?? string.Empty;
         }
 
         public LSL_String llGetDate()
@@ -6892,7 +6892,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     return World.GetSceneObjectPart(key).Name;
                 }
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         public LSL_Key llName2Key(LSL_String name)
@@ -6916,7 +6916,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             {
                 if (sp.IsDeleted || sp.IsChildAgent)
                     continue;
-                if (String.Compare(sname, sp.Name, true) == 0)
+                if (string.Compare(sname, sp.Name, true) == 0)
                     return sp.UUID.ToString();
             }
 
@@ -6944,7 +6944,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             {
                 if (sp.IsDeleted || sp.IsChildAgent)
                     continue;
-                if (String.Compare(sname, sp.Name, true) == 0)
+                if (string.Compare(sname, sp.Name, true) == 0)
                 {
                     string ftid = m_AsyncCommands.DataserverPlugin.RequestWithImediatePost(m_host.LocalId,
                                                         m_item.ItemID, sp.UUID.ToString());
@@ -7954,7 +7954,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             List<UUID> itemList = new List<UUID>();
 
-            foreach (Object item in inventory.Data)
+            foreach (object item in inventory.Data)
             {
                 string rawItemString = item.ToString();
                 TaskInventoryItem taskItem = null;
@@ -8263,9 +8263,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             m_host.AddScriptLPS(1);
             if (src.Length == 0)
             {
-                return String.Empty;
+                return string.Empty;
             }
-            string ret = String.Empty;
+            string ret = string.Empty;
             foreach (object o in src.Data)
             {
                 ret = ret + o.ToString() + seperator;
@@ -8427,7 +8427,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     string ExternalHostName = m_ScriptEngine.World.RegionInfo.ExternalHostName;
 
                     xmlRpcRouter.RegisterNewReceiver(m_ScriptEngine.ScriptModule, channelID, m_host.UUID,
-                                                     m_item.ItemID, String.Format("http://{0}:{1}/", ExternalHostName,
+                                                     m_item.ItemID, string.Format("http://{0}:{1}/", ExternalHostName,
                                                                              xmlrpcMod.Port.ToString()));
                 }
                 object[] resobj = new object[]
@@ -8435,9 +8435,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                         new LSL_Integer(1),
                         new LSL_String(channelID.ToString()),
                         new LSL_String(ScriptBaseClass.NULL_KEY),
-                        new LSL_String(String.Empty),
+                        new LSL_String(string.Empty),
                         new LSL_Integer(0),
-                        new LSL_String(String.Empty)
+                        new LSL_String(string.Empty)
                     };
                 m_ScriptEngine.PostScriptEvent(m_item.ItemID, new EventParams("remote_data", resobj,
                                                                          new DetectParams[0]));
@@ -8483,7 +8483,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         public LSL_String llMD5String(string src, int nonce)
         {
             m_host.AddScriptLPS(1);
-            return Util.Md5Hash(String.Format("{0}:{1}", src, nonce.ToString()), Encoding.UTF8);
+            return Util.Md5Hash(string.Format("{0}:{1}", src, nonce.ToString()), Encoding.UTF8);
         }
 
         public LSL_String llSHA1String(string src)
@@ -11176,7 +11176,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             ILandObject land = World.LandChannel.GetLandObject(m_host.AbsolutePosition);
 
             if (land.LandData.OwnerID != m_host.OwnerID)
-                return String.Empty;
+                return string.Empty;
 
             return land.GetMusicUrl();
         }
@@ -11220,13 +11220,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
         public LSL_String llGetObjectDesc()
         {
-            return m_host.Description ?? String.Empty;
+            return m_host.Description ?? string.Empty;
         }
 
         public void llSetObjectDesc(string desc)
         {
             m_host.AddScriptLPS(1);
-            m_host.Description = desc ?? String.Empty;
+            m_host.Description = desc ?? string.Empty;
         }
 
         public LSL_Key llGetCreator()
@@ -12586,7 +12586,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
            if (m_UrlModule != null)
                return m_UrlModule.GetHttpHeader(new UUID(request_id), header);
-           return String.Empty;
+           return string.Empty;
         }
 
 
@@ -12975,7 +12975,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             {
                 Error("llGetInventoryCreator", "Can't find item '" + item + "'");
 
-                return String.Empty;
+                return string.Empty;
             }
 
             return item.CreatorID.ToString();
@@ -13007,7 +13007,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
                 if (World.RegionInfo.RegionName == simulator)
                 {
-                    string lreply = String.Empty;
+                    string lreply = string.Empty;
                     GridRegion linfo = new GridRegion(World.RegionInfo);
                     switch (data)
                     {
@@ -14315,7 +14315,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             for (int i = 0; i < parameters.Data.Length; i += 2)
             {
-                ok = Int32.TryParse(parameters.Data[i].ToString(), out int flag);
+                ok = int.TryParse(parameters.Data[i].ToString(), out int flag);
                 if (!ok || flag < 0 ||
                     flag > (int)HttpRequestConstants.HTTP_PRAGMA_NO_CACHE)
                 {
@@ -14363,7 +14363,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                         //Have we reached the end of the list of headers?
                         //End is marked by a string with a single digit.
                         if (i + 2 >= parameters.Data.Length ||
-                            Char.IsDigit(parameters.Data[i + 2].ToString()[0]))
+                            char.IsDigit(parameters.Data[i + 2].ToString()[0]))
                         {
                             break;
                         }
@@ -14445,7 +14445,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
                 if (m.Groups.Count == 5)
                 {
-                    httpHeaders["Authorization"] = String.Format("Basic {0}", Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(m.Groups[2].ToString() + ":" + m.Groups[3].ToString())));
+                    httpHeaders["Authorization"] = string.Format("Basic {0}", Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(m.Groups[2].ToString() + ":" + m.Groups[3].ToString())));
                     url = m.Groups[1].ToString() + m.Groups[4].ToString();
                 }
             }
@@ -15076,7 +15076,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                             ret.Add(new LSL_Key(obj.ParentGroup.RezzerID.ToString()));
                             break;
                         case ScriptBaseClass.OBJECT_GROUP_TAG:
-                            ret.Add(new LSL_String(String.Empty));
+                            ret.Add(new LSL_String(string.Empty));
                             break;
                         case ScriptBaseClass.OBJECT_TEMP_ATTACHED:
                             if (obj.ParentGroup.AttachmentPoint != 0 && obj.ParentGroup.FromItemID == UUID.Zero)
@@ -15453,7 +15453,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Action<string> act = eventID =>
             {
-                string name = String.Empty;
+                string name = string.Empty;
                 ScenePresence presence = World.GetScenePresence(key);
                 if (presence != null)
                 {
@@ -15490,7 +15490,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     return presence.Name;
                 }
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         public LSL_Key llRequestDisplayName(LSL_Key id)
@@ -15510,7 +15510,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Action<string> act = eventID =>
             {
-                string name = String.Empty;
+                string name = string.Empty;
                 ScenePresence presence = World.GetScenePresence(key);
                 if (presence != null)
                 {
@@ -17102,7 +17102,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             group.ResumeScripts();
 
             m_ScriptEngine.PostObjectEvent(m_host.LocalId, new EventParams(
-                    "object_rez", new Object[] {
+                    "object_rez", new object[] {
                     new LSL_String(
                     group.RootPart.UUID.ToString()) },
                     new DetectParams[0]));
@@ -17167,7 +17167,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             if(bad)
             {
                 m_ScriptEngine.PostScriptEvent(m_item.ItemID, new EventParams(
-                        "transaction_result", new Object[] {
+                        "transaction_result", new object[] {
                             new LSL_String(txn.ToString()),
                             new LSL_Integer(0),
                             new LSL_String(replydata) },
@@ -17201,7 +17201,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 finally
                 {
                     m_ScriptEngine.PostScriptEvent(m_item.ItemID, new EventParams(
-                            "transaction_result", new Object[] {
+                            "transaction_result", new object[] {
                             new LSL_String(txn.ToString()),
                             new LSL_Integer(replycode),
                             new LSL_String(replydata) },
@@ -17648,7 +17648,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
         public void llSetAnimationOverride(LSL_String animState, LSL_String anim)
         {
-            string state = String.Empty;
+            string state = string.Empty;
 
             foreach (KeyValuePair<string, string> kvp in MovementAnimationsForLSL)
             {
@@ -17688,7 +17688,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             if (animID == UUID.Zero)
             {
-                String animupper = ((string)anim).ToUpperInvariant();
+                string animupper = ((string)anim).ToUpperInvariant();
                 DefaultAvatarAnimations.AnimsUUIDbyName.TryGetValue(animupper, out animID);
             }
 
@@ -17725,7 +17725,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 return;
             }
 
-            string state = String.Empty;
+            string state = string.Empty;
 
             foreach (KeyValuePair<string, string> kvp in MovementAnimationsForLSL)
             {
@@ -17750,21 +17750,21 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             ScenePresence presence = World.GetScenePresence(m_item.PermsGranter);
             if (presence == null)
-                return String.Empty;
+                return string.Empty;
 
             if (m_item.PermsGranter == UUID.Zero)
             {
                 llShout(ScriptBaseClass.DEBUG_CHANNEL, "No permission to override animations");
-                return String.Empty;
+                return string.Empty;
             }
 
             if ((m_item.PermsMask & (ScriptBaseClass.PERMISSION_OVERRIDE_ANIMATIONS | ScriptBaseClass.PERMISSION_TRIGGER_ANIMATION)) == 0)
             {
                 llShout(ScriptBaseClass.DEBUG_CHANNEL, "No permission to override animations");
-                return String.Empty;
+                return string.Empty;
             }
 
-            string state = String.Empty;
+            string state = string.Empty;
 
             foreach (KeyValuePair<string, string> kvp in MovementAnimationsForLSL)
             {
@@ -17777,7 +17777,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             if (string.IsNullOrEmpty(state))
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             UUID animID = presence.GetAnimationOverride(state);
@@ -17796,7 +17796,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     return item.Name;
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         public LSL_Integer llGetDayLength()
@@ -17927,7 +17927,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             m_host.AddScriptLPS(1);
 
-            if (String.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json))
                 return new LSL_List();
             if(json == "[]")
                 return new LSL_List();
@@ -18150,7 +18150,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             int i;
             char c;
-            String t;
+            string t;
             int len = s.Length;
 
             StringBuilder sb = new StringBuilder(len + 64);
@@ -18186,7 +18186,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     default:
                         if (c < ' ')
                         {
-                            t = "000" + String.Format("{0:X}", c);
+                            t = "000" + string.Format("{0:X}", c);
                             sb.Append("\\u" + t.Substring(t.Length - 4));
                         }
                         else
@@ -18210,7 +18210,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 if(noSpecifiers)
                     specifiers.Add(new LSL_Integer(0));
 
-                if(!String.IsNullOrEmpty(json))
+                if(!string.IsNullOrEmpty(json))
                     workData = LitJson.JsonMapper.ToObject(json);
                 else
                 {
@@ -18563,7 +18563,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
         public LSL_String llJsonGetValue(LSL_String json, LSL_List specifiers)
         {
-            if(String.IsNullOrWhiteSpace(json))
+            if(string.IsNullOrWhiteSpace(json))
                 return ScriptBaseClass.JSON_INVALID;
 
             if(specifiers.Length > 0 && (json == "{}" || json == "[]"))
@@ -18614,7 +18614,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     return new LSL_String((bool)elem ? ScriptBaseClass.JSON_TRUE : ScriptBaseClass.JSON_FALSE);
                 case LitJson.JsonType.Double:
                     double d= (double)elem;
-                    string sd = String.Format(Culture.FormatProvider, "{0:0.0#####}",d);
+                    string sd = string.Format(Culture.FormatProvider, "{0:0.0#####}",d);
                     return new LSL_String(sd);
                 case LitJson.JsonType.Int:
                     int i = (int)elem;
@@ -18636,7 +18636,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
         public LSL_String llJsonValueType(LSL_String json, LSL_List specifiers)
         {
-            if(String.IsNullOrWhiteSpace(json))
+            if(string.IsNullOrWhiteSpace(json))
                 return ScriptBaseClass.JSON_INVALID;
 
             if(specifiers.Length > 0 && (json == "{}" || json == "[]"))

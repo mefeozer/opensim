@@ -77,7 +77,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
 
         private List<string> m_warnings = new List<string>();
 
-        private static UInt64 scriptCompileCounter = 0;                                     // And a counter
+        private static ulong scriptCompileCounter = 0;                                     // And a counter
 
         public IScriptEngine m_scriptEngine;
         private Dictionary<string, Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>>> m_lineMaps =
@@ -318,7 +318,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
             if (!AllowedCompilers.ContainsKey(language.ToString()))
             {
                 // Not allowed to compile to this language!
-                string errtext = String.Empty;
+                string errtext = string.Empty;
                 errtext += "The compiler for language \"" + language.ToString() + "\" is not in list of allowed compilers. Script will not be executed!";
                 throw new Exception(errtext);
             }
@@ -326,7 +326,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
             if (m_scriptEngine.World.Permissions.CanCompileScript(ownerUUID, (int)language) == false)
             {
                 // Not allowed to compile to this language!
-                string errtext = String.Empty;
+                string errtext = string.Empty;
                 errtext += ownerUUID + " is not in list of allowed users for this scripting language. Script will not be executed!";
                 throw new Exception(errtext);
             }
@@ -464,10 +464,10 @@ namespace SecondLife
 
         public static string CreateVBCompilerScript(string compileScript, string className, string baseClassName)
         {
-            compileScript = String.Empty +
+            compileScript = string.Empty +
                 "Imports OpenSim.Region.ScriptEngine.Shared: Imports System.Collections.Generic: " +
-                String.Empty + "NameSpace SecondLife:" +
-                String.Empty + "Public Class " + className + ": Inherits " + baseClassName +
+                string.Empty + "NameSpace SecondLife:" +
+                string.Empty + "Public Class " + className + ": Inherits " + baseClassName +
                 "\r\nPublic Sub New()\r\nEnd Sub: " +
                 compileScript +
                 ":End Class :End Namespace\r\n";
@@ -605,7 +605,7 @@ namespace SecondLife
             // WARNINGS AND ERRORS
             //
             bool hadErrors = false;
-            string errtext = String.Empty;
+            string errtext = string.Empty;
             if (results.Errors.Count > 0)
             {
                 foreach (CompilerError CompErr in results.Errors)
@@ -632,7 +632,7 @@ namespace SecondLife
 
                         // The Second Life viewer's script editor begins
                         // countingn lines and columns at 0, so we subtract 1.
-                        errtext += String.Format("({0},{1}): {4} {2}: {3}\n",
+                        errtext += string.Format("({0},{1}): {4} {2}: {3}\n",
                                 errorPos.Key - 1, errorPos.Value - 1,
                                 CompErr.ErrorNumber, text, severity);
                         hadErrors = true;
@@ -660,7 +660,7 @@ namespace SecondLife
                 // One final chance...
                 if (!File.Exists(assembly))
                 {
-                    errtext = String.Empty;
+                    errtext = string.Empty;
                     errtext += "No compile error. But not able to locate compiled file.";
                     throw new Exception(errtext);
                 }
@@ -678,12 +678,12 @@ namespace SecondLife
 
             if (fi == null)
             {
-                errtext = String.Empty;
+                errtext = string.Empty;
                 errtext += "No compile error. But not able to stat file.";
                 throw new Exception(errtext);
             }
 
-            Byte[] data = new Byte[fi.Length];
+            byte[] data = new byte[fi.Length];
 
             try
             {
@@ -692,7 +692,7 @@ namespace SecondLife
             }
             catch (Exception)
             {
-                errtext = String.Empty;
+                errtext = string.Empty;
                 errtext += "No compile error. But not able to open file.";
                 throw new Exception(errtext);
             }
@@ -701,7 +701,7 @@ namespace SecondLife
             //
             string filetext = System.Convert.ToBase64String(data);
 
-            Byte[] buf = Encoding.ASCII.GetBytes(filetext);
+            byte[] buf = Encoding.ASCII.GetBytes(filetext);
 
             using (FileStream sfs = File.Create(assembly + ".text"))
                 sfs.Write(buf, 0, buf.Length);
@@ -805,10 +805,10 @@ namespace SecondLife
             {
                 KeyValuePair<int, int> k = kvp.Key;
                 KeyValuePair<int, int> v = kvp.Value;
-                mapbuilder.Append(String.Format("{0},{1},{2},{3}\n", k.Key, k.Value, v.Key, v.Value));
+                mapbuilder.Append(string.Format("{0},{1},{2},{3}\n", k.Key, k.Value, v.Key, v.Value));
             }
 
-            Byte[] mapbytes = Encoding.ASCII.GetBytes(mapbuilder.ToString());
+            byte[] mapbytes = Encoding.ASCII.GetBytes(mapbuilder.ToString());
 
             using (FileStream mfs = File.Create(filename))
                 mfs.Write(mapbytes, 0, mapbytes.Length);
@@ -826,7 +826,7 @@ namespace SecondLife
                     string line;
                     while ((line = r.ReadLine()) != null)
                     {
-                        String[] parts = line.Split(new Char[] { ',' });
+                        string[] parts = line.Split(new char[] { ',' });
                         int kk = System.Convert.ToInt32(parts[0]);
                         int kv = System.Convert.ToInt32(parts[1]);
                         int vk = System.Convert.ToInt32(parts[2]);

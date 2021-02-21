@@ -65,19 +65,19 @@ namespace OpenSim.Groups
             string homeURI = Util.GetConfigVarFromSections<string>(config, "HomeURI",
                 new string[] { "Startup", "Hypergrid", m_ConfigName}, string.Empty);
             if (string.IsNullOrEmpty(homeURI))
-                throw new Exception(String.Format("[Groups.RobustHGConnector]: please provide the HomeURI [Startup] or in section {0}", m_ConfigName));
+                throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide the HomeURI [Startup] or in section {0}", m_ConfigName));
 
             IConfig cnf = config.Configs[m_ConfigName];
             if (cnf == null)
-                throw new Exception(String.Format("[Groups.RobustHGConnector]: {0} section does not exist", m_ConfigName));
+                throw new Exception(string.Format("[Groups.RobustHGConnector]: {0} section does not exist", m_ConfigName));
 
             if (im == null)
             {
                 string imDll = cnf.GetString("OfflineIMService", string.Empty);
                 if (string.IsNullOrEmpty(imDll))
-                    throw new Exception(String.Format("[Groups.RobustHGConnector]: please provide OfflineIMService in section {0}", m_ConfigName));
+                    throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide OfflineIMService in section {0}", m_ConfigName));
 
-                Object[] args = new Object[] { config };
+                object[] args = new object[] { config };
                 im = ServerUtils.LoadPlugin<IOfflineIMService>(imDll, args);
             }
 
@@ -85,9 +85,9 @@ namespace OpenSim.Groups
             {
                 string usersDll = cnf.GetString("UserAccountService", string.Empty);
                 if (string.IsNullOrEmpty(usersDll))
-                    throw new Exception(String.Format("[Groups.RobustHGConnector]: please provide UserAccountService in section {0}", m_ConfigName));
+                    throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide UserAccountService in section {0}", m_ConfigName));
 
-                Object[] args = new Object[] { config };
+                object[] args = new object[] { config };
                 users = ServerUtils.LoadPlugin<IUserAccountService>(usersDll, args);
             }
 

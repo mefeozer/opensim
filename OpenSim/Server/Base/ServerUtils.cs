@@ -215,13 +215,13 @@ namespace OpenSim.Server.Base
         /// <param name="dllName"></param>
         /// <param name="args">The arguments which control which constructor is invoked on the plugin</param>
         /// <returns></returns>
-        public static T LoadPlugin<T> (string dllName, Object[] args) where T:class
+        public static T LoadPlugin<T> (string dllName, object[] args) where T:class
         {
             // This is good to debug configuration problems
             //if (dllName == string.Empty)
             //    Util.PrintCallStack();
 
-            string className = String.Empty;
+            string className = string.Empty;
 
             // The path for a dynamic plugin will contain ":" on Windows
             string[] parts = dllName.Split (new char[] {':'});
@@ -236,7 +236,7 @@ namespace OpenSim.Server.Base
             else
             {
                 // This is Windows - we must replace the ":" in the path
-                dllName = String.Format ("{0}:{1}", parts [0], parts [1]);
+                dllName = string.Format ("{0}:{1}", parts [0], parts [1]);
                 if (parts.Length > 2)
                     className = parts[2];
             }
@@ -246,7 +246,7 @@ namespace OpenSim.Server.Base
             {
                 string[] dllNameParts = dllName.Split(new char[] {'@'});
                 dllName = dllNameParts[dllNameParts.Length - 1];
-                List<Object> argList = new List<Object>(args);
+                List<object> argList = new List<object>(args);
                 for (int i = 0 ; i < dllNameParts.Length - 1 ; ++i)
                     argList.Add(dllNameParts[i]);
 
@@ -263,7 +263,7 @@ namespace OpenSim.Server.Base
         /// <param name="className"></param>
         /// <param name="args">The arguments which control which constructor is invoked on the plugin</param>
         /// <returns></returns>
-        public static T LoadPlugin<T>(string dllName, string className, Object[] args) where T:class
+        public static T LoadPlugin<T>(string dllName, string className, object[] args) where T:class
         {
             string interfaceName = typeof(T).ToString();
 
@@ -313,7 +313,7 @@ namespace OpenSim.Server.Base
             catch (ReflectionTypeLoadException rtle)
             {
                 m_log.Error(string.Format("[SERVER UTILS]: Error loading plugin from {0}:\n{1}", dllName,
-                    String.Join("\n", Array.ConvertAll(rtle.LoaderExceptions, e => e.ToString()))),
+                    string.Join("\n", Array.ConvertAll(rtle.LoaderExceptions, e => e.ToString()))),
                     rtle);
                 return null;
             }
@@ -342,7 +342,7 @@ namespace OpenSim.Server.Base
                 if (elems.Length == 0)
                     continue;
 
-                if(String.IsNullOrWhiteSpace(elems[0]))
+                if(string.IsNullOrWhiteSpace(elems[0]))
                     continue;
 
                 name = System.Web.HttpUtility.UrlDecode(elems[0]);
@@ -350,7 +350,7 @@ namespace OpenSim.Server.Base
                 if (name.EndsWith("[]"))
                 {
                     name = name.Substring(0, name.Length - 2);
-                    if(String.IsNullOrWhiteSpace(name))
+                    if(string.IsNullOrWhiteSpace(name))
                         continue;
                     if (result.ContainsKey(name))
                     {
@@ -358,18 +358,18 @@ namespace OpenSim.Server.Base
                             continue;
 
                         List<string> l = (List<string>)result[name];
-                        if (elems.Length > 1 && !String.IsNullOrWhiteSpace(elems[1]))
+                        if (elems.Length > 1 && !string.IsNullOrWhiteSpace(elems[1]))
                             l.Add(System.Web.HttpUtility.UrlDecode(elems[1]));
                         else
-                            l.Add(String.Empty);
+                            l.Add(string.Empty);
                     }
                     else
                     {
                         List<string> newList = new List<string>();
-                        if (elems.Length > 1 && !String.IsNullOrWhiteSpace(elems[1]))
+                        if (elems.Length > 1 && !string.IsNullOrWhiteSpace(elems[1]))
                             newList.Add(System.Web.HttpUtility.UrlDecode(elems[1]));
                         else
-                            newList.Add(String.Empty);
+                            newList.Add(string.Empty);
                         result[name] = newList;
                     }
                 }
@@ -377,10 +377,10 @@ namespace OpenSim.Server.Base
                 {
                     if (!result.ContainsKey(name))
                     {
-                        if (elems.Length > 1 && !String.IsNullOrWhiteSpace(elems[1]))
+                        if (elems.Length > 1 && !string.IsNullOrWhiteSpace(elems[1]))
                             result[name] = System.Web.HttpUtility.UrlDecode(elems[1]);
                         else
-                            result[name] = String.Empty;
+                            result[name] = string.Empty;
                     }
                 }
             }
@@ -400,7 +400,7 @@ namespace OpenSim.Server.Base
             {
                 if (kvp.Value is List<string>)
                 {
-                    List<string> l = (List<String>)kvp.Value;
+                    List<string> l = (List<string>)kvp.Value;
                     int llen = l.Count;
                     string nkey = System.Web.HttpUtility.UrlEncode(kvp.Key);
                     for(int i = 0; i < llen; ++i)
@@ -445,7 +445,7 @@ namespace OpenSim.Server.Base
                     sb.Append(System.Web.HttpUtility.UrlEncode(kvp.Key));
  
                     pvalue = kvp.Value.ToString();
-                    if (!String.IsNullOrEmpty(pvalue))
+                    if (!string.IsNullOrEmpty(pvalue))
                     {
                         sb.Append("=");
                         sb.Append(System.Web.HttpUtility.UrlEncode(pvalue));

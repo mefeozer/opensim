@@ -837,7 +837,7 @@ namespace OpenSim.Data.PGSQL
                 {
                     if (!result.Read())
                     {
-                        return String.Empty;
+                        return string.Empty;
                     }
                     else
                     {
@@ -1072,7 +1072,7 @@ namespace OpenSim.Data.PGSQL
             if (row["loaded_creation_id"] is DBNull)
                 newSettings.LoadedCreationID = "";
             else
-                newSettings.LoadedCreationID = (String)row["loaded_creation_id"];
+                newSettings.LoadedCreationID = (string)row["loaded_creation_id"];
 
             newSettings.TerrainImageID = new UUID((string)row["map_tile_ID"]);
             newSettings.ParcelImageID = new UUID((Guid)row["parcel_tile_ID"]);
@@ -1096,7 +1096,7 @@ namespace OpenSim.Data.PGSQL
             newData.LocalID = Convert.ToInt32(row["LocalLandID"]);
 
             // Bitmap is a byte[512]
-            newData.Bitmap = (Byte[])row["Bitmap"];
+            newData.Bitmap = (byte[])row["Bitmap"];
 
             newData.Name = (string)row["Name"];
             newData.Description = (string)row["Description"];
@@ -1317,9 +1317,9 @@ namespace OpenSim.Data.PGSQL
                 prim.SoundFlags = 0;
 
             if (!(primRow["TextureAnimation"] is DBNull))
-                prim.TextureAnimation = (Byte[])primRow["TextureAnimation"];
+                prim.TextureAnimation = (byte[])primRow["TextureAnimation"];
             if (!(primRow["ParticleSystem"] is DBNull))
-                prim.ParticleSystem = (Byte[])primRow["ParticleSystem"];
+                prim.ParticleSystem = (byte[])primRow["ParticleSystem"];
 
             prim.SetCameraEyeOffset(new Vector3(
                                         Convert.ToSingle(primRow["CameraEyeOffsetX"]),

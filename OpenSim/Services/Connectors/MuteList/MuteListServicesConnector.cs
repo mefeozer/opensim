@@ -41,7 +41,7 @@ namespace OpenSim.Services.Connectors
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = String.Empty;
+        private string m_ServerURI = string.Empty;
 
         public MuteListServicesConnector()
         {
@@ -67,7 +67,7 @@ namespace OpenSim.Services.Connectors
             }
 
             string serviceURI = gridConfig.GetString("MuteListServerURI",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceURI))
             {
@@ -79,7 +79,7 @@ namespace OpenSim.Services.Connectors
         }
 
         #region IMuteListService
-        public Byte[] MuteListRequest(UUID agentID, uint crc)
+        public byte[] MuteListRequest(UUID agentID, uint crc)
         {
             Dictionary<string, object> sendData = new Dictionary<string, object>();
             sendData["METHOD"] = "get";
@@ -97,7 +97,7 @@ namespace OpenSim.Services.Connectors
                     if (replyData.ContainsKey("result"))
                     {
                         string datastr = replyData["result"].ToString();
-                        if(String.IsNullOrWhiteSpace(datastr))
+                        if(string.IsNullOrWhiteSpace(datastr))
                             return null;
                         return Convert.FromBase64String(datastr);
                     }
@@ -126,7 +126,7 @@ namespace OpenSim.Services.Connectors
             if(mute.MuteFlags != 0)
                 sendData["muteflags"] = mute.MuteFlags.ToString();
             sendData["mutestamp"] = mute.Stamp.ToString();
-            if(!String.IsNullOrEmpty(mute.MuteName))
+            if(!string.IsNullOrEmpty(mute.MuteName))
                 sendData["mutename"] = mute.MuteName;
 
             return doSimplePost(ServerUtils.BuildQueryString(sendData), "update");
@@ -138,7 +138,7 @@ namespace OpenSim.Services.Connectors
             sendData["METHOD"] = "delete";
             sendData["agentid"] = agentID.ToString();
             sendData["muteid"] = muteID.ToString();
-            if(!String.IsNullOrEmpty(muteName))
+            if(!string.IsNullOrEmpty(muteName))
                 sendData["mutename"] = muteName;
 
             return doSimplePost(ServerUtils.BuildQueryString(sendData), "remove");

@@ -78,7 +78,7 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
                 words[0] = words[0].Trim(); // it has at least 1
                 words[1] = words[1].Trim().ToLower();
                 string match1 = "@" + words[1];
-                if (String.IsNullOrWhiteSpace(words[0])) // query was @foo.com?
+                if (string.IsNullOrWhiteSpace(words[0])) // query was @foo.com?
                 {
                     foreach (UserData d in m_userCacheByID.Values)
                     {

@@ -102,7 +102,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                         // No, that doesn't scale it:
                         // heightvalue = low + mid * (heightvalue - low) / mid; => low + (heightvalue - low) * mid / mid = low + (heightvalue - low) * 1 = low + heightvalue - low = heightvalue
 
-                        if (Single.IsInfinity(heightvalue) || Single.IsNaN(heightvalue))
+                        if (float.IsInfinity(heightvalue) || float.IsNaN(heightvalue))
                             heightvalue = 0;
                         else if (heightvalue > 255f)
                             heightvalue = 255f;
@@ -128,10 +128,10 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                                 {
                                     hfvaluecompare = (float)hm[x + 1, y + 1]; // light from north-east => look at land height there
                                 }
-                                if (Single.IsInfinity(hfvalue) || Single.IsNaN(hfvalue))
+                                if (float.IsInfinity(hfvalue) || float.IsNaN(hfvalue))
                                     hfvalue = 0f;
 
-                                if (Single.IsInfinity(hfvaluecompare) || Single.IsNaN(hfvaluecompare))
+                                if (float.IsInfinity(hfvaluecompare) || float.IsNaN(hfvaluecompare))
                                     hfvaluecompare = 0f;
 
                                 float hfdiff = hfvalue - hfvaluecompare;  // => positive if NE is lower, negative if here is lower
@@ -222,7 +222,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
                         // Y flip the cordinates
                         heightvalue = waterHeight - heightvalue;
-                        if (Single.IsInfinity(heightvalue) || Single.IsNaN(heightvalue))
+                        if (float.IsInfinity(heightvalue) || float.IsNaN(heightvalue))
                             heightvalue = 0f;
                         else if (heightvalue > 19f)
                             heightvalue = 19f;

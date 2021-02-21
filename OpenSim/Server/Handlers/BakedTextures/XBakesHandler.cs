@@ -49,7 +49,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
 
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
 
             string bakesServiceName = serverConfig.GetString("LocalServiceModule", string.Empty);
 

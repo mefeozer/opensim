@@ -67,14 +67,14 @@ public class BSPrim : BSPhysObject
     // Parameters for the hover actor
     public const string HoverActorName = "BSPrim.HoverActor";
     // Parameters for the axis lock actor
-    public const String LockedAxisActorName = "BSPrim.LockedAxis";
+    public const string LockedAxisActorName = "BSPrim.LockedAxis";
     // Parameters for the move to target actor
     public const string MoveToTargetActorName = "BSPrim.MoveToTargetActor";
     // Parameters for the setForce and setTorque actors
     public const string SetForceActorName = "BSPrim.SetForceActor";
     public const string SetTorqueActorName = "BSPrim.SetTorqueActor";
 
-    public BSPrim(uint localID, String primName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 size,
+    public BSPrim(uint localID, string primName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 size,
                        OMV.Quaternion rotation, PrimitiveBaseShape pbs, bool pisPhysical)
             : base(parent_scene, localID, primName, "BSPrim")
     {
@@ -1675,7 +1675,7 @@ public class BSPrim : BSPhysObject
                 {
                     var funct = pParams[index];
                     DetailLog("{0} SetAxisLockLimitsExtension. op={1}, index={2}", LocalID, funct, index);
-                    if (funct is Int32 || funct is Int64)
+                    if (funct is int || funct is long)
                     {
                         switch ((int)funct)
                         {

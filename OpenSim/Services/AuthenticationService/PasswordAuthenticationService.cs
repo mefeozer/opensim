@@ -80,13 +80,13 @@ namespace OpenSim.Services.AuthenticationService
             if (data == null || data.Data == null)
             {
                 m_log.DebugFormat("[AUTH SERVICE]: PrincipalID {0} or its data not found", principalID);
-                return String.Empty;
+                return string.Empty;
             }
 
             if (!data.Data.ContainsKey("passwordHash") ||
                 !data.Data.ContainsKey("passwordSalt"))
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             string hashed = Util.Md5Hash(password + ":" +
@@ -102,13 +102,13 @@ namespace OpenSim.Services.AuthenticationService
             if (user == null)
             {
                 m_log.DebugFormat("[PASS AUTH]: No user record for {0}", principalID);
-                return String.Empty;
+                return string.Empty;
             }
 
             int impersonateFlag = 1 << 6;
 
             if ((user.UserFlags & impersonateFlag) == 0)
-                return String.Empty;
+                return string.Empty;
 
             m_log.DebugFormat("[PASS AUTH]: Attempting impersonation");
 
@@ -116,7 +116,7 @@ namespace OpenSim.Services.AuthenticationService
             if (accounts == null || accounts.Count == 0)
             {
                 m_log.DebugFormat("[PASS AUTH]: No suitable gods found");
-                return String.Empty;
+                return string.Empty;
             }
 
             foreach (UserAccount a in accounts)
@@ -150,7 +150,7 @@ namespace OpenSim.Services.AuthenticationService
             }
 
             m_log.DebugFormat("[PASS AUTH]: Impersonation of {0} failed", principalID);
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

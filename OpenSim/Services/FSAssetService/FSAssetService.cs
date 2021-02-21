@@ -127,17 +127,17 @@ namespace OpenSim.Services.FSAssetService
             if (dbConfig != null)
             {
                 if (string.IsNullOrEmpty(dllName))
-                    dllName = dbConfig.GetString("StorageProvider", String.Empty);
+                    dllName = dbConfig.GetString("StorageProvider", string.Empty);
 
                 if (string.IsNullOrEmpty(connectionString))
-                    connectionString = dbConfig.GetString("ConnectionString", String.Empty);
+                    connectionString = dbConfig.GetString("ConnectionString", string.Empty);
             }
 
             // No databse connection found in either config
-            if (dllName.Equals(String.Empty))
+            if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            if (connectionString.Equals(String.Empty))
+            if (connectionString.Equals(string.Empty))
                 throw new Exception("Missing database connection string");
 
             // Create Storage Provider
@@ -173,7 +173,7 @@ namespace OpenSim.Services.FSAssetService
 
             Directory.CreateDirectory(spoolTmp);
 
-            m_FSBase = assetConfig.GetString("BaseDirectory", String.Empty);
+            m_FSBase = assetConfig.GetString("BaseDirectory", string.Empty);
             if (string.IsNullOrEmpty(m_FSBase))
             {
                 m_log.ErrorFormat("[FSASSETS]: BaseDirectory not specified");
@@ -356,7 +356,7 @@ namespace OpenSim.Services.FSAssetService
             using (SHA256CryptoServiceProvider SHA256 = new SHA256CryptoServiceProvider())
                 hash = SHA256.ComputeHash(data);
 
-            return BitConverter.ToString(hash).Replace("-", String.Empty);
+            return BitConverter.ToString(hash).Replace("-", string.Empty);
         }
 
         public string HashToPath(string hash)
@@ -539,7 +539,7 @@ namespace OpenSim.Services.FSAssetService
             return GetFsData(hash);
         }
 
-        public bool Get(string id, Object sender, AssetRetrieved handler)
+        public bool Get(string id, object sender, AssetRetrieved handler)
         {
             AssetBase asset = Get(id);
 
@@ -592,7 +592,7 @@ namespace OpenSim.Services.FSAssetService
                 }
                 catch (Exception)
                 {
-                    return new Byte[0];
+                    return new byte[0];
                 }
             }
             else if (File.Exists(diskFile))
@@ -607,7 +607,7 @@ namespace OpenSim.Services.FSAssetService
                 {
                 }
             }
-            return new Byte[0];
+            return new byte[0];
 
         }
 
@@ -749,12 +749,12 @@ namespace OpenSim.Services.FSAssetService
 
             int i;
 
-            MainConsole.Instance.Output(String.Format("Name: {0}", asset.Name));
-            MainConsole.Instance.Output(String.Format("Description: {0}", asset.Description));
-            MainConsole.Instance.Output(String.Format("Type: {0}", asset.Type));
-            MainConsole.Instance.Output(String.Format("Content-type: {0}", asset.Metadata.ContentType));
-            MainConsole.Instance.Output(String.Format("Flags: {0}", asset.Metadata.Flags.ToString()));
-            MainConsole.Instance.Output(String.Format("FS file: {0}", HashToFile(hash)));
+            MainConsole.Instance.Output(string.Format("Name: {0}", asset.Name));
+            MainConsole.Instance.Output(string.Format("Description: {0}", asset.Description));
+            MainConsole.Instance.Output(string.Format("Type: {0}", asset.Type));
+            MainConsole.Instance.Output(string.Format("Content-type: {0}", asset.Metadata.ContentType));
+            MainConsole.Instance.Output(string.Format("Flags: {0}", asset.Metadata.Flags.ToString()));
+            MainConsole.Instance.Output(string.Format("FS file: {0}", HashToFile(hash)));
 
             for (i = 0 ; i < 5 ; i++)
             {
@@ -769,7 +769,7 @@ namespace OpenSim.Services.FSAssetService
                 Array.Copy(asset.Data, off, line, 0, len);
 
                 string text = BitConverter.ToString(line);
-                MainConsole.Instance.Output(String.Format("{0:x4}: {1}", off, text));
+                MainConsole.Instance.Output(string.Format("{0:x4}: {1}", off, text));
             }
         }
 

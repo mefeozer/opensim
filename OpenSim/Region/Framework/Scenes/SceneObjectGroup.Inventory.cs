@@ -505,22 +505,22 @@ namespace OpenSim.Region.Framework.Scenes
             }
 
             if (states.Count < 1)
-                return String.Empty;
+                return string.Empty;
 
             XmlDocument xmldoc = new XmlDocument();
 
             XmlNode xmlnode = xmldoc.CreateNode(XmlNodeType.XmlDeclaration,
-                    String.Empty, String.Empty);
+                    string.Empty, string.Empty);
 
             xmldoc.AppendChild(xmlnode);
             XmlElement rootElement = xmldoc.CreateElement("", "ScriptData",
-                    String.Empty);
+                    string.Empty);
 
             xmldoc.AppendChild(rootElement);
 
 
             XmlElement wrapper = xmldoc.CreateElement("", "ScriptStates",
-                    String.Empty);
+                    string.Empty);
 
             rootElement.AppendChild(wrapper);
 

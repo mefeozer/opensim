@@ -102,7 +102,7 @@ namespace OpenSim.Data.MySQL
 
         public EstateSettings LoadEstateSettings(UUID regionID, bool create)
         {
-            string sql = "select estate_settings." + String.Join(",estate_settings.", FieldList) +
+            string sql = "select estate_settings." + string.Join(",estate_settings.", FieldList) +
                 " from estate_map left join estate_settings on estate_map.EstateID = estate_settings.EstateID where estate_settings.EstateID is not null and RegionID = ?RegionID";
 
             using (MySqlCommand cmd = new MySqlCommand())
@@ -197,7 +197,7 @@ namespace OpenSim.Data.MySQL
             if (es.EstateID < 100)
                 names.Remove("EstateID");
 
-            string sql = "insert into estate_settings (" + String.Join(",", names.ToArray()) + ") values ( ?" + String.Join(", ?", names.ToArray()) + ")";
+            string sql = "insert into estate_settings (" + string.Join(",", names.ToArray()) + ") values ( ?" + string.Join(", ?", names.ToArray()) + ")";
 
             using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
             {
@@ -245,7 +245,7 @@ namespace OpenSim.Data.MySQL
 
         public void StoreEstateSettings(EstateSettings es)
         {
-            string sql = "replace into estate_settings (" + String.Join(",", FieldList) + ") values ( ?" + String.Join(", ?", FieldList) + ")";
+            string sql = "replace into estate_settings (" + string.Join(",", FieldList) + ") values ( ?" + string.Join(", ?", FieldList) + ")";
 
             using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
             {
@@ -406,7 +406,7 @@ namespace OpenSim.Data.MySQL
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                string sql = "select estate_settings." + String.Join(",estate_settings.", FieldList) + " from estate_settings where EstateID = ?EstateID";
+                string sql = "select estate_settings." + string.Join(",estate_settings.", FieldList) + " from estate_settings where EstateID = ?EstateID";
 
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue("?EstateID", estateID);

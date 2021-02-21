@@ -181,7 +181,7 @@ namespace OpenSim.Region.OptionalModules.PhysicsParameters
                 return;
             }
             string parm = "xxx";
-            string valparm = String.Empty;
+            string valparm = string.Empty;
             uint localID = (uint)PhysParameterEntry.APPLY_TO_NONE;  // set default value
             try
             {

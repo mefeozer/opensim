@@ -350,7 +350,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
 
             MemoryStream archiveWriteStream = new MemoryStream();
 
-            Dictionary<string, Object> options = new Dictionary<string, Object>();
+            Dictionary<string, object> options = new Dictionary<string, object>();
             options.Add("noassets", true);
 
             // When we're not saving assets, archiving is being done synchronously.

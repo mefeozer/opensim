@@ -70,9 +70,9 @@ namespace OpenSim.ConsoleClient
             m_Port = serverConfig.GetInt("port", 8003);
             m_Pass = serverConfig.GetString("pass", "secret");
 
-            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/StartSession/", String.Format("USER={0}&PASS={1}", m_User, m_Pass), LoginReply);
+            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/StartSession/", string.Format("USER={0}&PASS={1}", m_User, m_Pass), LoginReply);
 
-            string pidFile = serverConfig.GetString("PIDFile", String.Empty);
+            string pidFile = serverConfig.GetString("PIDFile", string.Empty);
 
             while (m_Server.Running)
             {
@@ -98,10 +98,10 @@ namespace OpenSim.ConsoleClient
             if (cmd.Length > 1)
             {
                 Array.Copy(cmd, 1, cmdlist, 0, cmd.Length - 1);
-                sendCmd += " \"" + String.Join("\" \"", cmdlist) + "\"";
+                sendCmd += " \"" + string.Join("\" \"", cmdlist) + "\"";
             }
 
-            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/SessionCommand/", String.Format("ID={0}&COMMAND={1}", m_SessionID, sendCmd), CommandReply);
+            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/SessionCommand/", string.Format("ID={0}&COMMAND={1}", m_SessionID, sendCmd), CommandReply);
         }
 
         public static void LoginReply(string requestUrl, string requestData, string replyData)
@@ -160,7 +160,7 @@ namespace OpenSim.ConsoleClient
 
             MainConsole.Instance.Commands.FromXml(helpNode, SendCommand);
 
-            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/ReadResponses/"+m_SessionID.ToString()+"/", String.Empty, ReadResponses);
+            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/ReadResponses/"+m_SessionID.ToString()+"/", string.Empty, ReadResponses);
         }
 
         public static void ReadResponses(string requestUrl, string requestData, string replyData)
@@ -192,7 +192,7 @@ namespace OpenSim.ConsoleClient
             while (lines.Count > 100)
                 lines.RemoveAt(0);
 
-            string prompt = String.Empty;
+            string prompt = string.Empty;
 
             foreach (string l in lines)
             {

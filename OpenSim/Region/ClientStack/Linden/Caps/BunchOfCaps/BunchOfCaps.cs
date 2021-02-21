@@ -529,7 +529,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     if (mm != null)
                         baseCost = mm.UploadCharge;
 
-                    string warning = String.Empty;
+                    string warning = string.Empty;
 
                     if (llsdRequest.asset_type == "mesh")
                     {
@@ -809,7 +809,7 @@ namespace OpenSim.Region.ClientStack.Linden
                             InventoryItemBase texitem = new InventoryItemBase();
                             texitem.Owner = m_HostCapsObj.AgentID;
                             texitem.CreatorId = creatorIDstr;
-                            texitem.CreatorData = String.Empty;
+                            texitem.CreatorData = string.Empty;
                             texitem.ID = UUID.Random();
                             texitem.AssetID = textureAsset.FullID;
                             texitem.Description = "mesh model texture";
@@ -876,7 +876,7 @@ namespace OpenSim.Region.ClientStack.Linden
                             InventoryItemBase meshitem = new InventoryItemBase();
                             meshitem.Owner = m_HostCapsObj.AgentID;
                             meshitem.CreatorId = creatorIDstr;
-                            meshitem.CreatorData = String.Empty;
+                            meshitem.CreatorData = string.Empty;
                             meshitem.ID = UUID.Random();
                             meshitem.AssetID = meshAsset.FullID;
                             meshitem.Description = "mesh ";
@@ -1116,7 +1116,7 @@ namespace OpenSim.Region.ClientStack.Linden
             InventoryItemBase item = new InventoryItemBase();
             item.Owner = m_HostCapsObj.AgentID;
             item.CreatorId = creatorIDstr;
-            item.CreatorData = String.Empty;
+            item.CreatorData = string.Empty;
             item.ID = inventoryItem;
             item.AssetID = asset.FullID;
             if (istest)
@@ -2342,19 +2342,19 @@ namespace OpenSim.Region.ClientStack.Linden
             public event UpLoadedAsset OnUpLoad;
             private UpLoadedAsset handlerUpLoad = null;
 
-            private string uploaderPath = String.Empty;
+            private string uploaderPath = string.Empty;
             private UUID newAssetID;
             private UUID inventoryItemID;
             private UUID parentFolder;
             private IHttpServer httpListener;
             private bool m_dumpAssetsToFile;
-            private string m_assetName = String.Empty;
-            private string m_assetDes = String.Empty;
+            private string m_assetName = string.Empty;
+            private string m_assetDes = string.Empty;
 
-            private string m_invType = String.Empty;
-            private string m_assetType = String.Empty;
+            private string m_invType = string.Empty;
+            private string m_assetType = string.Empty;
             private int m_cost;
-            private string m_error = String.Empty;
+            private string m_error = string.Empty;
 
             private System.Timers.Timer m_timeoutTimer;
             private UUID m_texturesFolder;
@@ -2415,7 +2415,7 @@ namespace OpenSim.Region.ClientStack.Linden
             public string uploaderCaps(byte[] data, string path, string param)
             {
                 UUID inv = inventoryItemID;
-                string res = String.Empty;
+                string res = string.Empty;
                 LLSDAssetUploadComplete uploadComplete = new LLSDAssetUploadComplete();
     /*
                 uploadComplete.new_asset = newAssetID.ToString();

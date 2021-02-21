@@ -48,7 +48,7 @@ namespace OpenSim.Services.Connectors.Friends
 
         public bool FriendshipOffered(GridRegion region, UUID userID, UUID friendID, string message)
         {
-            return FriendshipOffered(region, userID, friendID, message, String.Empty);
+            return FriendshipOffered(region, userID, friendID, message, string.Empty);
         }
 
         public virtual bool FriendshipOffered(GridRegion region, UUID userID, UUID friendID, string message, string userName)

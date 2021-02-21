@@ -61,7 +61,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
         public class Copse
         {
             public string m_name;
-            public Boolean m_frozen;
+            public bool m_frozen;
             public Tree m_tree_type;
             public int m_tree_quantity;
             public float m_treeline_low;
@@ -73,7 +73,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             public Vector3 m_rate;
 
             [XmlIgnore]
-            public Boolean m_planted;
+            public bool m_planted;
             [XmlIgnore]
             public List<UUID> m_trees;
 
@@ -81,7 +81,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             {
             }
 
-            public Copse(string fileName, Boolean planted)
+            public Copse(string fileName, bool planted)
             {
                 Copse cp = (Copse)DeserializeObject(fileName);
 
@@ -257,15 +257,15 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
 
         #region ICommandableModule Members
 
-        private void HandleTreeActive(Object[] args)
+        private void HandleTreeActive(object[] args)
         {
-            if ((Boolean)args[0] && !m_active_trees)
+            if ((bool)args[0] && !m_active_trees)
             {
                 m_log.InfoFormat("[TREES]: Activating Trees");
                 m_active_trees = true;
                 activeizeTreeze(m_active_trees);
             }
-            else if (!(Boolean)args[0] && m_active_trees)
+            else if (!(bool)args[0] && m_active_trees)
             {
                 m_log.InfoFormat("[TREES]: Trees module is no longer active");
                 m_active_trees = false;
@@ -277,10 +277,10 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             }
         }
 
-        private void HandleTreeFreeze(Object[] args)
+        private void HandleTreeFreeze(object[] args)
         {
             string copsename = ((string)args[0]).Trim();
-            Boolean freezeState = (Boolean) args[1];
+            bool freezeState = (bool) args[1];
 
             lock(mylock)
             {
@@ -338,7 +338,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             m_log.InfoFormat("[TREES]: Copse {0} was not found - command failed", copsename);
         }
 
-        private void HandleTreeLoad(Object[] args)
+        private void HandleTreeLoad(object[] args)
         {
             Copse copse;
 
@@ -362,7 +362,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             m_log.InfoFormat("[TREES]: Loaded copse: {0}", copse.ToString());
         }
 
-        private void HandleTreePlant(Object[] args)
+        private void HandleTreePlant(object[] args)
         {
             string copsename = ((string)args[0]).Trim();
 
@@ -393,7 +393,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             m_log.InfoFormat("[TREES]: Copse {0} not found for planting", copsename);
         }
 
-        private void HandleTreeRate(Object[] args)
+        private void HandleTreeRate(object[] args)
         {
             m_update_ms = (double)args[0];
             if (m_update_ms >= 1000.0)
@@ -411,7 +411,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             }
         }
 
-        private void HandleTreeReload(Object[] args)
+        private void HandleTreeReload(object[] args)
         {
             if (m_active_trees)
             {
@@ -426,7 +426,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             }
         }
 
-        private void HandleTreeRemove(Object[] args)
+        private void HandleTreeRemove(object[] args)
         {
             string copsename = ((string)args[0]).Trim();
             Copse copseIdentity = null;
@@ -467,7 +467,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             }
         }
 
-        private void HandleTreeStatistics(Object[] args)
+        private void HandleTreeStatistics(object[] args)
         {
             m_log.InfoFormat("[TREES]: region {0}:", m_scene.Name);
             m_log.InfoFormat("[TREES]:    Activity State: {0};  Update Rate: {1}", m_active_trees, m_update_ms);
@@ -576,7 +576,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
         //--------------------------------------------------------------
 
         #region Tree Utilities
-        static public void SerializeObject(string fileName, Object obj)
+        static public void SerializeObject(string fileName, object obj)
         {
             try
             {
@@ -625,7 +625,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
                     // Create a new copse definition or add uuid to an existing definition
                     try
                     {
-                        Boolean copsefound = false;
+                        bool copsefound = false;
                         Copse grpcopse = new Copse(grpname);
 
                         lock(mylock)

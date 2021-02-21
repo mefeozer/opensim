@@ -284,7 +284,7 @@ namespace OSHttpServer
             foreach (ResponseCookie cookie in Cookies)
                 sb.AppendFormat("Set-Cookie: {0}\r\n", cookie);
 
-            sb.Append("\r\n");
+            sb.Append(Environment.NewLine);
 
             m_headers.Clear();
 

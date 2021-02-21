@@ -40,8 +40,8 @@ namespace OpenSim.Groups
         public GroupsServiceBase(IConfigSource config, string cName)
             : base(config)
         {
-            string dllName = String.Empty;
-            string connString = String.Empty;
+            string dllName = string.Empty;
+            string connString = string.Empty;
             string realm = "os_groups";
             string usersRealm = "GridUser";
             string configName = (string.IsNullOrEmpty(cName)) ? "Groups" : cName;
@@ -53,9 +53,9 @@ namespace OpenSim.Groups
             if (dbConfig != null)
             {
                 if (string.IsNullOrEmpty(dllName))
-                    dllName = dbConfig.GetString("StorageProvider", String.Empty);
+                    dllName = dbConfig.GetString("StorageProvider", string.Empty);
                 if (string.IsNullOrEmpty(connString))
-                    connString = dbConfig.GetString("ConnectionString", String.Empty);
+                    connString = dbConfig.GetString("ConnectionString", string.Empty);
             }
 
             //
@@ -72,10 +72,10 @@ namespace OpenSim.Groups
             //
             // We tried, but this doesn't exist. We can't proceed.
             //
-            if (dllName.Equals(String.Empty))
+            if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IGroupsData>(dllName, new Object[] { connString, realm });
+            m_Database = LoadPlugin<IGroupsData>(dllName, new object[] { connString, realm });
             if (m_Database == null)
                 throw new Exception("Could not find a storage interface in the given module " + dllName);
 
@@ -90,7 +90,7 @@ namespace OpenSim.Groups
                 usersRealm = usersConfig.GetString("Realm", usersRealm);
             }
 
-            m_GridUserService = LoadPlugin<IGridUserData>(dllName, new Object[] { connString, usersRealm });
+            m_GridUserService = LoadPlugin<IGridUserData>(dllName, new object[] { connString, usersRealm });
             if (m_GridUserService == null)
                 throw new Exception("Could not find a storage inferface for the given users module " + dllName);
         }

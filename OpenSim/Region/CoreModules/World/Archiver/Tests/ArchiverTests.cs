@@ -283,7 +283,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
 
             Guid requestId = new Guid("00000000-0000-0000-0000-808080808080");
 
-            Dictionary<string, Object> options = new Dictionary<string, Object>();
+            Dictionary<string, object> options = new Dictionary<string, object>();
             options.Add("noassets", true);
 
             m_archiverModule.ArchiveRegion(archiveWriteStream, requestId, options);
@@ -495,7 +495,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
 
             m_oarEvent.Reset();
             m_archiverModule.ArchiveRegion(
-                    archiveWriteStream, requestId, new Dictionary<string, Object>() { { "wipe-owners", Boolean.TrueString } });
+                    archiveWriteStream, requestId, new Dictionary<string, object>() { { "wipe-owners", bool.TrueString } });
 
              m_oarEvent.WaitOne(60000);
 
@@ -807,7 +807,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
                     }
                     scenes.Add(scene);
 
-                    string dir = String.Format("{0}_{1}_{2}", x + 1, y + 1, scene.RegionInfo.RegionName.Replace(" ", "_"));
+                    string dir = string.Format("{0}_{1}_{2}", x + 1, y + 1, scene.RegionInfo.RegionName.Replace(" ", "_"));
                     regionPaths[dir] = scene;
 
                     SceneObjectGroup sog1;
@@ -829,7 +829,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
 
             Guid requestId = new Guid("00000000-0000-0000-0000-808080808080");
 
-            Dictionary<string, Object> options = new Dictionary<string, Object>();
+            Dictionary<string, object> options = new Dictionary<string, object>();
             options.Add("all", true);
 
             m_scene.EventManager.OnOarFileSaved += SaveCompleted;
@@ -879,7 +879,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
                 {
                     // This file belongs to one of the regions. Find out which one.
                     Assert.IsTrue(filePath.StartsWith(ArchiveConstants.REGIONS_PATH));
-                    string[] parts = filePath.Split(new Char[] { '/' }, 3);
+                    string[] parts = filePath.Split(new char[] { '/' }, 3);
                     Assert.AreEqual(3, parts.Length);
                     string regionDirectory = parts[1];
                     string relativePath = parts[2];

@@ -54,7 +54,7 @@ namespace OpenSim.Framework
         public float hazeDensity = 0.70f;
         public float densityMultiplier = 0.18f;
         public float distanceMultiplier = 0.8f;
-        public UInt16 maxAltitude = 1605;
+        public ushort maxAltitude = 1605;
         public Vector4 sunMoonColor = new Vector4(0.24f, 0.26f, 0.30f, 0.30f);
         public float sunMoonPosition = 0.317f;
         public Vector4 ambient = new Vector4(0.35f, 0.35f, 0.35f, 0.35f);
@@ -530,7 +530,7 @@ namespace OpenSim.Framework
                     return OSDParser.SerializeLLSDNotationFull(eosd);
             }
             catch {}
-            return String.Empty;
+            return string.Empty;
         }
 
         public ViewerEnvironment Clone()

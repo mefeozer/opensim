@@ -176,16 +176,16 @@ namespace OpenSim.Framework.Console
 
                 //m_log.Debug("Found {0}", helpParts[0]);
 
-                if (dict[helpPart] is Dictionary<string, Object>)
+                if (dict[helpPart] is Dictionary<string, object>)
                     dict = (Dictionary<string, object>)dict[helpPart];
 
                 helpParts.RemoveAt(0);
             }
 
             // There was a command for the given help string
-            if (dict.ContainsKey(String.Empty))
+            if (dict.ContainsKey(string.Empty))
             {
-                CommandInfo commandInfo = (CommandInfo)dict[String.Empty];
+                CommandInfo commandInfo = (CommandInfo)dict[string.Empty];
                 help.Add(commandInfo.help_text);
                 help.Add(commandInfo.long_help);
 
@@ -274,7 +274,7 @@ namespace OpenSim.Framework.Console
         public void AddCommand(string module, bool shared, string command,
                 string help, string longhelp, CommandDelegate fn)
         {
-            AddCommand(module, shared, command, help, longhelp, String.Empty, fn);
+            AddCommand(module, shared, command, help, longhelp, string.Empty, fn);
         }
 
         /// <summary>
@@ -292,29 +292,29 @@ namespace OpenSim.Framework.Console
         {
             string[] parts = Parser.Parse(command);
 
-            Dictionary<string, Object> current = tree;
+            Dictionary<string, object> current = tree;
 
             foreach (string part in parts)
             {
                 if (current.ContainsKey(part))
                 {
-                    if (current[part] is Dictionary<string, Object>)
-                        current = (Dictionary<string, Object>)current[part];
+                    if (current[part] is Dictionary<string, object>)
+                        current = (Dictionary<string, object>)current[part];
                     else
                         return;
                 }
                 else
                 {
-                    current[part] = new Dictionary<string, Object>();
-                    current = (Dictionary<string, Object>)current[part];
+                    current[part] = new Dictionary<string, object>();
+                    current = (Dictionary<string, object>)current[part];
                 }
             }
 
             CommandInfo info;
 
-            if (current.ContainsKey(String.Empty))
+            if (current.ContainsKey(string.Empty))
             {
-                info = (CommandInfo)current[String.Empty];
+                info = (CommandInfo)current[string.Empty];
                 if (!info.shared && !info.fn.Contains(fn))
                     info.fn.Add(fn);
 
@@ -329,7 +329,7 @@ namespace OpenSim.Framework.Console
             info.descriptive_help = descriptivehelp;
             info.fn = new List<CommandDelegate>();
             info.fn.Add(fn);
-            current[String.Empty] = info;
+            current[string.Empty] = info;
 
             // Now add command to modules dictionary
             lock (m_modulesCommands)
@@ -400,7 +400,7 @@ namespace OpenSim.Framework.Console
                 {
                     if (string.IsNullOrEmpty(s))
                     {
-                        CommandInfo ci = (CommandInfo)current[String.Empty];
+                        CommandInfo ci = (CommandInfo)current[string.Empty];
                         if (ci.fn.Count != 0)
                             addcr = true;
                     }
@@ -412,8 +412,8 @@ namespace OpenSim.Framework.Console
                 return choices.ToArray();
             }
 
-            if (current.ContainsKey(String.Empty))
-                return new string[] { "Command help: "+((CommandInfo)current[String.Empty]).help_text};
+            if (current.ContainsKey(string.Empty))
+                return new string[] { "Command help: "+((CommandInfo)current[string.Empty]).help_text};
 
             return new string[] { new List<string>(current.Keys)[0] };
         }
@@ -460,8 +460,8 @@ namespace OpenSim.Framework.Console
                 }
             }
 
-            if (current.ContainsKey(String.Empty))
-                return (CommandInfo)current[String.Empty];
+            if (current.ContainsKey(string.Empty))
+                return (CommandInfo)current[string.Empty];
 
             return null;
         }
@@ -496,12 +496,12 @@ namespace OpenSim.Framework.Console
 
         public XmlElement GetXml(XmlDocument doc)
         {
-            CommandInfo help = (CommandInfo)((Dictionary<string, object>)tree["help"])[String.Empty];
+            CommandInfo help = (CommandInfo)((Dictionary<string, object>)tree["help"])[string.Empty];
             ((Dictionary<string, object>)tree["help"]).Remove(string.Empty);
             if (((Dictionary<string, object>)tree["help"]).Count == 0)
                 tree.Remove("help");
 
-            CommandInfo quit = (CommandInfo)((Dictionary<string, object>)tree["quit"])[String.Empty];
+            CommandInfo quit = (CommandInfo)((Dictionary<string, object>)tree["quit"])[string.Empty];
             ((Dictionary<string, object>)tree["quit"]).Remove(string.Empty);
             if (((Dictionary<string, object>)tree["quit"]).Count == 0)
                 tree.Remove("quit");
@@ -512,11 +512,11 @@ namespace OpenSim.Framework.Console
 
             if (!tree.ContainsKey("help"))
                 tree["help"] = (object) new Dictionary<string, object>();
-            ((Dictionary<string, object>)tree["help"])[String.Empty] = help;
+            ((Dictionary<string, object>)tree["help"])[string.Empty] = help;
 
             if (!tree.ContainsKey("quit"))
                 tree["quit"] = (object) new Dictionary<string, object>();
-            ((Dictionary<string, object>)tree["quit"])[String.Empty] = quit;
+            ((Dictionary<string, object>)tree["quit"])[string.Empty] = quit;
 
             return root;
         }
@@ -525,7 +525,7 @@ namespace OpenSim.Framework.Console
         {
             foreach (KeyValuePair<string, object> kvp in level)
             {
-                if (kvp.Value is Dictionary<string, Object>)
+                if (kvp.Value is Dictionary<string, object>)
                 {
                     XmlElement next = doc.CreateElement("", "Level", "");
                     next.SetAttribute("Name", kvp.Key);
@@ -569,12 +569,12 @@ namespace OpenSim.Framework.Console
 
         public void FromXml(XmlElement root, CommandDelegate fn)
         {
-            CommandInfo help = (CommandInfo)((Dictionary<string, object>)tree["help"])[String.Empty];
+            CommandInfo help = (CommandInfo)((Dictionary<string, object>)tree["help"])[string.Empty];
             ((Dictionary<string, object>)tree["help"]).Remove(string.Empty);
             if (((Dictionary<string, object>)tree["help"]).Count == 0)
                 tree.Remove("help");
 
-            CommandInfo quit = (CommandInfo)((Dictionary<string, object>)tree["quit"])[String.Empty];
+            CommandInfo quit = (CommandInfo)((Dictionary<string, object>)tree["quit"])[string.Empty];
             ((Dictionary<string, object>)tree["quit"]).Remove(string.Empty);
             if (((Dictionary<string, object>)tree["quit"]).Count == 0)
                 tree.Remove("quit");
@@ -585,11 +585,11 @@ namespace OpenSim.Framework.Console
 
             if (!tree.ContainsKey("help"))
                 tree["help"] = (object) new Dictionary<string, object>();
-            ((Dictionary<string, object>)tree["help"])[String.Empty] = help;
+            ((Dictionary<string, object>)tree["help"])[string.Empty] = help;
 
             if (!tree.ContainsKey("quit"))
                 tree["quit"] = (object) new Dictionary<string, object>();
-            ((Dictionary<string, object>)tree["quit"])[String.Empty] = quit;
+            ((Dictionary<string, object>)tree["quit"])[string.Empty] = quit;
         }
 
         private void ReadTreeLevel(Dictionary<string, object> level, XmlNode node, CommandDelegate fn)
@@ -637,7 +637,7 @@ namespace OpenSim.Framework.Console
                     }
                     c.fn = new List<CommandDelegate>();
                     c.fn.Add(fn);
-                    level[String.Empty] = c;
+                    level[string.Empty] = c;
                     break;
                 }
             }
@@ -779,7 +779,7 @@ namespace OpenSim.Framework.Console
                         if (cmd[i].Contains(" "))
                             cmd[i] = "\"" + cmd[i] + "\"";
                     }
-                    return String.Empty;
+                    return string.Empty;
                 }
             }
             return cmdinput;

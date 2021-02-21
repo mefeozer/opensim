@@ -86,7 +86,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
         {
             m_log.Info("[IRCd] Sending >>> " + command);
 
-            byte[] buf = Util.UTF8.GetBytes(command + "\r\n");
+            byte[] buf = Util.UTF8.GetBytes(command + Environment.NewLine);
 
             m_client.GetStream().BeginWrite(buf, 0, buf.Length, SendComplete, null);
         }
@@ -107,7 +107,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
         {
             try
             {
-                string strbuf = String.Empty;
+                string strbuf = string.Empty;
 
                 while (m_connected && m_client.Connected)
                 {
@@ -452,7 +452,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         private static string ExtractMessage(string buffer)
         {
-            int pos = buffer.IndexOf("\r\n");
+            int pos = buffer.IndexOf(Environment.NewLine);
 
             if (pos == -1)
                 return null;
@@ -1509,7 +1509,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         public string GetClientOption(string option)
         {
-            return String.Empty;
+            return string.Empty;
         }
 
         public void Terminate()

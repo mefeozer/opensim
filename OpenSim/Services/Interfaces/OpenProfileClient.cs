@@ -83,8 +83,8 @@ namespace OpenSim.Services.UserProfilesService
             profileData = (Hashtable)dataArray[0];
 
             props.WebUrl = string.Empty;
-            props.AboutText = String.Empty;
-            props.FirstLifeText = String.Empty;
+            props.AboutText = string.Empty;
+            props.FirstLifeText = string.Empty;
             props.ImageId = UUID.Zero;
             props.FirstLifeImageId = UUID.Zero;
             props.PartnerId = UUID.Zero;
@@ -103,10 +103,10 @@ namespace OpenSim.Services.UserProfilesService
                 props.PartnerId = new UUID(profileData["Partner"].ToString());
 
             props.WantToMask = 0;
-            props.WantToText = String.Empty;
+            props.WantToText = string.Empty;
             props.SkillsMask = 0;
-            props.SkillsText = String.Empty;
-            props.Language = String.Empty;
+            props.SkillsText = string.Empty;
+            props.Language = string.Empty;
 
             if (profileData["wantmask"] != null)
                 props.WantToMask = Convert.ToInt32(profileData["wantmask"].ToString());

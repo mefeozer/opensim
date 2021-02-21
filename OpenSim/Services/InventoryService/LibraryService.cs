@@ -151,13 +151,13 @@ namespace OpenSim.Services.InventoryService
             m_LibraryRootFolder.Version = (ushort)config.GetInt("RootVersion", 1);
             string foldersPath
                 = Path.Combine(
-                    basePath, config.GetString("foldersFile", String.Empty));
+                    basePath, config.GetString("foldersFile", string.Empty));
 
             LoadFromFile(foldersPath, "Library folders", ReadFolderFromConfig);
 
             string itemsPath
                 = Path.Combine(
-                    basePath, config.GetString("itemsFile", String.Empty));
+                    basePath, config.GetString("itemsFile", string.Empty));
 
             LoadFromFile(itemsPath, "Library items", ReadItemFromConfig);
         }
@@ -207,7 +207,7 @@ namespace OpenSim.Services.InventoryService
             item.ID = itID; 
             item.AssetID = new UUID(config.GetString("assetID", item.ID.ToString()));
             item.Folder = new UUID(config.GetString("folderID", m_LibraryRootFolder.ID.ToString()));
-            item.Name = config.GetString("name", String.Empty);
+            item.Name = config.GetString("name", string.Empty);
             item.Description = config.GetString("description", item.Name);
             item.InvType = config.GetInt("inventoryType", 0);
             item.AssetType = config.GetInt("assetType", item.InvType);

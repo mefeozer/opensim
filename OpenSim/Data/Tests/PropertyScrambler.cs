@@ -132,7 +132,7 @@ namespace OpenSim.Data.Tests
             else if (t == typeof(uint))
                 property.SetValue(obj, Convert.ToUInt32(random.Next()), index);
             else if (t == typeof(ulong))
-                property.SetValue(obj, Convert.ToUInt64(random.Next()) * Convert.ToUInt64(UInt32.MaxValue), index);
+                property.SetValue(obj, Convert.ToUInt64(random.Next()) * Convert.ToUInt64(uint.MaxValue), index);
             else if (t == typeof(bool))
                 property.SetValue(obj, true, index);
             else if (t == typeof(byte[]))

@@ -229,7 +229,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
                             xmlparcel.AppendChild(textureuuid);
                         }
 
-                        string groupName = String.Empty;
+                        string groupName = string.Empty;
 
                         //attached user and group
                         if (parcel.GroupID != UUID.Zero)
@@ -300,7 +300,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
             return parent;
         }
 
-        public String Name
+        public string Name
         {
             get { return "LandSnapshot"; }
         }

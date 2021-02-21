@@ -160,7 +160,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             bool doolder = true;
             if (m_packets.Count > 0)
             {
-                int now = Environment.TickCount & Int32.MaxValue;
+                int now = Environment.TickCount & int.MaxValue;
 
                 foreach (OutgoingPacket packet in m_packets.Values)
                 {

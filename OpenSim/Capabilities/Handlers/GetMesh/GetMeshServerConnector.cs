@@ -48,19 +48,19 @@ namespace OpenSim.Capabilities.Handlers
 
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
 
-            string assetService = serverConfig.GetString("AssetService", String.Empty);
+            string assetService = serverConfig.GetString("AssetService", string.Empty);
 
             if (string.IsNullOrEmpty(assetService))
                 throw new Exception("No AssetService in config file");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_AssetService =
                     ServerUtils.LoadPlugin<IAssetService>(assetService, args);
 
             if (m_AssetService == null)
-                throw new Exception(String.Format("Failed to load AssetService from {0}; config is {1}", assetService, m_ConfigName));
+                throw new Exception(string.Format("Failed to load AssetService from {0}; config is {1}", assetService, m_ConfigName));
 
             string rurl = serverConfig.GetString("GetMeshRedirectURL");
 

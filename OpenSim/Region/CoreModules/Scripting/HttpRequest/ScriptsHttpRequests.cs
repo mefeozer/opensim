@@ -274,7 +274,7 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest
                 string[] parms = parameters.ToArray();
                 for (int i = 0; i < parms.Length; i += 2)
                 {
-                    switch (Int32.Parse(parms[i]))
+                    switch (int.Parse(parms[i]))
                     {
                         case (int)HttpRequestConstants.HTTP_METHOD:
 
@@ -327,7 +327,7 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest
                                 htc.HttpCustomHeaders.Add(parms[i]);
                                 htc.HttpCustomHeaders.Add(parms[i+1]);
                                 int nexti = i + 2;
-                                if (nexti >= parms.Length || Char.IsDigit(parms[nexti][0]))
+                                if (nexti >= parms.Length || char.IsDigit(parms[nexti][0]))
                                     break;
 
                                 i = nexti;

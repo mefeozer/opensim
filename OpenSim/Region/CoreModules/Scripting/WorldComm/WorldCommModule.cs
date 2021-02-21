@@ -493,7 +493,7 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
          *
          * *****************************************************************/
 
-        private void DeliverClientMessage(Object sender, OSChatMessage e)
+        private void DeliverClientMessage(object sender, OSChatMessage e)
         {
             if (null != e.Sender)
             {
@@ -507,13 +507,13 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
             }
         }
 
-        public Object[] GetSerializationData(UUID itemID)
+        public object[] GetSerializationData(UUID itemID)
         {
             return m_listenerManager.GetSerializationData(itemID);
         }
 
         public void CreateFromData(uint localID, UUID itemID, UUID hostID,
-                Object[] data)
+                object[] data)
         {
             m_listenerManager.AddFromData(localID, itemID, hostID, data);
         }
@@ -804,9 +804,9 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
             return collection;
         }
 
-        public Object[] GetSerializationData(UUID itemID)
+        public object[] GetSerializationData(UUID itemID)
         {
-            List<Object> data = new List<Object>();
+            List<object> data = new List<object>();
 
             lock (mainLock)
             {
@@ -819,20 +819,20 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
                     }
                 }
             }
-            return (Object[])data.ToArray();
+            return (object[])data.ToArray();
         }
 
         public void AddFromData(uint localID, UUID itemID, UUID hostID,
-                Object[] data)
+                object[] data)
         {
             int idx = 0;
-            Object[] item = new Object[6];
+            object[] item = new object[6];
             int dataItemLength = 6;
 
             while (idx < data.Length)
             {
                 dataItemLength = (idx + 7 == data.Length || (idx + 7 < data.Length && data[idx + 7] is bool)) ? 7 : 6;
-                item = new Object[dataItemLength];
+                item = new object[dataItemLength];
                 Array.Copy(data, idx, item, 0, dataItemLength);
 
                 ListenerInfo info =
@@ -945,9 +945,9 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
             RegexBitfield = regexBitfield;
         }
 
-        public Object[] GetSerializationData()
+        public object[] GetSerializationData()
         {
-            Object[] data = new Object[7];
+            object[] data = new object[7];
 
             data[0] = m_active;
             data[1] = m_handle;
@@ -961,7 +961,7 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
         }
 
         public static ListenerInfo FromData(uint localID, UUID ItemID,
-                UUID hostID, Object[] data)
+                UUID hostID, object[] data)
         {
             ListenerInfo linfo = new ListenerInfo((int)data[1], localID,
                     ItemID, hostID, (int)data[2], (string)data[3],

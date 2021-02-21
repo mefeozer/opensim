@@ -74,7 +74,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             m_environment = m_ScriptEngine.World.RequestModuleInterface<IEnvironmentModule>();
         }
 
-        public override Object InitializeLifetimeService()
+        public override object InitializeLifetimeService()
         {
             ILease lease = (ILease)base.InitializeLifetimeService();
 

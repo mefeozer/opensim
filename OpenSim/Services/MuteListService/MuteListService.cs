@@ -47,15 +47,15 @@ namespace OpenSim.Services.EstateService
         public MuteListService(IConfigSource config)
             : base(config)
         {
-            string dllName = String.Empty;
-            string connString = String.Empty;
+            string dllName = string.Empty;
+            string connString = string.Empty;
 
             // Try reading the [DatabaseService] section, if it exists
             IConfig dbConfig = config.Configs["DatabaseService"];
             if (dbConfig != null)
             {
-                dllName = dbConfig.GetString("StorageProvider", String.Empty);
-                connString = dbConfig.GetString("ConnectionString", String.Empty);
+                dllName = dbConfig.GetString("StorageProvider", string.Empty);
+                connString = dbConfig.GetString("ConnectionString", string.Empty);
                 connString = dbConfig.GetString("MuteConnectionString", connString);
             }
 
@@ -71,19 +71,19 @@ namespace OpenSim.Services.EstateService
             if (string.IsNullOrEmpty(dllName))
                 throw new Exception("No StorageProvider configured");
 
-            m_database = LoadPlugin<IMuteListData>(dllName, new Object[] { connString });
+            m_database = LoadPlugin<IMuteListData>(dllName, new object[] { connString });
             if (m_database == null)
                 throw new Exception("Could not find a storage interface in the given module");
         }
 
-        public Byte[] MuteListRequest(UUID agentID, uint crc)
+        public byte[] MuteListRequest(UUID agentID, uint crc)
         {
             if(m_database == null)
                 return null;
 
             MuteData[] data = m_database.Get(agentID);
             if (data == null || data.Length == 0)
-                return new Byte[0];
+                return new byte[0];
 
             StringBuilder sb = new StringBuilder(16384);
             foreach (MuteData d in data)
@@ -93,16 +93,16 @@ namespace OpenSim.Services.EstateService
                         d.MuteName,
                         d.MuteFlags);
 
-            Byte[] filedata = Util.UTF8.GetBytes(sb.ToString());
+            byte[] filedata = Util.UTF8.GetBytes(sb.ToString());
 
             uint dataCrc = Crc32.Compute(filedata);
 
             if (dataCrc == crc)
             {
                 if(crc == 0)
-                     return new Byte[0];
+                     return new byte[0];
 
-                Byte[] ret = new Byte[1] {1};
+                byte[] ret = new byte[1] {1};
                 return ret;
             }
 

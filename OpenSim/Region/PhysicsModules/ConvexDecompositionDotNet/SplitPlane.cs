@@ -83,8 +83,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
     {
         public static bool computeSplitPlane(List<float3> vertices, List<int> indices, ref float4 plane)
         {
-            float[] bmin = { Single.MaxValue, Single.MaxValue, Single.MaxValue };
-            float[] bmax = { Single.MinValue, Single.MinValue, Single.MinValue };
+            float[] bmin = { float.MaxValue, float.MaxValue, float.MaxValue };
+            float[] bmax = { float.MinValue, float.MinValue, float.MinValue };
 
             for (int i = 0; i < vertices.Count; i++)
             {

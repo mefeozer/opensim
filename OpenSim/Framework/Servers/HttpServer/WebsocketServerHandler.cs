@@ -1000,7 +1000,7 @@ byt   0               1               2               3
 
         public WebSocketReader.OpCode Opcode;
 
-        public UInt64 PayloadLen;
+        public ulong PayloadLen;
         //public UInt64 PayloadLeft;
         // Payload is X + Y
         //public UInt64 ExtensionDataLength;

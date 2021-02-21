@@ -441,7 +441,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         [ScriptInvocation]
         public string JsonGetValue(UUID hostID, UUID scriptID, UUID storeID, string path)
         {
-            string value = String.Empty;
+            string value = string.Empty;
             m_store.GetValue(storeID,path,false,out value);
             return value;
         }
@@ -449,7 +449,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         [ScriptInvocation]
         public string JsonGetJson(UUID hostID, UUID scriptID, UUID storeID, string path)
         {
-            string value = String.Empty;
+            string value = string.Empty;
             m_store.GetValue(storeID,path,true, out value);
             return value;
         }
@@ -540,7 +540,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 m_log.InfoFormat("[JsonStoreScripts]: unable to retrieve value; {0}",e.ToString());
             }
 
-            DispatchValue(scriptID,reqID,String.Empty);
+            DispatchValue(scriptID,reqID, string.Empty);
         }
 
 
@@ -561,7 +561,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 m_log.InfoFormat("[JsonStoreScripts]: unable to retrieve value; {0}",e.ToString());
             }
 
-            DispatchValue(scriptID,reqID,String.Empty);
+            DispatchValue(scriptID,reqID, string.Empty);
         }
 
         // -----------------------------------------------------------------
@@ -582,10 +582,10 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
 
             AssetBase a = m_scene.AssetService.Get(assetID.ToString());
             if (a == null)
-                GenerateRuntimeError(String.Format("Unable to find notecard asset {0}", assetID));
+                GenerateRuntimeError(string.Format("Unable to find notecard asset {0}", assetID));
 
             if (a.Type != (sbyte)AssetType.Notecard)
-                GenerateRuntimeError(String.Format("Invalid notecard asset {0}", assetID));
+                GenerateRuntimeError(string.Format("Invalid notecard asset {0}", assetID));
 
             m_log.DebugFormat("[JsonStoreScripts]: read notecard in context {0}",storeID);
 
@@ -610,7 +610,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 m_log.WarnFormat("[JsonStoreScripts]: Json parsing failed; {0}", e.Message);
             }
 
-            GenerateRuntimeError(String.Format("Json parsing failed for {0}", assetID));
+            GenerateRuntimeError(string.Format("Json parsing failed for {0}", assetID));
             m_comms.DispatchReply(scriptID, 0, "", reqID.ToString());
         }
 
@@ -714,7 +714,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         // -----------------------------------------------------------------
         private void DoJsonRezObject(UUID hostID, UUID scriptID, UUID reqID, string name, Vector3 pos, Vector3 vel, Quaternion rot, string param)
         {
-            if (Double.IsNaN(rot.X) || Double.IsNaN(rot.Y) || Double.IsNaN(rot.Z) || Double.IsNaN(rot.W))
+            if (double.IsNaN(rot.X) || double.IsNaN(rot.Y) || double.IsNaN(rot.Z) || double.IsNaN(rot.W))
             {
                 GenerateRuntimeError("Invalid rez rotation");
                 return;
@@ -723,7 +723,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
             SceneObjectGroup host = m_scene.GetSceneObjectGroup(hostID);
             if (host == null)
             {
-                GenerateRuntimeError(String.Format("Unable to find rezzing host '{0}'",hostID));
+                GenerateRuntimeError(string.Format("Unable to find rezzing host '{0}'",hostID));
                 return;
             }
 
@@ -735,7 +735,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
             TaskInventoryItem item = host.RootPart.Inventory.GetInventoryItem(name);
             if (item == null)
             {
-                GenerateRuntimeError(String.Format("Unable to find object to rez '{0}'",name));
+                GenerateRuntimeError(string.Format("Unable to find object to rez '{0}'",name));
                 return;
             }
 

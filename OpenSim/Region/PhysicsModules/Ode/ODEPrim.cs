@@ -234,7 +234,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         internal int m_material = (int)Material.Wood;
 
         public OdePrim(
-            String primName, OdeScene parent_scene, Vector3 pos, Vector3 size,
+            string primName, OdeScene parent_scene, Vector3 pos, Vector3 size,
             Quaternion rotation, PrimitiveBaseShape pbs, bool pisPhysical)
         {
             Name = primName;
@@ -2575,13 +2575,13 @@ Console.WriteLine(" JointCreateFixed");
 
         private static bool QuaternionIsFinite(Quaternion q)
         {
-            if (Single.IsNaN(q.X) || Single.IsInfinity(q.X))
+            if (float.IsNaN(q.X) || float.IsInfinity(q.X))
                 return false;
-            if (Single.IsNaN(q.Y) || Single.IsInfinity(q.Y))
+            if (float.IsNaN(q.Y) || float.IsInfinity(q.Y))
                 return false;
-            if (Single.IsNaN(q.Z) || Single.IsInfinity(q.Z))
+            if (float.IsNaN(q.Z) || float.IsInfinity(q.Z))
                 return false;
-            if (Single.IsNaN(q.W) || Single.IsInfinity(q.W))
+            if (float.IsNaN(q.W) || float.IsInfinity(q.W))
                 return false;
             return true;
         }

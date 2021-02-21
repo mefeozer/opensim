@@ -491,26 +491,26 @@ namespace OpenSim.Framework
         }
 
 // DEBUG ON
-        public override String ToString()
+        public override string ToString()
         {
-            String s = "";
+            string s = "";
 
-            s += String.Format("Serial: {0}\n",m_serial);
+            s += string.Format("Serial: {0}\n",m_serial);
 
             for (uint i = 0; i < AvatarAppearance.TEXTURE_COUNT; i++)
                 if (m_texture.FaceTextures[i] != null)
-                    s += String.Format("Texture: {0} --> {1}\n",i,m_texture.FaceTextures[i].TextureID);
+                    s += string.Format("Texture: {0} --> {1}\n",i,m_texture.FaceTextures[i].TextureID);
 
             foreach (AvatarWearable awear in m_wearables)
             {
                 for (int i = 0; i < awear.Count; i++)
-                    s += String.Format("Wearable: item={0}, asset={1}\n",awear[i].ItemID,awear[i].AssetID);
+                    s += string.Format("Wearable: item={0}, asset={1}\n",awear[i].ItemID,awear[i].AssetID);
             }
 
             s += "Visual Params: ";
             //            for (uint j = 0; j < AvatarAppearance.VISUALPARAM_COUNT; j++)
             for (uint j = 0; j < m_visualparams.Length; j++)
-                s += String.Format("{0},",m_visualparams[j]);
+                s += string.Format("{0},",m_visualparams[j]);
             s += "\n";
 
             return s;

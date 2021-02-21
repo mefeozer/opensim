@@ -180,15 +180,15 @@ namespace OpenSim.Region.Framework.Scenes
             SpecularLightColorG = (byte)(SpecularLightColortmp.G);
             SpecularLightColorB = (byte)(SpecularLightColortmp.B);
 
-            SpecularLightExponent = (Byte)mat["SpecExp"].AsUInteger();
-            EnvironmentIntensity = (Byte)mat["EnvIntensity"].AsUInteger();
-            DiffuseAlphaMode = (Byte)mat["DiffuseAlphaMode"].AsUInteger();
-            AlphaMaskCutoff = (Byte)mat["AlphaMaskCutoff"].AsUInteger();
+            SpecularLightExponent = (byte)mat["SpecExp"].AsUInteger();
+            EnvironmentIntensity = (byte)mat["EnvIntensity"].AsUInteger();
+            DiffuseAlphaMode = (byte)mat["DiffuseAlphaMode"].AsUInteger();
+            AlphaMaskCutoff = (byte)mat["AlphaMaskCutoff"].AsUInteger();
         }
 
         public void genID()
         {
-            Byte[] data = toLLSDxml();
+            byte[] data = toLLSDxml();
             using (var md5 = MD5.Create())
                 ID = new UUID(md5.ComputeHash(data), 0);
         }
@@ -226,7 +226,7 @@ namespace OpenSim.Region.Framework.Scenes
             return inthash;
         }
 
-        public override bool Equals(Object o)
+        public override bool Equals(object o)
         {
             if (o == null || !(o is FaceMaterial))
                 return false;

@@ -260,8 +260,8 @@ namespace OpenSim.Data.Tests
             byte material = (byte) random.Next((int)SOPMaterialData.MaxMaterial);
             ulong regionh = (ulong)random.NextDouble() * (ulong)random.Next();
             int pin = random.Next();
-            Byte[] partsys = new byte[8];
-            Byte[] textani = new byte[8];
+            byte[] partsys = new byte[8];
+            byte[] textani = new byte[8];
             random.NextBytes(textani);
             random.NextBytes(partsys);
             DateTime expires = new DateTime(2008, 12, 20);
@@ -437,8 +437,8 @@ namespace OpenSim.Data.Tests
             byte material = (byte) random.Next((int)SOPMaterialData.MaxMaterial);
             ulong regionh = (ulong)random.NextDouble() * (ulong)random.Next();
             int pin = random.Next();
-            Byte[] partsys = new byte[8];
-            Byte[] textani = new byte[8];
+            byte[] partsys = new byte[8];
+            byte[] textani = new byte[8];
             random.NextBytes(textani);
             random.NextBytes(partsys);
             DateTime expires = new DateTime(2010, 12, 20);

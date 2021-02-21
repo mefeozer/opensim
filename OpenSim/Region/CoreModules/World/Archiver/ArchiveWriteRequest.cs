@@ -144,7 +144,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             if (options.ContainsKey("noassets") && (bool)options["noassets"])
                 SaveAssets = false;
 
-            if (options.TryGetValue("checkPermissions", out Object temp))
+            if (options.TryGetValue("checkPermissions", out object temp))
                 FilterContent = (string)temp;
 
 
@@ -465,7 +465,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 m_log.WarnFormat("[ARCHIVER]: Please be aware that version 1.0 OARs are not compatible with OpenSim versions prior to 0.7.4. Do not use the --all option if you want to produce a compatible OAR");
             }
 
-            String s;
+            string s;
 
             using (StringWriter sw = new StringWriter())
             {
@@ -571,7 +571,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             m_log.InfoFormat("[ARCHIVER]: Adding region settings to archive.");
 
             // Write out region settings
-            string settingsPath = String.Format("{0}{1}{2}.xml",
+            string settingsPath = string.Format("{0}{1}{2}.xml",
                 regionDir, ArchiveConstants.SETTINGS_PATH, scene.RegionInfo.RegionName);
             m_archiveWriter.WriteFile(settingsPath, RegionSettingsSerializer.Serialize(scene.RegionInfo.RegionSettings, scene.RegionEnvironment));
 
@@ -583,14 +583,14 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             {
                 LandData landData = lo.LandData;
                 string landDataPath
-                    = String.Format("{0}{1}", regionDir, ArchiveConstants.CreateOarLandDataPath(landData));
+                    = string.Format("{0}{1}", regionDir, ArchiveConstants.CreateOarLandDataPath(landData));
                 m_archiveWriter.WriteFile(landDataPath, LandDataSerializer.Serialize(landData, m_options));
             }
 
             m_log.InfoFormat("[ARCHIVER]: Adding terrain information to archive.");
 
             // Write out terrain
-            string terrainPath = String.Format("{0}{1}{2}.r32",
+            string terrainPath = string.Format("{0}{1}{2}.r32",
                 regionDir, ArchiveConstants.TERRAINS_PATH, scene.RegionInfo.RegionName);
 
             using (MemoryStream ms = new MemoryStream())
@@ -633,7 +633,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 //                "[ARCHIVER]: Received {0} of {1} assets requested",
                 //                assetsFoundUuids.Count, assetsFoundUuids.Count + assetsNotFoundUuids.Count);
 
-                errorMessage = String.Empty;
+                errorMessage = string.Empty;
             }
 
             CloseArchive(errorMessage);

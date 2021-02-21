@@ -69,9 +69,9 @@ namespace OpenSim.Region.Framework.Interfaces
         /// The arguments of the event.  These are in the order in which they appear.
         /// e.g. for http_request this will be an object array of key request_id, string method, string body
         /// </param>
-        bool PostScriptEvent(UUID itemID, string name, Object[] args);
+        bool PostScriptEvent(UUID itemID, string name, object[] args);
 
-        bool PostObjectEvent(UUID itemID, string name, Object[] args);
+        bool PostObjectEvent(UUID itemID, string name, object[] args);
 
         /// <summary>
         /// Suspends a script.

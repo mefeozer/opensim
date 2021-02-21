@@ -482,7 +482,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if (ContactgeomsArray == IntPtr.Zero || index >= CollisionContactGeomsPerTest)
                 return false;
 
-            IntPtr contactptr = new IntPtr(ContactgeomsArray.ToInt64() + (Int64)(index * SafeNativeMethods.ContactGeom.unmanagedSizeOf));
+            IntPtr contactptr = new IntPtr(ContactgeomsArray.ToInt64() + (long)(index * SafeNativeMethods.ContactGeom.unmanagedSizeOf));
             newcontactgeom = (SafeNativeMethods.ContactGeom)Marshal.PtrToStructure(contactptr, typeof(SafeNativeMethods.ContactGeom));
             return true;
         }

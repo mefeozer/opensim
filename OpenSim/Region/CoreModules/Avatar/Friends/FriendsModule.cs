@@ -173,8 +173,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             {
                 int mPort = friendsConfig.GetInt("Port", 0);
 
-                string connector = friendsConfig.GetString("Connector", String.Empty);
-                Object[] args = new Object[] { config };
+                string connector = friendsConfig.GetString("Connector", string.Empty);
+                object[] args = new object[] { config };
 
                 m_FriendsService = ServerUtils.LoadPlugin<IFriendsService>(connector, args);
                 m_FriendsSimConnector = new FriendsSimConnector();
@@ -395,7 +395,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                     outstanding.Add(fi.Friend);
             }
 
-            GridInstantMessage im = new GridInstantMessage(client.Scene, UUID.Zero, String.Empty, agentID, (byte)InstantMessageDialog.FriendshipOffered,
+            GridInstantMessage im = new GridInstantMessage(client.Scene, UUID.Zero, string.Empty, agentID, (byte)InstantMessageDialog.FriendshipOffered,
                 "Will you be my friend?", true, Vector3.Zero);
 
             foreach (string fid in outstanding)

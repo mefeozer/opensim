@@ -40,10 +40,10 @@ namespace OpenSim.Services.Base
 
         public T LoadPlugin<T>(string dllName) where T:class
         {
-            return LoadPlugin<T>(dllName, new Object[0]);
+            return LoadPlugin<T>(dllName, new object[0]);
         }
 
-        public T LoadPlugin<T>(string dllName, Object[] args) where T:class
+        public T LoadPlugin<T>(string dllName, object[] args) where T:class
         {
             // The path:type separator : is unfortunate because it collides
             // with Windows paths like C:\...
@@ -56,7 +56,7 @@ namespace OpenSim.Services.Base
 
             dllName = pathRoot + parts[0];
 
-            string className = String.Empty;
+            string className = string.Empty;
 
             if (parts.Length > 1)
                 className = parts[1];
@@ -64,7 +64,7 @@ namespace OpenSim.Services.Base
             return LoadPlugin<T>(dllName, className, args);
         }
 
-        public T LoadPlugin<T>(string dllName, string className, Object[] args) where T:class
+        public T LoadPlugin<T>(string dllName, string className, object[] args) where T:class
         {
             string interfaceName = typeof(T).ToString();
 
@@ -102,7 +102,7 @@ namespace OpenSim.Services.Base
             catch (Exception e)
             {
                 List<string> strArgs = new List<string>();
-                foreach (Object arg in args)
+                foreach (object arg in args)
                     strArgs.Add(arg.ToString());
 
                 m_log.Error(

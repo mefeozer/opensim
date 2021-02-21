@@ -71,7 +71,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         // Create terrain of specified size and initialize with specified terrain.
         // TODO: join this with the terrain initializers.
-        public TerrainChannel(String type, int pX, int pY, int pZ)
+        public TerrainChannel(string type, int pX, int pY, int pZ)
         {
             m_terrainData = new TerrainData(pX, pY, pZ);
             if (type.Equals("flat"))
@@ -150,7 +150,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
             set
             {
-                if (Double.IsNaN(value) || Double.IsInfinity(value))
+                if (double.IsNaN(value) || double.IsInfinity(value))
                     return;
 
                 m_terrainData[x, y] = (float)value;
@@ -428,14 +428,14 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 // Downward compatibility for legacy region terrain maps.
                 // If region is exactly legacy size, return the old format XML.
-                writer.WriteStartElement(String.Empty, "TerrainMap", String.Empty);
+                writer.WriteStartElement(string.Empty, "TerrainMap", string.Empty);
                 ToXml(writer);
                 writer.WriteEndElement();
             }
             else
             {
                 // New format XML that includes width and length.
-                writer.WriteStartElement(String.Empty, "TerrainMap2", String.Empty);
+                writer.WriteStartElement(string.Empty, "TerrainMap2", string.Empty);
                 ToXml2(writer);
                 writer.WriteEndElement();
             }

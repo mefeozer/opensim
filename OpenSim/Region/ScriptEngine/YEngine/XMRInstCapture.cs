@@ -80,7 +80,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 CheckRunLockInvariants(true);
 
                 // Get copy of script globals and stack in relocateable form.
-                Byte[] snapshotBytes;
+                byte[] snapshotBytes;
                 using (MemoryStream snapshotStream = new MemoryStream())
                 {
                     MigrateOutEventHandler(snapshotStream);
@@ -175,7 +175,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 CheckRunLockInvariants(true);
 
                 // "Plugins" indicate enabled timers and listens, etc.
-                Object[] pluginData =
+                object[] pluginData =
                         AsyncCommandManager.GetSerializationData(m_Engine, m_ItemID);
 
                 XmlNode plugins = doc.CreateElement("", "Plugins", "");

@@ -44,7 +44,7 @@ namespace OpenSim.Framework.Monitoring
         /// Report back collected statistical information in json
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </returns>
         string XReport(string uptime, string version);
 

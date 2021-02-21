@@ -54,14 +54,14 @@ namespace OpenSim.Services.ProfilesService
                 m_log.Warn("[PROFILES SERVICE]: No configuration found!");
                 return;
             }
-            Object[] args = null;
+            object[] args = null;
 
-            args = new Object[] { config };
-            string accountService = Config.GetString("UserAccountService", String.Empty);
+            args = new object[] { config };
+            string accountService = Config.GetString("UserAccountService", string.Empty);
             if (!string.IsNullOrEmpty(accountService))
                 userAccounts = ServerUtils.LoadPlugin<IUserAccountService>(accountService, args);
 
-            args = new Object[] { config };
+            args = new object[] { config };
         }
 
         #region Classifieds

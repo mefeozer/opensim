@@ -60,7 +60,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 return true;
             }
 
-            public override bool Equals(Object that)
+            public override bool Equals(object that)
             {
                 if(that == null)
                     return false;

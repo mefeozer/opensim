@@ -71,7 +71,7 @@ namespace OpenSim.Region.UserStatistics
         private volatile int updateLogCounter = 0;
         private volatile int concurrencyCounter = 0;
         private bool enabled = false;
-        private string m_loglines = String.Empty;
+        private string m_loglines = string.Empty;
         private volatile int lastHit = 12000;
 
         #region ISharedRegionModule
@@ -417,10 +417,10 @@ namespace OpenSim.Region.UserStatistics
             byte[] buffer = encoding.GetBytes("\n");
             string logfile = Util.logFile();
             FileStream fs = new FileStream(logfile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            Int64 tokenCount = 0;
-            Int64 endPosition = fs.Length / sizeOfChar;
+            long tokenCount = 0;
+            long endPosition = fs.Length / sizeOfChar;
 
-            for (Int64 position = sizeOfChar; position < endPosition; position += sizeOfChar)
+            for (long position = sizeOfChar; position < endPosition; position += sizeOfChar)
             {
                 fs.Seek(-position, SeekOrigin.End);
                 fs.Read(buffer, 0, buffer.Length);
@@ -464,7 +464,7 @@ namespace OpenSim.Region.UserStatistics
 
             UpdateUserStats(ParseViewerStats(request, agentID), dbConn);
 
-            return String.Empty;
+            return string.Empty;
         }
 
         private UserSession ParseViewerStats(string request, UUID agentID)

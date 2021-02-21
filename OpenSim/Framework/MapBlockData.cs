@@ -36,7 +36,7 @@ namespace OpenSim.Framework
         public byte Access;
         public byte Agents;
         public UUID MapImageId;
-        public String Name;
+        public string Name;
         public uint RegionFlags;
         public byte WaterHeight;
         public ushort X;

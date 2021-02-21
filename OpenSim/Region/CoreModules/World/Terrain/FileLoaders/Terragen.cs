@@ -88,8 +88,8 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
                         break;
                     case "ALTW":
                         eof = true;
-                        Int16 heightScale = bs.ReadInt16();
-                        Int16 baseHeight = bs.ReadInt16();
+                        short heightScale = bs.ReadInt16();
+                        short baseHeight = bs.ReadInt16();
 
                         int currFileYOffset = 0;
 
@@ -285,10 +285,10 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
                     float elevation = (float)((map[x,y] - baseHeight) * factor); // see LoadStream for inverse
 
                     // clamp rounding issues
-                    if (elevation > Int16.MaxValue)
-                        elevation = Int16.MaxValue;
-                    else if (elevation < Int16.MinValue)
-                        elevation = Int16.MinValue;
+                    if (elevation > short.MaxValue)
+                        elevation = short.MaxValue;
+                    else if (elevation < short.MinValue)
+                        elevation = short.MinValue;
 
                     bs.Write(Convert.ToInt16(elevation));
                 }

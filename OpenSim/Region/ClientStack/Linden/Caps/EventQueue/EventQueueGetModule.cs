@@ -355,7 +355,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     agentID, caps, m_scene.RegionInfo.RegionName);
 
             UUID eventQueueGetUUID;
-            Queue<Byte[]> queue = null;
+            Queue<byte[]> queue = null;
 
             lock (queues)
             {

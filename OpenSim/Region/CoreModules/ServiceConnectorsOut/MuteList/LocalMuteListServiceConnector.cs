@@ -91,7 +91,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
             }
 
             string serviceDll = userConfig.GetString("LocalServiceModule",
-                    String.Empty);
+                    string.Empty);
 
             if (string.IsNullOrEmpty(serviceDll))
             {
@@ -99,7 +99,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
                 return;
             }
 
-            Object[] args = new Object[] { source };
+            object[] args = new object[] { source };
             try
             {
                 m_service = ServerUtils.LoadPlugin<IMuteListService>(serviceDll, args);
@@ -162,7 +162,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
         #endregion ISharedRegionModule
 
         #region IMuteListService
-        public Byte[] MuteListRequest(UUID agentID, uint crc)
+        public byte[] MuteListRequest(UUID agentID, uint crc)
         {
             if (!m_Enabled)
                 return null;

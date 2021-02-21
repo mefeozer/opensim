@@ -137,9 +137,9 @@ namespace OpenSim.Data.SQLite
                     terms.Add("`" + fields[i] + "` = :" + fields[i]);
                 }
 
-                string where = String.Join(" and ", terms.ToArray());
+                string where = string.Join(" and ", terms.ToArray());
 
-                string query = String.Format("select * from {0} where {1}",
+                string query = string.Format("select * from {0} where {1}",
                         m_Realm, where);
 
                 cmd.CommandText = query;
@@ -196,7 +196,7 @@ namespace OpenSim.Data.SQLite
                     {
                         data[col] = reader[col].ToString();
                         if (data[col] == null)
-                            data[col] = String.Empty;
+                            data[col] = string.Empty;
                     }
 
                     m_DataField.SetValue(row, data);
@@ -214,7 +214,7 @@ namespace OpenSim.Data.SQLite
         {
             using (SqliteCommand cmd = new SqliteCommand())
             {
-                string query = String.Format("select * from {0} where {1}",
+                string query = string.Format("select * from {0} where {1}",
                         m_Realm, where);
 
                 cmd.CommandText = query;
@@ -228,8 +228,8 @@ namespace OpenSim.Data.SQLite
             using (SqliteCommand cmd = new SqliteCommand())
             {
                 string query = "";
-                List<String> names = new List<String>();
-                List<String> values = new List<String>();
+                List<string> names = new List<string>();
+                List<string> values = new List<string>();
 
                 foreach (FieldInfo fi in m_Fields.Values)
                 {
@@ -251,7 +251,7 @@ namespace OpenSim.Data.SQLite
                     }
                 }
 
-                query = String.Format("replace into {0} (`", m_Realm) + String.Join("`,`", names.ToArray()) + "`) values (" + String.Join(",", values.ToArray()) + ")";
+                query = string.Format("replace into {0} (`", m_Realm) + string.Join("`,`", names.ToArray()) + "`) values (" + string.Join(",", values.ToArray()) + ")";
 
                 cmd.CommandText = query;
 
@@ -282,9 +282,9 @@ namespace OpenSim.Data.SQLite
                     terms.Add("`" + fields[i] + "` = :" + fields[i]);
                 }
 
-                string where = String.Join(" and ", terms.ToArray());
+                string where = string.Join(" and ", terms.ToArray());
 
-                string query = String.Format("delete from {0} where {1}", m_Realm, where);
+                string query = string.Format("delete from {0} where {1}", m_Realm, where);
 
                 cmd.CommandText = query;
 

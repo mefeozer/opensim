@@ -571,7 +571,7 @@ public sealed class BSTerrainManager : IDisposable
     }
 
 
-    private void DetailLog(string msg, params Object[] args)
+    private void DetailLog(string msg, params object[] args)
     {
         m_physicsScene.PhysicsLogging.Write(msg, args);
     }

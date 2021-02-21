@@ -65,7 +65,7 @@ namespace OpenSim.Framework.Monitoring
             public int lastFetch;
             public string name;
             public PerfCounterControl(PerformanceCounter pPc)
-                : this(pPc, String.Empty)
+                : this(pPc, string.Empty)
             {
             }
             public PerfCounterControl(PerformanceCounter pPc, string pName)

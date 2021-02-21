@@ -136,7 +136,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         // If we just had one lock, then the queuing would deadlock.
 
         // guards m_DetachQuantum, m_EventQueue, m_EventCounts, m_Running, m_Suspended
-        public Object m_QueueLock = new Object();
+        public object m_QueueLock = new object();
 
         // true iff allowed to accept new events
         public bool m_Running = true;
@@ -148,7 +148,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private int[] m_EventCounts = new int[(int)ScriptEventCode.Size];
 
         // locked whilst running on the microthread stack (or about to run on it or just ran on it)
-        private Object m_RunLock = new Object();
+        private object m_RunLock = new object();
 
         // script won't step while > 0.  bus-atomic updates only.
         private int m_SuspendCount = 0;

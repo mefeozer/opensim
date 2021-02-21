@@ -84,7 +84,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
                         return;
                     }
 
-                    string serviceDll = userConfig.GetString("LocalServiceModule", String.Empty);
+                    string serviceDll = userConfig.GetString("LocalServiceModule", string.Empty);
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
@@ -92,7 +92,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
                         return;
                     }
 
-                    Object[] args = new Object[] { source };
+                    object[] args = new object[] { source };
                     UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(serviceDll, args);
 
                     if (UserAccountService == null)

@@ -68,8 +68,8 @@ namespace OpenSim.Data.Tests
             string[] allres = asm.GetManifestResourceNames();
             string sResFile = Array.Find(allres, s => s.Contains("TestDataConnections.ini"));
 
-            if (String.IsNullOrEmpty(sResFile))
-                throw new Exception(String.Format("Please add resource TestDataConnections.ini, with section [TestConnections] and settings like {0}=\"...\"",
+            if (string.IsNullOrEmpty(sResFile))
+                throw new Exception(string.Format("Please add resource TestDataConnections.ini, with section [TestConnections] and settings like {0}=\"...\"",
                     sType));
 
             using (Stream resource = asm.GetManifestResourceStream(sResFile))
@@ -79,7 +79,7 @@ namespace OpenSim.Data.Tests
                 sConn = cfg.Get(sType, "");
             }
 
-            if (!String.IsNullOrEmpty(sConn))
+            if (!string.IsNullOrEmpty(sConn))
                 conns[connType] = sConn;
 
             return sConn;

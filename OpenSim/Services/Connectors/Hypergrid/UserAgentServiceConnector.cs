@@ -60,7 +60,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
 
             string serviceURI = tmp.HomeURL;
 
-            if (String.IsNullOrWhiteSpace(serviceURI))
+            if (string.IsNullOrWhiteSpace(serviceURI))
             {
                 m_log.Error("[USER AGENT CONNECTOR]: No Home URI named in configuration");
                 throw new Exception("UserAgent connector init error");
@@ -103,7 +103,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
         // Either way, this is verified by the handler
         public bool LoginAgentToGrid(GridRegion source, AgentCircuitData aCircuit, GridRegion gatekeeper, GridRegion destination, bool fromLogin, out string reason)
         {
-            reason = String.Empty;
+            reason = string.Empty;
 
             if (destination == null)
             {
@@ -191,7 +191,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             hash = CallServer("get_home_region", hash);
 
             bool success;
-            if (!Boolean.TryParse((string)hash["result"], out success) || !success)
+            if (!bool.TryParse((string)hash["result"], out success) || !success)
                 return null;
 
             GridRegion region = new GridRegion();
@@ -201,25 +201,25 @@ namespace OpenSim.Services.Connectors.Hypergrid
             int n = 0;
             if (hash["x"] != null)
             {
-                Int32.TryParse((string)hash["x"], out n);
+                int.TryParse((string)hash["x"], out n);
                 region.RegionLocX = n;
                 //m_log.Debug(">> HERE, x: " + region.RegionLocX);
             }
             if (hash["y"] != null)
             {
-                Int32.TryParse((string)hash["y"], out n);
+                int.TryParse((string)hash["y"], out n);
                 region.RegionLocY = n;
                 //m_log.Debug(">> HERE, y: " + region.RegionLocY);
             }
             if (hash["size_x"] != null)
             {
-                Int32.TryParse((string)hash["size_x"], out n);
+                int.TryParse((string)hash["size_x"], out n);
                 region.RegionSizeX = n;
                 //m_log.Debug(">> HERE, x: " + region.RegionLocX);
             }
             if (hash["size_y"] != null)
             {
-                Int32.TryParse((string)hash["size_y"], out n);
+                int.TryParse((string)hash["size_y"], out n);
                 region.RegionSizeY = n;
                 //m_log.Debug(">> HERE, y: " + region.RegionLocY);
             }
@@ -233,7 +233,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             if (hash["http_port"] != null)
             {
                 uint p = 0;
-                UInt32.TryParse((string)hash["http_port"], out p);
+                uint.TryParse((string)hash["http_port"], out p);
                 region.HttpPort = p;
             }
             if (hash.ContainsKey("server_uri") && hash["server_uri"] != null)
@@ -242,7 +242,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             if (hash["internal_port"] != null)
             {
                 int p = 0;
-                Int32.TryParse((string)hash["internal_port"], out p);
+                int.TryParse((string)hash["internal_port"], out p);
                 region.InternalEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), p);
             }
             if (hash["position"] != null)
@@ -528,7 +528,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             return uui;
         }
 
-        public UUID GetUUID(String first, String last)
+        public UUID GetUUID(string first, string last)
         {
             Hashtable hash = new Hashtable();
             hash["first"] = first;
@@ -586,7 +586,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 bool success = false;
                 reason = string.Empty;
                 if (hash.ContainsKey("result"))
-                    Boolean.TryParse((string)hash["result"], out success);
+                    bool.TryParse((string)hash["result"], out success);
                 else
                 {
                     reason = "Internal error 2";

@@ -72,7 +72,7 @@ namespace OpenSim.Tools.Configger
             string masterFileName = startupConfig.GetString("inimaster", "OpenSimDefaults.ini");
 
             if (masterFileName == "none")
-                masterFileName = String.Empty;
+                masterFileName = string.Empty;
 
             if (IsUri(masterFileName))
             {

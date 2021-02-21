@@ -239,7 +239,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             bool online = true;
             if (request.ContainsKey("online"))
-                Boolean.TryParse(request["online"].ToString(), out online);
+                bool.TryParse(request["online"].ToString(), out online);
             else
             {
                 m_log.WarnFormat("[HGFRIENDS HANDLER]: no online in request to notify");
@@ -362,7 +362,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
         private byte[] FailureResult()
         {
-            return FailureResult(String.Empty);
+            return FailureResult(string.Empty);
         }
 
         private byte[] FailureResult(string msg)

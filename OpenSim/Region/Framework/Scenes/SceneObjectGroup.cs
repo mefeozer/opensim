@@ -767,7 +767,7 @@ namespace OpenSim.Region.Framework.Scenes
                 return sog;
             }
 
-            string reason = String.Empty;
+            string reason = string.Empty;
             EntityTransferContext ctx = new EntityTransferContext();
 
             Vector3 curPos = root.GroupPosition;
@@ -1972,12 +1972,12 @@ namespace OpenSim.Region.Framework.Scenes
             if (states.Count > 0)
             {
                 // Now generate the necessary XML wrappings
-                writer.WriteStartElement(String.Empty, "GroupScriptStates", String.Empty);
+                writer.WriteStartElement(string.Empty, "GroupScriptStates", string.Empty);
                 foreach (UUID itemid in states.Keys)
                 {
                     doc.LoadXml(states[itemid]);
-                    writer.WriteStartElement(String.Empty, "SavedScriptState", String.Empty);
-                    writer.WriteAttributeString(String.Empty, "UUID", String.Empty, itemid.ToString());
+                    writer.WriteStartElement(string.Empty, "SavedScriptState", string.Empty);
+                    writer.WriteAttributeString(string.Empty, "UUID", string.Empty, itemid.ToString());
                     writer.WriteRaw(doc.DocumentElement.OuterXml); // Writes ScriptState element
                     writer.WriteEndElement(); // End of SavedScriptState
                 }
@@ -3931,7 +3931,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 return part.Name;
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         public string GetPartDescription(uint localID)
@@ -3941,7 +3941,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 return part.Description;
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
@@ -5387,7 +5387,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         public override string ToString()
         {
-            return String.Format("{0} {1} ({2})", Name, UUID, AbsolutePosition);
+            return string.Format("{0} {1} ({2})", Name, UUID, AbsolutePosition);
         }
 
         #region ISceneObject
@@ -5436,7 +5436,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         public int GetLinkNumber(string name)
         {
-            if(String.IsNullOrEmpty(name) || name == "Object" || name == "Primitive")
+            if(string.IsNullOrEmpty(name) || name == "Object" || name == "Primitive")
                 return -1;
 
             lock(m_partsNameToLinkMap)
@@ -5446,14 +5446,14 @@ namespace OpenSim.Region.Framework.Scenes
 
                 if (m_partsNameToLinkMap.Count == 0)
                 {
-                    GetLinkNumber_lastname = String.Empty;
+                    GetLinkNumber_lastname = string.Empty;
                     GetLinkNumber_lastnumber = -1;
 
                     SceneObjectPart[] parts = m_parts.GetArray();
                     for (int i = 0; i < parts.Length; i++)
                     {
                         string s = parts[i].Name;
-                        if(String.IsNullOrEmpty(s) || s == "Object" || s == "Primitive")
+                        if(string.IsNullOrEmpty(s) || s == "Object" || s == "Primitive")
                             continue;
 
                         if(m_partsNameToLinkMap.ContainsKey(s))
@@ -5500,7 +5500,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 if(all)
                     m_partsNameToLinkMap.Clear();
-                GetLinkNumber_lastname = String.Empty;
+                GetLinkNumber_lastname = string.Empty;
                 GetLinkNumber_lastnumber = -1;
             }
         }

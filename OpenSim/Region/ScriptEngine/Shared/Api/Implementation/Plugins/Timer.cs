@@ -137,7 +137,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                     //m_log.Debug("Time has passed: Now: " + DateTime.Now.Ticks + ", Passed: " + ts.next);
                     // Add it to queue
                     m_CmdManager.m_ScriptEngine.PostScriptEvent(ts.itemID,
-                            new EventParams("timer", new Object[0],
+                            new EventParams("timer", new object[0],
                             new DetectParams[0]));
                     // set next interval
 
@@ -147,9 +147,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
         }
 
-        public Object[] GetSerializationData(UUID itemID)
+        public object[] GetSerializationData(UUID itemID)
         {
-            List<Object> data = new List<Object>();
+            List<object> data = new List<object>();
 
             lock (TimerListLock)
             {
@@ -167,7 +167,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         }
 
         public void CreateFromData(uint localID, UUID itemID, UUID objectID,
-                                   Object[] data)
+                                   object[] data)
         {
             int idx = 0;
 

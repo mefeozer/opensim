@@ -349,7 +349,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             System.Reflection.MethodInfo parser = null;
             try
             {
-                parser = genericType.GetMethod("Parse", new Type[] { typeof(String) } );
+                parser = genericType.GetMethod("Parse", new Type[] { typeof(string) } );
             }
             catch (Exception e)
             {
@@ -361,7 +361,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 // Parse the input string
                 try
                 {
-                    T setValue = (T)parser.Invoke(genericType, new Object[] { valAsString });
+                    T setValue = (T)parser.Invoke(genericType, new object[] { valAsString });
                     // Store the parsed value
                     setter(s, setValue);
                     // s.Logger.DebugFormat("{0} Parameter {1} = {2}", LogHeader, name, setValue);

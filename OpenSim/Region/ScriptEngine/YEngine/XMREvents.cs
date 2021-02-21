@@ -237,7 +237,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                 this.PostObjectEvent(localID, new EventParams(
                         eventname,
-                        new Object[] { dc },
+                        new object[] { dc },
                         det));
             }
         }
@@ -265,7 +265,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                                 detobj.posVector.Y,
                                                 detobj.posVector.Z);
                 EventParams eps = new EventParams(eventname,
-                                                  new Object[] { vec },
+                                                  new object[] { vec },
                                                   zeroDetectParams);
                 this.PostObjectEvent(localID, eps);
             }

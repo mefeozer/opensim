@@ -138,7 +138,7 @@ namespace OpenSim.Region.CoreModules.Asset
 
             if (moduleConfig != null)
             {
-                string name = moduleConfig.GetString("AssetCaching", String.Empty);
+                string name = moduleConfig.GetString("AssetCaching", string.Empty);
 
                 if (name == Name)
                 {
@@ -202,7 +202,7 @@ namespace OpenSim.Region.CoreModules.Asset
                     assetConfig = source.Configs["AssetService"];
                     if(assetConfig != null)
                     {
-                        m_assetLoader = assetConfig.GetString("DefaultAssetLoader", String.Empty);
+                        m_assetLoader = assetConfig.GetString("DefaultAssetLoader", string.Empty);
                         m_assetLoaderArgs = assetConfig.GetString("AssetLoaderArgs", string.Empty);
                         if (string.IsNullOrWhiteSpace(m_assetLoaderArgs))
                             m_assetLoader = string.Empty;
@@ -836,7 +836,7 @@ namespace OpenSim.Region.CoreModules.Asset
 
                     ++dirSize;
                     string id = Path.GetFileName(file);
-                    if (String.IsNullOrEmpty(id))
+                    if (string.IsNullOrEmpty(id))
                         continue; //??
 
                     if (m_defaultAssets.Contains(id) ||(UUID.TryParse(id, out UUID uid) && gids.ContainsKey(uid)))

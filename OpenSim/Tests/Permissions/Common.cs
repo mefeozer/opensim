@@ -203,16 +203,16 @@ namespace OpenSim.Tests.Permissions
 
         public void PrintPerms(SceneObjectGroup sog)
         {
-            Console.WriteLine("SOG " + sog.Name + " (" + sog.OwnerID.ToString().Substring(34) + "): " + 
-                String.Format(Perms, (PermissionMask)sog.EffectiveOwnerPerms,
+            Console.WriteLine("SOG " + sog.Name + " (" + sog.OwnerID.ToString().Substring(34) + "): " +
+                string.Format(Perms, (PermissionMask)sog.EffectiveOwnerPerms,
                     (PermissionMask)sog.EffectiveGroupPerms, (PermissionMask)sog.EffectiveEveryOnePerms, (PermissionMask)sog.RootPart.NextOwnerMask));
 
         }
 
         public void PrintPerms(InventoryItemBase item)
         {
-            Console.WriteLine("Inv " + item.Name + " (" + item.Owner.ToString().Substring(34) + "): " + 
-                String.Format(Perms, (PermissionMask)item.BasePermissions,
+            Console.WriteLine("Inv " + item.Name + " (" + item.Owner.ToString().Substring(34) + "): " +
+                string.Format(Perms, (PermissionMask)item.BasePermissions,
                     (PermissionMask)item.GroupPermissions, (PermissionMask)item.EveryOnePermissions, (PermissionMask)item.NextPermissions));
 
         }

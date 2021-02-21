@@ -47,8 +47,8 @@ namespace OpenSim.Framework
         private uint _baseMask = FULL_MASK_PERMISSIONS_GENERAL;
         private uint _creationDate = 0;
         private UUID _creatorID = UUID.Zero;
-        private string _creatorData = String.Empty;
-        private string _description = String.Empty;
+        private string _creatorData = string.Empty;
+        private string _description = string.Empty;
         private uint _everyoneMask = FULL_MASK_PERMISSIONS_GENERAL;
         private uint _flags = 0;
         private UUID _groupID = UUID.Zero;
@@ -58,7 +58,7 @@ namespace OpenSim.Framework
         private UUID _itemID = UUID.Zero;
         private UUID _lastOwnerID = UUID.Zero;
         private UUID _rezzerID = UUID.Zero;
-        private string _name = String.Empty;
+        private string _name = string.Empty;
         private uint _nextOwnerMask = FULL_MASK_PERMISSIONS_GENERAL;
         private UUID _ownerID = UUID.Zero;
         private uint _ownerMask = FULL_MASK_PERMISSIONS_GENERAL;
@@ -371,7 +371,7 @@ namespace OpenSim.Framework
 
         #region ICloneable Members
 
-        public Object Clone()
+        public object Clone()
         {
             return MemberwiseClone();
         }

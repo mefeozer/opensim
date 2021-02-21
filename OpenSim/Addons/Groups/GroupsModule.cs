@@ -606,7 +606,7 @@ namespace OpenSim.Groups
                 if (m_debugEnabled)
                     m_log.DebugFormat("[xmlGroups]: Deny inventory from {0} to {1}", giver, remoteAgentIDstr);
 
-                string message = String.Empty;
+                string message = string.Empty;
 
                 InventoryItemBase itemCopy = scene.InventoryService.GetItem(remoteAgentID, attachmentUUID);
                 if (itemCopy == null)
@@ -908,7 +908,7 @@ namespace OpenSim.Groups
             {
                 if (avatar.GodController.UserLevel < m_levelGroupCreate)
                 {
-                    remoteClient.SendCreateGroupReply(UUID.Zero, false, String.Format("Insufficient permissions to create a group. Requires level {0}", m_levelGroupCreate));
+                    remoteClient.SendCreateGroupReply(UUID.Zero, false, string.Format("Insufficient permissions to create a group. Requires level {0}", m_levelGroupCreate));
                     return UUID.Zero;
                 }
             }

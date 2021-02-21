@@ -64,15 +64,15 @@ namespace OpenSim.Services.HypergridService
             if (assetConfig == null)
                 throw new Exception("No HGAssetService configuration");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
 
-            string assetConnectorDll = assetConfig.GetString("AssetConnector", String.Empty);
+            string assetConnectorDll = assetConfig.GetString("AssetConnector", string.Empty);
             if (string.IsNullOrEmpty(assetConnectorDll))
                 throw new Exception("Please specify AssetConnector in HGAssetService configuration");
 
             m_assetConnector = ServerUtils.LoadPlugin<IAssetService>(assetConnectorDll, args);
             if (m_assetConnector == null)
-                throw new Exception(String.Format("Unable to create AssetConnector from {0}", assetConnectorDll));
+                throw new Exception(string.Format("Unable to create AssetConnector from {0}", assetConnectorDll));
 
             string userAccountsDll = assetConfig.GetString("UserAccountsService", string.Empty);
             if (string.IsNullOrEmpty(userAccountsDll))
@@ -80,7 +80,7 @@ namespace OpenSim.Services.HypergridService
 
             m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userAccountsDll, args);
             if (m_UserAccountService == null)
-                throw new Exception(String.Format("Unable to create UserAccountService from {0}", userAccountsDll));
+                throw new Exception(string.Format("Unable to create UserAccountService from {0}", userAccountsDll));
 
             m_HomeURL = Util.GetConfigVarFromSections<string>(config, "HomeURI",
                 new string[] { "Startup", "Hypergrid", configName }, string.Empty);
@@ -152,7 +152,7 @@ namespace OpenSim.Services.HypergridService
         }
 
         // public delegate void AssetRetrieved(string id, Object sender, AssetBase asset);
-        public virtual bool Get(string id, Object sender, AssetRetrieved handler)
+        public virtual bool Get(string id, object sender, AssetRetrieved handler)
         {
             return m_assetConnector.Get(id, sender, (i, s, asset) =>
             {

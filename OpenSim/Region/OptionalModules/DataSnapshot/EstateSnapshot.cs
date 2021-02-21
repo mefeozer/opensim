@@ -59,8 +59,8 @@ namespace OpenSim.Region.DataSnapshot.Providers
 
             UserAccount userInfo = m_scene.UserAccountService.GetUserAccount(m_scene.RegionInfo.ScopeID, ownerid);
             //TODO: Change to query userserver about the master avatar UUID ?
-            String firstname;
-            String lastname;
+            string firstname;
+            string lastname;
 
             if (userInfo != null)
             {
@@ -124,7 +124,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
             get { return m_scene; }
         }
 
-        public String Name {
+        public string Name {
             get { return "EstateSnapshot"; }
         }
 

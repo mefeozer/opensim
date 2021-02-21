@@ -50,7 +50,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool m_Enabled = false;
-        protected string m_MessageKey = String.Empty;
+        protected string m_MessageKey = string.Empty;
         protected List<Scene> m_Scenes = new List<Scene>();
         protected Dictionary<UUID, UUID> m_UserRegionMap = new Dictionary<UUID, UUID>();
 
@@ -78,7 +78,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     return;
                 }
 
-                m_MessageKey = cnf.GetString("MessageKey", String.Empty);
+                m_MessageKey = cnf.GetString("MessageKey", string.Empty);
             }
             m_log.Debug("[MESSAGE TRANSFER]: Module enabled");
             m_Enabled = true;
@@ -298,7 +298,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                         fromGroup = true;
 
                     string requestData2 = (string)requestData["offline"];
-                    if (String.IsNullOrEmpty(requestData2))
+                    if (string.IsNullOrEmpty(requestData2))
                     {
                         offline = 0;
                     }

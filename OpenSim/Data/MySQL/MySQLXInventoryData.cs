@@ -46,7 +46,7 @@ namespace OpenSim.Data.MySQL
             m_Folders = new MySqlFolderHandler(
                     conn, "inventoryfolders", "InventoryStore");
             m_Items = new MySqlItemHandler(
-                    conn, "inventoryitems", String.Empty);
+                    conn, "inventoryitems", string.Empty);
         }
 
         public XInventoryFolder[] GetFolders(string[] fields, string[] vals)
@@ -171,7 +171,7 @@ namespace OpenSim.Data.MySQL
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = String.Format("update {0} set parentFolderID = ?ParentFolderID where inventoryID = ?InventoryID", m_Realm);
+                cmd.CommandText = string.Format("update {0} set parentFolderID = ?ParentFolderID where inventoryID = ?InventoryID", m_Realm);
                 cmd.Parameters.AddWithValue("?ParentFolderID", newParent);
                 cmd.Parameters.AddWithValue("?InventoryID", id);
 
@@ -191,7 +191,7 @@ namespace OpenSim.Data.MySQL
             {
 //                cmd.CommandText = String.Format("select * from inventoryitems where avatarId = ?uuid and assetType = ?type and flags & 1", m_Realm);
 
-                cmd.CommandText = String.Format("select * from inventoryitems where avatarId = ?uuid and assetType = ?type and flags & 1");
+                cmd.CommandText = string.Format("select * from inventoryitems where avatarId = ?uuid and assetType = ?type and flags & 1");
 
                 cmd.Parameters.AddWithValue("?uuid", principalID.ToString());
                 cmd.Parameters.AddWithValue("?type", (int)AssetType.Gesture);
@@ -212,7 +212,7 @@ namespace OpenSim.Data.MySQL
 
 //                    cmd.CommandText = String.Format("select bit_or(inventoryCurrentPermissions) as inventoryCurrentPermissions from inventoryitems where avatarID = ?PrincipalID and assetID = ?AssetID group by assetID", m_Realm);
 
-                    cmd.CommandText = String.Format("select bit_or(inventoryCurrentPermissions) as inventoryCurrentPermissions from inventoryitems where avatarID = ?PrincipalID and assetID = ?AssetID group by assetID");
+                    cmd.CommandText = string.Format("select bit_or(inventoryCurrentPermissions) as inventoryCurrentPermissions from inventoryitems where avatarID = ?PrincipalID and assetID = ?AssetID group by assetID");
 
                     cmd.Parameters.AddWithValue("?PrincipalID", principalID.ToString());
                     cmd.Parameters.AddWithValue("?AssetID", assetID.ToString());
@@ -265,7 +265,7 @@ namespace OpenSim.Data.MySQL
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.CommandText
-                    = String.Format(
+                    = string.Format(
                         "update {0} set parentFolderID = ?ParentFolderID where folderID = ?folderID", m_Realm);
                 cmd.Parameters.AddWithValue("?ParentFolderID", newParentFolderID);
                 cmd.Parameters.AddWithValue("?folderID", id);
@@ -313,7 +313,7 @@ namespace OpenSim.Data.MySQL
                 {
                     cmd.Connection = dbcon;
 
-                    cmd.CommandText = String.Format("update inventoryfolders set version=version+1 where folderID = ?folderID");
+                    cmd.CommandText = string.Format("update inventoryfolders set version=version+1 where folderID = ?folderID");
                     cmd.Parameters.AddWithValue("?folderID", folderID);
 
                     try

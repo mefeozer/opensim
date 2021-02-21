@@ -70,7 +70,7 @@ namespace OpenSim.Capabilities.Handlers
             }
 
             UUID textureID;
-            if (!String.IsNullOrEmpty(textureStr) && UUID.TryParse(textureStr, out textureID))
+            if (!string.IsNullOrEmpty(textureStr) && UUID.TryParse(textureStr, out textureID))
             {
 //                m_log.DebugFormat("[GETTEXTURE]: Received request for texture id {0}", textureID);
 
@@ -190,7 +190,7 @@ namespace OpenSim.Capabilities.Handlers
             Hashtable headers = new Hashtable();
             response["headers"] = headers;
 
-            string range = String.Empty;
+            string range = string.Empty;
 
             if (((Hashtable)request["headers"])["range"] != null)
                 range = (string)((Hashtable)request["headers"])["range"];
@@ -198,7 +198,7 @@ namespace OpenSim.Capabilities.Handlers
             else if (((Hashtable)request["headers"])["Range"] != null)
                 range = (string)((Hashtable)request["headers"])["Range"];
 
-            if (!String.IsNullOrEmpty(range)) // JP2's only
+            if (!string.IsNullOrEmpty(range)) // JP2's only
             {
                 // Range request
                 int start, end;
@@ -242,7 +242,7 @@ namespace OpenSim.Capabilities.Handlers
 
                         response["content-type"] = texture.Metadata.ContentType;
                         response["int_response_code"] = (int)System.Net.HttpStatusCode.PartialContent;
-                        headers["Content-Range"] = String.Format("bytes {0}-{1}/{2}", start, end, texture.Data.Length);
+                        headers["Content-Range"] = string.Format("bytes {0}-{1}/{2}", start, end, texture.Data.Length);
 
                         byte[] d = new byte[len];
                         Array.Copy(texture.Data, start, d, 0, len);
@@ -342,7 +342,7 @@ namespace OpenSim.Capabilities.Handlers
         }
 
         // From msdn
-        private static ImageCodecInfo GetEncoderInfo(String mimeType)
+        private static ImageCodecInfo GetEncoderInfo(string mimeType)
         {
             ImageCodecInfo[] encoders;
             encoders = ImageCodecInfo.GetImageEncoders();

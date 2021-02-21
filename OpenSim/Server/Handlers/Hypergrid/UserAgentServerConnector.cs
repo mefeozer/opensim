@@ -68,14 +68,14 @@ namespace OpenSim.Server.Handlers.Hypergrid
         }
 
         public UserAgentServerConnector(IConfigSource config, IHttpServer server, IFriendsSimConnector friendsConnector) :
-                base(config, server, String.Empty)
+                base(config, server, string.Empty)
         {
             IConfig gridConfig = config.Configs["UserAgentService"];
             if (gridConfig != null)
             {
                 string serviceDll = gridConfig.GetString("LocalServiceModule", string.Empty);
 
-                Object[] args = new Object[] { config, friendsConnector };
+                object[] args = new object[] { config, friendsConnector };
                 m_HomeUsersService = ServerUtils.LoadPlugin<IUserAgentService>(serviceDll, args);
             }
             if (m_HomeUsersService == null)

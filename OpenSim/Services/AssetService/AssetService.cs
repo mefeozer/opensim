@@ -59,7 +59,7 @@ namespace OpenSim.Services.AssetService
                         throw new Exception("No " + m_ConfigName + " configuration");
 
                     string loaderArgs = assetConfig.GetString("AssetLoaderArgs",
-                            String.Empty);
+                            string.Empty);
 
                     bool assetLoaderEnabled = assetConfig.GetBoolean("AssetLoaderEnabled", true);
 
@@ -144,7 +144,7 @@ namespace OpenSim.Services.AssetService
                 return null;
         }
 
-        public virtual bool Get(string id, Object sender, AssetRetrieved handler)
+        public virtual bool Get(string id, object sender, AssetRetrieved handler)
         {
             //m_log.DebugFormat("[AssetService]: Get asset async {0}", id);
 

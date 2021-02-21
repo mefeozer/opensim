@@ -76,7 +76,7 @@ namespace OpenSim.Data.SQLite
         private SqliteDataAdapter regionSpawnPointsDa;
 
         private SqliteConnection m_conn;
-        private String m_connectionString;
+        private string m_connectionString;
 
         protected virtual Assembly Assembly
         {
@@ -436,10 +436,10 @@ namespace OpenSim.Data.SQLite
                 DataRow row = environmentTable.Rows.Find(regionUUID.ToString());
                 if (row == null)
                 {
-                    return String.Empty;
+                    return string.Empty;
                 }
 
-                return (String)row["llsd_settings"];
+                return (string)row["llsd_settings"];
             }
         }
 
@@ -608,7 +608,7 @@ namespace OpenSim.Data.SQLite
         {
             DataTable items = ds.Tables["primitems"];
 
-            String sql = String.Format("primID = '{0}'", uuid);
+            string sql = string.Format("primID = '{0}'", uuid);
             DataRow[] itemRows = items.Select(sql);
 
             foreach (DataRow itemRow in itemRows)
@@ -734,7 +734,7 @@ namespace OpenSim.Data.SQLite
 //            m_log.DebugFormat("[SQLITE REGION DB]: Loading inventory for {0} {1}", prim.Name, prim.UUID);
 
             DataTable dbItems = ds.Tables["primitems"];
-            String sql = String.Format("primID = '{0}'", prim.UUID.ToString());
+            string sql = string.Format("primID = '{0}'", prim.UUID.ToString());
             DataRow[] dbItemRows = dbItems.Select(sql);
             IList<TaskInventoryItem> inventory = new List<TaskInventoryItem>();
 
@@ -774,7 +774,7 @@ namespace OpenSim.Data.SQLite
 
                 // the following is an work around for .NET.  The perf
                 // issues associated with it aren't as bad as you think.
-                String sql = "insert into terrain(RegionUUID, Revision, Heightfield)" +
+                string sql = "insert into terrain(RegionUUID, Revision, Heightfield)" +
                              " values(:RegionUUID, :Revision, :Heightfield)";
 
                 int terrainDBRevision;
@@ -811,7 +811,7 @@ namespace OpenSim.Data.SQLite
 
                 // the following is an work around for .NET.  The perf
                 // issues associated with it aren't as bad as you think.
-                String sql = "insert into bakedterrain(RegionUUID, Revision, Heightfield)" +
+                string sql = "insert into bakedterrain(RegionUUID, Revision, Heightfield)" +
                              " values(:RegionUUID, :Revision, :Heightfield)";
 
                 int terrainDBRevision;
@@ -851,7 +851,7 @@ namespace OpenSim.Data.SQLite
 
             lock (ds)
             {
-                String sql = "select RegionUUID, Revision, Heightfield from terrain" +
+                string sql = "select RegionUUID, Revision, Heightfield from terrain" +
                              " where RegionUUID=:RegionUUID order by Revision desc";
 
                 using (SqliteCommand cmd = new SqliteCommand(sql, m_conn))
@@ -886,7 +886,7 @@ namespace OpenSim.Data.SQLite
 
             lock (ds)
             {
-                String sql = "select RegionUUID, Revision, Heightfield from bakedterrain" +
+                string sql = "select RegionUUID, Revision, Heightfield from bakedterrain" +
                              " where RegionUUID=:RegionUUID";
 
                 using (SqliteCommand cmd = new SqliteCommand(sql, m_conn))
@@ -1108,9 +1108,9 @@ namespace OpenSim.Data.SQLite
         {
             DataTable terrain = new DataTable("terrain");
 
-            createCol(terrain, "RegionUUID", typeof(String));
-            createCol(terrain, "Revision", typeof(Int32));
-            createCol(terrain, "Heightfield", typeof(Byte[]));
+            createCol(terrain, "RegionUUID", typeof(string));
+            createCol(terrain, "Revision", typeof(int));
+            createCol(terrain, "Heightfield", typeof(byte[]));
 
             return terrain;
         }
@@ -1123,118 +1123,118 @@ namespace OpenSim.Data.SQLite
         {
             DataTable prims = new DataTable("prims");
 
-            createCol(prims, "UUID", typeof(String));
-            createCol(prims, "RegionUUID", typeof(String));
-            createCol(prims, "CreationDate", typeof(Int32));
-            createCol(prims, "Name", typeof(String));
-            createCol(prims, "SceneGroupID", typeof(String));
+            createCol(prims, "UUID", typeof(string));
+            createCol(prims, "RegionUUID", typeof(string));
+            createCol(prims, "CreationDate", typeof(int));
+            createCol(prims, "Name", typeof(string));
+            createCol(prims, "SceneGroupID", typeof(string));
             // various text fields
-            createCol(prims, "Text", typeof(String));
-            createCol(prims, "ColorR", typeof(Int32));
-            createCol(prims, "ColorG", typeof(Int32));
-            createCol(prims, "ColorB", typeof(Int32));
-            createCol(prims, "ColorA", typeof(Int32));
-            createCol(prims, "Description", typeof(String));
-            createCol(prims, "SitName", typeof(String));
-            createCol(prims, "TouchName", typeof(String));
+            createCol(prims, "Text", typeof(string));
+            createCol(prims, "ColorR", typeof(int));
+            createCol(prims, "ColorG", typeof(int));
+            createCol(prims, "ColorB", typeof(int));
+            createCol(prims, "ColorA", typeof(int));
+            createCol(prims, "Description", typeof(string));
+            createCol(prims, "SitName", typeof(string));
+            createCol(prims, "TouchName", typeof(string));
             // permissions
-            createCol(prims, "ObjectFlags", typeof(Int32));
-            createCol(prims, "CreatorID", typeof(String));
-            createCol(prims, "OwnerID", typeof(String));
-            createCol(prims, "GroupID", typeof(String));
-            createCol(prims, "LastOwnerID", typeof(String));
-            createCol(prims, "RezzerID", typeof(String));
-            createCol(prims, "OwnerMask", typeof(Int32));
-            createCol(prims, "NextOwnerMask", typeof(Int32));
-            createCol(prims, "GroupMask", typeof(Int32));
-            createCol(prims, "EveryoneMask", typeof(Int32));
-            createCol(prims, "BaseMask", typeof(Int32));
+            createCol(prims, "ObjectFlags", typeof(int));
+            createCol(prims, "CreatorID", typeof(string));
+            createCol(prims, "OwnerID", typeof(string));
+            createCol(prims, "GroupID", typeof(string));
+            createCol(prims, "LastOwnerID", typeof(string));
+            createCol(prims, "RezzerID", typeof(string));
+            createCol(prims, "OwnerMask", typeof(int));
+            createCol(prims, "NextOwnerMask", typeof(int));
+            createCol(prims, "GroupMask", typeof(int));
+            createCol(prims, "EveryoneMask", typeof(int));
+            createCol(prims, "BaseMask", typeof(int));
             // vectors
-            createCol(prims, "PositionX", typeof(Double));
-            createCol(prims, "PositionY", typeof(Double));
-            createCol(prims, "PositionZ", typeof(Double));
-            createCol(prims, "GroupPositionX", typeof(Double));
-            createCol(prims, "GroupPositionY", typeof(Double));
-            createCol(prims, "GroupPositionZ", typeof(Double));
-            createCol(prims, "VelocityX", typeof(Double));
-            createCol(prims, "VelocityY", typeof(Double));
-            createCol(prims, "VelocityZ", typeof(Double));
-            createCol(prims, "AngularVelocityX", typeof(Double));
-            createCol(prims, "AngularVelocityY", typeof(Double));
-            createCol(prims, "AngularVelocityZ", typeof(Double));
-            createCol(prims, "AccelerationX", typeof(Double));
-            createCol(prims, "AccelerationY", typeof(Double));
-            createCol(prims, "AccelerationZ", typeof(Double));
+            createCol(prims, "PositionX", typeof(double));
+            createCol(prims, "PositionY", typeof(double));
+            createCol(prims, "PositionZ", typeof(double));
+            createCol(prims, "GroupPositionX", typeof(double));
+            createCol(prims, "GroupPositionY", typeof(double));
+            createCol(prims, "GroupPositionZ", typeof(double));
+            createCol(prims, "VelocityX", typeof(double));
+            createCol(prims, "VelocityY", typeof(double));
+            createCol(prims, "VelocityZ", typeof(double));
+            createCol(prims, "AngularVelocityX", typeof(double));
+            createCol(prims, "AngularVelocityY", typeof(double));
+            createCol(prims, "AngularVelocityZ", typeof(double));
+            createCol(prims, "AccelerationX", typeof(double));
+            createCol(prims, "AccelerationY", typeof(double));
+            createCol(prims, "AccelerationZ", typeof(double));
             // quaternions
-            createCol(prims, "RotationX", typeof(Double));
-            createCol(prims, "RotationY", typeof(Double));
-            createCol(prims, "RotationZ", typeof(Double));
-            createCol(prims, "RotationW", typeof(Double));
+            createCol(prims, "RotationX", typeof(double));
+            createCol(prims, "RotationY", typeof(double));
+            createCol(prims, "RotationZ", typeof(double));
+            createCol(prims, "RotationW", typeof(double));
 
             // sit target
-            createCol(prims, "SitTargetOffsetX", typeof(Double));
-            createCol(prims, "SitTargetOffsetY", typeof(Double));
-            createCol(prims, "SitTargetOffsetZ", typeof(Double));
+            createCol(prims, "SitTargetOffsetX", typeof(double));
+            createCol(prims, "SitTargetOffsetY", typeof(double));
+            createCol(prims, "SitTargetOffsetZ", typeof(double));
 
-            createCol(prims, "SitTargetOrientW", typeof(Double));
-            createCol(prims, "SitTargetOrientX", typeof(Double));
-            createCol(prims, "SitTargetOrientY", typeof(Double));
-            createCol(prims, "SitTargetOrientZ", typeof(Double));
+            createCol(prims, "SitTargetOrientW", typeof(double));
+            createCol(prims, "SitTargetOrientX", typeof(double));
+            createCol(prims, "SitTargetOrientY", typeof(double));
+            createCol(prims, "SitTargetOrientZ", typeof(double));
 
-            createCol(prims, "PayPrice", typeof(Int32));
-            createCol(prims, "PayButton1", typeof(Int32));
-            createCol(prims, "PayButton2", typeof(Int32));
-            createCol(prims, "PayButton3", typeof(Int32));
-            createCol(prims, "PayButton4", typeof(Int32));
+            createCol(prims, "PayPrice", typeof(int));
+            createCol(prims, "PayButton1", typeof(int));
+            createCol(prims, "PayButton2", typeof(int));
+            createCol(prims, "PayButton3", typeof(int));
+            createCol(prims, "PayButton4", typeof(int));
 
-            createCol(prims, "LoopedSound", typeof(String));
-            createCol(prims, "LoopedSoundGain", typeof(Double));
-            createCol(prims, "TextureAnimation", typeof(String));
-            createCol(prims, "ParticleSystem", typeof(String));
+            createCol(prims, "LoopedSound", typeof(string));
+            createCol(prims, "LoopedSoundGain", typeof(double));
+            createCol(prims, "TextureAnimation", typeof(string));
+            createCol(prims, "ParticleSystem", typeof(string));
 
-            createCol(prims, "CameraEyeOffsetX", typeof(Double));
-            createCol(prims, "CameraEyeOffsetY", typeof(Double));
-            createCol(prims, "CameraEyeOffsetZ", typeof(Double));
+            createCol(prims, "CameraEyeOffsetX", typeof(double));
+            createCol(prims, "CameraEyeOffsetY", typeof(double));
+            createCol(prims, "CameraEyeOffsetZ", typeof(double));
 
-            createCol(prims, "CameraAtOffsetX", typeof(Double));
-            createCol(prims, "CameraAtOffsetY", typeof(Double));
-            createCol(prims, "CameraAtOffsetZ", typeof(Double));
+            createCol(prims, "CameraAtOffsetX", typeof(double));
+            createCol(prims, "CameraAtOffsetY", typeof(double));
+            createCol(prims, "CameraAtOffsetZ", typeof(double));
 
-            createCol(prims, "ForceMouselook", typeof(Int16));
+            createCol(prims, "ForceMouselook", typeof(short));
 
-            createCol(prims, "ScriptAccessPin", typeof(Int32));
+            createCol(prims, "ScriptAccessPin", typeof(int));
 
-            createCol(prims, "AllowedDrop", typeof(Int16));
-            createCol(prims, "DieAtEdge", typeof(Int16));
+            createCol(prims, "AllowedDrop", typeof(short));
+            createCol(prims, "DieAtEdge", typeof(short));
 
-            createCol(prims, "SalePrice", typeof(Int32));
-            createCol(prims, "SaleType", typeof(Int16));
+            createCol(prims, "SalePrice", typeof(int));
+            createCol(prims, "SaleType", typeof(short));
 
             // click action
-            createCol(prims, "ClickAction", typeof(Byte));
+            createCol(prims, "ClickAction", typeof(byte));
 
-            createCol(prims, "Material", typeof(Byte));
+            createCol(prims, "Material", typeof(byte));
 
-            createCol(prims, "CollisionSound", typeof(String));
-            createCol(prims, "CollisionSoundVolume", typeof(Double));
+            createCol(prims, "CollisionSound", typeof(string));
+            createCol(prims, "CollisionSoundVolume", typeof(double));
 
-            createCol(prims, "VolumeDetect", typeof(Int16));
+            createCol(prims, "VolumeDetect", typeof(short));
 
-            createCol(prims, "MediaURL", typeof(String));
+            createCol(prims, "MediaURL", typeof(string));
 
-            createCol(prims, "AttachedPosX", typeof(Double));
-            createCol(prims, "AttachedPosY", typeof(Double));
-            createCol(prims, "AttachedPosZ", typeof(Double));
+            createCol(prims, "AttachedPosX", typeof(double));
+            createCol(prims, "AttachedPosY", typeof(double));
+            createCol(prims, "AttachedPosZ", typeof(double));
 
-            createCol(prims, "DynAttrs", typeof(String));
+            createCol(prims, "DynAttrs", typeof(string));
 
-            createCol(prims, "PhysicsShapeType", typeof(Byte));
-            createCol(prims, "Density", typeof(Double));
-            createCol(prims, "GravityModifier", typeof(Double));
-            createCol(prims, "Friction", typeof(Double));
-            createCol(prims, "Restitution", typeof(Double));
+            createCol(prims, "PhysicsShapeType", typeof(byte));
+            createCol(prims, "Density", typeof(double));
+            createCol(prims, "GravityModifier", typeof(double));
+            createCol(prims, "Friction", typeof(double));
+            createCol(prims, "Restitution", typeof(double));
 
-            createCol(prims, "KeyframeMotion", typeof(Byte[]));
+            createCol(prims, "KeyframeMotion", typeof(byte[]));
 
             createCol(prims, "PassTouches", typeof(bool));
             createCol(prims, "PassCollisions", typeof(bool));
@@ -1264,41 +1264,41 @@ namespace OpenSim.Data.SQLite
         private static DataTable createShapeTable()
         {
             DataTable shapes = new DataTable("primshapes");
-            createCol(shapes, "UUID", typeof(String));
+            createCol(shapes, "UUID", typeof(string));
             // shape is an enum
-            createCol(shapes, "Shape", typeof(Int32));
+            createCol(shapes, "Shape", typeof(int));
             // vectors
-            createCol(shapes, "ScaleX", typeof(Double));
-            createCol(shapes, "ScaleY", typeof(Double));
-            createCol(shapes, "ScaleZ", typeof(Double));
+            createCol(shapes, "ScaleX", typeof(double));
+            createCol(shapes, "ScaleY", typeof(double));
+            createCol(shapes, "ScaleZ", typeof(double));
             // paths
-            createCol(shapes, "PCode", typeof(Int32));
-            createCol(shapes, "PathBegin", typeof(Int32));
-            createCol(shapes, "PathEnd", typeof(Int32));
-            createCol(shapes, "PathScaleX", typeof(Int32));
-            createCol(shapes, "PathScaleY", typeof(Int32));
-            createCol(shapes, "PathShearX", typeof(Int32));
-            createCol(shapes, "PathShearY", typeof(Int32));
-            createCol(shapes, "PathSkew", typeof(Int32));
-            createCol(shapes, "PathCurve", typeof(Int32));
-            createCol(shapes, "PathRadiusOffset", typeof(Int32));
-            createCol(shapes, "PathRevolutions", typeof(Int32));
-            createCol(shapes, "PathTaperX", typeof(Int32));
-            createCol(shapes, "PathTaperY", typeof(Int32));
-            createCol(shapes, "PathTwist", typeof(Int32));
-            createCol(shapes, "PathTwistBegin", typeof(Int32));
+            createCol(shapes, "PCode", typeof(int));
+            createCol(shapes, "PathBegin", typeof(int));
+            createCol(shapes, "PathEnd", typeof(int));
+            createCol(shapes, "PathScaleX", typeof(int));
+            createCol(shapes, "PathScaleY", typeof(int));
+            createCol(shapes, "PathShearX", typeof(int));
+            createCol(shapes, "PathShearY", typeof(int));
+            createCol(shapes, "PathSkew", typeof(int));
+            createCol(shapes, "PathCurve", typeof(int));
+            createCol(shapes, "PathRadiusOffset", typeof(int));
+            createCol(shapes, "PathRevolutions", typeof(int));
+            createCol(shapes, "PathTaperX", typeof(int));
+            createCol(shapes, "PathTaperY", typeof(int));
+            createCol(shapes, "PathTwist", typeof(int));
+            createCol(shapes, "PathTwistBegin", typeof(int));
             // profile
-            createCol(shapes, "ProfileBegin", typeof(Int32));
-            createCol(shapes, "ProfileEnd", typeof(Int32));
-            createCol(shapes, "ProfileCurve", typeof(Int32));
-            createCol(shapes, "ProfileHollow", typeof(Int32));
-            createCol(shapes, "State", typeof(Int32));
-            createCol(shapes, "LastAttachPoint", typeof(Int32));
+            createCol(shapes, "ProfileBegin", typeof(int));
+            createCol(shapes, "ProfileEnd", typeof(int));
+            createCol(shapes, "ProfileCurve", typeof(int));
+            createCol(shapes, "ProfileHollow", typeof(int));
+            createCol(shapes, "State", typeof(int));
+            createCol(shapes, "LastAttachPoint", typeof(int));
             // text TODO: this isn't right, but I'm not sure the right
             // way to specify this as a blob atm
-            createCol(shapes, "Texture", typeof(Byte[]));
-            createCol(shapes, "ExtraParams", typeof(Byte[]));
-            createCol(shapes, "Media", typeof(String));
+            createCol(shapes, "Texture", typeof(byte[]));
+            createCol(shapes, "ExtraParams", typeof(byte[]));
+            createCol(shapes, "Media", typeof(string));
 
             shapes.PrimaryKey = new DataColumn[] { shapes.Columns["UUID"] };
 
@@ -1313,29 +1313,29 @@ namespace OpenSim.Data.SQLite
         {
             DataTable items = new DataTable("primitems");
 
-            createCol(items, "itemID", typeof(String));
-            createCol(items, "primID", typeof(String));
-            createCol(items, "assetID", typeof(String));
-            createCol(items, "parentFolderID", typeof(String));
+            createCol(items, "itemID", typeof(string));
+            createCol(items, "primID", typeof(string));
+            createCol(items, "assetID", typeof(string));
+            createCol(items, "parentFolderID", typeof(string));
 
-            createCol(items, "invType", typeof(Int32));
-            createCol(items, "assetType", typeof(Int32));
+            createCol(items, "invType", typeof(int));
+            createCol(items, "assetType", typeof(int));
 
-            createCol(items, "name", typeof(String));
-            createCol(items, "description", typeof(String));
+            createCol(items, "name", typeof(string));
+            createCol(items, "description", typeof(string));
 
-            createCol(items, "creationDate", typeof(Int64));
-            createCol(items, "creatorID", typeof(String));
-            createCol(items, "ownerID", typeof(String));
-            createCol(items, "lastOwnerID", typeof(String));
-            createCol(items, "groupID", typeof(String));
+            createCol(items, "creationDate", typeof(long));
+            createCol(items, "creatorID", typeof(string));
+            createCol(items, "ownerID", typeof(string));
+            createCol(items, "lastOwnerID", typeof(string));
+            createCol(items, "groupID", typeof(string));
 
-            createCol(items, "nextPermissions", typeof(UInt32));
-            createCol(items, "currentPermissions", typeof(UInt32));
-            createCol(items, "basePermissions", typeof(UInt32));
-            createCol(items, "everyonePermissions", typeof(UInt32));
-            createCol(items, "groupPermissions", typeof(UInt32));
-            createCol(items, "flags", typeof(UInt32));
+            createCol(items, "nextPermissions", typeof(uint));
+            createCol(items, "currentPermissions", typeof(uint));
+            createCol(items, "basePermissions", typeof(uint));
+            createCol(items, "everyonePermissions", typeof(uint));
+            createCol(items, "groupPermissions", typeof(uint));
+            createCol(items, "flags", typeof(uint));
 
             items.PrimaryKey = new DataColumn[] { items.Columns["itemID"] };
 
@@ -1349,52 +1349,52 @@ namespace OpenSim.Data.SQLite
         private static DataTable createLandTable()
         {
             DataTable land = new DataTable("land");
-            createCol(land, "UUID", typeof(String));
-            createCol(land, "RegionUUID", typeof(String));
-            createCol(land, "LocalLandID", typeof(UInt32));
+            createCol(land, "UUID", typeof(string));
+            createCol(land, "RegionUUID", typeof(string));
+            createCol(land, "LocalLandID", typeof(uint));
 
             // Bitmap is a byte[512]
-            createCol(land, "Bitmap", typeof(Byte[]));
+            createCol(land, "Bitmap", typeof(byte[]));
 
-            createCol(land, "Name", typeof(String));
-            createCol(land, "Desc", typeof(String));
-            createCol(land, "OwnerUUID", typeof(String));
+            createCol(land, "Name", typeof(string));
+            createCol(land, "Desc", typeof(string));
+            createCol(land, "OwnerUUID", typeof(string));
             createCol(land, "IsGroupOwned", typeof(string));
-            createCol(land, "Area", typeof(Int32));
-            createCol(land, "AuctionID", typeof(Int32)); //Unemplemented
-            createCol(land, "Category", typeof(Int32)); //Enum OpenMetaverse.Parcel.ParcelCategory
-            createCol(land, "ClaimDate", typeof(Int32));
-            createCol(land, "ClaimPrice", typeof(Int32));
+            createCol(land, "Area", typeof(int));
+            createCol(land, "AuctionID", typeof(int)); //Unemplemented
+            createCol(land, "Category", typeof(int)); //Enum OpenMetaverse.Parcel.ParcelCategory
+            createCol(land, "ClaimDate", typeof(int));
+            createCol(land, "ClaimPrice", typeof(int));
             createCol(land, "GroupUUID", typeof(string));
-            createCol(land, "SalePrice", typeof(Int32));
-            createCol(land, "LandStatus", typeof(Int32)); //Enum. OpenMetaverse.Parcel.ParcelStatus
-            createCol(land, "LandFlags", typeof(UInt32));
-            createCol(land, "LandingType", typeof(Byte));
-            createCol(land, "MediaAutoScale", typeof(Byte));
-            createCol(land, "MediaTextureUUID", typeof(String));
-            createCol(land, "MediaURL", typeof(String));
-            createCol(land, "MusicURL", typeof(String));
-            createCol(land, "PassHours", typeof(Double));
-            createCol(land, "PassPrice", typeof(UInt32));
-            createCol(land, "SnapshotUUID", typeof(String));
-            createCol(land, "UserLocationX", typeof(Double));
-            createCol(land, "UserLocationY", typeof(Double));
-            createCol(land, "UserLocationZ", typeof(Double));
-            createCol(land, "UserLookAtX", typeof(Double));
-            createCol(land, "UserLookAtY", typeof(Double));
-            createCol(land, "UserLookAtZ", typeof(Double));
-            createCol(land, "AuthbuyerID", typeof(String));
-            createCol(land, "OtherCleanTime", typeof(Int32));
-            createCol(land, "Dwell", typeof(Int32));
-            createCol(land, "MediaType", typeof(String));
-            createCol(land, "MediaDescription", typeof(String));
-            createCol(land, "MediaSize", typeof(String));
-            createCol(land, "MediaLoop", typeof(Boolean));
-            createCol(land, "ObscureMedia", typeof(Boolean));
-            createCol(land, "ObscureMusic", typeof(Boolean));
-            createCol(land, "SeeAVs", typeof(Boolean));
-            createCol(land, "AnyAVSounds", typeof(Boolean));
-            createCol(land, "GroupAVSounds", typeof(Boolean));
+            createCol(land, "SalePrice", typeof(int));
+            createCol(land, "LandStatus", typeof(int)); //Enum. OpenMetaverse.Parcel.ParcelStatus
+            createCol(land, "LandFlags", typeof(uint));
+            createCol(land, "LandingType", typeof(byte));
+            createCol(land, "MediaAutoScale", typeof(byte));
+            createCol(land, "MediaTextureUUID", typeof(string));
+            createCol(land, "MediaURL", typeof(string));
+            createCol(land, "MusicURL", typeof(string));
+            createCol(land, "PassHours", typeof(double));
+            createCol(land, "PassPrice", typeof(uint));
+            createCol(land, "SnapshotUUID", typeof(string));
+            createCol(land, "UserLocationX", typeof(double));
+            createCol(land, "UserLocationY", typeof(double));
+            createCol(land, "UserLocationZ", typeof(double));
+            createCol(land, "UserLookAtX", typeof(double));
+            createCol(land, "UserLookAtY", typeof(double));
+            createCol(land, "UserLookAtZ", typeof(double));
+            createCol(land, "AuthbuyerID", typeof(string));
+            createCol(land, "OtherCleanTime", typeof(int));
+            createCol(land, "Dwell", typeof(int));
+            createCol(land, "MediaType", typeof(string));
+            createCol(land, "MediaDescription", typeof(string));
+            createCol(land, "MediaSize", typeof(string));
+            createCol(land, "MediaLoop", typeof(bool));
+            createCol(land, "ObscureMedia", typeof(bool));
+            createCol(land, "ObscureMusic", typeof(bool));
+            createCol(land, "SeeAVs", typeof(bool));
+            createCol(land, "AnyAVSounds", typeof(bool));
+            createCol(land, "GroupAVSounds", typeof(bool));
             createCol(land, "environment", typeof(string));
 
             land.PrimaryKey = new DataColumn[] { land.Columns["UUID"] };
@@ -1409,9 +1409,9 @@ namespace OpenSim.Data.SQLite
         private static DataTable createLandAccessListTable()
         {
             DataTable landaccess = new DataTable("landaccesslist");
-            createCol(landaccess, "LandUUID", typeof(String));
-            createCol(landaccess, "AccessUUID", typeof(String));
-            createCol(landaccess, "Flags", typeof(UInt32));
+            createCol(landaccess, "LandUUID", typeof(string));
+            createCol(landaccess, "AccessUUID", typeof(string));
+            createCol(landaccess, "Flags", typeof(uint));
 
             return landaccess;
         }
@@ -1419,49 +1419,49 @@ namespace OpenSim.Data.SQLite
         private static DataTable createRegionSettingsTable()
         {
             DataTable regionsettings = new DataTable("regionsettings");
-            createCol(regionsettings, "regionUUID", typeof(String));
-            createCol(regionsettings, "block_terraform", typeof(Int32));
-            createCol(regionsettings, "block_fly", typeof(Int32));
-            createCol(regionsettings, "allow_damage", typeof(Int32));
-            createCol(regionsettings, "restrict_pushing", typeof(Int32));
-            createCol(regionsettings, "allow_land_resell", typeof(Int32));
-            createCol(regionsettings, "allow_land_join_divide", typeof(Int32));
-            createCol(regionsettings, "block_show_in_search", typeof(Int32));
-            createCol(regionsettings, "agent_limit", typeof(Int32));
-            createCol(regionsettings, "object_bonus", typeof(Double));
-            createCol(regionsettings, "maturity", typeof(Int32));
-            createCol(regionsettings, "disable_scripts", typeof(Int32));
-            createCol(regionsettings, "disable_collisions", typeof(Int32));
-            createCol(regionsettings, "disable_physics", typeof(Int32));
-            createCol(regionsettings, "terrain_texture_1", typeof(String));
-            createCol(regionsettings, "terrain_texture_2", typeof(String));
-            createCol(regionsettings, "terrain_texture_3", typeof(String));
-            createCol(regionsettings, "terrain_texture_4", typeof(String));
-            createCol(regionsettings, "elevation_1_nw", typeof(Double));
-            createCol(regionsettings, "elevation_2_nw", typeof(Double));
-            createCol(regionsettings, "elevation_1_ne", typeof(Double));
-            createCol(regionsettings, "elevation_2_ne", typeof(Double));
-            createCol(regionsettings, "elevation_1_se", typeof(Double));
-            createCol(regionsettings, "elevation_2_se", typeof(Double));
-            createCol(regionsettings, "elevation_1_sw", typeof(Double));
-            createCol(regionsettings, "elevation_2_sw", typeof(Double));
-            createCol(regionsettings, "water_height", typeof(Double));
-            createCol(regionsettings, "terrain_raise_limit", typeof(Double));
-            createCol(regionsettings, "terrain_lower_limit", typeof(Double));
-            createCol(regionsettings, "use_estate_sun", typeof(Int32));
-            createCol(regionsettings, "sandbox", typeof(Int32));
-            createCol(regionsettings, "sunvectorx", typeof(Double));
-            createCol(regionsettings, "sunvectory", typeof(Double));
-            createCol(regionsettings, "sunvectorz", typeof(Double));
-            createCol(regionsettings, "fixed_sun", typeof(Int32));
-            createCol(regionsettings, "sun_position", typeof(Double));
-            createCol(regionsettings, "covenant", typeof(String));
-            createCol(regionsettings, "covenant_datetime", typeof(Int32));
-            createCol(regionsettings, "map_tile_ID", typeof(String));
-            createCol(regionsettings, "TelehubObject", typeof(String));
-            createCol(regionsettings, "parcel_tile_ID", typeof(String));
-            createCol(regionsettings, "block_search", typeof(Boolean));
-            createCol(regionsettings, "casino", typeof(Boolean));
+            createCol(regionsettings, "regionUUID", typeof(string));
+            createCol(regionsettings, "block_terraform", typeof(int));
+            createCol(regionsettings, "block_fly", typeof(int));
+            createCol(regionsettings, "allow_damage", typeof(int));
+            createCol(regionsettings, "restrict_pushing", typeof(int));
+            createCol(regionsettings, "allow_land_resell", typeof(int));
+            createCol(regionsettings, "allow_land_join_divide", typeof(int));
+            createCol(regionsettings, "block_show_in_search", typeof(int));
+            createCol(regionsettings, "agent_limit", typeof(int));
+            createCol(regionsettings, "object_bonus", typeof(double));
+            createCol(regionsettings, "maturity", typeof(int));
+            createCol(regionsettings, "disable_scripts", typeof(int));
+            createCol(regionsettings, "disable_collisions", typeof(int));
+            createCol(regionsettings, "disable_physics", typeof(int));
+            createCol(regionsettings, "terrain_texture_1", typeof(string));
+            createCol(regionsettings, "terrain_texture_2", typeof(string));
+            createCol(regionsettings, "terrain_texture_3", typeof(string));
+            createCol(regionsettings, "terrain_texture_4", typeof(string));
+            createCol(regionsettings, "elevation_1_nw", typeof(double));
+            createCol(regionsettings, "elevation_2_nw", typeof(double));
+            createCol(regionsettings, "elevation_1_ne", typeof(double));
+            createCol(regionsettings, "elevation_2_ne", typeof(double));
+            createCol(regionsettings, "elevation_1_se", typeof(double));
+            createCol(regionsettings, "elevation_2_se", typeof(double));
+            createCol(regionsettings, "elevation_1_sw", typeof(double));
+            createCol(regionsettings, "elevation_2_sw", typeof(double));
+            createCol(regionsettings, "water_height", typeof(double));
+            createCol(regionsettings, "terrain_raise_limit", typeof(double));
+            createCol(regionsettings, "terrain_lower_limit", typeof(double));
+            createCol(regionsettings, "use_estate_sun", typeof(int));
+            createCol(regionsettings, "sandbox", typeof(int));
+            createCol(regionsettings, "sunvectorx", typeof(double));
+            createCol(regionsettings, "sunvectory", typeof(double));
+            createCol(regionsettings, "sunvectorz", typeof(double));
+            createCol(regionsettings, "fixed_sun", typeof(int));
+            createCol(regionsettings, "sun_position", typeof(double));
+            createCol(regionsettings, "covenant", typeof(string));
+            createCol(regionsettings, "covenant_datetime", typeof(int));
+            createCol(regionsettings, "map_tile_ID", typeof(string));
+            createCol(regionsettings, "TelehubObject", typeof(string));
+            createCol(regionsettings, "parcel_tile_ID", typeof(string));
+            createCol(regionsettings, "block_search", typeof(bool));
+            createCol(regionsettings, "casino", typeof(bool));
             createCol(regionsettings, "cacheID", typeof(string));
             regionsettings.PrimaryKey = new DataColumn[] { regionsettings.Columns["regionUUID"] };
             return regionsettings;
@@ -1474,70 +1474,70 @@ namespace OpenSim.Data.SQLite
         private static DataTable createRegionWindlightTable()
         {
             DataTable regionwindlight = new DataTable("regionwindlight");
-            createCol(regionwindlight, "region_id", typeof(String));
-            createCol(regionwindlight, "water_color_r", typeof(Double));
-            createCol(regionwindlight, "water_color_g", typeof(Double));
-            createCol(regionwindlight, "water_color_b", typeof(Double));
-            createCol(regionwindlight, "water_color_i", typeof(Double));
-            createCol(regionwindlight, "water_fog_density_exponent", typeof(Double));
-            createCol(regionwindlight, "underwater_fog_modifier", typeof(Double));
-            createCol(regionwindlight, "reflection_wavelet_scale_1", typeof(Double));
-            createCol(regionwindlight, "reflection_wavelet_scale_2", typeof(Double));
-            createCol(regionwindlight, "reflection_wavelet_scale_3", typeof(Double));
-            createCol(regionwindlight, "fresnel_scale", typeof(Double));
-            createCol(regionwindlight, "fresnel_offset", typeof(Double));
-            createCol(regionwindlight, "refract_scale_above", typeof(Double));
-            createCol(regionwindlight, "refract_scale_below", typeof(Double));
-            createCol(regionwindlight, "blur_multiplier", typeof(Double));
-            createCol(regionwindlight, "big_wave_direction_x", typeof(Double));
-            createCol(regionwindlight, "big_wave_direction_y", typeof(Double));
-            createCol(regionwindlight, "little_wave_direction_x", typeof(Double));
-            createCol(regionwindlight, "little_wave_direction_y", typeof(Double));
-            createCol(regionwindlight, "normal_map_texture", typeof(String));
-            createCol(regionwindlight, "horizon_r", typeof(Double));
-            createCol(regionwindlight, "horizon_g", typeof(Double));
-            createCol(regionwindlight, "horizon_b", typeof(Double));
-            createCol(regionwindlight, "horizon_i", typeof(Double));
-            createCol(regionwindlight, "haze_horizon", typeof(Double));
-            createCol(regionwindlight, "blue_density_r", typeof(Double));
-            createCol(regionwindlight, "blue_density_g", typeof(Double));
-            createCol(regionwindlight, "blue_density_b", typeof(Double));
-            createCol(regionwindlight, "blue_density_i", typeof(Double));
-            createCol(regionwindlight, "haze_density", typeof(Double));
-            createCol(regionwindlight, "density_multiplier", typeof(Double));
-            createCol(regionwindlight, "distance_multiplier", typeof(Double));
-            createCol(regionwindlight, "max_altitude", typeof(Int32));
-            createCol(regionwindlight, "sun_moon_color_r", typeof(Double));
-            createCol(regionwindlight, "sun_moon_color_g", typeof(Double));
-            createCol(regionwindlight, "sun_moon_color_b", typeof(Double));
-            createCol(regionwindlight, "sun_moon_color_i", typeof(Double));
-            createCol(regionwindlight, "sun_moon_position", typeof(Double));
-            createCol(regionwindlight, "ambient_r", typeof(Double));
-            createCol(regionwindlight, "ambient_g", typeof(Double));
-            createCol(regionwindlight, "ambient_b", typeof(Double));
-            createCol(regionwindlight, "ambient_i", typeof(Double));
-            createCol(regionwindlight, "east_angle", typeof(Double));
-            createCol(regionwindlight, "sun_glow_focus", typeof(Double));
-            createCol(regionwindlight, "sun_glow_size", typeof(Double));
-            createCol(regionwindlight, "scene_gamma", typeof(Double));
-            createCol(regionwindlight, "star_brightness", typeof(Double));
-            createCol(regionwindlight, "cloud_color_r", typeof(Double));
-            createCol(regionwindlight, "cloud_color_g", typeof(Double));
-            createCol(regionwindlight, "cloud_color_b", typeof(Double));
-            createCol(regionwindlight, "cloud_color_i", typeof(Double));
-            createCol(regionwindlight, "cloud_x", typeof(Double));
-            createCol(regionwindlight, "cloud_y", typeof(Double));
-            createCol(regionwindlight, "cloud_density", typeof(Double));
-            createCol(regionwindlight, "cloud_coverage", typeof(Double));
-            createCol(regionwindlight, "cloud_scale", typeof(Double));
-            createCol(regionwindlight, "cloud_detail_x", typeof(Double));
-            createCol(regionwindlight, "cloud_detail_y", typeof(Double));
-            createCol(regionwindlight, "cloud_detail_density", typeof(Double));
-            createCol(regionwindlight, "cloud_scroll_x", typeof(Double));
-            createCol(regionwindlight, "cloud_scroll_x_lock", typeof(Int32));
-            createCol(regionwindlight, "cloud_scroll_y", typeof(Double));
-            createCol(regionwindlight, "cloud_scroll_y_lock", typeof(Int32));
-            createCol(regionwindlight, "draw_classic_clouds", typeof(Int32));
+            createCol(regionwindlight, "region_id", typeof(string));
+            createCol(regionwindlight, "water_color_r", typeof(double));
+            createCol(regionwindlight, "water_color_g", typeof(double));
+            createCol(regionwindlight, "water_color_b", typeof(double));
+            createCol(regionwindlight, "water_color_i", typeof(double));
+            createCol(regionwindlight, "water_fog_density_exponent", typeof(double));
+            createCol(regionwindlight, "underwater_fog_modifier", typeof(double));
+            createCol(regionwindlight, "reflection_wavelet_scale_1", typeof(double));
+            createCol(regionwindlight, "reflection_wavelet_scale_2", typeof(double));
+            createCol(regionwindlight, "reflection_wavelet_scale_3", typeof(double));
+            createCol(regionwindlight, "fresnel_scale", typeof(double));
+            createCol(regionwindlight, "fresnel_offset", typeof(double));
+            createCol(regionwindlight, "refract_scale_above", typeof(double));
+            createCol(regionwindlight, "refract_scale_below", typeof(double));
+            createCol(regionwindlight, "blur_multiplier", typeof(double));
+            createCol(regionwindlight, "big_wave_direction_x", typeof(double));
+            createCol(regionwindlight, "big_wave_direction_y", typeof(double));
+            createCol(regionwindlight, "little_wave_direction_x", typeof(double));
+            createCol(regionwindlight, "little_wave_direction_y", typeof(double));
+            createCol(regionwindlight, "normal_map_texture", typeof(string));
+            createCol(regionwindlight, "horizon_r", typeof(double));
+            createCol(regionwindlight, "horizon_g", typeof(double));
+            createCol(regionwindlight, "horizon_b", typeof(double));
+            createCol(regionwindlight, "horizon_i", typeof(double));
+            createCol(regionwindlight, "haze_horizon", typeof(double));
+            createCol(regionwindlight, "blue_density_r", typeof(double));
+            createCol(regionwindlight, "blue_density_g", typeof(double));
+            createCol(regionwindlight, "blue_density_b", typeof(double));
+            createCol(regionwindlight, "blue_density_i", typeof(double));
+            createCol(regionwindlight, "haze_density", typeof(double));
+            createCol(regionwindlight, "density_multiplier", typeof(double));
+            createCol(regionwindlight, "distance_multiplier", typeof(double));
+            createCol(regionwindlight, "max_altitude", typeof(int));
+            createCol(regionwindlight, "sun_moon_color_r", typeof(double));
+            createCol(regionwindlight, "sun_moon_color_g", typeof(double));
+            createCol(regionwindlight, "sun_moon_color_b", typeof(double));
+            createCol(regionwindlight, "sun_moon_color_i", typeof(double));
+            createCol(regionwindlight, "sun_moon_position", typeof(double));
+            createCol(regionwindlight, "ambient_r", typeof(double));
+            createCol(regionwindlight, "ambient_g", typeof(double));
+            createCol(regionwindlight, "ambient_b", typeof(double));
+            createCol(regionwindlight, "ambient_i", typeof(double));
+            createCol(regionwindlight, "east_angle", typeof(double));
+            createCol(regionwindlight, "sun_glow_focus", typeof(double));
+            createCol(regionwindlight, "sun_glow_size", typeof(double));
+            createCol(regionwindlight, "scene_gamma", typeof(double));
+            createCol(regionwindlight, "star_brightness", typeof(double));
+            createCol(regionwindlight, "cloud_color_r", typeof(double));
+            createCol(regionwindlight, "cloud_color_g", typeof(double));
+            createCol(regionwindlight, "cloud_color_b", typeof(double));
+            createCol(regionwindlight, "cloud_color_i", typeof(double));
+            createCol(regionwindlight, "cloud_x", typeof(double));
+            createCol(regionwindlight, "cloud_y", typeof(double));
+            createCol(regionwindlight, "cloud_density", typeof(double));
+            createCol(regionwindlight, "cloud_coverage", typeof(double));
+            createCol(regionwindlight, "cloud_scale", typeof(double));
+            createCol(regionwindlight, "cloud_detail_x", typeof(double));
+            createCol(regionwindlight, "cloud_detail_y", typeof(double));
+            createCol(regionwindlight, "cloud_detail_density", typeof(double));
+            createCol(regionwindlight, "cloud_scroll_x", typeof(double));
+            createCol(regionwindlight, "cloud_scroll_x_lock", typeof(int));
+            createCol(regionwindlight, "cloud_scroll_y", typeof(double));
+            createCol(regionwindlight, "cloud_scroll_y_lock", typeof(int));
+            createCol(regionwindlight, "draw_classic_clouds", typeof(int));
 
             regionwindlight.PrimaryKey = new DataColumn[] { regionwindlight.Columns["region_id"] };
             return regionwindlight;
@@ -1546,8 +1546,8 @@ namespace OpenSim.Data.SQLite
         private static DataTable createRegionEnvironmentTable()
         {
             DataTable regionEnvironment = new DataTable("regionenvironment");
-            createCol(regionEnvironment, "region_id", typeof(String));
-            createCol(regionEnvironment, "llsd_settings", typeof(String));
+            createCol(regionEnvironment, "region_id", typeof(string));
+            createCol(regionEnvironment, "llsd_settings", typeof(string));
 
             regionEnvironment.PrimaryKey = new DataColumn[] { regionEnvironment.Columns["region_id"] };
 
@@ -1557,7 +1557,7 @@ namespace OpenSim.Data.SQLite
         private static DataTable createRegionSpawnPointsTable()
         {
             DataTable spawn_points = new DataTable("spawn_points");
-            createCol(spawn_points, "regionID", typeof(String));
+            createCol(spawn_points, "regionID", typeof(string));
             createCol(spawn_points, "Yaw", typeof(float));
             createCol(spawn_points, "Pitch", typeof(float));
             createCol(spawn_points, "Distance", typeof(float));
@@ -1603,27 +1603,27 @@ namespace OpenSim.Data.SQLite
             // back out.  Not enough time to figure it out yet.
 
             SceneObjectPart prim = new SceneObjectPart();
-            prim.UUID = new UUID((String)row["UUID"]);
+            prim.UUID = new UUID((string)row["UUID"]);
             // explicit conversion of integers is required, which sort
             // of sucks.  No idea if there is a shortcut here or not.
             prim.CreationDate = Convert.ToInt32(row["CreationDate"]);
             prim.Name = row["Name"] == DBNull.Value ? string.Empty : (string)row["Name"];
             // various text fields
-            prim.Text = (String)row["Text"];
+            prim.Text = (string)row["Text"];
             prim.Color = Color.FromArgb(Convert.ToInt32(row["ColorA"]),
                                         Convert.ToInt32(row["ColorR"]),
                                         Convert.ToInt32(row["ColorG"]),
                                         Convert.ToInt32(row["ColorB"]));
-            prim.Description = (String)row["Description"];
-            prim.SitName = (String)row["SitName"];
-            prim.TouchName = (String)row["TouchName"];
+            prim.Description = (string)row["Description"];
+            prim.SitName = (string)row["SitName"];
+            prim.TouchName = (string)row["TouchName"];
             // permissions
             prim.Flags = (PrimFlags)Convert.ToUInt32(row["ObjectFlags"]);
-            prim.CreatorIdentification = (String)row["CreatorID"];
-            prim.OwnerID = new UUID((String)row["OwnerID"]);
-            prim.GroupID = new UUID((String)row["GroupID"]);
-            prim.LastOwnerID = new UUID((String)row["LastOwnerID"]);
-            prim.RezzerID = row["RezzerID"] == DBNull.Value ? UUID.Zero : new UUID((String)row["RezzerID"]);
+            prim.CreatorIdentification = (string)row["CreatorID"];
+            prim.OwnerID = new UUID((string)row["OwnerID"]);
+            prim.GroupID = new UUID((string)row["GroupID"]);
+            prim.LastOwnerID = new UUID((string)row["LastOwnerID"]);
+            prim.RezzerID = row["RezzerID"] == DBNull.Value ? UUID.Zero : new UUID((string)row["RezzerID"]);
             prim.OwnerMask = Convert.ToUInt32(row["OwnerMask"]);
             prim.NextOwnerMask = Convert.ToUInt32(row["NextOwnerMask"]);
             prim.GroupMask = Convert.ToUInt32(row["GroupMask"]);
@@ -1765,7 +1765,7 @@ namespace OpenSim.Data.SQLite
 
             if (!(row["KeyframeMotion"] is DBNull))
             {
-                Byte[] data = (byte[])row["KeyframeMotion"];
+                byte[] data = (byte[])row["KeyframeMotion"];
                 if (data.Length > 0)
                     prim.KeyframeMotion = KeyframeMotion.FromData(null, data);
                 else
@@ -1809,21 +1809,21 @@ namespace OpenSim.Data.SQLite
         {
             TaskInventoryItem taskItem = new TaskInventoryItem();
 
-            taskItem.ItemID = new UUID((String)row["itemID"]);
-            taskItem.ParentPartID = new UUID((String)row["primID"]);
-            taskItem.AssetID = new UUID((String)row["assetID"]);
-            taskItem.ParentID = new UUID((String)row["parentFolderID"]);
+            taskItem.ItemID = new UUID((string)row["itemID"]);
+            taskItem.ParentPartID = new UUID((string)row["primID"]);
+            taskItem.AssetID = new UUID((string)row["assetID"]);
+            taskItem.ParentID = new UUID((string)row["parentFolderID"]);
 
             taskItem.InvType = Convert.ToInt32(row["invType"]);
             taskItem.Type = Convert.ToInt32(row["assetType"]);
 
-            taskItem.Name = (String)row["name"];
-            taskItem.Description = (String)row["description"];
+            taskItem.Name = (string)row["name"];
+            taskItem.Description = (string)row["description"];
             taskItem.CreationDate = Convert.ToUInt32(row["creationDate"]);
-            taskItem.CreatorIdentification = (String)row["creatorID"];
-            taskItem.OwnerID = new UUID((String)row["ownerID"]);
-            taskItem.LastOwnerID = new UUID((String)row["lastOwnerID"]);
-            taskItem.GroupID = new UUID((String)row["groupID"]);
+            taskItem.CreatorIdentification = (string)row["creatorID"];
+            taskItem.OwnerID = new UUID((string)row["ownerID"]);
+            taskItem.LastOwnerID = new UUID((string)row["lastOwnerID"]);
+            taskItem.GroupID = new UUID((string)row["groupID"]);
 
             taskItem.NextPermissions = Convert.ToUInt32(row["nextPermissions"]);
             taskItem.CurrentPermissions = Convert.ToUInt32(row["currentPermissions"]);
@@ -1844,15 +1844,15 @@ namespace OpenSim.Data.SQLite
         {
             LandData newData = new LandData();
 
-            newData.GlobalID = new UUID((String)row["UUID"]);
+            newData.GlobalID = new UUID((string)row["UUID"]);
             newData.LocalID = Convert.ToInt32(row["LocalLandID"]);
 
             // Bitmap is a byte[512]
-            newData.Bitmap = (Byte[])row["Bitmap"];
+            newData.Bitmap = (byte[])row["Bitmap"];
 
-            newData.Name = (String)row["Name"];
-            newData.Description = (String)row["Desc"];
-            newData.OwnerID = (UUID)(String)row["OwnerUUID"];
+            newData.Name = (string)row["Name"];
+            newData.Description = (string)row["Desc"];
+            newData.OwnerID = (UUID)(string)row["OwnerUUID"];
             newData.IsGroupOwned = Convert.ToBoolean(row["IsGroupOwned"]);
             newData.Area = Convert.ToInt32(row["Area"]);
             newData.AuctionID = Convert.ToUInt32(row["AuctionID"]); //Unemplemented
@@ -1860,22 +1860,22 @@ namespace OpenSim.Data.SQLite
             //Enum OpenMetaverse.Parcel.ParcelCategory
             newData.ClaimDate = Convert.ToInt32(row["ClaimDate"]);
             newData.ClaimPrice = Convert.ToInt32(row["ClaimPrice"]);
-            newData.GroupID = new UUID((String)row["GroupUUID"]);
+            newData.GroupID = new UUID((string)row["GroupUUID"]);
             newData.SalePrice = Convert.ToInt32(row["SalePrice"]);
             newData.Status = (ParcelStatus)Convert.ToInt32(row["LandStatus"]);
             //Enum. OpenMetaverse.Parcel.ParcelStatus
             newData.Flags = Convert.ToUInt32(row["LandFlags"]);
-            newData.LandingType = (Byte)row["LandingType"];
-            newData.MediaAutoScale = (Byte)row["MediaAutoScale"];
-            newData.MediaID = new UUID((String)row["MediaTextureUUID"]);
-            newData.MediaURL = (String)row["MediaURL"];
-            newData.MusicURL = (String)row["MusicURL"];
+            newData.LandingType = (byte)row["LandingType"];
+            newData.MediaAutoScale = (byte)row["MediaAutoScale"];
+            newData.MediaID = new UUID((string)row["MediaTextureUUID"]);
+            newData.MediaURL = (string)row["MediaURL"];
+            newData.MusicURL = (string)row["MusicURL"];
             newData.PassHours = Convert.ToSingle(row["PassHours"]);
             newData.PassPrice = Convert.ToInt32(row["PassPrice"]);
-            newData.SnapshotID = (UUID)(String)row["SnapshotUUID"];
+            newData.SnapshotID = (UUID)(string)row["SnapshotUUID"];
             newData.Dwell = Convert.ToInt32(row["Dwell"]);
-            newData.MediaType = (String)row["MediaType"];
-            newData.MediaDescription = (String)row["MediaDescription"];
+            newData.MediaType = (string)row["MediaType"];
+            newData.MediaDescription = (string)row["MediaDescription"];
             newData.MediaWidth = Convert.ToInt32((((string)row["MediaSize"]).Split(','))[0]);
             newData.MediaHeight = Convert.ToInt32((((string)row["MediaSize"]).Split(','))[1]);
             newData.MediaLoop = Convert.ToBoolean(row["MediaLoop"]);
@@ -1959,10 +1959,10 @@ namespace OpenSim.Data.SQLite
             newSettings.DisableScripts = Convert.ToBoolean(row["disable_scripts"]);
             newSettings.DisableCollisions = Convert.ToBoolean(row["disable_collisions"]);
             newSettings.DisablePhysics = Convert.ToBoolean(row["disable_physics"]);
-            newSettings.TerrainTexture1 = new UUID((String)row["terrain_texture_1"]);
-            newSettings.TerrainTexture2 = new UUID((String)row["terrain_texture_2"]);
-            newSettings.TerrainTexture3 = new UUID((String)row["terrain_texture_3"]);
-            newSettings.TerrainTexture4 = new UUID((String)row["terrain_texture_4"]);
+            newSettings.TerrainTexture1 = new UUID((string)row["terrain_texture_1"]);
+            newSettings.TerrainTexture2 = new UUID((string)row["terrain_texture_2"]);
+            newSettings.TerrainTexture3 = new UUID((string)row["terrain_texture_3"]);
+            newSettings.TerrainTexture4 = new UUID((string)row["terrain_texture_4"]);
             newSettings.Elevation1NW = Convert.ToDouble(row["elevation_1_nw"]);
             newSettings.Elevation2NW = Convert.ToDouble(row["elevation_2_nw"]);
             newSettings.Elevation1NE = Convert.ToDouble(row["elevation_1_ne"]);
@@ -1983,15 +1983,15 @@ namespace OpenSim.Data.SQLite
                                      );
             newSettings.FixedSun = Convert.ToBoolean(row["fixed_sun"]);
             newSettings.SunPosition = Convert.ToDouble(row["sun_position"]);
-            newSettings.Covenant = new UUID((String)row["covenant"]);
+            newSettings.Covenant = new UUID((string)row["covenant"]);
             newSettings.CovenantChangedDateTime = Convert.ToInt32(row["covenant_datetime"]);
-            newSettings.TerrainImageID = new UUID((String)row["map_tile_ID"]);
-            newSettings.TelehubObject = new UUID((String)row["TelehubObject"]);
-            newSettings.ParcelImageID = new UUID((String)row["parcel_tile_ID"]);
+            newSettings.TerrainImageID = new UUID((string)row["map_tile_ID"]);
+            newSettings.TelehubObject = new UUID((string)row["TelehubObject"]);
+            newSettings.ParcelImageID = new UUID((string)row["parcel_tile_ID"]);
             newSettings.GodBlockSearch = Convert.ToBoolean(row["block_search"]);
             newSettings.Casino = Convert.ToBoolean(row["casino"]);
             if (!(row["cacheID"] is System.DBNull))
-                newSettings.CacheID = new UUID((String)row["cacheID"]);
+                newSettings.CacheID = new UUID((string)row["cacheID"]);
 
             return newSettings;
         }
@@ -2168,7 +2168,7 @@ namespace OpenSim.Data.SQLite
             if (prim.KeyframeMotion != null)
                 row["KeyframeMotion"] = prim.KeyframeMotion.Serialize();
             else
-                row["KeyframeMotion"] = new Byte[0];
+                row["KeyframeMotion"] = new byte[0];
 
             row["PassTouches"] = prim.PassTouches;
             row["PassCollisions"] = prim.PassCollisions;
@@ -2177,12 +2177,12 @@ namespace OpenSim.Data.SQLite
             if (prim.VehicleParams != null)
                 row["Vehicle"] = prim.VehicleParams.ToXml2();
             else
-                row["Vehicle"] = String.Empty;
+                row["Vehicle"] = string.Empty;
 
             if (prim.PhysicsInertia != null)
                 row["PhysInertia"] = prim.PhysicsInertia.ToXml2();
             else
-                row["PhysInertia"] = String.Empty;
+                row["PhysInertia"] = string.Empty;
 
             row["pseudocrc"] = prim.PseudoCRC;
         }
@@ -2264,7 +2264,7 @@ namespace OpenSim.Data.SQLite
             row["Dwell"] = land.Dwell;
             row["MediaType"] = land.MediaType;
             row["MediaDescription"] = land.MediaDescription;
-            row["MediaSize"] = String.Format("{0},{1}", land.MediaWidth, land.MediaHeight);
+            row["MediaSize"] = string.Format("{0},{1}", land.MediaWidth, land.MediaHeight);
             row["MediaLoop"] = land.MediaLoop;
             row["ObscureMusic"] = land.ObscureMusic;
             row["ObscureMedia"] = land.ObscureMedia;
@@ -2546,10 +2546,10 @@ namespace OpenSim.Data.SQLite
             }
 
             string sql = "insert into " + table + "(";
-            sql += String.Join(", ", cols);
+            sql += string.Join(", ", cols);
             // important, the first ':' needs to be here, the rest get added in the join
             sql += ") values (:";
-            sql += String.Join(", :", cols);
+            sql += string.Join(", :", cols);
             sql += ")";
 //            m_log.DebugFormat("[SQLITE]: Created insert command {0}", sql);
             SqliteCommand cmd = new SqliteCommand(sql);
@@ -2574,7 +2574,7 @@ namespace OpenSim.Data.SQLite
         private static SqliteCommand createUpdateCommand(string table, string pk, DataTable dt)
         {
             string sql = "update " + table + " set ";
-            string subsql = String.Empty;
+            string subsql = string.Empty;
             foreach (DataColumn col in dt.Columns)
             {
                 if (subsql.Length > 0)
@@ -2608,7 +2608,7 @@ namespace OpenSim.Data.SQLite
         private static SqliteCommand createUpdateCommand(string table, string pk1, string pk2, DataTable dt)
         {
             string sql = "update " + table + " set ";
-            string subsql = String.Empty;
+            string subsql = string.Empty;
             foreach (DataColumn col in dt.Columns)
             {
                 if (subsql.Length > 0)
@@ -2703,7 +2703,7 @@ namespace OpenSim.Data.SQLite
             da.UpdateCommand.Connection = conn;
 
             SqliteCommand delete = new SqliteCommand("delete from prims where UUID = :UUID");
-            delete.Parameters.Add(createSqliteParameter("UUID", typeof(String)));
+            delete.Parameters.Add(createSqliteParameter("UUID", typeof(string)));
             delete.Connection = conn;
             da.DeleteCommand = delete;
         }
@@ -2722,7 +2722,7 @@ namespace OpenSim.Data.SQLite
             da.UpdateCommand.Connection = conn;
 
             SqliteCommand delete = new SqliteCommand("delete from primitems where itemID = :itemID");
-            delete.Parameters.Add(createSqliteParameter("itemID", typeof(String)));
+            delete.Parameters.Add(createSqliteParameter("itemID", typeof(string)));
             delete.Connection = conn;
             da.DeleteCommand = delete;
         }
@@ -2752,7 +2752,7 @@ namespace OpenSim.Data.SQLite
             da.UpdateCommand.Connection = conn;
 
             SqliteCommand delete = new SqliteCommand("delete from land where UUID=:UUID");
-            delete.Parameters.Add(createSqliteParameter("UUID", typeof(String)));
+            delete.Parameters.Add(createSqliteParameter("UUID", typeof(string)));
             da.DeleteCommand = delete;
             da.DeleteCommand.Connection = conn;
         }
@@ -2771,8 +2771,8 @@ namespace OpenSim.Data.SQLite
             da.UpdateCommand.Connection = conn;
 
             SqliteCommand delete = new SqliteCommand("delete from landaccesslist where LandUUID= :LandUUID and AccessUUID= :AccessUUID");
-            delete.Parameters.Add(createSqliteParameter("LandUUID", typeof(String)));
-            delete.Parameters.Add(createSqliteParameter("AccessUUID", typeof(String)));
+            delete.Parameters.Add(createSqliteParameter("LandUUID", typeof(string)));
+            delete.Parameters.Add(createSqliteParameter("AccessUUID", typeof(string)));
             da.DeleteCommand = delete;
             da.DeleteCommand.Connection = conn;
         }
@@ -2828,7 +2828,7 @@ namespace OpenSim.Data.SQLite
             da.UpdateCommand.Connection = conn;
 
             SqliteCommand delete = new SqliteCommand("delete from primshapes where UUID = :UUID");
-            delete.Parameters.Add(createSqliteParameter("UUID", typeof(String)));
+            delete.Parameters.Add(createSqliteParameter("UUID", typeof(string)));
             delete.Connection = conn;
             da.DeleteCommand = delete;
         }
@@ -2846,31 +2846,31 @@ namespace OpenSim.Data.SQLite
         /// <returns></returns>
         private static DbType dbtypeFromType(Type type)
         {
-            if (type == typeof(String))
+            if (type == typeof(string))
             {
                 return DbType.String;
             }
-            else if (type == typeof(Int32))
+            else if (type == typeof(int))
             {
                 return DbType.Int32;
             }
-            else if (type == typeof(Double))
+            else if (type == typeof(double))
             {
                 return DbType.Double;
             }
-            else if (type == typeof(Byte))
+            else if (type == typeof(byte))
             {
                 return DbType.Byte;
             }
-            else if (type == typeof(Double))
+            else if (type == typeof(double))
             {
                 return DbType.Double;
             }
-            else if (type == typeof(Byte[]))
+            else if (type == typeof(byte[]))
             {
                 return DbType.Binary;
             }
-            else if (type == typeof(Boolean))
+            else if (type == typeof(bool))
             {
                 return DbType.Boolean;
             }

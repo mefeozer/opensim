@@ -82,18 +82,18 @@ namespace OpenSim.Services.HypergridService
 
                 IConfig serverConfig = config.Configs["HGInstantMessageService"];
                 if (serverConfig == null)
-                    throw new Exception(String.Format("No section HGInstantMessageService in config file"));
+                    throw new Exception(string.Format("No section HGInstantMessageService in config file"));
 
-                string gridService = serverConfig.GetString("GridService", String.Empty);
-                string presenceService = serverConfig.GetString("PresenceService", String.Empty);
-                string userAgentService = serverConfig.GetString("UserAgentService", String.Empty);
+                string gridService = serverConfig.GetString("GridService", string.Empty);
+                string presenceService = serverConfig.GetString("PresenceService", string.Empty);
+                string userAgentService = serverConfig.GetString("UserAgentService", string.Empty);
                 m_InGatekeeper = serverConfig.GetBoolean("InGatekeeper", false);
                 m_log.DebugFormat("[HG IM SERVICE]: Starting... InRobust? {0}", m_InGatekeeper);
 
                 if (string.IsNullOrEmpty(gridService) || string.IsNullOrEmpty(presenceService))
-                    throw new Exception(String.Format("Incomplete specifications, InstantMessage Service cannot function."));
+                    throw new Exception(string.Format("Incomplete specifications, InstantMessage Service cannot function."));
 
-                Object[] args = new Object[] { config };
+                object[] args = new object[] { config };
                 m_GridService = ServerUtils.LoadPlugin<IGridService>(gridService, args);
                 m_PresenceService = ServerUtils.LoadPlugin<IPresenceService>(presenceService, args);
                 try
@@ -111,7 +111,7 @@ namespace OpenSim.Services.HypergridService
                     return;
                 }
 
-                m_messageKey = cnf.GetString("MessageKey", String.Empty);
+                m_messageKey = cnf.GetString("MessageKey", string.Empty);
                 m_ForwardOfflineGroupMessages = cnf.GetBoolean("ForwardOfflineGroupMessages", false);
 
                 if (m_InGatekeeper)

@@ -181,7 +181,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             else
             {
-                return String.Format("{0} {1} {2} {3} {4} {5}",
+                return string.Format("{0} {1} {2} {3} {4} {5}",
                         m_ItemID,
                         m_CPUTime.ToString("F3").PadLeft(9),
                         m_InstEHEvent.ToString().PadLeft(9),

@@ -78,7 +78,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 m_MODFunctionsEnabled = false;
         }
 
-        public override Object InitializeLifetimeService()
+        public override object InitializeLifetimeService()
         {
             ILease lease = (ILease)base.InitializeLifetimeService();
 
@@ -135,7 +135,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type returntype = m_comms.LookupReturnType(fname);
             if (returntype != typeof(void))
-                MODError(String.Format("return type mismatch for {0}",fname));
+                MODError(string.Format("return type mismatch for {0}",fname));
 
             modInvoke(fname,parms);
         }
@@ -150,7 +150,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type returntype = m_comms.LookupReturnType(fname);
             if (returntype != typeof(string))
-                MODError(String.Format("return type mismatch for {0}",fname));
+                MODError(string.Format("return type mismatch for {0}",fname));
 
             string result = (string)modInvoke(fname,parms);
             return new LSL_String(result);
@@ -166,7 +166,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type returntype = m_comms.LookupReturnType(fname);
             if (returntype != typeof(int))
-                MODError(String.Format("return type mismatch for {0}",fname));
+                MODError(string.Format("return type mismatch for {0}",fname));
 
             int result = (int)modInvoke(fname,parms);
             return new LSL_Integer(result);
@@ -182,7 +182,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type returntype = m_comms.LookupReturnType(fname);
             if (returntype != typeof(float))
-                MODError(String.Format("return type mismatch for {0}",fname));
+                MODError(string.Format("return type mismatch for {0}",fname));
 
             float result = (float)modInvoke(fname,parms);
             return new LSL_Float(result);
@@ -198,7 +198,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type returntype = m_comms.LookupReturnType(fname);
             if (returntype != typeof(UUID))
-                MODError(String.Format("return type mismatch for {0}",fname));
+                MODError(string.Format("return type mismatch for {0}",fname));
 
             UUID result = (UUID)modInvoke(fname,parms);
             return new LSL_Key(result.ToString());
@@ -214,7 +214,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type returntype = m_comms.LookupReturnType(fname);
             if (returntype != typeof(OpenMetaverse.Vector3))
-                MODError(String.Format("return type mismatch for {0}",fname));
+                MODError(string.Format("return type mismatch for {0}",fname));
 
             OpenMetaverse.Vector3 result = (OpenMetaverse.Vector3)modInvoke(fname,parms);
             return new LSL_Vector(result.X,result.Y,result.Z);
@@ -230,7 +230,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type returntype = m_comms.LookupReturnType(fname);
             if (returntype != typeof(OpenMetaverse.Quaternion))
-                MODError(String.Format("return type mismatch for {0}",fname));
+                MODError(string.Format("return type mismatch for {0}",fname));
 
             OpenMetaverse.Quaternion result = (OpenMetaverse.Quaternion)modInvoke(fname,parms);
             return new LSL_Rotation(result.X,result.Y,result.Z,result.W);
@@ -246,7 +246,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type returntype = m_comms.LookupReturnType(fname);
             if (returntype != typeof(object[]))
-                MODError(String.Format("return type mismatch for {0}",fname));
+                MODError(string.Format("return type mismatch for {0}",fname));
 
             object[] result = (object[])modInvoke(fname,parms);
             object[] llist = new object[result.Length];
@@ -284,7 +284,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
                 else
                 {
-                    MODError(String.Format("unknown list element {1} returned by {0}", fname, result[i].GetType().Name));
+                    MODError(string.Format("unknown list element {1} returned by {0}", fname, result[i].GetType().Name));
                 }
             }
 
@@ -313,7 +313,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             Type[] signature = m_comms.LookupTypeSignature(fname);
             if (signature.Length != parms.Length)
-                MODError(String.Format("wrong number of parameters to function {0}",fname));
+                MODError(string.Format("wrong number of parameters to function {0}",fname));
 
             object[] convertedParms = new object[parms.Length];
             for (int i = 0; i < parms.Length; i++)
@@ -331,11 +331,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 if (returntype == typeof(void))
                     return null;
 
-                MODError(String.Format("Invocation of {0} failed; null return value",fname));
+                MODError(string.Format("Invocation of {0} failed; null return value",fname));
             }
             catch (Exception e)
             {
-                MODError(String.Format("Invocation of {0} failed; {1}",fname,e.Message));
+                MODError(string.Format("Invocation of {0} failed; {1}",fname,e.Message));
             }
 
             return null;
@@ -443,14 +443,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                         else if (plist[i] is LSL_Vector)
                             result[i] = (Vector3)((LSL_Vector)plist[i]);
                         else
-                            MODError(String.Format("{0}: unknown LSL list element type", fname));
+                            MODError(string.Format("{0}: unknown LSL list element type", fname));
                     }
 
                     return result;
                 }
             }
 
-            MODError(String.Format("{0}: parameter type mismatch; expecting {1}, type(parm)={2}", fname, type.Name, lslparm.GetType()));
+            MODError(string.Format("{0}: parameter type mismatch; expecting {1}, type(parm)={2}", fname, type.Name, lslparm.GetType()));
             return null;
         }
 

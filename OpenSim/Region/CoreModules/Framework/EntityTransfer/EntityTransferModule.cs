@@ -509,7 +509,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
             posZLimit += localHalfAVHeight + 0.1f;
 
-            if ((position.Z < posZLimit) && !(Single.IsInfinity(posZLimit) || Single.IsNaN(posZLimit)))
+            if ((position.Z < posZLimit) && !(float.IsInfinity(posZLimit) || float.IsNaN(posZLimit)))
             {
                 position.Z = posZLimit;
             }
@@ -593,7 +593,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
             string homeURI = Scene.GetAgentHomeURI(sp.ControllingClient.AgentId);
 
-            string reason = String.Empty;
+            string reason = string.Empty;
             finalDestination = GetFinalDestination(reg, sp.ControllingClient.AgentId, homeURI, out reason);
 
             if (finalDestination == null)
@@ -655,7 +655,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         // Nothing to validate here
         protected virtual bool ValidateGenericConditions(ScenePresence sp, GridRegion reg, GridRegion finalDestination, uint teleportFlags, out string reason)
         {
-            reason = String.Empty;
+            reason = string.Empty;
             return true;
         }
 
@@ -1510,7 +1510,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         public bool checkAgentAccessToRegion(ScenePresence agent, GridRegion destiny, Vector3 position,
                 EntityTransferContext ctx, out string reason)
         {
-            reason = String.Empty;
+            reason = string.Empty;
 
             UUID agentID = agent.UUID;
             ulong destinyHandle = destiny.RegionHandle;
@@ -1587,7 +1587,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
             {
                 // remember the fail
                 m_bannedRegionCache.Add(neighbourRegion.RegionHandle, agentID, 45);
-                if(String.IsNullOrWhiteSpace(failureReason))
+                if(string.IsNullOrWhiteSpace(failureReason))
                     failureReason = "Access Denied";
                 return null;
             }
@@ -1842,7 +1842,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         {
             int ts = Util.EnvironmentTickCount();
             bool sucess = true;
-            string reason = String.Empty;
+            string reason = string.Empty;
             List<ulong> childRegionsToClose = null;
             try
             {
@@ -1866,7 +1866,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                     cAgent.ControlFlags |= (uint)AgentManager.ControlFlags.AGENT_CONTROL_FLY;
 
                 // We don't need the callback anymnore
-                cAgent.CallbackURI = String.Empty;
+                cAgent.CallbackURI = string.Empty;
 
                 // Beyond this point, extra cleanup is needed beyond removing transit state
                 m_entityTransferStateMachine.UpdateInTransit(agent.UUID, AgentTransferState.Transferring);
@@ -2648,7 +2648,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
                 string capsPath = reg.ServerURI + CapsUtil.GetCapsSeedPath(agentCircData.CapsPath);
 
-                string reason = String.Empty;
+                string reason = string.Empty;
 
                 EntityTransferContext ctx = new EntityTransferContext();
                 bool regionAccepted = scene.SimulationService.CreateAgent(reg, reg, agentCircData, (uint)TeleportFlags.Default, null, out reason);

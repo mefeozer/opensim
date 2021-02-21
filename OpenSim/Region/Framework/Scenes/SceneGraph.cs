@@ -92,8 +92,8 @@ namespace OpenSim.Region.Framework.Scenes
         /// These operations rely on the parts composition of the object.  If allowed to run concurrently then race
         /// conditions can occur.
         /// </remarks>
-        private readonly Object m_updateLock = new Object();
-        private readonly  Object m_linkLock = new Object();
+        private readonly object m_updateLock = new object();
+        private readonly object m_linkLock = new object();
         private System.Threading.ReaderWriterLockSlim m_scenePresencesLock;
         private System.Threading.ReaderWriterLockSlim m_scenePartsLock;
 
@@ -1044,7 +1044,7 @@ namespace OpenSim.Region.Framework.Scenes
             List<ScenePresence> presences = GetScenePresences();
             foreach (ScenePresence presence in presences)
             {
-                if (String.Compare(name, presence.ControllingClient.Name, true) == 0)
+                if (string.Compare(name, presence.ControllingClient.Name, true) == 0)
                 {
                     avatar = presence;
                     break;

@@ -335,7 +335,7 @@ namespace OpenSim.Region.ClientStack.Linden
             m_scene.PhysicsScene.AddPhysicsActorTaint(rootpart.PhysActor);
 
             httpResponse.StatusCode = (int)HttpStatusCode.OK;
-            httpResponse.RawBuffer = Util.UTF8NBGetbytes(String.Format("<llsd><map><key>local_id</key>{0}</map></llsd>", ConvertUintToBytes(obj.LocalId)));
+            httpResponse.RawBuffer = Util.UTF8NBGetbytes(string.Format("<llsd><map><key>local_id</key>{0}</map></llsd>", ConvertUintToBytes(obj.LocalId)));
          }
 
         private uint ReadUIntVal(OSD obj)
@@ -351,7 +351,7 @@ namespace OpenSim.Region.ClientStack.Linden
             byte[] resultbytes = Utils.UIntToBytes(val);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(resultbytes);
-            return String.Format("<binary>{0}</binary>", Convert.ToBase64String(resultbytes));
+            return string.Format("<binary>{0}</binary>", Convert.ToBase64String(resultbytes));
         }
     }
 }

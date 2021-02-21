@@ -273,7 +273,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments
 
             m_scene.StoreExtraSetting("auto_grant_attach_perms", val);
 
-            SendConsoleOutput(agentID, String.Format("auto_grant_attach_perms set to {0}", val));
+            SendConsoleOutput(agentID, string.Format("auto_grant_attach_perms set to {0}", val));
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments
                 m_log.DebugFormat("[ATTACHMENTS MODULE]: Rezzing any attachments for {0} from simulator-side", sp.Name);
 
             XmlDocument doc = new XmlDocument();
-            string stateData = String.Empty;
+            string stateData = string.Empty;
 
             IAttachmentsService attServ = m_scene.RequestModuleInterface<IAttachmentsService>();
             if (attServ != null)
@@ -498,7 +498,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments
                 lock (sp.AttachmentsSyncLock)
                 {
                     for (int i = 0; i < attachments.Count; ++i)
-                        UpdateDetachedObject(sp, attachments[i], String.Empty);
+                        UpdateDetachedObject(sp, attachments[i], string.Empty);
                     sp.ClearAttachments();
                 }
             }

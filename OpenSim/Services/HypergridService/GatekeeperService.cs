@@ -85,7 +85,7 @@ namespace OpenSim.Services.HypergridService
 
                 IConfig serverConfig = config.Configs["GatekeeperService"];
                 if (serverConfig == null)
-                    throw new Exception(String.Format("No section GatekeeperService in config file"));
+                    throw new Exception(string.Format("No section GatekeeperService in config file"));
 
                 string accountService = serverConfig.GetString("UserAccountService", string.Empty);
                 string homeUsersService = serverConfig.GetString("UserAgentService", string.Empty);
@@ -174,7 +174,7 @@ namespace OpenSim.Services.HypergridService
 
                 IConfig messagingConfig = config.Configs["Messaging"];
                 if (messagingConfig != null)
-                    m_messageKey = messagingConfig.GetString("MessageKey", String.Empty);
+                    m_messageKey = messagingConfig.GetString("MessageKey", string.Empty);
                 m_log.Debug("[GATEKEEPER SERVICE]: Starting...");
             }
         }
@@ -305,7 +305,7 @@ namespace OpenSim.Services.HypergridService
             //
             // Check client
             //
-            if (!String.IsNullOrWhiteSpace(m_AllowedClients))
+            if (!string.IsNullOrWhiteSpace(m_AllowedClients))
             {
                 Regex arx = new Regex(m_AllowedClients);
                 Match am = arx.Match(curViewer);
@@ -318,7 +318,7 @@ namespace OpenSim.Services.HypergridService
                 }
             }
 
-            if (!String.IsNullOrWhiteSpace(m_DeniedClients))
+            if (!string.IsNullOrWhiteSpace(m_DeniedClients))
             {
                 Regex drx = new Regex(m_DeniedClients);
                 Match dm = drx.Match(curViewer);
@@ -331,7 +331,7 @@ namespace OpenSim.Services.HypergridService
                 }
             }
 
-            if (!String.IsNullOrWhiteSpace(m_DeniedMacs))
+            if (!string.IsNullOrWhiteSpace(m_DeniedMacs))
             {
                 m_log.InfoFormat("[GATEKEEPER SERVICE]: Checking users Mac {0} against list of denied macs {1} ...", curMac, m_DeniedMacs);
                 if (m_DeniedMacs.Contains(curMac))

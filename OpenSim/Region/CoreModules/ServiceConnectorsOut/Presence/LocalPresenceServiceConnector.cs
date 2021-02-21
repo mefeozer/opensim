@@ -63,7 +63,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
                         return;
                     }
 
-                    string serviceDll = inventoryConfig.GetString("LocalServiceModule", String.Empty);
+                    string serviceDll = inventoryConfig.GetString("LocalServiceModule", string.Empty);
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
@@ -71,7 +71,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
                         return;
                     }
 
-                    Object[] args = new Object[] { source };
+                    object[] args = new object[] { source };
                     m_log.DebugFormat("[LOCAL PRESENCE CONNECTOR]: Service dll = {0}", serviceDll);
 
                     m_PresenceService = ServerUtils.LoadPlugin<IPresenceService>(serviceDll, args);

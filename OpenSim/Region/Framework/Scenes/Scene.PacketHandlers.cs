@@ -528,7 +528,7 @@ namespace OpenSim.Region.Framework.Scenes
         }
 
         static private ConcurrentQueue<DescendentsRequestData> m_descendentsRequestQueue = new ConcurrentQueue<DescendentsRequestData>();
-        static private Object m_descendentsRequestLock = new Object();
+        static private object m_descendentsRequestLock = new object();
         static private bool m_descendentsRequestProcessing = false;
 
         /// <summary>

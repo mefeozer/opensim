@@ -107,8 +107,8 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
 
         static StatLogger m_statLog = null;
         static TimeSpan m_statLogPeriod = TimeSpan.FromSeconds(300);
-        static string m_statsDir = String.Empty;
-        static Object m_statLockObject = new Object();
+        static string m_statsDir = string.Empty;
+        static object m_statLockObject = new object();
 
         private void LogSimStats(SimStats stats)
         {
@@ -142,7 +142,7 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
                         m_statLog = new StatLogger();
                         m_statLog.StartTime = now;
                         m_statLog.Path = (m_statsDir.Length > 0 ? m_statsDir + System.IO.Path.DirectorySeparatorChar.ToString() : "")
-                                + String.Format("stats-{0}.log", now.ToString("yyyyMMddHHmmss"));
+                                + string.Format("stats-{0}.log", now.ToString("yyyyMMddHHmmss"));
                         m_statLog.Log = new BinaryWriter(File.Open(m_statLog.Path, FileMode.Append, FileAccess.Write));
                     }
 

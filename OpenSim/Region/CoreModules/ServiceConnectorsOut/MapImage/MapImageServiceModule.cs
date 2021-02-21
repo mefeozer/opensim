@@ -106,7 +106,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MapImage
                 return;
             }
 
-            Object[] args = new Object[] { source };
+            object[] args = new object[] { source };
             m_MapService = ServerUtils.LoadPlugin<IMapImageService>(service, args);
             if (m_MapService == null)
             {

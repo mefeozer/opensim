@@ -105,7 +105,7 @@ namespace OpenSim.Data.PGSQL
         {
             EstateSettings es = new EstateSettings();
 
-            string sql = "select estate_settings.\"" + String.Join("\",estate_settings.\"", FieldList) +
+            string sql = "select estate_settings.\"" + string.Join("\",estate_settings.\"", FieldList) +
                          "\" from estate_map left join estate_settings on estate_map.\"EstateID\" = estate_settings.\"EstateID\" " +
                          " where estate_settings.\"EstateID\" is not null and \"RegionID\" = :RegionID";
 
@@ -139,11 +139,11 @@ namespace OpenSim.Data.PGSQL
                             {
                                 f.SetValue(es, v.ToString());
                             }
-                            else if (f.FieldType == typeof(UInt32))
+                            else if (f.FieldType == typeof(uint))
                             {
                                 f.SetValue(es, Convert.ToUInt32(v));
                             }
-                            else if (f.FieldType == typeof(Single))
+                            else if (f.FieldType == typeof(float))
                             {
                                 f.SetValue(es, Convert.ToSingle(v));
                             }
@@ -201,7 +201,7 @@ namespace OpenSim.Data.PGSQL
             if (es.EstateID < 100)
                 names.Remove("EstateID");
 
-            string sql = string.Format("insert into estate_settings (\"{0}\") values ( :{1} )", String.Join("\",\"", names.ToArray()), String.Join(", :", names.ToArray()));
+            string sql = string.Format("insert into estate_settings (\"{0}\") values ( :{1} )", string.Join("\",\"", names.ToArray()), string.Join(", :", names.ToArray()));
 
             using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
             using (NpgsqlCommand insertCommand = new NpgsqlCommand(sql, conn))
@@ -389,7 +389,7 @@ namespace OpenSim.Data.PGSQL
         public EstateSettings LoadEstateSettings(int estateID)
         {
             EstateSettings es = new EstateSettings();
-            string sql = "select estate_settings.\"" + String.Join("\",estate_settings.\"", FieldList) + "\" from estate_settings where \"EstateID\" = :EstateID";
+            string sql = "select estate_settings.\"" + string.Join("\",estate_settings.\"", FieldList) + "\" from estate_settings where \"EstateID\" = :EstateID";
             using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
             {
                 conn.Open();
@@ -416,11 +416,11 @@ namespace OpenSim.Data.PGSQL
                                 {
                                     f.SetValue(es, v.ToString());
                                 }
-                                else if (f.FieldType == typeof(UInt32))
+                                else if (f.FieldType == typeof(uint))
                                 {
                                     f.SetValue(es, Convert.ToUInt32(v));
                                 }
-                                else if (f.FieldType == typeof(Single))
+                                else if (f.FieldType == typeof(float))
                                 {
                                     f.SetValue(es, Convert.ToSingle(v));
                                 }

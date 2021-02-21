@@ -109,19 +109,19 @@ namespace OpenSim.Framework.Console
             if (components == null || components.Length == 0)
                 text = format;
             else
-                text = String.Format(format, components);
+                text = string.Format(format, components);
 
             System.Console.WriteLine(text);
         }
 
         public string Prompt(string p)
         {
-            return ReadLine(String.Format("{0}: ", p), false, true);
+            return ReadLine(string.Format("{0}: ", p), false, true);
         }
 
         public string Prompt(string p, string def)
         {
-            string ret = ReadLine(String.Format("{0} [{1}]: ", p, def), false, true);
+            string ret = ReadLine(string.Format("{0} [{1}]: ", p, def), false, true);
             if (string.IsNullOrEmpty(ret))
                 ret = def;
 
@@ -131,7 +131,7 @@ namespace OpenSim.Framework.Console
         public string Prompt(string p, List<char> excludedCharacters)
         {
             bool itisdone = false;
-            string ret = String.Empty;
+            string ret = string.Empty;
             while (!itisdone)
             {
                 itisdone = true;
@@ -153,15 +153,15 @@ namespace OpenSim.Framework.Console
         public virtual string Prompt(string p, string def, List<char> excludedCharacters, bool echo = true)
         {
             bool itisdone = false;
-            string ret = String.Empty;
+            string ret = string.Empty;
             while (!itisdone)
             {
                 itisdone = true;
 
                 if (def == null)
-                    ret = ReadLine(String.Format("{0}: ", p), false, echo);
+                    ret = ReadLine(string.Format("{0}: ", p), false, echo);
                 else
-                    ret = ReadLine(String.Format("{0} [{1}]: ", p, def), false, echo);
+                    ret = ReadLine(string.Format("{0} [{1}]: ", p, def), false, echo);
 
                 if (string.IsNullOrEmpty(ret) && def != null)
                 {
@@ -190,7 +190,7 @@ namespace OpenSim.Framework.Console
         public virtual string Prompt(string prompt, string defaultresponse, List<string> options)
         {
             bool itisdone = false;
-            string optstr = String.Empty;
+            string optstr = string.Empty;
             foreach (string s in options)
                 optstr += " " + s;
 

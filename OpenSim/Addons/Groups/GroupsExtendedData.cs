@@ -163,7 +163,7 @@ namespace OpenSim.Groups
                 grec.MaturePublish = bool.Parse(dict["MaturePublish"].ToString());
 
             if (dict.ContainsKey("MembershipFee") && dict["MembershipFee"] != null)
-                grec.MembershipFee = Int32.Parse(dict["MembershipFee"].ToString());
+                grec.MembershipFee = int.Parse(dict["MembershipFee"].ToString());
 
             if (dict.ContainsKey("OpenEnrollment") && dict["OpenEnrollment"] != null)
                 grec.OpenEnrollment = bool.Parse(dict["OpenEnrollment"].ToString());
@@ -180,10 +180,10 @@ namespace OpenSim.Groups
                 grec.ShowInList = bool.Parse(dict["ShownInList"].ToString());
 
             if (dict.ContainsKey("MemberCount") && dict["MemberCount"] != null)
-                grec.MemberCount = Int32.Parse(dict["MemberCount"].ToString());
+                grec.MemberCount = int.Parse(dict["MemberCount"].ToString());
 
             if (dict.ContainsKey("RoleCount") && dict["RoleCount"] != null)
-                grec.RoleCount = Int32.Parse(dict["RoleCount"].ToString());
+                grec.RoleCount = int.Parse(dict["RoleCount"].ToString());
 
             return grec;
         }
@@ -246,7 +246,7 @@ namespace OpenSim.Groups
                 membership.Charter = string.Empty;
 
             if (dict.ContainsKey("Contribution") && dict["Contribution"] != null)
-                membership.Contribution = Int32.Parse(dict["Contribution"].ToString());
+                membership.Contribution = int.Parse(dict["Contribution"].ToString());
 
             if (dict.ContainsKey("FounderID") && dict["FounderID"] != null)
                 membership.FounderID = UUID.Parse(dict["FounderID"].ToString());
@@ -263,7 +263,7 @@ namespace OpenSim.Groups
                 membership.GroupPicture = UUID.Parse(dict["GroupPicture"].ToString());
 
             if (dict.ContainsKey("GroupPowers") && dict["GroupPowers"] != null)
-                membership.GroupPowers = UInt64.Parse(dict["GroupPowers"].ToString());
+                membership.GroupPowers = ulong.Parse(dict["GroupPowers"].ToString());
 
             if (dict.ContainsKey("GroupTitle") && dict["GroupTitle"] != null)
                 membership.GroupTitle = dict["GroupTitle"].ToString();
@@ -277,7 +277,7 @@ namespace OpenSim.Groups
                 membership.MaturePublish = bool.Parse(dict["MaturePublish"].ToString());
 
             if (dict.ContainsKey("MembershipFee") && dict["MembershipFee"] != null)
-                membership.MembershipFee = Int32.Parse(dict["MembershipFee"].ToString());
+                membership.MembershipFee = int.Parse(dict["MembershipFee"].ToString());
 
             if (dict.ContainsKey("OpenEnrollment") && dict["OpenEnrollment"] != null)
                 membership.OpenEnrollment = bool.Parse(dict["OpenEnrollment"].ToString());
@@ -326,10 +326,10 @@ namespace OpenSim.Groups
                 member.AgentID = UUID.Zero.ToString();
 
             if (dict.ContainsKey("AgentPowers") && dict["AgentPowers"] != null)
-                member.AgentPowers = UInt64.Parse(dict["AgentPowers"].ToString());
+                member.AgentPowers = ulong.Parse(dict["AgentPowers"].ToString());
 
             if (dict.ContainsKey("Contribution") && dict["Contribution"] != null)
-                member.Contribution = Int32.Parse(dict["Contribution"].ToString());
+                member.Contribution = int.Parse(dict["Contribution"].ToString());
 
             if (dict.ContainsKey("IsOwner") && dict["IsOwner"] != null)
                 member.IsOwner = bool.Parse(dict["IsOwner"].ToString());
@@ -377,7 +377,7 @@ namespace OpenSim.Groups
                 role.Description = string.Empty;
 
             if (dict.ContainsKey("Members") && dict["Members"] != null)
-                role.Members = Int32.Parse(dict["Members"].ToString());
+                role.Members = int.Parse(dict["Members"].ToString());
 
             if (dict.ContainsKey("Name") && dict["Name"] != null)
                 role.Name = Sanitize(dict["Name"].ToString());
@@ -385,7 +385,7 @@ namespace OpenSim.Groups
                 role.Name = string.Empty;
 
             if (dict.ContainsKey("Powers") && dict["Powers"] != null)
-                role.Powers = UInt64.Parse(dict["Powers"].ToString());
+                role.Powers = ulong.Parse(dict["Powers"].ToString());
 
             if (dict.ContainsKey("Title") && dict["Title"] != null)
                 role.Title = Sanitize(dict["Title"].ToString());
@@ -472,7 +472,7 @@ namespace OpenSim.Groups
                 return notice;
 
             notice.NoticeID = new UUID(dict["NoticeID"].ToString());
-            notice.Timestamp = UInt32.Parse(dict["Timestamp"].ToString());
+            notice.Timestamp = uint.Parse(dict["Timestamp"].ToString());
             notice.FromName = Sanitize(dict["FromName"].ToString());
             notice.Subject = Sanitize(dict["Subject"].ToString());
             notice.HasAttachment = bool.Parse(dict["HasAttachment"].ToString());
@@ -523,7 +523,7 @@ namespace OpenSim.Groups
 
             g.groupID = new UUID(dict["GroupID"].ToString());
             g.groupName = dict["Name"].ToString();
-            Int32.TryParse(dict["NMembers"].ToString(), out g.members);
+            int.TryParse(dict["NMembers"].ToString(), out g.members);
             float.TryParse(dict["SearchOrder"].ToString(), out g.searchOrder);
 
             return g;

@@ -71,7 +71,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         {
             string ID = UUID.Random().ToString();
             m_CmdManager.m_ScriptEngine.PostObjectEvent(localID,
-                    new EventParams("dataserver", new Object[]
+                    new EventParams("dataserver", new object[]
                             { new LSL_Types.LSLString(ID),
                             new LSL_Types.LSLString(reply)},
                     new DetectParams[0]));
@@ -211,7 +211,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
 
             m_CmdManager.m_ScriptEngine.PostObjectEvent(ds.localID,
-                    new EventParams("dataserver", new Object[]
+                    new EventParams("dataserver", new object[]
                             { new LSL_Types.LSLString(ds.ID.ToString()),
                             new LSL_Types.LSLString(reply)},
                     new DetectParams[0]));

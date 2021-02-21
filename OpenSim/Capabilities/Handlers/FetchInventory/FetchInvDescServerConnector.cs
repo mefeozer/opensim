@@ -51,21 +51,21 @@ namespace OpenSim.Capabilities.Handlers
 
             IConfig serverConfig = config.Configs[m_ConfigName];
             if (serverConfig == null)
-                throw new Exception(String.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
 
-            string invService = serverConfig.GetString("InventoryService", String.Empty);
+            string invService = serverConfig.GetString("InventoryService", string.Empty);
 
             if (string.IsNullOrEmpty(invService))
                 throw new Exception("No InventoryService in config file");
 
-            Object[] args = new Object[] { config };
+            object[] args = new object[] { config };
             m_InventoryService =
                     ServerUtils.LoadPlugin<IInventoryService>(invService, args);
 
             if (m_InventoryService == null)
-                throw new Exception(String.Format("Failed to load InventoryService from {0}; config is {1}", invService, m_ConfigName));
+                throw new Exception(string.Format("Failed to load InventoryService from {0}; config is {1}", invService, m_ConfigName));
 
-            string libService = serverConfig.GetString("LibraryService", String.Empty);
+            string libService = serverConfig.GetString("LibraryService", string.Empty);
             m_LibraryService =
                     ServerUtils.LoadPlugin<ILibraryService>(libService, args);
 

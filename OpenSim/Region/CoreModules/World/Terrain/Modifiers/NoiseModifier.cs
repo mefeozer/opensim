@@ -55,7 +55,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Modifiers
                     {
                         if (data.bevelevation < 0.0 || data.bevelevation > 1.0)
                         {
-                            result = String.Format("Taper must be 0.0 to 1.0: {0}", data.bevelevation);
+                            result = string.Format("Taper must be 0.0 to 1.0: {0}", data.bevelevation);
                         }
                     }
                     else
@@ -65,7 +65,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Modifiers
 
                     if (data.elevation < 0.0 || data.elevation > 1.0)
                     {
-                        result = String.Format("Noise strength must be 0.0 to 1.0: {0}", data.elevation);
+                        result = string.Format("Noise strength must be 0.0 to 1.0: {0}", data.elevation);
                     }
 
                     if (string.IsNullOrEmpty(data.shape))

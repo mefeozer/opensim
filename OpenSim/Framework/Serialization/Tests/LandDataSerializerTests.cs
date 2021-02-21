@@ -93,7 +93,7 @@ namespace OpenSim.Framework.Serialization.Tests
 //        {
 //            TestHelpers.InMethod();
 //
-//            string serialized = LandDataSerializer.Serialize(this.land).Replace("\r\n", "\n");
+//            string serialized = LandDataSerializer.Serialize(this.land).Replace(Environment.NewLine, "\n");
 //            Assert.That(serialized.Length > 0, "Serialize(LandData) returned empty string");
 //
 //            // adding a simple boolean variable because resharper nUnit integration doesn't like this
@@ -101,7 +101,7 @@ namespace OpenSim.Framework.Serialization.Tests
 //            bool result = (serialized == preSerialized);
 //            Assert.That(result, "result of Serialize LandData  does not match expected result");
 //
-//            string serializedWithParcelAccessList = LandDataSerializer.Serialize(this.landWithParcelAccessList).Replace("\r\n", "\n");
+//            string serializedWithParcelAccessList = LandDataSerializer.Serialize(this.landWithParcelAccessList).Replace(Environment.NewLine, "\n");
 //            Assert.That(serializedWithParcelAccessList.Length > 0,
 //                        "Serialize(LandData) returned empty string for LandData object with ParcelAccessList");
 //            result = (serializedWithParcelAccessList == preSerializedWithParcelAccessList);

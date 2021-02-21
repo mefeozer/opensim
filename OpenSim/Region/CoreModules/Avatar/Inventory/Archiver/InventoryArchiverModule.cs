@@ -448,14 +448,14 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
             ops.Add("e|exclude=", delegate(string v)
                 {
                     if (!options.ContainsKey("exclude"))
-                        options["exclude"] = new List<String>();
-                    ((List<String>)options["exclude"]).Add(v);
+                        options["exclude"] = new List<string>();
+                    ((List<string>)options["exclude"]).Add(v);
                 });
             ops.Add("f|excludefolder=", delegate(string v)
                 {
                     if (!options.ContainsKey("excludefolders"))
-                        options["excludefolders"] = new List<String>();
-                    ((List<String>)options["excludefolders"]).Add(v);
+                        options["excludefolders"] = new List<string>();
+                    ((List<string>)options["excludefolders"]).Add(v);
                 });
             ops.Add("perm=", delegate(string v) { options["checkPermissions"] = v; });
 

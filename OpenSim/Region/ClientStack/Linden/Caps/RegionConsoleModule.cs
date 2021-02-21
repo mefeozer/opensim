@@ -145,7 +145,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
             List<string> help = Commands.GetHelp(cmd);
 
-            string reply = String.Empty;
+            string reply = string.Empty;
 
             foreach (string s in help)
             {
