@@ -42,9 +42,9 @@ namespace OpenSim.Groups
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IOfflineIMService m_OfflineIM;
-        private IUserAccountService m_UserAccounts;
-        private string m_HomeURI;
+        private readonly IOfflineIMService m_OfflineIM;
+        private readonly IUserAccountService m_UserAccounts;
+        private readonly string m_HomeURI;
 
         public HGGroupsService(IConfigSource config, IOfflineIMService im, IUserAccountService users, string homeURI)
             : base(config, string.Empty)
@@ -76,7 +76,7 @@ namespace OpenSim.Groups
             // Check if it already exists
             GroupData grec = m_Database.RetrieveGroup(groupID);
             if (grec == null ||
-                (grec != null && !string.IsNullOrEmpty(grec.Data["Location"]) && grec.Data["Location"].ToLower() != serviceLocation.ToLower()))
+                grec != null && !string.IsNullOrEmpty(grec.Data["Location"]) && grec.Data["Location"].ToLower() != serviceLocation.ToLower())
             {
                 // Create the group
                 grec = new GroupData();

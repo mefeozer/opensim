@@ -15,7 +15,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private HGFriendsModule m_FriendsModule;
+        private readonly HGFriendsModule m_FriendsModule;
 
         public HGStatusNotifier(HGFriendsModule friendsModule)
         {

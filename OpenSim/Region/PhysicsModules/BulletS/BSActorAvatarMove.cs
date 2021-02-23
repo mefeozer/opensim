@@ -338,7 +338,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             // float nearFeetHeightMin = m_controllingPrim.RawPosition.Z - (m_controllingPrim.Size.Z / 2f) + 0.05f;
             // Note: there is a problem with the computation of the capsule height. Thus RawPosition is off
             //    from the height. Revisit size and this computation when height is scaled properly.
-            float nearFeetHeightMin = m_controllingPrim.RawPosition.Z - (m_controllingPrim.Size.Z / 2f) - BSParam.AvatarStepGroundFudge;
+            float nearFeetHeightMin = m_controllingPrim.RawPosition.Z - m_controllingPrim.Size.Z / 2f - BSParam.AvatarStepGroundFudge;
             float nearFeetHeightMax = nearFeetHeightMin + BSParam.AvatarStepHeight;
 
             // Look for a collision point that is near the character's feet and is oriented the same as the charactor is.
@@ -368,8 +368,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                 // m_physicsScene.DetailLog("{0},BSCharacter.WalkUpStairs,avNormal={1},colNormal={2},diff={3}",
                                 //             m_controllingPrim.LocalID, directionFacing, touchNormal,
                                 //             Math.Abs(OMV.Vector3.Distance(directionFacing, touchNormal)) );
-                                if ((Math.Abs(directionFacing.Z) * PIOver2) < BSParam.AvatarStepAngle
-                                    && (Math.Abs(touchNormal.Z) * PIOver2) < BSParam.AvatarStepAngle)
+                                if (Math.Abs(directionFacing.Z) * PIOver2 < BSParam.AvatarStepAngle
+                                    && Math.Abs(touchNormal.Z) * PIOver2 < BSParam.AvatarStepAngle)
                                 {
                                     // The normal should be our contact point to the object so it is pointing away
                                     //    thus the difference between our facing orientation and the normal should be small.

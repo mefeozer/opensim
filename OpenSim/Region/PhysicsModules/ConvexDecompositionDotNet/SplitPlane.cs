@@ -199,19 +199,19 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         internal static void computePlane(float[] A, float[] B, float[] C, float4 plane)
         {
-            float vx = (B[0] - C[0]);
-            float vy = (B[1] - C[1]);
-            float vz = (B[2] - C[2]);
+            float vx = B[0] - C[0];
+            float vy = B[1] - C[1];
+            float vz = B[2] - C[2];
 
-            float wx = (A[0] - B[0]);
-            float wy = (A[1] - B[1]);
-            float wz = (A[2] - B[2]);
+            float wx = A[0] - B[0];
+            float wy = A[1] - B[1];
+            float wz = A[2] - B[2];
 
             float vw_x = vy * wz - vz * wy;
             float vw_y = vz * wx - vx * wz;
             float vw_z = vx * wy - vy * wx;
 
-            float mag = (float)Math.Sqrt((vw_x * vw_x) + (vw_y * vw_y) + (vw_z * vw_z));
+            float mag = (float)Math.Sqrt(vw_x * vw_x + vw_y * vw_y + vw_z * vw_z);
 
             if (mag < 0.000001f)
             {
@@ -226,7 +226,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             float y = vw_y * mag;
             float z = vw_z * mag;
 
-            float D = 0.0f - ((x * A[0]) + (y * A[1]) + (z * A[2]));
+            float D = 0.0f - (x * A[0] + y * A[1] + z * A[2]);
 
             plane.x = x;
             plane.y = y;

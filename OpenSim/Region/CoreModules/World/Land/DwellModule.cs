@@ -62,7 +62,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                 m_Enabled = false;
                 return;
             }
-            m_Enabled = (DwellConfig.GetString ("DwellModule", "DefaultDwellModule") == "DefaultDwellModule");
+            m_Enabled = DwellConfig.GetString ("DwellModule", "DefaultDwellModule") == "DefaultDwellModule";
         }
 
         public void AddRegion(Scene scene)
@@ -113,14 +113,14 @@ namespace OpenSim.Region.CoreModules.World.Land
         {
             ILandObject parcel = m_scene.LandChannel.GetLandObject(parcelID);
             if (parcel != null && parcel.LandData != null)
-               return (int)(parcel.LandData.Dwell);
+               return (int)parcel.LandData.Dwell;
             return 0;
         }
 
         public int GetDwell(LandData land)
         {
             if (land != null)
-               return (int)(land.Dwell);
+               return (int)land.Dwell;
             return 0;
         }
 

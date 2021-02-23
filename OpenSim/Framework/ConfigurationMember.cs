@@ -48,12 +48,12 @@ namespace OpenSim.Framework
         #endregion
 
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private int cE = 0;
+        private readonly int cE = 0;
 
         private string configurationDescription = string.Empty;
         private string configurationFilename = string.Empty;
-        private XmlNode configurationFromXMLNode = null;
-        private List<ConfigurationOption> configurationOptions = new List<ConfigurationOption>();
+        private readonly XmlNode configurationFromXMLNode = null;
+        private readonly List<ConfigurationOption> configurationOptions = new List<ConfigurationOption>();
         private IGenericConfig configurationPlugin = null;
 
         /// <summary>
@@ -61,10 +61,10 @@ namespace OpenSim.Framework
         /// </summary>
         private string configurationPluginFilename = "OpenSim.Framework.Configuration.XML.dll";
 
-        private ConfigurationOptionsLoad loadFunction;
+        private readonly ConfigurationOptionsLoad loadFunction;
         private ConfigurationOptionResult resultFunction;
 
-        private bool useConsoleToPromptOnError = true;
+        private readonly bool useConsoleToPromptOnError = true;
 
         public ConfigurationMember(string configuration_filename, string configuration_description,
                                    ConfigurationOptionsLoad load_function, ConfigurationOptionResult result_function, bool use_console_to_prompt_on_error)
@@ -109,8 +109,8 @@ namespace OpenSim.Framework
 
         private void checkAndAddConfigOption(ConfigurationOption option)
         {
-            if ((!string.IsNullOrEmpty(option.configurationKey) && !string.IsNullOrEmpty(option.configurationQuestion)) ||
-                (!string.IsNullOrEmpty(option.configurationKey) && option.configurationUseDefaultNoPrompt))
+            if (!string.IsNullOrEmpty(option.configurationKey) && !string.IsNullOrEmpty(option.configurationQuestion) ||
+                !string.IsNullOrEmpty(option.configurationKey) && option.configurationUseDefaultNoPrompt)
             {
                 if (!configurationOptions.Contains(option))
                 {
@@ -255,8 +255,8 @@ namespace OpenSim.Framework
                         }
                         else
                         {
-                            if ((configOption.shouldIBeAsked != null &&
-                                 configOption.shouldIBeAsked(configOption.configurationKey)) ||
+                            if (configOption.shouldIBeAsked != null &&
+                                configOption.shouldIBeAsked(configOption.configurationKey) ||
                                 configOption.shouldIBeAsked == null)
                             {
                                 if (!string.IsNullOrEmpty(configurationDescription.Trim()))

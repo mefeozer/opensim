@@ -46,9 +46,9 @@ namespace OpenSim.Services.GridService
         private static readonly ILog m_log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
-        private string LogHeader = "[GRID SERVICE]";
+        private readonly string LogHeader = "[GRID SERVICE]";
 
-        private bool m_DeleteOnUnregister = true;
+        private readonly bool m_DeleteOnUnregister = true;
         private static GridService m_RootInstance = null;
         protected IConfigSource m_config;
         protected static HypergridLinker m_HypergridLinker;
@@ -57,7 +57,7 @@ namespace OpenSim.Services.GridService
         protected bool m_AllowDuplicateNames = false;
         protected bool m_AllowHypergridMapSearch = false;
 
-        private static Dictionary<string,object> m_ExtraFeatures = new Dictionary<string, object>();
+        private static readonly Dictionary<string,object> m_ExtraFeatures = new Dictionary<string, object>();
 
         public GridService(IConfigSource config)
             : base(config)
@@ -263,7 +263,7 @@ namespace OpenSim.Services.GridService
             else if(rdatas.Count == 1)
                 region = rdatas[0];
 
-            if ((region != null) && (region.RegionID != regionInfos.RegionID))
+            if (region != null && region.RegionID != regionInfos.RegionID)
             {
                 // If not same ID and same coordinates, this new region has conflicts and can't be registered.
                 m_log.WarnFormat("{0} Register region conflict in scope {1}. {2}", LogHeader, scopeID, reason);
@@ -327,8 +327,8 @@ namespace OpenSim.Services.GridService
 
             // If there is an old record for us, delete it if it is elsewhere.
             region = m_Database.Get(regionInfos.RegionID, scopeID);
-            if ((region != null) && (region.RegionID == regionInfos.RegionID) &&
-                ((region.posX != regionInfos.RegionLocX) || (region.posY != regionInfos.RegionLocY)))
+            if (region != null && region.RegionID == regionInfos.RegionID &&
+                (region.posX != regionInfos.RegionLocX || region.posY != regionInfos.RegionLocY))
             {
                 if ((Convert.ToInt32(region.Data["flags"]) & (int)OpenSim.Framework.RegionFlags.NoMove) != 0)
                     return "Can't move this region";
@@ -365,7 +365,7 @@ namespace OpenSim.Services.GridService
             else
             {
                 rdata.Data["flags"] = "0";
-                if ((gridConfig != null) && !string.IsNullOrEmpty(rdata.RegionName))
+                if (gridConfig != null && !string.IsNullOrEmpty(rdata.RegionName))
                 {
                     int newFlags = 0;
                     string regionName = rdata.RegionName.Trim().Replace(' ', '_');
@@ -425,7 +425,7 @@ namespace OpenSim.Services.GridService
 
             int flags = Convert.ToInt32(region.Data["flags"]);
 
-            if ((!m_DeleteOnUnregister) || ((flags & (int)OpenSim.Framework.RegionFlags.Persistent) != 0))
+            if (!m_DeleteOnUnregister || (flags & (int)OpenSim.Framework.RegionFlags.Persistent) != 0)
             {
                 flags &= ~(int)OpenSim.Framework.RegionFlags.RegionOnline;
                 region.Data["flags"] = flags.ToString();
@@ -634,7 +634,7 @@ namespace OpenSim.Services.GridService
                 else
                 {
                     string name = nameURI.RegionName;
-                    if (rdatas != null && (rdatas.Count > 0))
+                    if (rdatas != null && rdatas.Count > 0)
                     {
                         //m_log.DebugFormat("[GRID SERVICE]: Found {0} regions", rdatas.Count);
                         foreach (RegionData rdata in rdatas)
@@ -656,7 +656,7 @@ namespace OpenSim.Services.GridService
             if (!m_AllowHypergridMapSearch)
                 return rinfos;
 
-            if (rdatas != null && (rdatas.Count > 0))
+            if (rdatas != null && rdatas.Count > 0)
             {
                 bool haveMatch = false;
                 // m_log.DebugFormat("[GRID SERVICE]: Found {0} regions", rdatas.Count);

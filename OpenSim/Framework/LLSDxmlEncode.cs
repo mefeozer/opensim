@@ -850,7 +850,7 @@ namespace OpenSim.Framework
                             i = len;
                             sb.Append(b64[d[i] >> 2]);
                             sb.Append(b64[((d[i] & 0x03) << 4) | ((d[i + 1] & 0xf0) >> 4)]);
-                            sb.Append(b64[((d[i + 1] & 0x0f) << 2)]);
+                            sb.Append(b64[(d[i + 1] & 0x0f) << 2]);
                             sb.Append('=');
                             break;
                         }
@@ -893,7 +893,7 @@ namespace OpenSim.Framework
                             i = len;
                             sb.Append(b64[d[i] >> 2]);
                             sb.Append(b64[((d[i] & 0x03) << 4) | (d[i + 1] >> 4)]);
-                            sb.Append(b64[((d[i + 1] & 0x0f) << 2)]);
+                            sb.Append(b64[(d[i + 1] & 0x0f) << 2]);
                             sb.Append('=');
                             break;
                         }

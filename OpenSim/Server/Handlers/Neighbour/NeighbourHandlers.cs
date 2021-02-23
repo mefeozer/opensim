@@ -44,8 +44,8 @@ namespace OpenSim.Server.Handlers.Neighbour
     public class NeighbourSimpleHandler : SimpleStreamHandler
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private INeighbourService m_NeighbourService;
-        private IAuthenticationService m_AuthenticationService;
+        private readonly INeighbourService m_NeighbourService;
+        private readonly IAuthenticationService m_AuthenticationService;
 
         public NeighbourSimpleHandler(INeighbourService service, IAuthenticationService authentication) :
                 base("/region")

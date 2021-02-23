@@ -41,10 +41,10 @@ namespace OpenSim.Framework.Serialization.External
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static Dictionary<string, Action<LandData, XmlReader>> m_ldProcessors
+        private static readonly Dictionary<string, Action<LandData, XmlReader>> m_ldProcessors
             = new Dictionary<string, Action<LandData, XmlReader>>();
 
-        private static Dictionary<string, Action<LandAccessEntry, XmlReader>> m_laeProcessors
+        private static readonly Dictionary<string, Action<LandAccessEntry, XmlReader>> m_laeProcessors
             = new Dictionary<string, Action<LandAccessEntry, XmlReader>>();
 
         static LandDataSerializer()

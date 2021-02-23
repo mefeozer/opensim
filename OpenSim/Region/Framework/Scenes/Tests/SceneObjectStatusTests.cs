@@ -39,7 +39,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
     public class SceneObjectStatusTests : OpenSimTestCase
     {
         private TestScene m_scene;
-        private UUID m_ownerId = TestHelpers.ParseTail(0x1);
+        private readonly UUID m_ownerId = TestHelpers.ParseTail(0x1);
         private SceneObjectGroup m_so1;
         private SceneObjectGroup m_so2;
 

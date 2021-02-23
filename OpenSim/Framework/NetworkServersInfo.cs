@@ -61,7 +61,7 @@ namespace OpenSim.Framework
             HttpListenerPort =
                 (uint) config.Configs["Network"].GetInt("http_listener_port", (int) ConfigSettings.DefaultRegionHttpPort);
             httpSSLPort =
-                (uint)config.Configs["Network"].GetInt("http_listener_sslport", ((int)ConfigSettings.DefaultRegionHttpPort+1));
+                (uint)config.Configs["Network"].GetInt("http_listener_sslport", (int)ConfigSettings.DefaultRegionHttpPort+1);
             HttpUsesSSL = config.Configs["Network"].GetBoolean("http_listener_ssl", false);
             HttpSSLCN = config.Configs["Network"].GetString("http_listener_cn", "localhost");
             HttpSSLCertPath = config.Configs["Network"].GetString("http_listener_cert_path", HttpSSLCertPath);

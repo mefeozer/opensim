@@ -202,7 +202,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private Token lastToken;        // last token created so far
         private string cameFrom;        // where the source came from
         private TextWriter saveSource;  // save copy of source here (or null)
-        private Options options = new Options();
+        private readonly Options options = new Options();
 
         /**
          * @brief convert a source file in the form of a string
@@ -387,9 +387,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                      // Check for '#' lineno filename newline
                      // lineno is line number of next line in file
                      // If found, save values and remove tokens from stream
-                    if((lastToken is TokenStr) &&
-                        (lastToken.prevToken is TokenInt) &&
-                        (lastToken.prevToken.prevToken is TokenKwHash))
+                    if(lastToken is TokenStr &&
+                        lastToken.prevToken is TokenInt &&
+                        lastToken.prevToken.prevToken is TokenKwHash)
                     {
                         filNam = ((TokenStr)lastToken).val;
                         lineNo = ((TokenInt)lastToken.prevToken).val;
@@ -404,18 +404,18 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     continue;
 
                  // Skip over comments.
-                if((i + 2 <= source.Length) && source.Substring(i, 2).Equals("//"))
+                if(i + 2 <= source.Length && source.Substring(i, 2).Equals("//"))
                 {
-                    while((i < source.Length) && (source[i] != '\n'))
+                    while(i < source.Length && source[i] != '\n')
                         i++;
                     lineNo++;
                     bolIdx = i + 1;
                     continue;
                 }
-                if((i + 2 <= source.Length) && (source.Substring(i, 2).Equals("/*")))
+                if(i + 2 <= source.Length && source.Substring(i, 2).Equals("/*"))
                 {
                     i += 2;
-                    while((i + 1 < source.Length) && (((c = source[i]) != '*') || (source[i + 1] != '/')))
+                    while(i + 1 < source.Length && ((c = source[i]) != '*' || source[i + 1] != '/'))
                     {
                         if(c == '\n')
                         {
@@ -429,7 +429,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                  // Check for numbers.
-                if((c >= '0') && (c <= '9'))
+                if(c >= '0' && c <= '9')
                 {
                     int j = TryParseFloat(i);
                     if(j == 0)
@@ -437,7 +437,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     i = --j;
                     continue;
                 }
-                if((c == '.') && (i + 1 < source.Length) && (source[i + 1] >= '0') && (source[i + 1] <= '9'))
+                if(c == '.' && i + 1 < source.Length && source[i + 1] >= '0' && source[i + 1] <= '9')
                 {
                     int j = TryParseFloat(i);
                     if(j > 0)
@@ -468,11 +468,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         }
                         else
                         {
-                            if(!backslash && (c == '"'))
+                            if(!backslash && c == '"')
                                 break;
-                            if(backslash && (c == 'n'))
+                            if(backslash && c == 'n')
                                 c = '\n';
-                            if(backslash && (c == 't'))
+                            if(backslash && c == 't')
                             {
                                 sb.Append("   ");
                                 c = ' ';
@@ -518,11 +518,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         }
                         else
                         {
-                            if(!backslash && (c == '\''))
+                            if(!backslash && c == '\'')
                                 break;
-                            if(backslash && (c == 'n'))
+                            if(backslash && c == 'n')
                                 c = '\n';
-                            if(backslash && (c == 't'))
+                            if(backslash && c == 't')
                                 c = '\t';
                         }
                         backslash = false;
@@ -543,7 +543,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                  // Check for keywords/names.
-                if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_') || (c == '$' && options.dollarsigns))
+                if(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_' || c == '$' && options.dollarsigns)
                 {
                     int j;
 
@@ -610,7 +610,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                 // Check for option enables.
-                if ((c == ';') && (lastToken is TokenName))
+                if (c == ';' && lastToken is TokenName)
                 {
                     if(strcasecmp(((TokenName)lastToken).val, "yoptions") == 0)
                     {
@@ -621,8 +621,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         lastToken.nextToken = null;
                         continue;
                     }
-                    else if ((lastToken.prevToken is TokenName) &&
-                            (strcasecmp(((TokenName)lastToken.prevToken).val, "yoption") == 0))
+                    else if (lastToken.prevToken is TokenName &&
+                            strcasecmp(((TokenName)lastToken.prevToken).val, "yoption") == 0)
                     {
                         string opt = ((TokenName)lastToken).val;
                         if(strcasecmp(opt, "allowall") == 0)
@@ -666,7 +666,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     for(j = 0; j < delims.Length; j++)
                     {
                         len = delims[j].str.Length;
-                        if((i + len <= source.Length) && (source.Substring(i, len).Equals(delims[j].str)))
+                        if(i + len <= source.Length && source.Substring(i, len).Equals(delims[j].str))
                             break;
                     }
                     if(j < delims.Length)
@@ -712,7 +712,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             for(j = i; j < source.Length; j++)
             {
                 c = source[j];
-                if((c >= '0') && (c <= '9'))
+                if(c >= '0' && c <= '9')
                 {
                     m = mantissa * 10 + (ulong)(c - '0');
                     if(m / 10 != mantissa)
@@ -738,7 +738,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     decimals = true;
                     continue;
                 }
-                if((c == 'E') || (c == 'e'))
+                if(c == 'E' || c == 'e')
                 {
                     if(++j >= source.Length)
                     {
@@ -746,15 +746,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         return j;
                     }
                     c = source[j];
-                    negexp = (c == '-');
-                    if(negexp || (c == '+'))
+                    negexp = c == '-';
+                    if(negexp || c == '+')
                         j++;
                     y = 0;
                     nulexp = true;
                     for(; j < source.Length; j++)
                     {
                         c = source[j];
-                        if((c < '0') || (c > '9'))
+                        if(c < '0' || c > '9')
                             break;
                         x = y * 10 + (c - '0');
                         if(x / 10 != y)
@@ -793,7 +793,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     }
                     exponent = x;
                 }
-                if ((c == 'F') || (c == 'f'))
+                if (c == 'F' || c == 'f')
                 {
                     if (++j >= source.Length)
                     {
@@ -802,7 +802,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     }
 
                     c = source[j];
-                    if (((c >= '0') && (c <= '9')) || c == '.' || ((c == 'E') || (c == 'e')) || ((c == 'F') || (c == 'f')))
+                    if (c >= '0' && c <= '9' || c == '.' || c == 'E' || c == 'e' || c == 'F' || c == 'f')
                     {
                         TokenError(j-1, "Syntax error");
                         return j;
@@ -817,7 +817,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
             f = mantissa;
-            if((exponent != 0) && (mantissa != 0) && !error)
+            if(exponent != 0 && mantissa != 0 && !error)
             {
                 f10 = 10.0;
                 if(exponent < 0)
@@ -874,7 +874,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             for(j = i; j < source.Length; j++)
             {
                 c = source[j];
-                if((c >= '0') && (c <= '9'))
+                if(c >= '0' && c <= '9')
                 {
                     m = mantissa * basse + (uint)(c - '0');
                     if(m / basse != mantissa)
@@ -886,7 +886,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     mantissa = m;
                     continue;
                 }
-                if((basse == 16) && ((c >= 'A') && (c <= 'F')))
+                if(basse == 16 && c >= 'A' && c <= 'F')
                 {
                     m = mantissa * basse + (uint)(c - 'A') + 10U;
                     if(m / basse != mantissa)
@@ -898,7 +898,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     mantissa = m;
                     continue;
                 }
-                if((basse == 16) && ((c >= 'a') && (c <= 'f')))
+                if(basse == 16 && c >= 'a' && c <= 'f')
                 {
                     m = mantissa * basse + (uint)(c - 'a') + 10U;
                     if(m / basse != mantissa)
@@ -910,7 +910,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     mantissa = m;
                     continue;
                 }
-                if(((c == 'x') || (c == 'X')) && (mantissa == 0) && (basse == 10))
+                if((c == 'x' || c == 'X') && mantissa == 0 && basse == 10)
                 {
                     basse = 16;
                     continue;
@@ -957,7 +957,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          * @param tokenType = token's type
          * @returns token's constructor
          */
-        private static Type[] constrTypes = new Type[] {
+        private static readonly Type[] constrTypes = new Type[] {
             typeof (TokenErrorMessage), typeof (string), typeof (int), typeof (int)
         };
 
@@ -971,8 +971,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class Delim
         {
-            public string str;
-            public System.Reflection.ConstructorInfo ctorInfo;
+            public readonly string str;
+            public readonly System.Reflection.ConstructorInfo ctorInfo;
             public Delim(string str, Type type)
             {
                 this.str = str;
@@ -980,7 +980,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
         }
 
-        private static Delim[] delims = new Delim[] {
+        private static readonly Delim[] delims = new Delim[] {
             new Delim ("...", typeof (TokenKwDotDotDot)),
             new Delim ("&&&", typeof (TokenKwAndAndAnd)),
             new Delim ("|||", typeof (TokenKwOrOrOr)),
@@ -1037,12 +1037,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          *        The keyword tables translate a keyword string
          *        to the corresponding token constructor.
          */
-        private static Dictionary<string, System.Reflection.ConstructorInfo> keywords = BuildKeywords();
-        private static Dictionary<string, System.Reflection.ConstructorInfo> arrayKeywords = BuildArrayKeywords();
-        private static Dictionary<string, System.Reflection.ConstructorInfo> advFlowCtlKeywords = BuildAdvFlowCtlKeywords();
-        private static Dictionary<string, System.Reflection.ConstructorInfo> tryCatchKeywords = BuildTryCatchKeywords();
-        private static Dictionary<string, System.Reflection.ConstructorInfo> objectsKeywords = BuildObjectsKeywords();
-        private static Dictionary<string, System.Reflection.ConstructorInfo> charsKeywords = BuildCharsKeywords();
+        private static readonly Dictionary<string, System.Reflection.ConstructorInfo> keywords = BuildKeywords();
+        private static readonly Dictionary<string, System.Reflection.ConstructorInfo> arrayKeywords = BuildArrayKeywords();
+        private static readonly Dictionary<string, System.Reflection.ConstructorInfo> advFlowCtlKeywords = BuildAdvFlowCtlKeywords();
+        private static readonly Dictionary<string, System.Reflection.ConstructorInfo> tryCatchKeywords = BuildTryCatchKeywords();
+        private static readonly Dictionary<string, System.Reflection.ConstructorInfo> objectsKeywords = BuildObjectsKeywords();
+        private static readonly Dictionary<string, System.Reflection.ConstructorInfo> charsKeywords = BuildCharsKeywords();
 
         private static Dictionary<string, System.Reflection.ConstructorInfo> BuildKeywords()
         {
@@ -1237,10 +1237,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         public override string ToString()
         {
-            if((val.IndexOf('"') < 0) &&
-                (val.IndexOf('\\') < 0) &&
-                (val.IndexOf('\n') < 0) &&
-                (val.IndexOf('\t') < 0))
+            if(val.IndexOf('"') < 0 &&
+                val.IndexOf('\\') < 0 &&
+                val.IndexOf('\n') < 0 &&
+                val.IndexOf('\t') < 0)
                 return "\"" + val + "\"";
 
             int len = val.Length;
@@ -2199,13 +2199,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             double r;
             try
             {
-                if ((left is int li) && (right is int ri))
+                if (left is int li && right is int ri)
                 {
                     if(li == -2147483648 && ri == -1)
                         return -2147483648;
                     return (int)left / (int)right;
                 }
-                if ((left is double) && (right is int))
+                if (left is double && right is int)
                 {
                     r = (double)left / (int)right;
                     if (double.IsNaN(r) || double.IsInfinity(r))
@@ -2218,11 +2218,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 throw new Exception("Division by Zero");
             }
 
-            if ((left is int) && (right is double))
+            if (left is int && right is double)
             {
                 r = (int)left / (double)right;
             }
-            else if((left is double) && (right is double))
+            else if(left is double && right is double)
             {
                 r= (double)left / (double)right;
             }
@@ -2238,13 +2238,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             double r;
             try
             {
-                if ((left is int li) && (right is int ri))
+                if (left is int li && right is int ri)
                 {
                     if (li == -2147483648 && ri == -1)
                         return 0;
                     return li % ri;
                 }
-                if ((left is double) && (right is int))
+                if (left is double && right is int)
                 {
                     r = (double)left % (int)right;
                     if (double.IsNaN(r) || double.IsInfinity(r))
@@ -2257,11 +2257,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 throw new Exception("Division by Zero");
             }
 
-            if ((left is int) && (right is double))
+            if (left is int && right is double)
             {
                 r = (int)left % (double)right;
             }
-            else if ((left is double) && (right is double))
+            else if (left is double && right is double)
             {
                 r = (double)left % (double)right;
             }
@@ -2275,19 +2275,19 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public static object Mul(object left, object right)
         {
-            if((left is int) && (right is int))
+            if(left is int && right is int)
             {
                 return (int)left * (int)right;
             }
-            if((left is int) && (right is double))
+            if(left is int && right is double)
             {
                 return (int)left * (double)right;
             }
-            if((left is double) && (right is int))
+            if(left is double && right is int)
             {
                 return (double)left * (int)right;
             }
-            if((left is double) && (right is double))
+            if(left is double && right is double)
             {
                 return (double)left * (double)right;
             }
@@ -2295,7 +2295,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         public static object And(object left, object right)
         {
-            if((left is int) && (right is int))
+            if(left is int && right is int)
             {
                 return (int)left & (int)right;
             }
@@ -2303,71 +2303,71 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         public static object LSh(object left, object right)
         {
-            if((left is int) && (right is int))
+            if(left is int && right is int)
                 return (int)left << (int)right;
             return null;
         }
         public static object Or(object left, object right)
         {
-            if((left is int) && (right is int))
+            if(left is int && right is int)
                 return (int)left | (int)right;
             return null;
         }
         public static object RSh(object left, object right)
         {
-            if((left is int) && (right is int))
+            if(left is int && right is int)
                 return (int)left >> (int)right;
             return null;
         }
         public static object Xor(object left, object right)
         {
-            if((left is int) && (right is int))
+            if(left is int && right is int)
                 return (int)left ^ (int)right;
             return null;
         }
         public static object Add(object left, object right)
         {
-            if((left is char) && (right is int))
+            if(left is char && right is int)
             {
                 return (char)((char)left + (int)right);
             }
-            if((left is double) && (right is double))
+            if(left is double && right is double)
             {
                 return (double)left + (double)right;
             }
-            if((left is double) && (right is int))
+            if(left is double && right is int)
             {
                 return (double)left + (int)right;
             }
-            if((left is double) && (right is string))
+            if(left is double && right is string)
             {
                 return TypeCast.FloatToString((double)left) + (string)right;
             }
-            if((left is int) && (right is double))
+            if(left is int && right is double)
             {
                 return (int)left + (double)right;
             }
-            if((left is int) && (right is int))
+            if(left is int && right is int)
             {
                 return (int)left + (int)right;
             }
-            if((left is int) && (right is string))
+            if(left is int && right is string)
             {
                 return TypeCast.IntegerToString((int)left) + (string)right;
             }
-            if((left is string) && (right is char))
+            if(left is string && right is char)
             {
                 return (string)left + (char)right;
             }
-            if((left is string) && (right is double))
+            if(left is string && right is double)
             {
                 return (string)left + TypeCast.FloatToString((double)right);
             }
-            if((left is string) && (right is int))
+            if(left is string && right is int)
             {
                 return (string)left + TypeCast.IntegerToString((int)right);
             }
-            if((left is string) && (right is string))
+            if(left is string && right is string)
             {
                 return (string)left + (string)right;
             }
@@ -2375,23 +2375,23 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         public static object Sub(object left, object right)
         {
-            if((left is char) && (right is int))
+            if(left is char && right is int)
             {
                 return (char)((char)left - (int)right);
             }
-            if((left is int) && (right is int))
+            if(left is int && right is int)
             {
                 return (int)left - (int)right;
             }
-            if((left is int) && (right is double))
+            if(left is int && right is double)
             {
                 return (int)left - (double)right;
             }
-            if((left is double) && (right is int))
+            if(left is double && right is int)
             {
                 return (double)left - (int)right;
             }
-            if((left is double) && (right is double))
+            if(left is double && right is double)
             {
                 return (double)left - (double)right;
             }
@@ -2462,7 +2462,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             int res = binConstCompare(left, right);
             if (res == -2)
                 return null;
-            return (res < 0) ? 1 : 0;
+            return res < 0 ? 1 : 0;
         }
 
         public static object binConstsLE(object left, object right)
@@ -2470,7 +2470,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             int res = binConstCompare(left, right);
             if (res == -2)
                 return null;
-            return (res <= 0) ? 1 : 0;
+            return res <= 0 ? 1 : 0;
         }
 
         public static object binConstsGT(object left, object right)
@@ -2478,7 +2478,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             int res = binConstCompare(left, right);
             if (res == -2)
                 return null;
-            return (res > 0) ? 1 : 0;
+            return res > 0 ? 1 : 0;
         }
 
         public static object binConstsGE(object left, object right)
@@ -2486,7 +2486,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             int res = binConstCompare(left, right);
             if (res == -2)
                 return null;
-            return (res >= 0) ? 1 : 0;
+            return res >= 0 ? 1 : 0;
         }
 
         public static object binConstsEQ(object left, object right)
@@ -2494,7 +2494,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             int res = binConstCompare(left, right);
             if (res == -2)
                 return null;
-            return (res == 0) ? 1 : 0;
+            return res == 0 ? 1 : 0;
         }
 
         public static object binConstsNE(object left, object right)
@@ -2502,12 +2502,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             int res = binConstCompare(left, right);
             if (res == -2)
                 return null;
-            return (res != 0) ? 1 : 0;
+            return res != 0 ? 1 : 0;
         }
 
         public static object binConstsLogicAndAnd(object left, object right)
         {
-            if ((left is int li) && (right is int ri))
+            if (left is int li && right is int ri)
             {
                 if (li == 0)
                     return 0;
@@ -2520,7 +2520,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public static object binConstsLoginOrOr(object left, object right)
         {
-            if ((left is int li) && (right is int ri))
+            if (left is int li && right is int ri)
             {
                 if (li != 0)
                     return 1;
@@ -2533,7 +2533,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public static object unOpExclam(object left)
         {
-            if ((left is int li))
+            if (left is int li)
             {
                 if (li == 0)
                     return 1;

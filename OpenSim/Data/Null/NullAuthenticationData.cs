@@ -32,8 +32,8 @@ namespace OpenSim.Data.Null
 {
     public class NullAuthenticationData : IAuthenticationData
     {
-        private static Dictionary<UUID, AuthenticationData> m_DataByUUID = new Dictionary<UUID, AuthenticationData>();
-        private static Dictionary<UUID, string> m_Tokens = new Dictionary<UUID, string>();
+        private static readonly Dictionary<UUID, AuthenticationData> m_DataByUUID = new Dictionary<UUID, AuthenticationData>();
+        private static readonly Dictionary<UUID, string> m_Tokens = new Dictionary<UUID, string>();
 
         public NullAuthenticationData(string connectionString, string realm)
         {

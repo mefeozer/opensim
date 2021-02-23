@@ -300,7 +300,7 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest
                             break;
 
                         case (int)HttpRequestConstants.HTTP_VERIFY_CERT:
-                            htc.HttpVerifyCert = (int.Parse(parms[i + 1]) != 0);
+                            htc.HttpVerifyCert = int.Parse(parms[i + 1]) != 0;
                             break;
 
                         case (int)HttpRequestConstants.HTTP_VERBOSE_THROTTLE:
@@ -335,7 +335,7 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest
                             break;
 
                         case (int)HttpRequestConstants.HTTP_PRAGMA_NO_CACHE:
-                            htc.HttpPragmaNoCache = (int.Parse(parms[i + 1]) != 0);
+                            htc.HttpPragmaNoCache = int.Parse(parms[i + 1]) != 0;
                             break;
                     }
                 }
@@ -515,7 +515,7 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest
                     return true;
             }
 
-            if ((((int)sslPolicyErrors) & ~4) != 0)
+            if (((int)sslPolicyErrors & ~4) != 0)
                 return false;
 
             return true;

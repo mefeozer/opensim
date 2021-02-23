@@ -48,14 +48,14 @@ namespace OpenSim.Region.Framework.Scenes
         private string m_inventoryFileName = "";
         private uint m_inventoryFileNameSerial = 0;
         private bool m_inventoryPrivileged = false;
-        private object m_inventoryFileLock = new object();
+        private readonly object m_inventoryFileLock = new object();
 
-        private Dictionary<UUID, ArrayList> m_scriptErrors = new Dictionary<UUID, ArrayList>();
+        private readonly Dictionary<UUID, ArrayList> m_scriptErrors = new Dictionary<UUID, ArrayList>();
 
         /// <value>
         /// The part to which the inventory belongs.
         /// </value>
-        private SceneObjectPart m_part;
+        private readonly SceneObjectPart m_part;
 
         /// <summary>
         /// Serial count for inventory file , used to tell if inventory has changed
@@ -1507,7 +1507,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         public class InventoryStringBuilder
         {
-            private StringBuilder BuildString = new StringBuilder(1024);
+            private readonly StringBuilder BuildString = new StringBuilder(1024);
 
             public InventoryStringBuilder(UUID folderID, UUID parentID)
             {

@@ -164,7 +164,7 @@ namespace OpenSim
         protected virtual void LoadPlugins()
         {
             IConfig startupConfig = Config.Configs["Startup"];
-            string registryLocation = (startupConfig != null) ? startupConfig.GetString("RegistryLocation", string.Empty) : string.Empty;
+            string registryLocation = startupConfig != null ? startupConfig.GetString("RegistryLocation", string.Empty) : string.Empty;
 
             // The location can also be specified in the environment. If there
             // is no location in the configuration, we must call the constructor
@@ -425,7 +425,7 @@ namespace OpenSim
 
             regionInfo.osSecret = m_osSecret;
 
-            if ((proxyUrl.Length > 0) && (portadd_flag))
+            if (proxyUrl.Length > 0 && portadd_flag)
             {
                 // set proxy url to RegionInfo
                 regionInfo.proxyUrl = proxyUrl;
@@ -670,8 +670,8 @@ namespace OpenSim
         {
             // only need to check this if we are not at the
             // root level
-            if ((SceneManager.CurrentScene != null) &&
-                (SceneManager.CurrentScene.RegionInfo.RegionID == scene.RegionInfo.RegionID))
+            if (SceneManager.CurrentScene != null &&
+                SceneManager.CurrentScene.RegionInfo.RegionID == scene.RegionInfo.RegionID)
             {
                 SceneManager.TrySetCurrentScene("..");
             }
@@ -732,8 +732,8 @@ namespace OpenSim
         {
             // only need to check this if we are not at the
             // root level
-            if ((SceneManager.CurrentScene != null) &&
-                (SceneManager.CurrentScene.RegionInfo.RegionID == scene.RegionInfo.RegionID))
+            if (SceneManager.CurrentScene != null &&
+                SceneManager.CurrentScene.RegionInfo.RegionID == scene.RegionInfo.RegionID)
             {
                 SceneManager.TrySetCurrentScene("..");
             }
@@ -832,7 +832,7 @@ namespace OpenSim
         /// </summary>
         public class XSimStatusHandler : SimpleStreamHandler
         {
-            OpenSimBase m_opensim;
+            readonly OpenSimBase m_opensim;
 
             public XSimStatusHandler(OpenSimBase sim)
                 : base("/" + Util.SHA1Hash(sim.osSecret), "XSimStatus")
@@ -864,7 +864,7 @@ namespace OpenSim
         /// </summary>
         protected class UXSimStatusHandler : SimpleStreamHandler
         {
-            OpenSimBase m_opensim;
+            readonly OpenSimBase m_opensim;
 
             public UXSimStatusHandler(OpenSimBase sim)
                 : base("/" + sim.userStatsURI, "UXSimStatus")

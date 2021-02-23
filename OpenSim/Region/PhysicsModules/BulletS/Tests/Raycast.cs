@@ -48,7 +48,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS.Tests
         Vector3 _targetSpherePosition { get; set; }
 //        float _simulationTimeStep = 0.089f;
 
-        uint _targetLocalID = 123;
+readonly uint _targetLocalID = 123;
 
         [TestFixtureSetUp]
         public void Init()

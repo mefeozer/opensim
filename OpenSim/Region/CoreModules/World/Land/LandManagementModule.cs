@@ -110,7 +110,7 @@ namespace OpenSim.Region.CoreModules.World.Land
         /// <summary>
         /// Record positions that avatar's are currently being forced to move to due to parcel entry restrictions.
         /// </summary>
-        private HashSet<UUID> forcedPosition = new HashSet<UUID>();
+        private readonly HashSet<UUID> forcedPosition = new HashSet<UUID>();
 
 
         // Enables limiting parcel layer info transmission when doing simple updates
@@ -978,13 +978,13 @@ namespace OpenSim.Region.CoreModules.World.Land
         public ILandObject GetLandObjectClippedXY(float x, float y)
         {
             //do clip inline
-            int avx = (int)(Math.Round(x));
+            int avx = (int)Math.Round(x);
             if (avx < 0)
                 avx = 0;
             else if (avx >= m_regionSizeX)
                 avx = m_regionSizeX - 1;
 
-            int avy = (int)(Math.Round(y));
+            int avy = (int)Math.Round(y);
             if (avy < 0)
                 avy = 0;
             else if (avy >= m_regionSizeY)
@@ -1186,7 +1186,7 @@ namespace OpenSim.Region.CoreModules.World.Land
             {
                 if (obj != null)
                 {
-                    if ((obj is SceneObjectGroup) && !obj.IsDeleted && !((SceneObjectGroup) obj).IsAttachment)
+                    if (obj is SceneObjectGroup && !obj.IsDeleted && !((SceneObjectGroup) obj).IsAttachment)
                     {
                         m_scene.EventManager.TriggerParcelPrimCountAdd((SceneObjectGroup) obj);
                     }
@@ -1457,7 +1457,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                     else
                     {
                         tmpByte = curByte;
-                        southID = GetLandObjectIDinLandUnits(x, (y - 1));
+                        southID = GetLandObjectIDinLandUnits(x, y - 1);
                         if (southID >= 0 && southID != curID)
                             tmpByte |= LandChannel.LAND_FLAG_PROPERTY_BORDER_SOUTH;
                     }
@@ -1495,7 +1495,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                         while (++x < sx && GetLandObjectIDinLandUnits(x, y) == curID)
                         {
                             // need to check south one by one
-                            southID = GetLandObjectIDinLandUnits(x, (y - 1));
+                            southID = GetLandObjectIDinLandUnits(x, y - 1);
                             if (southID >= 0 && southID != curID)
                             {
                                 tmpByte = curByte;
@@ -1570,7 +1570,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                 }
             }
 
-            int requestResult = (temp.Count > 1) ? LandChannel.LAND_RESULT_MULTIPLE : LandChannel.LAND_RESULT_SINGLE;
+            int requestResult = temp.Count > 1 ? LandChannel.LAND_RESULT_MULTIPLE : LandChannel.LAND_RESULT_SINGLE;
 
             foreach(ILandObject lo in temp.Values)
             {
@@ -1786,8 +1786,8 @@ namespace OpenSim.Region.CoreModules.World.Land
                     int saleprice = lob.LandData.SalePrice;
                     UUID pOwnerID = lob.LandData.OwnerID;
 
-                    bool landforsale = ((lob.LandData.Flags &
-                                         (uint)(ParcelFlags.ForSale | ParcelFlags.ForSaleObjects | ParcelFlags.SellParcelObjects)) != 0);
+                    bool landforsale = (lob.LandData.Flags &
+                                        (uint)(ParcelFlags.ForSale | ParcelFlags.ForSaleObjects | ParcelFlags.SellParcelObjects)) != 0;
                     if ((AuthorizedID == UUID.Zero || AuthorizedID == e.agentId) && e.parcelPrice >= saleprice && landforsale)
                     {
                         // TODO I don't think we have to lock it here, no?
@@ -2472,7 +2472,7 @@ namespace OpenSim.Region.CoreModules.World.Land
             ((Scene)client.Scene).returnObjects(objs, client);
         }
 
-        Dictionary<UUID, System.Threading.Timer> Timers = new Dictionary<UUID, System.Threading.Timer>();
+        readonly Dictionary<UUID, System.Threading.Timer> Timers = new Dictionary<UUID, System.Threading.Timer>();
 
         public void ClientOnParcelFreezeUser(IClientAPI client, UUID parcelowner, uint flags, UUID target)
         {
@@ -2595,9 +2595,9 @@ namespace OpenSim.Region.CoreModules.World.Land
                  // (b) land owners can set home
                  remoteClient.AgentId == land.LandData.OwnerID ||
                  // (c) members of the land-associated group in roles that can set home
-                 ((gpowers & (ulong)GroupPowers.AllowSetHome) == (ulong)GroupPowers.AllowSetHome) ||
+                 (gpowers & (ulong)GroupPowers.AllowSetHome) == (ulong)GroupPowers.AllowSetHome ||
                  // (d) parcels with telehubs can be the home of anyone
-                 (telehub != null && land.ContainsPoint((int)telehub.AbsolutePosition.X, (int)telehub.AbsolutePosition.Y))))
+                 telehub != null && land.ContainsPoint((int)telehub.AbsolutePosition.X, (int)telehub.AbsolutePosition.Y)))
             {
                 string userId;
                 UUID test;
@@ -2722,7 +2722,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                     if (ld.IsGroupOwned)
                     {
                         GroupRecord rec = m_groupManager.GetGroupRecord(ld.GroupID);
-                        ownerName = (rec != null) ? rec.GroupName : "Unknown Group";
+                        ownerName = rec != null ? rec.GroupName : "Unknown Group";
                     }
                     else
                     {
@@ -2753,7 +2753,7 @@ namespace OpenSim.Region.CoreModules.World.Land
             if (ld.IsGroupOwned)
             {
                 GroupRecord rec = m_groupManager.GetGroupRecord(ld.GroupID);
-                ownerName = (rec != null) ? rec.GroupName : "Unknown Group";
+                ownerName = rec != null ? rec.GroupName : "Unknown Group";
             }
             else
             {

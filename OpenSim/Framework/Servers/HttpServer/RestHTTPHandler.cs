@@ -31,7 +31,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 {
     public class RestHTTPHandler : BaseHTTPHandler
     {
-        private GenericHTTPMethod m_dhttpMethod;
+        private readonly GenericHTTPMethod m_dhttpMethod;
 
         public GenericHTTPMethod Method
         {

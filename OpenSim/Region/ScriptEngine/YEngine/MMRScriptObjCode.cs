@@ -188,7 +188,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // Fill in all script-defined class vtables.
             foreach(TokenDeclSDType sdt in sdObjTypesIndx)
             {
-                if((sdt != null) && (sdt is TokenDeclSDTypeClass))
+                if(sdt != null && sdt is TokenDeclSDTypeClass)
                 {
                     TokenDeclSDTypeClass sdtc = (TokenDeclSDTypeClass)sdt;
                     sdtc.FillVTables(this);
@@ -221,7 +221,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          * @brief Called once for every method found in objFileReader file.
          *        It enters the method in the ScriptObjCode object table so it can be called.
          */
-        private static EndMethodWrapper endMethodWrapper = new EndMethodWrapper();
+        private static readonly EndMethodWrapper endMethodWrapper = new EndMethodWrapper();
         private class EndMethodWrapper: System.Collections.IComparer
         {
             public int Compare(object x, object y)

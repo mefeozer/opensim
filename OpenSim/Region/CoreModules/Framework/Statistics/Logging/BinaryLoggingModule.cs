@@ -108,7 +108,7 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
         static StatLogger m_statLog = null;
         static TimeSpan m_statLogPeriod = TimeSpan.FromSeconds(300);
         static string m_statsDir = string.Empty;
-        static object m_statLockObject = new object();
+        static readonly object m_statLockObject = new object();
 
         private void LogSimStats(SimStats stats)
         {

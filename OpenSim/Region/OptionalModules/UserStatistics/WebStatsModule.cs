@@ -61,11 +61,11 @@ namespace OpenSim.Region.UserStatistics
         /// <summary>
         /// User statistics sessions keyed by agent ID
         /// </summary>
-        private Dictionary<UUID, UserSession> m_sessions = new Dictionary<UUID, UserSession>();
+        private readonly Dictionary<UUID, UserSession> m_sessions = new Dictionary<UUID, UserSession>();
 
-        private List<Scene> m_scenes = new List<Scene>();
-        private Dictionary<string, IStatsController> reports = new Dictionary<string, IStatsController>();
-        private Dictionary<UUID, USimStatsData> m_simstatsCounters = new Dictionary<UUID, USimStatsData>();
+        private readonly List<Scene> m_scenes = new List<Scene>();
+        private readonly Dictionary<string, IStatsController> reports = new Dictionary<string, IStatsController>();
+        private readonly Dictionary<UUID, USimStatsData> m_simstatsCounters = new Dictionary<UUID, USimStatsData>();
         private const int updateStatsMod = 6;
         private int updateLogMod = 1;
         private volatile int updateLogCounter = 0;
@@ -221,7 +221,7 @@ namespace OpenSim.Region.UserStatistics
 
                     USimStatsData ss = m_simstatsCounters[stats.RegionUUID];
 
-                    if ((++ss.StatsCounter % updateStatsMod) == 0)
+                    if (++ss.StatsCounter % updateStatsMod == 0)
                     {
                         ss.ConsumeSimStats(stats);
                     }
@@ -921,7 +921,7 @@ VALUES
 
             Array.Sort(srtArr);
 
-            if ((srtArr[srtArr.Length - 1]) == 0 || (srtArr[srtArr.Length - 1]) == 1)
+            if (srtArr[srtArr.Length - 1] == 0 || srtArr[srtArr.Length - 1] == 1)
                 return 0;
 
             float freqtest = (float)freq.Length / freq.Rank;
@@ -976,7 +976,7 @@ VALUES
 
             Array.Sort(srtArr);
 
-            if ((srtArr[srtArr.Length - 1]) == 0 || (srtArr[srtArr.Length - 1]) == 1)
+            if (srtArr[srtArr.Length - 1] == 0 || srtArr[srtArr.Length - 1] == 1)
                 return 0;
 
             float freqtest = (float)freq.Length / freq.Rank;

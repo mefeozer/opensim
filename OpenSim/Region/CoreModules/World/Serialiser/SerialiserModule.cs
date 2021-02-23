@@ -48,9 +48,9 @@ namespace OpenSim.Region.CoreModules.World.Serialiser
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 //        private Commander m_commander = new Commander("export");
-        private List<Scene> m_regions = new List<Scene>();
+        private readonly List<Scene> m_regions = new List<Scene>();
         private string m_savedir = "exports";
-        private List<IFileSerialiser> m_serialisers = new List<IFileSerialiser>();
+        private readonly List<IFileSerialiser> m_serialisers = new List<IFileSerialiser>();
 
         #region ISharedRegionModule Members
 

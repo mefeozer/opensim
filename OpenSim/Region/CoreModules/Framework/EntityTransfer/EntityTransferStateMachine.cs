@@ -75,9 +75,9 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         /// </summary>
         public bool EnableWaitForAgentArrivedAtDestination { get; set; }
 
-        private EntityTransferModule m_mod;
+        private readonly EntityTransferModule m_mod;
 
-        private Dictionary<UUID, AgentTransferState> m_agentsInTransit = new Dictionary<UUID, AgentTransferState>();
+        private readonly Dictionary<UUID, AgentTransferState> m_agentsInTransit = new Dictionary<UUID, AgentTransferState>();
 
         public EntityTransferStateMachine(EntityTransferModule module)
         {

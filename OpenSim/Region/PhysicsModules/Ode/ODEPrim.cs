@@ -119,7 +119,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
         private Vector3 m_PIDTarget;
         private float m_PIDTau;
-        private float PID_D = 35f;
+        private readonly float PID_D = 35f;
         private float PID_G = 25f;
 
         // KF: These next 7 params apply to llSetHoverHeight(float height, integer water, float tau),
@@ -135,21 +135,20 @@ namespace OpenSim.Region.PhysicsModule.ODE
         private float m_buoyancy;                //KF: m_buoyancy should be set by llSetBuoyancy() for non-vehicle.
 
         // private float m_tensor = 5f;
-        private int body_autodisable_frames = 20;
+        private readonly int body_autodisable_frames = 20;
 
 
-        private const CollisionCategories m_default_collisionFlags = (CollisionCategories.Geom
-                                                        | CollisionCategories.Space
-                                                        | CollisionCategories.Body
-                                                        | CollisionCategories.Character
-                                                        );
+        private const CollisionCategories m_default_collisionFlags = CollisionCategories.Geom
+                                                                     | CollisionCategories.Space
+                                                                     | CollisionCategories.Body
+                                                                     | CollisionCategories.Character;
         private bool m_taintshape;
         private bool m_taintPhysics;
-        private bool m_collidesLand = true;
+        private readonly bool m_collidesLand = true;
         private bool m_collidesWater;
 
         // Default we're a Geometry
-        private CollisionCategories m_collisionCategories = (CollisionCategories.Geom);
+        private CollisionCategories m_collisionCategories = CollisionCategories.Geom;
 
         // Default, Collide with Other Geometries, spaces and Bodies
         private CollisionCategories m_collisionFlags = m_default_collisionFlags;
@@ -165,10 +164,10 @@ namespace OpenSim.Region.PhysicsModule.ODE
         private bool m_taintaddangularforce = false;
         private Vector3 m_force;
         private List<Vector3> m_forcelist = new List<Vector3>();
-        private List<Vector3> m_angularforcelist = new List<Vector3>();
+        private readonly List<Vector3> m_angularforcelist = new List<Vector3>();
 
         private PrimitiveBaseShape _pbs;
-        private OdeScene _parent_scene;
+        private readonly OdeScene _parent_scene;
 
         /// <summary>
         /// The physics space which contains prim geometries
@@ -186,11 +185,11 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
         public IntPtr _triMeshData { get; private set; }
 
-        private IntPtr _linkJointGroup = IntPtr.Zero;
+        private readonly IntPtr _linkJointGroup = IntPtr.Zero;
         private PhysicsActor _parent;
         private PhysicsActor m_taintparent;
 
-        private List<OdePrim> childrenPrim = new List<OdePrim>();
+        private readonly List<OdePrim> childrenPrim = new List<OdePrim>();
 
         private bool iscolliding;
         private bool m_isSelected;
@@ -204,7 +203,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         public int m_roundsUnderMotionThreshold { get; private set; }
 
         public bool outofBounds { get; private set; }
-        private float m_density = 10.000006836f; // Aluminum g/cm3;
+        private readonly float m_density = 10.000006836f; // Aluminum g/cm3;
 
         public bool _zeroFlag { get; private set; }
         private bool m_lastUpdateSent;
@@ -214,7 +213,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         private SafeNativeMethods.Mass pMass;
 
         private int m_eventsubscription;
-        private CollisionEventUpdate CollisionEventsThisFrame = new CollisionEventUpdate();
+        private readonly CollisionEventUpdate CollisionEventsThisFrame = new CollisionEventUpdate();
 
         /// <summary>
         /// Signal whether there were collisions on the previous frame, so we know if we need to send the
@@ -229,7 +228,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
         internal volatile bool childPrim;
 
-        private ODEDynamics m_vehicle;
+        private readonly ODEDynamics m_vehicle;
 
         internal int m_material = (int)Material.Wood;
 
@@ -243,8 +242,8 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
             if (!pos.IsFinite())
             {
-                pos = new Vector3(((float)Constants.RegionSize * 0.5f), ((float)Constants.RegionSize * 0.5f),
-                    parent_scene.GetTerrainHeightAtXY(((float)Constants.RegionSize * 0.5f), ((float)Constants.RegionSize * 0.5f)) + 0.5f);
+                pos = new Vector3((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f,
+                    parent_scene.GetTerrainHeightAtXY((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f) + 0.5f);
                 m_log.WarnFormat("[PHYSICS]: Got nonFinite Object create Position for {0}", Name);
             }
             _position = pos;
@@ -328,7 +327,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 // through it while it's selected
                 m_collisionscore = 0;
 
-                if ((IsPhysical && !_zeroFlag) || !value)
+                if (IsPhysical && !_zeroFlag || !value)
                 {
                     m_taintselected = value;
                     _parent_scene.AddPhysicsActorTaint(this);
@@ -434,7 +433,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 else
                 {
                     m_collisionCategories |= CollisionCategories.Body;
-                    m_collisionFlags |= (CollisionCategories.Land | CollisionCategories.Wind);
+                    m_collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
                 }
 
                 SafeNativeMethods.GeomSetCategoryBits(prim_geom, (uint)m_collisionCategories);
@@ -497,14 +496,14 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
                                 case HollowShape.Triangle:
 
-                                    hollowVolume *= (0.5f * .5f);
+                                    hollowVolume *= 0.5f * .5f;
                                     break;
 
                                 default:
                                     hollowVolume = 0;
                                     break;
                                 }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                             }
                         }
 
@@ -537,7 +536,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                     hollowVolume = 0;
                                     break;
                                 }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                             }
                         }
 
@@ -569,7 +568,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                     hollowVolume = 0;
                                     break;
                                 }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                             }
                         }
 
@@ -577,7 +576,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                         {
                         volume *= 0.61685027506808491367715568749226e-2f * (float)(200 - _pbs.PathScaleX);
                         tmp = 1.0f - .02f * (float)(200 - _pbs.PathScaleY);
-                        volume *= (1.0f - tmp * tmp);
+                        volume *= 1.0f - tmp * tmp;
 
                         if (hollowAmount > 0.0)
                             {
@@ -603,7 +602,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                     hollowVolume = 0;
                                     break;
                                 }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                             }
                         }
                     break;
@@ -647,7 +646,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                     hollowVolume = 0;
                                     break;
                                 }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                             }
                         }
                     else if (_pbs.PathCurve == (byte)Extrusion.Curve1)
@@ -655,7 +654,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                         volume *= 0.32475953f;
                         volume *= 0.01f * (float)(200 - _pbs.PathScaleX);
                         tmp = 1.0f - .02f * (float)(200 - _pbs.PathScaleY);
-                        volume *= (1.0f - tmp * tmp);
+                        volume *= 1.0f - tmp * tmp;
 
                         if (hollowAmount > 0.0)
                             {
@@ -682,7 +681,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                     hollowVolume = 0;
                                     break;
                                 }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                             }
                         }
                         break;
@@ -725,16 +724,16 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 taperY1 = 1.0f - taperY;
             }
 
-            volume *= (taperX1 * taperY1 + 0.5f * (taperX1 * taperY + taperX * taperY1) + 0.3333333333f * taperX * taperY);
+            volume *= taperX1 * taperY1 + 0.5f * (taperX1 * taperY + taperX * taperY1) + 0.3333333333f * taperX * taperY;
 
             pathBegin = (float)_pbs.PathBegin * 2.0e-5f;
             pathEnd = 1.0f - (float)_pbs.PathEnd * 2.0e-5f;
-            volume *= (pathEnd - pathBegin);
+            volume *= pathEnd - pathBegin;
 
 // this is crude aproximation
             profileBegin = (float)_pbs.ProfileBegin * 2.0e-5f;
             profileEnd = 1.0f - (float)_pbs.ProfileEnd * 2.0e-5f;
-            volume *= (profileEnd - profileBegin);
+            volume *= profileEnd - profileBegin;
 
             returnMass = m_density * volume;
 
@@ -868,7 +867,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
             m_collisionscore = 0;
         }
 
-        private static Dictionary<IMesh, IntPtr> m_MeshToTriMeshMap = new Dictionary<IMesh, IntPtr>();
+        private static readonly Dictionary<IMesh, IntPtr> m_MeshToTriMeshMap = new Dictionary<IMesh, IntPtr>();
 
         private void setMesh(OdeScene parent_scene, IMesh mesh)
         {
@@ -1142,7 +1141,7 @@ Console.WriteLine("ZProcessTaints for " + Name);
                 foreach (OdePrim prm in childrenPrim)
                 {
                     prm.m_collisionCategories |= CollisionCategories.Body;
-                    prm.m_collisionFlags |= (CollisionCategories.Land | CollisionCategories.Wind);
+                    prm.m_collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
 
 //Console.WriteLine(" GeomSetCategoryBits 1: " + prm.prim_geom + " - " + (int)prm.m_collisionCategories + " for " + Name);
                     if (prm.m_assetFailed)
@@ -1192,7 +1191,7 @@ Console.WriteLine("ZProcessTaints for " + Name);
                 }
 
                 m_collisionCategories |= CollisionCategories.Body;
-                m_collisionFlags |= (CollisionCategories.Land | CollisionCategories.Wind);
+                m_collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
 
                 if (m_assetFailed)
                 {
@@ -1338,7 +1337,7 @@ Console.WriteLine("ZProcessTaints for " + Name);
             if (m_taintselected)
             {
                 m_collisionCategories = CollisionCategories.Selected;
-                m_collisionFlags = (CollisionCategories.Sensor | CollisionCategories.Space);
+                m_collisionFlags = CollisionCategories.Sensor | CollisionCategories.Space;
 
                 // We do the body disable soft twice because 'in theory' a collision could have happened
                 // in between the disabling and the collision properties setting
@@ -1456,7 +1455,7 @@ Console.WriteLine("CreateGeom:");
                 {
                     if (_size.X == _size.Y && _size.Y == _size.Z && _size.X == _size.Z)
                     {
-                        if (((_size.X / 2f) > 0f))
+                        if (_size.X / 2f > 0f)
                         {
 //                            _parent_scene.waitForSpaceUnlock(m_targetSpace);
                             try
@@ -1693,7 +1692,7 @@ Console.WriteLine(" JointCreateFixed");
             if (outofBounds)
                 return;
 
-            if (IsPhysical && (Body != IntPtr.Zero) && !m_isSelected && !childPrim)        // KF: Only move root prims.
+            if (IsPhysical && Body != IntPtr.Zero && !m_isSelected && !childPrim)        // KF: Only move root prims.
             {
                 if (m_vehicle.Type != Vehicle.TYPE_NONE)
                 {
@@ -1732,13 +1731,13 @@ Console.WriteLine(" JointCreateFixed");
                         // If the PID Controller isn't active then we set our force
                         // calculating base velocity to the current position
 
-                        if ((m_PIDTau < 1) && (m_PIDTau != 0))
+                        if (m_PIDTau < 1 && m_PIDTau != 0)
                         {
                             //PID_G = PID_G / m_PIDTau;
                             m_PIDTau = 1;
                         }
 
-                        if ((PID_G - m_PIDTau) <= 0)
+                        if (PID_G - m_PIDTau <= 0)
                         {
                             PID_G = m_PIDTau + 1;
                         }
@@ -1779,12 +1778,12 @@ Console.WriteLine(" JointCreateFixed");
                             _zeroFlag = false;
 
                             // We're flying and colliding with something
-                            fx = ((_target_velocity.X) - vel.X) * (PID_D);
-                            fy = ((_target_velocity.Y) - vel.Y) * (PID_D);
+                            fx = (_target_velocity.X - vel.X) * PID_D;
+                            fy = (_target_velocity.Y - vel.Y) * PID_D;
 
                             // vec.Z = (_target_velocity.Z - vel.Z) * PID_D + (_zeroPosition.Z - pos.Z) * PID_P;
 
-                            fz = fz + ((_target_velocity.Z - vel.Z) * (PID_D) * m_mass);
+                            fz = fz + (_target_velocity.Z - vel.Z) * PID_D * m_mass;
                         }
                     }        // end if (PIDActive)
 
@@ -1794,19 +1793,19 @@ Console.WriteLine(" JointCreateFixed");
 //Console.WriteLine("Hover " +  Name);
 
                         // If we're using the PID controller, then we have no gravity
-                        fz = (-1 * _parent_scene.gravityz) * m_mass;
+                        fz = -1 * _parent_scene.gravityz * m_mass;
 
                         //  no lock; for now it's only called from within Simulate()
 
                         // If the PID Controller isn't active then we set our force
                         // calculating base velocity to the current position
 
-                        if ((m_PIDTau < 1))
+                        if (m_PIDTau < 1)
                         {
                             PID_G = PID_G / m_PIDTau;
                         }
 
-                        if ((PID_G - m_PIDTau) <= 0)
+                        if (PID_G - m_PIDTau <= 0)
                         {
                             PID_G = m_PIDTau + 1;
                         }
@@ -1865,7 +1864,7 @@ Console.WriteLine(" JointCreateFixed");
                             _zeroFlag = false;
 
                             // We're flying and colliding with something
-                            fz = fz + ((_target_velocity.Z - vel.Z) * (PID_D) * m_mass);
+                            fz = fz + (_target_velocity.Z - vel.Z) * PID_D * m_mass;
                         }
                     }
 
@@ -2244,7 +2243,7 @@ Console.WriteLine(" JointCreateFixed");
                             for (i = 0; i < m_forcelist.Count; i++)
                             {
 
-                                iforce = iforce + (m_forcelist[i] * 100);
+                                iforce = iforce + m_forcelist[i] * 100;
                             }
                         }
                         catch (IndexOutOfRangeException)
@@ -2307,7 +2306,7 @@ Console.WriteLine(" JointCreateFixed");
                         Vector3 iforce = Vector3.Zero;
                         for (int i = 0; i < m_angularforcelist.Count; i++)
                         {
-                            iforce = iforce + (m_angularforcelist[i] * 100);
+                            iforce = iforce + m_angularforcelist[i] * 100;
                         }
                         SafeNativeMethods.BodyEnable(Body);
                         SafeNativeMethods.BodyAddTorque(Body, iforce.X, iforce.Y, iforce.Z);
@@ -2469,7 +2468,7 @@ Console.WriteLine(" JointCreateFixed");
             // possible collisions with this prim or for none of them.
             lock (_parent_scene.OdeLock)
             {
-                m_isVolumeDetect = (param != 0);
+                m_isVolumeDetect = param != 0;
             }
         }
 
@@ -2781,7 +2780,7 @@ Console.WriteLine(" JointCreateFixed");
                         return;
                     }
 
-                    if (l_position.X > ((int)_parent_scene.WorldExtents.X - 0.05f) || l_position.X < 0f || l_position.Y > ((int)_parent_scene.WorldExtents.Y - 0.05f) || l_position.Y < 0f)
+                    if (l_position.X > (int)_parent_scene.WorldExtents.X - 0.05f || l_position.X < 0f || l_position.Y > (int)_parent_scene.WorldExtents.Y - 0.05f || l_position.Y < 0f)
                     {
                         //base.RaiseOutOfBounds(l_position);
                         /*
@@ -2828,11 +2827,11 @@ Console.WriteLine(" JointCreateFixed");
 
                     //float Adiff = 1.0f - Math.Abs(Quaternion.Dot(m_lastorientation, l_orientation));
                     //Console.WriteLine("Adiff " + Name + " = " + Adiff);
-                    if ((Math.Abs(m_lastposition.X - l_position.X) < 0.02)
-                        && (Math.Abs(m_lastposition.Y - l_position.Y) < 0.02)
-                        && (Math.Abs(m_lastposition.Z - l_position.Z) < 0.02)
+                    if (Math.Abs(m_lastposition.X - l_position.X) < 0.02
+                        && Math.Abs(m_lastposition.Y - l_position.Y) < 0.02
+                        && Math.Abs(m_lastposition.Z - l_position.Z) < 0.02
 //                        && (1.0 - Math.Abs(Quaternion.Dot(m_lastorientation, l_orientation)) < 0.01))
-                        && (1.0 - Math.Abs(Quaternion.Dot(m_lastorientation, l_orientation)) < 0.0001))  // KF 0.01 is far to large
+                        && 1.0 - Math.Abs(Quaternion.Dot(m_lastorientation, l_orientation)) < 0.0001)  // KF 0.01 is far to large
                     {
                         _zeroFlag = true;
 //Console.WriteLine("ZFT 2");
@@ -2895,7 +2894,7 @@ Console.WriteLine(" JointCreateFixed");
                         _velocity.Y = vel.Y;
                         _velocity.Z = vel.Z;
 
-                        _acceleration = ((_velocity - m_lastVelocity) / 0.1f);
+                        _acceleration = (_velocity - m_lastVelocity) / 0.1f;
                         _acceleration = new Vector3(_velocity.X - m_lastVelocity.X / 0.1f, _velocity.Y - m_lastVelocity.Y / 0.1f, _velocity.Z - m_lastVelocity.Z / 0.1f);
                         //m_log.Info("[PHYSICS]: V1: " + _velocity + " V2: " + m_lastVelocity + " Acceleration: " + _acceleration.ToString());
 
@@ -2903,7 +2902,7 @@ Console.WriteLine(" JointCreateFixed");
                         // it does make sense to do this for tiny little instabilities with physical prim, however 0.5m/frame is fairly large.
                         // reducing this to 0.02m/frame seems to help the angular rubberbanding quite a bit, however, to make sure it doesn't affect elevators and vehicles
                         // adding these logical exclusion situations to maintain this where I think it was intended to be.
-                        if (m_throttleUpdates || PIDActive || (m_vehicle != null && m_vehicle.Type != Vehicle.TYPE_NONE) || (Amotor != IntPtr.Zero))
+                        if (m_throttleUpdates || PIDActive || m_vehicle != null && m_vehicle.Type != Vehicle.TYPE_NONE || Amotor != IntPtr.Zero)
                         {
                             m_minvelocity = 0.5f;
                         }
@@ -3062,7 +3061,7 @@ Console.WriteLine(" JointCreateFixed");
             int j = 0;
             if (axisX)
             {
-                ax = (new Vector3(1, 0, 0)) * curr; // rotate world X to current local X
+                ax = new Vector3(1, 0, 0) * curr; // rotate world X to current local X
                 SafeNativeMethods.JointSetAMotorAxis(Amotor, 0, 0, ax.X, ax.Y, ax.Z);
                 SafeNativeMethods.JointSetAMotorAngle(Amotor, 0, 0);
                 SafeNativeMethods.JointSetAMotorParam(Amotor, (int)SafeNativeMethods.JointParam.LoStop, 0f);
@@ -3080,7 +3079,7 @@ Console.WriteLine(" JointCreateFixed");
 
             if (axisY)
             {
-                ax = (new Vector3(0, 1, 0)) * curr;
+                ax = new Vector3(0, 1, 0) * curr;
                 SafeNativeMethods.JointSetAMotorAxis(Amotor, i, 0, ax.X, ax.Y, ax.Z);
                 SafeNativeMethods.JointSetAMotorAngle(Amotor, i, 0);
                 SafeNativeMethods.JointSetAMotorParam(Amotor, j + (int)SafeNativeMethods.JointParam.LoStop, 0f);
@@ -3098,7 +3097,7 @@ Console.WriteLine(" JointCreateFixed");
 
             if (axisZ)
             {
-                ax = (new Vector3(0, 0, 1)) * curr;
+                ax = new Vector3(0, 0, 1) * curr;
                 SafeNativeMethods.JointSetAMotorAxis(Amotor, i, 0, ax.X, ax.Y, ax.Z);
                 SafeNativeMethods.JointSetAMotorAngle(Amotor, i, 0);
                 SafeNativeMethods.JointSetAMotorParam(Amotor, j + (int)SafeNativeMethods.JointParam.LoStop, 0f);

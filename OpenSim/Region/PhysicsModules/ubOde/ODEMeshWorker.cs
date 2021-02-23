@@ -314,9 +314,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             // if it's a standard box or sphere with no cuts, hollows, twist or top shear, return false since ODE can use an internal representation for the prim
 
-            if ((pbs.ProfileShape == ProfileShape.Square && pbs.PathCurve == (byte)Extrusion.Straight)
-                    || (pbs.ProfileShape == ProfileShape.HalfCircle && pbs.PathCurve == (byte)Extrusion.Curve1
-                    && pbs.Scale.X == pbs.Scale.Y && pbs.Scale.Y == pbs.Scale.Z))
+            if (pbs.ProfileShape == ProfileShape.Square && pbs.PathCurve == (byte)Extrusion.Straight
+                    || pbs.ProfileShape == ProfileShape.HalfCircle && pbs.PathCurve == (byte)Extrusion.Curve1
+                                                                   && pbs.Scale.X == pbs.Scale.Y && pbs.Scale.Y == pbs.Scale.Z)
             {
 
                 if (pbs.ProfileBegin == 0 && pbs.ProfileEnd == 0
@@ -340,19 +340,19 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if (profilehollow != 0)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.PathBegin != 0) || pbs.PathEnd != 0)
+            if (pbs.PathBegin != 0 || pbs.PathEnd != 0)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.PathTwistBegin != 0) || (pbs.PathTwist != 0))
+            if (pbs.PathTwistBegin != 0 || pbs.PathTwist != 0)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.ProfileBegin != 0) || pbs.ProfileEnd != 0)
+            if (pbs.ProfileBegin != 0 || pbs.ProfileEnd != 0)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.PathScaleX != 100) || (pbs.PathScaleY != 100))
+            if (pbs.PathScaleX != 100 || pbs.PathScaleY != 100)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.PathShearX != 0) || (pbs.PathShearY != 0))
+            if (pbs.PathShearX != 0 || pbs.PathShearY != 0)
                 iPropertiesNotSupportedDefault++;
 
             if (pbs.ProfileShape == ProfileShape.Circle && pbs.PathCurve == (byte)Extrusion.Straight)
@@ -596,14 +596,14 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                                 case HollowShape.Triangle:
 
-                                    hollowVolume *= (0.5f * .5f);
+                                    hollowVolume *= 0.5f * .5f;
                                     break;
 
                                 default:
                                     hollowVolume = 0;
                                     break;
                             }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                         }
                     }
 
@@ -636,7 +636,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                                     hollowVolume = 0;
                                     break;
                             }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                         }
                     }
 
@@ -668,7 +668,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                                     hollowVolume = 0;
                                     break;
                             }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                         }
                     }
 
@@ -676,7 +676,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     {
                         volume *= 0.61685027506808491367715568749226e-2f * (float)(200 - _pbs.PathScaleX);
                         tmp = 1.0f - .02f * (float)(200 - _pbs.PathScaleY);
-                        volume *= (1.0f - tmp * tmp);
+                        volume *= 1.0f - tmp * tmp;
 
                         if (hollowAmount > 0.0)
                         {
@@ -702,7 +702,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                                     hollowVolume = 0;
                                     break;
                             }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                         }
                     }
                     break;
@@ -734,7 +734,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                                     hollowVolume = 0;
                                     break;
                             }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                         }
 
                     }
@@ -772,7 +772,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                                     hollowVolume = 0;
                                     break;
                             }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                         }
                     }
                     else if (_pbs.PathCurve == (byte)Extrusion.Curve1)
@@ -780,7 +780,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                         volume *= 0.32475953f;
                         volume *= 0.01f * (float)(200 - _pbs.PathScaleX);
                         tmp = 1.0f - .02f * (float)(200 - _pbs.PathScaleY);
-                        volume *= (1.0f - tmp * tmp);
+                        volume *= 1.0f - tmp * tmp;
 
                         if (hollowAmount > 0.0)
                         {
@@ -807,7 +807,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                                     hollowVolume = 0;
                                     break;
                             }
-                            volume *= (1.0f - hollowVolume);
+                            volume *= 1.0f - hollowVolume;
                         }
                     }
                     break;
@@ -850,16 +850,16 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 taperY1 = 1.0f - taperY;
             }
 
-            volume *= (taperX1 * taperY1 + 0.5f * (taperX1 * taperY + taperX * taperY1) + 0.3333333333f * taperX * taperY);
+            volume *= taperX1 * taperY1 + 0.5f * (taperX1 * taperY + taperX * taperY1) + 0.3333333333f * taperX * taperY;
 
             pathBegin = (float)_pbs.PathBegin * 2.0e-5f;
             pathEnd = 1.0f - (float)_pbs.PathEnd * 2.0e-5f;
-            volume *= (pathEnd - pathBegin);
+            volume *= pathEnd - pathBegin;
 
             // this is crude aproximation
             profileBegin = (float)_pbs.ProfileBegin * 2.0e-5f;
             profileEnd = 1.0f - (float)_pbs.ProfileEnd * 2.0e-5f;
-            volume *= (profileEnd - profileBegin);
+            volume *= profileEnd - profileBegin;
 
             repData.volume = volume;
         }
@@ -887,9 +887,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
     public class ODEAssetRequest
     {
-        ODEMeshWorker m_worker;
-        private ILog m_log;
-        ODEPhysRepData repData;
+        readonly ODEMeshWorker m_worker;
+        private readonly ILog m_log;
+        readonly ODEPhysRepData repData;
 
         public ODEAssetRequest(ODEMeshWorker pWorker, RequestAssetDelegate provider,
             ODEPhysRepData pRepData, ILog plog)

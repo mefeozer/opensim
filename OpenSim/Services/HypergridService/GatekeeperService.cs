@@ -63,18 +63,18 @@ namespace OpenSim.Services.HypergridService
         private static string m_DeniedClients = string.Empty;
         private static string m_DeniedMacs = string.Empty;
         private static bool m_ForeignAgentsAllowed = true;
-        private static List<string> m_ForeignsAllowedExceptions = new List<string>();
-        private static List<string> m_ForeignsDisallowedExceptions = new List<string>();
+        private static readonly List<string> m_ForeignsAllowedExceptions = new List<string>();
+        private static readonly List<string> m_ForeignsDisallowedExceptions = new List<string>();
 
         private static UUID m_ScopeID;
         private static bool m_AllowTeleportsToAnyRegion;
 
         private static OSHHTPHost m_gatekeeperHost;
         private static string m_gatekeeperURL;
-        private HashSet<OSHHTPHost> m_gateKeeperAlias;
+        private readonly HashSet<OSHHTPHost> m_gateKeeperAlias;
 
         private static GridRegion m_DefaultGatewayRegion;
-        private bool m_allowDuplicatePresences = false;
+        private readonly bool m_allowDuplicatePresences = false;
         private static string m_messageKey;
 
         public GatekeeperService(IConfigSource config, ISimulationService simService)
@@ -199,7 +199,7 @@ namespace OpenSim.Services.HypergridService
             regionHandle = 0;
             sizeX = (int)Constants.RegionSize;
             sizeY = (int)Constants.RegionSize;
-            externalName = m_gatekeeperURL + ((!string.IsNullOrEmpty(regionName)) ? " " + regionName : "");
+            externalName = m_gatekeeperURL + (!string.IsNullOrEmpty(regionName) ? " " + regionName : "");
             imageURL = string.Empty;
             reason = string.Empty;
             GridRegion region = null;
@@ -267,7 +267,7 @@ namespace OpenSim.Services.HypergridService
             {
                 m_log.DebugFormat(
                     "[GATEKEEPER SERVICE]: Could not find region with ID {0} as requested by user {1}{2}.  Returning null.",
-                    regionID, agentID, (agentHomeURI == null) ? "" : " @ " + agentHomeURI);
+                    regionID, agentID, agentHomeURI == null ? "" : " @ " + agentHomeURI);
 
                 message = "The teleport destination could not be found.";
                 return null;
@@ -296,7 +296,7 @@ namespace OpenSim.Services.HypergridService
             m_log.InfoFormat("[GATEKEEPER SERVICE]: Login request for {0} {1} @ {2} ({3}) at {4} using viewer {5}, channel {6}, IP {7}, Mac {8}, Id0 {9}, Teleport Flags: {10}. From region {11}",
                 aCircuit.firstname, aCircuit.lastname, authURL, aCircuit.AgentID, destination.RegionID,
                 aCircuit.Viewer, aCircuit.Channel, aCircuit.IPAddress, aCircuit.Mac, aCircuit.Id0, (TeleportFlags)aCircuit.teleportFlags,
-                (source == null) ? "Unknown" : string.Format("{0} ({1}){2}", source.RegionName, source.RegionID, (source.RawServerURI == null) ? "" : " @ " + source.ServerURI));
+                source == null ? "Unknown" : string.Format("{0} ({1}){2}", source.RegionName, source.RegionID, source.RawServerURI == null ? "" : " @ " + source.ServerURI));
 
             string curViewer = Util.GetViewerName(aCircuit);
             string curMac = aCircuit.Mac.ToString();
@@ -405,7 +405,7 @@ namespace OpenSim.Services.HypergridService
             // Is the user banned?
             // This uses a Ban service that's more powerful than the configs
             //
-            string uui = (account != null ? aCircuit.AgentID.ToString() : Util.ProduceUserUniversalIdentifier(aCircuit));
+            string uui = account != null ? aCircuit.AgentID.ToString() : Util.ProduceUserUniversalIdentifier(aCircuit);
             if (m_BansService != null && m_BansService.IsBanned(uui, aCircuit.IPAddress, aCircuit.Id0, authURL))
             {
                 reason = "You are banned from this world";

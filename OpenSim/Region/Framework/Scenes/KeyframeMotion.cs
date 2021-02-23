@@ -39,13 +39,13 @@ namespace OpenSim.Region.Framework.Scenes
 {
     public class KeyframeTimer
     {
-        private static Dictionary<Scene, KeyframeTimer> m_timers =
+        private static readonly Dictionary<Scene, KeyframeTimer> m_timers =
                 new Dictionary<Scene, KeyframeTimer>();
 
-        private Timer m_timer;
-        private Dictionary<KeyframeMotion, object> m_motions = new Dictionary<KeyframeMotion, object>();
-        private object m_lockObject = new object();
-        private object m_timerLock = new object();
+        private readonly Timer m_timer;
+        private readonly Dictionary<KeyframeMotion, object> m_motions = new Dictionary<KeyframeMotion, object>();
+        private readonly object m_lockObject = new object();
+        private readonly object m_timerLock = new object();
         private const double m_tickDuration = 50.0;
 
         public double TickDuration
@@ -526,7 +526,7 @@ namespace OpenSim.Region.Framework.Scenes
             if (m_mode == PlayMode.Loop || m_mode == PlayMode.PingPong || m_iterations == 0)
             {
                 int direction = 1;
-                if (m_mode == PlayMode.Reverse || ((m_mode == PlayMode.PingPong) && ((m_iterations & 1) != 0)))
+                if (m_mode == PlayMode.Reverse || m_mode == PlayMode.PingPong && (m_iterations & 1) != 0)
                     direction = -1;
 
                 int start = 0;
@@ -545,7 +545,7 @@ namespace OpenSim.Region.Framework.Scenes
                     k.StartPosition = pos;
                     if (k.Position.HasValue)
                     {
-                        k.Position = (k.Position * direction);
+                        k.Position = k.Position * direction;
 //                        k.Velocity = (Vector3)k.Position / (k.TimeMS / 1000.0f);
                         k.Position += pos;
                     }
@@ -712,7 +712,7 @@ namespace OpenSim.Region.Framework.Scenes
                 }
                 m_nextPosition = m_group.AbsolutePosition;
                 m_currentVel = (Vector3)m_currentFrame.Position - m_nextPosition;
-                m_currentVel /= (m_currentFrame.TimeMS * 0.001f);
+                m_currentVel /= m_currentFrame.TimeMS * 0.001f;
 
                 m_currentFrame.TimeMS += (int)tickDuration;
                 m_lasttickMS = nowMS - 50f;
@@ -746,7 +746,7 @@ namespace OpenSim.Region.Framework.Scenes
                     {
                         m_currentFrame = m_frames[0];
                         m_currentVel = (Vector3)m_currentFrame.Position - m_nextPosition;
-                        m_currentVel /= (m_currentFrame.TimeMS * 0.001f);
+                        m_currentVel /= m_currentFrame.TimeMS * 0.001f;
                         m_group.RootPart.Velocity = m_currentVel;
                         m_currentFrame.TimeMS += (int)tickDuration;
                     }

@@ -68,7 +68,7 @@ namespace OpenSim.Services.InventoryService
 
         static protected Dictionary<UUID, InventoryItemBase> m_items = new Dictionary<UUID, InventoryItemBase>(256);
         static LibraryService m_root;
-        static object m_rootLock = new object();
+        static readonly object m_rootLock = new object();
         static readonly uint m_BasePermissions = (uint)PermissionMask.AllAndExport;
         static readonly uint m_EveryOnePermissions = (uint)PermissionMask.AllAndExportNoMod;
         static readonly uint m_CurrentPermissions = (uint)PermissionMask.AllAndExport;

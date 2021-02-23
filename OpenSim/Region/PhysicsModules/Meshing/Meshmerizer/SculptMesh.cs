@@ -305,7 +305,7 @@ namespace PrimMesher
             normals = new List<Coord>();
             uvs = new List<UVCoord>();
 
-            sculptType = (SculptType)(((int)sculptType) & 0x07);
+            sculptType = (SculptType)((int)sculptType & 0x07);
 
             if (mirror)
                 invert = !invert;

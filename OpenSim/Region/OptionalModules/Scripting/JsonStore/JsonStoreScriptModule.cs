@@ -56,7 +56,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         private IScriptModuleComms m_comms;
         private IJsonStoreModule m_store;
 
-        private Dictionary<UUID,HashSet<UUID>> m_scriptStores = new Dictionary<UUID,HashSet<UUID>>();
+        private readonly Dictionary<UUID,HashSet<UUID>> m_scriptStores = new Dictionary<UUID,HashSet<UUID>>();
 
 #region Region Module interface
 

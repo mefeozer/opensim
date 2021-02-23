@@ -54,7 +54,7 @@ namespace OpenSim.Framework
             m_dictionary = new Dictionary<Tkey1, int>();
             m_rwLock = new ReaderWriterLockSlim();
             m_startTS = Util.GetTimeStampMS();
-            m_expire = (expireCheckTimeinMS > MINEXPIRECHECK) ? m_expire = expireCheckTimeinMS : MINEXPIRECHECK;
+            m_expire = expireCheckTimeinMS > MINEXPIRECHECK ? m_expire = expireCheckTimeinMS : MINEXPIRECHECK;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -190,7 +190,7 @@ namespace OpenSim.Framework
             int now;
             if (expireMS > 0)
             {
-                expireMS = (expireMS > m_expire) ? expireMS : m_expire;
+                expireMS = expireMS > m_expire ? expireMS : m_expire;
                 now = (int)(Util.GetTimeStampMS() - m_startTS) + expireMS;
             }
             else
@@ -313,7 +313,7 @@ namespace OpenSim.Framework
                         int now;
                         if (expireMS > 0)
                         {
-                            expireMS = (expireMS > m_expire) ? expireMS : m_expire;
+                            expireMS = expireMS > m_expire ? expireMS : m_expire;
                             now = (int)(Util.GetTimeStampMS() - m_startTS) + expireMS;
                         }
                         else

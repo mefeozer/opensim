@@ -56,9 +56,9 @@ namespace OpenSim.Tests.Permissions
             get { return TheInstance.m_Avatars;  }
         }
 
-        private static string Perms = "Owner: {0}; Group: {1}; Everyone: {2}; Next: {3}";
+        private static readonly string Perms = "Owner: {0}; Group: {1}; Everyone: {2}; Next: {3}";
         private TestScene m_Scene;
-        private ScenePresence[] m_Avatars = new ScenePresence[3];
+        private readonly ScenePresence[] m_Avatars = new ScenePresence[3];
 
         [SetUp]
         public override void SetUp()

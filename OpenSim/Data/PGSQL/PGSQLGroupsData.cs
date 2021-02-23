@@ -34,13 +34,13 @@ namespace OpenSim.Data.PGSQL
 {
     public class PGSQLGroupsData : IGroupsData
     {
-        private PGSqlGroupsGroupsHandler m_Groups;
-        private PGSqlGroupsMembershipHandler m_Membership;
-        private PGSqlGroupsRolesHandler m_Roles;
-        private PGSqlGroupsRoleMembershipHandler m_RoleMembership;
-        private PGSqlGroupsInvitesHandler m_Invites;
-        private PGSqlGroupsNoticesHandler m_Notices;
-        private PGSqlGroupsPrincipalsHandler m_Principals;
+        private readonly PGSqlGroupsGroupsHandler m_Groups;
+        private readonly PGSqlGroupsMembershipHandler m_Membership;
+        private readonly PGSqlGroupsRolesHandler m_Roles;
+        private readonly PGSqlGroupsRoleMembershipHandler m_RoleMembership;
+        private readonly PGSqlGroupsInvitesHandler m_Invites;
+        private readonly PGSqlGroupsNoticesHandler m_Notices;
+        private readonly PGSqlGroupsPrincipalsHandler m_Principals;
 
         public PGSQLGroupsData(string connectionString, string realm)
         {

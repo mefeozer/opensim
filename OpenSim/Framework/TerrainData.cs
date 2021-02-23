@@ -67,14 +67,14 @@ namespace OpenSim.Framework
     public class TerrainData
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static string LogHeader = "[TERRAIN DATA]";
+        private static readonly string LogHeader = "[TERRAIN DATA]";
 
         private float[,] m_heightmap;
         // Remember subregions of the heightmap that has changed.
 
-        private BitArray m_taint;
-        private int m_taintSizeX;
-        private int m_taintSizeY;
+        private readonly BitArray m_taint;
+        private readonly int m_taintSizeX;
+        private readonly int m_taintSizeY;
 
         // legacy CompressionFactor
         public float CompressionFactor { get; private set; }
@@ -332,12 +332,12 @@ namespace OpenSim.Framework
 
         public float FromCompressedHeight(short pHeight)
         {
-            return ((float)pHeight) / CompressionFactor;
+            return (float)pHeight / CompressionFactor;
         }
 
         public float FromCompressedHeight(ushort pHeight)
         {
-            return ((float)pHeight) / CompressionFactor;
+            return (float)pHeight / CompressionFactor;
         }
 
         // To keep with the legacy theme, create an instance of this class based on the
@@ -487,7 +487,7 @@ namespace OpenSim.Framework
             Array ret = null;
             try
             {
-                using (MemoryStream str = new MemoryStream((2 * sizeof(int)) + (SizeX * SizeY * sizeof(float))))
+                using (MemoryStream str = new MemoryStream(2 * sizeof(int) + SizeX * SizeY * sizeof(float)))
                 {
                     using (BinaryWriter bw = new BinaryWriter(str))
                     {
@@ -517,7 +517,7 @@ namespace OpenSim.Framework
             Array ret = null;
             try
             {
-                using (MemoryStream inp = new MemoryStream((2 * sizeof(int)) + (SizeX * SizeY * sizeof(float))))
+                using (MemoryStream inp = new MemoryStream(2 * sizeof(int) + SizeX * SizeY * sizeof(float)))
                 {
                     using (BinaryWriter bw = new BinaryWriter(inp))
                     {

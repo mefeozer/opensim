@@ -42,7 +42,7 @@ namespace OpenSim.Framework.Serialization.External
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static Dictionary<string, Action<InventoryItemBase, XmlReader>> m_InventoryItemXmlProcessors
+        private static readonly Dictionary<string, Action<InventoryItemBase, XmlReader>> m_InventoryItemXmlProcessors
             = new Dictionary<string, Action<InventoryItemBase, XmlReader>>();
 
         #region InventoryItemBase Processor initialization

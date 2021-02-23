@@ -367,7 +367,7 @@ namespace OpenSim.Framework
         public static OSDMap ServiceFormRequest(string url, NameValueCollection data, int timeout)
         {
             int reqnum = RequestNumber++;
-            string method = (data != null && data["RequestMethod"] != null) ? data["RequestMethod"] : "unknown";
+            string method = data != null && data["RequestMethod"] != null ? data["RequestMethod"] : "unknown";
 
             if (DebugLevel >= 3)
                 m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} ServiceForm '{1}' to {2}",
@@ -996,7 +996,7 @@ namespace OpenSim.Framework
             }
 
             int sendlen = 0;
-            if (obj.Length > 0 && (verb == "POST") || (verb == "PUT"))
+            if (obj.Length > 0 && verb == "POST" || verb == "PUT")
             {
                 byte[] data = Util.UTF8NBGetbytes(obj);
                 sendlen = data.Length;
@@ -1263,7 +1263,7 @@ namespace OpenSim.Framework
 
             try
             {
-                if ((verb == "POST") || (verb == "PUT"))
+                if (verb == "POST" || verb == "PUT")
                 {
                     request.ContentType = "text/xml";
 
@@ -1484,7 +1484,7 @@ namespace OpenSim.Framework
                         "[LOGHTTP]: Slow XML-RPC request {0} '{1}' to {2} took {3}ms, {4}",
                         reqnum, method, url, tickdiff,
                         responseStr != null
-                            ? (responseStr.Length > WebUtil.MaxRequestDiagLength ? responseStr.Remove(WebUtil.MaxRequestDiagLength) : responseStr)
+                            ? responseStr.Length > WebUtil.MaxRequestDiagLength ? responseStr.Remove(WebUtil.MaxRequestDiagLength) : responseStr
                             : "");
                 }
                 else if (WebUtil.DebugLevel >= 4)

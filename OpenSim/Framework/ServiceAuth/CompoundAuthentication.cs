@@ -35,7 +35,7 @@ namespace OpenSim.Framework.ServiceAuth
     {
         public string Name { get { return "Compound"; } }
 
-        private List<IServiceAuth> m_authentications = new List<IServiceAuth>();
+        private readonly List<IServiceAuth> m_authentications = new List<IServiceAuth>();
 
         public int Count { get { return m_authentications.Count; } }
 

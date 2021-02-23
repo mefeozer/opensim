@@ -32,11 +32,11 @@ namespace OpenSim.Region.Framework.Scenes.Types
 {
     public class UpdateQueue
     {
-        private Queue<SceneObjectPart> m_queue;
+        private readonly Queue<SceneObjectPart> m_queue;
 
-        private Dictionary<UUID, bool> m_ids;
+        private readonly Dictionary<UUID, bool> m_ids;
 
-        private object m_syncObject = new object();
+        private readonly object m_syncObject = new object();
 
         public int Count
         {

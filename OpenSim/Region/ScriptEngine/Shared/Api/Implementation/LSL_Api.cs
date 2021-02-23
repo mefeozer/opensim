@@ -996,7 +996,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             }
             else
             {
-                double max = (left.y > up.z) ? left.y : up.z;
+                double max = left.y > up.z ? left.y : up.z;
 
                 if (max < fwd.x)
                 {
@@ -18473,7 +18473,6 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     string str = val.m_string;
                     return new LitJson.JsonData(str);
                 }
-                throw new IndexOutOfRangeException();
             }
 
             if(spec is LSL_String)
@@ -18706,7 +18705,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
     public class NotecardCache
     {
-        private static ExpiringCacheOS<UUID, string[]> m_Notecards = new ExpiringCacheOS<UUID, string[]>(30000);
+        private static readonly ExpiringCacheOS<UUID, string[]> m_Notecards = new ExpiringCacheOS<UUID, string[]>(30000);
 
         public static void Cache(UUID assetID, byte[] text)
         {

@@ -39,11 +39,11 @@ namespace OpenSim.Framework
     /// </remarks>
     public class DoubleDictionaryThreadAbortSafe<TKey1, TKey2, TValue>
     {
-        Dictionary<TKey1, TValue> Dictionary1;
-        Dictionary<TKey2, TValue> Dictionary2;
+        readonly Dictionary<TKey1, TValue> Dictionary1;
+        readonly Dictionary<TKey2, TValue> Dictionary2;
         private TValue[] m_array;
 
-        ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
+        readonly ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
 
         public DoubleDictionaryThreadAbortSafe()
         {

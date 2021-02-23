@@ -37,8 +37,8 @@ namespace OpenSim.Server.Handlers.Friends
 {
     public class FriendsServiceConnector : ServiceConnector
     {
-        private IFriendsService m_FriendsService;
-        private string m_ConfigName = "FriendsService";
+        private readonly IFriendsService m_FriendsService;
+        private readonly string m_ConfigName = "FriendsService";
 
         public FriendsServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

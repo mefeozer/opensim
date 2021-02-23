@@ -31,7 +31,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     public class BSActorCollection
 {
-    private Dictionary<string, BSActor> m_actors;
+    private readonly Dictionary<string, BSActor> m_actors;
 
     public BSActorCollection()
     {

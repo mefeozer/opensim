@@ -67,7 +67,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
             {
                 for (int j = 0; j < 256; j++)
                 {
-                    LookupHeightTable[i + (j * 256)] = new HeightmapLookupValue((ushort)(i + (j * 256)), (float)((double)i * ((double)j / 128.0d)));
+                    LookupHeightTable[i + j * 256] = new HeightmapLookupValue((ushort)(i + j * 256), (float)((double)i * ((double)j / 128.0d)));
                 }
             }
             Array.Sort<HeightmapLookupValue>(LookupHeightTable);
@@ -103,7 +103,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
                 while (currFileYOffset > offsetY)
                 {
                     // read a whole strip of regions
-                    int heightsToRead = sectionHeight * (fileWidth * sectionWidth);
+                    int heightsToRead = sectionHeight * fileWidth * sectionWidth;
                     bs.ReadBytes(heightsToRead * 13); // because there are 13 fun channels
                     currFileYOffset--;
                 }
@@ -157,7 +157,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
             // Guess the square dimensions by using the length of the raw file.
             double dimension = Math.Sqrt((double)(s.Length / 13));
             // Regions are always multiples of 256.
-            int trimmedDimension = (int)dimension - ((int)dimension % (int)Constants.RegionSize);
+            int trimmedDimension = (int)dimension - (int)dimension % (int)Constants.RegionSize;
             if (trimmedDimension < Constants.RegionSize)
                 trimmedDimension = (int)Constants.RegionSize;
 
@@ -171,7 +171,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
                     int x;
                     for (x = 0; x < retval.Width; x++)
                     {
-                        retval[x, (retval.Height - 1) - y] = bs.ReadByte() * (bs.ReadByte() / 128.0f);
+                        retval[x, retval.Height - 1 - y] = bs.ReadByte() * (bs.ReadByte() / 128.0f);
                         bs.ReadBytes(11); // Advance the stream to next bytes.
                     }
                 }
@@ -200,7 +200,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
                 {
                     for (int x = 0; x < map.Width; x++)
                     {
-                        double t = map[x, (map.Height - 1) - y];
+                        double t = map[x, map.Height - 1 - y];
                         //if height is less than 0, set it to 0 as
                         //can't save -ve values in a LLRAW file
                         if (t < 0d)

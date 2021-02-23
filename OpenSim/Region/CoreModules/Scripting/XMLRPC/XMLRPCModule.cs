@@ -82,7 +82,7 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_name = "XMLRPCModule";
+        private readonly string m_name = "XMLRPCModule";
 
         // <channel id, RPCChannelInfo>
         private Dictionary<UUID, RPCChannelInfo> m_openChannels;
@@ -95,10 +95,10 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
 
         private Dictionary<UUID, RPCRequestInfo> m_rpcPending;
         private Dictionary<UUID, RPCRequestInfo> m_rpcPendingResponses;
-        private List<Scene> m_scenes = new List<Scene>();
-        private int RemoteReplyScriptTimeout = 9000;
-        private int RemoteReplyScriptWait = 300;
-        private object XMLRPCListLock = new object();
+        private readonly List<Scene> m_scenes = new List<Scene>();
+        private readonly int RemoteReplyScriptTimeout = 9000;
+        private readonly int RemoteReplyScriptWait = 300;
+        private readonly object XMLRPCListLock = new object();
 
         #region ISharedRegionModule Members
 
@@ -187,7 +187,7 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
 
         public bool IsEnabled()
         {
-            return (m_remoteDataPort > 0);
+            return m_remoteDataPort > 0;
         }
 
         /**********************************************
@@ -232,7 +232,7 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
 
             if (newChannel == UUID.Zero)
             {
-                newChannel = (channelID == UUID.Zero) ? UUID.Random() : channelID;
+                newChannel = channelID == UUID.Zero ? UUID.Random() : channelID;
                 RPCChannelInfo rpcChanInfo = new RPCChannelInfo(localID, itemID, newChannel);
                 lock (XMLRPCListLock)
                 {
@@ -325,7 +325,7 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
             lock (XMLRPCListLock)
             {
                 if (m_rpcPending != null)
-                    return (m_rpcPending.Count > 0);
+                    return m_rpcPending.Count > 0;
                 else
                     return false;
             }
@@ -433,8 +433,8 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
             XmlRpcResponse response = new XmlRpcResponse();
 
             Hashtable requestData = (Hashtable) request.Params[0];
-            bool GoodXML = (requestData.Contains("Channel") && requestData.Contains("IntValue") &&
-                            requestData.Contains("StringValue"));
+            bool GoodXML = requestData.Contains("Channel") && requestData.Contains("IntValue") &&
+                           requestData.Contains("StringValue");
 
             if (GoodXML)
             {
@@ -457,7 +457,7 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
 
                     int timeoutCtr = 0;
 
-                    while (!rpcInfo.IsProcessed() && (timeoutCtr < RemoteReplyScriptTimeout))
+                    while (!rpcInfo.IsProcessed() && timeoutCtr < RemoteReplyScriptTimeout)
                     {
                         Thread.Sleep(RemoteReplyScriptWait);
                         timeoutCtr += RemoteReplyScriptWait;
@@ -492,15 +492,15 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
 
     public class RPCRequestInfo: IXmlRpcRequestInfo
     {
-        private UUID m_ChannelKey;
-        private string m_IntVal;
-        private UUID m_ItemID;
-        private uint m_localID;
-        private UUID m_MessageID;
+        private readonly UUID m_ChannelKey;
+        private readonly string m_IntVal;
+        private readonly UUID m_ItemID;
+        private readonly uint m_localID;
+        private readonly UUID m_MessageID;
         private bool m_processed;
         private int m_respInt;
         private string m_respStr;
-        private string m_StrVal;
+        private readonly string m_StrVal;
 
         public RPCRequestInfo(uint localID, UUID itemID, UUID channelKey, string strVal, string intVal)
         {
@@ -578,9 +578,9 @@ namespace OpenSim.Region.CoreModules.Scripting.XMLRPC
 
     public class RPCChannelInfo
     {
-        private UUID m_ChannelKey;
-        private UUID m_itemID;
-        private uint m_localID;
+        private readonly UUID m_ChannelKey;
+        private readonly UUID m_itemID;
+        private readonly uint m_localID;
 
         public RPCChannelInfo(uint localID, UUID itemID, UUID channelID)
         {

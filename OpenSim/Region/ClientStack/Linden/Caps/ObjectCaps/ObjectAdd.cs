@@ -287,7 +287,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 }
             }
 
-            Vector3 pos = m_scene.GetNewRezLocation(ray_start, ray_end, ray_target_id, rotation, (bypass_raycast) ? (byte)1 : (byte)0, (ray_end_is_intersection) ? (byte)1 : (byte)0, true, scale, false);
+            Vector3 pos = m_scene.GetNewRezLocation(ray_start, ray_end, ray_target_id, rotation, bypass_raycast ? (byte)1 : (byte)0, ray_end_is_intersection ? (byte)1 : (byte)0, true, scale, false);
             if (!m_scene.Permissions.CanRezObject(1, avatarID, pos))
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.Unauthorized;

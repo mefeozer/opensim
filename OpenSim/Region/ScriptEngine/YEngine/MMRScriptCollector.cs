@@ -120,8 +120,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 throw new Exception("stack is boxed " + st.Name + ", expecting a numeric");
             }
-            if((st != typeof(bool)) && (st != typeof(char)) && (st != typeof(int)) &&
-                (st != typeof(long)) && (st != typeof(float)) && (st != typeof(double)))
+            if(st != typeof(bool) && st != typeof(char) && st != typeof(int) &&
+                st != typeof(long) && st != typeof(float) && st != typeof(double))
             {
                 throw new Exception("stack has " + st.Name + ", expecting a numeric");
             }
@@ -137,7 +137,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(c < 1)
                 throw new Exception("stack going negative");
             Type st = this[--c];
-            if((st != null) && !isBoxeds[c] && st.IsValueType)
+            if(st != null && !isBoxeds[c] && st.IsValueType)
             {
                 throw new Exception("stack has " + st.Name + ", expecting a ref type");
             }
@@ -205,7 +205,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 return;
 
             // object can accept any boxed type
-            if((ex == typeof(object)) && stBoxed)
+            if(ex == typeof(object) && stBoxed)
                 return;
 
             // otherwise, it is disallowed
@@ -483,7 +483,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class NNEnumerableCatchFinally: System.Collections.Generic.IEnumerable<GraphNode>
         {
-            private GraphNode gn;
+            private readonly GraphNode gn;
             public NNEnumerableCatchFinally(GraphNode gn)
             {
                 this.gn = gn;
@@ -499,9 +499,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         private class NNEnumeratorCatchFinally: NNEnumeratorBase
         {
-            private GraphNode gn;
+            private readonly GraphNode gn;
             private int index = 0;
-            private System.Collections.Generic.IEnumerator<GraphNode> realEnumerator;
+            private readonly System.Collections.Generic.IEnumerator<GraphNode> realEnumerator;
             public NNEnumeratorCatchFinally(GraphNode gn)
             {
                 this.gn = gn;
@@ -519,7 +519,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 // Then if this instruction is in a try section, say this instruction 
                 // can potentially branch to the beginning of the corresponding 
                 // catch/finally.
-                if((index == 0) && (gn.tryBlock != null))
+                if(index == 0 && gn.tryBlock != null)
                 {
                     index++;
                     nn = gn.tryBlock.catchFinallyBlock;
@@ -556,7 +556,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class NNEnumerator: NNEnumeratorBase
         {
-            private GraphNode gn;
+            private readonly GraphNode gn;
             private int index;
             public NNEnumerator(GraphNode gn)
             {
@@ -723,7 +723,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class NNEnumerator: NNEnumeratorBase
         {
-            private GraphNodeBeginCatchBlock gn;
+            private readonly GraphNodeBeginCatchBlock gn;
             private int index;
             public NNEnumerator(GraphNodeBeginCatchBlock gn)
             {
@@ -880,11 +880,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // compute resultant stack depth
             int stack = coll.stackDepth.Count;
 
-            if((stack != 0) && ((opcode == OpCodes.Endfinally) || (opcode == OpCodes.Leave) || (opcode == OpCodes.Rethrow)))
+            if(stack != 0 && (opcode == OpCodes.Endfinally || opcode == OpCodes.Leave || opcode == OpCodes.Rethrow))
             {
                 throw new Exception(opcode + " stack depth " + stack);
             }
-            if((stack != 1) && (opcode == OpCodes.Throw))
+            if(stack != 1 && opcode == OpCodes.Throw)
             {
                 throw new Exception(opcode + " stack depth " + stack);
             }
@@ -927,16 +927,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             get
             {
                 return
-                    ((opcode.StackBehaviourPop == StackBehaviour.Pop0) &&    // ldarg,ldloc,ldsfld
-                     (opcode.StackBehaviourPush == StackBehaviour.Push1)) ||
-                    ((opcode.StackBehaviourPop == StackBehaviour.Pop0) &&    // ldarga,ldloca,ldc,ldsflda,...
-                     (opcode.StackBehaviourPush == StackBehaviour.Pushi)) ||
-                    (opcode == OpCodes.Ldnull) ||
-                    (opcode == OpCodes.Ldc_R4) ||
-                    (opcode == OpCodes.Ldc_R8) ||
-                    (opcode == OpCodes.Ldstr) ||
-                    (opcode == OpCodes.Ldc_I8) ||
-                    (opcode == OpCodes.Dup);
+                    opcode.StackBehaviourPop == StackBehaviour.Pop0 &&    // ldarg,ldloc,ldsfld
+                    opcode.StackBehaviourPush == StackBehaviour.Push1 ||
+                    opcode.StackBehaviourPop == StackBehaviour.Pop0 &&    // ldarga,ldloca,ldc,ldsflda,...
+                    opcode.StackBehaviourPush == StackBehaviour.Pushi ||
+                    opcode == OpCodes.Ldnull ||
+                    opcode == OpCodes.Ldc_R4 ||
+                    opcode == OpCodes.Ldc_R8 ||
+                    opcode == OpCodes.Ldstr ||
+                    opcode == OpCodes.Ldc_I8 ||
+                    opcode == OpCodes.Dup;
             }
         }
 
@@ -957,7 +957,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class NNEnumerator: NNEnumeratorBase
         {
-            private GraphNodeEmit gn;
+            private readonly GraphNodeEmit gn;
             private int index;
             public NNEnumerator(GraphNodeEmit gn)
             {
@@ -1054,7 +1054,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 case "ret":
                 {
-                    int sd = (coll.wrapped.retType != typeof(void)) ? 1 : 0;
+                    int sd = coll.wrapped.retType != typeof(void) ? 1 : 0;
                     if(coll.stackDepth.Count != sd)
                         throw new Exception("bad stack depth");
                     if(sd > 0)
@@ -1293,8 +1293,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class NNEnumerator: NNEnumeratorBase
         {
-            private GraphNodeEmitNullEndfinally gn;
-            private IEnumerator<GraphNodeBlock> leaveTargetEnumerator;
+            private readonly GraphNodeEmitNullEndfinally gn;
+            private readonly IEnumerator<GraphNodeBlock> leaveTargetEnumerator;
             private int index;
             public NNEnumerator(GraphNodeEmitNullEndfinally gn)
             {
@@ -1428,7 +1428,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 Type brt = t.MakeByRefType();      // if value type, eg Vector, it can be pushed by reference or by value
                 int c = coll.stackDepth.Count;
-                if((c > 0) && (coll.stackDepth[c - 1] == brt))
+                if(c > 0 && coll.stackDepth[c - 1] == brt)
                     t = brt;
             }
             coll.stackDepth.Pop(t);                    // type of what should be on the stack pointing to object or struct
@@ -1686,7 +1686,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class NNEnumerator: NNEnumeratorBase
         {
-            private GraphNodeEmitLabel gn;
+            private readonly GraphNodeEmitLabel gn;
             private int index;
             public NNEnumerator(GraphNodeEmitLabel gn)
             {
@@ -1773,7 +1773,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class NNEnumerator: NNEnumeratorBase
         {
-            private GraphNodeEmitLabelLeave gn;
+            private readonly GraphNodeEmitLabelLeave gn;
             private int index;
             public NNEnumerator(GraphNodeEmitLabelLeave gn)
             {
@@ -1859,7 +1859,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class NNEnumerator: NNEnumeratorBase
         {
-            private GraphNodeEmitLabels gn;
+            private readonly GraphNodeEmitLabels gn;
             private int index;
             public NNEnumerator(GraphNodeEmitLabels gn)
             {
@@ -2246,8 +2246,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      */
     public class NNEnumerable: System.Collections.Generic.IEnumerable<GraphNode>
     {
-        private object[] cps;
-        private ConstructorInfo ci;
+        private readonly object[] cps;
+        private readonly ConstructorInfo ci;
 
         public NNEnumerable(GraphNode gn, Type nnEnumeratorType)
         {
@@ -2311,8 +2311,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public GraphNodeBeginExceptionBlock curExcBlock = null;  // pushed at beginning of try
                                                                  // popped at END of catch/finally
 
-        private List<ScriptMyLocal> declaredLocals = new List<ScriptMyLocal>();
-        private List<ScriptMyLabel> definedLabels = new List<ScriptMyLabel>();
+        private readonly List<ScriptMyLocal> declaredLocals = new List<ScriptMyLocal>();
+        private readonly List<ScriptMyLabel> definedLabels = new List<ScriptMyLabel>();
 
         public string methName
         {
@@ -2520,7 +2520,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(!gn.CanFallThrough())
                 {
                     GraphNode nn;
-                    while(((nn = gn.nextLin) != null) && !(nn is GraphNodeBlock) &&
+                    while((nn = gn.nextLin) != null && !(nn is GraphNodeBlock) &&
                                               !(nn is GraphNodeEndExceptionBlock))
                     {
                         if((gn.nextLin = nn.nextLin) != null)
@@ -2542,7 +2542,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     GraphNodeEmitLabelLeave leaveInstr = (GraphNodeEmitLabelLeave)gn;         // the leave instruction
                     GraphNodeMarkLabel leaveTarget = leaveInstr.myLabel.whereAmI;             // label being targeted by leave
                     GraphNodeBeginExceptionBlock leaveTargetsTryBlock =                       // try block directly enclosing leave target
-                        (leaveTarget == null) ? null : leaveTarget.tryBlock;              // ...it must not be unwound
+                        leaveTarget == null ? null : leaveTarget.tryBlock;              // ...it must not be unwound
 
                     // Step through try { }s from the leave instruction towards its target looking for try { }s with finally { }s.
                     // The leave instruction unconditionally branches to the beginning of the innermost one found.
@@ -2587,14 +2587,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(gn is GraphNodeBlock)
                     currentBlock = (GraphNodeBlock)gn;
                 ScriptMyLocal rdlcl = gn.ReadsLocal();
-                if((rdlcl != null) &&
+                if(rdlcl != null &&
                     !currentBlock.localsWrittenBeforeRead.Contains(rdlcl) &&
                     !currentBlock.localsReadBeforeWritten.Contains(rdlcl))
                 {
                     currentBlock.localsReadBeforeWritten.Add(rdlcl);
                 }
                 ScriptMyLocal wrlcl = gn.WritesLocal();
-                if((wrlcl != null) &&
+                if(wrlcl != null &&
                     !currentBlock.localsWrittenBeforeRead.Contains(wrlcl) &&
                     !currentBlock.localsReadBeforeWritten.Contains(wrlcl))
                 {
@@ -2654,7 +2654,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     if(!(gn is GraphNodeEmit))
                         continue;
                     GraphNodeEmit brft = (GraphNodeEmit)gn;
-                    if((brft.opcode != OpCodes.Brfalse) && (brft.opcode != OpCodes.Brtrue))
+                    if(brft.opcode != OpCodes.Brfalse && brft.opcode != OpCodes.Brtrue)
                         continue;
                     if(!(brft.prevLin is GraphNodeEmit))
                         continue;
@@ -2675,7 +2675,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         continue;
                     cmp.nextLin = brft;
                     brft.prevLin = cmp;
-                    brft.opcode = (brft.opcode == OpCodes.Brfalse) ? OpCodes.Brtrue : OpCodes.Brfalse;
+                    brft.opcode = brft.opcode == OpCodes.Brfalse ? OpCodes.Brtrue : OpCodes.Brfalse;
                     didSomething = true;
                 }
 
@@ -2685,7 +2685,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     if(!(gn is GraphNodeEmit))
                         continue;
                     GraphNodeEmit brft = (GraphNodeEmit)gn;
-                    if((brft.opcode != OpCodes.Brfalse) && (brft.opcode != OpCodes.Brtrue))
+                    if(brft.opcode != OpCodes.Brfalse && brft.opcode != OpCodes.Brtrue)
                         continue;
                     if(!(brft.prevLin is GraphNodeEmit))
                         continue;
@@ -2696,7 +2696,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         continue;
                     cmp.prevLin.nextLin = brft;
                     brft.prevLin = cmp.prevLin;
-                    bool brtru = (brft.opcode == OpCodes.Brtrue);
+                    bool brtru = brft.opcode == OpCodes.Brtrue;
                     if(cmp.opcode == OpCodes.Ceq)
                         brft.opcode = brtru ? OpCodes.Beq : OpCodes.Bne_Un;
                     else if(cmp.opcode == OpCodes.Cgt)
@@ -2718,16 +2718,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     if(!(gn is GraphNodeEmit))
                         continue;
                     GraphNodeEmit brcc = (GraphNodeEmit)gn;
-                    if((brcc.opcode != OpCodes.Bne_Un) && (brcc.opcode != OpCodes.Beq))
+                    if(brcc.opcode != OpCodes.Bne_Un && brcc.opcode != OpCodes.Beq)
                         continue;
                     if(!(brcc.prevLin is GraphNodeEmit))
                         continue;
                     GraphNodeEmit ldc0 = (GraphNodeEmit)brcc.prevLin;
-                    if((ldc0.opcode != OpCodes.Ldc_I4_0) && (ldc0.opcode != OpCodes.Ldnull))
+                    if(ldc0.opcode != OpCodes.Ldc_I4_0 && ldc0.opcode != OpCodes.Ldnull)
                         continue;
                     ldc0.prevLin.nextLin = brcc;
                     brcc.prevLin = ldc0.prevLin;
-                    brcc.opcode = (brcc.opcode == OpCodes.Bne_Un) ? OpCodes.Brtrue : OpCodes.Brfalse;
+                    brcc.opcode = brcc.opcode == OpCodes.Bne_Un ? OpCodes.Brtrue : OpCodes.Brfalse;
                     didSomething = true;
                 }
 
@@ -2763,7 +2763,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     GraphNodeEmit ldany = (GraphNodeEmit)stlv2.nextLin;
                     if(!ldany.opcode.ToString().StartsWith("ld"))
                         continue;
-                    if((ldany is GraphNodeEmitLocal) &&
+                    if(ldany is GraphNodeEmitLocal &&
                         ((GraphNodeEmitLocal)ldany).myLocal == stlv2.myLocal)
                         continue;
 
@@ -2800,14 +2800,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 // stloc/ldloc with dup/stloc.
                 for(GraphNode gn = firstLin; gn != null; gn = gn.nextLin)
                 {
-                    if((gn is GraphNodeEmitLocal) &&
-                        (gn.prevLin is GraphNodeEmitLocal))
+                    if(gn is GraphNodeEmitLocal &&
+                        gn.prevLin is GraphNodeEmitLocal)
                     {
                         GraphNodeEmitLocal stloc = (GraphNodeEmitLocal)gn.prevLin;
                         GraphNodeEmitLocal ldloc = (GraphNodeEmitLocal)gn;
-                        if((stloc.opcode == OpCodes.Stloc) &&
-                            (ldloc.opcode == OpCodes.Ldloc) &&
-                            (stloc.myLocal == ldloc.myLocal))
+                        if(stloc.opcode == OpCodes.Stloc &&
+                            ldloc.opcode == OpCodes.Ldloc &&
+                            stloc.myLocal == ldloc.myLocal)
                         {
                             if(IsLocalNeededAfterThis(ldloc, ldloc.myLocal))
                             {
@@ -2842,9 +2842,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 for(GraphNode gn = firstLin; gn != null; gn = gn.nextLin)
                 {
                     ScriptMyLocal wrlcl = gn.WritesLocal();
-                    if((wrlcl != null) && !wrlcl.isReferenced)
+                    if(wrlcl != null && !wrlcl.isReferenced)
                     {
-                        if(!(gn is GraphNodeEmitLocal) || (((GraphNodeEmitLocal)gn).opcode != OpCodes.Stloc))
+                        if(!(gn is GraphNodeEmitLocal) || ((GraphNodeEmitLocal)gn).opcode != OpCodes.Stloc)
                         {
                             throw new Exception("expecting stloc");
                         }
@@ -2861,12 +2861,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 // Remove any Ld<const>/Dup,Pop.
                 for(GraphNode gn = firstLin; gn != null; gn = gn.nextLin)
                 {
-                    if((gn is GraphNodeEmit) &&
-                        (gn.nextLin is GraphNodeEmit))
+                    if(gn is GraphNodeEmit &&
+                        gn.nextLin is GraphNodeEmit)
                     {
                         GraphNodeEmit gne = (GraphNodeEmit)gn;
                         GraphNodeEmit nne = (GraphNodeEmit)gn.nextLin;
-                        if(gne.isPoppable && (nne.opcode == OpCodes.Pop))
+                        if(gne.isPoppable && nne.opcode == OpCodes.Pop)
                         {
                             gne.prevLin.nextLin = nne.nextLin;
                             nne.nextLin.prevLin = gne.prevLin;
@@ -2948,7 +2948,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                 // See if the instruction writes a local we don't know about yet.
                 ScriptMyLocal wrlcl = gn.WritesLocal();
-                if((wrlcl != null) && !localsWrittenSoFar.Contains(wrlcl))
+                if(wrlcl != null && !localsWrittenSoFar.Contains(wrlcl))
                 {
                     localsWrittenSoFar.Add(wrlcl);
                 }

@@ -58,11 +58,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
     public class ScriptObjWriter: ScriptMyILGen
     {
-        private static Dictionary<short, OpCode> opCodes = PopulateOpCodes();
-        private static Dictionary<string, Type> string2Type = PopulateS2T();
-        private static Dictionary<Type, string> type2String = PopulateT2S();
+        private static readonly Dictionary<short, OpCode> opCodes = PopulateOpCodes();
+        private static readonly Dictionary<string, Type> string2Type = PopulateS2T();
+        private static readonly Dictionary<Type, string> type2String = PopulateT2S();
 
-        private static MethodInfo monoGetCurrentOffset = typeof(ILGenerator).GetMethod("Mono_GetCurrentOffset",
+        private static readonly MethodInfo monoGetCurrentOffset = typeof(ILGenerator).GetMethod("Mono_GetCurrentOffset",
                         BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, null,
                         new Type[] { typeof(ILGenerator) }, null);
 
@@ -76,11 +76,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private int lastErrorAtLine = 0;
         private int lastErrorAtPosn = 0;
 
-        private Dictionary<Type, string> sdTypesRev = new Dictionary<Type, string>();
+        private readonly Dictionary<Type, string> sdTypesRev = new Dictionary<Type, string>();
         public int labelNumber = 0;
         public int localNumber = 0;
 
-        private string _methName;
+        private readonly string _methName;
         public string methName
         {
             get
@@ -396,7 +396,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 // Get IL instruction offset at beginning of instruction.
                 offset = 0;
-                if((ilGen != null) && (monoGetCurrentOffset != null))
+                if(ilGen != null && monoGetCurrentOffset != null)
                 {
                     offset = (int)monoGetCurrentOffset.Invoke(null, ilGenArg);
                 }
@@ -736,7 +736,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                         if(opCode == OpCodes.Ldc_I4)
                         {
-                            if((value >= -1) && (value <= 8))
+                            if(value >= -1 && value <= 8)
                             {
                                 opCode = opCodesLdcI4M1P8[value + 1];
                                 ilGen.Emit(opCode);
@@ -744,7 +744,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                     objectTokens.EmitNull(offset, opCode);
                                 break;
                             }
-                            if((value >= 0) && (value <= 127))
+                            if(value >= 0 && value <= 127)
                             {
                                 opCode = OpCodes.Ldc_I4_S;
                                 ilGen.Emit(OpCodes.Ldc_I4_S, (sbyte)value);

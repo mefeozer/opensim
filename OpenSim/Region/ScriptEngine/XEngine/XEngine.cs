@@ -108,7 +108,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
         private string m_ScriptErrorMessage;
         private bool m_AppDomainLoading;
         private bool m_AttachmentsDomainLoading;
-        private Dictionary<UUID,ArrayList> m_ScriptErrors =
+        private readonly Dictionary<UUID,ArrayList> m_ScriptErrors =
                 new Dictionary<UUID,ArrayList>();
 
         // disable warning: need to keep a reference to XEngine.EventManager
@@ -139,47 +139,47 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
         private string m_ScriptEnginesPath = null;
 
-        private ExpiringCache<UUID, bool> m_runFlags = new ExpiringCache<UUID, bool>();
+        private readonly ExpiringCache<UUID, bool> m_runFlags = new ExpiringCache<UUID, bool>();
 
         /// <summary>
         /// Is the entire simulator in the process of shutting down?
         /// </summary>
         private bool m_SimulatorShuttingDown;
 
-        private static List<XEngine> m_ScriptEngines =
+        private static readonly List<XEngine> m_ScriptEngines =
                 new List<XEngine>();
 
         // Maps the local id to the script inventory items in it
 
-        private Dictionary<uint, List<UUID> > m_PrimObjects =
+        private readonly Dictionary<uint, List<UUID> > m_PrimObjects =
                 new Dictionary<uint, List<UUID> >();
 
         // Maps the UUID above to the script instance
 
-        private Dictionary<UUID, IScriptInstance> m_Scripts =
+        private readonly Dictionary<UUID, IScriptInstance> m_Scripts =
                 new Dictionary<UUID, IScriptInstance>();
 
         // Maps the asset ID to the assembly
 
-        private Dictionary<UUID, string> m_Assemblies =
+        private readonly Dictionary<UUID, string> m_Assemblies =
                 new Dictionary<UUID, string>();
 
-        private Dictionary<string, int> m_AddingAssemblies =
+        private readonly Dictionary<string, int> m_AddingAssemblies =
                 new Dictionary<string, int>();
 
         // This will list AppDomains by script asset
 
-        private Dictionary<UUID, AppDomain> m_AppDomains =
+        private readonly Dictionary<UUID, AppDomain> m_AppDomains =
                 new Dictionary<UUID, AppDomain>();
 
         // List the scripts running in each appdomain
 
-        private Dictionary<UUID, List<UUID> > m_DomainScripts =
+        private readonly Dictionary<UUID, List<UUID> > m_DomainScripts =
                 new Dictionary<UUID, List<UUID> >();
 
-        private ScriptCompileQueue m_CompileQueue = new ScriptCompileQueue();
+        private readonly ScriptCompileQueue m_CompileQueue = new ScriptCompileQueue();
         IWorkItemResult m_CurrentCompile = null;
-        private Dictionary<UUID, ScriptCompileInfo> m_CompileDict = new Dictionary<UUID, ScriptCompileInfo>();
+        private readonly Dictionary<UUID, ScriptCompileInfo> m_CompileDict = new Dictionary<UUID, ScriptCompileInfo>();
 
         private ScriptEngineConsoleCommands m_consoleCommands;
 
@@ -235,7 +235,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
         private class ScriptCompileInfo
         {
-            public List<EventParams> eventList = new List<EventParams>();
+            public readonly List<EventParams> eventList = new List<EventParams>();
         }
 
         /// <summary>
@@ -1296,7 +1296,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             lock (m_Scripts)
             {
                 // Create the object record
-                if ((!m_Scripts.ContainsKey(itemID)) || (m_Scripts[itemID].AssetID != assetID))
+                if (!m_Scripts.ContainsKey(itemID) || m_Scripts[itemID].AssetID != assetID)
                 {
 
                     bool attachDomains = m_AttachmentsDomainLoading && part.ParentGroup.IsAttachmentCheckFull();

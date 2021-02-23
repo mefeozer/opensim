@@ -38,9 +38,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     private BSScene m_physicsScene { get; set; }
 
-    private object m_collectionActivityLock = new object();
+    private readonly object m_collectionActivityLock = new object();
 
-    private bool DDetail = false;
+    private readonly bool DDetail = false;
 
     public BSShapeCollection(BSScene physScene)
     {
@@ -85,7 +85,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             //    rebuild the body around it.
             // Updates prim.BSBody with information/pointers to requested body
             // Returns 'true' if BSBody was changed.
-            bool newBody = CreateBody((newGeom || forceRebuild), prim, m_physicsScene.World, bodyCallback);
+            bool newBody = CreateBody(newGeom || forceRebuild, prim, m_physicsScene.World, bodyCallback);
             ret = newGeom || newBody;
         }
         DetailLog("{0},BSShapeCollection.GetBodyAndShape,taintExit,force={1},ret={2},body={3},shape={4}",
@@ -171,7 +171,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 && nativeShapePossible
                 && pbs != null
                 && PrimHasNoCuts(pbs)
-                && ( !pbs.SculptEntry || (pbs.SculptEntry && !BSParam.ShouldMeshSculptedPrim) )
+                && ( !pbs.SculptEntry || pbs.SculptEntry && !BSParam.ShouldMeshSculptedPrim )
             )
         {
             // Get the scale of any existing shape so we can see if the new shape is same native type and same size.
@@ -183,8 +183,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                         prim.LocalID, forceRebuild, prim.Scale, prim.Size, prim.PhysShape.physShapeInfo.shapeType);
 
             // It doesn't look like Bullet scales native spheres so make sure the scales are all equal
-            if ((pbs.ProfileShape == ProfileShape.HalfCircle && pbs.PathCurve == (byte)Extrusion.Curve1)
-                                && pbs.Scale.X == pbs.Scale.Y && pbs.Scale.Y == pbs.Scale.Z)
+            if (pbs.ProfileShape == ProfileShape.HalfCircle && pbs.PathCurve == (byte)Extrusion.Curve1
+                                                            && pbs.Scale.X == pbs.Scale.Y && pbs.Scale.Y == pbs.Scale.Z)
             {
                 haveShape = true;
                 if (forceRebuild

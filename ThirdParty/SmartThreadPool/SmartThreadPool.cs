@@ -224,7 +224,7 @@ namespace Amib.Threading
         /// Stores a copy of the original STPStartInfo.
         /// It is used to change the MinThread and MaxThreads
         /// </summary>
-        private STPStartInfo _stpStartInfo;
+        private readonly STPStartInfo _stpStartInfo;
 
         /// <summary>
         /// Total number of work items that are stored in the work items queue 
@@ -861,8 +861,8 @@ namespace Amib.Threading
 
             WorkItem workItem = CurrentThreadEntry.CurrentWorkItem;
             ValidateWorkItemsGroupWaitForIdleImpl(workItemsGroup, workItem);
-            if ((null != workItemsGroup) &&
-                (null != workItem) &&
+            if (null != workItemsGroup &&
+                null != workItem &&
                 CurrentThreadEntry.CurrentWorkItem.WasQueuedBy(workItemsGroup))
             {
                 throw new NotSupportedException("WaitForIdle cannot be called from a thread on its SmartThreadPool, it causes a deadlock");
@@ -872,8 +872,8 @@ namespace Amib.Threading
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void ValidateWorkItemsGroupWaitForIdleImpl(IWorkItemsGroup workItemsGroup, WorkItem workItem)
         {
-            if ((null != workItemsGroup) &&
-                (null != workItem) &&
+            if (null != workItemsGroup &&
+                null != workItem &&
                 workItem.WasQueuedBy(workItemsGroup))
             {
                 throw new NotSupportedException("WaitForIdle cannot be called from a thread on its SmartThreadPool, it causes a deadlock");
@@ -932,14 +932,14 @@ namespace Amib.Threading
             int millisecondsLeft = millisecondsTimeout;
             Stopwatch stopwatch = Stopwatch.StartNew();
             //DateTime start = DateTime.UtcNow;
-            bool waitInfinitely = (Timeout.Infinite == millisecondsTimeout);
+            bool waitInfinitely = Timeout.Infinite == millisecondsTimeout;
             bool timeout = false;
 
             // Each iteration we update the time left for the timeout.
             foreach (Thread thread in threads)
             {
                 // Join don't work with negative numbers
-                if (!waitInfinitely && (millisecondsLeft < 0))
+                if (!waitInfinitely && millisecondsLeft < 0)
                 {
                     timeout = true;
                     break;
@@ -967,7 +967,7 @@ namespace Amib.Threading
                 foreach (Thread thread in threads)
                 {
 
-                    if ((thread != null) && thread.IsAlive )
+                    if (thread != null && thread.IsAlive )
                     {
                         try
                         {

@@ -39,7 +39,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
 private sealed class BulletWorldUnman : BulletWorld
 {
-    public IntPtr ptr;
+    public readonly IntPtr ptr;
     public BulletWorldUnman(uint id, BSScene physScene, IntPtr xx)
         : base(id, physScene)
     {
@@ -93,7 +93,7 @@ private sealed class BulletShapeUnman : BulletShape
     public override bool ReferenceSame(BulletShape other)
     {
         BulletShapeUnman otheru = other as BulletShapeUnman;
-        return (otheru != null) && (this.ptr == otheru.ptr);
+        return otheru != null && this.ptr == otheru.ptr;
 
     }
     public override string AddrString

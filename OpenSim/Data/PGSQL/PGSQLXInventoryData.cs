@@ -36,8 +36,8 @@ namespace OpenSim.Data.PGSQL
 //        private static readonly ILog m_log = LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        private PGSQLFolderHandler m_Folders;
-        private PGSQLItemHandler m_Items;
+        private readonly PGSQLFolderHandler m_Folders;
+        private readonly PGSQLItemHandler m_Items;
 
         public PGSQLXInventoryData(string conn, string realm)
         {

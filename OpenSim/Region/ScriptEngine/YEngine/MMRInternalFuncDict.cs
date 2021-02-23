@@ -50,7 +50,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                  // Only do ones that begin with lower-case letters...
                  // as any others can't be referenced by scripts
-                if((key[0] < 'a') || (key[0] > 'z'))
+                if(key[0] < 'a' || key[0] > 'z')
                     continue;
 
                 try

@@ -240,7 +240,7 @@ public static Dictionary<CollisionType, CollisionTypeFilterGroup> CollisionTypeM
     { CollisionType.Avatar,
                 new CollisionTypeFilterGroup(CollisionType.Avatar,
                                 (uint)CollisionFilterGroups.BCharacterGroup,
-                                (uint)(CollisionFilterGroups.BAllGroup))
+                                (uint)CollisionFilterGroups.BAllGroup)
     },
     { CollisionType.PhantomToOthersAvatar,
         new CollisionTypeFilterGroup(CollisionType.PhantomToOthersAvatar,
@@ -266,17 +266,17 @@ public static Dictionary<CollisionType, CollisionTypeFilterGroup> CollisionTypeM
     { CollisionType.Dynamic,
                 new CollisionTypeFilterGroup(CollisionType.Dynamic,
                                 (uint)CollisionFilterGroups.BSolidGroup,
-                                (uint)(CollisionFilterGroups.BAllGroup))
+                                (uint)CollisionFilterGroups.BAllGroup)
     },
     { CollisionType.VolumeDetect,
                 new CollisionTypeFilterGroup(CollisionType.VolumeDetect,
                                 (uint)CollisionFilterGroups.BSensorTrigger,
-                                (uint)(~CollisionFilterGroups.BSensorTrigger))
+                                (uint)~CollisionFilterGroups.BSensorTrigger)
     },
     { CollisionType.LinksetChild,
                 new CollisionTypeFilterGroup(CollisionType.LinksetChild,
                                 (uint)CollisionFilterGroups.BLinksetChildGroup,
-                                (uint)(CollisionFilterGroups.BNoneGroup))
+                                (uint)CollisionFilterGroups.BNoneGroup)
                                 // (uint)(CollisionFilterGroups.BCharacterGroup | CollisionFilterGroups.BSolidGroup))
     },
 };

@@ -145,7 +145,7 @@ namespace OpenSim.Region.Framework.Scenes
 
     public class UndoRedoState
     {
-        int size;
+        readonly int size;
         public LinkedList<UndoState> m_redo = new LinkedList<UndoState>();
         public LinkedList<UndoState> m_undo = new LinkedList<UndoState>();
 

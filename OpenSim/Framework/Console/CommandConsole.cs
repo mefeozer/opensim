@@ -83,13 +83,13 @@ namespace OpenSim.Framework.Console
         /// <value>
         /// Commands organized by keyword in a tree
         /// </value>
-        private Dictionary<string, object> tree =
+        private readonly Dictionary<string, object> tree =
                 new Dictionary<string, object>();
 
         /// <summary>
         /// Commands organized by module
         /// </summary>
-        private Dictionary<string, List<CommandInfo>> m_modulesCommands = new Dictionary<string, List<CommandInfo>>();
+        private readonly Dictionary<string, List<CommandInfo>> m_modulesCommands = new Dictionary<string, List<CommandInfo>>();
 
         /// <summary>
         /// Get help for the given help string
@@ -649,7 +649,7 @@ namespace OpenSim.Framework.Console
         // If an unquoted portion ends with an element matching this regex
         // and the next element contains a space, then we have stripped
         // embedded quotes that should not have been stripped
-        private static Regex optionRegex = new Regex("^--[a-zA-Z0-9-]+=$");
+        private static readonly Regex optionRegex = new Regex("^--[a-zA-Z0-9-]+=$");
 
         public static string[] Parse(string text)
         {
@@ -681,7 +681,7 @@ namespace OpenSim.Framework.Console
                     if (option)
                     {
                         // If the line ended with it, don't do anything
-                        if (index < (unquoted.Length - 1))
+                        if (index < unquoted.Length - 1)
                         {
                             // Get and remove the option name
                             string optionText = result[result.Count - 1];

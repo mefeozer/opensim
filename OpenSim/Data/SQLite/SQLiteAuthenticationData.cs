@@ -45,7 +45,7 @@ namespace OpenSim.Data.SQLite
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_Realm;
+        private readonly string m_Realm;
         private List<string> m_ColumnNames;
         private int m_LastExpire;
 

@@ -176,8 +176,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 char c = source[i];
                 skipeol &= c != '\n';
-                skipeol |= (c == '/') && (i + 1 < len) && (source[i+1] == '/');
-                if ((c > ' ') && !skipeol)
+                skipeol |= c == '/' && i + 1 < len && source[i+1] == '/';
+                if (c > ' ' && !skipeol)
                     return false;
             }
             return true;

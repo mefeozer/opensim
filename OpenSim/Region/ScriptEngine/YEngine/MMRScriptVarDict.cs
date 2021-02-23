@@ -46,9 +46,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             public bool CanBeCalledBy(TokenType[] calledBy)
             {
-                if((argTypes == null) && (calledBy == null))
+                if(argTypes == null && calledBy == null)
                     return true;
-                if((argTypes == null) || (calledBy == null))
+                if(argTypes == null || calledBy == null)
                     return false;
                 if(argTypes.Length != calledBy.Length)
                     return false;
@@ -68,9 +68,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     return false;
                 TokenType[] at = this.argTypes;
                 TokenType[] bt = ((ArgTypes)that).argTypes;
-                if((at == null) && (bt == null))
+                if(at == null && bt == null)
                     return true;
-                if((at == null) || (bt == null))
+                if(at == null || bt == null)
                     return false;
                 if(at.Length != bt.Length)
                     return false;
@@ -90,7 +90,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 int hc = 0;
                 for(int i = at.Length; --i >= 0;)
                 {
-                    int c = (hc < 0) ? 1 : 0;
+                    int c = hc < 0 ? 1 : 0;
                     hc = hc * 2 + c;
                     hc ^= at[i].ToString().GetHashCode();
                 }
@@ -105,7 +105,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
 
         private bool isFrozen = false;
-        private bool locals;
+        private readonly bool locals;
         private Dictionary<string, Dictionary<ArgTypes, TDVEntry>> master = new Dictionary<string, Dictionary<ArgTypes, TDVEntry>>();
         private int count = 0;
         private VarDict frozenLocals = null;
@@ -142,7 +142,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // Note that fields have null argument lists.
              // Methods always have a non-null argument list, even if only 0 entries long.
             ArgTypes types;
-            types.argTypes = (var.argDecl == null) ? null : KeyTypesToStringTypes(var.argDecl.types);
+            types.argTypes = var.argDecl == null ? null : KeyTypesToStringTypes(var.argDecl.types);
             if(typedic.ContainsKey(types))
                 return false;
 
@@ -178,7 +178,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // If local var frame, return a copy frozen at this point.
              // This disallows forward referenes as those future additions
              // will not be seen by lookups done in the frozen dictionary.
-            if((frozenLocals == null) || (frozenLocals.count != this.count))
+            if(frozenLocals == null || frozenLocals.count != this.count)
             {
                  // Make a copy of the current var dictionary frame.
                  // We copy a reference to the dictionary, and though it may
@@ -209,7 +209,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          *          else: list of matching functions/variables
          *                for variables, always of length 1
          */
-        private List<TokenDeclVar> found = new List<TokenDeclVar>();
+        private readonly List<TokenDeclVar> found = new List<TokenDeclVar>();
         public TokenDeclVar[] FindCallables(string name, TokenType[] argTypes)
         {
             argTypes = KeyTypesToStringTypes(argTypes);
@@ -224,12 +224,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             found.Clear();
             foreach(KeyValuePair<ArgTypes, TDVEntry> kvp in typedic)
             {
-                if((kvp.Value.count <= this.count) && kvp.Key.CanBeCalledBy(argTypes))
+                if(kvp.Value.count <= this.count && kvp.Key.CanBeCalledBy(argTypes))
                 {
                     found.Add(kvp.Value.var);
                 }
             }
-            return (found.Count > 0) ? found.ToArray() : null;
+            return found.Count > 0 ? found.ToArray() : null;
         }
 
         /**
@@ -257,20 +257,20 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                  // Get argument types of declaration.
                  //   fields are always null
                  //   methods are always non-null, though may be zero-length
-                TokenType[] declArgs = (var.argDecl == null) ? null : var.argDecl.types;
+                TokenType[] declArgs = var.argDecl == null ? null : var.argDecl.types;
 
                  // Convert any key args to string args.
                 declArgs = KeyTypesToStringTypes(declArgs);
 
                  // If both are null, they are signature-less (ie, both are fields), and so match.
-                if((declArgs == null) && (argTypes == null))
+                if(declArgs == null && argTypes == null)
                     return var;
 
                  // If calling a delegate, it is a match, regardless of delegate arg types.
                  // If it turns out the arg types do not match, the compiler will give an error
                  // trying to cast the arguments to the delegate arg types.
                  // We don't allow overloading same field name with different delegate types.
-                if((declArgs == null) && (argTypes != null))
+                if(declArgs == null && argTypes != null)
                 {
                     TokenType fieldType = var.type;
                     if(fieldType is TokenTypeSDTypeDelegate)
@@ -278,7 +278,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                  // If not both null, no match, keep looking.
-                if((declArgs == null) || (argTypes == null))
+                if(declArgs == null || argTypes == null)
                     continue;
 
                  // Both not null, match argument types to make sure we have correct overload.
@@ -349,9 +349,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class VarDictEnumerator: IEnumerator
         {
-            private IEnumerator masterEnum;
+            private readonly IEnumerator masterEnum;
             private IEnumerator typedicEnum;
-            private int count;
+            private readonly int count;
 
             public VarDictEnumerator(Dictionary<string, Dictionary<ArgTypes, TDVEntry>> master, int count)
             {

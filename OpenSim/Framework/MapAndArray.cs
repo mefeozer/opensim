@@ -47,7 +47,7 @@ namespace OpenSim.Framework
         /// acquire a lock to add, remove, or enumerate entries. This
         /// synchronization object should only be locked for larger
         /// transactions</summary>
-        private object m_syncRoot = new object();
+        private readonly object m_syncRoot = new object();
         public object SyncRoot { get { return m_syncRoot; } }
 
         /// <summary>

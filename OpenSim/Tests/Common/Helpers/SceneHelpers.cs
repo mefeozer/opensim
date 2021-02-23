@@ -61,19 +61,19 @@ namespace OpenSim.Tests.Common
 
         public ISimulationDataService SimDataService { get; private set; }
 
-        private AgentCircuitManager m_acm = new AgentCircuitManager();
-        private IEstateDataService m_estateDataService = null;
+        private readonly AgentCircuitManager m_acm = new AgentCircuitManager();
+        private readonly IEstateDataService m_estateDataService = null;
 
-        private LocalAssetServicesConnector m_assetService;
-        private LocalAuthenticationServicesConnector m_authenticationService;
-        private LocalInventoryServicesConnector m_inventoryService;
-        private RegionGridServicesConnector m_gridService;
-        private LocalUserAccountServicesConnector m_userAccountService;
-        private LocalPresenceServicesConnector m_presenceService;
+        private readonly LocalAssetServicesConnector m_assetService;
+        private readonly LocalAuthenticationServicesConnector m_authenticationService;
+        private readonly LocalInventoryServicesConnector m_inventoryService;
+        private readonly RegionGridServicesConnector m_gridService;
+        private readonly LocalUserAccountServicesConnector m_userAccountService;
+        private readonly LocalPresenceServicesConnector m_presenceService;
 
-        private TestsAssetCache m_cache;
+        private readonly TestsAssetCache m_cache;
 
-        private PhysicsScene m_physicsScene;
+        private readonly PhysicsScene m_physicsScene;
 
         public SceneHelpers() : this(null) {}
 

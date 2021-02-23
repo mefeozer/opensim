@@ -52,7 +52,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<UUID, UUID> m_Channels =
+        private readonly Dictionary<UUID, UUID> m_Channels =
                 new Dictionary<UUID, UUID>();
 
         private bool m_Enabled = false;

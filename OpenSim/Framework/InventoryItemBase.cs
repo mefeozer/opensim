@@ -84,7 +84,7 @@ namespace OpenSim.Framework
             {
                 m_creatorId = value;
 
-                if ((m_creatorId == null) || !UUID.TryParse(m_creatorId, out m_creatorIdAsUuid))
+                if (m_creatorId == null || !UUID.TryParse(m_creatorId, out m_creatorIdAsUuid))
                     m_creatorIdAsUuid = UUID.Zero;
             }
         }
@@ -133,7 +133,7 @@ namespace OpenSim.Framework
             }
             set
             {
-                if ((value == null) || (value != null && string.IsNullOrEmpty(value)))
+                if (value == null || value != null && string.IsNullOrEmpty(value))
                 {
                     m_creatorData = string.Empty;
                     return;

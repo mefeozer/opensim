@@ -235,7 +235,7 @@ namespace OpenSim.Data.Tests
                     lst += ", " + s;
             }
 
-            string sCond = stores.Length > 1 ? ("in (" + lst + ")") : ("=" + lst);
+            string sCond = stores.Length > 1 ? "in (" + lst + ")" : "=" + lst;
             try
             {
                 ExecuteSql("DELETE FROM migrations where name " + sCond);

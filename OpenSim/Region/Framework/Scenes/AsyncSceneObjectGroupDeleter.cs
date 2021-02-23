@@ -55,10 +55,10 @@ namespace OpenSim.Region.Framework.Scenes
         /// Is the deleter currently enabled?
         /// </value>
         public bool Enabled;
-        private Scene m_scene;
+        private readonly Scene m_scene;
 
-        static private ConcurrentQueue<DeleteToInventoryHolder> m_inventoryDeletes = new ConcurrentQueue<DeleteToInventoryHolder>();
-        static private object m_threadLock = new object();
+        static private readonly ConcurrentQueue<DeleteToInventoryHolder> m_inventoryDeletes = new ConcurrentQueue<DeleteToInventoryHolder>();
+        static private readonly object m_threadLock = new object();
         static private bool m_running;
 
         public AsyncSceneObjectGroupDeleter(Scene scene)

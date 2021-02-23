@@ -46,7 +46,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         private Scene m_scene;
 
-        private Dictionary<UUID, Dictionary<int, FloaterData>> m_floaters = new Dictionary<UUID, Dictionary<int, FloaterData>>();
+        private readonly Dictionary<UUID, Dictionary<int, FloaterData>> m_floaters = new Dictionary<UUID, Dictionary<int, FloaterData>>();
 
         public string Name
         {

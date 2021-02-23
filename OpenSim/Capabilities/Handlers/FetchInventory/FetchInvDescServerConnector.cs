@@ -39,9 +39,9 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class FetchInvDescServerConnector : ServiceConnector
     {
-        private IInventoryService m_InventoryService;
-        private ILibraryService m_LibraryService;
-        private string m_ConfigName = "CapsService";
+        private readonly IInventoryService m_InventoryService;
+        private readonly ILibraryService m_LibraryService;
+        private readonly string m_ConfigName = "CapsService";
 
         public FetchInvDescServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

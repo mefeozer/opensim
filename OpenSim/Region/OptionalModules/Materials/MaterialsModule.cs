@@ -61,13 +61,13 @@ namespace OpenSim.Region.OptionalModules.Materials
         private Scene m_scene = null;
         private bool m_enabled = false;
         private int m_maxMaterialsPerTransaction = 50;
-        private object materialslock = new object();
+        private readonly object materialslock = new object();
 
         public Dictionary<UUID, FaceMaterial> m_Materials = new Dictionary<UUID, FaceMaterial>();
         public Dictionary<UUID, int> m_MaterialsRefCount = new Dictionary<UUID, int>();
 
-        private Dictionary<FaceMaterial, double> m_changed = new Dictionary<FaceMaterial, double>();
-        private Queue<UUID> delayedDelete = new Queue<UUID>();
+        private readonly Dictionary<FaceMaterial, double> m_changed = new Dictionary<FaceMaterial, double>();
+        private readonly Queue<UUID> delayedDelete = new Queue<UUID>();
         private bool m_storeBusy;
 
         public void Initialise(IConfigSource source)
@@ -318,9 +318,9 @@ namespace OpenSim.Region.OptionalModules.Materials
                                 FaceMaterial fmat = new FaceMaterial(theMatMap);
 
                                 if(fmat == null ||
-                                        ( fmat.DiffuseAlphaMode == 1
+                                        fmat.DiffuseAlphaMode == 1
                                         && fmat.NormalMapID == UUID.Zero
-                                        && fmat.SpecularMapID == UUID.Zero))
+                                        && fmat.SpecularMapID == UUID.Zero)
                                     continue;
 
                                 fmat.ID = id; 
@@ -418,9 +418,9 @@ namespace OpenSim.Region.OptionalModules.Materials
                 FaceMaterial fmat = new FaceMaterial(mat);
 
                 if(fmat == null ||
-                        (fmat.DiffuseAlphaMode == 1
+                        fmat.DiffuseAlphaMode == 1
                         && fmat.NormalMapID == UUID.Zero
-                        && fmat.SpecularMapID == UUID.Zero))
+                        && fmat.SpecularMapID == UUID.Zero)
                 {
                         face.MaterialID = UUID.Zero;
                         return true;
@@ -588,7 +588,7 @@ namespace OpenSim.Region.OptionalModules.Materials
                     {
                         materialsFromViewer = osd as OSDMap;
 
-                        if (materialsFromViewer.TryGetValue("FullMaterialsPerFace", out tmpOSD) && (tmpOSD is OSDArray))
+                        if (materialsFromViewer.TryGetValue("FullMaterialsPerFace", out tmpOSD) && tmpOSD is OSDArray)
                         {
                             OSDArray matsArr = tmpOSD as OSDArray;
                             try

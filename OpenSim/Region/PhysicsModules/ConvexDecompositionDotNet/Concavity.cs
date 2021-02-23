@@ -191,7 +191,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 volume += det(p1, p2, p3); // compute the volume of the tetrahedran relative to the origin.
             }
 
-            volume *= (1.0f / 6.0f);
+            volume *= 1.0f / 6.0f;
             if (volume < 0f)
                 return -volume;
             return volume;

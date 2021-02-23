@@ -35,8 +35,8 @@ namespace OpenSim.Framework.Monitoring
     // Built this way mostly so histograms and history can be created.
     public class CounterStat : Stat
 {
-    private SortedDictionary<string, EventHistogram> m_histograms;
-    private object counterLock = new object();
+    private readonly SortedDictionary<string, EventHistogram> m_histograms;
+    private readonly object counterLock = new object();
 
     public CounterStat(
                         string shortName,

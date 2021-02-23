@@ -501,7 +501,7 @@ namespace OpenSim.Region.Framework.Scenes
                     if (sp.ControllingClient.AgentId != remoteClient.AgentId)
                     {
                         if (!discardableEffects ||
-                           (discardableEffects && ShouldSendDiscardableEffect(remoteClient, sp)))
+                           discardableEffects && ShouldSendDiscardableEffect(remoteClient, sp))
                         {
                             //m_log.DebugFormat("[YYY]: Sending to {0}", sp.UUID);
                             sp.ControllingClient.SendViewerEffect(effectBlockArray);
@@ -527,8 +527,8 @@ namespace OpenSim.Region.Framework.Scenes
             //public int SortOrder;
         }
 
-        static private ConcurrentQueue<DescendentsRequestData> m_descendentsRequestQueue = new ConcurrentQueue<DescendentsRequestData>();
-        static private object m_descendentsRequestLock = new object();
+        static private readonly ConcurrentQueue<DescendentsRequestData> m_descendentsRequestQueue = new ConcurrentQueue<DescendentsRequestData>();
+        static private readonly object m_descendentsRequestLock = new object();
         static private bool m_descendentsRequestProcessing = false;
 
         /// <summary>

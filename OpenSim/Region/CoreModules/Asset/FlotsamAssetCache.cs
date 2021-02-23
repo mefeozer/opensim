@@ -80,7 +80,7 @@ namespace OpenSim.Region.CoreModules.Asset
         private ulong m_MemoryHits;
         private ulong m_weakRefHits;
 
-        private static HashSet<string> m_CurrentlyWriting = new HashSet<string>();
+        private static readonly HashSet<string> m_CurrentlyWriting = new HashSet<string>();
         private static ObjectJobEngine m_assetFileWriteWorker = null;
         private static HashSet<string> m_defaultAssets = new HashSet<string>();
 
@@ -107,7 +107,7 @@ namespace OpenSim.Region.CoreModules.Asset
         private System.Timers.Timer m_CacheCleanTimer;
 
         private IAssetService m_AssetService;
-        private List<Scene> m_Scenes = new List<Scene>();
+        private readonly List<Scene> m_Scenes = new List<Scene>();
         private readonly object timerLock = new object();
 
         private Dictionary<string,WeakReference> weakAssetReferences = new Dictionary<string, WeakReference>();
@@ -293,7 +293,7 @@ namespace OpenSim.Region.CoreModules.Asset
                 {
                     if(!m_timerRunning)
                     {
-                        if (m_FileCacheEnabled && (m_FileExpiration > TimeSpan.Zero) && (m_FileExpirationCleanupTimer > TimeSpan.Zero))
+                        if (m_FileCacheEnabled && m_FileExpiration > TimeSpan.Zero && m_FileExpirationCleanupTimer > TimeSpan.Zero)
                         {
                             m_CacheCleanTimer = new System.Timers.Timer(m_FileExpirationCleanupTimer.TotalMilliseconds)
                             {
@@ -839,7 +839,7 @@ namespace OpenSim.Region.CoreModules.Asset
                     if (string.IsNullOrEmpty(id))
                         continue; //??
 
-                    if (m_defaultAssets.Contains(id) ||(UUID.TryParse(id, out UUID uid) && gids.ContainsKey(uid)))
+                    if (m_defaultAssets.Contains(id) ||UUID.TryParse(id, out UUID uid) && gids.ContainsKey(uid))
                     {
                         ++cooldown;
                         continue;

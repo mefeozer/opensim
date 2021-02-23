@@ -34,7 +34,7 @@ namespace OpenSim.Data.Null
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<UUID, XGroup> m_groups = new Dictionary<UUID, XGroup>();
+        private readonly Dictionary<UUID, XGroup> m_groups = new Dictionary<UUID, XGroup>();
 
         public NullXGroupData(string connectionString, string realm) {}
 

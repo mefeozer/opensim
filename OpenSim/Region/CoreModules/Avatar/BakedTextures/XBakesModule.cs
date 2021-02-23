@@ -52,7 +52,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private UTF8Encoding enc = new UTF8Encoding();
         private string m_URL = string.Empty;
-        private static XmlSerializer m_serializer = new XmlSerializer(typeof(AssetBase));
+        private static readonly XmlSerializer m_serializer = new XmlSerializer(typeof(AssetBase));
         private static bool m_enabled = false;
 
         private static IServiceAuth m_Auth;

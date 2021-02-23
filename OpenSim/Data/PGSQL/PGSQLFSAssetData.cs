@@ -39,7 +39,7 @@ namespace OpenSim.Data.PGSQL
     public class PGSQLFSAssetData : IFSAssetDataPlugin
     {
         private const string _migrationStore = "FSAssetStore";
-        private static string m_Table = "fsassets";
+        private static readonly string m_Table = "fsassets";
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private long m_ticksToEpoch;
 
@@ -272,7 +272,7 @@ namespace OpenSim.Data.PGSQL
                     {
                         while (reader.Read())
                         {
-                            if ((imported % 100) == 0)
+                            if (imported % 100 == 0)
                             {
                                 MainConsole.Instance.Output(string.Format("{0} assets imported so far", imported));
                             }

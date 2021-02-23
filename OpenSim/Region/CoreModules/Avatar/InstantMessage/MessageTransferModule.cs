@@ -443,7 +443,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             public MessageResultNotification result;
         };
 
-        private Queue<GIM> pendingInstantMessages = new Queue<GIM>();
+        private readonly Queue<GIM> pendingInstantMessages = new Queue<GIM>();
         private int numInstantMessageThreads = 0;
 
         private void SendGridInstantMessageViaXMLRPC(GridInstantMessage im, MessageResultNotification result)

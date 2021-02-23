@@ -39,12 +39,12 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
     public class Command : ICommand
     {
         //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private List<CommandArgument> m_args = new List<CommandArgument>();
+        private readonly List<CommandArgument> m_args = new List<CommandArgument>();
 
-        private Action<object[]> m_command;
-        private string m_help;
-        private string m_name;
-        private CommandIntentions m_intentions; //A permission type system could implement this and know what a command intends on doing.
+        private readonly Action<object[]> m_command;
+        private readonly string m_help;
+        private readonly string m_name;
+        private readonly CommandIntentions m_intentions; //A permission type system could implement this and know what a command intends on doing.
 
         public Command(string name, CommandIntentions intention, Action<object[]> command, string help)
         {
@@ -187,9 +187,9 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
     /// </summary>
     public class CommandArgument
     {
-        private string m_help;
-        private string m_name;
-        private string m_type;
+        private readonly string m_help;
+        private readonly string m_name;
+        private readonly string m_type;
         private object m_val;
 
         public CommandArgument(string name, string help, string type)

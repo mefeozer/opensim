@@ -39,11 +39,11 @@ namespace OpenSim.Data.Null
         /// <summary>
         /// Should we use the static instance for all invocations?
         /// </summary>
-        private bool m_useStaticInstance = true;
+        private readonly bool m_useStaticInstance = true;
 
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, RegionData>();
+readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, RegionData>();
 
         public NullRegionData(string connectionString, string realm)
         {
@@ -78,7 +78,7 @@ namespace OpenSim.Data.Null
                 {
                     // m_log.DebugFormat("[NULL REGION DATA]: comparing {0} to {1}", cleanName, r.RegionName.ToLower());
                     if (queryMatch(r.RegionName.ToLower()))
-                        return(r);
+                        return r;
                 }
             }
 

@@ -45,13 +45,13 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
         /// <value>
         /// Used in runtime class generation
         /// </summary>
-        private string m_generatedApiClassName;
+        private readonly string m_generatedApiClassName;
 
         public string Name
         {
             get { return m_name; }
         }
-        private string m_name;
+        private readonly string m_name;
 
         public string Help
         {
@@ -87,7 +87,7 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
         {
             get { return m_commands; }
         }
-        private Dictionary<string, ICommand> m_commands = new Dictionary<string, ICommand>();
+        private readonly Dictionary<string, ICommand> m_commands = new Dictionary<string, ICommand>();
 
         #region ICommander Members
 

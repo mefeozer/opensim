@@ -78,17 +78,17 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Effects
 
         private void BuildTiles(ITerrainChannel map, float height)
         {
-            int channelWidth = (int) Math.Floor((map.Width / num_w) * 0.8);
-            int channelHeight = (int) Math.Floor((map.Height / num_h) * 0.8);
-            int channelXOffset = (map.Width / num_w) - channelWidth;
-            int channelYOffset = (map.Height / num_h) - channelHeight;
+            int channelWidth = (int) Math.Floor(map.Width / num_w * 0.8);
+            int channelHeight = (int) Math.Floor(map.Height / num_h * 0.8);
+            int channelXOffset = map.Width / num_w - channelWidth;
+            int channelYOffset = map.Height / num_h - channelHeight;
 
             for (int x = 0; x < num_w; x++)
             {
                 for (int y = 0; y < num_h; y++)
                 {
-                    int xoff = ((channelXOffset + channelWidth) * x) + (channelXOffset / 2);
-                    int yoff = ((channelYOffset + channelHeight) * y) + (channelYOffset / 2);
+                    int xoff = (channelXOffset + channelWidth) * x + channelXOffset / 2;
+                    int yoff = (channelYOffset + channelHeight) * y + channelYOffset / 2;
 
                     bool[,] bitmap = new bool[map.Width,map.Height];
 

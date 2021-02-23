@@ -161,7 +161,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                       " World Position                  " +
                                       " <Part>:<Item>");
                 }
-                for(int i = 0; (i < numScripts) && (i < maxScripts); i++)
+                for(int i = 0; i < numScripts && i < maxScripts; i++)
                 {
                     outFile.WriteLine(instances[i].RunTestLs(flagFull));
                 }
@@ -367,7 +367,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(token is TokenName)
             {
                 FieldInfo field = typeof(OpenSim.Region.ScriptEngine.Shared.ScriptBase.ScriptBaseClass).GetField(((TokenName)token).val);
-                if((field != null) && field.IsPublic && (field.IsLiteral || (field.IsStatic && field.IsInitOnly)))
+                if(field != null && field.IsPublic && (field.IsLiteral || field.IsStatic && field.IsInitOnly))
                 {
                     return field.GetValue(null);
                 }
@@ -451,7 +451,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             if(a == null)
             {
-                return (b == null) ? 0 : 1;
+                return b == null ? 0 : 1;
             }
             if(b == null)
             {
@@ -514,8 +514,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      */
     public class LogInfoTextWriter: TextWriter
     {
-        private StringBuilder sb = new StringBuilder();
-        private ILog m_log;
+        private readonly StringBuilder sb = new StringBuilder();
+        private readonly ILog m_log;
         public LogInfoTextWriter(ILog m_log)
         {
             this.m_log = m_log;

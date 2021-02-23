@@ -36,7 +36,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
         public int id;
         public int vmax;
         public float rise;
-        private List<HullTriangle> tris;
+        private readonly List<HullTriangle> tris;
 
         public HullTriangle(int a, int b, int c, List<HullTriangle> tris)
             : base(a, b, c)
@@ -64,9 +64,9 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             {
                 int i1 = (i + 1) % 3;
                 int i2 = (i + 2) % 3;
-                if ((this)[i] == a && (this)[i1] == b)
+                if (this[i] == a && this[i1] == b)
                     return n[i2];
-                if ((this)[i] == b && (this)[i1] == a)
+                if (this[i] == b && this[i1] == a)
                     return n[i2];
             }
 
@@ -82,12 +82,12 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             {
                 int i1 = (i + 1) % 3;
                 int i2 = (i + 2) % 3;
-                if ((this)[i] == a && (this)[i1] == b)
+                if (this[i] == a && this[i1] == b)
                 {
                     n[i2] = value;
                     return;
                 }
-                if ((this)[i] == b && (this)[i1] == a)
+                if (this[i] == b && this[i1] == a)
                 {
                     n[i2] = value;
                     return;

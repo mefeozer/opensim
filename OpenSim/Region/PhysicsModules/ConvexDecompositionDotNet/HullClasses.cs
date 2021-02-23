@@ -50,8 +50,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
     public enum HullFlag : int
     {
         QF_DEFAULT = 0,
-        QF_TRIANGLES = (1 << 0), // report results as triangles, not polygons.
-        QF_SKIN_WIDTH = (1 << 2) // extrude hull based on this skin width
+        QF_TRIANGLES = 1 << 0, // report results as triangles, not polygons.
+        QF_SKIN_WIDTH = 1 << 2 // extrude hull based on this skin width
     }
 
     public enum HullError : int

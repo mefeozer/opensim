@@ -50,7 +50,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
     public class Meshmerizer : IMesher, INonSharedRegionModule
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static string LogHeader = "[MESH]";
+        private static readonly string LogHeader = "[MESH]";
 
         // Setting baseDir to a path will enable the dumping of raw files
         // raw files can be imported by blender so a visual inspection of the results can be done
@@ -68,13 +68,13 @@ namespace OpenSim.Region.PhysicsModule.Meshing
         private string decodedSculptMapPath = null;
         private bool useMeshiesPhysicsMesh = true;
 
-        private float minSizeForComplexMesh = 0.2f; // prims with all dimensions smaller than this will have a bounding box mesh
+        private readonly float minSizeForComplexMesh = 0.2f; // prims with all dimensions smaller than this will have a bounding box mesh
 
         private List<List<Vector3>> mConvexHulls = null;
         private List<Vector3> mBoundingHull = null;
 
         // Mesh cache. Static so it can be shared across instances of this class
-        private static Dictionary<ulong, Mesh> m_uniqueMeshes = new Dictionary<ulong, Mesh>();
+        private static readonly Dictionary<ulong, Mesh> m_uniqueMeshes = new Dictionary<ulong, Mesh>();
 
         #region INonSharedRegionModule
         public string Name
@@ -251,7 +251,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
             // As per http://wiki.secondlife.com/wiki/Mesh/Mesh_Asset_Format, some Mesh Level
             // of Detail Blocks (maps) contain just a NoGeometry key to signal there is no
             // geometry for this submesh.
-            if (subMeshData.ContainsKey("NoGeometry") && ((OSDBoolean)subMeshData["NoGeometry"]))
+            if (subMeshData.ContainsKey("NoGeometry") && (OSDBoolean)subMeshData["NoGeometry"])
                 return;
 
             OpenMetaverse.Vector3 posMax = ((OSDMap)subMeshData["PositionDomain"])["Max"].AsVector3();
@@ -303,7 +303,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
 
             if (primShape.SculptEntry)
             {
-                if (((OpenMetaverse.SculptType)primShape.SculptType) == SculptType.Mesh)
+                if ((OpenMetaverse.SculptType)primShape.SculptType == SculptType.Mesh)
                 {
                     if (!useMeshiesPhysicsMesh)
                         return null;
@@ -725,8 +725,8 @@ namespace OpenSim.Region.PhysicsModule.Meshing
                     break;
             }
 
-            bool mirror = ((primShape.SculptType & 128) != 0);
-            bool invert = ((primShape.SculptType & 64) != 0);
+            bool mirror = (primShape.SculptType & 128) != 0;
+            bool invert = (primShape.SculptType & 64) != 0;
 
             sculptMesh = new PrimMesher.SculptMesh((Bitmap)idata, sculptType, (int)lod, false, mirror, invert);
 
@@ -985,7 +985,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
 
             if (mesh != null)
             {
-                if ((!isPhysical) && size.X < minSizeForComplexMesh && size.Y < minSizeForComplexMesh && size.Z < minSizeForComplexMesh)
+                if (!isPhysical && size.X < minSizeForComplexMesh && size.Y < minSizeForComplexMesh && size.Z < minSizeForComplexMesh)
                 {
 #if SPAM
                 m_log.Debug("Meshmerizer: prim " + primName + " has a size of " + size.ToString() + " which is below threshold of " +

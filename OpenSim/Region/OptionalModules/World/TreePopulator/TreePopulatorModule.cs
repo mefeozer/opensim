@@ -107,7 +107,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
                 string[] field = copsedef.Split(delimiterChars);
 
                 m_name = field[1].Trim();
-                m_frozen = (copsedef[0] == 'F');
+                m_frozen = copsedef[0] == 'F';
                 m_tree_quantity = int.Parse(field[2]);
                 m_treeline_high = float.Parse(field[3], Culture.NumberFormatInfo);
                 m_treeline_low = float.Parse(field[4], Culture.NumberFormatInfo);
@@ -140,7 +140,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
 
             public override string ToString()
             {
-                string frozen = (m_frozen ? "F" : "A");
+                string frozen = m_frozen ? "F" : "A";
 
                 return string.Format("{0}TPM: {1}; {2}; {3:0.0}; {4:0.0}; {5:0.0}; {6}; {7:0.0}; {8:0.0}; {9:0.0}; {10:0.00};",
                     frozen,
@@ -346,7 +346,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
 
             lock(mylock)
             {
-                copse = new Copse(((string)args[0]), false);
+                copse = new Copse((string)args[0], false);
                 {
                     foreach (Copse cp in m_copses)
                     {
@@ -730,7 +730,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
                 if (!low && Util.RandomClass.NextDouble() < 0.75)
                     return;
 
-                int maxbirths =  (int)(copse.m_tree_quantity) - copse.m_trees.Count;
+                int maxbirths =  (int)copse.m_tree_quantity - copse.m_trees.Count;
                 if(maxbirths <= 1)
                     return;
 
@@ -836,8 +836,8 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
             randY *=  2.0f * r - 1.0f;
             position.Y = s_tree.AbsolutePosition.Y + (float)randY;
 
-            if (position.X > (m_scene.RegionInfo.RegionSizeX - 1) || position.X <= 0 ||
-                position.Y > (m_scene.RegionInfo.RegionSizeY - 1) || position.Y <= 0)
+            if (position.X > m_scene.RegionInfo.RegionSizeX - 1 || position.X <= 0 ||
+                position.Y > m_scene.RegionInfo.RegionSizeY - 1 || position.Y <= 0)
                 return;
 
             randX = position.X - copse.m_seed_point.X;

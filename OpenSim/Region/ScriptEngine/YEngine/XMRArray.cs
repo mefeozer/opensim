@@ -51,12 +51,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private bool enumrValid;                              // true: enumr set to return array[arrayValid]
                                                               // false: array[0..arrayValid-1] is all there is
-        private SortedDictionary<object, object> dnary;
+        private readonly SortedDictionary<object, object> dnary;
         private SortedDictionary<object, object>.Enumerator enumr;
         // enumerator used to fill 'array' past arrayValid to end of dictionary
         private int arrayValid;                               // number of elements in 'array' that have been filled in
         private KeyValuePair<object, object>[] array;         // list of kvp's that have been returned by ForEach() since last modification
-        private XMRInstAbstract inst;                         // script instance debited with heap use
+        private readonly XMRInstAbstract inst;                         // script instance debited with heap use
         private int heapUse;                                  // current heap use debit amount
 
         public static TokenTypeSDTypeDelegate countDelegate = new TokenTypeSDTypeDelegate(new TokenTypeInt(null), new TokenType[0]);
@@ -134,7 +134,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 dnary.Remove(key);
 
                  // Shrink the enumeration array, but always leave at least one element.
-                if((array != null) && (dnary.Count < array.Length / 2))
+                if(array != null && dnary.Count < array.Length / 2)
                 {
                     Array.Resize<KeyValuePair<object, object>>(ref array, array.Length / 2);
                 }
@@ -245,7 +245,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // Make sure we have filled the array up enough for requested element.
-            while((arrayValid <= number) && enumrValid && enumr.MoveNext())
+            while(arrayValid <= number && enumrValid && enumr.MoveNext())
             {
                 if(arrayValid >= array.Length)
                 {
@@ -369,7 +369,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private delegate int ComparerDelegate(object a, object b);
 
-        private static Dictionary<string, ComparerDelegate> comparers = BuildComparers();
+        private static readonly Dictionary<string, ComparerDelegate> comparers = BuildComparers();
 
         private static Dictionary<string, ComparerDelegate> BuildComparers()
         {
@@ -458,10 +458,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      */
     public class XMRArrayListKey
     {
-        private LSL_List original;
-        private object[] cleaned;
-        private int length;
-        private int hashCode;
+        private readonly LSL_List original;
+        private readonly object[] cleaned;
+        private readonly int length;
+        private readonly int hashCode;
 
         /**
          * @brief Construct a sanitized object[] from a list.
@@ -478,7 +478,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             for(int i = 0; i < len; i++)
             {
                 object v = XMR_Array.FixKey(given[i]);
-                hc += hc + ((hc < 0) ? 1 : 0);
+                hc += hc + (hc < 0 ? 1 : 0);
                 hc ^= v.GetHashCode();
                 cleaned[i] = v;
             }

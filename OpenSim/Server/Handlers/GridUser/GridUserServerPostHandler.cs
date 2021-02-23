@@ -44,7 +44,7 @@ namespace OpenSim.Server.Handlers.GridUser
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IGridUserService m_GridUserService;
+        private readonly IGridUserService m_GridUserService;
 
         public GridUserServerPostHandler(IGridUserService service, IServiceAuth auth) :
                 base("POST", "/griduser", auth)
@@ -216,7 +216,7 @@ namespace OpenSim.Server.Handlers.GridUser
             GridUserInfo[] pinfos = m_GridUserService.GetGridUserInfo(userIDs);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((pinfos == null) || ((pinfos != null) && (pinfos.Length == 0)))
+            if (pinfos == null || pinfos != null && pinfos.Length == 0)
                 result["result"] = "null";
             else
             {

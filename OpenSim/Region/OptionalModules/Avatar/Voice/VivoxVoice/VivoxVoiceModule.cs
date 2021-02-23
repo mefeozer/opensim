@@ -103,7 +103,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.VivoxVoice
         private static string m_vivoxChannelType;
         private static int    m_vivoxChannelClampingDistance;
 
-        private static Dictionary<string,string> m_parents = new Dictionary<string,string>();
+        private static readonly Dictionary<string,string> m_parents = new Dictionary<string,string>();
         private static bool m_dumpXml;
 
         private IConfig m_config;
@@ -969,7 +969,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.VivoxVoice
 
                     // skip if not a channel
                     if (!XmlFind(resp, "response.level0.channel-search.channels.channels.level4.type", i, out type) ||
-                        (type != "channel" && type != "positional_M"))
+                        type != "channel" && type != "positional_M")
                     {
                         m_log.Debug("[VivoxVoice] Skipping Channel " + i + " as it's not a channel.");
                         continue;
@@ -1204,7 +1204,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.VivoxVoice
         {
             string status;
             XmlFind(resp, "response.level0.status", out status);
-            return (status == "OK");
+            return status == "OK";
         }
 
         /// <summary>

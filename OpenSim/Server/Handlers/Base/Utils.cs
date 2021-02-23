@@ -79,7 +79,7 @@ namespace OpenSim.Server.Handlers.Base
             string auth = httpRequest.Headers["authentication"];
             // Authentication keys look like this:
             // http://orgrid.org:8002/<uuid>
-            if ((auth != null) && (!string.Empty.Equals(auth)) && auth != "None")
+            if (auth != null && !string.Empty.Equals(auth) && auth != "None")
             {
                 if (Uri.TryCreate(auth, UriKind.Absolute, out authUri))
                 {
@@ -98,7 +98,7 @@ namespace OpenSim.Server.Handlers.Base
             Stream innerStream = null;
             try
             {
-                if ((httpRequest.ContentType == "application/x-gzip" || httpRequest.Headers["Content-Encoding"] == "gzip") || (httpRequest.Headers["X-Content-Encoding"] == "gzip"))
+                if (httpRequest.ContentType == "application/x-gzip" || httpRequest.Headers["Content-Encoding"] == "gzip" || httpRequest.Headers["X-Content-Encoding"] == "gzip")
                 {
                     innerStream = inputStream;
                     inputStream = new GZipStream(innerStream, CompressionMode.Decompress);

@@ -70,7 +70,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <summary>
         /// Lock for enqueue and dequeue operations on the priority queue
         /// </summary>
-        private object m_syncRoot = new object();
+        private readonly object m_syncRoot = new object();
         public object SyncRoot {
             get { return m_syncRoot; }
         }
@@ -277,7 +277,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         private EntityUpdate[] m_items;
         private int m_size;
-        private int minCapacity;
+        private readonly int minCapacity;
 
         public PriorityMinHeap(int _capacity)
         {
@@ -296,7 +296,7 @@ namespace OpenSim.Region.Framework.Scenes
             int current, parent;
 
             for (current = index, parent = (current - 1) / 2;
-                    (current > 0) && m_items[parent].EntryOrder > itemEntryOrder;
+                    current > 0 && m_items[parent].EntryOrder > itemEntryOrder;
                     current = parent, parent = (current - 1) / 2)
             {
                 tmp = m_items[parent];
@@ -327,9 +327,9 @@ namespace OpenSim.Region.Framework.Scenes
             int child;
             int childlimit = m_size - 1;
 
-            for (current = index, child = (2 * current) + 1;
+            for (current = index, child = 2 * current + 1;
                         current < m_size / 2;
-                        current = child, child = (2 * current) + 1)
+                        current = child, child = 2 * current + 1)
             {
                 childItem = m_items[child];
                 if (child < childlimit)
@@ -360,8 +360,8 @@ namespace OpenSim.Region.Framework.Scenes
         {
             if (m_size == m_items.Length)
             {
-                int newcapacity = (int)((m_items.Length * 200L) / 100L);
-                if (newcapacity < (m_items.Length + MIN_CAPACITY))
+                int newcapacity = (int)(m_items.Length * 200L / 100L);
+                if (newcapacity < m_items.Length + MIN_CAPACITY)
                     newcapacity = m_items.Length + MIN_CAPACITY;
                 Array.Resize<EntityUpdate>(ref m_items, newcapacity);
             }

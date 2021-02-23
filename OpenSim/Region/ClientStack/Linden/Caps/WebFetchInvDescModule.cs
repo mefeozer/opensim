@@ -231,10 +231,10 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-            private Dictionary<UUID, Hashtable> responses = new Dictionary<UUID, Hashtable>();
-            private HashSet<UUID> dropedResponses = new HashSet<UUID>();
+            private readonly Dictionary<UUID, Hashtable> responses = new Dictionary<UUID, Hashtable>();
+            private readonly HashSet<UUID> dropedResponses = new HashSet<UUID>();
 
-            private WebFetchInvDescModule m_module;
+            private readonly WebFetchInvDescModule m_module;
 
             public PollServiceInventoryEventArgs(WebFetchInvDescModule module, string url, UUID pId) :
                 base(null, url, null, null, null, null, pId, int.MaxValue)

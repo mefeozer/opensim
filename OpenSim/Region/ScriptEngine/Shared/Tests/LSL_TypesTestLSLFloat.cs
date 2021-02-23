@@ -35,7 +35,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     public class LSL_TypesTestLSLFloat : OpenSimTestCase
     {
         // Used for testing equality of two floats.
-        private double _lowPrecisionTolerance = 0.000001;
+        private readonly double _lowPrecisionTolerance = 0.000001;
 
         private Dictionary<int, double> m_intDoubleSet;
         private Dictionary<double, double> m_doubleDoubleSet;
@@ -644,10 +644,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             LSL_Types.LSLFloat testFloat;
 
-            testFloat = (1 == 0);
+            testFloat = 1 == 0;
             Assert.That(testFloat.value, new DoubleToleranceConstraint(0.0, _lowPrecisionTolerance));
 
-            testFloat = (1 == 1);
+            testFloat = 1 == 1;
             Assert.That(testFloat.value, new DoubleToleranceConstraint(1.0, _lowPrecisionTolerance));
 
             testFloat = false;

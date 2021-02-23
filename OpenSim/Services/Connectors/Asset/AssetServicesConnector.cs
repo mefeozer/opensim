@@ -52,7 +52,7 @@ namespace OpenSim.Services.Connectors
         // Keeps track of concurrent requests for the same asset, so that it's only loaded once.
         // Maps: Asset ID -> Handlers which will be called when the asset has been loaded
 
-        private Dictionary<string, List<AssetRetrievedEx>> m_AssetHandlers = new Dictionary<string, List<AssetRetrievedEx>>();
+        private readonly Dictionary<string, List<AssetRetrievedEx>> m_AssetHandlers = new Dictionary<string, List<AssetRetrievedEx>>();
 
         public AssetServicesConnector()
         {
@@ -313,7 +313,7 @@ namespace OpenSim.Services.Connectors
             return exist;
         }
 
-        string stringUUIDZero = UUID.Zero.ToString();
+        readonly string stringUUIDZero = UUID.Zero.ToString();
 
         public virtual string Store(AssetBase asset)
         {

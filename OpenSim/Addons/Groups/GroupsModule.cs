@@ -47,7 +47,7 @@ namespace OpenSim.Groups
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Scene> m_sceneList = new List<Scene>();
+        private readonly List<Scene> m_sceneList = new List<Scene>();
 
         private IMessageTransferModule m_msgTransferModule = null;
 
@@ -357,7 +357,7 @@ namespace OpenSim.Groups
 
             //m_log.DebugFormat("[Groups]: IM From {0} to {1} msg {2} type {3}", im.fromAgentID, im.toAgentID, im.message, (InstantMessageDialog)im.dialog);
             // Group invitations
-            if ((im.dialog == (byte)InstantMessageDialog.GroupInvitationAccept) || (im.dialog == (byte)InstantMessageDialog.GroupInvitationDecline))
+            if (im.dialog == (byte)InstantMessageDialog.GroupInvitationAccept || im.dialog == (byte)InstantMessageDialog.GroupInvitationDecline)
             {
                 UUID inviteID = new UUID(im.imSessionID);
                 GroupInviteInfo inviteInfo = m_groupData.GetAgentToGroupInvite(remoteAgentIDstr, inviteID);
@@ -374,7 +374,7 @@ namespace OpenSim.Groups
                 UUID invitee = UUID.Zero;
                 string tmp = string.Empty;
                 Util.ParseUniversalUserIdentifier(inviteInfo.AgentID, out invitee, out tmp, out tmp, out tmp, out tmp);
-                if ((inviteInfo != null) && (fromAgentID == invitee))
+                if (inviteInfo != null && fromAgentID == invitee)
                 {
                     // Accept
                     if (im.dialog == (byte)InstantMessageDialog.GroupInvitationAccept)
@@ -426,7 +426,7 @@ namespace OpenSim.Groups
             }
 
             // Group notices
-            else if ((im.dialog == (byte)InstantMessageDialog.GroupNotice))
+            else if (im.dialog == (byte)InstantMessageDialog.GroupNotice)
             {
                 if (!m_groupNoticesEnabled)
                     return;
@@ -640,7 +640,7 @@ namespace OpenSim.Groups
             // TODO:FIXME: Use a presense server of some kind to find out where the
             // client actually is, and try contacting that region directly to notify them,
             // or provide the notification via xmlrpc update queue
-            else if ((im.dialog == 210))
+            else if (im.dialog == 210)
             {
                 // This is sent from the region that the ejectee was ejected from
                 // if it's being delivered here, then the ejectee is here
@@ -1116,7 +1116,7 @@ namespace OpenSim.Groups
             {
                 m_log.DebugFormat("[Groups]: Group Notice {0} not found, composing empty message.", groupNoticeID);
                 msg.fromAgentID = UUID.Zero.Guid;
-                msg.timestamp = (uint)Util.UnixTimeSinceEpoch(); ;
+                msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
                 msg.fromAgentName = string.Empty;
                 msg.message = string.Empty;
                 msg.binaryBucket = new byte[0];
@@ -1231,7 +1231,7 @@ namespace OpenSim.Groups
             GroupRecord groupInfo = m_groupData.GetGroupRecord(agentID.ToString(), groupID, null);
 
             UserAccount account = m_sceneList[0].UserAccountService.GetUserAccount(regionInfo.ScopeID, ejecteeID);
-            if ((groupInfo == null) || (account == null))
+            if (groupInfo == null || account == null)
             {
                 return;
             }
@@ -1409,11 +1409,9 @@ namespace OpenSim.Groups
         {
             if (m_debugEnabled) m_log.DebugFormat("[Groups]: Updating scene title for {0} with title: {1}", AgentID, Title);
 
-            ScenePresence presence = null;
-
             foreach (Scene scene in m_sceneList)
             {
-                presence = scene.GetScenePresence(AgentID);
+                var presence = scene.GetScenePresence(AgentID);
                 if (presence != null)
                 {
                     if (presence.Grouptitle != Title)
@@ -1585,7 +1583,7 @@ namespace OpenSim.Groups
             return GetRequestingAgentID(client).ToString();
         }
 
-        private UUID GetRequestingAgentID(IClientAPI client)
+        private static UUID GetRequestingAgentID(IClientAPI client)
         {
             UUID requestingAgentID = UUID.Zero;
             if (client != null)

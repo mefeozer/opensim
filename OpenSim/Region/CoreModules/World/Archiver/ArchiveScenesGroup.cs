@@ -105,8 +105,8 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 uint curFirstX = row.First().Key;
                 uint curLastX = row.Last().Key;
 
-                firstX = (firstX == null) ? curFirstX : (firstX < curFirstX) ? firstX : curFirstX;
-                lastX = (lastX == null) ? curLastX : (lastX > curLastX) ? lastX : curLastX;
+                firstX = firstX == null ? curFirstX : firstX < curFirstX ? firstX : curFirstX;
+                lastX = lastX == null ? curLastX : lastX > curLastX ? lastX : curLastX;
             }
 
             Rect = new Rectangle((int)firstX, (int)firstY, (int)(lastX - firstX + 1), (int)(lastY - firstY + 1));

@@ -33,7 +33,7 @@ namespace OpenSim.Region.UserStatistics
 {
     public class Prototype_distributor : IStatsController
     {
-        private string jsFileName = "prototype.js";
+        private readonly string jsFileName = "prototype.js";
         private string prototypejs = string.Empty;
 
         public Prototype_distributor()

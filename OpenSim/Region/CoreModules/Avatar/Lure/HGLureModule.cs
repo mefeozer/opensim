@@ -183,7 +183,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Lure
             if (!(client.Scene is Scene))
                 return;
 
-            Scene scene = (Scene)(client.Scene);
+            Scene scene = (Scene)client.Scene;
             ScenePresence presence = scene.GetScenePresence(client.AgentId);
 
             message += "@" + m_thisGridInfo.GateKeeperURLNoEndSlash;

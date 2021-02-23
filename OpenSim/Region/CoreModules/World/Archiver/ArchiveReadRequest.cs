@@ -152,7 +152,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <summary>
         /// Used to cache lookups for valid uuids.
         /// </summary>
-        private IDictionary<UUID, bool> m_validUserUuids = new Dictionary<UUID, bool>();
+        private readonly IDictionary<UUID, bool> m_validUserUuids = new Dictionary<UUID, bool>();
 
         private IUserManagement m_UserMan;
         private IUserManagement UserManager
@@ -170,13 +170,13 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <summary>
         /// Used to cache lookups for valid groups.
         /// </summary>
-        private IDictionary<UUID, bool> m_validGroupUuids = new Dictionary<UUID, bool>();
+        private readonly IDictionary<UUID, bool> m_validGroupUuids = new Dictionary<UUID, bool>();
 
-        private IGroupsModule m_groupsModule;
+        private readonly IGroupsModule m_groupsModule;
 
-        private IAssetService m_assetService = null;
+        private readonly IAssetService m_assetService = null;
 
-        private UUID m_defaultUser;
+        private readonly UUID m_defaultUser;
 
         public ArchiveReadRequest(Scene scene, string loadPath, Guid requestId, Dictionary<string, object> options)
         {
@@ -615,7 +615,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 if (m_debug)
                     m_log.DebugFormat("[ARCHIVER]: Placing object from OAR in scene at position {0}.  ", pos.ToString());
 
-                bool isTelehub = (sceneObject.UUID == oldTelehubUUID) && (oldTelehubUUID != UUID.Zero);
+                bool isTelehub = sceneObject.UUID == oldTelehubUUID && oldTelehubUUID != UUID.Zero;
 
                 // For now, give all incoming scene objects new uuids.  This will allow scenes to be cloned
                 // on the same region server and multiple examples a single object archive to be imported
@@ -869,7 +869,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             }
 
             m_log.InfoFormat("[ARCHIVER]: Clearing {0} parcels.", parcels.Count);
-            bool setupDefaultParcel = (landData.Count == 0);
+            bool setupDefaultParcel = landData.Count == 0;
             scene.LandChannel.Clear(setupDefaultParcel);
 
             if (domerge)
@@ -932,7 +932,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                     {
                         // Note: we call GetGroupRecord() inside the lock because this GroupID is likely
                         // to occur many times, and we only want to query the groups service once.
-                        exists = (m_groupsModule.GetGroupRecord(uuid) != null);
+                        exists = m_groupsModule.GetGroupRecord(uuid) != null;
                     }
                     m_validGroupUuids.Add(uuid, exists);
                 }

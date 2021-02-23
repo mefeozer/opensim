@@ -47,7 +47,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
         {
             float d = DistToPt(p, plane);
 
-            if ((d + epsilon) > 0f)
+            if (d + epsilon > 0f)
                 return PlaneTriResult.PTR_FRONT; // it is 'in front' within the provided epsilon value.
 
             return PlaneTriResult.PTR_BACK;
@@ -74,9 +74,9 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
             float t = -(plane[3] + dot2) / dot1;
 
-            split.x = (dir[0] * t) + p1[0];
-            split.y = (dir[1] * t) + p1[1];
-            split.z = (dir[2] * t) + p1[2];
+            split.x = dir[0] * t + p1[0];
+            split.y = dir[1] * t + p1[1];
+            split.z = dir[2] * t + p1[2];
         }
 
         public static PlaneTriResult planeTriIntersection(float4 plane, FaceTri triangle, float epsilon, ref float3[] front, out int fcount, ref float3[] back, out int bcount)

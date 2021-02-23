@@ -88,7 +88,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.FreeSwitchVoice
 //        private string m_freeSwitchContext;
 
         private readonly Dictionary<string, string> m_UUIDName = new Dictionary<string, string>();
-        private Dictionary<string, string> m_ParcelAddress = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> m_ParcelAddress = new Dictionary<string, string>();
 
         private IConfig m_Config;
 

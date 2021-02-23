@@ -200,10 +200,10 @@ namespace OpenSim.Region.CoreModules.World.Region
                         currentAlertString += "1 minute";
                     else
                         currentAlertString += string.Format("{0} minutes", minutes);
-                    if ((currentAlert % 60) != 0)
+                    if (currentAlert % 60 != 0)
                         currentAlertString += " and ";
                 }
-                if ((currentAlert % 60) != 0)
+                if (currentAlert % 60 != 0)
                 {
                     int seconds = currentAlert % 60;
                     if (seconds == 1)

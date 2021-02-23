@@ -50,19 +50,19 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private bool m_shuttingdown;
-        private AssetBase m_missingImage;
-        private IAssetService m_assetCache;
-        private IJ2KDecoder m_j2kDecodeModule;
+        private readonly AssetBase m_missingImage;
+        private readonly IAssetService m_assetCache;
+        private readonly IJ2KDecoder m_j2kDecodeModule;
 
         /// <summary>
         /// Priority queue for determining which image to send first.
         /// </summary>
-        private C5.IntervalHeap<J2KImage> m_priorityQueue = new C5.IntervalHeap<J2KImage>(10, new J2KImageComparer());
+        private readonly C5.IntervalHeap<J2KImage> m_priorityQueue = new C5.IntervalHeap<J2KImage>(10, new J2KImageComparer());
 
         /// <summary>
         /// Used to control thread access to the priority queue.
         /// </summary>
-        private object m_syncRoot = new object();
+        private readonly object m_syncRoot = new object();
 
         /// <summary>
         /// Client served by this image manager

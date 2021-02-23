@@ -236,7 +236,7 @@ namespace OpenSim.Data.PGSQL
             }
             if (PGFieldType == "boolean")
             {
-                return (value.ToString() == "true");
+                return value.ToString() == "true";
             }
             if (PGFieldType == "timestamp with time zone")
             {

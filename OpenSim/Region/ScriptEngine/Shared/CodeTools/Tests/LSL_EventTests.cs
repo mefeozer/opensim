@@ -34,7 +34,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 {
     public class LSL_EventTests : OpenSimTestCase
     {
-        CSCodeGenerator m_cg = new CSCodeGenerator();
+        readonly CSCodeGenerator m_cg = new CSCodeGenerator();
 
         [Test]
         public void TestBadEvent()

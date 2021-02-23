@@ -161,7 +161,7 @@ namespace OpenSim.Services.GridService
             return null;
         }
 
-        private static IPEndPoint dummyIP = new IPEndPoint(0,0);
+        private static readonly IPEndPoint dummyIP = new IPEndPoint(0,0);
         private bool TryCreateLinkImpl(UUID scopeID, int xloc, int yloc, RegionURI rurl, UUID ownerID, out GridRegion regInfo)
         {
             m_log.InfoFormat("[HYPERGRID LINKER]: Link to {0} {1}, in <{2},{3}>",
@@ -241,7 +241,7 @@ namespace OpenSim.Services.GridService
             return true;
         }
 
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
 
         // From the command line link-region (obsolete) and the map
         private GridRegion TryLinkRegionToCoords(UUID scopeID, string mapName, int xloc, int yloc, out string reason)
@@ -293,7 +293,7 @@ namespace OpenSim.Services.GridService
         private bool TryCreateLinkImpl(UUID scopeID, int xloc, int yloc, string remoteRegionName, uint externalPort, string externalHostName, string serverURI, UUID ownerID, out GridRegion regInfo, out string reason)
         {
             m_log.InfoFormat("[HYPERGRID LINKER]: Link to {0} {1}, in <{2},{3}>",
-                ((serverURI == null) ? (externalHostName + ":" + externalPort) : serverURI),
+                serverURI == null ? externalHostName + ":" + externalPort : serverURI,
                 remoteRegionName, Util.WorldToRegionLoc((uint)xloc), Util.WorldToRegionLoc((uint)yloc));
 
             reason = string.Empty;
@@ -605,7 +605,7 @@ namespace OpenSim.Services.GridService
             {
                 if (cmdparams.Length < 3)
                 {
-                    if ((cmdparams.Length == 1) || (cmdparams.Length == 2))
+                    if (cmdparams.Length == 1 || cmdparams.Length == 2)
                     {
                         LoadXmlLinkFile(cmdparams);
                     }
@@ -717,7 +717,7 @@ namespace OpenSim.Services.GridService
                 for (int i = 0; i < cs.Configs.Count; i++)
                 {
                     bool skip = false;
-                    if ((excludeSections != null) && (excludeSections.Length > 0))
+                    if (excludeSections != null && excludeSections.Length > 0)
                     {
                         for (int n = 0; n < excludeSections.Length; n++)
                         {
@@ -758,13 +758,13 @@ namespace OpenSim.Services.GridService
 
             if (m_enableAutoMapping)
             {
-                xloc = (xloc % 100) + m_autoMappingX;
-                yloc = (yloc % 100) + m_autoMappingY;
+                xloc = xloc % 100 + m_autoMappingX;
+                yloc = yloc % 100 + m_autoMappingY;
             }
 
-            if (((realXLoc == 0) && (realYLoc == 0)) ||
-                (((realXLoc - xloc < 3896) || (xloc - realXLoc < 3896)) &&
-                 ((realYLoc - yloc < 3896) || (yloc - realYLoc < 3896))))
+            if (realXLoc == 0 && realYLoc == 0 ||
+                (realXLoc - xloc < 3896 || xloc - realXLoc < 3896) &&
+                (realYLoc - yloc < 3896 || yloc - realYLoc < 3896))
             {
                 xloc = Util.RegionToWorldLoc(xloc);
                 yloc = Util.RegionToWorldLoc(yloc);

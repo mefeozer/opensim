@@ -36,7 +36,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<string,Type> m_Apis = new Dictionary<string,Type>();
+        private readonly Dictionary<string,Type> m_Apis = new Dictionary<string,Type>();
 
         public string[] GetApis()
         {
@@ -71,7 +71,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             if (!m_Apis.ContainsKey(api))
                 return null;
 
-            IScriptApi ret = (IScriptApi)(Activator.CreateInstance(m_Apis[api]));
+            IScriptApi ret = (IScriptApi)Activator.CreateInstance(m_Apis[api]);
             return ret;
         }
     }

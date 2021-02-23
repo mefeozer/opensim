@@ -100,7 +100,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public ValidateHandshake HandshakeValidateMethodOverride = null;
 
-        private ManualResetEvent _receiveDone = new ManualResetEvent(false);
+        private readonly ManualResetEvent _receiveDone = new ManualResetEvent(false);
 
         private OSHttpRequest _request;
         private HTTPNetworkContext _networkContext;
@@ -109,12 +109,12 @@ namespace OpenSim.Framework.Servers.HttpServer
         private int _pingtime = 0;
         private byte[] _buffer;
         private int _bufferPosition;
-        private int _bufferLength;
+        private readonly int _bufferLength;
         private bool _closing;
         private bool _upgraded;
         private int _maxPayloadBytes = 41943040;
         private int _initialMsgTimeout = 0;
-        private int _defaultReadTimeout = 10000;
+        private readonly int _defaultReadTimeout = 10000;
 
         private const string HandshakeAcceptText =
             "HTTP/1.1 101 Switching Protocols\r\n" +

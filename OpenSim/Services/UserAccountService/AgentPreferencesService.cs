@@ -47,7 +47,7 @@ namespace OpenSim.Services.UserAccountService
         public AgentPrefs GetAgentPreferences(UUID principalID)
         {
             AgentPreferencesData d = m_Database.GetPrefs(principalID);
-            AgentPrefs prefs = (d == null) ? null : new AgentPrefs(d.Data);
+            AgentPrefs prefs = d == null ? null : new AgentPrefs(d.Data);
             return prefs;
         }
 
@@ -59,7 +59,7 @@ namespace OpenSim.Services.UserAccountService
             d.Data["AccessPrefs"] = data.AccessPrefs;
             d.Data["HoverHeight"] = data.HoverHeight.ToString();
             d.Data["Language"] = data.Language;
-            d.Data["LanguageIsPublic"] = (data.LanguageIsPublic ? "1" : "0");
+            d.Data["LanguageIsPublic"] = data.LanguageIsPublic ? "1" : "0";
             d.Data["PermEveryone"] = data.PermEveryone.ToString();
             d.Data["PermGroup"] = data.PermGroup.ToString();
             d.Data["PermNextOwner"] = data.PermNextOwner.ToString();

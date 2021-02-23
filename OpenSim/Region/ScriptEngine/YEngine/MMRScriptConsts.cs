@@ -67,7 +67,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 try
                 {
                     string s = ((ScriptEventCode)i).ToString();
-                    if((s.Length > 0) && (s[0] >= 'a') && (s[0] <= 'z'))
+                    if(s.Length > 0 && s[0] >= 'a' && s[0] <= 'z')
                     {
                         new ScriptConst(sc,
                                          "XMREVENTCODE_" + s,

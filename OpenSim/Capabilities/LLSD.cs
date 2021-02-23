@@ -639,11 +639,11 @@ namespace OpenSim.Framework.Capabilities
 
                             if (llsd[pos] != '\'') throw new LLSDParseException("Expected a map key");
                             int endquote = llsd.IndexOf('\'', pos + 1);
-                            if (endquote == -1 || (endquote + 1) >= llsd.Length || llsd[endquote + 1] != ':')
+                            if (endquote == -1 || endquote + 1 >= llsd.Length || llsd[endquote + 1] != ':')
                                 throw new LLSDParseException("Invalid map format");
                             string key = llsd.Substring(pos, endquote - pos);
                             key = key.Replace("'", string.Empty);
-                            pos += (endquote - pos) + 2;
+                            pos += endquote - pos + 2;
 
                             int end;
                             hashtable.Add(key, ParseTerseLLSD(llsd.Substring(pos), out end));

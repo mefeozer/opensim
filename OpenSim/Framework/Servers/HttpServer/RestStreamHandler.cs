@@ -32,7 +32,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 {
     public class RestStreamHandler : BaseStreamHandler
     {
-        private RestMethod m_restMethod;
+        private readonly RestMethod m_restMethod;
 
         public RestMethod Method
         {

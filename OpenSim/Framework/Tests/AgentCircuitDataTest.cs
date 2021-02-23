@@ -42,7 +42,7 @@ namespace OpenSim.Framework.Tests
         private UUID BaseFolder;
         private string CapsPath;
         private Dictionary<ulong, string> ChildrenCapsPaths;
-        private uint circuitcode = 0949030;
+        private readonly uint circuitcode = 0949030;
         private string firstname;
         private string lastname;
         private UUID SecureSessionId;
@@ -258,19 +258,19 @@ namespace OpenSim.Framework.Tests
                 AgentCircuitData Agent2Data = new AgentCircuitData();
                 Agent2Data.UnpackAgentCircuitData(map2);
 
-                Assert.That((Agent1Data.AgentID == Agent2Data.AgentID));
-                Assert.That((Agent1Data.BaseFolder == Agent2Data.BaseFolder));
+                Assert.That(Agent1Data.AgentID == Agent2Data.AgentID);
+                Assert.That(Agent1Data.BaseFolder == Agent2Data.BaseFolder);
 
-                Assert.That((Agent1Data.CapsPath == Agent2Data.CapsPath));
-                Assert.That((Agent1Data.child == Agent2Data.child));
-                Assert.That((Agent1Data.ChildrenCapSeeds.Count == Agent2Data.ChildrenCapSeeds.Count));
-                Assert.That((Agent1Data.circuitcode == Agent2Data.circuitcode));
-                Assert.That((Agent1Data.firstname == Agent2Data.firstname));
-                Assert.That((Agent1Data.InventoryFolder == Agent2Data.InventoryFolder));
-                Assert.That((Agent1Data.lastname == Agent2Data.lastname));
-                Assert.That((Agent1Data.SecureSessionID == Agent2Data.SecureSessionID));
-                Assert.That((Agent1Data.SessionID == Agent2Data.SessionID));
-                Assert.That((Agent1Data.startpos == Agent2Data.startpos));
+                Assert.That(Agent1Data.CapsPath == Agent2Data.CapsPath);
+                Assert.That(Agent1Data.child == Agent2Data.child);
+                Assert.That(Agent1Data.ChildrenCapSeeds.Count == Agent2Data.ChildrenCapSeeds.Count);
+                Assert.That(Agent1Data.circuitcode == Agent2Data.circuitcode);
+                Assert.That(Agent1Data.firstname == Agent2Data.firstname);
+                Assert.That(Agent1Data.InventoryFolder == Agent2Data.InventoryFolder);
+                Assert.That(Agent1Data.lastname == Agent2Data.lastname);
+                Assert.That(Agent1Data.SecureSessionID == Agent2Data.SecureSessionID);
+                Assert.That(Agent1Data.SessionID == Agent2Data.SessionID);
+                Assert.That(Agent1Data.startpos == Agent2Data.startpos);
             }
             catch (LitJson.JsonException)
             {
@@ -325,19 +325,19 @@ namespace OpenSim.Framework.Tests
            AgentCircuitData Agent2Data = new AgentCircuitData();
            Agent2Data.UnpackAgentCircuitData(map2);
 
-           Assert.That((Agent1Data.AgentID == Agent2Data.AgentID));
-           Assert.That((Agent1Data.BaseFolder == Agent2Data.BaseFolder));
+           Assert.That(Agent1Data.AgentID == Agent2Data.AgentID);
+           Assert.That(Agent1Data.BaseFolder == Agent2Data.BaseFolder);
 
-           Assert.That((Agent1Data.CapsPath == Agent2Data.CapsPath));
-           Assert.That((Agent1Data.child == Agent2Data.child));
-           Assert.That((Agent1Data.ChildrenCapSeeds.Count == Agent2Data.ChildrenCapSeeds.Count));
-           Assert.That((Agent1Data.circuitcode == Agent2Data.circuitcode));
-           Assert.That((Agent1Data.firstname == Agent2Data.firstname));
-           Assert.That((Agent1Data.InventoryFolder == Agent2Data.InventoryFolder));
-           Assert.That((Agent1Data.lastname == Agent2Data.lastname));
-           Assert.That((Agent1Data.SecureSessionID == Agent2Data.SecureSessionID));
-           Assert.That((Agent1Data.SessionID == Agent2Data.SessionID));
-           Assert.That((Agent1Data.startpos == Agent2Data.startpos));
+           Assert.That(Agent1Data.CapsPath == Agent2Data.CapsPath);
+           Assert.That(Agent1Data.child == Agent2Data.child);
+           Assert.That(Agent1Data.ChildrenCapSeeds.Count == Agent2Data.ChildrenCapSeeds.Count);
+           Assert.That(Agent1Data.circuitcode == Agent2Data.circuitcode);
+           Assert.That(Agent1Data.firstname == Agent2Data.firstname);
+           Assert.That(Agent1Data.InventoryFolder == Agent2Data.InventoryFolder);
+           Assert.That(Agent1Data.lastname == Agent2Data.lastname);
+           Assert.That(Agent1Data.SecureSessionID == Agent2Data.SecureSessionID);
+           Assert.That(Agent1Data.SessionID == Agent2Data.SessionID);
+           Assert.That(Agent1Data.startpos == Agent2Data.startpos);
 
            /*
             Enable this once VisualParams go in the packing method

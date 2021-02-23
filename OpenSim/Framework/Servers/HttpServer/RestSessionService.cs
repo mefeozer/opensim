@@ -188,8 +188,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         private static readonly ILog m_log
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private RestDeserialiseMethod<TRequest, TResponse> m_method;
-        private CheckIdentityMethod m_smethod;
+        private readonly RestDeserialiseMethod<TRequest, TResponse> m_method;
+        private readonly CheckIdentityMethod m_smethod;
 
         public RestDeserialiseSecureHandler(
              string httpMethod, string path,
@@ -245,12 +245,12 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// <summary>
         /// The operation to perform once trust has been established.
         /// </summary>
-        private RestDeserialiseMethod<TRequest, TResponse> m_method;
+        private readonly RestDeserialiseMethod<TRequest, TResponse> m_method;
 
         /// <summary>
         /// The method used to check whether a request is trusted.
         /// </summary>
-        private CheckTrustedSourceMethod m_tmethod;
+        private readonly CheckTrustedSourceMethod m_tmethod;
 
         public RestDeserialiseTrustedHandler(string httpMethod, string path, RestDeserialiseMethod<TRequest, TResponse> method, CheckTrustedSourceMethod tmethod)
             : base(httpMethod, path)

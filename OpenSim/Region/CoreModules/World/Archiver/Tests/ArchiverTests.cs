@@ -63,7 +63,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
 
         protected TaskInventoryItem m_soundItem;
 
-        private  AutoResetEvent m_oarEvent = new AutoResetEvent(false);
+        private readonly AutoResetEvent m_oarEvent = new AutoResetEvent(false);
 
         [SetUp]
         public override void SetUp()
@@ -802,7 +802,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
                     }
                     else
                     {
-                        scene = m_sceneHelpers.SetupScene(string.Format("Unit test region {0}", (y * WIDTH) + x + 1), UUID.Random(), 1000 + x, 1000 + y);
+                        scene = m_sceneHelpers.SetupScene(string.Format("Unit test region {0}", y * WIDTH + x + 1), UUID.Random(), 1000 + x, 1000 + y);
                         SceneHelpers.SetupSceneModules(scene, new ArchiverModule(), m_serialiserModule, new TerrainModule());
                     }
                     scenes.Add(scene);
@@ -925,7 +925,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
                     }
                     else
                     {
-                        scene = m_sceneHelpers.SetupScene(string.Format("Unit test region {0}", (y * WIDTH) + x + 1), UUID.Random(), 1000 + x, 1000 + y);
+                        scene = m_sceneHelpers.SetupScene(string.Format("Unit test region {0}", y * WIDTH + x + 1), UUID.Random(), 1000 + x, 1000 + y);
                         SceneHelpers.SetupSceneModules(scene, new ArchiverModule(), m_serialiserModule, new TerrainModule());
                     }
                 }

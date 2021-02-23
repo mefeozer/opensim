@@ -51,7 +51,7 @@ namespace OpenSim.Region.Framework.Scenes
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static HashSet<UUID> ToSkip = new HashSet<UUID>()
+        private static readonly HashSet<UUID> ToSkip = new HashSet<UUID>()
         {
             new UUID("11111111-1111-0000-0000-000100bba000"),
             new UUID("5a9f4a74-30f2-821c-b88d-70499d3e7183"),
@@ -797,7 +797,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
         }
 
-        private static byte[] wearableSeps = new byte[]{(byte)' ', (byte)'\t'};
+        private static readonly byte[] wearableSeps = new byte[]{(byte)' ', (byte)'\t'};
         /// <summary>
         /// Record the uuids referenced by the given wearable asset
         /// </summary>
@@ -957,20 +957,20 @@ namespace OpenSim.Region.Framework.Scenes
 
 
         // bad ugly
-        private static byte[] UUIDB = osUTF8.GetASCIIBytes("UUID");
-        private static byte[] uuidB = osUTF8.GetASCIIBytes("uuid");
-        private static byte[] SOPAnimsB = osUTF8.GetASCIIBytes("SOPAnims");
-        private static byte[] CollisionSoundB = osUTF8.GetASCIIBytes("CollisionSound");
-        private static byte[] SoundIDB = osUTF8.GetASCIIBytes("SoundID");
-        private static byte[] SculptTextureB = osUTF8.GetASCIIBytes("SculptTexture");
-        private static byte[] ExtraParamsB = osUTF8.GetASCIIBytes("ExtraParams");
-        private static byte[] ParticleSystemB = osUTF8.GetASCIIBytes("ParticleSystem");
-        private static byte[] TextureEntryB = osUTF8.GetASCIIBytes("TextureEntry");
-        private static byte[] TaskInventoryB = osUTF8.GetASCIIBytes("TaskInventory");
-        private static byte[] endTaskInventoryB = osUTF8.GetASCIIBytes("/TaskInventory");
-        private static byte[] AssetIDB = osUTF8.GetASCIIBytes("AssetID");
-        private static byte[] texturesB = osUTF8.GetASCIIBytes("textures");
-        private static byte[] parametersB = osUTF8.GetASCIIBytes("parameters");
+        private static readonly byte[] UUIDB = osUTF8.GetASCIIBytes("UUID");
+        private static readonly byte[] uuidB = osUTF8.GetASCIIBytes("uuid");
+        private static readonly byte[] SOPAnimsB = osUTF8.GetASCIIBytes("SOPAnims");
+        private static readonly byte[] CollisionSoundB = osUTF8.GetASCIIBytes("CollisionSound");
+        private static readonly byte[] SoundIDB = osUTF8.GetASCIIBytes("SoundID");
+        private static readonly byte[] SculptTextureB = osUTF8.GetASCIIBytes("SculptTexture");
+        private static readonly byte[] ExtraParamsB = osUTF8.GetASCIIBytes("ExtraParams");
+        private static readonly byte[] ParticleSystemB = osUTF8.GetASCIIBytes("ParticleSystem");
+        private static readonly byte[] TextureEntryB = osUTF8.GetASCIIBytes("TextureEntry");
+        private static readonly byte[] TaskInventoryB = osUTF8.GetASCIIBytes("TaskInventory");
+        private static readonly byte[] endTaskInventoryB = osUTF8.GetASCIIBytes("/TaskInventory");
+        private static readonly byte[] AssetIDB = osUTF8.GetASCIIBytes("AssetID");
+        private static readonly byte[] texturesB = osUTF8.GetASCIIBytes("textures");
+        private static readonly byte[] parametersB = osUTF8.GetASCIIBytes("parameters");
 
         /// <summary>
         /// Get all the asset uuids associated with a given object.  This includes both those directly associated with

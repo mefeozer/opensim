@@ -45,7 +45,7 @@ namespace OpenSim.Data.PGSQL
         private PGSQLManager _Database;
         private string m_connectionString;
         private FieldInfo[] _Fields;
-        private Dictionary<string, FieldInfo> _FieldMap = new Dictionary<string, FieldInfo>();
+        private readonly Dictionary<string, FieldInfo> _FieldMap = new Dictionary<string, FieldInfo>();
 
         #region Public methods
 
@@ -562,7 +562,7 @@ namespace OpenSim.Data.PGSQL
                         else
                             transaction.Rollback();
 
-                        return (ret != 0);
+                        return ret != 0;
                     }
                 }
                 catch (Exception ex)

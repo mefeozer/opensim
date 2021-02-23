@@ -145,7 +145,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             // Agent remains a child until the client triggers complete movement
             Assert.That(spAfterCrossSceneB.IsChildAgent, Is.True);
 
-            TestClient sceneBTc = ((TestClient)spAfterCrossSceneB.ControllingClient);
+            TestClient sceneBTc = (TestClient)spAfterCrossSceneB.ControllingClient;
 
             int agentMovementCompleteReceived = 0;
             sceneBTc.OnReceivedMoveAgentIntoRegion += (ri, pos, look) => agentMovementCompleteReceived++;
@@ -230,7 +230,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Assert.That(spAfterCrossSceneB.IsChildAgent, Is.True);
 
             // sceneB should ignore unauthorized attempt to upgrade agent to root
-            TestClient sceneBTc = ((TestClient)spAfterCrossSceneB.ControllingClient);
+            TestClient sceneBTc = (TestClient)spAfterCrossSceneB.ControllingClient;
 
             int agentMovementCompleteReceived = 0;
             sceneBTc.OnReceivedMoveAgentIntoRegion += (ri, pos, look) => agentMovementCompleteReceived++;

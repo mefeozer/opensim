@@ -55,7 +55,7 @@ namespace OpenSim.Region.CoreModules
         private IConfig m_windConfig;
         private IWindModelPlugin m_activeWindPlugin = null;
         private string m_dWindPluginName = "SimpleRandomWind";
-        private Dictionary<string, IWindModelPlugin> m_availableWindPlugins = new Dictionary<string, IWindModelPlugin>();
+        private readonly Dictionary<string, IWindModelPlugin> m_availableWindPlugins = new Dictionary<string, IWindModelPlugin>();
 
         // Simplified windSpeeds based on the fact that the client protocal tracks at a resolution of 16m
         private Vector2[] windSpeeds = new Vector2[16 * 16];
@@ -242,7 +242,7 @@ namespace OpenSim.Region.CoreModules
         {
             ValidateConsole();
 
-            if ((cmdparams.Length != 4)
+            if (cmdparams.Length != 4
                 || !cmdparams[1].Equals("base"))
             {
                 MainConsole.Instance.Output(
@@ -301,8 +301,8 @@ namespace OpenSim.Region.CoreModules
             ValidateConsole();
 
             // wind <plugin> <param> [value]
-            if ((cmdparams.Length != 4)
-                && (cmdparams.Length != 3))
+            if (cmdparams.Length != 4
+                && cmdparams.Length != 3)
             {
                 MainConsole.Instance.Output("Usage: wind <plugin> <param> [value]");
                 return;
@@ -413,7 +413,7 @@ namespace OpenSim.Region.CoreModules
         /// </summary>
         public void WindUpdate()
         {
-            if ((!m_ready || m_inUpdate || (m_frame++ % m_frameUpdateRate) != 0))
+            if (!m_ready || m_inUpdate || m_frame++ % m_frameUpdateRate != 0)
                 return;
 
             m_inUpdate = true;

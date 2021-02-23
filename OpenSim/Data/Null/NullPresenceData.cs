@@ -36,7 +36,7 @@ namespace OpenSim.Data.Null
 
         public static NullPresenceData Instance;
 
-        Dictionary<UUID, PresenceData> m_presenceData = new Dictionary<UUID, PresenceData>();
+        readonly Dictionary<UUID, PresenceData> m_presenceData = new Dictionary<UUID, PresenceData>();
 
         public NullPresenceData(string connectionString, string realm)
         {

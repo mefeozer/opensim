@@ -60,7 +60,7 @@ namespace OpenSim.Region.CoreModules.World.Land
         private readonly object m_listTransactionsLock = new object();
 
         protected readonly ExpiringCacheOS<UUID, bool> m_groupMemberCache = new ExpiringCacheOS<UUID, bool>();
-        IDwellModule m_dwellModule;
+        readonly IDwellModule m_dwellModule;
 
         private bool[,] m_landBitmap;
         public bool[,] LandBitmap
@@ -383,7 +383,7 @@ namespace OpenSim.Region.CoreModules.World.Land
         public ILandObject Copy()
         {
             ILandObject newLand = new LandObject(LandData, m_scene);
-            newLand.LandBitmap = (bool[,]) (LandBitmap.Clone());
+            newLand.LandBitmap = (bool[,]) LandBitmap.Clone();
             return newLand;
         }
 
@@ -472,7 +472,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                 regionFlags = estateModule.GetRegionFlags();
 
             int seq_id;
-            if (snap_selection && (sequence_id == 0))
+            if (snap_selection && sequence_id == 0)
             {
                 seq_id = m_lastSeqId;
             }
@@ -633,7 +633,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                 newData.Flags = preserve | (args.ParcelFlags & allowedDelta);
 
                 uint curdelta = LandData.Flags ^ newData.Flags;
-                curdelta &= (uint)(ParcelFlags.SoundLocal);
+                curdelta &= (uint)ParcelFlags.SoundLocal;
 
                 if(curdelta != 0 || newData.SeeAVs != LandData.SeeAVs)
                     needOverlay = true;
@@ -657,7 +657,7 @@ namespace OpenSim.Region.CoreModules.World.Land
             newData.AuthBuyerID = UUID.Zero;
             newData.Flags &= ~(uint) (ParcelFlags.ForSale | ParcelFlags.ForSaleObjects | ParcelFlags.SellParcelObjects | ParcelFlags.ShowDirectory);
 
-            bool sellObjects = (LandData.Flags & (uint)(ParcelFlags.SellParcelObjects)) != 0
+            bool sellObjects = (LandData.Flags & (uint)ParcelFlags.SellParcelObjects) != 0
                 && !LandData.IsGroupOwned && !groupOwned;
             UUID previousOwner = LandData.OwnerID;
 
@@ -798,9 +798,9 @@ namespace OpenSim.Region.CoreModules.World.Land
             if ((LandData.Flags & (uint) ParcelFlags.UseAccessList) == 0)
             {
                 bool adults = m_scene.RegionInfo.EstateSettings.DoDenyMinors &&
-                    (m_scene.RegionInfo.EstateSettings.DenyMinors || ((LandData.Flags & (uint)ParcelFlags.DenyAgeUnverified) != 0));
+                    (m_scene.RegionInfo.EstateSettings.DenyMinors || (LandData.Flags & (uint)ParcelFlags.DenyAgeUnverified) != 0);
                 bool anonymous = m_scene.RegionInfo.EstateSettings.DoDenyAnonymous &&
-                    (m_scene.RegionInfo.EstateSettings.DenyAnonymous || ((LandData.Flags & (uint)ParcelFlags.DenyAnonymous) != 0));
+                    (m_scene.RegionInfo.EstateSettings.DenyAnonymous || (LandData.Flags & (uint)ParcelFlags.DenyAnonymous) != 0);
                 if(adults || anonymous)
                 {
                     int userflags;
@@ -813,9 +813,9 @@ namespace OpenSim.Region.CoreModules.World.Land
                     else
                         userflags = m_scene.GetUserFlags(avatar);
 
-                    if(adults && ((userflags & 32) == 0))
+                    if(adults && (userflags & 32) == 0)
                         return true;
-                    if(anonymous && ((userflags & 4) == 0))
+                    if(anonymous && (userflags & 4) == 0)
                         return true;
                 }
                 return false;
@@ -904,8 +904,8 @@ namespace OpenSim.Region.CoreModules.World.Land
                 try
                 {
                     over =
-                        m_scene.LandChannel.GetLandObject(Util.Clamp<int>((int)Math.Round(avatar.AbsolutePosition.X), 0, ((int)m_scene.RegionInfo.RegionSizeX - 1)),
-                                                          Util.Clamp<int>((int)Math.Round(avatar.AbsolutePosition.Y), 0, ((int)m_scene.RegionInfo.RegionSizeY - 1)));
+                        m_scene.LandChannel.GetLandObject(Util.Clamp<int>((int)Math.Round(avatar.AbsolutePosition.X), 0, (int)m_scene.RegionInfo.RegionSizeX - 1),
+                                                          Util.Clamp<int>((int)Math.Round(avatar.AbsolutePosition.Y), 0, (int)m_scene.RegionInfo.RegionSizeY - 1));
                 }
                 catch (Exception)
                 {
@@ -945,8 +945,8 @@ namespace OpenSim.Region.CoreModules.World.Land
                 try
                 {
                     over =
-                        m_scene.LandChannel.GetLandObject(Util.Clamp<int>((int)Math.Round(avatar.AbsolutePosition.X), 0, ((int)m_scene.RegionInfo.RegionSizeX - 1)),
-                                                        Util.Clamp<int>((int)Math.Round(avatar.AbsolutePosition.Y), 0, ((int)m_scene.RegionInfo.RegionSizeY - 1)));
+                        m_scene.LandChannel.GetLandObject(Util.Clamp<int>((int)Math.Round(avatar.AbsolutePosition.X), 0, (int)m_scene.RegionInfo.RegionSizeX - 1),
+                                                        Util.Clamp<int>((int)Math.Round(avatar.AbsolutePosition.Y), 0, (int)m_scene.RegionInfo.RegionSizeY - 1));
                 }
                 catch (Exception)
                 {
@@ -1029,7 +1029,7 @@ namespace OpenSim.Region.CoreModules.World.Land
             // we need to this way because viewer protocol does not seem reliable
             lock (m_listTransactionsLock)
             {
-                if ((!m_listTransactions.ContainsKey(flags)) ||
+                if (!m_listTransactions.ContainsKey(flags) ||
                                     m_listTransactions[flags] != transactionID)
                 {
                     m_listTransactions[flags] = transactionID;
@@ -1380,8 +1380,8 @@ namespace OpenSim.Region.CoreModules.World.Land
                     else
                     {
                         // arbitary rotation: hmmm should I be using (centreX - 0.5) and (centreY - 0.5) and round cosR and sinR to say only 5 decimal places?
-                        sx = centreX + (int)Math.Round((((double)x - centreX) * cosR) + (((double)y - centreY) * sinR)) - offsetX;
-                        sy = centreY + (int)Math.Round((((double)y - centreY) * cosR) - (((double)x - centreX) * sinR)) - offsetY;
+                        sx = centreX + (int)Math.Round(((double)x - centreX) * cosR + ((double)y - centreY) * sinR) - offsetX;
+                        sy = centreY + (int)Math.Round(((double)y - centreY) * cosR - ((double)x - centreX) * sinR) - offsetY;
                     }
                     if (sx >= 0 && sx < baseX && sy >= 0 && sy < baseY)
                     {
@@ -1708,7 +1708,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                             {
                                 m_log.Error("[LAND]: Unable to match a prim with it's owner.");
                             }
-                            if (obj.OwnerID == obj.GroupID && (!groups.Contains(obj.OwnerID)))
+                            if (obj.OwnerID == obj.GroupID && !groups.Contains(obj.OwnerID))
                                 groups.Add(obj.OwnerID);
                         }
                     }
@@ -1990,7 +1990,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                     {
                         if(sp.IsNPC || sp.IsDeleted || sp.currentParcelUUID != lgid)
                             return;
-                        cur += (now - sp.ParcelDwellTickMS);
+                        cur += now - sp.ParcelDwellTickMS;
                         sp.ParcelDwellTickMS = now;
                     });
                 
@@ -2017,7 +2017,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                 LandData.ParcelAccessList.Remove(entry);
                 ScenePresence presence;
 
-                if (m_scene.TryGetScenePresence(entry.AgentID, out presence) && (!presence.IsChildAgent))
+                if (m_scene.TryGetScenePresence(entry.AgentID, out presence) && !presence.IsChildAgent)
                 {
                     ILandObject land = m_scene.LandChannel.GetLandObject(presence.AbsolutePosition.X, presence.AbsolutePosition.Y);
                     if (land.LandData.LocalID == LandData.LocalID)

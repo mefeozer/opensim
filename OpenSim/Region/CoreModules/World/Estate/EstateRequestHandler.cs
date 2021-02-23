@@ -49,7 +49,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
         protected EstateModule m_EstateModule;
         protected object m_RequestLock = new object();
-        private string token;
+        private readonly string token;
 
         public EstateSimpleRequestHandler(EstateModule fmodule, string _token) : base("/estate")
         {

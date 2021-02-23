@@ -104,7 +104,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         private delegate T DefaultGetter<T>(string settingName, T defaultValue);
         private bool m_enabled;
         private ICommandConsole m_console;
-        private List<Scene> m_Scenes = new List<Scene> ();
+        private readonly List<Scene> m_Scenes = new List<Scene> ();
         private Timer m_masterTimer;
         private bool m_busy;
         private int m_KeepFilesForDays = -1;

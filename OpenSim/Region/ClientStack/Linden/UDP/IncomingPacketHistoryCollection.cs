@@ -36,10 +36,10 @@ namespace OpenSim.Region.ClientStack.LindenUDP
     public sealed class IncomingPacketHistoryCollection
     {
         private readonly uint[] m_items;
-        private HashSet<uint> m_hashSet;
+        private readonly HashSet<uint> m_hashSet;
         private int m_first;
         private int m_next;
-        private int m_capacity;
+        private readonly int m_capacity;
 
         public IncomingPacketHistoryCollection(int capacity)
         {

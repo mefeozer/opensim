@@ -57,8 +57,8 @@ namespace OpenSim.ApplicationPlugins.RemoteController
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static bool m_defaultAvatarsLoaded = false;
-        private static object m_requestLock = new object();
-        private static object m_saveOarLock = new object();
+        private static readonly object m_requestLock = new object();
+        private static readonly object m_saveOarLock = new object();
 
         private OpenSimBase m_application;
         private IHttpServer m_httpServer;
@@ -67,8 +67,8 @@ namespace OpenSim.ApplicationPlugins.RemoteController
         private string m_requiredPassword = string.Empty;
         private HashSet<string> m_accessIP;
 
-        private string m_name = "RemoteAdminPlugin";
-        private string m_version = "0.0";
+        private readonly string m_name = "RemoteAdminPlugin";
+        private readonly string m_version = "0.0";
         private string m_openSimVersion;
 
         public string Version
@@ -349,7 +349,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
                 bool notice = true;
                 if (requestData.ContainsKey("noticetype")
-                    && ((string)requestData["noticetype"] == "dialog"))
+                    && (string)requestData["noticetype"] == "dialog")
                 {
                     notice = false;
                 }
@@ -555,7 +555,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             string message;
 
             if (requestData.ContainsKey("shutdown")
-                && ((string) requestData["shutdown"] == "delayed")
+                && (string) requestData["shutdown"] == "delayed"
                 && requestData.ContainsKey("milliseconds"))
             {
                 timeout = int.Parse(requestData["milliseconds"].ToString());
@@ -570,7 +570,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             }
 
             if (requestData.ContainsKey("noticetype")
-                && ((string) requestData["noticetype"] == "dialog"))
+                && (string) requestData["noticetype"] == "dialog")
             {
                 m_application.SceneManager.ForEachScene(
 
@@ -584,7 +584,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             else
             {
                 if (!requestData.ContainsKey("noticetype")
-                    || ((string)requestData["noticetype"] != "none"))
+                    || (string)requestData["noticetype"] != "none")
                 {
                     m_application.SceneManager.ForEachScene(
                     delegate(Scene scene)
@@ -1418,7 +1418,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
                     // Set home position
 
-                    if ((null != regionXLocation) && (null != regionYLocation))
+                    if (null != regionXLocation && null != regionYLocation)
                     {
                         GridRegion home = scene.GridService.GetRegionByPosition(scopeID,
                                         (int)Util.RegionToWorldLoc((uint)regionXLocation), (int)Util.RegionToWorldLoc((uint)regionYLocation));
@@ -2264,9 +2264,9 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 set_flags = uint.TryParse(requestData["flags"].ToString(), out flags);
 
             m_log.InfoFormat("[RADMIN]: Received Reset Land Request group={0} musicURL={1} flags={2}",
-                (set_group ? groupID.ToString() : "unchanged"),
-                (set_music ? musicURL : "unchanged"),
-                (set_flags ? flags.ToString() : "unchanged"));
+                set_group ? groupID.ToString() : "unchanged",
+                set_music ? musicURL : "unchanged",
+                set_flags ? flags.ToString() : "unchanged");
 
             m_application.SceneManager.ForEachScene(delegate (Scene s)
             {
@@ -2440,8 +2440,8 @@ namespace OpenSim.ApplicationPlugins.RemoteController
         private void CheckRegionParams(Hashtable requestData, Hashtable responseData)
         {
             //Checks if region parameters exist and gives exeption if no parameters are given
-            if ((requestData.ContainsKey("region_id") && !string.IsNullOrEmpty((string)requestData["region_id"])) ||
-                (requestData.ContainsKey("region_name") && !string.IsNullOrEmpty((string)requestData["region_name"])))
+            if (requestData.ContainsKey("region_id") && !string.IsNullOrEmpty((string)requestData["region_id"]) ||
+                requestData.ContainsKey("region_name") && !string.IsNullOrEmpty((string)requestData["region_name"]))
             {
                 return;
             }
@@ -2550,7 +2550,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             if (null == account)
             {
                 account = new UserAccount(scopeID, UUID.Random(), firstName, lastName, email);
-                if (account.ServiceURLs == null || (account.ServiceURLs != null && account.ServiceURLs.Count == 0))
+                if (account.ServiceURLs == null || account.ServiceURLs != null && account.ServiceURLs.Count == 0)
                 {
                     account.ServiceURLs = new Dictionary<string, object>();
                     account.ServiceURLs["HomeURI"] = string.Empty;
@@ -2717,7 +2717,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
             // Has an explicit model been specified?
 
-            if (requestData.Contains("model") && (string.IsNullOrEmpty((string)requestData["gender"])))
+            if (requestData.Contains("model") && string.IsNullOrEmpty((string)requestData["gender"]))
             {
                 model = (string)requestData["model"];
             }
@@ -3272,7 +3272,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                                         GetStringAttribute(outfit,"name","?"), GetStringAttribute(avatar,"name","?"));
 
                                     outfitName   = GetStringAttribute(outfit,"name","");
-                                    select  = (GetStringAttribute(outfit,"default","no") == "yes");
+                                    select  = GetStringAttribute(outfit,"default","no") == "yes";
 
                                     // If the folder already exists, re-use it. The defaults may
                                     // change over time. Augment only.
@@ -3357,7 +3357,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                                             inventoryItem.AssetType = GetIntegerAttribute(item,"assettype",-1);
                                             inventoryItem.AssetID = assetid; // associated asset
                                             inventoryItem.GroupID = (UUID)GetStringAttribute(item,"groupid","");
-                                            inventoryItem.GroupOwned = (GetStringAttribute(item,"groupowned","false") == "true");
+                                            inventoryItem.GroupOwned = GetStringAttribute(item,"groupowned","false") == "true";
                                             inventoryItem.SalePrice = GetIntegerAttribute(item,"saleprice",0);
                                             inventoryItem.SaleType = (byte)GetIntegerAttribute(item,"saletype",0);
                                             inventoryItem.Flags = GetUnsignedAttribute(item,"flags",0);
@@ -3379,7 +3379,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                                         // Record whether or not the item is to be initially worn
                                         try
                                         {
-                                        if (select && (GetStringAttribute(item, "wear", "false") == "true"))
+                                        if (select && GetStringAttribute(item, "wear", "false") == "true")
                                             {
                                                 avatarAppearance.Wearables[inventoryItem.Flags].Wear(inventoryItem.ID, inventoryItem.AssetID);
                                             }

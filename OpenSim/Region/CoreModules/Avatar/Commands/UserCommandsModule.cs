@@ -53,7 +53,7 @@ namespace OpenSim.Region.CoreModules.Avatars.Commands
         public static Regex WithinRegionDestinationRegex
             = new Regex(@"^(?<x>\d+)/(?<y>\d+)/(?<z>\d+)$", RegexOptions.Compiled);
 
-        private Dictionary<UUID, Scene> m_scenes = new Dictionary<UUID, Scene>();
+        private readonly Dictionary<UUID, Scene> m_scenes = new Dictionary<UUID, Scene>();
 
         public string Name { get { return "User Commands Module"; } }
 

@@ -82,7 +82,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             new Dictionary<StandardTerrainEffects, ITerrainFloodEffect>();
         private readonly Dictionary<StandardTerrainEffects, ITerrainPaintableEffect> m_painteffects =
             new Dictionary<StandardTerrainEffects, ITerrainPaintableEffect>();
-        private Dictionary<string, ITerrainModifier> m_modifyOperations = new Dictionary<string, ITerrainModifier>();
+        private readonly Dictionary<string, ITerrainModifier> m_modifyOperations = new Dictionary<string, ITerrainModifier>();
         private Dictionary<string, ITerrainEffect> m_plugineffects;
         private ITerrainChannel m_channel;
         private ITerrainChannel m_baked;
@@ -99,14 +99,14 @@ namespace OpenSim.Region.CoreModules.World.Terrain
         //    patch packet is queued to the client, the bit for that patch is set to 'false'.
         private class PatchUpdates
         {
-            private BitArray updated;    // for each patch, whether it needs to be sent to this client
+            private readonly BitArray updated;    // for each patch, whether it needs to be sent to this client
             private int updateCount;    // number of patches that need to be sent
-            public ScenePresence Presence;   // a reference to the client to send to
+            public readonly ScenePresence Presence;   // a reference to the client to send to
             public bool sendAll;
             public int sendAllcurrentX;
             public int sendAllcurrentY;
-            private int xsize;
-            private int ysize;
+            private readonly int xsize;
+            private readonly int ysize;
 
             public PatchUpdates(TerrainData terrData, ScenePresence pPresence)
             {
@@ -137,7 +137,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
             public bool HasUpdates()
             {
-                return (updateCount > 0);
+                return updateCount > 0;
             }
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -249,8 +249,8 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             // Logically OR's the terrain data's patch taint map into this client's update map.
             public void SetAll(TerrainData terrData)
             {
-                if (xsize != (terrData.SizeX / Constants.TerrainPatchSize)
-                    || ysize != (terrData.SizeY / Constants.TerrainPatchSize))
+                if (xsize != terrData.SizeX / Constants.TerrainPatchSize
+                    || ysize != terrData.SizeY / Constants.TerrainPatchSize)
                 {
                     throw new Exception(
                         string.Format("{0} PatchUpdates.SetAll: patch array not same size as terrain. arr=<{1},{2}>, terr=<{3},{4}>",
@@ -268,7 +268,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
         }
 
         // The flags of which terrain patches to send for each of the ScenePresence's
-        private Dictionary<UUID, PatchUpdates> m_perClientPatchUpdates = new Dictionary<UUID, PatchUpdates>();
+        private readonly Dictionary<UUID, PatchUpdates> m_perClientPatchUpdates = new Dictionary<UUID, PatchUpdates>();
 
         /// <summary>
         /// Human readable list of terrain file extensions that are supported.
@@ -944,7 +944,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                 EventManager_TerrainCheckUpdatesAsync);
         }
 
-        object TerrainCheckUpdatesLock = new object();
+        readonly object TerrainCheckUpdatesLock = new object();
 
         private void EventManager_TerrainCheckUpdatesAsync(object o)
         {
@@ -1182,9 +1182,9 @@ namespace OpenSim.Region.CoreModules.World.Terrain
 
         private class PatchesToSend : IComparable<PatchesToSend>
         {
-            public int PatchX;
-            public int PatchY;
-            public float Dist;
+            public readonly int PatchX;
+            public readonly int PatchY;
+            public readonly float Dist;
             public PatchesToSend(int pX, int pY, float pDist)
             {
                 PatchX = pX;
@@ -1724,7 +1724,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     for(int y = 0; y < height; y++)
                     {
                         float currHeight = m_channel[x, y] - currMin;
-                        m_channel[x, y] = desiredMin + (currHeight * scale);
+                        m_channel[x, y] = desiredMin + currHeight * scale;
                     }
                 }
 
@@ -2003,7 +2003,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
         {
             string result;
             Scene scene = SceneManager.Instance.CurrentScene;
-            if ((scene != null) && (scene != m_scene))
+            if (scene != null && scene != m_scene)
             {
                 result = string.Empty;
             }
@@ -2017,7 +2017,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                 {
                     result = string.Format("Terrain Modify \"{0}\" not found.", operationType);
                 }
-                else if ((cmd.Length > 3) && (cmd[3] == "usage"))
+                else if (cmd.Length > 3 && cmd[3] == "usage")
                 {
                     result = "Usage: " + operation.GetUsage();
                 }

@@ -117,7 +117,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             float qyqz = q.y * q.z;
             float qyqw = q.y * q.w;
             float qzqw = q.z * q.w;
-            return new float3((1 - 2 * (qy2 + qz2)) * v.x + (2 * (qxqy - qzqw)) * v.y + (2 * (qxqz + qyqw)) * v.z, (2 * (qxqy + qzqw)) * v.x + (1 - 2 * (qx2 + qz2)) * v.y + (2 * (qyqz - qxqw)) * v.z, (2 * (qxqz - qyqw)) * v.x + (2 * (qyqz + qxqw)) * v.y + (1 - 2 * (qx2 + qy2)) * v.z);
+            return new float3((1 - 2 * (qy2 + qz2)) * v.x + 2 * (qxqy - qzqw) * v.y + 2 * (qxqz + qyqw) * v.z, 2 * (qxqy + qzqw) * v.x + (1 - 2 * (qx2 + qz2)) * v.y + 2 * (qyqz - qxqw) * v.z, 2 * (qxqz - qyqw) * v.x + 2 * (qyqz + qxqw) * v.y + (1 - 2 * (qx2 + qy2)) * v.z);
         }
 
         public static Quaternion operator +(Quaternion a, Quaternion b)
@@ -144,7 +144,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static float dot(Quaternion a, Quaternion b)
         {
-            return (a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z);
+            return a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
         }
 
         public static Quaternion slerp(Quaternion a, Quaternion b, float interp)
@@ -164,7 +164,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             float theta = (float)Math.Acos(d);
             if (theta == 0.0f)
             {
-                return (a);
+                return a;
             }
             return a * ((float)Math.Sin(theta - interp * theta) / (float)Math.Sin(theta)) + b * ((float)Math.Sin(interp * theta) / (float)Math.Sin(theta));
         }
@@ -181,16 +181,16 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static Quaternion YawPitchRoll(float yaw, float pitch, float roll)
         {
-            roll *= (3.14159264f / 180.0f);
-            yaw *= (3.14159264f / 180.0f);
-            pitch *= (3.14159264f / 180.0f);
+            roll *= 3.14159264f / 180.0f;
+            yaw *= 3.14159264f / 180.0f;
+            pitch *= 3.14159264f / 180.0f;
             return new Quaternion(new float3(0.0f, 0.0f, 1.0f), yaw) * new Quaternion(new float3(1.0f, 0.0f, 0.0f), pitch) * new Quaternion(new float3(0.0f, 1.0f, 0.0f), roll);
         }
 
         public static float Yaw(Quaternion q)
         {
             float3 v = q.ydir();
-            return (v.y == 0.0 && v.x == 0.0) ? 0.0f : (float)Math.Atan2(-v.x, v.y) * (180.0f / 3.14159264f);
+            return v.y == 0.0 && v.x == 0.0 ? 0.0f : (float)Math.Atan2(-v.x, v.y) * (180.0f / 3.14159264f);
         }
 
         public static float Pitch(Quaternion q)

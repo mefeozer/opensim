@@ -289,12 +289,10 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             AgentManager.ControlFlags controlFlags = (AgentManager.ControlFlags)m_scenePresence.AgentControlFlags;
             PhysicsActor actor = m_scenePresence.PhysicsActor;
 
-            const AgentManager.ControlFlags ANYXYMASK = (
-                AgentManager.ControlFlags.AGENT_CONTROL_AT_POS | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_POS |
-                AgentManager.ControlFlags.AGENT_CONTROL_AT_NEG | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_NEG |
-                AgentManager.ControlFlags.AGENT_CONTROL_LEFT_POS | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_LEFT_POS |
-                AgentManager.ControlFlags.AGENT_CONTROL_LEFT_NEG | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_LEFT_NEG
-                );
+            const AgentManager.ControlFlags ANYXYMASK = AgentManager.ControlFlags.AGENT_CONTROL_AT_POS | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_POS |
+                                                        AgentManager.ControlFlags.AGENT_CONTROL_AT_NEG | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_NEG |
+                                                        AgentManager.ControlFlags.AGENT_CONTROL_LEFT_POS | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_LEFT_POS |
+                                                        AgentManager.ControlFlags.AGENT_CONTROL_LEFT_NEG | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_LEFT_NEG;
 
             // Check control flags
             /* not in use
@@ -307,12 +305,12 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             bool heldTurnRight = (controlFlags & AgentManager.ControlFlags.AGENT_CONTROL_TURN_RIGHT) == AgentManager.ControlFlags.AGENT_CONTROL_TURN_RIGHT;
             //            bool heldUp = ((controlFlags & (AgentManager.ControlFlags.AGENT_CONTROL_UP_POS | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_POS)) != 0);
             // excluded nudge up so it doesn't trigger jump state
-            bool heldUp = ((controlFlags & (AgentManager.ControlFlags.AGENT_CONTROL_UP_POS)) != 0);
-            bool heldDown = ((controlFlags & (AgentManager.ControlFlags.AGENT_CONTROL_UP_NEG | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_NEG)) != 0);
+            bool heldUp = (controlFlags & AgentManager.ControlFlags.AGENT_CONTROL_UP_POS) != 0;
+            bool heldDown = (controlFlags & (AgentManager.ControlFlags.AGENT_CONTROL_UP_NEG | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_NEG)) != 0;
             //bool flying = (controlFlags & AgentManager.ControlFlags.AGENT_CONTROL_FLY) == AgentManager.ControlFlags.AGENT_CONTROL_FLY;
             //bool mouselook = (controlFlags & AgentManager.ControlFlags.AGENT_CONTROL_MOUSELOOK) == AgentManager.ControlFlags.AGENT_CONTROL_MOUSELOOK;
 
-            bool heldOnXY = ((controlFlags & ANYXYMASK) != 0);
+            bool heldOnXY = (controlFlags & ANYXYMASK) != 0;
             if (heldOnXY || heldUp || heldDown)
             {
                 heldTurnLeft = false;
@@ -348,7 +346,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
                 if (heldOnXY)
                 {
-                    return (m_scenePresence.Scene.m_useFlySlow ? "FLYSLOW" : "FLY");
+                    return m_scenePresence.Scene.m_useFlySlow ? "FLYSLOW" : "FLY";
                 }
                 else if (heldUp)
                 {
@@ -401,14 +399,14 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 if (fallVelocity < -2.5f)
                     Falling = true;
 
-                if (m_animTickFall == 0 || (fallVelocity >= -0.5f))
+                if (m_animTickFall == 0 || fallVelocity >= -0.5f)
                 {
                     m_animTickFall = Environment.TickCount;
                 }
                 else
                 {
-                    int fallElapsed = (Environment.TickCount - m_animTickFall);
-                    if ((fallElapsed > FALL_DELAY) && (fallVelocity < -3.0f))
+                    int fallElapsed = Environment.TickCount - m_animTickFall;
+                    if (fallElapsed > FALL_DELAY && fallVelocity < -3.0f)
                     {
                         currentControlState = motionControlStates.falling;
                         m_lastFallVelocity = fallVelocity;
@@ -443,7 +441,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             if (currentControlState == motionControlStates.jumping)
             {
                 int jumptime = Environment.TickCount - m_animTickJump;
-                if ((jumptime > (JUMP_PERIOD * 1.5f)) && actor.IsColliding)
+                if (jumptime > JUMP_PERIOD * 1.5f && actor.IsColliding)
                 {
                     // end jumping
                     m_jumping = false;
@@ -496,7 +494,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                     limit = 350;
                 // NB if the above is set too long a weird anim reset from some place prevents STAND from being sent to client
 
-                if ((m_animTickLand != 0) && (landElapsed <= limit))
+                if (m_animTickLand != 0 && landElapsed <= limit)
                 {
                     return CurrentMovementAnimation;
                 }
@@ -751,10 +749,10 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
             anim.HandPose = 1;
             anim.InPoint = 0;
-            anim.OutPoint = (rnditerations * .10f);
+            anim.OutPoint = rnditerations * .10f;
             anim.Priority = 7;
             anim.Loop = false;
-            anim.Length = (rnditerations * .10f);
+            anim.Length = rnditerations * .10f;
             anim.ExpressionName = "afraid";
             anim.EaseInTime = 0;
             anim.EaseOutTime = 0;
@@ -772,12 +770,12 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 for (int i = 0; i < rnditerations; i++)
                 {
                     anim.Joints[j].rotationkeys[i] = new binBVHJointKey();
-                    anim.Joints[j].rotationkeys[i].time = (i * .10f);
-                    anim.Joints[j].rotationkeys[i].key_element.X = ((float)rnd.NextDouble() * 2 - 1);
-                    anim.Joints[j].rotationkeys[i].key_element.Y = ((float)rnd.NextDouble() * 2 - 1);
-                    anim.Joints[j].rotationkeys[i].key_element.Z = ((float)rnd.NextDouble() * 2 - 1);
+                    anim.Joints[j].rotationkeys[i].time = i * .10f;
+                    anim.Joints[j].rotationkeys[i].key_element.X = (float)rnd.NextDouble() * 2 - 1;
+                    anim.Joints[j].rotationkeys[i].key_element.Y = (float)rnd.NextDouble() * 2 - 1;
+                    anim.Joints[j].rotationkeys[i].key_element.Z = (float)rnd.NextDouble() * 2 - 1;
                     anim.Joints[j].positionkeys[i] = new binBVHJointKey();
-                    anim.Joints[j].positionkeys[i].time = (i * .10f);
+                    anim.Joints[j].positionkeys[i].time = i * .10f;
                     anim.Joints[j].positionkeys[i].key_element.X = 0;
                     anim.Joints[j].positionkeys[i].key_element.Y = 0;
                     anim.Joints[j].positionkeys[i].key_element.Z = 0;

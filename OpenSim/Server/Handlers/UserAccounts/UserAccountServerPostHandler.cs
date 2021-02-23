@@ -46,9 +46,9 @@ namespace OpenSim.Server.Handlers.UserAccounts
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IUserAccountService m_UserAccountService;
-        private bool m_AllowCreateUser = false;
-        private bool m_AllowSetAccount = false;
+        private readonly IUserAccountService m_UserAccountService;
+        private readonly bool m_AllowCreateUser = false;
+        private readonly bool m_AllowSetAccount = false;
 
         public UserAccountServerPostHandler(IUserAccountService service)
             : this(service, null, null) {}
@@ -178,7 +178,7 @@ namespace OpenSim.Server.Handlers.UserAccounts
             List<UserAccount> accounts = m_UserAccountService.GetUserAccounts(scopeID, query);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((accounts == null) || ((accounts != null) && (accounts.Count == 0)))
+            if (accounts == null || accounts != null && accounts.Count == 0)
             {
                 result["result"] = "null";
             }
@@ -222,7 +222,7 @@ namespace OpenSim.Server.Handlers.UserAccounts
             List<UserAccount> accounts = m_UserAccountService.GetUserAccounts(scopeID, userIDs);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((accounts == null) || ((accounts != null) && (accounts.Count == 0)))
+            if (accounts == null || accounts != null && accounts.Count == 0)
             {
                 result["result"] = "null";
             }

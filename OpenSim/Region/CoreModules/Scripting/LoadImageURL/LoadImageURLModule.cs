@@ -46,7 +46,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_name = "LoadImageURL";
+        private readonly string m_name = "LoadImageURL";
         private Scene m_scene;
         private IDynamicTextureManager m_textureManager;
 
@@ -63,7 +63,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
 
         public string GetContentType()
         {
-            return ("image");
+            return "image";
         }
 
         public bool SupportsAsynchronous()
@@ -183,7 +183,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
             // IAsyncResult result = request.BeginGetResponse(new AsyncCallback(HttpRequestReturn), state);
             request.BeginGetResponse(new AsyncCallback(HttpRequestReturn), state);
 
-            TimeSpan t = (DateTime.UtcNow - new DateTime(1970, 1, 1));
+            TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
             state.TimeOfRequest = (int) t.TotalSeconds;
 
             return true;
@@ -217,27 +217,27 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
                             using(Bitmap image = new Bitmap(stream))
                             {
                                 // TODO: make this a bit less hard coded
-                                if((image.Height < 64) && (image.Width < 64))
+                                if(image.Height < 64 && image.Width < 64)
                                 {
                                     newSize.Width = 32;
                                     newSize.Height = 32;
                                 }
-                                else if((image.Height < 128) && (image.Width < 128))
+                                else if(image.Height < 128 && image.Width < 128)
                                 {
                                     newSize.Width = 64;
                                     newSize.Height = 64;
                                 }
-                                else if((image.Height < 256) && (image.Width < 256))
+                                else if(image.Height < 256 && image.Width < 256)
                                 {
                                     newSize.Width = 128;
                                     newSize.Height = 128;
                                 }
-                                else if((image.Height < 512 && image.Width < 512))
+                                else if(image.Height < 512 && image.Width < 512)
                                 {
                                     newSize.Width = 256;
                                     newSize.Height = 256;
                                 }
-                                else if((image.Height < 1024 && image.Width < 1024))
+                                else if(image.Height < 1024 && image.Width < 1024)
                                 {
                                     newSize.Width = 512;
                                     newSize.Height = 512;

@@ -41,7 +41,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IGatekeeperService m_GatekeeperService;
+        private readonly IGatekeeperService m_GatekeeperService;
 
         public HypergridHandlers(IGatekeeperService gatekeeper)
         {
@@ -71,7 +71,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             int sizeX = 256;
             int sizeY = 256;
 
-            m_log.DebugFormat("[HG Handler]: XMLRequest to link to {0} from {1}", (string.IsNullOrEmpty(name)) ? "default region" : name, remoteClient.Address.ToString());
+            m_log.DebugFormat("[HG Handler]: XMLRequest to link to {0} from {1}", string.IsNullOrEmpty(name) ? "default region" : name, remoteClient.Address.ToString());
             bool success = m_GatekeeperService.LinkRegion(name, out regionID, out regionHandle, out externalName, out imageURL, out reason, out sizeX, out sizeY);
 
             Hashtable hash = new Hashtable();

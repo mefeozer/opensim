@@ -41,7 +41,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
     {
         static public Random random;
         SceneObjectGroup found;
-        Scene scene = new SceneHelpers().SetupScene();
+        readonly Scene scene = new SceneHelpers().SetupScene();
 
         [Test]
         public void T010_AddObjects()
@@ -150,9 +150,9 @@ namespace OpenSim.Region.Framework.Scenes.Tests
 
     public class NewTestThreads
     {
-        private EntityManager entman;
-        private SceneObjectGroup sog;
-        private Random random;
+        private readonly EntityManager entman;
+        private readonly SceneObjectGroup sog;
+        private readonly Random random;
 
         public NewTestThreads(EntityManager entman, SceneObjectGroup sog)
         {

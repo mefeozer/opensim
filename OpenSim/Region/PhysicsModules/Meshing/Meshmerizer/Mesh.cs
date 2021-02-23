@@ -98,9 +98,9 @@ namespace OpenSim.Region.PhysicsModule.Meshing
             // add it and set its index to the current index count
             // vertex == seems broken
             // skip colapsed triangles
-            if ((triangle.v1.X == triangle.v2.X && triangle.v1.Y == triangle.v2.Y && triangle.v1.Z == triangle.v2.Z)
-                || (triangle.v1.X == triangle.v3.X && triangle.v1.Y == triangle.v3.Y && triangle.v1.Z == triangle.v3.Z)
-                || (triangle.v2.X == triangle.v3.X && triangle.v2.Y == triangle.v3.Y && triangle.v2.Z == triangle.v3.Z)
+            if (triangle.v1.X == triangle.v2.X && triangle.v1.Y == triangle.v2.Y && triangle.v1.Z == triangle.v2.Z
+                || triangle.v1.X == triangle.v3.X && triangle.v1.Y == triangle.v3.Y && triangle.v1.Z == triangle.v3.Z
+                || triangle.v2.X == triangle.v3.X && triangle.v2.Y == triangle.v3.Y && triangle.v2.Z == triangle.v3.Z
                 )
             {
                 return;
@@ -244,7 +244,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
         public float[] getVertexListAsFloatLocked()
         {
             if (m_pinnedVertexes.IsAllocated)
-                return (float[])(m_pinnedVertexes.Target);
+                return (float[])m_pinnedVertexes.Target;
 
             float[] result = getVertexListAsFloat();
             m_pinnedVertexes = GCHandle.Alloc(result, GCHandleType.Pinned);
@@ -297,7 +297,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
         public int[] getIndexListAsIntLocked()
         {
             if (m_pinnedIndex.IsAllocated)
-                return (int[])(m_pinnedIndex.Target);
+                return (int[])m_pinnedIndex.Target;
 
             int[] result = getIndexListAsInt();
             m_pinnedIndex = GCHandle.Alloc(result, GCHandleType.Pinned);

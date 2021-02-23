@@ -37,7 +37,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     delegate bool ConstraintAction(BSConstraint constrain);
 
-    private List<BSConstraint> m_constraints;
+    private readonly List<BSConstraint> m_constraints;
     private BulletWorld m_world;
 
     public BSConstraintCollection(BulletWorld world)
@@ -89,8 +89,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         {
             foreach (BSConstraint constrain in m_constraints)
             {
-                if ((constrain.Body1.ID == lookingID1 && constrain.Body2.ID == lookingID2)
-                    || (constrain.Body1.ID == lookingID2 && constrain.Body2.ID == lookingID1))
+                if (constrain.Body1.ID == lookingID1 && constrain.Body2.ID == lookingID2
+                    || constrain.Body1.ID == lookingID2 && constrain.Body2.ID == lookingID1)
                 {
                     foundConstraint = constrain;
                     found = true;
@@ -158,7 +158,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 constrain.Dispose();
             }
         }
-        return (toRemove.Count > 0);
+        return toRemove.Count > 0;
     }
 
     public bool RecalculateAllConstraints()

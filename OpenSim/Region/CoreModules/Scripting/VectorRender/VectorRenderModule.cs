@@ -53,7 +53,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
 //        private static byte[] s_asset2Data;
 
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static object thisLock = new object();
+        private static readonly object thisLock = new object();
         private static Graphics m_graph = null; // just to get chars sizes
 
         private Scene m_scene;
@@ -868,7 +868,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
             {
                 WebRequest request = HttpWebRequest.Create(url);
 
-                using (HttpWebResponse response = (HttpWebResponse)(request).GetResponse())
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {

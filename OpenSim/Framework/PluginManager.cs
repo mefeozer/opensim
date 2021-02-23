@@ -72,7 +72,7 @@ namespace OpenSim.Framework
 
             AddinRepositoryEntry[] available = GetSortedAvailbleAddins();
 
-            if (ndx > (available.Length - 1))
+            if (ndx > available.Length - 1)
             {
                 MainConsole.Instance.Output("Selection out of range");
                 result = res;
@@ -119,7 +119,7 @@ namespace OpenSim.Framework
         {
             Addin[] addins = GetSortedAddinList("RobustPlugin");
 
-            if (ndx > (addins.Length -1))
+            if (ndx > addins.Length -1)
             {
                 MainConsole.Instance.Output("Selection out of range");
                 return;
@@ -279,7 +279,7 @@ namespace OpenSim.Framework
             }
 
             int n = Convert.ToInt16(args[2]);
-            if (n > (reps.Length -1))
+            if (n > reps.Length -1)
             {
                 MainConsole.Instance.Output("Selection out of range");
                 return;
@@ -308,7 +308,7 @@ namespace OpenSim.Framework
             }
 
             int n = Convert.ToInt16(args[2]);
-            if (n > (reps.Length -1))
+            if (n > reps.Length -1)
             {
                 MainConsole.Instance.Output("Selection out of range");
                 return;
@@ -337,7 +337,7 @@ namespace OpenSim.Framework
             }
 
             int n = Convert.ToInt16(args[2]);
-            if (n > (reps.Length -1))
+            if (n > reps.Length -1)
             {
                 MainConsole.Instance.Output("Selection out of range");
                 return;
@@ -406,7 +406,7 @@ namespace OpenSim.Framework
 
             Addin[] addins = GetSortedAddinList("RobustPlugin");
 
-            if (ndx > (addins.Length - 1))
+            if (ndx > addins.Length - 1)
             {
                 MainConsole.Instance.Output("Selection out of range");
                 return false;
@@ -437,7 +437,7 @@ namespace OpenSim.Framework
             Addin[] addins = GetSortedAddinList("RobustPlugin");
 
             int n = Convert.ToInt16(args[2]);
-            if (n > (addins.Length -1))
+            if (n > addins.Length -1)
             {
                 MainConsole.Instance.Output("Selection out of range");
                 return;
@@ -461,7 +461,7 @@ namespace OpenSim.Framework
             Addin[] addins = GetSortedAddinList("RobustPlugin");
 
             int n = Convert.ToInt16(args[2]);
-            if (n > (addins.Length -1))
+            if (n > addins.Length -1)
             {
                 MainConsole.Instance.Output("Selection out of range");
                 return;

@@ -37,7 +37,7 @@ namespace OpenSim.Region.CoreModules.Agent.IPBan
         private static readonly log4net.ILog m_log
                     = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<string> bans;
+        private readonly List<string> bans;
         // private SceneBase m_scene;
         public SceneBanner(SceneBase scene, List<string> banList)
         {

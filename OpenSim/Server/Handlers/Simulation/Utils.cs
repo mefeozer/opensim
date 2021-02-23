@@ -81,7 +81,7 @@ namespace OpenSim.Server.Handlers.Simulation
             Stream innerStream = null;
             try
             {
-                if ((httpRequest.ContentType == "application/x-gzip" || httpRequest.Headers["Content-Encoding"] == "gzip") || (httpRequest.Headers["X-Content-Encoding"] == "gzip"))
+                if (httpRequest.ContentType == "application/x-gzip" || httpRequest.Headers["Content-Encoding"] == "gzip" || httpRequest.Headers["X-Content-Encoding"] == "gzip")
                 {
                     innerStream = inputStream;
                     inputStream = new GZipStream(innerStream, CompressionMode.Decompress);

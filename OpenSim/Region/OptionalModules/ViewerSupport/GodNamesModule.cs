@@ -46,8 +46,8 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         // Configuration
         private static bool m_enabled = false;
-        private static List<string> m_lastNames = new List<string>();
-        private static List<string> m_fullNames = new List<string>();
+        private static readonly List<string> m_lastNames = new List<string>();
+        private static readonly List<string> m_fullNames = new List<string>();
 
         public void Initialise(IConfigSource config)
         {

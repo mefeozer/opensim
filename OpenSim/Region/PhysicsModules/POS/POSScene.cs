@@ -40,8 +40,8 @@ namespace OpenSim.Region.PhysicsModule.POS
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "POSPhysicsScene")]
     public class POSScene : PhysicsScene, INonSharedRegionModule
     {
-        private List<POSCharacter> _characters = new List<POSCharacter>();
-        private List<POSPrim> _prims = new List<POSPrim>();
+        private readonly List<POSCharacter> _characters = new List<POSCharacter>();
+        private readonly List<POSPrim> _prims = new List<POSPrim>();
         private float[] _heightMap;
         private const float gravity = -9.8f;
 
@@ -92,7 +92,7 @@ namespace OpenSim.Region.PhysicsModule.POS
 
             scene.RegisterModuleInterface<PhysicsScene>(this);
             base.Initialise(scene.PhysicsRequestAsset,
-                (scene.Heightmap != null ? scene.Heightmap.GetFloatsSerialised() : new float[Constants.RegionSize * Constants.RegionSize]),
+                scene.Heightmap != null ? scene.Heightmap.GetFloatsSerialised() : new float[Constants.RegionSize * Constants.RegionSize],
                 (float)scene.RegionInfo.RegionSettings.WaterHeight);
 
         }
@@ -166,9 +166,9 @@ namespace OpenSim.Region.PhysicsModule.POS
                                              c.Position.Z - p.Position.Z) * Quaternion.Inverse(p.Orientation);
             Vector3 avatarSize = new Vector3(c.Size.X, c.Size.Y, c.Size.Z) * Quaternion.Inverse(p.Orientation);
 
-            return (Math.Abs(rotatedPos.X) < (p.Size.X*0.5 + Math.Abs(avatarSize.X)) &&
-                    Math.Abs(rotatedPos.Y) < (p.Size.Y*0.5 + Math.Abs(avatarSize.Y)) &&
-                    Math.Abs(rotatedPos.Z) < (p.Size.Z*0.5 + Math.Abs(avatarSize.Z)));
+            return Math.Abs(rotatedPos.X) < p.Size.X*0.5 + Math.Abs(avatarSize.X) &&
+                   Math.Abs(rotatedPos.Y) < p.Size.Y*0.5 + Math.Abs(avatarSize.Y) &&
+                   Math.Abs(rotatedPos.Z) < p.Size.Z*0.5 + Math.Abs(avatarSize.Z);
         }
 
         private bool isCollidingWithPrim(POSCharacter c)
@@ -216,7 +216,7 @@ namespace OpenSim.Region.PhysicsModule.POS
                 bool forcedZ = false;
 
                 float terrainheight = _heightMap[(int)character.Position.Y * Constants.RegionSize + (int)character.Position.X];
-                if (character.Position.Z + (character._target_velocity.Z * timeStep) < terrainheight + 2)
+                if (character.Position.Z + character._target_velocity.Z * timeStep < terrainheight + 2)
                 {
                     characterPosition.Z = terrainheight + character.Size.Z;
                     forcedZ = true;

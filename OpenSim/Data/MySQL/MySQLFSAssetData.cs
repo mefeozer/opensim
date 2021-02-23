@@ -395,7 +395,7 @@ namespace OpenSim.Data.MySQL
 
                         while (reader.Read())
                         {
-                            if ((imported % 100) == 0)
+                            if (imported % 100 == 0)
                             {
                                 MainConsole.Instance.Output(string.Format("{0} assets imported so far", imported));
                             }

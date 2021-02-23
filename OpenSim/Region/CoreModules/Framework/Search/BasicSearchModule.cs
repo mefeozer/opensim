@@ -52,8 +52,8 @@ namespace OpenSim.Region.CoreModules.Framework.Search
 
         private IGroupsModule m_GroupsService = null;
 
-        private ExpiringCache<string, List<UserAccount>> queryPeopleCache = new ExpiringCache<string, List<UserAccount>>();
-        private ExpiringCache<string, List<DirGroupsReplyData>> queryGroupCache = new ExpiringCache<string, List<DirGroupsReplyData>>();
+        private readonly ExpiringCache<string, List<UserAccount>> queryPeopleCache = new ExpiringCache<string, List<UserAccount>>();
+        private readonly ExpiringCache<string, List<DirGroupsReplyData>> queryGroupCache = new ExpiringCache<string, List<DirGroupsReplyData>>();
 
         #region ISharedRegionModule
 
@@ -182,7 +182,7 @@ namespace OpenSim.Region.CoreModules.Framework.Search
                 }
 
                 // viewers don't sent sorting, so results they show are a nice mess
-                if ((queryStart > 0) && (queryStart < count))
+                if (queryStart > 0 && queryStart < count)
                 {
                     int len = count - queryStart;
                     if (len > 101) // a viewer page is 100
@@ -235,7 +235,7 @@ namespace OpenSim.Region.CoreModules.Framework.Search
                 answer = null;
 
                 // viewers don't sent sorting, so results they show are a nice mess
-                if ((queryStart > 0) && (queryStart < count))
+                if (queryStart > 0 && queryStart < count)
                 {
                     int len = count - queryStart;
                     if (len > 101) // a viewer page is 100

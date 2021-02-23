@@ -103,11 +103,11 @@ namespace OpenSim.Services.Connectors
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                    if (replyData.ContainsKey("Result") && (replyData["Result"].ToString().ToLower() == "success"))
+                    if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "success")
                     {
                         return true;
                     }
-                    else if (replyData.ContainsKey("Result") && (replyData["Result"].ToString().ToLower() == "failure"))
+                    else if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "failure")
                     {
                         m_log.DebugFormat("[MAP IMAGE CONNECTOR]: Delete failed: {0}", replyData["Message"].ToString());
                         reason = replyData["Message"].ToString();
@@ -164,11 +164,11 @@ namespace OpenSim.Services.Connectors
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                    if (replyData.ContainsKey("Result") && (replyData["Result"].ToString().ToLower() == "success"))
+                    if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "success")
                     {
                         return true;
                     }
-                    else if (replyData.ContainsKey("Result") && (replyData["Result"].ToString().ToLower() == "failure"))
+                    else if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "failure")
                     {
                         m_log.DebugFormat("[MAP IMAGE CONNECTOR]: Delete failed: {0}", replyData["Message"].ToString());
                         reason = replyData["Message"].ToString();
@@ -229,11 +229,11 @@ namespace OpenSim.Services.Connectors
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                    if (replyData.ContainsKey("Result") && (replyData["Result"].ToString().ToLower() == "success"))
+                    if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "success")
                     {
                         return true;
                     }
-                    else if (replyData.ContainsKey("Result") && (replyData["Result"].ToString().ToLower() == "failure"))
+                    else if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "failure")
                     {
                         reason = string.Format("Map post to {0} failed: {1}", uri, replyData["Message"].ToString());
                         m_log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);

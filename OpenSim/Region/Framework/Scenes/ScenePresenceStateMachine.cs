@@ -55,7 +55,7 @@ namespace OpenSim.Region.Framework.Scenes
 
     internal class ScenePresenceStateMachine
     {
-        private ScenePresence m_sp;
+        private readonly ScenePresence m_sp;
         private ScenePresenceState m_state;
 
         internal ScenePresenceStateMachine(ScenePresence sp)

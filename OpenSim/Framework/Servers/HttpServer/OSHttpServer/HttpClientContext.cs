@@ -26,7 +26,7 @@ namespace OSHttpServer
         static private int basecontextID;
 
         Queue<HttpRequest> m_requests;
-        object m_requestsLock = new object();
+        readonly object m_requestsLock = new object();
         public int m_maxRequests = MAXREQUESTS;
         public bool m_waitingResponse; 
 
@@ -63,7 +63,7 @@ namespace OSHttpServer
             get { return m_TimeoutKeepAlive; }
             set
             {
-                m_TimeoutKeepAlive = (value > MAXKEEPALIVE) ? MAXKEEPALIVE : value;
+                m_TimeoutKeepAlive = value > MAXKEEPALIVE ? MAXKEEPALIVE : value;
             }
         }
 
@@ -729,7 +729,7 @@ namespace OSHttpServer
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
 
-        private object sendLock = new object();
+        private readonly object sendLock = new object();
 
         public bool Send(byte[] buffer, int offset, int size)
         {

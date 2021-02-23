@@ -37,8 +37,8 @@ namespace OpenSim.Server.Handlers.GridUser
 {
     public class MuteListServiceConnector : ServiceConnector
     {
-        private IMuteListService m_MuteListService;
-        private string m_ConfigName = "MuteListService";
+        private readonly IMuteListService m_MuteListService;
+        private readonly string m_ConfigName = "MuteListService";
 
         public MuteListServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

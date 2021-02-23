@@ -37,17 +37,17 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
     {
 //      private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static yyLSLSyntax yyLSL = new yyLSLSyntax();
+        private static readonly yyLSLSyntax yyLSL = new yyLSLSyntax();
         private SYMBOL m_astRoot = null;
         private Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>> m_positionMap;
         private int m_braceCount;       // for indentation
         private int m_CSharpLine;       // the current line of generated C# code
         private int m_CSharpCol;        // the current column of generated C# code
-        private List<string> m_warnings = new List<string>();
+        private readonly List<string> m_warnings = new List<string>();
         private IScriptModuleComms m_comms = null;
 
-        private bool m_insertCoopTerminationChecks;
-        private static string m_coopTerminationCheck = "opensim_reserved_CheckForCoopTermination();";
+        private readonly bool m_insertCoopTerminationChecks;
+        private static readonly string m_coopTerminationCheck = "opensim_reserved_CheckForCoopTermination();";
 
         /// <summary>
         /// Keep a record of the previous node when we do the parsing.
@@ -880,7 +880,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
                     else if (value is float)
                         retval = string.Format("new LSL_Types.LSLFloat({0})",((float)value).ToString());
                     else if (value is string)
-                        retval = string.Format("new LSL_Types.LSLString(\"{0}\")",((string)value));
+                        retval = string.Format("new LSL_Types.LSLString(\"{0}\")",(string)value);
                     else if (value is OpenMetaverse.UUID)
                         retval = string.Format("new LSL_Types.key(\"{0}\")",((OpenMetaverse.UUID)value).ToString());
                     else if (value is OpenMetaverse.Vector3)

@@ -47,10 +47,10 @@ namespace OpenSim.Region.CoreModules.World
         private bool m_ready = false;
         private bool m_enabled = false;
         private float m_cloudDensity = 1.0F;
-        private float[] cloudCover = new float[16 * 16];
+        private readonly float[] cloudCover = new float[16 * 16];
         private int m_dataVersion;
         private bool m_busy;
-        private object cloudlock = new object();
+        private readonly object cloudlock = new object();
 
 
         public void Initialise(IConfigSource config)
@@ -76,7 +76,7 @@ namespace OpenSim.Region.CoreModules.World
             scene.RegisterModuleInterface<ICloudModule>(this);
             int seed = Environment.TickCount;
             seed += (int)(scene.RegionInfo.RegionLocX << 16);
-            seed += (int)(scene.RegionInfo.RegionLocY);
+            seed += (int)scene.RegionInfo.RegionLocY;
             m_rndnums = new Random(seed);
 
             GenerateCloudCover();
@@ -192,7 +192,7 @@ namespace OpenSim.Region.CoreModules.World
                                              cloudCover[y * 16 + columnRight] +
                                              cloudCover[rowAbove * 16 + columnRight] +
                                              cloudCover[y * 16 + x]) / 9;
-                    newCover[y * 16 + x] = ((neighborAverage / m_cloudDensity) + 0.175f) % 1.0f;
+                    newCover[y * 16 + x] = (neighborAverage / m_cloudDensity + 0.175f) % 1.0f;
                     newCover[y * 16 + x] *= m_cloudDensity;
                 }
             }
@@ -202,8 +202,8 @@ namespace OpenSim.Region.CoreModules.World
 
         private void CloudUpdate()
         {
-            if ((!m_ready ||  m_busy || m_cloudDensity == 0 ||
-                    (m_frame++ % m_frameUpdateRate) != 0))
+            if (!m_ready ||  m_busy || m_cloudDensity == 0 ||
+                m_frame++ % m_frameUpdateRate != 0)
                 return;
 
             if(Monitor.TryEnter(cloudlock))
@@ -251,7 +251,7 @@ namespace OpenSim.Region.CoreModules.World
             {
                 for (int x = 0; x < 16; x++)
                 {
-                    cloudCover[y * 16 + x] = (float)(m_rndnums.NextDouble()); // 0 to 1
+                    cloudCover[y * 16 + x] = (float)m_rndnums.NextDouble(); // 0 to 1
                     cloudCover[y * 16 + x] *= m_cloudDensity;
                 }
             }

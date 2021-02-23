@@ -46,7 +46,7 @@ public class BasicVehicles : OpenSimTestCase
     BSScene PhysicsScene { get; set; }
     BSPrim TestVehicle { get; set; }
     Vector3 TestVehicleInitPosition { get; set; }
-    float simulationTimeStep = 0.089f;
+    readonly float simulationTimeStep = 0.089f;
 
     [TestFixtureSetUp]
     public void Init()

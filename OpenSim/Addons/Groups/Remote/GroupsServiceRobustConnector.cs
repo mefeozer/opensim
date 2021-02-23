@@ -44,8 +44,8 @@ namespace OpenSim.Groups
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private GroupsService m_GroupsService;
-        private string m_ConfigName = "Groups";
+        private readonly GroupsService m_GroupsService;
+        private readonly string m_ConfigName = "Groups";
 
         public GroupsServiceRobustConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)
@@ -77,7 +77,7 @@ namespace OpenSim.Groups
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private GroupsService m_GroupsService;
+        private readonly GroupsService m_GroupsService;
 
         public GroupsServicePostHandler(GroupsService service, IServiceAuth auth) :
             base("POST", "/groups", auth)
@@ -328,7 +328,7 @@ namespace OpenSim.Groups
                 else
                 {
                     List<GroupMembershipData> memberships = m_GroupsService.GetAgentGroupMemberships(requestingAgentID, agentID);
-                    if (memberships == null || (memberships != null && memberships.Count == 0))
+                    if (memberships == null || memberships != null && memberships.Count == 0)
                     {
                         NullResult(result, "No memberships");
                     }
@@ -362,7 +362,7 @@ namespace OpenSim.Groups
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
                 List<ExtendedGroupMembersData> members = m_GroupsService.GetGroupMembers(requestingAgentID, groupID);
-                if (members == null || (members != null && members.Count == 0))
+                if (members == null || members != null && members.Count == 0)
                 {
                     NullResult(result, "No members");
                 }
@@ -449,7 +449,7 @@ namespace OpenSim.Groups
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
                 List<GroupRolesData> roles = m_GroupsService.GetGroupRoles(requestingAgentID, groupID);
-                if (roles == null || (roles != null && roles.Count == 0))
+                if (roles == null || roles != null && roles.Count == 0)
                 {
                     NullResult(result, "No members");
                 }
@@ -482,7 +482,7 @@ namespace OpenSim.Groups
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
                 List<ExtendedGroupRoleMembersData> rmembers = m_GroupsService.GetGroupRoleMembers(requestingAgentID, groupID);
-                if (rmembers == null || (rmembers != null && rmembers.Count == 0))
+                if (rmembers == null || rmembers != null && rmembers.Count == 0)
                 {
                     NullResult(result, "No members");
                 }
@@ -546,7 +546,7 @@ namespace OpenSim.Groups
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
                 List<GroupRolesData> roles = m_GroupsService.GetAgentGroupRoles(requestingAgentID, agentID, groupID);
-                if (roles == null || (roles != null && roles.Count == 0))
+                if (roles == null || roles != null && roles.Count == 0)
                 {
                     NullResult(result, "No members");
                 }
@@ -739,7 +739,7 @@ namespace OpenSim.Groups
             {
                 List<ExtendedGroupNoticeData> notices = m_GroupsService.GetGroupNotices(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()));
 
-                if (notices == null || (notices != null && notices.Count == 0))
+                if (notices == null || notices != null && notices.Count == 0)
                     NullResult(result, "No notices");
                 else
                 {
@@ -768,7 +768,7 @@ namespace OpenSim.Groups
 
             List<DirGroupsReplyData> hits = m_GroupsService.FindGroups(request["RequestingAgentID"].ToString(), request["Query"].ToString());
 
-            if (hits == null || (hits != null && hits.Count == 0))
+            if (hits == null || hits != null && hits.Count == 0)
                 NullResult(result, "No hits");
             else
             {

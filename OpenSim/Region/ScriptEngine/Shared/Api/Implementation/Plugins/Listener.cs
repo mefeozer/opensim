@@ -39,7 +39,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 
         public AsyncCommandManager m_CmdManager;
 
-        private IWorldComm m_commsPlugin;
+        private readonly IWorldComm m_commsPlugin;
 
         public int ListenerCount
         {

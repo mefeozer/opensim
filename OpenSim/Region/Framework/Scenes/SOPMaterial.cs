@@ -49,8 +49,8 @@ namespace OpenSim.Region.Framework.Scenes
 
         private struct MaterialData
         {
-            public float friction;
-            public float bounce;
+            public readonly float friction;
+            public readonly float bounce;
             public MaterialData(float f, float b)
             {
                 friction = f;
@@ -58,7 +58,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
         }
 
-        private static MaterialData[] m_materialdata = {
+        private static readonly MaterialData[] m_materialdata = {
             new MaterialData(0.8f,0.4f), // Stone
             new MaterialData(0.3f,0.4f), // Metal
             new MaterialData(0.2f,0.7f), // Glass
@@ -78,7 +78,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             int indx = (int)material;
             if (indx < m_materialdata.Length)
-                return (m_materialdata[indx].friction);
+                return m_materialdata[indx].friction;
             else
                 return 0;
         }
@@ -87,7 +87,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             int indx = (int)material;
             if (indx < m_materialdata.Length)
-                return (m_materialdata[indx].bounce);
+                return m_materialdata[indx].bounce;
             else
                 return 0;
         }
@@ -176,9 +176,9 @@ namespace OpenSim.Region.Framework.Scenes
             SpecularRotation = scale * (float)mat["SpecRotation"].AsReal();
 
             Color4 SpecularLightColortmp = mat["SpecColor"].AsColor4(); // we can read as color4
-            SpecularLightColorR = (byte)(SpecularLightColortmp.R);
-            SpecularLightColorG = (byte)(SpecularLightColortmp.G);
-            SpecularLightColorB = (byte)(SpecularLightColortmp.B);
+            SpecularLightColorR = (byte)SpecularLightColortmp.R;
+            SpecularLightColorG = (byte)SpecularLightColortmp.G;
+            SpecularLightColorB = (byte)SpecularLightColortmp.B;
 
             SpecularLightExponent = (byte)mat["SpecExp"].AsUInteger();
             EnvironmentIntensity = (byte)mat["EnvIntensity"].AsUInteger();
@@ -232,27 +232,25 @@ namespace OpenSim.Region.Framework.Scenes
                 return false;
 
             FaceMaterial other = (FaceMaterial)o;
-            return (
-                DiffuseAlphaMode == other.DiffuseAlphaMode
-                && AlphaMaskCutoff == other.AlphaMaskCutoff
-                && SpecularLightExponent == other.SpecularLightExponent
-                && EnvironmentIntensity == other.EnvironmentIntensity
-                && NormalMapID == other.NormalMapID
-                && NormalOffsetX == other.NormalOffsetX
-                && NormalOffsetY == other.NormalOffsetY
-                && NormalRepeatX == other.NormalRepeatX
-                && NormalRepeatY == other.NormalRepeatY
-                && NormalRotation == other.NormalRotation
-                && SpecularMapID == other.SpecularMapID
-                && SpecularOffsetX == other.SpecularOffsetX
-                && SpecularOffsetY == other.SpecularOffsetY
-                && SpecularRepeatX == other.SpecularRepeatX
-                && SpecularRepeatY == other.SpecularRepeatY
-                && SpecularRotation == other.SpecularRotation
-                && SpecularLightColorR == other.SpecularLightColorR
-                && SpecularLightColorG == other.SpecularLightColorG
-                && SpecularLightColorB == other.SpecularLightColorB
-                );
+            return DiffuseAlphaMode == other.DiffuseAlphaMode
+                   && AlphaMaskCutoff == other.AlphaMaskCutoff
+                   && SpecularLightExponent == other.SpecularLightExponent
+                   && EnvironmentIntensity == other.EnvironmentIntensity
+                   && NormalMapID == other.NormalMapID
+                   && NormalOffsetX == other.NormalOffsetX
+                   && NormalOffsetY == other.NormalOffsetY
+                   && NormalRepeatX == other.NormalRepeatX
+                   && NormalRepeatY == other.NormalRepeatY
+                   && NormalRotation == other.NormalRotation
+                   && SpecularMapID == other.SpecularMapID
+                   && SpecularOffsetX == other.SpecularOffsetX
+                   && SpecularOffsetY == other.SpecularOffsetY
+                   && SpecularRepeatX == other.SpecularRepeatX
+                   && SpecularRepeatY == other.SpecularRepeatY
+                   && SpecularRotation == other.SpecularRotation
+                   && SpecularLightColorR == other.SpecularLightColorR
+                   && SpecularLightColorG == other.SpecularLightColorG
+                   && SpecularLightColorB == other.SpecularLightColorB;
         }
 
         public OSDMap toOSD()

@@ -50,8 +50,8 @@ namespace OpenSim.Groups
     {
         private const int GROUPS_CACHE_TIMEOUT = 1 * 60; // 1 minutes
 
-        private ForeignImporter m_ForeignImporter;
-        private HashSet<string> m_ActiveRequests = new HashSet<string>();
+        private readonly ForeignImporter m_ForeignImporter;
+        private readonly HashSet<string> m_ActiveRequests = new HashSet<string>();
 
         // This all important cache caches objects of different types:
         // group-<GroupID> or group-<Name>          => ExtendedGroupRecord
@@ -65,7 +65,7 @@ namespace OpenSim.Groups
         // rolemembers-<RequestingAgentID>-<GroupID> => List<ExtendedGroupRoleMembersData>
         // notice-<noticeID>                        => GroupNoticeInfo
         // notices-<GroupID>                        => List<ExtendedGroupNoticeData>
-        private ExpiringCacheOS<string, object> m_Cache = new ExpiringCacheOS<string, object>(30000);
+        private readonly ExpiringCacheOS<string, object> m_Cache = new ExpiringCacheOS<string, object>(30000);
 
         public RemoteConnectorCacheWrapper(IUserManagement uman)
         {

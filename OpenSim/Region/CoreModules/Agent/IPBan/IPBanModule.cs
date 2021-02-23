@@ -41,7 +41,7 @@ namespace OpenSim.Region.CoreModules.Agent.IPBan
     {
         #region Implementation of ISharedRegionModule
 
-        private List<string> m_bans = new List<string>();
+        private readonly List<string> m_bans = new List<string>();
 
         public void Initialise(IConfigSource source)
         {

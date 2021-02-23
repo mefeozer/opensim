@@ -43,11 +43,11 @@ namespace OSHttpServer
         /// Use a Thread or a Timer to monitor the ugly
         /// </summary>
         private static Thread m_internalThread = null;
-        private static object m_threadLock = new object();
-        private static ConcurrentQueue<HttpClientContext> m_contexts = new ConcurrentQueue<HttpClientContext>();
-        private static ConcurrentQueue<HttpClientContext> m_highPrio = new ConcurrentQueue<HttpClientContext>();
-        private static ConcurrentQueue<HttpClientContext> m_midPrio = new ConcurrentQueue<HttpClientContext>();
-        private static ConcurrentQueue<HttpClientContext> m_lowPrio = new ConcurrentQueue<HttpClientContext>();
+        private static readonly object m_threadLock = new object();
+        private static readonly ConcurrentQueue<HttpClientContext> m_contexts = new ConcurrentQueue<HttpClientContext>();
+        private static readonly ConcurrentQueue<HttpClientContext> m_highPrio = new ConcurrentQueue<HttpClientContext>();
+        private static readonly ConcurrentQueue<HttpClientContext> m_midPrio = new ConcurrentQueue<HttpClientContext>();
+        private static readonly ConcurrentQueue<HttpClientContext> m_lowPrio = new ConcurrentQueue<HttpClientContext>();
         private static AutoResetEvent m_processWaitEven = new AutoResetEvent(false);
         private static bool m_shuttingDown;
 
@@ -367,7 +367,7 @@ namespace OSHttpServer
         public static int EnvironmentTickCountSubtract(int newValue, int prevValue)
         {
             int diff = newValue - prevValue;
-            return (diff >= 0) ? diff : (diff + EnvironmentTickCountMask + 1);
+            return diff >= 0 ? diff : diff + EnvironmentTickCountMask + 1;
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace OSHttpServer
         public static int EnvironmentTickCountAdd(int newValue, int prevValue)
         {
             int ret = newValue + prevValue;
-            return (ret >= 0) ? ret : (ret + EnvironmentTickCountMask + 1);
+            return ret >= 0 ? ret : ret + EnvironmentTickCountMask + 1;
         }
 
         public static double TimeStampClockPeriodMS;

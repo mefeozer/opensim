@@ -84,11 +84,11 @@ namespace OpenSim.Region.ClientStack.Linden
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_Scene;
-        private UUID m_AgentID;
-        private UUID m_scopeID;
-        private Caps m_HostCapsObj;
-        private ModelCost m_ModelCost;
+        private readonly Scene m_Scene;
+        private readonly UUID m_AgentID;
+        private readonly UUID m_scopeID;
+        private readonly Caps m_HostCapsObj;
+        private readonly ModelCost m_ModelCost;
 
         // private static readonly string m_remoteParcelRequestPath = "0009/";// This is in the LandManagementModule.
 
@@ -100,31 +100,31 @@ namespace OpenSim.Region.ClientStack.Linden
         public TaskScriptUpdatedCallback TaskScriptUpdatedCall = null;
         public GetClientDelegate GetClient = null;
 
-        private bool m_persistBakedTextures = false;
-        private IAssetService m_assetService;
-        private bool m_dumpAssetsToFile = false;
-        private string m_regionName;
+        private readonly bool m_persistBakedTextures = false;
+        private readonly IAssetService m_assetService;
+        private readonly bool m_dumpAssetsToFile = false;
+        private readonly string m_regionName;
 
-        private int m_levelUpload = 0;
+        private readonly int m_levelUpload = 0;
 
-        private bool m_enableFreeTestUpload = false; // allows "TEST-" prefix hack
-        private bool m_ForceFreeTestUpload = false; // forces all uploads to be test
+        private readonly bool m_enableFreeTestUpload = false; // allows "TEST-" prefix hack
+        private readonly bool m_ForceFreeTestUpload = false; // forces all uploads to be test
 
-        private bool m_enableModelUploadTextureToInventory = false; // place uploaded textures also in inventory
+        private readonly bool m_enableModelUploadTextureToInventory = false; // place uploaded textures also in inventory
                                                                     // may not be visible till relog
 
-        private bool m_RestrictFreeTestUploadPerms = false; // reduces also the permitions. Needs a creator defined!!
-        private UUID m_testAssetsCreatorID = UUID.Zero;
+        private readonly bool m_RestrictFreeTestUploadPerms = false; // reduces also the permitions. Needs a creator defined!!
+        private readonly UUID m_testAssetsCreatorID = UUID.Zero;
 
-        private float m_PrimScaleMin = 0.001f;
+        private readonly float m_PrimScaleMin = 0.001f;
 
-        private bool m_AllowCapHomeLocation = true;
-        private bool m_AllowCapGroupMemberData = true;
-        private bool m_AllowCapLandResources = true;
-        private bool m_AllowCapAttachmentResources = true;
+        private readonly bool m_AllowCapHomeLocation = true;
+        private readonly bool m_AllowCapGroupMemberData = true;
+        private readonly bool m_AllowCapLandResources = true;
+        private readonly bool m_AllowCapAttachmentResources = true;
 
-        private IUserManagement m_UserManager;
-        private IUserAccountService m_userAccountService;
+        private readonly IUserManagement m_UserManager;
+        private readonly IUserAccountService m_userAccountService;
         private IMoneyModule m_moneyModule;
 
         private enum FileAgentInventoryState : int
@@ -574,7 +574,7 @@ namespace OpenSim.Region.ClientStack.Linden
                         else if (m_enableFreeTestUpload) // only if prefixed with "TEST-"
                         {
 
-                            IsAtestUpload = (assetName.Length > 5 && assetName.StartsWith("TEST-"));
+                            IsAtestUpload = assetName.Length > 5 && assetName.StartsWith("TEST-");
                         }
 
                         if(IsAtestUpload) // let user know, still showing cost estimation
@@ -601,7 +601,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     }
                     else if (m_enableFreeTestUpload) // only if prefixed with "TEST-"
                     {
-                        IsAtestUpload = (assetName.Length > 5 && assetName.StartsWith("TEST-"));
+                        IsAtestUpload = assetName.Length > 5 && assetName.StartsWith("TEST-");
                         if(IsAtestUpload)
                             warning += "Upload for testing purposes only. Items will be local to region only, Inventory entry will be lost on logout";
                     }
@@ -778,8 +778,8 @@ namespace OpenSim.Region.ClientStack.Linden
                     SceneObjectGroup grp = null;
 
                     // create and store texture assets
-                    bool doTextInv = (!istest && m_enableModelUploadTextureToInventory &&
-                                    texturesFolder != UUID.Zero);
+                    bool doTextInv = !istest && m_enableModelUploadTextureToInventory &&
+                                     texturesFolder != UUID.Zero;
 
 
                     List<UUID> textures = new List<UUID>();
@@ -1122,7 +1122,7 @@ namespace OpenSim.Region.ClientStack.Linden
             if (istest)
             {
                 item.Description = "For testing only. Other uses are prohibited";
-                item.Flags = (uint) (InventoryItemFlags.SharedSingleReference);
+                item.Flags = (uint) InventoryItemFlags.SharedSingleReference;
             }
             else
                 item.Description = assetDescription;
@@ -1436,7 +1436,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     ownerPerms &= nextPerms;
                     basePerms &= nextPerms;
                     basePerms &= ~(uint)PermissionMask.FoldedMask;
-                    basePerms |= ((basePerms >> 13) & 7) | (((basePerms & (uint)PermissionMask.Export) != 0) ? (uint)PermissionMask.FoldedExport : 0);
+                    basePerms |= ((basePerms >> 13) & 7) | ((basePerms & (uint)PermissionMask.Export) != 0 ? (uint)PermissionMask.FoldedExport : 0);
                     item.BasePermissions = basePerms;
                     item.CurrentPermissions = ownerPerms;
                     item.Flags |= (uint)InventoryItemFlags.ObjectSlamPerm;
@@ -1834,7 +1834,7 @@ namespace OpenSim.Region.ClientStack.Linden
                             name = so.Name,
                             memory = mem,
                             urls = urls_used,
-                            groupOwned = (so.OwnerID == so.GroupID),
+                            groupOwned = so.OwnerID == so.GroupID,
                             pos = so.AbsolutePosition
                         };
                         pi.objects.Add(sip);
@@ -2062,7 +2062,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     !m_Scene.Permissions.IsGod(m_AgentID) &&
                     m_AgentID != land.LandData.OwnerID && // (b) land owners can set home
                     // (c) members of the land-associated group in roles that can set home
-                    ((gpowers & (ulong)GroupPowers.AllowSetHome) != (ulong)GroupPowers.AllowSetHome) &&
+                    (gpowers & (ulong)GroupPowers.AllowSetHome) != (ulong)GroupPowers.AllowSetHome &&
                     // (d) parcels with telehubs can be the home of anyone
                     (telehub == null || !land.ContainsPoint((int)telehub.AbsolutePosition.X, (int)telehub.AbsolutePosition.Y)))
                 {
@@ -2122,7 +2122,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
         private static int CompareRolesByMembersDesc(GroupRolesData x, GroupRolesData y)
         {
-            return -(x.Members.CompareTo(y.Members));
+            return -x.Members.CompareTo(y.Members);
         }
 
         public void GroupMemberData(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
@@ -2220,7 +2220,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     if(gmd.OnlineStatus != null && gmd.OnlineStatus != "")
                         m["last_login"] = new OSDString(gmd.OnlineStatus);
                     if(gmd.AgentPowers != defaultPowers)
-                        m["powers"] = new OSDString((gmd.AgentPowers).ToString("X"));
+                        m["powers"] = new OSDString(gmd.AgentPowers.ToString("X"));
                     if(gmd.Title != null && titles.ContainsKey(gmd.Title) && titles[gmd.Title] != 0)
                         m["title"] = new OSDInteger(titles[gmd.Title]);
                     if(gmd.IsOwner)
@@ -2228,7 +2228,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     if(gmd.Contribution != 0)
                         m["donated_square_meters"] = new OSDInteger(gmd.Contribution);
 
-                    osdmembers[(gmd.AgentID).ToString()] = m;
+                    osdmembers[gmd.AgentID.ToString()] = m;
                 }
 
                 OSDMap osddefaults = new OSDMap();
@@ -2342,31 +2342,31 @@ namespace OpenSim.Region.ClientStack.Linden
             public event UpLoadedAsset OnUpLoad;
             private UpLoadedAsset handlerUpLoad = null;
 
-            private string uploaderPath = string.Empty;
+            private readonly string uploaderPath = string.Empty;
             private UUID newAssetID;
-            private UUID inventoryItemID;
-            private UUID parentFolder;
-            private IHttpServer httpListener;
-            private bool m_dumpAssetsToFile;
-            private string m_assetName = string.Empty;
-            private string m_assetDes = string.Empty;
+            private readonly UUID inventoryItemID;
+            private readonly UUID parentFolder;
+            private readonly IHttpServer httpListener;
+            private readonly bool m_dumpAssetsToFile;
+            private readonly string m_assetName = string.Empty;
+            private readonly string m_assetDes = string.Empty;
 
-            private string m_invType = string.Empty;
-            private string m_assetType = string.Empty;
-            private int m_cost;
+            private readonly string m_invType = string.Empty;
+            private readonly string m_assetType = string.Empty;
+            private readonly int m_cost;
             private string m_error = string.Empty;
 
-            private System.Timers.Timer m_timeoutTimer;
-            private UUID m_texturesFolder;
-            private int m_nreqtextures;
-            private int m_nreqmeshs;
-            private int m_nreqinstances;
-            private bool m_IsAtestUpload;
+            private readonly System.Timers.Timer m_timeoutTimer;
+            private readonly UUID m_texturesFolder;
+            private readonly int m_nreqtextures;
+            private readonly int m_nreqmeshs;
+            private readonly int m_nreqinstances;
+            private readonly bool m_IsAtestUpload;
 
             private int m_nextOwnerMask;
             private int m_groupMask;
             private int m_everyoneMask;
-            private int[] m_meshesSides;
+            private readonly int[] m_meshesSides;
 
             public AssetUploader(string assetName, string description, UUID assetID, UUID inventoryItem,
                                     UUID parentFolderID, string invType, string assetType, string path,
@@ -2536,11 +2536,11 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-            private Scene m_scene;
-            private UUID m_agentID;
-            private int m_memory;
-            private int m_urls;
-            private IPAddress m_address;
+            private readonly Scene m_scene;
+            private readonly UUID m_agentID;
+            private readonly int m_memory;
+            private readonly int m_urls;
+            private readonly IPAddress m_address;
 
             public ScriptResourceSummary(Scene scene, UUID agentID, IHttpServer httpServer, string path, IPAddress address, 
                 int memory, int urls) : base(httpServer, path)
@@ -2621,10 +2621,10 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-            private Scene m_scene;
-            private UUID m_agentID;
-            private List<ParcelScriptInfo> m_parcelsInfo;
-            private IPAddress m_address;
+            private readonly Scene m_scene;
+            private readonly UUID m_agentID;
+            private readonly List<ParcelScriptInfo> m_parcelsInfo;
+            private readonly IPAddress m_address;
 
             public ScriptResourceDetails(Scene scene, UUID agentID, IHttpServer httpServer, string path, IPAddress address,
                 List<ParcelScriptInfo> parcelsInfo) :base(httpServer, path)

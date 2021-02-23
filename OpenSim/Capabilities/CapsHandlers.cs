@@ -39,12 +39,12 @@ namespace OpenSim.Framework.Capabilities
     /// </summary>
     public class CapsHandlers
     {
-        private Dictionary<string, IRequestHandler> m_capsHandlers = new Dictionary<string, IRequestHandler>();
-        private ConcurrentDictionary<string, ISimpleStreamHandler> m_capsSimpleHandlers = new ConcurrentDictionary<string, ISimpleStreamHandler>();
-        private IHttpServer m_httpListener;
-        private string m_httpListenerHostName;
-        private uint m_httpListenerPort;
-        private bool m_useSSL = false;
+        private readonly Dictionary<string, IRequestHandler> m_capsHandlers = new Dictionary<string, IRequestHandler>();
+        private readonly ConcurrentDictionary<string, ISimpleStreamHandler> m_capsSimpleHandlers = new ConcurrentDictionary<string, ISimpleStreamHandler>();
+        private readonly IHttpServer m_httpListener;
+        private readonly string m_httpListenerHostName;
+        private readonly uint m_httpListenerPort;
+        private readonly bool m_useSSL = false;
 
         /// <summary></summary>
         /// CapsHandlers is a cap handler container but also takes

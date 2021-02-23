@@ -122,29 +122,29 @@ namespace OpenSim.Services.LLLoginService
     public class LLLoginResponse : OpenSim.Services.Interfaces.LoginResponse
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static Hashtable globalTexturesHash;
+        private static readonly Hashtable globalTexturesHash;
         // Global Textures
         private static string sunTexture = "cce0f112-878f-4586-a2e2-a8f104bba271";
         private static string cloudTexture = "dc4b9f0b-d008-45c6-96a4-01dd947ac621";
         private static string moonTexture = "ec4b9f0b-d008-45c6-96a4-01dd947ac621";
 
         private Hashtable loginFlagsHash;
-        private Hashtable uiConfigHash;
+        private readonly Hashtable uiConfigHash;
 
-        private ArrayList loginFlags;
-        private ArrayList globalTextures;
-        private ArrayList eventCategories;
-        private ArrayList uiConfig;
-        private ArrayList classifiedCategories;
+        private readonly ArrayList loginFlags;
+        private readonly ArrayList globalTextures;
+        private readonly ArrayList eventCategories;
+        private readonly ArrayList uiConfig;
+        private readonly ArrayList classifiedCategories;
         private ArrayList inventoryRoot;
-        private ArrayList initialOutfit;
+        private readonly ArrayList initialOutfit;
         private ArrayList agentInventory;
         private ArrayList inventoryLibraryOwner;
         private ArrayList inventoryLibRoot;
         private ArrayList inventoryLibrary;
         private ArrayList activeGestures;
 
-        private UserInfo userProfile;
+        private readonly UserInfo userProfile;
 
         private UUID agentID;
         private UUID sessionID;
@@ -557,8 +557,8 @@ namespace OpenSim.Services.LLLoginService
                 responseData["look_at"] = lookAt;
                 responseData["max-agent-groups"] = MaxAgentGroups;
                 responseData["message"] = welcomeMessage;
-                responseData["region_x"] = (int)(RegionX);
-                responseData["region_y"] = (int)(RegionY);
+                responseData["region_x"] = (int)RegionX;
+                responseData["region_y"] = (int)RegionY;
                 responseData["region_size_x"] = (int)RegionSizeX;
                 responseData["region_size_y"] = (int)RegionSizeY;
                 m_log.DebugFormat("[LOGIN RESPONSE] returning sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);

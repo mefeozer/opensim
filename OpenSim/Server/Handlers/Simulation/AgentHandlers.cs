@@ -204,7 +204,7 @@ namespace OpenSim.Server.Handlers.Simulation
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ISimulationService m_SimulationService;
+        private readonly ISimulationService m_SimulationService;
         protected bool m_Proxy = false;
 
         public AgentSimpleHandler(ISimulationService service) : base("/agent")

@@ -63,11 +63,11 @@ namespace OpenSim.Framework
 
         private class TypeMapping
         {
-            private sbyte assetType;
-            private sbyte inventoryType;
-            private string contentType;
-            private string contentType2;
-            private string extension;
+            private readonly sbyte assetType;
+            private readonly sbyte inventoryType;
+            private readonly string contentType;
+            private readonly string contentType2;
+            private readonly string extension;
 
             public sbyte AssetTypeCode
             {
@@ -140,7 +140,7 @@ namespace OpenSim.Framework
         ///   AssetType "AssetType.Texture" -> Content-Type "image-xj2c"
         ///   Content-Type "image/x-j2c" -> InventoryType "InventoryType.Texture"
         /// </summary>
-        private static TypeMapping[] MAPPINGS = new TypeMapping[] {
+        private static readonly TypeMapping[] MAPPINGS = new TypeMapping[] {
             new TypeMapping(AssetType.Unknown, InventoryType.Unknown, "application/octet-stream", "bin"),
             new TypeMapping(AssetType.Texture, InventoryType.Texture, "image/x-j2c", "image/jp2", "j2c"),
             new TypeMapping(AssetType.Texture, InventoryType.Snapshot, "image/x-j2c", "image/jp2", "j2c"),
@@ -185,12 +185,12 @@ namespace OpenSim.Framework
             new TypeMapping(OpenSimAssetType.Material, InventoryType.Unknown, "application/llsd+xml", "material")
         };
 
-        private static Dictionary<sbyte, string> asset2Content;
-        private static Dictionary<sbyte, string> asset2Extension;
-        private static Dictionary<sbyte, string> inventory2Content;
-        private static Dictionary<string, sbyte> content2Asset;
-        private static Dictionary<string, sbyte> content2Inventory;
-        private static Dictionary<string, AssetType> name2Asset = new Dictionary<string, AssetType>()
+        private static readonly Dictionary<sbyte, string> asset2Content;
+        private static readonly Dictionary<sbyte, string> asset2Extension;
+        private static readonly Dictionary<sbyte, string> inventory2Content;
+        private static readonly Dictionary<string, sbyte> content2Asset;
+        private static readonly Dictionary<string, sbyte> content2Inventory;
+        private static readonly Dictionary<string, AssetType> name2Asset = new Dictionary<string, AssetType>()
         {
             {"texture", AssetType.Texture },
             {"sound", AssetType.Sound},
@@ -214,7 +214,7 @@ namespace OpenSim.Framework
             {"mesh", AssetType.Mesh},
             {"settings", AssetType.Settings}
         };
-        private static Dictionary<string, FolderType> name2Inventory = new Dictionary<string, FolderType>()
+        private static readonly Dictionary<string, FolderType> name2Inventory = new Dictionary<string, FolderType>()
         {
             {"texture", FolderType.Texture},
             {"sound", FolderType.Sound},
@@ -333,10 +333,10 @@ namespace OpenSim.Framework
 
         #endregion SL / file extension / content-type conversions
 
-        static char[] seps = new char[] { '\t', '\n' };
-        static char[] stringseps = new char[] { '|', '\n' };
+        static readonly char[] seps = new char[] { '\t', '\n' };
+        static readonly char[] stringseps = new char[] { '|', '\n' };
 
-        static byte[] moronize = new byte[16]
+        static readonly byte[] moronize = new byte[16]
         {
             60, 17, 94, 81, 4, 244, 82, 60, 159, 166, 152, 175, 241, 3, 71, 48
         };

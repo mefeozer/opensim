@@ -387,7 +387,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
             {
                 Util.RegionHandleToWorldLoc(regionhandle, out uint x, out uint y);
                 if( x < m_regionGlobalX || y < m_regionGlobalY ||
-                    x >= (m_regionGlobalX + m_regionSizeX) || y >= (m_regionGlobalY + m_regionSizeY))
+                    x >= m_regionGlobalX + m_regionSizeX || y >= m_regionGlobalY + m_regionSizeY)
                 {
                     RequestMapItems(remoteClient.AgentId, flags, EstateID, godlike, itemtype, regionhandle);
                     return;
@@ -488,7 +488,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                         ILandChannel landChannel = m_scene.LandChannel;
                         List<ILandObject> parcels = landChannel.AllParcels();
 
-                        if ((parcels != null) && (parcels.Count >= 1))
+                        if (parcels != null && parcels.Count >= 1)
                         {
                             foreach (ILandObject parcel_interface in parcels)
                             {
@@ -600,7 +600,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                 ILandChannel landChannel = m_scene.LandChannel;
                 List<ILandObject> parcels = landChannel.AllParcels();
 
-                if ((parcels != null) && (parcels.Count >= 1))
+                if (parcels != null && parcels.Count >= 1)
                 {
                     foreach (ILandObject parcel_interface in parcels)
                     {
@@ -915,7 +915,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
 
 
         private const double SPAMBLOCKTIMEms = 300000; // 5 minutes
-        private Dictionary<UUID,double> spamBlocked = new Dictionary<UUID,double>();
+        private readonly Dictionary<UUID,double> spamBlocked = new Dictionary<UUID,double>();
 
         /// <summary>
         /// Requests map blocks in area of minX, maxX, minY, MaxY in world cordinates
@@ -1474,7 +1474,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
             ILandChannel landChannel = m_scene.LandChannel;
             List<ILandObject> parcels = landChannel.AllParcels();
 
-            if ((parcels != null) && (parcels.Count >= 0))
+            if (parcels != null && parcels.Count >= 0)
             {
                 OSDArray responsearr = new OSDArray(parcels.Count);
                 foreach (ILandObject parcel_interface in parcels)
@@ -1768,7 +1768,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                                     g.FillRectangle(
                                         yellow,
                                         x * landTileSize,
-                                        regionSizeX - landTileSize - (y * landTileSize),
+                                        regionSizeX - landTileSize - y * landTileSize,
                                         landTileSize,
                                         landTileSize);
                             }

@@ -49,7 +49,7 @@ namespace OpenSim.Data.SQLite
         private string m_connectionString;
 
         private FieldInfo[] m_Fields;
-        private Dictionary<string, FieldInfo> m_FieldMap =
+        private readonly Dictionary<string, FieldInfo> m_FieldMap =
                 new Dictionary<string, FieldInfo>();
 
         protected virtual Assembly Assembly

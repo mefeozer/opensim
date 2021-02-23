@@ -48,7 +48,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Animations
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Scene> m_scenes = new List<Scene>();
+        private readonly List<Scene> m_scenes = new List<Scene>();
 
         public string Name { get { return "Animations Command Module"; } }
 

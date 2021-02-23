@@ -46,7 +46,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        private List<Scene> m_Scenelist = new List<Scene>();
+        private readonly List<Scene> m_Scenelist = new List<Scene>();
 
         private IMessageTransferModule m_TransferModule;
         private bool m_Enabled = true;

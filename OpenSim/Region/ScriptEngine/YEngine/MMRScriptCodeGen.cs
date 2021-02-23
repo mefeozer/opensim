@@ -72,70 +72,70 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                                      // - must inherit from XMRInstAbstract
 
          // Static tables that there only needs to be one copy of for all.
-        private static VarDict legalEventHandlers = CreateLegalEventHandlers();
-        private static CompValu[] zeroCompValus = new CompValu[0];
-        private static TokenType[] zeroArgs = new TokenType[0];
-        private static TokenTypeBool tokenTypeBool = new TokenTypeBool(null);
-        private static TokenTypeExc tokenTypeExc = new TokenTypeExc(null);
-        private static TokenTypeFloat tokenTypeFlt = new TokenTypeFloat(null);
-        private static TokenTypeInt tokenTypeInt = new TokenTypeInt(null);
-        private static TokenTypeObject tokenTypeObj = new TokenTypeObject(null);
-        private static TokenTypeRot tokenTypeRot = new TokenTypeRot(null);
-        private static TokenTypeStr tokenTypeStr = new TokenTypeStr(null);
-        private static TokenTypeVec tokenTypeVec = new TokenTypeVec(null);
-        private static Type[] instanceTypeArg = new Type[] { typeof(XMRInstAbstract) };
-        private static string[] instanceNameArg = new string[] { "$xmrthis" };
+        private static readonly VarDict legalEventHandlers = CreateLegalEventHandlers();
+        private static readonly CompValu[] zeroCompValus = new CompValu[0];
+        private static readonly TokenType[] zeroArgs = new TokenType[0];
+        private static readonly TokenTypeBool tokenTypeBool = new TokenTypeBool(null);
+        private static readonly TokenTypeExc tokenTypeExc = new TokenTypeExc(null);
+        private static readonly TokenTypeFloat tokenTypeFlt = new TokenTypeFloat(null);
+        private static readonly TokenTypeInt tokenTypeInt = new TokenTypeInt(null);
+        private static readonly TokenTypeObject tokenTypeObj = new TokenTypeObject(null);
+        private static readonly TokenTypeRot tokenTypeRot = new TokenTypeRot(null);
+        private static readonly TokenTypeStr tokenTypeStr = new TokenTypeStr(null);
+        private static readonly TokenTypeVec tokenTypeVec = new TokenTypeVec(null);
+        private static readonly Type[] instanceTypeArg = new Type[] { typeof(XMRInstAbstract) };
+        private static readonly string[] instanceNameArg = new string[] { "$xmrthis" };
 
-        private static ConstructorInfo lslFloatConstructorInfo = typeof(LSL_Float).GetConstructor(new Type[] { typeof(double) });
-        private static ConstructorInfo lslIntegerConstructorInfo = typeof(LSL_Integer).GetConstructor(new Type[] { typeof(int) });
-        private static ConstructorInfo lslListConstructorInfo = typeof(LSL_List).GetConstructor(new Type[] { typeof(object[]) });
+        private static readonly ConstructorInfo lslFloatConstructorInfo = typeof(LSL_Float).GetConstructor(new Type[] { typeof(double) });
+        private static readonly ConstructorInfo lslIntegerConstructorInfo = typeof(LSL_Integer).GetConstructor(new Type[] { typeof(int) });
+        private static readonly ConstructorInfo lslListConstructorInfo = typeof(LSL_List).GetConstructor(new Type[] { typeof(object[]) });
         public static ConstructorInfo lslRotationConstructorInfo = typeof(LSL_Rotation).GetConstructor(new Type[] { typeof(double), typeof(double), typeof(double), typeof(double) });
-        private static ConstructorInfo lslStringConstructorInfo = typeof(LSL_String).GetConstructor(new Type[] { typeof(string) });
+        private static readonly ConstructorInfo lslStringConstructorInfo = typeof(LSL_String).GetConstructor(new Type[] { typeof(string) });
         public static ConstructorInfo lslVectorConstructorInfo = typeof(LSL_Vector).GetConstructor(new Type[] { typeof(double), typeof(double), typeof(double) });
-        private static ConstructorInfo scriptBadCallNoExceptionConstructorInfo = typeof(ScriptBadCallNoException).GetConstructor(new Type[] { typeof(int) });
-        private static ConstructorInfo scriptChangeStateExceptionConstructorInfo = typeof(ScriptChangeStateException).GetConstructor(new Type[] { typeof(int) });
-        private static ConstructorInfo scriptRestoreCatchExceptionConstructorInfo = typeof(ScriptRestoreCatchException).GetConstructor(new Type[] { typeof(Exception) });
-        private static ConstructorInfo scriptUndefinedStateExceptionConstructorInfo = typeof(ScriptUndefinedStateException).GetConstructor(new Type[] { typeof(string) });
-        private static ConstructorInfo sdtClassConstructorInfo = typeof(XMRSDTypeClObj).GetConstructor(new Type[] { typeof(XMRInstAbstract), typeof(int) });
-        private static ConstructorInfo xmrArrayConstructorInfo = typeof(XMR_Array).GetConstructor(new Type[] { typeof(XMRInstAbstract) });
-        private static FieldInfo callModeFieldInfo = typeof(XMRInstAbstract).GetField("callMode");
-        private static FieldInfo doGblInitFieldInfo = typeof(XMRInstAbstract).GetField("doGblInit");
-        private static FieldInfo ehArgsFieldInfo = typeof(XMRInstAbstract).GetField("ehArgs");
-        private static FieldInfo rotationXFieldInfo = typeof(LSL_Rotation).GetField("x");
-        private static FieldInfo rotationYFieldInfo = typeof(LSL_Rotation).GetField("y");
-        private static FieldInfo rotationZFieldInfo = typeof(LSL_Rotation).GetField("z");
-        private static FieldInfo rotationSFieldInfo = typeof(LSL_Rotation).GetField("s");
-        private static FieldInfo sdtXMRInstFieldInfo = typeof(XMRSDTypeClObj).GetField("xmrInst");
-        private static FieldInfo stackLeftFieldInfo = typeof(XMRInstAbstract).GetField("m_StackLeft");
-        private static FieldInfo heapUsedFieldInfo = typeof(XMRInstAbstract).GetField("m_localsHeapUsed");
-        private static FieldInfo vectorXFieldInfo = typeof(LSL_Vector).GetField("x");
-        private static FieldInfo vectorYFieldInfo = typeof(LSL_Vector).GetField("y");
-        private static FieldInfo vectorZFieldInfo = typeof(LSL_Vector).GetField("z");
+        private static readonly ConstructorInfo scriptBadCallNoExceptionConstructorInfo = typeof(ScriptBadCallNoException).GetConstructor(new Type[] { typeof(int) });
+        private static readonly ConstructorInfo scriptChangeStateExceptionConstructorInfo = typeof(ScriptChangeStateException).GetConstructor(new Type[] { typeof(int) });
+        private static readonly ConstructorInfo scriptRestoreCatchExceptionConstructorInfo = typeof(ScriptRestoreCatchException).GetConstructor(new Type[] { typeof(Exception) });
+        private static readonly ConstructorInfo scriptUndefinedStateExceptionConstructorInfo = typeof(ScriptUndefinedStateException).GetConstructor(new Type[] { typeof(string) });
+        private static readonly ConstructorInfo sdtClassConstructorInfo = typeof(XMRSDTypeClObj).GetConstructor(new Type[] { typeof(XMRInstAbstract), typeof(int) });
+        private static readonly ConstructorInfo xmrArrayConstructorInfo = typeof(XMR_Array).GetConstructor(new Type[] { typeof(XMRInstAbstract) });
+        private static readonly FieldInfo callModeFieldInfo = typeof(XMRInstAbstract).GetField("callMode");
+        private static readonly FieldInfo doGblInitFieldInfo = typeof(XMRInstAbstract).GetField("doGblInit");
+        private static readonly FieldInfo ehArgsFieldInfo = typeof(XMRInstAbstract).GetField("ehArgs");
+        private static readonly FieldInfo rotationXFieldInfo = typeof(LSL_Rotation).GetField("x");
+        private static readonly FieldInfo rotationYFieldInfo = typeof(LSL_Rotation).GetField("y");
+        private static readonly FieldInfo rotationZFieldInfo = typeof(LSL_Rotation).GetField("z");
+        private static readonly FieldInfo rotationSFieldInfo = typeof(LSL_Rotation).GetField("s");
+        private static readonly FieldInfo sdtXMRInstFieldInfo = typeof(XMRSDTypeClObj).GetField("xmrInst");
+        private static readonly FieldInfo stackLeftFieldInfo = typeof(XMRInstAbstract).GetField("m_StackLeft");
+        private static readonly FieldInfo heapUsedFieldInfo = typeof(XMRInstAbstract).GetField("m_localsHeapUsed");
+        private static readonly FieldInfo vectorXFieldInfo = typeof(LSL_Vector).GetField("x");
+        private static readonly FieldInfo vectorYFieldInfo = typeof(LSL_Vector).GetField("y");
+        private static readonly FieldInfo vectorZFieldInfo = typeof(LSL_Vector).GetField("z");
 
-        private static MethodInfo arrayClearMethodInfo = typeof(XMR_Array).GetMethod("__pub_clear", new Type[] { });
-        private static MethodInfo arrayCountMethodInfo = typeof(XMR_Array).GetMethod("__pub_count", new Type[] { });
-        private static MethodInfo arrayIndexMethodInfo = typeof(XMR_Array).GetMethod("__pub_index", new Type[] { typeof(int) });
-        private static MethodInfo arrayValueMethodInfo = typeof(XMR_Array).GetMethod("__pub_value", new Type[] { typeof(int) });
-        private static MethodInfo checkRunStackMethInfo = typeof(XMRInstAbstract).GetMethod("CheckRunStack", new Type[] { });
-        private static MethodInfo checkRunQuickMethInfo = typeof(XMRInstAbstract).GetMethod("CheckRunQuick", new Type[] { });
-        private static MethodInfo ehArgUnwrapFloat = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapFloat", new Type[] { typeof(object) });
-        private static MethodInfo ehArgUnwrapInteger = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapInteger", new Type[] { typeof(object) });
-        private static MethodInfo ehArgUnwrapRotation = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapRotation", new Type[] { typeof(object) });
-        private static MethodInfo ehArgUnwrapString = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapString", new Type[] { typeof(object) });
-        private static MethodInfo ehArgUnwrapVector = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapVector", new Type[] { typeof(object) });
-        private static MethodInfo xmrArrPubIndexMethod = typeof(XMR_Array).GetMethod("__pub_index", new Type[] { typeof(int) });
-        private static MethodInfo xmrArrPubValueMethod = typeof(XMR_Array).GetMethod("__pub_value", new Type[] { typeof(int) });
-        private static MethodInfo captureStackFrameMethodInfo = typeof(XMRInstAbstract).GetMethod("CaptureStackFrame", new Type[] { typeof(string), typeof(int), typeof(int) });
-        private static MethodInfo restoreStackFrameMethodInfo = typeof(XMRInstAbstract).GetMethod("RestoreStackFrame", new Type[] { typeof(string), typeof(int).MakeByRefType() });
-        private static MethodInfo stringCompareMethodInfo = GetStaticMethod(typeof(string), "Compare", new Type[] { typeof(string), typeof(string), typeof(StringComparison) });
-        private static MethodInfo stringConcat2MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string) });
-        private static MethodInfo stringConcat3MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string), typeof(string) });
-        private static MethodInfo stringConcat4MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string), typeof(string), typeof(string) });
-        private static MethodInfo lslRotationNegateMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "LSLRotationNegate", new Type[] { typeof(LSL_Rotation) });
-        private static MethodInfo lslVectorNegateMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "LSLVectorNegate", new Type[] { typeof(LSL_Vector) });
-        private static MethodInfo scriptRestoreCatchExceptionUnwrap = GetStaticMethod(typeof(ScriptRestoreCatchException), "Unwrap", new Type[] { typeof(Exception) });
-        private static MethodInfo thrownExceptionWrapMethodInfo = GetStaticMethod(typeof(ScriptThrownException), "Wrap", new Type[] { typeof(object) });
-        private static MethodInfo catchExcToStrMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "CatchExcToStr", new Type[] { typeof(Exception) });
+        private static readonly MethodInfo arrayClearMethodInfo = typeof(XMR_Array).GetMethod("__pub_clear", new Type[] { });
+        private static readonly MethodInfo arrayCountMethodInfo = typeof(XMR_Array).GetMethod("__pub_count", new Type[] { });
+        private static readonly MethodInfo arrayIndexMethodInfo = typeof(XMR_Array).GetMethod("__pub_index", new Type[] { typeof(int) });
+        private static readonly MethodInfo arrayValueMethodInfo = typeof(XMR_Array).GetMethod("__pub_value", new Type[] { typeof(int) });
+        private static readonly MethodInfo checkRunStackMethInfo = typeof(XMRInstAbstract).GetMethod("CheckRunStack", new Type[] { });
+        private static readonly MethodInfo checkRunQuickMethInfo = typeof(XMRInstAbstract).GetMethod("CheckRunQuick", new Type[] { });
+        private static readonly MethodInfo ehArgUnwrapFloat = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapFloat", new Type[] { typeof(object) });
+        private static readonly MethodInfo ehArgUnwrapInteger = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapInteger", new Type[] { typeof(object) });
+        private static readonly MethodInfo ehArgUnwrapRotation = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapRotation", new Type[] { typeof(object) });
+        private static readonly MethodInfo ehArgUnwrapString = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapString", new Type[] { typeof(object) });
+        private static readonly MethodInfo ehArgUnwrapVector = GetStaticMethod(typeof(TypeCast), "EHArgUnwrapVector", new Type[] { typeof(object) });
+        private static readonly MethodInfo xmrArrPubIndexMethod = typeof(XMR_Array).GetMethod("__pub_index", new Type[] { typeof(int) });
+        private static readonly MethodInfo xmrArrPubValueMethod = typeof(XMR_Array).GetMethod("__pub_value", new Type[] { typeof(int) });
+        private static readonly MethodInfo captureStackFrameMethodInfo = typeof(XMRInstAbstract).GetMethod("CaptureStackFrame", new Type[] { typeof(string), typeof(int), typeof(int) });
+        private static readonly MethodInfo restoreStackFrameMethodInfo = typeof(XMRInstAbstract).GetMethod("RestoreStackFrame", new Type[] { typeof(string), typeof(int).MakeByRefType() });
+        private static readonly MethodInfo stringCompareMethodInfo = GetStaticMethod(typeof(string), "Compare", new Type[] { typeof(string), typeof(string), typeof(StringComparison) });
+        private static readonly MethodInfo stringConcat2MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string) });
+        private static readonly MethodInfo stringConcat3MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string), typeof(string) });
+        private static readonly MethodInfo stringConcat4MethodInfo = GetStaticMethod(typeof(string), "Concat", new Type[] { typeof(string), typeof(string), typeof(string), typeof(string) });
+        private static readonly MethodInfo lslRotationNegateMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "LSLRotationNegate", new Type[] { typeof(LSL_Rotation) });
+        private static readonly MethodInfo lslVectorNegateMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "LSLVectorNegate", new Type[] { typeof(LSL_Vector) });
+        private static readonly MethodInfo scriptRestoreCatchExceptionUnwrap = GetStaticMethod(typeof(ScriptRestoreCatchException), "Unwrap", new Type[] { typeof(Exception) });
+        private static readonly MethodInfo thrownExceptionWrapMethodInfo = GetStaticMethod(typeof(ScriptThrownException), "Wrap", new Type[] { typeof(object) });
+        private static readonly MethodInfo catchExcToStrMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "CatchExcToStr", new Type[] { typeof(Exception) });
         private static MethodInfo consoleWriteMethodInfo = GetStaticMethod(typeof(ScriptCodeGen), "ConsoleWrite", new Type[] { typeof(object) });
         public static void ConsoleWrite(object o)
         {
@@ -160,15 +160,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private BreakContTarg curContTarg = null;
         private int lastErrorLine = 0;
         private int nStates = 0;
-        private string sourceHash;
+        private readonly string sourceHash;
         private string lastErrorFile = "";
         private string[] stateNames;
-        private XMRInstArSizes glblSizes = new XMRInstArSizes();
+        private readonly XMRInstArSizes glblSizes = new XMRInstArSizes();
         private Token errorMessageToken = null;
         private TokenDeclVar curDeclFunc = null;
         private TokenStmtBlock curStmtBlock = null;
-        private BinaryWriter objFileWriter = null;
-        private TokenScript tokenScript = null;
+        private readonly BinaryWriter objFileWriter = null;
+        private readonly TokenScript tokenScript = null;
         public int tempCompValuNum = 0;
         private TokenDeclSDTypeClass currentSDTClass = null;
 
@@ -181,7 +181,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private ScriptMyLocal retValue = null;
         private ScriptMyLocal actCallNo = null;  // for the active try/catch/finally stack or the big one outside them all
         private LinkedList<CallLabel> actCallLabels = new LinkedList<CallLabel>();  // for the active try/catch/finally stack or the big one outside them all
-        private LinkedList<CallLabel> allCallLabels = new LinkedList<CallLabel>();  // this holds each and every one for all stacks in total
+        private readonly LinkedList<CallLabel> allCallLabels = new LinkedList<CallLabel>();  // this holds each and every one for all stacks in total
         public CallLabel openCallLabel = null;  // only one call label can be open at a time
                                                 // - the call label is open from the time of CallPre() until corresponding CallPost()
                                                 // - so no non-trivial pushes/pops etc allowed between a CallPre() and a CallPost()
@@ -378,7 +378,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 int vti = 0;
                 foreach(TokenDeclVar im in sdtIFace.methsNProps)
                 {
-                    if((im.getProp == null) && (im.setProp == null))
+                    if(im.getProp == null && im.setProp == null)
                     {
                         im.vTableIndex = vti++;
                     }
@@ -434,7 +434,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                             continue;
                         if((declVar.sdtFlags & ScriptReduce.SDT_STATIC) != 0)
                             continue;
-                        if((declVar.getProp == null) && (declVar.setProp == null))
+                        if(declVar.getProp == null && declVar.setProp == null)
                         {
                             declVar.type.AssignVarSlot(declVar, sdtClass.instSizes);
                         }
@@ -567,7 +567,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         int nMeths = 0;
                         foreach(TokenDeclVar m in intf.methsNProps)
                         {
-                            if((m.getProp == null) && (m.setProp == null))
+                            if(m.getProp == null && m.setProp == null)
                                 nMeths++;
                         }
                         sdtClass.iImplFunc[i] = new TokenDeclVar[nMeths];
@@ -742,7 +742,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 {
                     foreach(TokenDeclVar tdf in sdtc.members)
                     {
-                        if((tdf.retType != null) && (tdf.vTableIndex >= 0) && ((tdf.sdtFlags & ScriptReduce.SDT_ABSTRACT) == 0))
+                        if(tdf.retType != null && tdf.vTableIndex >= 0 && (tdf.sdtFlags & ScriptReduce.SDT_ABSTRACT) == 0)
                         {
                             if(!filled[tdf.vTableIndex])
                             {
@@ -761,7 +761,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     List<TokenDeclVar> newobjDeclFuncs = new List<TokenDeclVar>();
                     foreach(TokenDeclVar ctorDeclFunc in sdtClass.members)
                     {
-                        if((ctorDeclFunc.funcNameSig != null) && ctorDeclFunc.funcNameSig.val.StartsWith("$ctor("))
+                        if(ctorDeclFunc.funcNameSig != null && ctorDeclFunc.funcNameSig.val.StartsWith("$ctor("))
                         {
                             TokenDeclVar newobjDeclFunc = DefineNewobjFunc(ctorDeclFunc);
                             newobjDeclFuncs.Add(newobjDeclFunc);
@@ -836,7 +836,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     TokenDeclSDTypeClass sdtClass = (TokenDeclSDTypeClass)sdType;
                     foreach(TokenDeclVar declFunc in sdtClass.members)
                     {
-                        if((declFunc.retType != null) && ((declFunc.sdtFlags & ScriptReduce.SDT_ABSTRACT) == 0))
+                        if(declFunc.retType != null && (declFunc.sdtFlags & ScriptReduce.SDT_ABSTRACT) == 0)
                             GenerateMethodHeader(declFunc);
                     }
                 }
@@ -855,7 +855,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     TokenDeclSDTypeClass sdtClass = (TokenDeclSDTypeClass)sdType;
                     foreach(TokenDeclVar declFunc in sdtClass.members)
                     {
-                        if((declFunc.retType != null) && ((declFunc.sdtFlags & ScriptReduce.SDT_ABSTRACT) == 0))
+                        if(declFunc.retType != null && (declFunc.sdtFlags & ScriptReduce.SDT_ABSTRACT) == 0)
                             GenerateMethodBody(declFunc);
                     }
                 }
@@ -903,7 +903,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private void WriteOutGblAssignment(string pfx, TokenDeclVar declVar)
         {
-            if(!declVar.constant && (declVar.retType == null) && (declVar.getProp == null) && (declVar.setProp == null))
+            if(!declVar.constant && declVar.retType == null && declVar.getProp == null && declVar.setProp == null)
             {
                 objFileWriter.Write(pfx + declVar.name.val);    // string
                 objFileWriter.Write(declVar.vTableArray.Name);  // string
@@ -1339,7 +1339,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     if(sdType is TokenDeclSDTypeClass)
                     {
                         TokenDeclVar sfiFunc = ((TokenDeclSDTypeClass)sdType).staticFieldInit;
-                        if((sfiFunc != null) && (sfiFunc.body.statements != null))
+                        if(sfiFunc != null && sfiFunc.body.statements != null)
                         {
                             sfiFunc.location.CallPre(this, sfiFunc);
                             sfiFunc.location.CallPost(this, sfiFunc);
@@ -1358,7 +1358,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
              // If this is a script-defined type constructor, call the base constructor and call
              // this class's $instfieldinit() method to initialize instance fields.
-            if((curDeclFunc.sdtClass != null) && curDeclFunc.funcNameSig.val.StartsWith("$ctor("))
+            if(curDeclFunc.sdtClass != null && curDeclFunc.funcNameSig.val.StartsWith("$ctor("))
             {
                 if(curDeclFunc.baseCtorCall != null)
                 {
@@ -2264,7 +2264,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 if(stmtBlock.isTry || stmtBlock.isCatch)
                     useLeave = true;
-                if((stmtBlock.tryStmt != null) && (stmtBlock.tryStmt.finallyStmt != null))
+                if(stmtBlock.tryStmt != null && stmtBlock.tryStmt.finallyStmt != null)
                 {
                     finallyBlocksCalled.Push(stmtBlock.tryStmt);
                 }
@@ -2312,7 +2312,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             while(finallyBlocksCalled.Count > 1)
             {
                 TokenStmtTry finallyBlock = finallyBlocksCalled.Pop();
-                string intername = "intr" + (++level) + "_" + target.name;
+                string intername = "intr" + ++level + "_" + target.name;
                 IntermediateLeave iLeave;
                 if(!finallyBlock.iLeaves.TryGetValue(intername, out iLeave))
                 {
@@ -2482,7 +2482,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
              // Set new state value by throwing an exception.
              // These exceptions aren't catchable by script-level try { } catch { }.
-            if((stateStmt.state != null) && !stateIndices.TryGetValue(stateStmt.state.val, out index))
+            if(stateStmt.state != null && !stateIndices.TryGetValue(stateStmt.state.val, out index))
             {
                 // The moron XEngine compiles scripts that reference undefined states.
                 // So rather than produce a compile-time error, we'll throw an exception at runtime.
@@ -2515,7 +2515,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             CompValu testRVal = GenerateFromRVal(switchStmt.testRVal);
 
              // Generate code based on string or integer index.
-            if((testRVal.type is TokenTypeKey) || (testRVal.type is TokenTypeStr))
+            if(testRVal.type is TokenTypeKey || testRVal.type is TokenTypeStr)
                 GenerateStmtSwitchStr(testRVal, switchStmt);
             else
                 GenerateStmtSwitchInt(testRVal, switchStmt);
@@ -2622,8 +2622,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 for(TokenSwitchCase scanCase = thisCase; scanCase != null; scanCase = scanCase.nextSortedCase)
                 {
                     int nVals = scanCase.val2 - thisCase.val1 + 1;
-                    double ratio = (double)nVals / (double)(++numCases);
-                    if((ratio >= 0.5) && (ratio <= 2.0))
+                    double ratio = (double)nVals / (double)++numCases;
+                    if(ratio >= 0.5 && ratio <= 2.0)
                     {
                         numFound = numCases;
                         numValues = nVals;
@@ -2702,7 +2702,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 ilGen.MarkLabel(thisCase.label);   // the branch comes here
                 ilGen.Emit(thisCase, OpCodes.Pop); // pop the integer index off stack
                 mightGetHere = true;            // it's possible to get here
-                for(TokenStmt stmt = thisCase.stmts; stmt != null; stmt = (TokenStmt)(stmt.nextToken))
+                for(TokenStmt stmt = thisCase.stmts; stmt != null; stmt = (TokenStmt)stmt.nextToken)
                 {
                     GenerateStmt(stmt);        // output the case/explicit default body
                 }
@@ -2820,7 +2820,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 ilGen.MarkLabel(thisCase.label);   // the branch comes here
                 mightGetHere = true;            // it's possible to get here
-                for(TokenStmt stmt = thisCase.stmts; stmt != null; stmt = (TokenStmt)(stmt.nextToken))
+                for(TokenStmt stmt = thisCase.stmts; stmt != null; stmt = (TokenStmt)stmt.nextToken)
                 {
                     GenerateStmt(stmt);        // output the case/explicit default body
                 }
@@ -2985,7 +2985,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
              // If nothing lower on tree and there is a single case value, 
              // just do one compare for equality.
-            if((thisCase.lowerCase == null) && (thisCase.higherCase == null) && (thisCase.str1 == thisCase.str2))
+            if(thisCase.lowerCase == null && thisCase.higherCase == null && thisCase.str1 == thisCase.str2)
             {
                 testRVal.PushVal(this, thisCase, tokenTypeStr);
                 ilGen.Emit(thisCase, OpCodes.Ldstr, thisCase.str1);
@@ -3103,11 +3103,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             /*
              * Reducer should make sure we have exactly one of catch or finally.
              */
-            if((tryStmt.catchStmt == null) && (tryStmt.finallyStmt == null))
+            if(tryStmt.catchStmt == null && tryStmt.finallyStmt == null)
             {
                 throw new Exception("must have a catch or a finally on try");
             }
-            if((tryStmt.catchStmt != null) && (tryStmt.finallyStmt != null))
+            if(tryStmt.catchStmt != null && tryStmt.finallyStmt != null)
             {
                 throw new Exception("can't have both catch and finally on same try");
             }
@@ -3567,11 +3567,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 int rank = basetypestring.IndexOf(']') - basetypestring.IndexOf('[');
                 if(nSubs != rank)
                 {
-                    ErrorMsg(lVal.baseRVal, "expect " + rank + " subscript" + ((rank == 1) ? "" : "s") + " but have " + nSubs);
+                    ErrorMsg(lVal.baseRVal, "expect " + rank + " subscript" + (rank == 1 ? "" : "s") + " but have " + nSubs);
                 }
                 CompValu[] subCompValus = new CompValu[rank];
                 int i;
-                for(i = 0; (subRVal != null) && (i < rank); i++)
+                for(i = 0; subRVal != null && i < rank; i++)
                 {
                     subCompValus[i] = GenerateFromRVal(subRVal);
                     subRVal = (TokenRVal)subRVal.nextToken;
@@ -3624,7 +3624,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // Maybe it is extracting a character from a string.
-            if((baseCompValu.type is TokenTypeKey) || (baseCompValu.type is TokenTypeStr))
+            if(baseCompValu.type is TokenTypeKey || baseCompValu.type is TokenTypeStr)
             {
                 subCompValu = GenerateFromRVal(lVal.subRVal);
                 return new CompValuStrChr(new TokenTypeChar(lVal), baseCompValu, subCompValu);
@@ -3718,7 +3718,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             string fieldName = baseField.fieldName.val;
 
             TokenDeclSDType sdtDecl = curDeclFunc.sdtClass;
-            if((sdtDecl == null) || ((curDeclFunc.sdtFlags & ScriptReduce.SDT_STATIC) != 0))
+            if(sdtDecl == null || (curDeclFunc.sdtFlags & ScriptReduce.SDT_STATIC) != 0)
             {
                 ErrorMsg(baseField, "cannot use 'base' outside instance method body");
                 return new CompValuVoid(baseField);
@@ -3860,7 +3860,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // Maybe it has an implied 'this.' on the front.
-            if((var.sdtClass != null) && ((var.sdtFlags & ScriptReduce.SDT_STATIC) == 0))
+            if(var.sdtClass != null && (var.sdtFlags & ScriptReduce.SDT_STATIC) == 0)
             {
 
                 if(!IsSDTInstMethod())
@@ -4099,10 +4099,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
              // There are String.Concat() methods available for 2, 3 and 4 operands.
              // So see if we have a string concat op and optimize if so.
-            if((opcodeIndex == "+") ||
-                ((opcodeIndex == "+=") &&
-                 (token.rValLeft is TokenLVal) &&
-                 (token.rValLeft.GetRValType(this, null) is TokenTypeStr)))
+            if(opcodeIndex == "+" ||
+                opcodeIndex == "+=" &&
+                token.rValLeft is TokenLVal &&
+                token.rValLeft.GetRValType(this, null) is TokenTypeStr)
             {
 
                  // We are adding something.  Maybe it's a bunch of strings together.
@@ -4278,7 +4278,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // convert this to a call to that method with the right value as its single parameter.
              // Except don't if the right value is 'undef' so they can always compare to undef.
             TokenType leftType = token.rValLeft.GetRValType(this, null);
-            if((leftType is TokenTypeSDTypeClass) && !(right.type is TokenTypeUndef))
+            if(leftType is TokenTypeSDTypeClass && !(right.type is TokenTypeUndef))
             {
                 TokenTypeSDTypeClass sdtType = (TokenTypeSDTypeClass)leftType;
                 TokenDeclSDTypeClass sdtDecl = sdtType.decl;
@@ -4310,7 +4310,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                  //
                  // Make sure we don't include comparisons (such as ==, >=, etc).
                  // Nothing like +=, -=, %=, etc, generate a boolean, only the comparisons.
-                if((binOpStr.outtype != typeof(bool)) && opcodeIndex.EndsWith("=") && (opcodeIndex != "!="))
+                if(binOpStr.outtype != typeof(bool) && opcodeIndex.EndsWith("=") && opcodeIndex != "!=")
                 {
                     if(!(token.rValLeft is TokenLVal))
                     {
@@ -4333,7 +4333,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // Nothing in the table, check for comparing object pointers because of the myriad of types possible.
              // This will compare list pointers, null pointers, script-defined type pointers, array pointers, etc.
              // It will show equal iff the memory addresses are equal and that is good enough.
-            if(!leftType.ToSysType().IsValueType && !right.type.ToSysType().IsValueType && ((opcodeIndex == "==") || (opcodeIndex == "!=")))
+            if(!leftType.ToSysType().IsValueType && !right.type.ToSysType().IsValueType && (opcodeIndex == "==" || opcodeIndex == "!="))
             {
                 CompValuTemp retRVal = new CompValuTemp(new TokenTypeInt(token), this);
                 left = GenerateFromRVal(token.rValLeft);
@@ -4430,9 +4430,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             try
             {
                 int len;
-                while(((len = scos.Count) >= 2) &&
-                       ((leftRVal = scos[len - 2]) is TokenRValConst) &&
-                       ((rightRVal = scos[len - 1]) is TokenRValConst))
+                while((len = scos.Count) >= 2 &&
+                       (leftRVal = scos[len - 2]) is TokenRValConst &&
+                       (rightRVal = scos[len - 1]) is TokenRValConst)
                 {
                     object sum = addop.binOpConst(((TokenRValConst)leftRVal).val,
                                                    ((TokenRValConst)rightRVal).val);
@@ -4526,7 +4526,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             result.Pop(this, asnPost.lVal);
 
              // Perform the ++/--.
-            if((lVal.type is TokenTypeChar) || (lVal.type is TokenTypeInt))
+            if(lVal.type is TokenTypeChar || lVal.type is TokenTypeInt)
             {
                 ilGen.Emit(asnPost, OpCodes.Ldc_I4_1);
             }
@@ -4579,7 +4579,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             lVal.PushVal(this, asnPre.lVal);
 
              // Perform the ++/--.
-            if((lVal.type is TokenTypeChar) || (lVal.type is TokenTypeInt))
+            if(lVal.type is TokenTypeChar || lVal.type is TokenTypeInt)
             {
                 ilGen.Emit(asnPre, OpCodes.Ldc_I4_1);
             }
@@ -4829,23 +4829,23 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 case TokenRValConstType.CHAR:
                     {
-                        return new CompValuChar(new TokenTypeChar(rValConst), (char)(rValConst.val));
+                        return new CompValuChar(new TokenTypeChar(rValConst), (char)rValConst.val);
                     }
                 case TokenRValConstType.FLOAT:
                     {
-                        return new CompValuFloat(new TokenTypeFloat(rValConst), (double)(rValConst.val));
+                        return new CompValuFloat(new TokenTypeFloat(rValConst), (double)rValConst.val);
                     }
                 case TokenRValConstType.INT:
                     {
-                        return new CompValuInteger(new TokenTypeInt(rValConst), (int)(rValConst.val));
+                        return new CompValuInteger(new TokenTypeInt(rValConst), (int)rValConst.val);
                     }
                 case TokenRValConstType.KEY:
                     {
-                        return new CompValuString(new TokenTypeKey(rValConst), (string)(rValConst.val));
+                        return new CompValuString(new TokenTypeKey(rValConst), (string)rValConst.val);
                     }
                 case TokenRValConstType.STRING:
                     {
-                        return new CompValuString(new TokenTypeStr(rValConst), (string)(rValConst.val));
+                        return new CompValuString(new TokenTypeStr(rValConst), (string)rValConst.val);
                     }
             }
             throw new Exception("unknown constant type " + rValConst.val.GetType());
@@ -4912,7 +4912,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         ilGen.Emit(val, OpCodes.Newobj, lslIntegerConstructorInfo);
                         ilGen.Emit(val, OpCodes.Box, typeof(LSL_Integer));
                     }
-                    else if((eRVal.type is TokenTypeKey) || (eRVal.type is TokenTypeStr))
+                    else if(eRVal.type is TokenTypeKey || eRVal.type is TokenTypeStr)
                     {
                         ilGen.Emit(val, OpCodes.Newobj, lslStringConstructorInfo);
                         ilGen.Emit(val, OpCodes.Box, typeof(LSL_String));
@@ -5058,7 +5058,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                          // We don't have enough subscripts yet, hopefully the sublist has the rest.
                         FillInInitVals(array, setMeth, subscripts, dimNo + 1, rank, sublist, eleType);
                     }
-                    else if((eleType is TokenTypeSDTypeClass) && (((TokenTypeSDTypeClass)eleType).decl.arrayOfType == null))
+                    else if(eleType is TokenTypeSDTypeClass && ((TokenTypeSDTypeClass)eleType).decl.arrayOfType == null)
                     {
                          // If we aren't a jagged array either, we can't do anything with the sublist.
                         ErrorMsg(val, "too many brace levels");
@@ -5183,7 +5183,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 CompValuFloat s = new CompValuFloat(type, ScriptBaseClass.ZERO_ROTATION.s);
                 return new CompValuRot(type, x, y, z, s);
             }
-            if((type is TokenTypeKey) || (type is TokenTypeStr))
+            if(type is TokenTypeKey || type is TokenTypeStr)
             {
                 return new CompValuString(type, "");
             }
@@ -5209,8 +5209,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
              // Default for 'object' type is 'undef'.
              // Likewise for script-defined classes and interfaces.
-            if((type is TokenTypeObject) || (type is TokenTypeSDTypeClass) || (type is TokenTypeSDTypeDelegate) ||
-                (type is TokenTypeSDTypeInterface) || (type is TokenTypeExc))
+            if(type is TokenTypeObject || type is TokenTypeSDTypeClass || type is TokenTypeSDTypeDelegate ||
+                type is TokenTypeSDTypeInterface || type is TokenTypeExc)
             {
                 return new CompValuNull(type);
             }
@@ -5342,7 +5342,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 ilGen.Emit(type, OpCodes.Newobj, lslRotationConstructorInfo);
                 return;
             }
-            if((type is TokenTypeKey) || (type is TokenTypeStr))
+            if(type is TokenTypeKey || type is TokenTypeStr)
             {
                 ilGen.Emit(type, OpCodes.Ldstr, "");
                 return;
@@ -5369,7 +5369,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
              // Default for 'object' type is 'undef'.
              // Likewise for script-defined classes and interfaces.
-            if((type is TokenTypeObject) || (type is TokenTypeSDTypeClass) || (type is TokenTypeSDTypeInterface) || (type is TokenTypeExc))
+            if(type is TokenTypeObject || type is TokenTypeSDTypeClass || type is TokenTypeSDTypeInterface || type is TokenTypeExc)
             {
                 ilGen.Emit(type, OpCodes.Ldnull);
                 return;
@@ -5426,7 +5426,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 string s = ((CompValuString)expr).x;
                 constVal = s != "";
-                if(constVal && (expr.type is TokenTypeKey))
+                if(constVal && expr.type is TokenTypeKey)
                 {
                     constVal = s != ScriptBaseClass.NULL_KEY;
                 }
@@ -5667,7 +5667,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     gblVar = sdtClass.members.FindExact(lvsf.fieldName.val, null);
                     if(gblVar != null)
                     {
-                        if(gblVar.constant && (gblVar.init is TokenRValConst))
+                        if(gblVar.constant && gblVar.init is TokenRValConst)
                         {
                             didOne = true;
                             return gblVar.init;
@@ -5689,7 +5689,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 gblVar = currentSDTClass.members.FindExact(name, null);
                 if(gblVar != null)
                 {
-                    if(gblVar.constant && (gblVar.init is TokenRValConst))
+                    if(gblVar.constant && gblVar.init is TokenRValConst)
                     {
                         didOne = true;
                         return gblVar.init;
@@ -5704,7 +5704,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             gblVar = tokenScript.variablesStack.FindExact(name, null);
             if(gblVar != null)
             {
-                if(gblVar.constant && (gblVar.init is TokenRValConst))
+                if(gblVar.constant && gblVar.init is TokenRValConst)
                 {
                     didOne = true;
                     return gblVar.init;
@@ -5743,7 +5743,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 {
                     TokenDeclSDTypeClass sdtClass = ((TokenTypeSDTypeClass)lvsf.baseType).decl;
                     gblVar = sdtClass.members.FindExact(lvsf.fieldName.val, null);
-                    if((gblVar != null) && gblVar.constant && (gblVar.init is TokenRValConst))
+                    if(gblVar != null && gblVar.constant && gblVar.init is TokenRValConst)
                     {
                         didOne = true;
                         return gblVar.init;
@@ -5842,8 +5842,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public bool IsSDTInstMethod()
         {
-            return (curDeclFunc.sdtClass != null) &&
-                   ((curDeclFunc.sdtFlags & ScriptReduce.SDT_STATIC) == 0);
+            return curDeclFunc.sdtClass != null &&
+                   (curDeclFunc.sdtFlags & ScriptReduce.SDT_STATIC) == 0;
         }
 
         /**
@@ -5929,7 +5929,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             TokenDeclSDTypeInterface sdtDecl = sdtType.decl;
             TokenDeclSDTypeInterface impl;
             TokenDeclVar declVar = sdtDecl.FindIFaceMember(this, name, argsig, out impl);
-            if((declVar != null) && (impl != sdtDecl))
+            if(declVar != null && impl != sdtDecl)
             {
                  // Accessing a method or propterty of another interface that the primary interface says it implements.
                  // In this case, we have to cast from the primary interface to that secondary interface.
@@ -6039,7 +6039,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private TokenDeclVar FindExactWithRet(VarDict where, TokenName name, TokenType ret, TokenType[] argsig)
         {
             TokenDeclVar func = where.FindExact(name.val, argsig);
-            if((func != null) && (func.retType.ToString() != ret.ToString()))
+            if(func != null && func.retType.ToString() != ret.ToString())
             {
                 ErrorMsg(name, "return type mismatch, have " + func.retType.ToString() + ", expect " + ret.ToString());
             }
@@ -6208,9 +6208,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void ErrorMsg(Token token, string message)
         {
-            if((token == null) || (token.emsg == null))
+            if(token == null || token.emsg == null)
                 token = errorMessageToken;
-            if(!youveAnError || (token.file != lastErrorFile) || (token.line > lastErrorLine))
+            if(!youveAnError || token.file != lastErrorFile || token.line > lastErrorLine)
             {
                 token.ErrorMsg(message);
                 youveAnError = true;
@@ -6258,8 +6258,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private class BreakContTarg
         {
             public bool used;
-            public ScriptMyLabel label;
-            public TokenStmtBlock block;
+            public readonly ScriptMyLabel label;
+            public readonly TokenStmtBlock block;
 
             public BreakContTarg(ScriptCodeGen scg, string name)
             {
@@ -6355,7 +6355,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
     {
 
         // old code uses these
-        private object e;
+        private readonly object e;
         public ScriptRestoreCatchException(object e)
         {
             this.e = e;
@@ -6370,7 +6370,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
 
         // new code uses these
-        private Exception ee;
+        private readonly Exception ee;
         public ScriptRestoreCatchException(Exception ee)
         {
             this.ee = ee;

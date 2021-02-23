@@ -49,11 +49,11 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IUserManagement m_UserManagement;
+        private readonly IUserManagement m_UserManagement;
 //        private IGridService m_GridService;
 
-        private Scene m_Scene;
-        AccessFlags m_accessValue = AccessFlags.None;
+        private readonly Scene m_Scene;
+        readonly AccessFlags m_accessValue = AccessFlags.None;
 
 
         public AuthorizationService(IConfig config, Scene scene)

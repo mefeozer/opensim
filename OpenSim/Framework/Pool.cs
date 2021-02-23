@@ -50,14 +50,14 @@ namespace OpenSim.Framework
             }
         }
 
-        private Stack<T> m_pool;
+        private readonly Stack<T> m_pool;
 
         /// <summary>
         /// Maximum pool size.  Beyond this, any returned objects are not pooled.
         /// </summary>
-        private int m_maxPoolSize;
+        private readonly int m_maxPoolSize;
 
-        private Func<T> m_createFunction;
+        private readonly Func<T> m_createFunction;
 
         public Pool(Func<T> createFunction, int maxSize)
         {

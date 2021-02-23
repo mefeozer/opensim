@@ -399,7 +399,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 double now = start;
                 while (now == start)
                     now = Util.GetTimeStampMS();
-                TickCountResolution += (float)((now - start));
+                TickCountResolution += (float)(now - start);
             }
 
             TickCountResolution = (float)Math.Round(TickCountResolution * 0.01f,6,MidpointRounding.AwayFromZero);
@@ -865,7 +865,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             // If we were not provided a method for handling unacked, use the UDPServer default method
             if ((outgoingPacket.Buffer.Data[0] & Helpers.MSG_RELIABLE) != 0)
-                outgoingPacket.UnackedMethod = ((method == null) ? delegate(OutgoingPacket oPacket) { ResendUnacked(oPacket); } : method);
+                outgoingPacket.UnackedMethod = method == null ? delegate(OutgoingPacket oPacket) { ResendUnacked(oPacket); } : method;
 
             // If a Linden Lab 1.23.5 client receives an update packet after a kill packet for an object, it will
             // continue to display the deleted object until relog.  Therefore, we need to always queue a kill object
@@ -950,7 +950,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             // If we were not provided a method for handling unacked, use the UDPServer default method
             if ((outgoingPacket.Buffer.Data[0] & Helpers.MSG_RELIABLE) != 0)
-                outgoingPacket.UnackedMethod = ((method == null) ? delegate (OutgoingPacket oPacket) { ResendUnacked(oPacket); } : method);
+                outgoingPacket.UnackedMethod = method == null ? delegate (OutgoingPacket oPacket) { ResendUnacked(oPacket); } : method;
 
             if (!outgoingPacket.Client.EnqueueOutgoing(outgoingPacket))
                 SendPacketFinal(outgoingPacket);
@@ -1209,7 +1209,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             IncomingMalformedPacketCount++;
 
-            if ((IncomingMalformedPacketCount % 10000) == 0)
+            if (IncomingMalformedPacketCount % 10000 == 0)
                 m_log.WarnFormat(
                     "[LLUDPSERVER]: Received {0} malformed packets so far, probable network attack.  Last was from {1}",
                     IncomingMalformedPacketCount, endPoint);
@@ -1266,7 +1266,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 UDPPacketBuffer zerodecodebufferholder = null;
                 byte[] zerodecodebuffer = null;
                 // only if needed
-                if (((buffer.Data[0] & Helpers.MSG_ZEROCODED) != 0))
+                if ((buffer.Data[0] & Helpers.MSG_ZEROCODED) != 0)
                 {
                     zerodecodebufferholder = GetNewUDPBuffer(null);
                     zerodecodebuffer = zerodecodebufferholder.Data;
@@ -1351,7 +1351,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
                 IncomingOrphanedPacketCount++;
 
-                if ((IncomingOrphanedPacketCount % 10000) == 0)
+                if (IncomingOrphanedPacketCount % 10000 == 0)
                     m_log.WarnFormat(
                         "[LLUDPSERVER]: Received {0} orphaned packets so far.  Last was from {1}",
                         IncomingOrphanedPacketCount, endPoint);
@@ -1471,7 +1471,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 StartPingCheckPacket startPing = (StartPingCheckPacket)packet;
                 CompletePing(udpClient, startPing.PingID.PingID);
 
-                if ((Environment.TickCount - m_elapsedMSSinceLastStatReport) >= 3000)
+                if (Environment.TickCount - m_elapsedMSSinceLastStatReport >= 3000)
                 {
                     udpClient.SendPacketStats();
                     m_elapsedMSSinceLastStatReport = Environment.TickCount;
@@ -1518,14 +1518,14 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         protected static bool m_shouldCollectStats = false;
         // Number of seconds to log for
         static TimeSpan binStatsMaxFilesize = TimeSpan.FromSeconds(300);
-        static object binStatsLogLock = new object();
+        static readonly object binStatsLogLock = new object();
         static string binStatsDir = "";
 
         //for Aggregated In/Out BW logging
         static bool m_aggregatedBWStats = false;
         static long m_aggregatedBytesIn = 0;
         static long m_aggregatedByestOut = 0;
-        static object aggBWStatsLock = new object();
+        static readonly object aggBWStatsLock = new object();
 
         public static long AggregatedLLUDPBytesIn
         {
@@ -1571,7 +1571,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 // m_log.Debug("2 LogPacketHeader(): Inside lock. now is " + now.Ticks);
                 try
                 {
-                    if (PacketLog == null || (now > PacketLog.StartTime + binStatsMaxFilesize))
+                    if (PacketLog == null || now > PacketLog.StartTime + binStatsMaxFilesize)
                     {
                         if (PacketLog != null && PacketLog.Log != null)
                         {

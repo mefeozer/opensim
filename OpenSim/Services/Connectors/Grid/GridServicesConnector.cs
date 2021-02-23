@@ -107,11 +107,11 @@ namespace OpenSim.Services.Connectors
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                    if (replyData.ContainsKey("Result")&& (replyData["Result"].ToString().ToLower() == "success"))
+                    if (replyData.ContainsKey("Result")&& replyData["Result"].ToString().ToLower() == "success")
                     {
                         return string.Empty;
                     }
-                    else if (replyData.ContainsKey("Result")&& (replyData["Result"].ToString().ToLower() == "failure"))
+                    else if (replyData.ContainsKey("Result")&& replyData["Result"].ToString().ToLower() == "failure")
                     {
                         m_log.ErrorFormat(
                             "[GRID CONNECTOR]: Registration failed: {0} when contacting {1}", replyData["Message"], uri);
@@ -164,7 +164,7 @@ namespace OpenSim.Services.Connectors
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                    if ((replyData["Result"] != null) && (replyData["Result"].ToString().ToLower() == "success"))
+                    if (replyData["Result"] != null && replyData["Result"].ToString().ToLower() == "success")
                         return true;
                 }
                 else
@@ -252,7 +252,7 @@ namespace OpenSim.Services.Connectors
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                if ((replyData != null) && (replyData["result"] != null))
+                if (replyData != null && replyData["result"] != null)
                 {
                     if (replyData["result"] is Dictionary<string, object>)
                         rinfo = new GridRegion((Dictionary<string, object>)replyData["result"]);
@@ -306,7 +306,7 @@ namespace OpenSim.Services.Connectors
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                if ((replyData != null) && (replyData["result"] != null))
+                if (replyData != null && replyData["result"] != null)
                 {
                     if (replyData["result"] is Dictionary<string, object>)
                         rinfo = new GridRegion((Dictionary<string, object>)replyData["result"]);
@@ -351,7 +351,7 @@ namespace OpenSim.Services.Connectors
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                if ((replyData != null) && (replyData["result"] != null))
+                if (replyData != null && replyData["result"] != null)
                 {
                     if (replyData["result"] is Dictionary<string, object>)
                         rinfo = new GridRegion((Dictionary<string, object>)replyData["result"]);
@@ -717,7 +717,7 @@ namespace OpenSim.Services.Connectors
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                if ((replyData != null) && replyData.ContainsKey("result") && (replyData["result"] != null))
+                if (replyData != null && replyData.ContainsKey("result") && replyData["result"] != null)
                 {
                     int.TryParse((string)replyData["result"], out flags);
                     //else
@@ -760,7 +760,7 @@ namespace OpenSim.Services.Connectors
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                if ((replyData != null) && replyData.Count > 0)
+                if (replyData != null && replyData.Count > 0)
                 {
                     foreach (string key in replyData.Keys)
                     {

@@ -46,7 +46,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int KEEPTIME = 30; // 30 secs
-        private ExpiringCacheOS<string, GridUserInfo> m_Infos = new ExpiringCacheOS<string, GridUserInfo>(10000);
+        private readonly ExpiringCacheOS<string, GridUserInfo> m_Infos = new ExpiringCacheOS<string, GridUserInfo>(10000);
 
         ~RemoteGridUserServicesConnector()
         {

@@ -235,7 +235,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments
                 ct.AddRow("Local ID", attachmentObject.LocalId);
                 ct.AddRow("Item ID", attachmentObject.UUID);
                 ct.AddRow("From Item ID", attachmentObject.FromItemID);
-                ct.AddRow("Attach Point", ((AttachmentPoint)attachmentObject.AttachmentPoint));
+                ct.AddRow("Attach Point", (AttachmentPoint)attachmentObject.AttachmentPoint);
                 ct.AddRow("Prims", attachmentObject.PrimCount);
                 ct.AddRow("Position", attachmentObject.RootPart.AttachedPos + "\n");
                 totalprims += attachmentObject.PrimCount;
@@ -459,7 +459,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments
                 }
                 catch (Exception e)
                 {
-                    UUID agentId = (sp.ControllingClient == null) ? default(UUID) : sp.ControllingClient.AgentId;
+                    UUID agentId = sp.ControllingClient == null ? default(UUID) : sp.ControllingClient.AgentId;
                     m_log.ErrorFormat("[ATTACHMENTS MODULE]: Unable to rez attachment with itemID {0}, assetID {1}, point {2} for {3}: {4}\n{5}",
                         attach.ItemID, attach.AssetID, attachmentPt, agentId, e.Message, e.StackTrace);
                 }
@@ -1000,12 +1000,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments
                     item.EveryOnePermissions = permsBase & grp.RootPart.EveryoneMask;
                     item.GroupPermissions = permsBase & grp.RootPart.GroupMask;
                     item.CurrentPermissions &=
-                        ((uint)PermissionMask.Copy |
-                         (uint)PermissionMask.Transfer |
-                         (uint)PermissionMask.Modify |
-                         (uint)PermissionMask.Move |
-                         (uint)PermissionMask.Export |
-                         (uint)PermissionMask.FoldedMask); // Preserve folded permissions ??
+                        (uint)PermissionMask.Copy |
+                        (uint)PermissionMask.Transfer |
+                        (uint)PermissionMask.Modify |
+                        (uint)PermissionMask.Move |
+                        (uint)PermissionMask.Export |
+                        (uint)PermissionMask.FoldedMask; // Preserve folded permissions ??
 
                     string name = grp.RootPart.Name;
                     string desc = grp.RootPart.Description;

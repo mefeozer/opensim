@@ -53,7 +53,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Timer m_regionChangeTimer = new Timer();
+        private readonly Timer m_regionChangeTimer = new Timer();
         public Scene Scene { get; private set; }
         public IUserManagement UserManager { get; private set; }
 
@@ -274,7 +274,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
                 // propagate the change
                 List<UUID> regions = Scene.GetEstateRegions(estateID);
-                UUID regionId = (regions.Count() > 0) ? regions.ElementAt(0) : UUID.Zero;
+                UUID regionId = regions.Count() > 0 ? regions.ElementAt(0) : UUID.Zero;
                 if (regionId != UUID.Zero)
                 {
                      OnEstateInfoChange?.Invoke(regionId);
@@ -318,7 +318,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
                    // propagate the change
                     List<UUID> regions = Scene.GetEstateRegions(estateID);
-                    UUID regionId = (regions.Count() > 0) ? regions.ElementAt(0) : UUID.Zero;
+                    UUID regionId = regions.Count() > 0 ? regions.ElementAt(0) : UUID.Zero;
                     if (regionId != UUID.Zero)
                     {
                         OnEstateInfoChange?.Invoke(regionId);
@@ -650,7 +650,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
             public UUID user;
         }
 
-        private BlockingCollection<EstateAccessDeltaRequest> deltaRequests = new BlockingCollection<EstateAccessDeltaRequest>();
+        private readonly BlockingCollection<EstateAccessDeltaRequest> deltaRequests = new BlockingCollection<EstateAccessDeltaRequest>();
 
         private void HandleEstateAccessDeltaRequest(IClientAPI _remote_client, UUID _invoice, int _estateAccessType, UUID _user)
         {
@@ -759,8 +759,8 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
                 estateAccessType = req.estateAccessType;
 
-                bool needReply = ((estateAccessType & 1024) == 0);
-                bool doOtherEstates = ((estateAccessType & 3) != 0);
+                bool needReply = (estateAccessType & 1024) == 0;
+                bool doOtherEstates = (estateAccessType & 3) != 0;
 
                 EstateSettings thisSettings = Scene.RegionInfo.EstateSettings;
                 int thisEstateID =(int)thisSettings.EstateID;
@@ -1250,7 +1250,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
         {
             lock (this)
             {
-                if ((TerrainUploader != null) && (XferID == TerrainUploader.XferID))
+                if (TerrainUploader != null && XferID == TerrainUploader.XferID)
                 {
                     remoteClient.OnXferReceive -= TerrainUploader.XferReceive;
                     remoteClient.OnAbortXfer -= AbortTerrainXferHandler;
@@ -1371,7 +1371,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
                 }
 
                 remote_client.SendAlertMessage("Terrain file written, starting download...");
-                string xfername = (UUID.Random()).ToString();
+                string xfername = UUID.Random().ToString();
                 Scene.XferManager.AddNewFile(xfername, bdata);
 
                 m_log.DebugFormat("[CLIENT]: Sending terrain for region {0} to {1}", Scene.Name, remote_client.Name);
@@ -1822,7 +1822,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
                 flags |= RegionFlags.AllowParcelAccessOverride;
 
             if (Scene.RegionInfo.EstateSettings.PublicAccess) //??
-                flags |= (RegionFlags.PublicAllowed | RegionFlags.ExternallyVisible);
+                flags |= RegionFlags.PublicAllowed | RegionFlags.ExternallyVisible;
 
             if (Scene.RegionInfo.EstateSettings.BlockDwell)
                 flags |= RegionFlags.BlockDwell;

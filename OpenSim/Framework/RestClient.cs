@@ -68,17 +68,17 @@ namespace OpenSim.Framework
         /// <summary>
         /// The base Uri of the web-service e.g. http://www.google.com
         /// </summary>
-        private string _url;
+        private readonly string _url;
 
         /// <summary>
         /// Path elements of the query
         /// </summary>
-        private List<string> _pathElements = new List<string>();
+        private readonly List<string> _pathElements = new List<string>();
 
         /// <summary>
         /// Parameter elements of the query, e.g. min=34
         /// </summary>
-        private Dictionary<string, string> _parameterElements = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _parameterElements = new Dictionary<string, string>();
 
         /// <summary>
         /// Request method. E.g. GET, POST, PUT or DELETE
@@ -88,12 +88,12 @@ namespace OpenSim.Framework
         /// <summary>
         /// Temporary buffer used to store bytes temporarily as they come in from the server
         /// </summary>
-        private byte[] _readbuf;
+        private readonly byte[] _readbuf;
 
         /// <summary>
         /// MemoryStream representing the resulting resource
         /// </summary>
-        private MemoryStream _resource;
+        private readonly MemoryStream _resource;
 
         /// <summary>
         /// WebRequest object, held as a member variable
@@ -144,7 +144,7 @@ namespace OpenSim.Framework
             _lock = new object();
         }
 
-        private object _lock;
+        private readonly object _lock;
 
         #endregion constructors
 

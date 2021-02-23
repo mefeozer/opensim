@@ -107,7 +107,7 @@ namespace pCampBot
                     return new Dictionary<UUID, Primitive>(m_objects);
             }
         }
-        private Dictionary<UUID, Primitive> m_objects = new Dictionary<UUID, Primitive>();
+        private readonly Dictionary<UUID, Primitive> m_objects = new Dictionary<UUID, Primitive>();
 
         /// <summary>
         /// Is this bot connected to the grid?
@@ -464,7 +464,7 @@ namespace pCampBot
 
         public WearableType GetWearableType(string path)
         {
-            string type = ((((path.Split('/'))[2]).Split('.'))[0]).Trim();
+            string type = path.Split('/')[2].Split('.')[0].Trim();
             switch (type)
             {
                 case "Eyes":
@@ -672,7 +672,7 @@ namespace pCampBot
 
                 if (prim.Sculpt != null && prim.Sculpt.SculptTexture != UUID.Zero)
                 {
-                    bool mesh = (prim.Sculpt.Type == SculptType.Mesh);
+                    bool mesh = prim.Sculpt.Type == SculptType.Mesh;
                     GetTextureOrMesh(prim.Sculpt.SculptTexture, !mesh);
                 }
             }

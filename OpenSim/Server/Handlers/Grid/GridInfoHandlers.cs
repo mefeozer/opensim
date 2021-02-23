@@ -43,8 +43,8 @@ namespace OpenSim.Server.Handlers.Grid
     public class GridInfoHandlers
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private IConfigSource m_Config;
-        private Hashtable _info = new Hashtable();
+        private readonly IConfigSource m_Config;
+        private readonly Hashtable _info = new Hashtable();
 
         /// <summary>
         /// Instantiate a GridInfoService object.

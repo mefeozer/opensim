@@ -240,7 +240,7 @@ namespace OpenSim.Framework
 
             if (prim.Sculpt != null)
             {
-                SculptEntry = (prim.Sculpt.Type != OpenMetaverse.SculptType.None);
+                SculptEntry = prim.Sculpt.Type != OpenMetaverse.SculptType.None;
                 SculptData = prim.Sculpt.GetBytes();
                 SculptTexture = prim.Sculpt.SculptTexture;
                 SculptType = (byte)prim.Sculpt.Type;
@@ -260,7 +260,7 @@ namespace OpenSim.Framework
                 try { return new Primitive.TextureEntry(m_textureEntry, 0, m_textureEntry.Length); }
                 catch { }
 
-                m_log.Warn("[SHAPE]: Failed to decode texture, length=" + ((m_textureEntry != null) ? m_textureEntry.Length : 0));
+                m_log.Warn("[SHAPE]: Failed to decode texture, length=" + (m_textureEntry != null ? m_textureEntry.Length : 0));
                 return new Primitive.TextureEntry(UUID.Zero);
             }
 
@@ -1020,13 +1020,13 @@ namespace OpenSim.Framework
 
         private ulong djb2(ulong hash, byte c)
         {
-            return ((hash << 5) + hash) + (ulong)c;
+            return (hash << 5) + hash + (ulong)c;
         }
 
         private ulong djb2(ulong hash, ushort c)
         {
-            hash = ((hash << 5) + hash) + (ulong)((byte)c);
-            return ((hash << 5) + hash) + (ulong)(c >> 8);
+            hash = (hash << 5) + hash + (ulong)(byte)c;
+            return (hash << 5) + hash + (ulong)(c >> 8);
         }
 
         public byte[] ExtraParamsToBytes()
@@ -1516,7 +1516,7 @@ namespace OpenSim.Framework
                             OSDArray meArray = new OSDArray();
                             foreach (MediaEntry me in this)
                             {
-                                OSD osd = (null == me ? new OSD() : me.GetOSD());
+                                OSD osd = null == me ? new OSD() : me.GetOSD();
                                 meArray.Add(osd);
                             }
 
@@ -1574,7 +1574,7 @@ namespace OpenSim.Framework
 
                             foreach (OSD osdMe in osdMeArray)
                             {
-                                MediaEntry me = (osdMe is OSDMap ? MediaEntry.FromOSD(osdMe) : new MediaEntry());
+                                MediaEntry me = osdMe is OSDMap ? MediaEntry.FromOSD(osdMe) : new MediaEntry();
                                 Add(me);
                             }
                         }

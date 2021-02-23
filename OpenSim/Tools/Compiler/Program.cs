@@ -39,7 +39,7 @@ namespace OpenSim.Tools.LSL.Compiler
     {
 //        Commented out because generated warning since m_positionMap could never be anything other than null
 //        private static Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>> m_positionMap;
-        private static CSharpCodeProvider CScodeProvider = new CSharpCodeProvider();
+        private static readonly CSharpCodeProvider CScodeProvider = new CSharpCodeProvider();
 
         static void Main(string[] args)
         {
@@ -261,7 +261,7 @@ namespace OpenSim.Tools.LSL.Compiler
                                KeyValuePair<KeyValuePair<int, int>, KeyValuePair<int, int>> b)
             {
                 int kc = a.Key.Key.CompareTo(b.Key.Key);
-                return (kc != 0) ? kc : a.Key.Value.CompareTo(b.Key.Value);
+                return kc != 0 ? kc : a.Key.Value.CompareTo(b.Key.Value);
             }
         }
 
@@ -305,7 +305,7 @@ namespace OpenSim.Tools.LSL.Compiler
                 if (posmap.Key.Key == line && posmap.Key.Value > col)
                 {
                   // Never move l,c backwards.
-                  if (nl > l || (nl == l && nc > c))
+                  if (nl > l || nl == l && nc > c)
                   {
                     //m_log.DebugFormat("[Compiler]: Using offset relative to this: {0} + {1} - {2}, {3} + {4} - {5} = {6}, {7}",
                     //    posmap.Value.Key, line, posmap.Key.Key, posmap.Value.Value, col, posmap.Key.Value, nl, nc);

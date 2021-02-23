@@ -49,7 +49,7 @@ namespace OpenSim.Data.Tests
 
     static class DefaultTestConns
     {
-        private static Dictionary<Type, string> conns = new Dictionary<Type, string>();
+        private static readonly Dictionary<Type, string> conns = new Dictionary<Type, string>();
 
         public static string Get(Type connType)
         {

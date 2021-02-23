@@ -53,7 +53,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
         private readonly TcpClient m_client;
         private readonly Scene m_scene;
 
-        private UUID m_agentID = UUID.Random();
+        private readonly UUID m_agentID = UUID.Random();
 
         public ISceneAgent SceneAgent { get; set; }
 

@@ -38,8 +38,8 @@ namespace OpenSim.Server.Handlers.AgentPreferences
 {
     public class AgentPreferencesServiceConnector : ServiceConnector
     {
-        private IAgentPreferencesService m_AgentPreferencesService;
-        private string m_ConfigName = "AgentPreferencesService";
+        private readonly IAgentPreferencesService m_AgentPreferencesService;
+        private readonly string m_ConfigName = "AgentPreferencesService";
 
         public AgentPreferencesServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

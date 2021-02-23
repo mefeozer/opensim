@@ -155,7 +155,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Lure
             if (!(client.Scene is Scene))
                 return;
 
-            Scene scene = (Scene)(client.Scene);
+            Scene scene = (Scene)client.Scene;
             ScenePresence presence = scene.GetScenePresence(client.AgentId);
 
             // Round up Z co-ordinate rather than round-down by casting.  This stops tall avatars from being given
@@ -174,7 +174,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Lure
 
             GridInstantMessage m;
 
-            if (scene.Permissions.IsAdministrator(client.AgentId) && presence.IsViewerUIGod && (!scene.Permissions.IsAdministrator(targetid)))
+            if (scene.Permissions.IsAdministrator(client.AgentId) && presence.IsViewerUIGod && !scene.Permissions.IsAdministrator(targetid))
             {
                 m = new GridInstantMessage(scene, client.AgentId,
                         client.FirstName+" "+client.LastName, targetid,
@@ -203,7 +203,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Lure
             if (!(client.Scene is Scene))
                 return;
 
-            Scene scene = (Scene)(client.Scene);
+            Scene scene = (Scene)client.Scene;
 
             ulong handle = 0;
             uint x = 128;

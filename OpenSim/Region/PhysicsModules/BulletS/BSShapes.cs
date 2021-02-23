@@ -110,7 +110,7 @@ public class ShapeInfoInfo
 
 public abstract class BSShape
 {
-    private static string LogHeader = "[BULLETSIM SHAPE]";
+    private static readonly string LogHeader = "[BULLETSIM SHAPE]";
 
     public int referenceCount { get; set; }
     public DateTime lastReferenced { get; set; }
@@ -361,7 +361,7 @@ public class BSShapeNull : BSShape
 // This means allocation and freeing is different than meshes.
 public class BSShapeNative : BSShape
 {
-    private static string LogHeader = "[BULLETSIM SHAPE NATIVE]";
+    private static readonly string LogHeader = "[BULLETSIM SHAPE NATIVE]";
     public BSShapeNative(BulletShape pShape) : base(pShape)
     {
     }
@@ -440,7 +440,7 @@ public class BSShapeNative : BSShape
 // BSShapeMesh is a simple mesh.
 public class BSShapeMesh : BSShape
 {
-    private static string LogHeader = "[BULLETSIM SHAPE MESH]";
+    private static readonly string LogHeader = "[BULLETSIM SHAPE MESH]";
     public static Dictionary<ulong, BSShapeMesh> Meshes = new Dictionary<ulong, BSShapeMesh>();
 
     public BSShapeMesh(BulletShape pShape) : base(pShape)
@@ -587,15 +587,15 @@ public class BSShapeMesh : BSShape
                     int v2 = indices[tri + 1] * 3;
                     int v3 = indices[tri + 2] * 3;
                 // Check to see if any two of the vertices are the same
-                    if (!( (  verticesAsFloats[v1 + 0] == verticesAsFloats[v2 + 0]
+                    if (!( verticesAsFloats[v1 + 0] == verticesAsFloats[v2 + 0]
                            && verticesAsFloats[v1 + 1] == verticesAsFloats[v2 + 1]
-                           && verticesAsFloats[v1 + 2] == verticesAsFloats[v2 + 2])
-                        || (  verticesAsFloats[v2 + 0] == verticesAsFloats[v3 + 0]
+                           && verticesAsFloats[v1 + 2] == verticesAsFloats[v2 + 2]
+                        || verticesAsFloats[v2 + 0] == verticesAsFloats[v3 + 0]
                            && verticesAsFloats[v2 + 1] == verticesAsFloats[v3 + 1]
-                           && verticesAsFloats[v2 + 2] == verticesAsFloats[v3 + 2])
-                        || (  verticesAsFloats[v1 + 0] == verticesAsFloats[v3 + 0]
+                           && verticesAsFloats[v2 + 2] == verticesAsFloats[v3 + 2]
+                        || verticesAsFloats[v1 + 0] == verticesAsFloats[v3 + 0]
                            && verticesAsFloats[v1 + 1] == verticesAsFloats[v3 + 1]
-                           && verticesAsFloats[v1 + 2] == verticesAsFloats[v3 + 2]) )
+                           && verticesAsFloats[v1 + 2] == verticesAsFloats[v3 + 2] )
                     )
                     {
                         // None of the vertices of the triangles are the same. This is a good triangle;
@@ -958,7 +958,7 @@ public class BSShapeHull : BSShape
 //    meshes. Used by BulletSim for complex shapes like linksets.
 public class BSShapeCompound : BSShape
 {
-    private static string LogHeader = "[BULLETSIM SHAPE COMPOUND]";
+    private static readonly string LogHeader = "[BULLETSIM SHAPE COMPOUND]";
     public static Dictionary<string, BSShapeCompound> CompoundShapes = new Dictionary<string, BSShapeCompound>();
 
     public BSShapeCompound(BulletShape pShape) : base(pShape)

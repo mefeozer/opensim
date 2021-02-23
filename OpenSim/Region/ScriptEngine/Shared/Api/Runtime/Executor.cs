@@ -190,8 +190,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
 
         // Cache functions by keeping a reference to them in a dictionary
-        private Dictionary<string, MethodInfo> Events = new Dictionary<string, MethodInfo>();
-        private Dictionary<string, scriptEvents> m_stateEvents = new Dictionary<string, scriptEvents>();
+        private readonly Dictionary<string, MethodInfo> Events = new Dictionary<string, MethodInfo>();
+        private readonly Dictionary<string, scriptEvents> m_stateEvents = new Dictionary<string, scriptEvents>();
 
         public Executor(IScript script)
         {
@@ -237,7 +237,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
                 m_stateEvents.Add(state, eventFlags);
 
             //m_log.Debug("Returning {0:x}", eventFlags);
-            return (eventFlags);
+            return eventFlags;
         }
 
         [DebuggerNonUserCode]

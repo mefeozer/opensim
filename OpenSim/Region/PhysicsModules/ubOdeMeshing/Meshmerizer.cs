@@ -57,7 +57,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
         // raw files can be imported by blender so a visual inspection of the results can be done
 
         const float floatPI = (float)Math.PI;
-        private static string cacheControlFilename = "cntr";
+        private static readonly string cacheControlFilename = "cntr";
         private bool m_Enabled = false;
 
         public static object diskLock = new object();
@@ -74,8 +74,8 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
         private bool doConvexPrims = true;
         private bool doConvexSculpts = true;
 
-        private Dictionary<AMeshKey, Mesh> m_uniqueMeshes = new Dictionary<AMeshKey, Mesh>();
-        private Dictionary<AMeshKey, Mesh> m_uniqueReleasedMeshes = new Dictionary<AMeshKey, Mesh>();
+        private readonly Dictionary<AMeshKey, Mesh> m_uniqueMeshes = new Dictionary<AMeshKey, Mesh>();
+        private readonly Dictionary<AMeshKey, Mesh> m_uniqueReleasedMeshes = new Dictionary<AMeshKey, Mesh>();
 
        #region INonSharedRegionModule
         public string Name
@@ -179,7 +179,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
             // As per http://wiki.secondlife.com/wiki/Mesh/Mesh_Asset_Format, some Mesh Level
             // of Detail Blocks (maps) contain just a NoGeometry key to signal there is no
             // geometry for this submesh.
-            if (subMeshData.ContainsKey("NoGeometry") && ((OSDBoolean)subMeshData["NoGeometry"]))
+            if (subMeshData.ContainsKey("NoGeometry") && (OSDBoolean)subMeshData["NoGeometry"])
                 return;
 
             OpenMetaverse.Vector3 posMax;
@@ -243,7 +243,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
 
             if (primShape.SculptEntry)
             {
-                if (((SculptType)primShape.SculptType) == SculptType.Mesh)
+                if ((SculptType)primShape.SculptType == SculptType.Mesh)
                 {
                     if (!useMeshiesPhysicsMesh)
                         return null;
@@ -292,7 +292,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
             int numCoords = coords.Count;
             int numFaces = faces.Count;
 
-            if(numCoords < 3 || (!needsConvexProcessing && numFaces < 1))
+            if(numCoords < 3 || !needsConvexProcessing && numFaces < 1)
             {
                 m_log.ErrorFormat("[ubODEMesh]: invalid degenerated mesh for prim {0} ignored", primName);
                 return null;
@@ -409,7 +409,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
                         usemesh = true;
                 }
 
-                if(!usemesh && (map.ContainsKey("physics_convex")))
+                if(!usemesh && map.ContainsKey("physics_convex"))
                         physicsParms = (OSDMap)map["physics_convex"];
 
                 if (physicsParms == null)
@@ -539,9 +539,9 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
                                         t3 = data[ptr++];
                                         t3 += data[ptr++] << 8;
 
-                                        f3 = new float3((t1 * range.X + min.X),
-                                                  (t2 * range.Y + min.Y),
-                                                  (t3 * range.Z + min.Z));
+                                        f3 = new float3(t1 * range.X + min.X,
+                                                  t2 * range.Y + min.Y,
+                                                  t3 * range.Z + min.Z);
                                         vs.Add(f3);
                                     }
 
@@ -644,9 +644,9 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
                             t3 = data[i++];
                             t3 += data[i++] << 8;
 
-                            f3 = new float3((t1 * range.X + min.X),
-                                      (t2 * range.Y + min.Y),
-                                      (t3 * range.Z + min.Z));
+                            f3 = new float3(t1 * range.X + min.X,
+                                      t2 * range.Y + min.Y,
+                                      t3 * range.Z + min.Z);
                             vs.Add(f3);
                         }
 
@@ -780,7 +780,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
 
             PrimMesher.SculptMesh.SculptType sculptType;
             // remove mirror and invert bits
-            OpenMetaverse.SculptType pbsSculptType = ((OpenMetaverse.SculptType)(primShape.SculptType & 0x3f));
+            OpenMetaverse.SculptType pbsSculptType = (OpenMetaverse.SculptType)(primShape.SculptType & 0x3f);
             switch (pbsSculptType)
             {
                 case OpenMetaverse.SculptType.Cylinder:
@@ -800,8 +800,8 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
                     break;
             }
 
-            bool mirror = ((primShape.SculptType & 128) != 0);
-            bool invert = ((primShape.SculptType & 64) != 0);
+            bool mirror = (primShape.SculptType & 128) != 0;
+            bool invert = (primShape.SculptType & 64) != 0;
 
             sculptMesh = new PrimMesher.SculptMesh((Bitmap)idata, sculptType, (int)lod, mirror, invert);
 
@@ -1064,13 +1064,13 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
 
         private ulong mdjb2(ulong hash, byte c)
         {
-            return ((hash << 5) + hash) + (ulong)c;
+            return (hash << 5) + hash + (ulong)c;
         }
 
         private ulong mdjb2(ulong hash, ushort c)
         {
-            hash = ((hash << 5) + hash) + (ulong)((byte)c);
-            return ((hash << 5) + hash) + (ulong)(c >> 8);
+            hash = (hash << 5) + hash + (ulong)(byte)c;
+            return (hash << 5) + hash + (ulong)(c >> 8);
         }
 
         public IMesh CreateMesh(string primName, PrimitiveBaseShape primShape, Vector3 size, float lod)
@@ -1127,7 +1127,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
             return null;
         }
 
-        private static Vector3 m_MeshUnitSize = new Vector3(1.0f, 1.0f, 1.0f);
+        private static readonly Vector3 m_MeshUnitSize = new Vector3(1.0f, 1.0f, 1.0f);
 
         public IMesh CreateMesh(string primName, PrimitiveBaseShape primShape, Vector3 size, float lod, bool isPhysical, bool convex, bool forOde)
         {

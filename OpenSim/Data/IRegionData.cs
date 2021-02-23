@@ -90,7 +90,7 @@ namespace OpenSim.Data
 
     public class RegionDataDistanceCompare : IComparer<RegionData>
     {
-        private Vector2 m_origin;
+        private readonly Vector2 m_origin;
 
         public RegionDataDistanceCompare(int x, int y)
         {

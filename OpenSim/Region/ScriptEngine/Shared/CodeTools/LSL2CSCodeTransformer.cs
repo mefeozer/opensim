@@ -34,7 +34,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private SYMBOL m_astRoot = null;
+        private readonly SYMBOL m_astRoot = null;
         private static Dictionary<string, string> m_datatypeLSL2OpenSim = null;
 
         /// <summary>

@@ -38,7 +38,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IGatekeeperService m_GatekeeperService;
+        private readonly IGatekeeperService m_GatekeeperService;
 
         public GatekeeperAgentHandler(IGatekeeperService gatekeeper, bool proxy) : base("/foreignagent")
         {

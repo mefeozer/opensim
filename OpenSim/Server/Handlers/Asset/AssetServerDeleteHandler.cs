@@ -51,12 +51,12 @@ namespace OpenSim.Server.Handlers.Asset
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAssetService m_AssetService;
+        private readonly IAssetService m_AssetService;
 
         /// <summary>
         /// Asset types that can be deleted remotely.
         /// </summary>
-        private AllowedRemoteDeleteTypes m_allowedTypes;
+        private readonly AllowedRemoteDeleteTypes m_allowedTypes;
 
         public AssetServerDeleteHandler(IAssetService service, AllowedRemoteDeleteTypes allowedTypes) :
                 base("DELETE", "/assets")

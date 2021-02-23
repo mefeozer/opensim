@@ -448,7 +448,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             FriendInfo[] friends = GetFriendsFromCache(userID);
             foreach (FriendInfo fi in friends)
             {
-                if (((fi.TheirFlags & (int)FriendRights.CanSeeOnline) != 0) && (fi.TheirFlags != -1))
+                if ((fi.TheirFlags & (int)FriendRights.CanSeeOnline) != 0 && fi.TheirFlags != -1)
                     friendList.Add(fi.Friend);
             }
 
@@ -508,7 +508,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                 List<FriendInfo> friendList = new List<FriendInfo>();
                 foreach (FriendInfo fi in friends)
                 {
-                    if (((fi.MyFlags & (int)FriendRights.CanSeeOnline) != 0) && (fi.TheirFlags != -1))
+                    if ((fi.MyFlags & (int)FriendRights.CanSeeOnline) != 0 && fi.TheirFlags != -1)
                         friendList.Add(fi);
                 }
                 if(friendList.Count > 0)
@@ -634,7 +634,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
         protected virtual string GetFriendshipRequesterName(UUID agentID)
         {
             UserAccount account = UserAccountService.GetUserAccount(UUID.Zero, agentID);
-            return (account == null) ? "Unknown" : account.FirstName + " " + account.LastName;
+            return account == null ? "Unknown" : account.FirstName + " " + account.LastName;
         }
 
         protected virtual void OnApproveFriendRequest(IClientAPI client, UUID friendID, List<UUID> callingCardFolders)

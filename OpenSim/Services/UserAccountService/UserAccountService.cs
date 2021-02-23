@@ -48,7 +48,7 @@ namespace OpenSim.Services.UserAccountService
         /// <summary>
         /// Should we create default entries (minimum body parts/clothing, avatar wearable entries) for a new avatar?
         /// </summary>
-        private bool m_CreateDefaultAvatarEntries;
+        private readonly bool m_CreateDefaultAvatarEntries;
 
         protected IGridService m_GridService;
         protected IAuthenticationService m_AuthenticationService;
@@ -594,7 +594,7 @@ namespace OpenSim.Services.UserAccountService
             if (null == account)
             {
                 account = new UserAccount(UUID.Zero, principalID, firstName, lastName, email);
-                if (account.ServiceURLs == null || (account.ServiceURLs != null && account.ServiceURLs.Count == 0))
+                if (account.ServiceURLs == null || account.ServiceURLs != null && account.ServiceURLs.Count == 0)
                 {
                     account.ServiceURLs = new Dictionary<string, object>();
                     account.ServiceURLs["HomeURI"] = string.Empty;

@@ -46,7 +46,7 @@ namespace OpenSim.Tests.Common
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        IXGroupData m_data = new NullXGroupData(null, null);
+        readonly IXGroupData m_data = new NullXGroupData(null, null);
 
         public string Name
         {

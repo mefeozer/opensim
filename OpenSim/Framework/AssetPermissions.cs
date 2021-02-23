@@ -14,8 +14,9 @@ namespace OpenSim.Framework
             LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool[] m_DisallowExport, m_DisallowImport;
-        private string[] m_AssetTypeNames;
+        private readonly bool[] m_DisallowExport;
+        private readonly bool[] m_DisallowImport;
+        private readonly string[] m_AssetTypeNames;
 
         public AssetPermissions(IConfig config)
         {

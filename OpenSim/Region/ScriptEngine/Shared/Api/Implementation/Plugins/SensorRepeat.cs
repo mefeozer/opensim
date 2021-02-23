@@ -82,7 +82,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             m_npcModule = m_CmdManager.m_ScriptEngine.World.RequestModuleInterface<INPCModule>();
         }
 
-        private INPCModule m_npcModule;
+        private readonly INPCModule m_npcModule;
 
         private readonly object SenseLock = new object();
 
@@ -93,8 +93,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         private const int PASSIVE = 4;
         private const int SCRIPTED = 8;
 
-        private double maximumRange = 96.0;
-        private int maximumToReturn = 16;
+        private readonly double maximumRange = 96.0;
+        private readonly int maximumToReturn = 16;
 
         //
         // Sensed entity
@@ -114,8 +114,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                 if (ent.distance > distance) return -1;
                 return 0;
             }
-            public UUID itemID;
-            public double distance;
+            public readonly UUID itemID;
+            public readonly double distance;
         }
 
         /// <summary>

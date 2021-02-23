@@ -177,7 +177,7 @@ namespace OpenSim.Framework.Serialization
             // Read the rest of the empty padding in the 512 byte block
             if (fileSize % 512 != 0)
             {
-                int paddingLeft = 512 - (fileSize % 512);
+                int paddingLeft = 512 - fileSize % 512;
 
                 //m_log.DebugFormat("[TAR ARCHIVE READER]: Reading {0} padding bytes", paddingLeft);
 

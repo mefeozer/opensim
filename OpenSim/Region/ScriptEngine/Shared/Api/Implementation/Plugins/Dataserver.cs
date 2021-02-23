@@ -34,7 +34,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 {
     public class Dataserver
     {
-        private ObjectJobEngine m_WorkPool;
+        private readonly ObjectJobEngine m_WorkPool;
 
         public AsyncCommandManager m_CmdManager;
 
@@ -47,7 +47,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
         }
 
-        private Dictionary<string, DataserverRequest> DataserverRequests =  new Dictionary<string, DataserverRequest>();
+        private readonly Dictionary<string, DataserverRequest> DataserverRequests =  new Dictionary<string, DataserverRequest>();
 
         public Dataserver(AsyncCommandManager CmdManager)
         {

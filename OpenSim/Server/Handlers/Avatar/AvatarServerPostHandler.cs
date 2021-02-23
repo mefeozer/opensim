@@ -44,7 +44,7 @@ namespace OpenSim.Server.Handlers.Avatar
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAvatarService m_AvatarService;
+        private readonly IAvatarService m_AvatarService;
 
         public AvatarServerPostHandler(IAvatarService service, IServiceAuth auth) :
                 base("POST", "/avatar", auth)

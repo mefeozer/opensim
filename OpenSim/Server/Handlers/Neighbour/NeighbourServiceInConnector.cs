@@ -40,8 +40,8 @@ namespace OpenSim.Server.Handlers.Neighbour
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private INeighbourService m_NeighbourService;
-        private IAuthenticationService m_AuthenticationService = null;
+        private readonly INeighbourService m_NeighbourService;
+        private readonly IAuthenticationService m_AuthenticationService = null;
 
         public NeighbourServiceInConnector(IConfigSource source, IHttpServer server, INeighbourService nService, IScene scene) :
                 base(source, server, string.Empty)

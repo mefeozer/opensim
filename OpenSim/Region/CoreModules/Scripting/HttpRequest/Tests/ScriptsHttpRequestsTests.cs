@@ -102,7 +102,7 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest.Tests
 
     class TestAsyncResult : IAsyncResult
     {
-        WaitHandle m_wh = new ManualResetEvent(true);
+        readonly WaitHandle m_wh = new ManualResetEvent(true);
 
         object IAsyncResult.AsyncState
         {

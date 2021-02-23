@@ -65,7 +65,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
         //private int m_retryCounter;
         //private bool m_inRetries;
 
-        private Dictionary<string, List<AssetRetrievedEx>> m_AssetHandlers = new Dictionary<string, List<AssetRetrievedEx>>();
+        private readonly Dictionary<string, List<AssetRetrievedEx>> m_AssetHandlers = new Dictionary<string, List<AssetRetrievedEx>>();
 
         private ObjectJobEngine m_requestQueue;
 

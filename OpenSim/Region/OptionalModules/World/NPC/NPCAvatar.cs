@@ -634,7 +634,7 @@ namespace OpenSim.Region.OptionalModules.World.NPC
 
         public bool IsGroupMember(UUID groupID)
         {
-            return (m_hostGroupID == groupID);
+            return m_hostGroupID == groupID;
         }
 
         public Dictionary<UUID, ulong> GetGroupPowers()

@@ -65,9 +65,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         /// <summary>
         /// ODE near callback delegate
         /// </summary>
-        private SafeNativeMethods.NearCallback nearCallback;
+        private readonly SafeNativeMethods.NearCallback nearCallback;
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private List<ContactResult> m_contactResults = new List<ContactResult>();
+        private readonly List<ContactResult> m_contactResults = new List<ContactResult>();
         private RayFilterFlags CurrentRayFilter;
         private int CurrentMaxCount;
 
@@ -143,8 +143,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                     CollisionContactGeomsPerTest = req.Count & 0xffff;
 
-                    closestHit = ((CurrentRayFilter & RayFilterFlags.ClosestHit) == 0 ? 0 : 1);
-                    backfacecull = ((CurrentRayFilter & RayFilterFlags.BackFaceCull) == 0 ? 0 : 1);
+                    closestHit = (CurrentRayFilter & RayFilterFlags.ClosestHit) == 0 ? 0 : 1;
+                    backfacecull = (CurrentRayFilter & RayFilterFlags.BackFaceCull) == 0 ? 0 : 1;
 
                     if (req.callbackMethod is ProbeBoxCallback)
                     {
@@ -308,9 +308,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 SafeNativeMethods.SpaceCollide2(ray, m_scene.ActiveSpace, IntPtr.Zero, nearCallback);
                 SafeNativeMethods.SpaceCollide2(ray, m_scene.CharsSpace, IntPtr.Zero, nearCallback);
             }
-            if ((CurrentRayFilter & FilterStaticSpace) != 0 && (m_contactResults.Count < CurrentMaxCount))
+            if ((CurrentRayFilter & FilterStaticSpace) != 0 && m_contactResults.Count < CurrentMaxCount)
                 SafeNativeMethods.SpaceCollide2(ray, m_scene.StaticSpace, IntPtr.Zero, nearCallback);
-            if ((CurrentRayFilter & RayFilterFlags.land) != 0 && (m_contactResults.Count < CurrentMaxCount))
+            if ((CurrentRayFilter & RayFilterFlags.land) != 0 && m_contactResults.Count < CurrentMaxCount)
             {
                 // current ode land to ray collisions is very bad
                 // so for now limit its range badly
@@ -378,9 +378,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 SafeNativeMethods.SpaceCollide2(probe, m_scene.ActiveSpace, IntPtr.Zero, nearCallback);
                 SafeNativeMethods.SpaceCollide2(probe, m_scene.CharsSpace, IntPtr.Zero, nearCallback);
             }
-            if ((CurrentRayFilter & FilterStaticSpace) != 0 && (m_contactResults.Count < CurrentMaxCount))
+            if ((CurrentRayFilter & FilterStaticSpace) != 0 && m_contactResults.Count < CurrentMaxCount)
                 SafeNativeMethods.SpaceCollide2(probe, m_scene.StaticSpace, IntPtr.Zero, nearCallback);
-            if ((CurrentRayFilter & RayFilterFlags.land) != 0 && (m_contactResults.Count < CurrentMaxCount))
+            if ((CurrentRayFilter & RayFilterFlags.land) != 0 && m_contactResults.Count < CurrentMaxCount)
                 SafeNativeMethods.SpaceCollide2(probe, m_scene.GroundSpace, IntPtr.Zero, nearCallback);
 
             List<ContactResult> cresult = new List<ContactResult>(m_contactResults.Count);
@@ -405,9 +405,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     SafeNativeMethods.SpaceCollide2(Plane, m_scene.ActiveSpace, IntPtr.Zero, nearCallback);
                     SafeNativeMethods.SpaceCollide2(Plane, m_scene.CharsSpace, IntPtr.Zero, nearCallback);
                 }
-                if ((CurrentRayFilter & FilterStaticSpace) != 0 && (m_contactResults.Count < CurrentMaxCount))
+                if ((CurrentRayFilter & FilterStaticSpace) != 0 && m_contactResults.Count < CurrentMaxCount)
                     SafeNativeMethods.SpaceCollide2(Plane, m_scene.StaticSpace, IntPtr.Zero, nearCallback);
-                if ((CurrentRayFilter & RayFilterFlags.land) != 0 && (m_contactResults.Count < CurrentMaxCount))
+                if ((CurrentRayFilter & RayFilterFlags.land) != 0 && m_contactResults.Count < CurrentMaxCount)
                     SafeNativeMethods.SpaceCollide2(Plane, m_scene.GroundSpace, IntPtr.Zero, nearCallback);
             }
             else

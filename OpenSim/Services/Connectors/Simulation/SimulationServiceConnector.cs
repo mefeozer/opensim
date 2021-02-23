@@ -45,7 +45,7 @@ namespace OpenSim.Services.Connectors.Simulation
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // we use this dictionary to track the pending updateagent requests, maps URI --> position update
-        private Dictionary<string,AgentPosition> m_updateAgentQueue = new Dictionary<string,AgentPosition>();
+        private readonly Dictionary<string,AgentPosition> m_updateAgentQueue = new Dictionary<string,AgentPosition>();
 
         //private GridRegion m_Region;
 
@@ -168,7 +168,7 @@ namespace OpenSim.Services.Connectors.Simulation
             return UpdateAgent(destination, (IAgentData)data, ctx, 200000); // yes, 200 seconds
         }
 
-        private ExpiringCache<string, bool> _failedSims = new ExpiringCache<string, bool>();
+        private readonly ExpiringCache<string, bool> _failedSims = new ExpiringCache<string, bool>();
         /// <summary>
         /// Send updated position information about an agent in this region to a neighbor
         /// This operation may be called very frequently if an avatar is moving about in

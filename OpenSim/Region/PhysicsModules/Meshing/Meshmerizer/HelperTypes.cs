@@ -299,7 +299,7 @@ public class Triangle
     {
         // This means, the vertices of this triangle are somewhat strange.
         // They either line up or at least two of them are identical
-        return (radius_square == 0.0);
+        return radius_square == 0.0;
     }
 
     private void CalcCircle()
@@ -349,8 +349,8 @@ public class Triangle
         v2x = p1x - p3x;
         v2y = p1y - p3y;
 
-        z = (c1*v2x - c2*v1x);
-        n = (v1y*v2x - v2y*v1x);
+        z = c1*v2x - c2*v1x;
+        n = v1y*v2x - v2y*v1x;
 
         if (n == 0.0) // This is no triangle, i.e there are (at least) two points at the same location
         {
@@ -373,8 +373,8 @@ public class Triangle
             Debug.Assert(false, "Malformed triangle"); /* Both terms zero means nothing good */
         }
 
-        rx = (p1x - cx);
-        ry = (p1y - cy);
+        rx = p1x - cx;
+        ry = p1y - cy;
 
         radius_square = (float) (rx*rx + ry*ry);
     }

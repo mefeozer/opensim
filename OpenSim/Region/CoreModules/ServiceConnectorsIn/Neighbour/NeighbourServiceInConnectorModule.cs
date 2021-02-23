@@ -50,7 +50,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Neighbour
         private static bool m_Registered = false;
 
         private IConfigSource m_Config;
-        private List<Scene> m_Scenes = new List<Scene>();
+        private readonly List<Scene> m_Scenes = new List<Scene>();
 
         #region Region Module interface
 

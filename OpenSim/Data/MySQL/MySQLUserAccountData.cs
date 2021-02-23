@@ -56,7 +56,7 @@ namespace OpenSim.Data.MySQL
 //                }
             }
 
-            if ((!valid) || words.Length == 0)
+            if (!valid || words.Length == 0)
                 return new UserAccountData[0];
 
             if (words.Length > 2)

@@ -38,7 +38,7 @@ namespace OpenSim.Framework
 
         public TimeSpan GetSumTime()
         {
-            return TimeSpan.FromMilliseconds((GetSum() * 1000) / Stopwatch.Frequency);
+            return TimeSpan.FromMilliseconds(GetSum() * 1000 / Stopwatch.Frequency);
         }
     }
 
@@ -63,9 +63,9 @@ namespace OpenSim.Framework
     /// </remarks>
     public abstract class MetricsCollector<T>
     {
-        private int bucketSize;     // e.g. 3,000 ms
+        private readonly int bucketSize;     // e.g. 3,000 ms
 
-        private MetricsBucket<T>[] buckets;
+        private readonly MetricsBucket<T>[] buckets;
 
         private int NumBuckets { get { return buckets.Length; } }
 

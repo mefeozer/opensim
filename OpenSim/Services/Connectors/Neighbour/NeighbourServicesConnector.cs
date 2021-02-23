@@ -64,9 +64,9 @@ namespace OpenSim.Services.Connectors
         public virtual GridRegion HelloNeighbour(ulong regionHandle, RegionInfo thisRegion)
         {
             GridRegion regInfo = m_GridService.GetRegionByHandle(thisRegion.ScopeID, regionHandle);
-            if ((regInfo != null) &&
+            if (regInfo != null &&
                 // Don't remote-call this instance; that's a startup hickup
-                !((regInfo.ExternalHostName == thisRegion.ExternalHostName) && (regInfo.HttpPort == thisRegion.HttpPort)))
+                !(regInfo.ExternalHostName == thisRegion.ExternalHostName && regInfo.HttpPort == thisRegion.HttpPort))
             {
                 if (!DoHelloNeighbourCall(regInfo, thisRegion))
                     return null;

@@ -43,7 +43,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public unsafe static bool IsBadNumber(double d)
         {
-            return (*(long*)(&d) & 0x7FFFFFFFFFFFFFFF) >= 0x7FF0000000000000;
+            return (*(long*)&d & 0x7FFFFFFFFFFFFFFF) >= 0x7FF0000000000000;
         }
 
         [Serializable]
@@ -174,7 +174,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public static bool operator ==(Vector3 lhs, Vector3 rhs)
             {
-                return (lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z);
+                return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
             }
 
             public static bool operator !=(Vector3 lhs, Vector3 rhs)
@@ -184,7 +184,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public override int GetHashCode()
             {
-                return (x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode());
+                return x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode();
             }
 
             public override bool Equals(object o)
@@ -193,7 +193,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
                 Vector3 vector = (Vector3)o;
 
-                return (x == vector.x && y == vector.y && z == vector.z);
+                return x == vector.x && y == vector.y && z == vector.z;
             }
 
             public static Vector3 operator -(Vector3 vector)
@@ -225,9 +225,9 @@ namespace OpenSim.Region.ScriptEngine.Shared
             {
                 //Cross product
                 Vector3 tv;
-                tv.x = (v1.y * v2.z) - (v1.z * v2.y);
-                tv.y = (v1.z * v2.x) - (v1.x * v2.z);
-                tv.z = (v1.x * v2.y) - (v1.y * v2.x);
+                tv.x = v1.y * v2.z - v1.z * v2.y;
+                tv.y = v1.z * v2.x - v1.x * v2.z;
+                tv.z = v1.x * v2.y - v1.y * v2.x;
                 return tv;
             }
 
@@ -330,7 +330,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public static double Dot(Vector3 v1, Vector3 v2)
             {
-                return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+                return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
             }
 
             public static Vector3 Cross(Vector3 v1, Vector3 v2)
@@ -366,7 +366,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public static Vector3 Slerp(Vector3 v1, Vector3 v2, double amount)
             {
-                double angle = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+                double angle = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
                 double scale;
                 double invscale;
 
@@ -375,7 +375,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
                     angle = Math.Acos(angle);
                     invscale = 1.0f / Math.Sin(angle);
                     scale = Math.Sin((1.0f - amount) * angle) * invscale;
-                    invscale *= Math.Sin((amount * angle));
+                    invscale *= Math.Sin(amount * angle);
                 }
                 else
                 {
@@ -488,7 +488,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public static Quaternion Slerp(Quaternion q1, Quaternion q2, double amount)
             {
-                double angle = (q1.x * q2.x) + (q1.y * q2.y) + (q1.z * q2.z) + (q1.s * q2.s);
+                double angle = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.s * q2.s;
 
                 if (angle < 0f)
                 {
@@ -502,9 +502,9 @@ namespace OpenSim.Region.ScriptEngine.Shared
                 double scale;
                 double invscale;
 
-                if ((angle + 1.0) > 0.0005)
+                if (angle + 1.0 > 0.0005)
                 {
-                    if ((1f - angle) >= 0.0005)
+                    if (1f - angle >= 0.0005)
                     {
                         // slerp
                         double theta = Math.Acos(angle);
@@ -555,7 +555,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public override int GetHashCode()
             {
-                return (x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode() ^ s.GetHashCode());
+                return x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode() ^ s.GetHashCode();
             }
 
             public override bool Equals(object o)
@@ -1222,7 +1222,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
                     stride = 1;
                 }
 
-                if ((Data.Length % stride) != 0)
+                if (Data.Length % stride != 0)
                     return new list(ret);
 
                 // we can optimize here in the case where stride == 1 and the list
@@ -1262,7 +1262,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
                 int k;
                 int n = Data.Length;
 
-                for (i = 0; i < (n-stride); i += stride)
+                for (i = 0; i < n-stride; i += stride)
                 {
                     for (j = i + stride; j < n; j += stride)
                     {
@@ -1372,7 +1372,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public double Range()
             {
-                return (this.Max() / this.Min());
+                return this.Max() / this.Min();
             }
 
             public int NumericLength()
@@ -1433,7 +1433,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public double Mean()
             {
-                return (this.Sum() / this.NumericLength());
+                return this.Sum() / this.NumericLength();
             }
 
             public void NumericSort()
@@ -1472,7 +1472,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
                 {
                     ret += 1.0 / (double)nums.Data[i];
                 }
-                return ((double)nums.Data.Length / ret);
+                return (double)nums.Data.Length / ret;
             }
 
             public double Variance()
@@ -1502,7 +1502,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
                 }
                 else
                 {
-                    return (double)j.Data[((int)(Math.Ceiling(this.Length * i))) - 1];
+                    return (double)j.Data[(int)Math.Ceiling(this.Length * i) - 1];
                 }
             }
 
@@ -1989,36 +1989,36 @@ namespace OpenSim.Region.ScriptEngine.Shared
             static public LSLInteger operator ==(LSLInteger i1, LSLInteger i2)
             {
                 bool ret = i1.value == i2.value;
-                return new LSLInteger((ret ? 1 : 0));
+                return new LSLInteger(ret ? 1 : 0);
             }
 
             static public LSLInteger operator !=(LSLInteger i1, LSLInteger i2)
             {
                 bool ret = i1.value != i2.value;
-                return new LSLInteger((ret ? 1 : 0));
+                return new LSLInteger(ret ? 1 : 0);
             }
 
             static public LSLInteger operator <(LSLInteger i1, LSLInteger i2)
             {
                 bool ret = i1.value < i2.value;
-                return new LSLInteger((ret ? 1 : 0));
+                return new LSLInteger(ret ? 1 : 0);
             }
             static public LSLInteger operator <=(LSLInteger i1, LSLInteger i2)
             {
                 bool ret = i1.value <= i2.value;
-                return new LSLInteger((ret ? 1 : 0));
+                return new LSLInteger(ret ? 1 : 0);
             }
 
             static public LSLInteger operator >(LSLInteger i1, LSLInteger i2)
             {
                 bool ret = i1.value > i2.value;
-                return new LSLInteger((ret ? 1 : 0));
+                return new LSLInteger(ret ? 1 : 0);
             }
 
             static public LSLInteger operator >=(LSLInteger i1, LSLInteger i2)
             {
                 bool ret = i1.value >= i2.value;
-                return new LSLInteger((ret ? 1 : 0));
+                return new LSLInteger(ret ? 1 : 0);
             }
 
             static public LSLInteger operator +(LSLInteger i1, int i2)

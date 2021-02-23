@@ -37,8 +37,8 @@ namespace OpenSim.Server.Handlers.UserAccounts
 {
     public class UserAccountServiceConnector : ServiceConnector
     {
-        private IUserAccountService m_UserAccountService;
-        private string m_ConfigName = "UserAccountService";
+        private readonly IUserAccountService m_UserAccountService;
+        private readonly string m_ConfigName = "UserAccountService";
 
         public UserAccountServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

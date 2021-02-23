@@ -59,7 +59,7 @@ namespace PrimMesher
             coords = new List<Coord>();
             faces = new List<Face>();
 
-            sculptType = (SculptType)(((int)sculptType) & 0x07);
+            sculptType = (SculptType)((int)sculptType & 0x07);
 
             int width = rows[0].Count;
 

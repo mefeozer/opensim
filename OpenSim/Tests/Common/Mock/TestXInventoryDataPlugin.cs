@@ -36,8 +36,8 @@ namespace OpenSim.Tests.Common
 {
     public class TestXInventoryDataPlugin : NullGenericDataHandler, IXInventoryData
     {
-        private Dictionary<UUID, XInventoryFolder> m_allFolders = new Dictionary<UUID, XInventoryFolder>();
-        private Dictionary<UUID, XInventoryItem> m_allItems = new Dictionary<UUID, XInventoryItem>();
+        private readonly Dictionary<UUID, XInventoryFolder> m_allFolders = new Dictionary<UUID, XInventoryFolder>();
+        private readonly Dictionary<UUID, XInventoryItem> m_allItems = new Dictionary<UUID, XInventoryItem>();
 
         public TestXInventoryDataPlugin(string conn, string realm) {}
 

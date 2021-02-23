@@ -46,7 +46,7 @@ namespace OpenSim.Region.CoreModules.Hypergrid
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Remember the map area that each client has been exposed to in this region
-        private Dictionary<UUID, List<MapBlockData>> m_SeenMapBlocks = new Dictionary<UUID, List<MapBlockData>>();
+        private readonly Dictionary<UUID, List<MapBlockData>> m_SeenMapBlocks = new Dictionary<UUID, List<MapBlockData>>();
 
         private string m_MapImageServerURL = string.Empty;
 

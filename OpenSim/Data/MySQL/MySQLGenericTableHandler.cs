@@ -108,7 +108,7 @@ namespace OpenSim.Data.MySQL
             foreach (DataRow row in schemaTable.Rows)
             {
                 if (row["ColumnName"] != null &&
-                        (!m_Fields.ContainsKey(row["ColumnName"].ToString())))
+                        !m_Fields.ContainsKey(row["ColumnName"].ToString()))
                     columnNames.Add(row["ColumnName"].ToString());
             }
 

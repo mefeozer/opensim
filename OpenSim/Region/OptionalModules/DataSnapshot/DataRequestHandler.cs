@@ -42,9 +42,9 @@ namespace OpenSim.Region.DataSnapshot
     public class DataRequestHandler
     {
 //        private Scene m_scene = null;
-        private DataSnapshotManager m_externalData = null;
+        private readonly DataSnapshotManager m_externalData = null;
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private ExpiringCache<string, int> throotleGen = new ExpiringCache<string, int>();
+        private readonly ExpiringCache<string, int> throotleGen = new ExpiringCache<string, int>();
 
         public DataRequestHandler(Scene scene, DataSnapshotManager externalData)
         {

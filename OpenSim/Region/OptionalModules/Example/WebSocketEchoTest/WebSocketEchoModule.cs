@@ -52,11 +52,11 @@ namespace OpenSim.Region.OptionalModules.WebSocketEchoModule
         public Type ReplaceableInterface { get { return null; } }
 
 
-        private HashSet<WebSocketHttpServerHandler> _activeHandlers = new HashSet<WebSocketHttpServerHandler>();
+        private readonly HashSet<WebSocketHttpServerHandler> _activeHandlers = new HashSet<WebSocketHttpServerHandler>();
 
         public void Initialise(IConfigSource pConfig)
         {
-            enabled = (pConfig.Configs["WebSocketEcho"] != null);
+            enabled = pConfig.Configs["WebSocketEcho"] != null;
 //            if (enabled)
 //                m_log.DebugFormat("[WebSocketEchoModule]: INITIALIZED MODULE");
         }

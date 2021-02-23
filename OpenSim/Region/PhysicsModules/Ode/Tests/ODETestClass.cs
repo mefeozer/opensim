@@ -84,7 +84,7 @@ namespace OpenSim.Region.PhysicsModule.ODE.Tests
             // Initializing Physics Scene.
             //ps.Initialise(imp.GetMesher(TopConfig), null, Vector3.Zero);
             float[] _heightmap = new float[(int)Constants.RegionSize * (int)Constants.RegionSize];
-            for (int i = 0; i < ((int)Constants.RegionSize * (int)Constants.RegionSize); i++)
+            for (int i = 0; i < (int)Constants.RegionSize * (int)Constants.RegionSize; i++)
             {
                 _heightmap[i] = 21f;
             }
@@ -104,7 +104,7 @@ namespace OpenSim.Region.PhysicsModule.ODE.Tests
         public void CreateAndDropPhysicalCube()
         {
             PrimitiveBaseShape newcube = PrimitiveBaseShape.CreateBox();
-            Vector3 position = new Vector3(((float)Constants.RegionSize * 0.5f), ((float)Constants.RegionSize * 0.5f), 128f);
+            Vector3 position = new Vector3((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f, 128f);
             Vector3 size = new Vector3(0.5f, 0.5f, 0.5f);
             Quaternion rot = Quaternion.Identity;
             PhysicsActor prim = pScene.AddPrimShape("CoolShape", newcube, position, size, rot, true, 0);

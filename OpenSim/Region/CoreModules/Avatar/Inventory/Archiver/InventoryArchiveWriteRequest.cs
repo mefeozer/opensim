@@ -75,8 +75,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         /// </value>
         private const string STAR_WILDCARD = "*";
 
-        private InventoryArchiverModule m_module;
-        private UserAccount m_userInfo;
+        private readonly InventoryArchiverModule m_module;
+        private readonly UserAccount m_userInfo;
         private string m_invPath;
         protected TarArchiveWriter m_archiveWriter;
         protected UuidGatherer m_assetGatherer;
@@ -99,7 +99,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         /// <value>
         /// The stream to which the inventory archive will be saved.
         /// </value>
-        private Stream m_saveStream;
+        private readonly Stream m_saveStream;
 
         /// <summary>
         /// Constructor

@@ -49,7 +49,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IInstantMessage m_IMService;
+        private readonly IInstantMessage m_IMService;
 
         public InstantMessageServerConnector(IConfigSource config, IHttpServer server) :
             this(config, server, (IInstantMessageSimConnector)null)

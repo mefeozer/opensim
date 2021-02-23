@@ -36,9 +36,9 @@ namespace OpenSim.Framework
 
     public class AnimationSet
     {
-        private bool m_parseError = false;
+        private readonly bool m_parseError = false;
 
-        public const uint createBasePermitions = (uint)(PermissionMask.All); // no export ?
+        public const uint createBasePermitions = (uint)PermissionMask.All; // no export ?
         public const uint createNextPermitions = (uint)(PermissionMask.Copy | PermissionMask.Modify);
 
         public const uint allowedBasePermitions = (uint)(PermissionMask.Copy | PermissionMask.Modify);
@@ -87,7 +87,7 @@ namespace OpenSim.Framework
         }
 
         public int AnimationCount { get; private set; }
-        private Dictionary<string, KeyValuePair<string, UUID>> m_animations = new Dictionary<string, KeyValuePair<string, UUID>>();
+        private readonly Dictionary<string, KeyValuePair<string, UUID>> m_animations = new Dictionary<string, KeyValuePair<string, UUID>>();
 
         public UUID GetAnimation(string index)
         {

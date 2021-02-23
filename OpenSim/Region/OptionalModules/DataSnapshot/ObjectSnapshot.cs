@@ -44,8 +44,8 @@ namespace OpenSim.Region.DataSnapshot.Providers
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private bool m_stale = true;
 
-        private static UUID m_DefaultImage = new UUID("89556747-24cb-43ed-920b-47caed15465f");
-        private static UUID m_BlankImage = new UUID("5748decc-f629-461c-9a36-a35a221fe21f");
+        private static readonly UUID m_DefaultImage = new UUID("89556747-24cb-43ed-920b-47caed15465f");
+        private static readonly UUID m_BlankImage = new UUID("5748decc-f629-461c-9a36-a35a221fe21f");
 
 
         public void Initialize(Scene scene, DataSnapshotManager parent)

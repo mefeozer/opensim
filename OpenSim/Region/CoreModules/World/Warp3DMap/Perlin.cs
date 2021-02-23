@@ -53,14 +53,14 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
             for (i = 0; i < B; i++)
             {
                 p[i] = i;
-                g1[i] = (float)((rng.Next() % (B + B)) - B) / B;
+                g1[i] = (float)(rng.Next() % (B + B) - B) / B;
 
                 for (j = 0; j < 2; j++)
-                    g2[i, j] = (float)((rng.Next() % (B + B)) - B) / B;
+                    g2[i, j] = (float)(rng.Next() % (B + B) - B) / B;
                 normalize2(g2, i);
 
                 for (j = 0; j < 3; j++)
-                    g3[i, j] = (float)((rng.Next() % (B + B)) - B) / B;
+                    g3[i, j] = (float)(rng.Next() % (B + B) - B) / B;
                 normalize3(g3, i);
             }
 
@@ -88,7 +88,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
             float rx0, rx1, sx, t, u, v;
 
             t = arg + N;
-            bx0 = ((int)t) & BM;
+            bx0 = (int)t & BM;
             bx1 = (bx0 + 1) & BM;
             rx0 = t - (int)t;
             rx1 = rx0 - 1f;
@@ -109,14 +109,14 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
 
             t = x + N;
             rx0 = t - (int)t;
-            bx = ((int)t) & BM;
+            bx = (int)t & BM;
             i = p[bx];
             bx = (bx + 1) & BM;
             j = p[bx];
 
             t = y + N;
             ry0 = t - (int)t;
-            by = ((int)t) & BM;
+            by = (int)t & BM;
             b00 = p[i + by];
             b10 = p[j + by];
 
@@ -146,19 +146,19 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
             int i, j;
 
             t = x + N;
-            bx0 = ((int)t) & BM;
+            bx0 = (int)t & BM;
             bx1 = (bx0 + 1) & BM;
             rx0 = t - (int)t;
             rx1 = rx0 - 1f;
 
             t = y + N;
-            by0 = ((int)t) & BM;
+            by0 = (int)t & BM;
             by1 = (by0 + 1) & BM;
             ry0 = t - (int)t;
             ry1 = ry0 - 1f;
 
             t = z + N;
-            bz0 = ((int)t) & BM;
+            bz0 = (int)t & BM;
             bz1 = (bz0 + 1) & BM;
             rz0 = t - (int)t;
             rz1 = rz0 - 1f;

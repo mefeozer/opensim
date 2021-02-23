@@ -98,7 +98,7 @@ public class BSVMotor : BSMotor
     }
     public virtual bool ErrorIsZero(Vector3 err)
     {
-        return (err == Vector3.Zero || err.ApproxEquals(Vector3.Zero, ErrorZeroThreshold));
+        return err == Vector3.Zero || err.ApproxEquals(Vector3.Zero, ErrorZeroThreshold);
     }
 
     public BSVMotor(string useName)
@@ -153,8 +153,8 @@ public class BSVMotor : BSMotor
             float decayFactor = 0f;
             if (TargetValueDecayTimeScale != BSMotor.Infinite)
             {
-                decayFactor = (1.0f / TargetValueDecayTimeScale) * timeStep;
-                TargetValue *= (1f - decayFactor);
+                decayFactor = 1.0f / TargetValueDecayTimeScale * timeStep;
+                TargetValue *= 1f - decayFactor;
             }
 
             MDetailLog("{0},  BSVMotor.Step,nonZero,{1},origCurr={2},origTarget={3},timeStep={4},err={5},corr={6}",
@@ -259,7 +259,7 @@ public class BSFMotor : BSMotor
     }
     public virtual bool ErrorIsZero(float err)
     {
-        return (err >= -ErrorZeroThreshold && err <= ErrorZeroThreshold);
+        return err >= -ErrorZeroThreshold && err <= ErrorZeroThreshold;
     }
 
     public BSFMotor(string useName, float timeScale, float decayTimescale, float efficiency)
@@ -304,8 +304,8 @@ public class BSFMotor : BSMotor
             float decayFactor = 0f;
             if (TargetValueDecayTimeScale != BSMotor.Infinite)
             {
-                decayFactor = (1.0f / TargetValueDecayTimeScale) * timeStep;
-                TargetValue *= (1f - decayFactor);
+                decayFactor = 1.0f / TargetValueDecayTimeScale * timeStep;
+                TargetValue *= 1f - decayFactor;
             }
 
             MDetailLog("{0},  BSFMotor.Step,nonZero,{1},origCurr={2},origTarget={3},timeStep={4},err={5},corr={6}",

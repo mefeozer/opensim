@@ -44,7 +44,7 @@ namespace OpenSim.Data.MySQL
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private string m_connectionString;
-        private object m_dbLock = new object();
+        private readonly object m_dbLock = new object();
 
         public string Version { get { return "1.0.0.0"; } }
 
@@ -316,7 +316,7 @@ namespace OpenSim.Data.MySQL
                 item.EveryOnePermissions = (uint) reader["inventoryEveryOnePermissions"];
                 item.GroupPermissions = (uint) reader["inventoryGroupPermissions"];
                 item.SalePrice = (int) reader["salePrice"];
-                item.SaleType = unchecked((byte)(Convert.ToSByte(reader["saleType"])));
+                item.SaleType = unchecked((byte)Convert.ToSByte(reader["saleType"]));
                 item.CreationDate = (int) reader["creationDate"];
                 item.GroupOwned = Convert.ToBoolean(reader["groupOwned"]);
                 item.Flags = (uint) reader["flags"];
@@ -385,7 +385,7 @@ namespace OpenSim.Data.MySQL
                 folder.ID = DBGuid.FromDB(reader["folderID"]);
                 folder.Name = (string) reader["folderName"];
                 folder.Type = (short) reader["type"];
-                folder.Version = (ushort) ((int) reader["version"]);
+                folder.Version = (ushort) (int) reader["version"];
                 return folder;
             }
             catch (Exception e)

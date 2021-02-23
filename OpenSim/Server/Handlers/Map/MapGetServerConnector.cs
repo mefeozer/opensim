@@ -43,9 +43,9 @@ namespace OpenSim.Server.Handlers.MapImage
     public class MapGetServiceConnector : ServiceConnector
     {
         //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private IMapImageService m_MapService;
+        private readonly IMapImageService m_MapService;
 
-        private string m_ConfigName = "MapImageService";
+        private readonly string m_ConfigName = "MapImageService";
 
         public MapGetServiceConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)
@@ -72,7 +72,7 @@ namespace OpenSim.Server.Handlers.MapImage
 
         //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IMapImageService m_MapService;
+        private readonly IMapImageService m_MapService;
 
         public MapServerGetHandler(IMapImageService service) :
                 base("GET", "/map")

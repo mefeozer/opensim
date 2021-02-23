@@ -37,7 +37,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     public static class BSParam
 {
-    private static string LogHeader = "[BULLETSIM PARAMETERS]";
+    private static readonly string LogHeader = "[BULLETSIM PARAMETERS]";
 
     // Tuning notes:
     // From: http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=6575
@@ -278,10 +278,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public delegate void PSetOnObject<T>(BSScene scene, BSPhysObject obj);
     public sealed class ParameterDefn<T> : ParameterDefnBase
     {
-        private T defaultValue;
-        private PSetValue<T> setter;
-        private PGetValue<T> getter;
-        private PSetOnObject<T> objectSet;
+        private readonly T defaultValue;
+        private readonly PSetValue<T> setter;
+        private readonly PGetValue<T> getter;
+        private readonly PSetOnObject<T> objectSet;
         public ParameterDefn(string pName, string pDesc, T pDefault, PGetValue<T> pGetter, PSetValue<T> pSetter)
             : base(pName, pDesc)
         {
@@ -407,7 +407,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     //    s = BSScene
     //    o = BSPhysObject
     //    v = value (appropriate type)
-    private static ParameterDefnBase[] ParameterDefinitions =
+    private static readonly ParameterDefnBase[] ParameterDefinitions =
     {
         new ParameterDefn<bool>("Active", "If 'true', false then physics is not active",
             false ),
@@ -853,13 +853,13 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // Convert a boolean to our numeric true and false values
     public static float NumericBool(bool b)
     {
-        return (b ? ConfigurationParameters.numericTrue : ConfigurationParameters.numericFalse);
+        return b ? ConfigurationParameters.numericTrue : ConfigurationParameters.numericFalse;
     }
 
     // Convert numeric true and false values to a boolean
     public static bool BoolNumeric(float b)
     {
-        return (b == ConfigurationParameters.numericTrue ? true : false);
+        return b == ConfigurationParameters.numericTrue ? true : false;
     }
 
     // Search through the parameter definitions and return the matching

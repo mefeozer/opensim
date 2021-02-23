@@ -144,7 +144,7 @@ namespace OpenSim.Region.Framework.Scenes
                     vd.m_angularMotorDirection = new Vector3(pValue, pValue, pValue);
                     len = vd.m_angularMotorDirection.Length();
                     if (len > 12.566f)
-                        vd.m_angularMotorDirection *= (12.566f / len);
+                        vd.m_angularMotorDirection *= 12.566f / len;
                     break;
                 case Vehicle.LINEAR_FRICTION_TIMESCALE:
                     if (pValue < timestep) pValue = timestep;
@@ -154,13 +154,13 @@ namespace OpenSim.Region.Framework.Scenes
                     vd.m_linearMotorDirection = new Vector3(pValue, pValue, pValue);
                     len = vd.m_linearMotorDirection.Length();
                     if (len > 30.0f)
-                        vd.m_linearMotorDirection *= (30.0f / len);
+                        vd.m_linearMotorDirection *= 30.0f / len;
                     break;
                 case Vehicle.LINEAR_MOTOR_OFFSET:
                     vd.m_linearMotorOffset = new Vector3(pValue, pValue, pValue);
                     len = vd.m_linearMotorOffset.Length();
                     if (len > 100.0f)
-                        vd.m_linearMotorOffset *= (100.0f / len);
+                        vd.m_linearMotorOffset *= 100.0f / len;
                     break;
             }
         }//end ProcessFloatVehicleParam
@@ -183,7 +183,7 @@ namespace OpenSim.Region.Framework.Scenes
                     // Limit requested angular speed to 2 rps= 4 pi rads/sec
                     len = vd.m_angularMotorDirection.Length();
                     if (len > 12.566f)
-                        vd.m_angularMotorDirection *= (12.566f / len);
+                        vd.m_angularMotorDirection *= 12.566f / len;
                     break;
                 case Vehicle.LINEAR_FRICTION_TIMESCALE:
                     if (pValue.X < timestep) pValue.X = timestep;
@@ -195,13 +195,13 @@ namespace OpenSim.Region.Framework.Scenes
                     vd.m_linearMotorDirection = new Vector3(pValue.X, pValue.Y, pValue.Z);
                     len = vd.m_linearMotorDirection.Length();
                     if (len > 30.0f)
-                        vd.m_linearMotorDirection *= (30.0f / len);
+                        vd.m_linearMotorDirection *= 30.0f / len;
                     break;
                 case Vehicle.LINEAR_MOTOR_OFFSET:
                     vd.m_linearMotorOffset = new Vector3(pValue.X, pValue.Y, pValue.Z);
                     len = vd.m_linearMotorOffset.Length();
                     if (len > 100.0f)
-                        vd.m_linearMotorOffset *= (100.0f / len);
+                        vd.m_linearMotorOffset *= 100.0f / len;
                     break;
             }
         }//end ProcessVectorVehicleParam
@@ -220,7 +220,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             if (remove)
             {
-                vd.m_flags &= ~((VehicleFlag)pParam);
+                vd.m_flags &= ~(VehicleFlag)pParam;
             }
             else
             {
@@ -284,7 +284,7 @@ namespace OpenSim.Region.Framework.Scenes
                     vd.m_flags &=
                          ~(VehicleFlag.HOVER_WATER_ONLY | VehicleFlag.HOVER_TERRAIN_ONLY |
                            VehicleFlag.HOVER_GLOBAL_HEIGHT | VehicleFlag.HOVER_UP_ONLY);
-                    vd.m_flags |= (VehicleFlag.NO_DEFLECTION_UP | VehicleFlag.LIMIT_ROLL_ONLY | VehicleFlag.LIMIT_MOTOR_UP);
+                    vd.m_flags |= VehicleFlag.NO_DEFLECTION_UP | VehicleFlag.LIMIT_ROLL_ONLY | VehicleFlag.LIMIT_MOTOR_UP;
                     break;
                 case Vehicle.TYPE_CAR:
                     vd.m_linearFrictionTimescale = new Vector3(100, 2, 1000);
@@ -307,8 +307,8 @@ namespace OpenSim.Region.Framework.Scenes
                     vd.m_bankingMix = 1;
                     vd.m_bankingTimescale = 1;
                     vd.m_flags &= ~(VehicleFlag.HOVER_WATER_ONLY | VehicleFlag.HOVER_TERRAIN_ONLY | VehicleFlag.HOVER_GLOBAL_HEIGHT);
-                    vd.m_flags |= (VehicleFlag.NO_DEFLECTION_UP | VehicleFlag.LIMIT_ROLL_ONLY |
-                                VehicleFlag.LIMIT_MOTOR_UP | VehicleFlag.HOVER_UP_ONLY);
+                    vd.m_flags |= VehicleFlag.NO_DEFLECTION_UP | VehicleFlag.LIMIT_ROLL_ONLY |
+                                  VehicleFlag.LIMIT_MOTOR_UP | VehicleFlag.HOVER_UP_ONLY;
                     break;
                 case Vehicle.TYPE_BOAT:
                     vd.m_linearFrictionTimescale = new Vector3(10, 3, 2);
@@ -334,9 +334,9 @@ namespace OpenSim.Region.Framework.Scenes
                             VehicleFlag.HOVER_GLOBAL_HEIGHT |
                             VehicleFlag.HOVER_UP_ONLY |
                             VehicleFlag.LIMIT_ROLL_ONLY);
-                    vd.m_flags |= (VehicleFlag.NO_DEFLECTION_UP |
-                                VehicleFlag.LIMIT_MOTOR_UP |
-                                VehicleFlag.HOVER_WATER_ONLY);
+                    vd.m_flags |= VehicleFlag.NO_DEFLECTION_UP |
+                                  VehicleFlag.LIMIT_MOTOR_UP |
+                                  VehicleFlag.HOVER_WATER_ONLY;
                     break;
                 case Vehicle.TYPE_AIRPLANE:
                     vd.m_linearFrictionTimescale = new Vector3(200, 10, 5);
@@ -364,7 +364,7 @@ namespace OpenSim.Region.Framework.Scenes
                         VehicleFlag.HOVER_UP_ONLY |
                         VehicleFlag.NO_DEFLECTION_UP |
                         VehicleFlag.LIMIT_MOTOR_UP);
-                    vd.m_flags |= (VehicleFlag.LIMIT_ROLL_ONLY);
+                    vd.m_flags |= VehicleFlag.LIMIT_ROLL_ONLY;
                     break;
                 case Vehicle.TYPE_BALLOON:
                     vd.m_linearFrictionTimescale = new Vector3(5, 5, 5);
@@ -391,8 +391,8 @@ namespace OpenSim.Region.Framework.Scenes
                         VehicleFlag.HOVER_UP_ONLY |
                         VehicleFlag.NO_DEFLECTION_UP |
                         VehicleFlag.LIMIT_MOTOR_UP);
-                    vd.m_flags |= (VehicleFlag.LIMIT_ROLL_ONLY |
-                        VehicleFlag.HOVER_GLOBAL_HEIGHT);
+                    vd.m_flags |= VehicleFlag.LIMIT_ROLL_ONLY |
+                                  VehicleFlag.HOVER_GLOBAL_HEIGHT;
                     break;
             }
         }

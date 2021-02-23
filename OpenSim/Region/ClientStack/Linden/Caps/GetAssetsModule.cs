@@ -76,7 +76,7 @@ namespace OpenSim.Region.ClientStack.Linden
         private static GetAssetsHandler m_getAssetHandler;
         private static ObjectJobEngine m_workerpool = null;
         private static int m_NumberScenes = 0;
-        private static object m_loadLock = new object();
+        private static readonly object m_loadLock = new object();
         protected IUserManagement m_UserManagement = null;
 
         #region Region Module interfaceBase Members
@@ -185,11 +185,11 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             //private List<Hashtable> requests = new List<Hashtable>();
             private List<OSHttpRequest> requests = new List<OSHttpRequest>();
-            private Dictionary<UUID, APollResponse> responses =new Dictionary<UUID, APollResponse>();
-            private HashSet<UUID> dropedResponses = new HashSet<UUID>();
+            private readonly Dictionary<UUID, APollResponse> responses =new Dictionary<UUID, APollResponse>();
+            private readonly HashSet<UUID> dropedResponses = new HashSet<UUID>();
 
-            private Scene m_scene;
-            private string m_hgassets = null;
+            private readonly Scene m_scene;
+            private readonly string m_hgassets = null;
             public PollServiceAssetEventArgs(string uri, UUID pId, Scene scene, string HGAssetSVC) :
                 base(null, uri, null, null, null, null, pId, int.MaxValue)
             {
@@ -340,7 +340,7 @@ namespace OpenSim.Region.ClientStack.Linden
         public void RegisterCaps(UUID agentID, Caps caps)
         {
             string hostName = m_scene.RegionInfo.ExternalHostName;
-            uint port = (MainServer.Instance == null) ? 0 : MainServer.Instance.Port;
+            uint port = MainServer.Instance == null ? 0 : MainServer.Instance.Port;
             string protocol = "http";
             if (MainServer.Instance.UseSSL)
             {

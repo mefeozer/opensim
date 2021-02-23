@@ -197,7 +197,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             foreach(MethodInfo meth in ifaceMethods)
             {
                 string name = meth.Name;
-                if((name[0] >= 'a') && (name[0] <= 'z'))
+                if(name[0] >= 'a' && name[0] <= 'z')
                 {
                     lcms.Add(meth);
                 }
@@ -298,7 +298,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             name = new TokenName(null, methInfo.Name);
             retType = GetRetType(methInfo, TokenType.FromSysType(null, methInfo.ReturnType));
             argDecl = GetArgDecl(methInfo.GetParameters());
-            triviality = (doCheckRun || isTaggedCallsCheckRun) ? Triviality.complex : Triviality.trivial;
+            triviality = doCheckRun || isTaggedCallsCheckRun ? Triviality.complex : Triviality.trivial;
             location = new CompValuInline(this);
 
             if(ifd == null)
@@ -331,7 +331,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private static bool IsTaggedCallsCheckRun(MethodInfo methInfo)
         {
-            return (methInfo != null) &&
+            return methInfo != null &&
                 Attribute.IsDefined(methInfo, typeof(xmrMethodCallsCheckRunAttribute));
         }
 
@@ -343,7 +343,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private static TokenType GetRetType(MethodInfo methInfo, TokenType retType)
         {
-            if((methInfo != null) && (retType != null) && (retType is TokenTypeStr))
+            if(methInfo != null && retType != null && retType is TokenTypeStr)
             {
                 if(Attribute.IsDefined(methInfo, typeof(xmrMethodReturnsKeyAttribute)))
                 {
@@ -392,7 +392,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             foreach(TokenDeclInline bif in bifs.Values)
             {
-                char noisy = (!inclNoisyTag || !IsTaggedNoisy(bif.GetMethodInfo())) ? ' ' : (bif.retType is TokenTypeVoid) ? 'N' : 'R';
+                char noisy = !inclNoisyTag || !IsTaggedNoisy(bif.GetMethodInfo()) ? ' ' : bif.retType is TokenTypeVoid ? 'N' : 'R';
                 writeLine(noisy + "   " + bif.retType.ToString().PadLeft(8) + " " + bif.fullName);
             }
             if(inclNoisyTag)
@@ -420,7 +420,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public static bool IsTaggedNoisy(MethodInfo methInfo)
         {
-            return (methInfo != null) && Attribute.IsDefined(methInfo, typeof(xmrMethodIsNoisyAttribute));
+            return methInfo != null && Attribute.IsDefined(methInfo, typeof(xmrMethodIsNoisyAttribute));
         }
 
         public static string BuiltInConstVal(CompValu rVal)
@@ -573,7 +573,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
     public class TokenDeclInline_Math: TokenDeclInline
     {
-        private MethodInfo methInfo;
+        private readonly MethodInfo methInfo;
 
         public TokenDeclInline_Math(VarDict ifd, string sig, string name, Type[] args)
                 : base(ifd, false, sig, new TokenTypeFloat(null))
@@ -595,7 +595,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
     public class TokenDeclInline_LLRound: TokenDeclInline
     {
 
-        private static MethodInfo roundMethInfo = ScriptCodeGen.GetStaticMethod(typeof(System.Math), "Round",
+        private static readonly MethodInfo roundMethInfo = ScriptCodeGen.GetStaticMethod(typeof(System.Math), "Round",
                 new Type[] { typeof(double), typeof(MidpointRounding) });
 
         public TokenDeclInline_LLRound(VarDict ifd)
@@ -656,8 +656,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         //                (typeof (XMRInstAbstract), "FixLLParcelMediaCommandList", new Type[] { typeof (LSL_List) });
 
         public bool doCheckRun;
-        private FieldInfo apiContextField;
-        private MethodInfo methInfo;
+        private readonly FieldInfo apiContextField;
+        private readonly MethodInfo methInfo;
 
         /**
          * @brief Constructor

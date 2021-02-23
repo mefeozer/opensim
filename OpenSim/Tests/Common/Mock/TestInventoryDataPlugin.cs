@@ -44,17 +44,17 @@ namespace OpenSim.Tests.Common
         /// <value>
         /// Inventory folders
         /// </value>
-        private Dictionary<UUID, InventoryFolderBase> m_folders = new Dictionary<UUID, InventoryFolderBase>();
+        private readonly Dictionary<UUID, InventoryFolderBase> m_folders = new Dictionary<UUID, InventoryFolderBase>();
 
         //// <value>
         /// Inventory items
         /// </value>
-        private Dictionary<UUID, InventoryItemBase> m_items = new Dictionary<UUID, InventoryItemBase>();
+        private readonly Dictionary<UUID, InventoryItemBase> m_items = new Dictionary<UUID, InventoryItemBase>();
 
         /// <value>
         /// User root folders
         /// </value>
-        private Dictionary<UUID, InventoryFolderBase> m_rootFolders = new Dictionary<UUID, InventoryFolderBase>();
+        private readonly Dictionary<UUID, InventoryFolderBase> m_rootFolders = new Dictionary<UUID, InventoryFolderBase>();
 
         public string Version { get { return "0"; } }
         public string Name { get { return "TestInventoryDataPlugin"; } }

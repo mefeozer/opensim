@@ -33,7 +33,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 {
     public sealed class LLUDPZeroEncoder
     {
-        private byte[] m_tmp = new byte[16];
+        private readonly byte[] m_tmp = new byte[16];
         private byte[] m_dest;
         private int zerocount;
         private int pos;
@@ -321,7 +321,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 return;
             }
 
-            AddByte((byte)(len));
+            AddByte((byte)len);
             AddBytes(data, len);
         }
 
@@ -346,7 +346,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 return;
             }
 
-            AddByte((byte)(len));
+            AddByte((byte)len);
             AddBytes(data, len);
         }
 

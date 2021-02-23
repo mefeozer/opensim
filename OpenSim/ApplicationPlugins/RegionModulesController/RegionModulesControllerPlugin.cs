@@ -58,13 +58,13 @@ namespace OpenSim.ApplicationPlugins.RegionModulesController
         private string m_name;
 
         // Internal lists to collect information about modules present
-        private List<TypeExtensionNode> m_nonSharedModules =
+        private readonly List<TypeExtensionNode> m_nonSharedModules =
                 new List<TypeExtensionNode>();
-        private List<TypeExtensionNode> m_sharedModules =
+        private readonly List<TypeExtensionNode> m_sharedModules =
                 new List<TypeExtensionNode>();
 
         // List of shared module instances, for adding to Scenes
-        private List<ISharedRegionModule> m_sharedInstances =
+        private readonly List<ISharedRegionModule> m_sharedInstances =
                 new List<ISharedRegionModule>();
 
         public RegionModulesControllerPlugin()

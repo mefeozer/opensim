@@ -47,7 +47,7 @@ namespace OpenSim.Services.FSAssetService
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
+        static readonly System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
 
         static byte[] ToCString(string s)
         {
@@ -75,7 +75,7 @@ namespace OpenSim.Services.FSAssetService
         protected bool m_showStats = true;
 
         private static bool m_Initialized;
-        private bool m_MainInstance;
+        private readonly bool m_MainInstance;
 
         public FSAssetConnector(IConfigSource config)
             : this(config, "AssetService")

@@ -129,7 +129,7 @@ namespace OpenSim.Framework
                     args["god_level"] = g["ViewerUiIsGod"].AsBoolean() ? 200 : 0;
             }
 
-            if ((Throttles != null) && (Throttles.Length > 0))
+            if (Throttles != null && Throttles.Length > 0)
                 args["throttles"] = OSD.FromBinary(Throttles);
 
             if (ChildrenCapSeeds != null && ChildrenCapSeeds.Count > 0)
@@ -192,15 +192,15 @@ namespace OpenSim.Framework
                 GodData = args["god_data"];
 
             if (args["far"] != null)
-                Far = (float)(args["far"].AsReal());
+                Far = (float)args["far"].AsReal();
 
             if (args["throttles"] != null)
                 Throttles = args["throttles"].AsBinary();
 
-            if (args.ContainsKey("children_seeds") && (args["children_seeds"] != null) &&
-                            (args["children_seeds"].Type == OSDType.Array))
+            if (args.ContainsKey("children_seeds") && args["children_seeds"] != null &&
+                            args["children_seeds"].Type == OSDType.Array)
             {
-                OSDArray childrenSeeds = (OSDArray)(args["children_seeds"]);
+                OSDArray childrenSeeds = (OSDArray)args["children_seeds"];
                 ChildrenCapSeeds = new Dictionary<ulong, string>();
                 foreach (OSD o in childrenSeeds)
                 {
@@ -433,7 +433,7 @@ namespace OpenSim.Framework
             args["far"] = OSD.FromReal(Far);
             args["aspect"] = OSD.FromReal(Aspect);
 
-            if ((Throttles != null) && (Throttles.Length > 0))
+            if (Throttles != null && Throttles.Length > 0)
                 args["throttles"] = OSD.FromBinary(Throttles);
 
             args["locomotion_state"] = OSD.FromString(LocomotionState.ToString());
@@ -477,7 +477,7 @@ namespace OpenSim.Framework
                 args["children_seeds"] = childrenSeeds;
             }
 
-            if ((Anims != null) && (Anims.Length > 0))
+            if (Anims != null && Anims.Length > 0)
             {
                 OSDArray anims = new OSDArray(Anims.Length);
                 foreach (Animation aanim in Anims)
@@ -518,7 +518,7 @@ namespace OpenSim.Framework
             if (Appearance != null)
                 args["packed_appearance"] = Appearance.Pack(ctx);
 
-            if ((Controllers != null) && (Controllers.Length > 0))
+            if (Controllers != null && Controllers.Length > 0)
             {
                 OSDArray controls = new OSDArray(Controllers.Length);
                 foreach (ControllerData ctl in Controllers)
@@ -526,10 +526,10 @@ namespace OpenSim.Framework
                 args["controllers"] = controls;
             }
 
-            if ((CallbackURI != null) && (!CallbackURI.Equals("")))
+            if (CallbackURI != null && !CallbackURI.Equals(""))
                 args["callback_uri"] = OSD.FromString(CallbackURI);
 
-            if ((NewCallbackURI != null) && (!NewCallbackURI.Equals("")))
+            if (NewCallbackURI != null && !NewCallbackURI.Equals(""))
                 args["cb_uri"] = OSD.FromString(NewCallbackURI);
 
             // Attachment objects for fatpack messages
@@ -609,7 +609,7 @@ namespace OpenSim.Framework
                 SenderWantsToWaitForRoot = tmp.AsBoolean();
 
             if (args.TryGetValue("far", out tmp) && tmp != null)
-                Far = (float)(tmp.AsReal());
+                Far = (float)tmp.AsReal();
 
             if (args.TryGetValue("aspect", out tmp) && tmp != null)
                 Aspect = (float)tmp.AsReal();
@@ -630,7 +630,7 @@ namespace OpenSim.Framework
                 uint.TryParse(tmp.AsString(), out ControlFlags);
 
             if (args.TryGetValue("energy_level", out tmp) && tmp != null)
-                EnergyLevel = (float)(tmp.AsReal());
+                EnergyLevel = (float)tmp.AsReal();
 
             if (args.TryGetValue("god_data", out tmp) && tmp != null)
                 GodData = tmp;

@@ -47,9 +47,9 @@ namespace OpenSim.Services.Connectors.Hypergrid
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static UUID m_HGMapImage = new UUID("00000000-0000-1111-9999-000000000013");
+        private static readonly UUID m_HGMapImage = new UUID("00000000-0000-1111-9999-000000000013");
 
-        private IAssetService m_AssetService;
+        private readonly IAssetService m_AssetService;
 
         public GatekeeperServiceConnector()
             : base()

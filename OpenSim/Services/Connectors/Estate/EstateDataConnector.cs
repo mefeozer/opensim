@@ -47,7 +47,7 @@ namespace OpenSim.Services.Connectors
                 MethodBase.GetCurrentMethod().DeclaringType);
 
         private string m_ServerURI = string.Empty;
-        private ExpiringCache<string, List<EstateSettings>> m_EstateCache = new ExpiringCache<string, List<EstateSettings>>();
+        private readonly ExpiringCache<string, List<EstateSettings>> m_EstateCache = new ExpiringCache<string, List<EstateSettings>>();
         private const int EXPIRATION = 5 * 60; // 5 minutes in secs
 
         public EstateDataRemoteConnector(IConfigSource source)
@@ -255,7 +255,7 @@ namespace OpenSim.Services.Connectors
         public void StoreEstateSettings(EstateSettings es)
         {
             // /estates/estate/
-            string uri = m_ServerURI + ("/estates/estate");
+            string uri = m_ServerURI + "/estates/estate";
 
             Dictionary<string, object> formdata = es.ToMap();
             formdata["OP"] = "STORE";

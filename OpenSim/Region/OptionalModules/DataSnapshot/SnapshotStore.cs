@@ -41,12 +41,12 @@ namespace OpenSim.Region.DataSnapshot
     public class SnapshotStore
     {
         #region Class Members
-        private string m_directory = "unyuu"; //not an attempt at adding RM references to core SVN, honest
-        private Dictionary<Scene, bool> m_scenes = null;
-        private List<IDataSnapshotProvider> m_providers = null;
+        private readonly string m_directory = "unyuu"; //not an attempt at adding RM references to core SVN, honest
+        private readonly Dictionary<Scene, bool> m_scenes = null;
+        private readonly List<IDataSnapshotProvider> m_providers = null;
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private Dictionary<string, string> m_gridinfo = null;
-        private bool m_cacheEnabled = true;
+        private readonly Dictionary<string, string> m_gridinfo = null;
+        private readonly bool m_cacheEnabled = true;
         #endregion
 
         public SnapshotStore(string directory, Dictionary<string, string> gridinfo) {

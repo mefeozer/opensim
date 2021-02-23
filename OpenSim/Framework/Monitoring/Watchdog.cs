@@ -160,7 +160,7 @@ namespace OpenSim.Framework.Monitoring
         }
 
         private static bool m_enabled;
-        private static Dictionary<int, ThreadWatchdogInfo> m_threads;
+        private static readonly Dictionary<int, ThreadWatchdogInfo> m_threads;
         private static Timer m_watchdogTimer;
 
         /// <summary>

@@ -39,7 +39,7 @@ namespace OpenSim.Region.UserStatistics
 {
     public class ActiveConnectionsAJAX : IStatsController
     {
-        private Vector3 DefaultNeighborPosition = new Vector3(((int)Constants.RegionSize * 0.5f), ((int)Constants.RegionSize * 0.5f), 70);
+        private readonly Vector3 DefaultNeighborPosition = new Vector3((int)Constants.RegionSize * 0.5f, (int)Constants.RegionSize * 0.5f, 70);
 
         #region IStatsController Members
 
@@ -80,7 +80,7 @@ namespace OpenSim.Region.UserStatistics
                     HTMLUtil.LI_O(ref output, string.Empty);
                     output.Append(av.Name);
                     output.Append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-                    output.Append((av.IsChildAgent ? "Child" : "Root"));
+                    output.Append(av.IsChildAgent ? "Child" : "Root");
                     if (av.AbsolutePosition == DefaultNeighborPosition)
                     {
                         output.Append("<br />Position: ?");
@@ -272,16 +272,16 @@ namespace OpenSim.Region.UserStatistics
             if (rep.Length == 79)
             {
                 int pos = 1;
-                returndic.Add("All", rep.Substring((6 * pos), 8)); pos++;
-                returndic.Add("Incoming", rep.Substring((7 * pos), 8)); pos++;
-                returndic.Add("Outgoing", rep.Substring((7 * pos) , 8)); pos++;
-                returndic.Add("Resend", rep.Substring((7 * pos) , 8)); pos++;
-                returndic.Add("Land", rep.Substring((7 * pos) , 8)); pos++;
-                returndic.Add("Wind", rep.Substring((7 * pos) , 8)); pos++;
-                returndic.Add("Cloud", rep.Substring((7 * pos) , 8)); pos++;
-                returndic.Add("Task", rep.Substring((7 * pos) , 8)); pos++;
-                returndic.Add("Texture", rep.Substring((7 * pos), 8)); pos++;
-                returndic.Add("Asset", rep.Substring((7 * pos), 8));
+                returndic.Add("All", rep.Substring(6 * pos, 8)); pos++;
+                returndic.Add("Incoming", rep.Substring(7 * pos, 8)); pos++;
+                returndic.Add("Outgoing", rep.Substring(7 * pos , 8)); pos++;
+                returndic.Add("Resend", rep.Substring(7 * pos , 8)); pos++;
+                returndic.Add("Land", rep.Substring(7 * pos , 8)); pos++;
+                returndic.Add("Wind", rep.Substring(7 * pos , 8)); pos++;
+                returndic.Add("Cloud", rep.Substring(7 * pos , 8)); pos++;
+                returndic.Add("Task", rep.Substring(7 * pos , 8)); pos++;
+                returndic.Add("Texture", rep.Substring(7 * pos, 8)); pos++;
+                returndic.Add("Asset", rep.Substring(7 * pos, 8));
                 /*
                  * return string.Format("{0,7} {1,7} {2,7} {3,7} {4,7} {5,7} {6,7} {7,7} {8,7} {9,7}",
                                  SendQueue.Count(),

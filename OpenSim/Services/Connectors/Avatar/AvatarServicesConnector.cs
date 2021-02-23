@@ -115,7 +115,7 @@ namespace OpenSim.Services.Connectors
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, m_Auth);
-                if (reply == null || (reply != null && string.IsNullOrEmpty(reply)))
+                if (reply == null || reply != null && string.IsNullOrEmpty(reply))
                 {
                     m_log.DebugFormat("[AVATAR CONNECTOR]: GetAgent received null or empty reply");
                     return null;
@@ -129,7 +129,7 @@ namespace OpenSim.Services.Connectors
             Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
             AvatarData avatar = null;
 
-            if ((replyData != null) && replyData.ContainsKey("result") && (replyData["result"] != null))
+            if (replyData != null && replyData.ContainsKey("result") && replyData["result"] != null)
             {
                 if (replyData["result"] is Dictionary<string, object>)
                 {

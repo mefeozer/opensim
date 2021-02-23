@@ -37,9 +37,9 @@ namespace OpenSim.Data.Null
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<UUID, UserAccountData> m_DataByUUID = new Dictionary<UUID, UserAccountData>();
-        private Dictionary<string, UserAccountData> m_DataByName = new Dictionary<string, UserAccountData>();
-        private Dictionary<string, UserAccountData> m_DataByEmail = new Dictionary<string, UserAccountData>();
+        private readonly Dictionary<UUID, UserAccountData> m_DataByUUID = new Dictionary<UUID, UserAccountData>();
+        private readonly Dictionary<string, UserAccountData> m_DataByName = new Dictionary<string, UserAccountData>();
+        private readonly Dictionary<string, UserAccountData> m_DataByEmail = new Dictionary<string, UserAccountData>();
 
         public NullUserAccountData(string connectionString, string realm)
         {
@@ -157,7 +157,7 @@ namespace OpenSim.Data.Null
                 lst = lst.FindAll(delegate(string s) { return s.Contains(words[0]) || s.Contains(words[1]); });
             }
 
-            if (lst == null || (lst != null && lst.Count == 0))
+            if (lst == null || lst != null && lst.Count == 0)
                 return new UserAccountData[0];
 
             UserAccountData[] result = new UserAccountData[lst.Count];

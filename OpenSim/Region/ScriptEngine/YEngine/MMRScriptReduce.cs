@@ -69,7 +69,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private const int ASNPR = 50;
 
-        private static Dictionary<Type, int> precedence = PrecedenceInit();
+        private static readonly Dictionary<Type, int> precedence = PrecedenceInit();
 
         private static readonly Type[] brkCloseOnly = new Type[] { typeof(TokenKwBrkClose) };
         private static readonly Type[] cmpGTOnly = new Type[] { typeof(TokenKwCmpGT) };
@@ -162,7 +162,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private int numTypedefs = 0;
         private TokenDeclVar currentDeclFunc = null;
         private TokenDeclSDType currentDeclSDType = null;
-        private TokenScript tokenScript;
+        private readonly TokenScript tokenScript;
         private TokenStmtBlock currentStmtBlock = null;
 
         /**
@@ -252,10 +252,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                  // <type> <name> ;
                  // <type> <name> = <rval> ;
-                if((token is TokenType) &&
-                    (token.nextToken is TokenName) &&
-                    ((token.nextToken.nextToken is TokenKwSemi) ||
-                     (token.nextToken.nextToken is TokenKwAssign)))
+                if(token is TokenType &&
+                    token.nextToken is TokenName &&
+                    (token.nextToken.nextToken is TokenKwSemi ||
+                     token.nextToken.nextToken is TokenKwAssign))
                 {
                     TokenDeclVar var = ParseDeclVar(ref token, gviFunc);
                     if(var != null)
@@ -268,9 +268,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                  // <type> <name> { [ get { <body> } ] [ set { <body> } ] }
-                if((token is TokenType) &&
-                    (token.nextToken is TokenName) &&
-                    (token.nextToken.nextToken is TokenKwBrcOpen))
+                if(token is TokenType &&
+                    token.nextToken is TokenName &&
+                    token.nextToken.nextToken is TokenKwBrcOpen)
                 {
                     ParseProperty(ref token, false, true);
                     continue;
@@ -380,7 +380,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // Must have a default state to start in.
-            if(!errors && (tokenScript.defaultState == null))
+            if(!errors && tokenScript.defaultState == null)
             {
                 ErrorMsg(tokenScript, "no default state defined");
             }
@@ -1812,7 +1812,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          * @param token = first token to evaluate
          * @returns flags found; token = unprocessed token
          */
-        private Dictionary<uint, Token> foundFlags = new Dictionary<uint, Token>();
+        private readonly Dictionary<uint, Token> foundFlags = new Dictionary<uint, Token>();
         private uint ParseQualifierFlags(ref Token token)
         {
             foundFlags.Clear();
@@ -4972,8 +4972,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private string retStr;
         private string[] argStrs;
 
-        private static Dictionary<string, TokenDeclSDTypeDelegate> inlines = new Dictionary<string, TokenDeclSDTypeDelegate>();
-        private static Dictionary<Type, string> inlrevs = new Dictionary<Type, string>();
+        private static readonly Dictionary<string, TokenDeclSDTypeDelegate> inlines = new Dictionary<string, TokenDeclSDTypeDelegate>();
+        private static readonly Dictionary<Type, string> inlrevs = new Dictionary<Type, string>();
 
         public TokenDeclSDTypeDelegate(TokenName shortName) : base(shortName)
         {
@@ -6198,7 +6198,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
     public class TokenLValBaseField: TokenLVal
     {
         public TokenName fieldName;
-        private TokenDeclSDTypeClass thisClass;
+        private readonly TokenDeclSDTypeClass thisClass;
 
         public TokenLValBaseField(Token original, TokenName fieldName, TokenDeclSDTypeClass thisClass) : base(original)
         {
@@ -7500,7 +7500,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      */
     public class TokenRValUndef: TokenRVal
     {
-        Token original;
+        readonly Token original;
 
         public TokenRValUndef(Token original) : base(original)
         {
@@ -7571,7 +7571,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public TokenDeclVar globalVarInit;                    // $globalvarinit function
                                                               // - performs explicit global var and static field inits
 
-        private Dictionary<string, TokenDeclSDType> sdSrcTypes = new Dictionary<string, TokenDeclSDType>();
+        private readonly Dictionary<string, TokenDeclSDType> sdSrcTypes = new Dictionary<string, TokenDeclSDType>();
         private bool sdSrcTypesSealed = false;
 
         public TokenScript(Token original) : base(original) { }

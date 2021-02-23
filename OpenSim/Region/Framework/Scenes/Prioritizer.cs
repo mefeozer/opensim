@@ -43,7 +43,7 @@ namespace OpenSim.Region.Framework.Scenes
     {
         private static readonly ILog m_log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
+        private readonly Scene m_scene;
 
         public Prioritizer(Scene scene)
         {

@@ -48,7 +48,7 @@ namespace OpenSim.Region.CoreModules.Framework
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_showCapsCommandFormat = "   {0,-38} {1,-60}\n";
+        private readonly string m_showCapsCommandFormat = "   {0,-38} {1,-60}\n";
 
         protected Scene m_scene;
 
@@ -163,7 +163,7 @@ namespace OpenSim.Region.CoreModules.Framework
 //                    agentId, m_scene.RegionInfo.RegionName, capsObjectPath);
 
                 caps = new Caps(MainServer.Instance, m_scene.RegionInfo.ExternalHostName,
-                        (MainServer.Instance == null) ? 0: MainServer.Instance.Port,
+                        MainServer.Instance == null ? 0: MainServer.Instance.Port,
                         capsObjectPath, agentId, m_scene.RegionInfo.RegionName);
 
                 m_log.DebugFormat("[CreateCaps]: new caps agent {0}, circuit {1}, path {2}, time {3} ",agentId,
@@ -245,7 +245,7 @@ namespace OpenSim.Region.CoreModules.Framework
 
             lock (m_childrenSeeds)
                 m_childrenSeeds[agent.AgentID]
-                    = ((agent.ChildrenCapSeeds == null) ? new Dictionary<ulong, string>() : agent.ChildrenCapSeeds);
+                    = agent.ChildrenCapSeeds == null ? new Dictionary<ulong, string>() : agent.ChildrenCapSeeds;
         }
 
         public string GetCapsPath(UUID agentId)

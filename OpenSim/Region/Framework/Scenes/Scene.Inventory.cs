@@ -512,7 +512,7 @@ namespace OpenSim.Region.Framework.Scenes
                         // original item's setting and if it was on, also force full perm
                         if ((item.EveryOnePermissions & (uint)PermissionMask.Export) != 0)
                         {
-                            itemUpd.NextPermissions = (uint)(PermissionMask.All);
+                            itemUpd.NextPermissions = (uint)PermissionMask.All;
                             itemUpd.EveryOnePermissions |= (uint)PermissionMask.Export;
                         }
                         else
@@ -526,7 +526,7 @@ namespace OpenSim.Region.Framework.Scenes
                         if ((itemUpd.EveryOnePermissions & (uint)PermissionMask.Export) != 0)
                         {
 //                            m_log.DebugFormat("[XXX]: Force full perm");
-                            itemUpd.NextPermissions = (uint)(PermissionMask.All);
+                            itemUpd.NextPermissions = (uint)PermissionMask.All;
                         }
                     }
 
@@ -799,7 +799,7 @@ namespace OpenSim.Region.Framework.Scenes
                 ownerPerms &= nextPerms;
                 basePerms &= nextPerms;
                 basePerms &= ~(uint)PermissionMask.FoldedMask;
-                basePerms |= ((basePerms >> 13) & 7) | (((basePerms & (uint)PermissionMask.Export) != 0) ? (uint)PermissionMask.FoldedExport : 0);
+                basePerms |= ((basePerms >> 13) & 7) | ((basePerms & (uint)PermissionMask.Export) != 0 ? (uint)PermissionMask.FoldedExport : 0);
                 // Assign to the actual item. Make sure the slam bit is
                 // set, if it wasn't set before.
                 itemCopy.BasePermissions = basePerms;
@@ -1071,9 +1071,9 @@ namespace OpenSim.Region.Framework.Scenes
 
 
             if (remoteClient.AgentId == oldAgentID
-                || (LibraryService != null
-                    && LibraryService.LibraryRootFolder != null
-                    && oldAgentID == LibraryService.LibraryRootFolder.Owner))
+                || LibraryService != null
+                && LibraryService.LibraryRootFolder != null
+                && oldAgentID == LibraryService.LibraryRootFolder.Owner)
             {
                 CreateNewInventoryItem(
                     remoteClient, item.CreatorId, item.CreatorData, newFolderID,
@@ -1084,7 +1084,7 @@ namespace OpenSim.Region.Framework.Scenes
             else
             {
                 // If item is transfer or permissions are off or calling agent is allowed to copy item owner's inventory item.
-                if (((item.CurrentPermissions & (uint)PermissionMask.Transfer) != 0)
+                if ((item.CurrentPermissions & (uint)PermissionMask.Transfer) != 0
                     && (m_permissions.BypassPermissions()
                         || m_permissions.CanCopyUserInventory(remoteClient.AgentId, oldItemID)))
                 {
@@ -1111,7 +1111,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             AssetBase asset = new AssetBase(UUID.Random(), name, assetType, creatorID.ToString());
             asset.Description = description;
-            asset.Data = (data == null) ? new byte[1] : data;
+            asset.Data = data == null ? new byte[1] : data;
 
             return asset;
         }
@@ -1394,7 +1394,7 @@ namespace OpenSim.Region.Framework.Scenes
                 return null;
             }
 
-            if ((destAgent != taskItem.OwnerID) && ((taskItem.CurrentPermissions & (uint)PermissionMask.Transfer) == 0))
+            if (destAgent != taskItem.OwnerID && (taskItem.CurrentPermissions & (uint)PermissionMask.Transfer) == 0)
             {
                 message = "Item doesn't have the Transfer permission.";
                 return null;
@@ -1417,7 +1417,7 @@ namespace OpenSim.Region.Framework.Scenes
             // in the object inventory, so it will break when you do it. That
             // is the previous behaviour, so no matter at this moment. However, there is a lot
             // TODO: Fix this after the inventory fixer exists and has beenr run
-            if ((part.OwnerID != destAgent) && Permissions.PropagatePermissions())
+            if (part.OwnerID != destAgent && Permissions.PropagatePermissions())
             {
                 uint perms = taskItem.BasePermissions & taskItem.NextPermissions;
                 if (taskItem.InvType == (int)InventoryType.Object)
@@ -2172,8 +2172,8 @@ namespace OpenSim.Region.Framework.Scenes
             if (srcPart.OwnerID != destPart.OwnerID)
             {
                 // Group permissions
-                if ((destPart.GroupID == UUID.Zero) || (destPart.GroupID != srcPart.GroupID) ||
-                    ((destPart.GroupMask & (uint)PermissionMask.Modify) == 0))
+                if (destPart.GroupID == UUID.Zero || destPart.GroupID != srcPart.GroupID ||
+                    (destPart.GroupMask & (uint)PermissionMask.Modify) == 0)
                     return;
             }
             else
@@ -2341,7 +2341,7 @@ namespace OpenSim.Region.Framework.Scenes
 
                     case DeRezAction.GodTakeCopy:
                     {
-                        if((remoteClient != null) && Permissions.IsGod(remoteClient.AgentId))
+                        if(remoteClient != null && Permissions.IsGod(remoteClient.AgentId))
                             takeCopyGroups.Add(grp);
                         break;
                     }
@@ -2350,7 +2350,7 @@ namespace OpenSim.Region.Framework.Scenes
                     {
                         if (Permissions.CanDeleteObject(grp, remoteClient))
                         {
-                            if(m_useTrashOnDelete || (sp.IsGod && grp.OwnerID != sp.UUID))
+                            if(m_useTrashOnDelete || sp.IsGod && grp.OwnerID != sp.UUID)
                                 takeDeleteGroups.Add(grp);
                             else
                                 deleteGroups.Add(grp);
@@ -2455,7 +2455,7 @@ namespace OpenSim.Region.Framework.Scenes
                 // Make sure we don't lock it
                 grp.RootPart.NextOwnerMask |= (uint)PermissionMask.Move;
 
-                if ((remoteClient.AgentId != grp.RootPart.OwnerID) && Permissions.PropagatePermissions())
+                if (remoteClient.AgentId != grp.RootPart.OwnerID && Permissions.PropagatePermissions())
                 {
                     item.BasePermissions = permsBase & grp.RootPart.NextOwnerMask;
                     item.CurrentPermissions = permsBase & grp.RootPart.NextOwnerMask;

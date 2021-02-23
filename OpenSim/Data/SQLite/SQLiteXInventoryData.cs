@@ -45,8 +45,8 @@ namespace OpenSim.Data.SQLite
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private SqliteFolderHandler m_Folders;
-        private SqliteItemHandler m_Items;
+        private readonly SqliteFolderHandler m_Folders;
+        private readonly SqliteItemHandler m_Items;
 
         public SQLiteXInventoryData(string conn, string realm)
         {

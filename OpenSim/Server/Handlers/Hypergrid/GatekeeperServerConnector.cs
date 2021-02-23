@@ -40,13 +40,13 @@ namespace OpenSim.Server.Handlers.Hypergrid
 //                LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IGatekeeperService m_GatekeeperService;
+        private readonly IGatekeeperService m_GatekeeperService;
         public IGatekeeperService GateKeeper
         {
             get { return m_GatekeeperService; }
         }
 
-        bool m_Proxy = false;
+        readonly bool m_Proxy = false;
 
         public GatekeeperServiceInConnector(IConfigSource config, IHttpServer server, ISimulationService simService) :
                 base(config, server, string.Empty)

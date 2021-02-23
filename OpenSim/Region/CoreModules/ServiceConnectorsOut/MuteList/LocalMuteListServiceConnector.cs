@@ -47,7 +47,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Scene> m_Scenes = new List<Scene>();
+        private readonly List<Scene> m_Scenes = new List<Scene>();
         protected IMuteListService m_service = null;
 
         private bool m_Enabled = false;

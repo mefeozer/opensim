@@ -44,7 +44,7 @@ namespace OpenSim.OfflineIM
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool m_Enabled = false;
-        private List<Scene> m_SceneList = new List<Scene>();
+        private readonly List<Scene> m_SceneList = new List<Scene>();
         IMessageTransferModule m_TransferModule = null;
         private bool m_ForwardOfflineGroupMessages = true;
 

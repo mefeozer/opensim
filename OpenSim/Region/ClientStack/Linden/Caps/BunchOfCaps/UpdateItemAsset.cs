@@ -256,11 +256,11 @@ namespace OpenSim.Region.ClientStack.Linden
         public class ItemUpdater : ExpiringCapBase
         {
             public event UpdateItem OnUpLoad = null;
-            private UUID m_inventoryItemID;
-            private UUID m_objectID;
-            private bool m_dumpAssetToFile;
+            private readonly UUID m_inventoryItemID;
+            private readonly UUID m_objectID;
+            private readonly bool m_dumpAssetToFile;
             public IPAddress m_remoteAdress;
-            private byte m_assetType;
+            private readonly byte m_assetType;
 
             public ItemUpdater(UUID inventoryItem, UUID objectid, byte aType, string path, IHttpServer httpServer, bool dumpAssetToFile):
                 base(httpServer, path)
@@ -341,10 +341,10 @@ namespace OpenSim.Region.ClientStack.Linden
         public class TaskInventoryScriptUpdater : ExpiringCapBase
         {
             public event UpdateTaskScript OnUpLoad;
-            private UUID m_inventoryItemID;
-            private UUID m_primID;
-            private bool m_isScriptRunning;
-            private bool m_dumpAssetToFile;
+            private readonly UUID m_inventoryItemID;
+            private readonly UUID m_primID;
+            private readonly bool m_isScriptRunning;
+            private readonly bool m_dumpAssetToFile;
             public IPAddress m_remoteAddress;
 
             public TaskInventoryScriptUpdater(UUID inventoryItemID, UUID primID, bool isScriptRunning,

@@ -212,7 +212,7 @@ namespace OpenSim.Services.Connectors
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
                     GridUserInfo guinfo = null;
 
-                    if ((replyData != null) && replyData.ContainsKey("result") && (replyData["result"] != null))
+                    if (replyData != null && replyData.ContainsKey("result") && replyData["result"] != null)
                     {
                         if (replyData["result"] is Dictionary<string, object>)
                             guinfo = Create((Dictionary<string, object>)replyData["result"]);
@@ -253,7 +253,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         m_Auth);
-                if (reply == null || (reply != null && string.IsNullOrEmpty(reply)))
+                if (reply == null || reply != null && string.IsNullOrEmpty(reply))
                 {
                     m_log.DebugFormat("[GRID USER CONNECTOR]: GetGridUserInfo received null or empty reply");
                     return null;

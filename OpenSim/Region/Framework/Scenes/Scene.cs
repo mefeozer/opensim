@@ -166,12 +166,12 @@ namespace OpenSim.Region.Framework.Scenes
             get { return m_clampNegativeZ; }
         }
 
-        private bool m_clampNegativeZ = false;
+        private readonly bool m_clampNegativeZ = false;
 
         /// <summary>
         /// Used to prevent simultaneous calls to code that adds and removes agents.
         /// </summary>
-        private object m_removeClientLock = new object();
+        private readonly object m_removeClientLock = new object();
 
         /// <summary>
         /// Statistical information for this scene.
@@ -272,8 +272,8 @@ namespace OpenSim.Region.Framework.Scenes
             get { return m_minRegionViewDistance; }
         }
 
-        private List<string> m_AllowedViewers = new List<string>();
-        private List<string> m_BannedViewers = new List<string>();
+        private readonly List<string> m_AllowedViewers = new List<string>();
+        private readonly List<string> m_BannedViewers = new List<string>();
 
         // TODO: need to figure out how allow client agents but deny
         // root agents when ACL denies access to root agent
@@ -329,7 +329,7 @@ namespace OpenSim.Region.Framework.Scenes
         protected ICapabilitiesModule m_capsModule;
         protected IGroupsModule m_groupsModule;
 
-        private Dictionary<string, string> m_extraSettings;
+        private readonly Dictionary<string, string> m_extraSettings;
 
         /// <summary>
         /// Current scene frame number
@@ -351,17 +351,17 @@ namespace OpenSim.Region.Framework.Scenes
         // see SimStatsReporter.cs
         public bool Normalized55FPS { get; private set; }
 
-        private int m_update_physics = 1;
-        private int m_update_entitymovement = 1;
-        private int m_update_objects = 1;
-        private int m_update_presences = 1; // Update scene presence movements
-        private int m_update_events = 1;
-        private int m_update_backup = 200;
+        private readonly int m_update_physics = 1;
+        private readonly int m_update_entitymovement = 1;
+        private readonly int m_update_objects = 1;
+        private readonly int m_update_presences = 1; // Update scene presence movements
+        private readonly int m_update_events = 1;
+        private readonly int m_update_backup = 200;
 
-        private int m_update_terrain = 1000;
+        private readonly int m_update_terrain = 1000;
 
-        private int m_update_coarse_locations = 5;
-        private int m_update_temp_cleaning = 180;
+        private readonly int m_update_coarse_locations = 5;
+        private readonly int m_update_temp_cleaning = 180;
 
         private float agentMS;
         private float frameMS;
@@ -397,13 +397,13 @@ namespace OpenSim.Region.Framework.Scenes
         private ManualResetEvent m_updateWaitEvent = new ManualResetEvent(false);
 
         // TODO: Possibly stop other classes being able to manipulate this directly.
-        private SceneGraph m_sceneGraph;
+        private readonly SceneGraph m_sceneGraph;
         private readonly Timer m_restartTimer = new Timer(15000); // Wait before firing
         private volatile bool m_backingup;
-        private Dictionary<UUID, ReturnInfo> m_returns = new Dictionary<UUID, ReturnInfo>();
-        private HashSet<UUID> m_groupsWithTargets = new HashSet<UUID>();
+        private readonly Dictionary<UUID, ReturnInfo> m_returns = new Dictionary<UUID, ReturnInfo>();
+        private readonly HashSet<UUID> m_groupsWithTargets = new HashSet<UUID>();
 
-        private string m_defaultScriptEngine;
+        private readonly string m_defaultScriptEngine;
 
         private int m_unixStartTime;
         public int UnixStartTime
@@ -478,8 +478,8 @@ namespace OpenSim.Region.Framework.Scenes
 //        private double m_childReprioritizationDistance = 20.0;
 
 
-        private Timer m_mapGenerationTimer = new Timer();
-        private bool m_generateMaptiles;
+        private readonly Timer m_mapGenerationTimer = new Timer();
+        private readonly bool m_generateMaptiles;
 
         protected int m_lastHealth = -1;
         protected int m_lastUsers = -1;
@@ -746,10 +746,10 @@ namespace OpenSim.Region.Framework.Scenes
         public bool IsReprioritizationEnabled { get; set; }
         public float ReprioritizationInterval { get; set; }
         public float ReprioritizationDistance { get; set; }
-        private float m_minReprioritizationDistance = 32f;
+        private readonly float m_minReprioritizationDistance = 32f;
         public bool ObjectsCullingByDistance = false;
 
-        private ExpiringCacheOS<UUID, UUID> TeleportTargetsCoolDown = new ExpiringCacheOS<UUID, UUID>();
+        private readonly ExpiringCacheOS<UUID, UUID> TeleportTargetsCoolDown = new ExpiringCacheOS<UUID, UUID>();
 
         public AgentCircuitManager AuthenticateHandler
         {
@@ -1680,7 +1680,7 @@ namespace OpenSim.Region.Framework.Scenes
             float sleepMS;
             float sleepError = 0;
 
-            while (!m_shuttingDown && ((endFrame == long.MaxValue && Active) || Frame < endFrame))
+            while (!m_shuttingDown && (endFrame == long.MaxValue && Active || Frame < endFrame))
             {
                 framestart = Util.GetTimeStampMS();
                 ++Frame;
@@ -3736,7 +3736,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// </param>
         ///
 
-        private object m_removeClientPrivLock = new object();
+        private readonly object m_removeClientPrivLock = new object();
 
         public void RemoveClient(UUID agentID, bool closeChildAgents)
         {
@@ -3952,7 +3952,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns>True if the region accepts this agent.  False if it does not.  False will
         /// also return a reason.</returns>
         ///
-        private object m_newUserConnLock = new object();
+        private readonly object m_newUserConnLock = new object();
 
         public bool NewUserConnection(AgentCircuitData acd, uint teleportFlags, GridRegion source, out string reason, bool requirePresenceLookup)
         {

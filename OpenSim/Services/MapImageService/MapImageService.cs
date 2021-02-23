@@ -63,10 +63,10 @@ namespace OpenSim.Services.MapImageService
 
         private static string m_TilesStoragePath = "maptiles";
 
-        private static object m_Sync = new object();
+        private static readonly object m_Sync = new object();
         private static bool m_Initialized = false;
         private static string m_WaterTileFile = string.Empty;
-        private static Color m_Watercolor = Color.FromArgb(29, 71, 95);
+        private static readonly Color m_Watercolor = Color.FromArgb(29, 71, 95);
         private static Bitmap m_WaterBitmap = null;
         private static byte[] m_WaterBytes = null;
 
@@ -162,9 +162,9 @@ namespace OpenSim.Services.MapImageService
         //    the next maptile arrives.
         private class mapToMultiRez
         {
-            public int xx;
-            public int yy;
-            public UUID scopeID;
+            public readonly int xx;
+            public readonly int yy;
+            public readonly UUID scopeID;
             public mapToMultiRez(int pX, int pY, UUID pscopeID)
             {
                 xx = pX;
@@ -172,7 +172,7 @@ namespace OpenSim.Services.MapImageService
                 scopeID = pscopeID;
             }
         };
-        private Queue<mapToMultiRez> multiRezToBuild = new Queue<mapToMultiRez>();
+        private readonly Queue<mapToMultiRez> multiRezToBuild = new Queue<mapToMultiRez>();
 
         private bool UpdateMultiResolutionFiles(int x, int y, UUID scopeID, out string reason)
         {
@@ -218,8 +218,8 @@ namespace OpenSim.Services.MapImageService
                         // Calculate the width (in full resolution tiles) and bottom-left
                         // corner of the current zoom level
                         width *= 2;
-                        int x1 = x - (x % width);
-                        int y1 = y - (y % width);
+                        int x1 = x - x % width;
+                        int y1 = y - y % width;
 
                         lock (m_Sync)   // must lock the reading and writing of the maptile files
                         {
@@ -315,12 +315,12 @@ namespace OpenSim.Services.MapImageService
             int thisWidth = (int)Math.Pow(2, (double)zoomLevel - 1);
 
             // Convert x and y to the bottom left tile for this zoom level
-            int xIn = x - (x % prevWidth);
-            int yIn = y - (y % prevWidth);
+            int xIn = x - x % prevWidth;
+            int yIn = y - y % prevWidth;
 
             // Convert x and y to the bottom left tile for the next zoom level
-            int xOut = x - (x % thisWidth);
-            int yOut = y - (y % thisWidth);
+            int xOut = x - x % thisWidth;
+            int yOut = y - y % thisWidth;
 
             // Try to open the four input tiles from the previous zoom level
             Bitmap inputBL = GetInputTileImage(GetFileName(zoomLevel - 1, xIn, yIn, scopeID));

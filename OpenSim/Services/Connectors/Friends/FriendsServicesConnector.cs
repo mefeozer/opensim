@@ -119,7 +119,7 @@ namespace OpenSim.Services.Connectors.Friends
 
                     if (replyData != null)
                     {
-                        if (replyData.ContainsKey("result") && (replyData["result"].ToString().ToLower() == "null"))
+                        if (replyData.ContainsKey("result") && replyData["result"].ToString().ToLower() == "null")
                         {
                         return new FriendInfo[0];
                         }
@@ -180,7 +180,7 @@ namespace OpenSim.Services.Connectors.Friends
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                if ((replyData != null) && replyData.ContainsKey("Result") && (replyData["Result"] != null))
+                if (replyData != null && replyData.ContainsKey("Result") && replyData["Result"] != null)
                 {
                     bool success = false;
                     bool.TryParse(replyData["Result"].ToString(), out success);
@@ -235,7 +235,7 @@ namespace OpenSim.Services.Connectors.Friends
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                if ((replyData != null) && replyData.ContainsKey("Result") && (replyData["Result"] != null))
+                if (replyData != null && replyData.ContainsKey("Result") && replyData["Result"] != null)
                 {
                     bool success = false;
                     bool.TryParse(replyData["Result"].ToString(), out success);

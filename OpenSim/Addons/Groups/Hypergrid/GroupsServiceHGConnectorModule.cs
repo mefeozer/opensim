@@ -59,7 +59,7 @@ namespace OpenSim.Groups
         private string m_ServiceLocation;
         private IConfigSource m_Config;
 
-        private Dictionary<string, GroupsServiceHGConnector> m_NetworkConnectors = new Dictionary<string, GroupsServiceHGConnector>();
+        private readonly Dictionary<string, GroupsServiceHGConnector> m_NetworkConnectors = new Dictionary<string, GroupsServiceHGConnector>();
         private RemoteConnectorCacheWrapper m_CacheWrapper; // for caching info of external group services
 
         #region ISharedRegionModule
@@ -70,8 +70,8 @@ namespace OpenSim.Groups
             if (groupsConfig == null)
                 return;
 
-            if ((groupsConfig.GetBoolean("Enabled", false) == false)
-                    || (groupsConfig.GetString("ServicesConnectorModule", string.Empty) != Name))
+            if (groupsConfig.GetBoolean("Enabled", false) == false
+                    || groupsConfig.GetString("ServicesConnectorModule", string.Empty) != Name)
             {
                 return;
             }
@@ -133,7 +133,7 @@ namespace OpenSim.Groups
                 {
                     m_LocalGroupsConnector = new GroupsServiceLocalConnectorModule(m_Config, m_UserManagement);
                     // Also, if local, create the endpoint for the HGGroupsService
-                    new HGGroupsServiceRobustConnector(m_Config, MainServer.Instance, string.Empty,
+                    new HgGroupsServiceRobustConnector(m_Config, MainServer.Instance, string.Empty,
                         scene.RequestModuleInterface<IOfflineIMService>(), scene.RequestModuleInterface<IUserAccountService>());
 
                 }
@@ -458,7 +458,7 @@ namespace OpenSim.Groups
 
         public GroupInviteInfo GetAgentToGroupInvite(string RequestingAgentID, UUID inviteID)
         {
-            return m_LocalGroupsConnector.GetAgentToGroupInvite(AgentUUI(RequestingAgentID), inviteID); ;
+            return m_LocalGroupsConnector.GetAgentToGroupInvite(AgentUUI(RequestingAgentID), inviteID);
         }
 
         public void RemoveAgentToGroupInvite(string RequestingAgentID, UUID inviteID)
@@ -670,7 +670,7 @@ namespace OpenSim.Groups
 
             serviceLocation = group.ServiceLocation;
             name = group.GroupName;
-            bool isLocal = (string.IsNullOrEmpty(group.ServiceLocation));
+            bool isLocal = string.IsNullOrEmpty(@group.ServiceLocation);
             //m_log.DebugFormat("[XXX]: IsLocal? {0}", isLocal);
             return isLocal;
         }

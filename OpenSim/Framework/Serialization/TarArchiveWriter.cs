@@ -151,7 +151,7 @@ namespace OpenSim.Framework.Serialization
 
             // file path field (100)
             byte[] nameBytes = Encoding.ASCII.GetBytes(filePath);
-            int nameSize = (nameBytes.Length >= 100) ? 100 : nameBytes.Length;
+            int nameSize = nameBytes.Length >= 100 ? 100 : nameBytes.Length;
             Array.Copy(nameBytes, header, nameSize);
 
             // file mode (8)
@@ -213,7 +213,7 @@ namespace OpenSim.Framework.Serialization
 
                 if (data.Length % 512 != 0)
                 {
-                    int paddingRequired = 512 - (data.Length % 512);
+                    int paddingRequired = 512 - data.Length % 512;
 
                     //m_log.DebugFormat("[TAR ARCHIVE WRITER]: Padding data with {0} bytes", paddingRequired);
 

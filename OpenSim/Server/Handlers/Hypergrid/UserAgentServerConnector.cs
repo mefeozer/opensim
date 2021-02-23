@@ -47,15 +47,15 @@ namespace OpenSim.Server.Handlers.Hypergrid
 //                LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IUserAgentService m_HomeUsersService;
+        private readonly IUserAgentService m_HomeUsersService;
         public IUserAgentService HomeUsersService
         {
             get { return m_HomeUsersService; }
         }
 
-        private string[] m_AuthorizedCallers;
+        private readonly string[] m_AuthorizedCallers;
 
-        private bool m_VerifyCallers = false;
+        private readonly bool m_VerifyCallers = false;
 
         public UserAgentServerConnector(IConfigSource config, IHttpServer server) :
             this(config, server, (IFriendsSimConnector)null)

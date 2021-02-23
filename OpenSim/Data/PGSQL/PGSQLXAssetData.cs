@@ -53,15 +53,15 @@ namespace OpenSim.Data.PGSQL
         /// </summary>
         private const int DaysBetweenAccessTimeUpdates = 30;
 
-        private bool m_enableCompression = false;
+        private readonly bool m_enableCompression = false;
         private PGSQLManager m_database;
         private string m_connectionString;
-        private object m_dbLock = new object();
+        private readonly object m_dbLock = new object();
 
         /// <summary>
         /// We can reuse this for all hashing since all methods are single-threaded through m_dbBLock
         /// </summary>
-        private HashAlgorithm hasher = new SHA256CryptoServiceProvider();
+        private readonly HashAlgorithm hasher = new SHA256CryptoServiceProvider();
 
         #region IPlugin Members
 

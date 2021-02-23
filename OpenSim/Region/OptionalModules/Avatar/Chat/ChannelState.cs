@@ -46,9 +46,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static Regex arg = new Regex(@"(?<!\\)\[[^\[\]]*(?<!\\)\]");
+        private static readonly Regex arg = new Regex(@"(?<!\\)\[[^\[\]]*(?<!\\)\]");
         private static int _idk_ = 0;
-        private static int DEBUG_CHANNEL = 2147483647;
+        private static readonly int DEBUG_CHANNEL = 2147483647;
 
         // These are the IRC Connector configurable parameters with hard-wired
         // default values (retained for compatability).
@@ -414,13 +414,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         private bool IsAConnectionMatchFor(ChannelState cs)
         {
-            return (
-                Server == cs.Server &&
-                IrcChannel == cs.IrcChannel &&
-                Port == cs.Port &&
-                BaseNickname == cs.BaseNickname &&
-                User == cs.User
-            );
+            return Server == cs.Server &&
+                   IrcChannel == cs.IrcChannel &&
+                   Port == cs.Port &&
+                   BaseNickname == cs.BaseNickname &&
+                   User == cs.User;
         }
 
         // This level of obsessive matching allows us to produce
@@ -429,20 +427,19 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         private bool IsAPerfectMatchFor(ChannelState cs)
         {
-            return (IsAConnectionMatchFor(cs) &&
-                     RelayChannelOut == cs.RelayChannelOut &&
-                     PrivateMessageFormat == cs.PrivateMessageFormat &&
-                     NoticeMessageFormat == cs.NoticeMessageFormat &&
-                     RandomizeNickname == cs.RandomizeNickname &&
-                     AccessPassword == cs.AccessPassword &&
-                     CommandsEnabled == cs.CommandsEnabled &&
-                     CommandChannel == cs.CommandChannel &&
-                     DefaultZone == cs.DefaultZone &&
-                     RelayPrivateChannels == cs.RelayPrivateChannels &&
-                     RelayChannel == cs.RelayChannel &&
-                     RelayChat == cs.RelayChat &&
-                     ClientReporting == cs.ClientReporting
-            );
+            return IsAConnectionMatchFor(cs) &&
+                   RelayChannelOut == cs.RelayChannelOut &&
+                   PrivateMessageFormat == cs.PrivateMessageFormat &&
+                   NoticeMessageFormat == cs.NoticeMessageFormat &&
+                   RandomizeNickname == cs.RandomizeNickname &&
+                   AccessPassword == cs.AccessPassword &&
+                   CommandsEnabled == cs.CommandsEnabled &&
+                   CommandChannel == cs.CommandChannel &&
+                   DefaultZone == cs.DefaultZone &&
+                   RelayPrivateChannels == cs.RelayPrivateChannels &&
+                   RelayChannel == cs.RelayChannel &&
+                   RelayChat == cs.RelayChat &&
+                   ClientReporting == cs.ClientReporting;
         }
 
         // This function implements the variable substitution mechanism
@@ -615,7 +612,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
                             // This non-IRC differentiator moved to here
 
-                            c.Channel = (cs.RelayPrivateChannels ? cs.RelayChannel : 0);
+                            c.Channel = cs.RelayPrivateChannels ? cs.RelayChannel : 0;
 
                             foreach (RegionState region in cs.clientregions)
                             {

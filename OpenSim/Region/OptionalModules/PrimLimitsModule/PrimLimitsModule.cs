@@ -139,8 +139,8 @@ namespace OpenSim.Region.OptionalModules
         {
             float newX = newPoint.X;
             float newY = newPoint.Y;
-            if (newX < -1.0f || newX > (m_scene.RegionInfo.RegionSizeX + 1.0f) ||
-                newY < -1.0f || newY > (m_scene.RegionInfo.RegionSizeY + 1.0f) )
+            if (newX < -1.0f || newX > m_scene.RegionInfo.RegionSizeX + 1.0f ||
+                newY < -1.0f || newY > m_scene.RegionInfo.RegionSizeY + 1.0f )
                 return true;
 
             if (sog == null)
@@ -199,7 +199,7 @@ namespace OpenSim.Region.OptionalModules
             string response = null;
 
             int OwnedParcelsCapacity = lo.GetSimulatorMaxPrimCount();
-            if ((objectCount + lo.PrimCounts.Simulator) > OwnedParcelsCapacity)
+            if (objectCount + lo.PrimCounts.Simulator > OwnedParcelsCapacity)
             {
                 response = "Unable to rez object because the parcel is full";
             }
@@ -220,7 +220,7 @@ namespace OpenSim.Region.OptionalModules
                             if (!mgrs.Contains(ownerID))
                             {
                                 // caller is not an Estate Manager
-                                if ((lo.PrimCounts.Users[ownerID] + objectCount) >  maxPrimsPerUser)
+                                if (lo.PrimCounts.Users[ownerID] + objectCount >  maxPrimsPerUser)
                                 {
                                     response = "Unable to rez object because you have reached your limit";
                                 }

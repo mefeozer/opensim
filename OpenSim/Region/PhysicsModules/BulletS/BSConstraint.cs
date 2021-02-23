@@ -32,7 +32,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public abstract class BSConstraint : IDisposable
 {
-    private static string LogHeader = "[BULLETSIM CONSTRAINT]";
+    private static readonly string LogHeader = "[BULLETSIM CONSTRAINT]";
 
     protected BulletWorld m_world;
     protected BSScene PhysicsScene;

@@ -255,7 +255,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
         // f'(x) = 0 at x = 0 and x = 1; f'(0.5) = 1.5,
         // f''(0.5) = 0, f''(x) != 0 for x != 0.5
         private float S(float v) {
-            return (v * v * (3f - 2f * v));
+            return v * v * (3f - 2f * v);
         }
 
         // interpolate two colors in HSV space and return the resulting color
@@ -277,7 +277,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
         // the heigthfield might have some jumps in values. Rendered land is smooth, though,
         // as a slope is rendered at that place. So average 4 neighbour values to emulate that.
         private float getHeight(ITerrainChannel hm, int x, int y) {
-            if (x < (hm.Width - 1) && y < (hm.Height - 1))
+            if (x < hm.Width - 1 && y < hm.Height - 1)
                 return (float)(hm[x, y] * .444 + (hm[x + 1, y] + hm[x, y + 1]) * .222 + hm[x + 1, y +1] * .112);
             else
                 return (float)hm[x, y];
@@ -331,7 +331,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                     float rowRatio = y / (hm.Height - 1); // 0 - 1, for interpolation
 
                     // Y flip the cordinates for the bitmap: hf origin is lower left, bm origin is upper left
-                    int yr = (hm.Height - 1) - y;
+                    int yr = hm.Height - 1 - y;
 
                     float heightvalue = getHeight(m_scene.Heightmap, x, y);
                     if (float.IsInfinity(heightvalue) || float.IsNaN(heightvalue))
@@ -378,12 +378,12 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                             hmod = (hmod - low) / (high - low);
                             // now we have to split: 0.00 => color1, 0.33 => color2, 0.67 => color3, 1.00 => color4
                             if (hmod < 1f / 3f) hsv = interpolateHSV(ref hsv1, ref hsv2, hmod * 3f);
-                            else if (hmod < 2f / 3f) hsv = interpolateHSV(ref hsv2, ref hsv3, (hmod * 3f) - 1f);
-                            else hsv = interpolateHSV(ref hsv3, ref hsv4, (hmod * 3f) - 2f);
+                            else if (hmod < 2f / 3f) hsv = interpolateHSV(ref hsv2, ref hsv3, hmod * 3f - 1f);
+                            else hsv = interpolateHSV(ref hsv3, ref hsv4, hmod * 3f - 2f);
                         }
 
                         // Shade the terrain for shadows
-                        if (x < (hm.Width - 1) && y < (hm.Height - 1))
+                        if (x < hm.Width - 1 && y < hm.Height - 1)
                         {
                             float hfvaluecompare = getHeight(m_scene.Heightmap, x + 1, y + 1); // light from north-east => look at land height there
                             if (float.IsInfinity(hfvaluecompare) || float.IsNaN(hfvaluecompare))
@@ -396,15 +396,15 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                                 float highlightfactor = 0.18f;
                                 // NE is lower than here
                                 // We have to desaturate and lighten the land at the same time
-                                hsv.s = (hsv.s - (hfdiff * highlightfactor) > 0f) ? hsv.s - (hfdiff * highlightfactor) : 0f;
-                                hsv.v = (hsv.v + (hfdiff * highlightfactor) < 1f) ? hsv.v + (hfdiff * highlightfactor) : 1f;
+                                hsv.s = hsv.s - hfdiff * highlightfactor > 0f ? hsv.s - hfdiff * highlightfactor : 0f;
+                                hsv.v = hsv.v + hfdiff * highlightfactor < 1f ? hsv.v + hfdiff * highlightfactor : 1f;
                             }
                             else if (hfdiff < -0.02f)
                             {
                                 // here is lower than NE:
                                 // We have to desaturate and blacken the land at the same time
-                                hsv.s = (hsv.s + hfdiff > 0f) ? hsv.s + hfdiff : 0f;
-                                hsv.v = (hsv.v + hfdiff > 0f) ? hsv.v + hfdiff : 0f;
+                                hsv.s = hsv.s + hfdiff > 0f ? hsv.s + hfdiff : 0f;
+                                hsv.v = hsv.v + hfdiff > 0f ? hsv.v + hfdiff : 0f;
                             }
                         }
                         mapbmp.SetPixel(x, yr, hsv.toColor());
@@ -421,7 +421,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                         else if (heightvalue < 0f)
                             heightvalue = 0f;
 
-                        heightvalue = 100f - (heightvalue * 100f) / 19f;  // 0 - 19 => 100 - 0
+                        heightvalue = 100f - heightvalue * 100f / 19f;  // 0 - 19 => 100 - 0
 
                         mapbmp.SetPixel(x, yr, m_color_water);
                     }

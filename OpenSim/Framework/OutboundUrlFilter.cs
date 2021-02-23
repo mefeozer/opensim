@@ -42,11 +42,11 @@ namespace OpenSim.Framework
 
         public string Name { get; private set; }
 
-        private List<IPNetwork> m_blacklistNetworks;
-        private List<IPEndPoint> m_blacklistEndPoints;
+        private readonly List<IPNetwork> m_blacklistNetworks;
+        private readonly List<IPEndPoint> m_blacklistEndPoints;
 
-        private List<IPNetwork> m_blacklistExceptionNetworks;
-        private List<IPEndPoint> m_blacklistExceptionEndPoints;
+        private readonly List<IPNetwork> m_blacklistExceptionNetworks;
+        private readonly List<IPEndPoint> m_blacklistExceptionEndPoints;
 
         public OutboundUrlFilter(
             string name,

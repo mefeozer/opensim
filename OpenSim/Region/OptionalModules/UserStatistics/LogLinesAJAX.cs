@@ -34,11 +34,11 @@ namespace OpenSim.Region.UserStatistics
 {
     public class LogLinesAJAX : IStatsController
     {
-        private Regex normalizeEndLines = new Regex(@"\r\n", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
+        private readonly Regex normalizeEndLines = new Regex(@"\r\n", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline);
 
-        private Regex webFormat = new Regex(@"[^\s]*\s([^,]*),[^\s]*\s([A-Z]*)[^\s-][^\[]*\[([^\]]*)\]([^\n]*)",
+        private readonly Regex webFormat = new Regex(@"[^\s]*\s([^,]*),[^\s]*\s([A-Z]*)[^\s-][^\[]*\[([^\]]*)\]([^\n]*)",
                                             RegexOptions.Singleline | RegexOptions.Compiled);
-        private Regex TitleColor = new Regex(@"[^\s]*\s(?:[^,]*),[^\s]*\s(?:[A-Z]*)[^\s-][^\[]*\[([^\]]*)\](?:[^\n]*)",
+        private readonly Regex TitleColor = new Regex(@"[^\s]*\s(?:[^,]*),[^\s]*\s(?:[A-Z]*)[^\s-][^\[]*\[([^\]]*)\](?:[^\n]*)",
                                     RegexOptions.Singleline | RegexOptions.Compiled);
 
 

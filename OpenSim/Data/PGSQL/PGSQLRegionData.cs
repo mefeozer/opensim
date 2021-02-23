@@ -42,10 +42,10 @@ namespace OpenSim.Data.PGSQL
     /// </summary>
     public class PGSQLRegionData : IRegionData
     {
-        private string m_Realm;
+        private readonly string m_Realm;
         private List<string> m_ColumnNames = null;
-        private string m_ConnectionString;
-        private PGSQLManager m_database;
+        private readonly string m_ConnectionString;
+        private readonly PGSQLManager m_database;
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         protected Dictionary<string, string> m_FieldTypes = new Dictionary<string, string>();

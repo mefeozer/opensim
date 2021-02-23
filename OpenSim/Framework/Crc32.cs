@@ -38,8 +38,8 @@ namespace OpenSim.Framework
         public const uint DefaultSeed = 0xffffffff;
 
         private uint hash;
-        private uint seed;
-        private uint[] table;
+        private readonly uint seed;
+        private readonly uint[] table;
         private static uint[] defaultTable;
 
         public Crc32()

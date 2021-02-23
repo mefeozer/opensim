@@ -64,7 +64,7 @@ namespace OpenSim.Capabilities.Handlers
             {"settings_id", AssetType.Settings}
         };
 
-        private IAssetService m_assetService;
+        private readonly IAssetService m_assetService;
 
         public GetAssetsHandler(IAssetService assService)
         {

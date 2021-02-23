@@ -42,7 +42,7 @@ namespace OpenSim.Server.Handlers.Inventory
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IInventoryService m_InventoryService;
+        private readonly IInventoryService m_InventoryService;
 
         public InventoryServerMoveItemsHandler(IInventoryService service) :
                 base("PUT", "/inventory")

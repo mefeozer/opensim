@@ -37,8 +37,8 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class GetTextureServerConnector : ServiceConnector
     {
-        private IAssetService m_AssetService;
-        private string m_ConfigName = "CapsService";
+        private readonly IAssetService m_AssetService;
+        private readonly string m_ConfigName = "CapsService";
 
         public GetTextureServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

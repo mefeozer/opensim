@@ -44,7 +44,7 @@ namespace OpenSim.Server.Handlers.Presence
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IPresenceService m_PresenceService;
+        private readonly IPresenceService m_PresenceService;
 
         public PresenceServerPostHandler(IPresenceService service, IServiceAuth auth) :
                 base("POST", "/presence", auth)
@@ -222,7 +222,7 @@ namespace OpenSim.Server.Handlers.Presence
             PresenceInfo[] pinfos = m_PresenceService.GetAgents(userIDs);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((pinfos == null) || ((pinfos != null) && (pinfos.Length == 0)))
+            if (pinfos == null || pinfos != null && pinfos.Length == 0)
                 result["result"] = "null";
             else
             {

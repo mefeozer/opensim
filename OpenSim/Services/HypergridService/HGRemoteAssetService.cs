@@ -49,13 +49,13 @@ namespace OpenSim.Services.HypergridService
             LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_HomeURL;
-        private IUserAccountService m_UserAccountService;
-        private IAssetService m_assetConnector;
+        private readonly string m_HomeURL;
+        private readonly IUserAccountService m_UserAccountService;
+        private readonly IAssetService m_assetConnector;
 
-        private UserAccountCache m_Cache;
+        private readonly UserAccountCache m_Cache;
 
-        private AssetPermissions m_AssetPerms;
+        private readonly AssetPermissions m_AssetPerms;
 
         public HGRemoteAssetService(IConfigSource config, string configName)
         {

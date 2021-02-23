@@ -67,7 +67,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
         #endregion Constants
 
         private static readonly ILog m_log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name);
-        private static string LogHeader = "[WARP3D TERRAIN SPLAT]";
+        private static readonly string LogHeader = "[WARP3D TERRAIN SPLAT]";
 
         /// <summary>
         /// Builds a composited terrain texture given the region texture
@@ -224,9 +224,9 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                                 byte* ptrc = (byte*)bmdata.Scan0 + y;
                                 for(int x = 0 ; x < bmdata.Width; ++x)
                                 {
-                                    cR += *(ptrc++);
-                                    cG += *(ptrc++);
-                                    cB += *(ptrc++);
+                                    cR += *ptrc++;
+                                    cG += *ptrc++;
+                                    cB += *ptrc++;
                                 }
                             }
 
@@ -336,15 +336,15 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
 
                             a = mapColorsRed[l0];
                             b = mapColorsRed[l1];
-                            *(ptrO++) = (byte)(a + layerDiff * (b - a));
+                            *ptrO++ = (byte)(a + layerDiff * (b - a));
 
                             a = mapColorsGreen[l0];
                             b = mapColorsGreen[l1];
-                            *(ptrO++) = (byte)(a + layerDiff * (b - a));
+                            *ptrO++ = (byte)(a + layerDiff * (b - a));
 
                             a = mapColorsBlue[l0];
                             b = mapColorsBlue[l1];
-                            *(ptrO++) = (byte)(a + layerDiff * (b - a));
+                            *ptrO++ = (byte)(a + layerDiff * (b - a));
                         }
                     }
                 }
@@ -395,21 +395,21 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                             int patchOffset = (tx & 0x0f) * 3 + ypatch;
 
                             ptr = (byte*)datas[l0].Scan0 + patchOffset;
-                            aB = *(ptr++);
-                            aG = *(ptr++);
-                            aR = *(ptr);
+                            aB = *ptr++;
+                            aG = *ptr++;
+                            aR = *ptr;
 
                             l1 = Math.Min(l0 + 1, 3);
                             ptr = (byte*)datas[l1].Scan0 + patchOffset;
-                            bB = *(ptr++);
-                            bG = *(ptr++);
-                            bR = *(ptr);
+                            bB = *ptr++;
+                            bG = *ptr++;
+                            bR = *ptr;
 
 
                             // Interpolate between the two selected textures
-                            *(ptrO++) = (byte)(aB + layerDiff * (bB - aB));
-                            *(ptrO++) = (byte)(aG + layerDiff * (bG - aG));
-                            *(ptrO++) = (byte)(aR + layerDiff * (bR - aR));
+                            *ptrO++ = (byte)(aB + layerDiff * (bB - aB));
+                            *ptrO++ = (byte)(aG + layerDiff * (bG - aG));
+                            *ptrO++ = (byte)(aR + layerDiff * (bR - aR));
                         }
                     }
 
@@ -463,7 +463,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
             noise += Perlin.turbulence2(sX, sY, 2f) * 4.5f;
 
             // Combine the current height, generated noise, start height, and height range parameters, then scale all of it
-            float layer = ((height + noise - startHeight) / heightRange) * 4f;
+            float layer = (height + noise - startHeight) / heightRange * 4f;
             return Utils.Clamp(layer, 0f, 3f);
         }
     }

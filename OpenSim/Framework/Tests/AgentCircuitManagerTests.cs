@@ -43,7 +43,7 @@ namespace OpenSim.Framework.Tests
 
         private UUID SessionId1;
         private UUID SessionId2;
-        private Random rnd = new Random(Environment.TickCount);
+        private readonly Random rnd = new Random(Environment.TickCount);
 
         [SetUp]
         public void setup()
@@ -108,19 +108,19 @@ namespace OpenSim.Framework.Tests
             agentCircuitManager.AddNewCircuit(circuitcode2, m_agentCircuitData2);
             AgentCircuitData agent = agentCircuitManager.GetAgentCircuitData(circuitcode1);
 
-            Assert.That((m_agentCircuitData1.AgentID == agent.AgentID));
-            Assert.That((m_agentCircuitData1.BaseFolder == agent.BaseFolder));
+            Assert.That(m_agentCircuitData1.AgentID == agent.AgentID);
+            Assert.That(m_agentCircuitData1.BaseFolder == agent.BaseFolder);
 
-            Assert.That((m_agentCircuitData1.CapsPath == agent.CapsPath));
-            Assert.That((m_agentCircuitData1.child == agent.child));
-            Assert.That((m_agentCircuitData1.ChildrenCapSeeds.Count == agent.ChildrenCapSeeds.Count));
-            Assert.That((m_agentCircuitData1.circuitcode == agent.circuitcode));
-            Assert.That((m_agentCircuitData1.firstname == agent.firstname));
-            Assert.That((m_agentCircuitData1.InventoryFolder == agent.InventoryFolder));
-            Assert.That((m_agentCircuitData1.lastname == agent.lastname));
-            Assert.That((m_agentCircuitData1.SecureSessionID == agent.SecureSessionID));
-            Assert.That((m_agentCircuitData1.SessionID == agent.SessionID));
-            Assert.That((m_agentCircuitData1.startpos == agent.startpos));
+            Assert.That(m_agentCircuitData1.CapsPath == agent.CapsPath);
+            Assert.That(m_agentCircuitData1.child == agent.child);
+            Assert.That(m_agentCircuitData1.ChildrenCapSeeds.Count == agent.ChildrenCapSeeds.Count);
+            Assert.That(m_agentCircuitData1.circuitcode == agent.circuitcode);
+            Assert.That(m_agentCircuitData1.firstname == agent.firstname);
+            Assert.That(m_agentCircuitData1.InventoryFolder == agent.InventoryFolder);
+            Assert.That(m_agentCircuitData1.lastname == agent.lastname);
+            Assert.That(m_agentCircuitData1.SecureSessionID == agent.SecureSessionID);
+            Assert.That(m_agentCircuitData1.SessionID == agent.SessionID);
+            Assert.That(m_agentCircuitData1.startpos == agent.startpos);
         }
 
         /// <summary>

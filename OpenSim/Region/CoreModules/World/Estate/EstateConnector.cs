@@ -45,7 +45,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         protected EstateModule m_EstateModule;
-        private string token;
+        private readonly string token;
         uint port = 0;
 
         public EstateConnector(EstateModule module, string _token, uint _port)

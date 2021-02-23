@@ -46,12 +46,12 @@ namespace OpenSim.Capabilities.Handlers
     {
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private IAssetService m_assetService;
+        private readonly IAssetService m_assetService;
 
         public const string DefaultFormat = "x-j2c";
 
         // TODO: Change this to a config option
-        private string m_RedirectURL = null;
+        private readonly string m_RedirectURL = null;
 
         public GetTextureRobustHandler(string path, IAssetService assService, string name, string description, string redirectURL)
             : base("GET", path, name, description)

@@ -30,7 +30,7 @@
  * Aurora version created from libOpenMetaverse Library terrain compressor
  */
 
-// terrain patchs must be 16mx16m
+// terrain patches must be 16mx16m
 
 using System;
 
@@ -43,7 +43,6 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 {
     public static class OpenSimTerrainCompressor
     {
-        private const float OO_SQRT2 = 0.7071068f;
         private const int END_OF_PATCHES = 97;
         private const int STRIDE = 264;
         private const int ZERO_CODE = 0x0;
@@ -57,8 +56,6 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         static OpenSimTerrainCompressor()
         {
-            if(Constants.TerrainPatchSize != 16)
-                throw new Exception("Terrain patch size must be 16m x 16m");
 
             // Initialize the decompression tables
             BuildDequantizeTable16();
@@ -75,18 +72,18 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             // Should be enough to fit even the most poorly packed data
             byte[] data = new byte[patches.Length * 256 * 2];
 
-            BitPack bitpack = new BitPack(data, 0);
-            bitpack.PackBits(header.Stride, 16);
-            bitpack.PackBits(header.PatchSize, 8);
-            bitpack.PackBits(type, 8);
+            BitPack bitPack = new BitPack(data, 0);
+            bitPack.PackBits(header.Stride, 16);
+            bitPack.PackBits(header.PatchSize, 8);
+            bitPack.PackBits(type, 8);
 
             foreach (TerrainPatch t in patches)
-                CreatePatchtStandardSize(bitpack, t.Data, t.X, t.Y);
+                CreatePatchtStandardSize(bitPack, t.Data, t.X, t.Y);
 
-            bitpack.PackBits(END_OF_PATCHES, 8);
+            bitPack.PackBits(END_OF_PATCHES, 8);
 
-            layer.LayerData.Data = new byte[bitpack.BytePos + 1];
-            Buffer.BlockCopy(bitpack.Data, 0, layer.LayerData.Data, 0, bitpack.BytePos + 1);
+            layer.LayerData.Data = new byte[bitPack.BytePos + 1];
+            Buffer.BlockCopy(bitPack.Data, 0, layer.LayerData.Data, 0, bitPack.BytePos + 1);
 
             return layer;
         }
@@ -96,8 +93,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             TerrainPatch.Header header = PrescanPatch(patchData);
             header.QuantWBits = 136;
 
-            header.PatchIDs = (y & 0x1F);
-            header.PatchIDs += (x << 5);
+            header.PatchIDs = y & 0x1F;
+            header.PatchIDs += x << 5;
 
             int wbits;
             int* patch = stackalloc int[256];
@@ -120,7 +117,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             }
 
             header.DCOffset = zmin;
-            header.Range = (int)((zmax - zmin) + 1.0f);
+            header.Range = (int)(zmax - zmin + 1.0f);
 
             return header;
         }
@@ -129,7 +126,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         {
             float* block = stackalloc float[256];
             float oozrange = 1.0f / header.Range;
-            float range = (1 << prequant);
+            float range = 1 << prequant;
             float premult = oozrange * range;
 
             float sub = 0.5f * header.Range + header.DCOffset;
@@ -145,7 +142,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     block[k++] = (patchData[j * 16 + i] - sub) * premult;
             }
 
-            wbits = (prequant >> 1);
+            wbits = prequant >> 1;
 
             dct16x16(block, iout, ref wbits);
         }
@@ -222,14 +219,14 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             // If larger than legacy region size, pack patch X and Y info differently.
             if (terrData.SizeX > Constants.RegionSize || terrData.SizeY > Constants.RegionSize)
             {
-                header.PatchIDs = (patchY & 0xFFFF);
-                header.PatchIDs += (patchX << 16);
+                header.PatchIDs = patchY & 0xFFFF;
+                header.PatchIDs += patchX << 16;
                 largeRegion = true;
             }
             else
             {
-                header.PatchIDs = (patchY & 0x1F);
-                header.PatchIDs += (patchX << 5);
+                header.PatchIDs = patchY & 0x1F;
+                header.PatchIDs += patchX << 5;
             }
 
             if (Math.Round(frange, 2) == 1.0)
@@ -266,7 +263,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             terrData.GetPatchMinMax(patchX, patchY, out zmin, out zmax);
 
             header.DCOffset = zmin;
-            frange = ((zmax - zmin) + 1.0f);
+            frange = zmax - zmin + 1.0f;
             header.Range = (int)frange;
 
             return header;
@@ -280,7 +277,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 wbits = 2;
 
             header.QuantWBits &= 0xf0;
-            header.QuantWBits |= (wbits - 2);
+            header.QuantWBits |= wbits - 2;
 
             output.PackBitsFromByte((byte)header.QuantWBits);
             output.PackFloat(header.DCOffset);
@@ -366,7 +363,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             float* block = stackalloc float[256];
 
             float oozrange = 1.0f / header.Range;
-            float invprequat = (1 << prequant);
+            float invprequat = 1 << prequant;
             float premult = oozrange * invprequat;
 
             float sub = 0.5f * header.Range + header.DCOffset;
@@ -377,7 +374,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             terrData.GetPatchBlock(block, patchX, patchY, sub, premult);
 
-            wbits = (prequant >> 1);
+            wbits = prequant >> 1;
 
             dct16x16(block, iout, ref wbits);
         }

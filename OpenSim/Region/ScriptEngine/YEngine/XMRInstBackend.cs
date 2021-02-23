@@ -83,7 +83,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public double getLSLTimer()
         {
-            return(m_timer);
+            return m_timer;
         }
 
         /**
@@ -243,7 +243,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public DetectParams GetDetectParams(int number)
         {
             DetectParams dp = null;
-            if((number >= 0) && (m_DetectParams != null) && (number < m_DetectParams.Length))
+            if(number >= 0 && m_DetectParams != null && number < m_DetectParams.Length)
                 dp = m_DetectParams[number];
 
             return dp;
@@ -320,7 +320,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          *      be returned by xmrEventDequeue, to let the runtime know that the script is capable
          *      of processing that event type.  Otherwise, the event may not be queued to the script.
          */
-        private static LSL_List emptyList = new LSL_List(new object[0]);
+        private static readonly LSL_List emptyList = new LSL_List(new object[0]);
 
         public override LSL_List xmrEventDequeue(double timeout, int returnMask1, int returnMask2,
                                                   int backgroundMask1, int backgroundMask2)
@@ -374,8 +374,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     m_eventCodeMap.TryGetValue(evt.EventName, out evc);
                     evc1 = (int)evc;
                     evc2 = evc1 - 32;
-                    if((((uint)evc1 < (uint)32) && (((mask1 >> evc1) & 1) != 0)) ||
-                        (((uint)evc2 < (uint)32) && (((mask2 >> evc2) & 1) != 0)))
+                    if((uint)evc1 < (uint)32 && ((mask1 >> evc1) & 1) != 0 ||
+                        (uint)evc2 < (uint)32 && ((mask2 >> evc2) & 1) != 0)
                         goto remfromq;
                 }
 
@@ -400,8 +400,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 m_InstEHEvent++;
 
                  // See if returnable or background event.
-                if((((uint)evc1 < (uint)32) && (((returnMask1 >> evc1) & 1) != 0)) ||
-                    (((uint)evc2 < (uint)32) && (((returnMask2 >> evc2) & 1) != 0)))
+                if((uint)evc1 < (uint)32 && ((returnMask1 >> evc1) & 1) != 0 ||
+                    (uint)evc2 < (uint)32 && ((returnMask2 >> evc2) & 1) != 0)
                 {
                      // Returnable event, return its parameters in a list.
                      // Also set the detect parameters to what the event has.
@@ -554,7 +554,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private static DetectParams[] ObjArrToDetPrms(object[] objs)
         {
             int j = 0;
-            if((objs.Length % 16 != 1) || (ListInt(objs[j++]) != saveDPVer))
+            if(objs.Length % 16 != 1 || ListInt(objs[j++]) != saveDPVer)
                 throw new Exception("invalid detect param format");
 
             int len = objs.Length / 16;

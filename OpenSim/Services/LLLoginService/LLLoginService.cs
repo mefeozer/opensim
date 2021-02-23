@@ -93,7 +93,7 @@ namespace OpenSim.Services.LLLoginService
         protected bool m_allowDuplicatePresences = false;
         protected string m_messageKey;
 
-        IConfig m_LoginServerConfig;
+        readonly IConfig m_LoginServerConfig;
 //        IConfig m_ClientsConfig;
 
         public LLLoginService(IConfigSource config, ISimulationService simService, ILibraryService libraryService)
@@ -264,7 +264,7 @@ namespace OpenSim.Services.LLLoginService
                 //
                 string token = m_AuthenticationService.Authenticate(account.PrincipalID, passwd, 30);
                 UUID secureSession = UUID.Zero;
-                if ((string.IsNullOrEmpty(token)) || (!string.IsNullOrEmpty(token) && !UUID.TryParse(token, out secureSession)))
+                if (string.IsNullOrEmpty(token) || !string.IsNullOrEmpty(token) && !UUID.TryParse(token, out secureSession))
                 {
                     m_log.InfoFormat("[LLOGIN SERVICE]: SetLevel failed, reason: authentication failed");
                     return response;
@@ -441,7 +441,7 @@ namespace OpenSim.Services.LLLoginService
                 }
 
                 List<InventoryFolderBase> inventorySkel = m_InventoryService.GetInventorySkeleton(account.PrincipalID);
-                if (m_RequireInventory && ((inventorySkel == null) || (inventorySkel != null && inventorySkel.Count == 0)))
+                if (m_RequireInventory && (inventorySkel == null || inventorySkel != null && inventorySkel.Count == 0))
                 {
                     m_log.InfoFormat(
                         "[LLOGIN SERVICE]: Login failed, for {0} {1}, reason: unable to retrieve user inventory",
@@ -1031,7 +1031,7 @@ namespace OpenSim.Services.LLLoginService
                     if (!keyValue.EndsWith("/"))
                         keyValue = keyValue + "/";
 
-                    if (!account.ServiceURLs.ContainsKey(keyName) || (account.ServiceURLs.ContainsKey(keyName) && (string)account.ServiceURLs[keyName] != keyValue))
+                    if (!account.ServiceURLs.ContainsKey(keyName) || account.ServiceURLs.ContainsKey(keyName) && (string)account.ServiceURLs[keyName] != keyValue)
                     {
                         account.ServiceURLs[keyName] = keyValue;
                         newUrls = true;

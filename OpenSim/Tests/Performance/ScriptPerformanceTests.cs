@@ -52,10 +52,10 @@ namespace OpenSim.Tests.Performance
     {
         private TestScene m_scene;
         private XEngine m_xEngine;
-        private AutoResetEvent m_chatEvent = new AutoResetEvent(false);
+        private readonly AutoResetEvent m_chatEvent = new AutoResetEvent(false);
 
         private int m_expectedChatMessages;
-        private List<OSChatMessage> m_osChatMessagesReceived = new List<OSChatMessage>();
+        private readonly List<OSChatMessage> m_osChatMessagesReceived = new List<OSChatMessage>();
 
         [SetUp]
         public void Init()

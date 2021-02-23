@@ -48,7 +48,7 @@ namespace OpenSim.Framework
     {
         // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static XmlSerializer tiiSerializer = new XmlSerializer(typeof (TaskInventoryItem));
+        private static readonly XmlSerializer tiiSerializer = new XmlSerializer(typeof (TaskInventoryItem));
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private Thread LockedByThread;

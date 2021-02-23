@@ -43,7 +43,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private XEngine myScriptEngine;
+        private readonly XEngine myScriptEngine;
 
         public EventManager(XEngine _ScriptEngine)
         {

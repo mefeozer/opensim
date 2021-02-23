@@ -274,7 +274,7 @@ namespace OpenSim.Region.Framework.Scenes
         }
 
         // new test code, to place in better place later
-        private object m_PermissionsLock = new object();
+        private readonly object m_PermissionsLock = new object();
         private bool m_EffectivePermsInvalid = true;
         private bool m_DeepEffectivePermsInvalid = true;
 

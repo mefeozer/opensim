@@ -40,42 +40,42 @@ using OpenMetaverse;
 
 namespace OpenSim.Groups
 {
-    public class HGGroupsServiceRobustConnector : ServiceConnector
+    public class HgGroupsServiceRobustConnector : ServiceConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog MLog = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private HGGroupsService m_GroupsService;
-        private string m_ConfigName = "Groups";
+        private readonly HGGroupsService _mGroupsService;
+        private readonly string _mConfigName = "Groups";
 
         // Called by Robust shell
-        public HGGroupsServiceRobustConnector(IConfigSource config, IHttpServer server, string configName) :
+        public HgGroupsServiceRobustConnector(IConfigSource config, IHttpServer server, string configName) :
             this(config, server, configName, null, null)
         {
         }
 
         // Called by the sim-bound module
-        public HGGroupsServiceRobustConnector(IConfigSource config, IHttpServer server, string configName, IOfflineIMService im, IUserAccountService users) :
+        public HgGroupsServiceRobustConnector(IConfigSource config, IHttpServer server, string configName, IOfflineIMService im, IUserAccountService users) :
             base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _mConfigName = configName;
 
-            m_log.DebugFormat("[Groups.RobustHGConnector]: Starting with config name {0}", m_ConfigName);
+            MLog.DebugFormat("[Groups.RobustHGConnector]: Starting with config name {0}", _mConfigName);
 
-            string homeURI = Util.GetConfigVarFromSections<string>(config, "HomeURI",
-                new string[] { "Startup", "Hypergrid", m_ConfigName}, string.Empty);
-            if (string.IsNullOrEmpty(homeURI))
-                throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide the HomeURI [Startup] or in section {0}", m_ConfigName));
+            string homeUri = Util.GetConfigVarFromSections<string>(config, "HomeURI",
+                new string[] { "Startup", "Hypergrid", _mConfigName}, string.Empty);
+            if (string.IsNullOrEmpty(homeUri))
+                throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide the HomeURI [Startup] or in section {0}", _mConfigName));
 
-            IConfig cnf = config.Configs[m_ConfigName];
+            IConfig cnf = config.Configs[_mConfigName];
             if (cnf == null)
-                throw new Exception(string.Format("[Groups.RobustHGConnector]: {0} section does not exist", m_ConfigName));
+                throw new Exception(string.Format("[Groups.RobustHGConnector]: {0} section does not exist", _mConfigName));
 
             if (im == null)
             {
                 string imDll = cnf.GetString("OfflineIMService", string.Empty);
                 if (string.IsNullOrEmpty(imDll))
-                    throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide OfflineIMService in section {0}", m_ConfigName));
+                    throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide OfflineIMService in section {0}", _mConfigName));
 
                 object[] args = new object[] { config };
                 im = ServerUtils.LoadPlugin<IOfflineIMService>(imDll, args);
@@ -85,29 +85,29 @@ namespace OpenSim.Groups
             {
                 string usersDll = cnf.GetString("UserAccountService", string.Empty);
                 if (string.IsNullOrEmpty(usersDll))
-                    throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide UserAccountService in section {0}", m_ConfigName));
+                    throw new Exception(string.Format("[Groups.RobustHGConnector]: please provide UserAccountService in section {0}", _mConfigName));
 
                 object[] args = new object[] { config };
                 users = ServerUtils.LoadPlugin<IUserAccountService>(usersDll, args);
             }
 
-            m_GroupsService = new HGGroupsService(config, im, users, homeURI);
+            _mGroupsService = new HGGroupsService(config, im, users, homeUri);
 
-            server.AddStreamHandler(new HGGroupsServicePostHandler(m_GroupsService));
+            server.AddStreamHandler(new HgGroupsServicePostHandler(_mGroupsService));
         }
 
     }
 
-    public class HGGroupsServicePostHandler : BaseStreamHandler
+    public class HgGroupsServicePostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog MLog = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private HGGroupsService m_GroupsService;
+        private readonly HGGroupsService _mGroupsService;
 
-        public HGGroupsServicePostHandler(HGGroupsService service) :
+        public HgGroupsServicePostHandler(HGGroupsService service) :
             base("POST", "/hg-groups")
         {
-            m_GroupsService = service;
+            _mGroupsService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -132,7 +132,7 @@ namespace OpenSim.Groups
                 string method = request["METHOD"].ToString();
                 request.Remove("METHOD");
 
-                m_log.DebugFormat("[Groups.RobustHGConnector]: {0}", method);
+                MLog.DebugFormat("[Groups.RobustHGConnector]: {0}", method);
                 switch (method)
                 {
                     case "POSTGROUP":
@@ -153,11 +153,11 @@ namespace OpenSim.Groups
                         return HandleGetRoleMembers(request);
 
                 }
-                m_log.DebugFormat("[Groups.RobustHGConnector]: unknown method request: {0}", method);
+                MLog.DebugFormat("[Groups.RobustHGConnector]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.Error(string.Format("[Groups.RobustHGConnector]: Exception {0} ", e.Message), e);
+                MLog.Error(string.Format("[Groups.RobustHGConnector]: Exception {0} ", e.Message), e);
             }
 
             return FailureResult();
@@ -174,17 +174,16 @@ namespace OpenSim.Groups
 
             else
             {
-                string RequestingAgentID = request["RequestingAgentID"].ToString();
-                string agentID = request["AgentID"].ToString();
-                UUID groupID = new UUID(request["GroupID"].ToString());
+                string requestingAgentId = request["RequestingAgentID"].ToString();
+                string agentId = request["AgentID"].ToString();
+                UUID groupId = new UUID(request["GroupID"].ToString());
                 string accessToken = request["AccessToken"].ToString();
                 string location = request["Location"].ToString();
                 string name = string.Empty;
                 if (request.ContainsKey("Name"))
                     name = request["Name"].ToString();
 
-                string reason = string.Empty;
-                bool success = m_GroupsService.CreateGroupProxy(RequestingAgentID, agentID, accessToken, groupID, location, name, out reason);
+                bool success = _mGroupsService.CreateGroupProxy(requestingAgentId, agentId, accessToken, groupId, location, name, out string reason);
                 result["REASON"] = reason;
                 result["RESULT"] = success.ToString();
             }
@@ -204,11 +203,11 @@ namespace OpenSim.Groups
                 NullResult(result, "Bad network data");
             else
             {
-                UUID groupID = new UUID(request["GroupID"].ToString());
-                string agentID = request["AgentID"].ToString();
+                UUID groupId = new UUID(request["GroupID"].ToString());
+                string agentId = request["AgentID"].ToString();
                 string token = request["AccessToken"].ToString();
 
-                if (!m_GroupsService.RemoveAgentFromGroup(agentID, agentID, groupID, token))
+                if (!_mGroupsService.RemoveAgentFromGroup(agentId, agentId, groupId, token))
                     NullResult(result, "Internal error");
                 else
                     result["RESULT"] = "true";
@@ -226,18 +225,18 @@ namespace OpenSim.Groups
                 NullResult(result, "Bad network data");
             else
             {
-                string RequestingAgentID = request["RequestingAgentID"].ToString();
+                string requestingAgentId = request["RequestingAgentID"].ToString();
                 string token = request["AccessToken"].ToString();
 
-                UUID groupID = UUID.Zero;
+                UUID groupId = UUID.Zero;
                 string groupName = string.Empty;
 
                 if (request.ContainsKey("GroupID"))
-                    groupID = new UUID(request["GroupID"].ToString());
+                    groupId = new UUID(request["GroupID"].ToString());
                 if (request.ContainsKey("Name"))
                     groupName = request["Name"].ToString();
 
-                ExtendedGroupRecord grec = m_GroupsService.GetGroupRecord(RequestingAgentID, groupID, groupName, token);
+                ExtendedGroupRecord grec = _mGroupsService.GetGroupRecord(requestingAgentId, groupId, groupName, token);
                 if (grec == null)
                     NullResult(result, "Group not found");
                 else
@@ -258,12 +257,12 @@ namespace OpenSim.Groups
                 NullResult(result, "Bad network data");
             else
             {
-                UUID groupID = new UUID(request["GroupID"].ToString());
-                string requestingAgentID = request["RequestingAgentID"].ToString();
+                UUID groupId = new UUID(request["GroupID"].ToString());
+                string requestingAgentId = request["RequestingAgentID"].ToString();
                 string token = request["AccessToken"].ToString();
 
-                List<ExtendedGroupMembersData> members = m_GroupsService.GetGroupMembers(requestingAgentID, groupID, token);
-                if (members == null || (members != null && members.Count == 0))
+                List<ExtendedGroupMembersData> members = _mGroupsService.GetGroupMembers(requestingAgentId, groupId, token);
+                if (members == null || members.Count == 0)
                 {
                     NullResult(result, "No members");
                 }
@@ -294,12 +293,12 @@ namespace OpenSim.Groups
                 NullResult(result, "Bad network data");
             else
             {
-                UUID groupID = new UUID(request["GroupID"].ToString());
-                string requestingAgentID = request["RequestingAgentID"].ToString();
+                UUID groupId = new UUID(request["GroupID"].ToString());
+                string requestingAgentId = request["RequestingAgentID"].ToString();
                 string token = request["AccessToken"].ToString();
 
-                List<GroupRolesData> roles = m_GroupsService.GetGroupRoles(requestingAgentID, groupID, token);
-                if (roles == null || (roles != null && roles.Count == 0))
+                List<GroupRolesData> roles = _mGroupsService.GetGroupRoles(requestingAgentId, groupId, token);
+                if (roles == null || roles != null && roles.Count == 0)
                 {
                     NullResult(result, "No members");
                 }
@@ -328,12 +327,12 @@ namespace OpenSim.Groups
                 NullResult(result, "Bad network data");
             else
             {
-                UUID groupID = new UUID(request["GroupID"].ToString());
-                string requestingAgentID = request["RequestingAgentID"].ToString();
+                UUID groupId = new UUID(request["GroupID"].ToString());
+                string requestingAgentId = request["RequestingAgentID"].ToString();
                 string token = request["AccessToken"].ToString();
 
-                List<ExtendedGroupRoleMembersData> rmembers = m_GroupsService.GetGroupRoleMembers(requestingAgentID, groupID, token);
-                if (rmembers == null || (rmembers != null && rmembers.Count == 0))
+                List<ExtendedGroupRoleMembersData> rmembers = _mGroupsService.GetGroupRoleMembers(requestingAgentId, groupId, token);
+                if (rmembers == null || rmembers != null && rmembers.Count == 0)
                 {
                     NullResult(result, "No members");
                 }
@@ -380,7 +379,7 @@ namespace OpenSim.Groups
                 if (request.ContainsKey("AttachmentOwnerID"))
                     attOwner = request["AttachmentOwnerID"].ToString();
 
-                bool success = m_GroupsService.AddNotice(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
+                bool success = _mGroupsService.AddNotice(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
                         new UUID(request["NoticeID"].ToString()), request["FromName"].ToString(), request["Subject"].ToString(),
                         request["Message"].ToString(), hasAtt, attType, attName, attItem, attOwner);
 
@@ -402,10 +401,10 @@ namespace OpenSim.Groups
 
             else
             {
-                UUID noticeID = new UUID(request["NoticeID"].ToString());
-                UUID groupID = new UUID(request["GroupID"].ToString());
+                UUID noticeId = new UUID(request["NoticeID"].ToString());
+                UUID groupId = new UUID(request["GroupID"].ToString());
 
-                bool success = m_GroupsService.VerifyNotice(noticeID, groupID);
+                bool success = _mGroupsService.VerifyNotice(noticeId, groupId);
                 //m_log.DebugFormat("[XXX]: VerifyNotice returned {0}", success);
                 result["RESULT"] = success.ToString();
             }

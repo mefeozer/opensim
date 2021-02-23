@@ -46,8 +46,8 @@ namespace OpenSim.Server.Handlers.Inventory
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IInventoryService m_InventoryService;
-        private string m_ConfigName = "InventoryService";
+        private readonly IInventoryService m_InventoryService;
+        private readonly string m_ConfigName = "InventoryService";
 
         public XInventoryInConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
@@ -81,7 +81,7 @@ namespace OpenSim.Server.Handlers.Inventory
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IInventoryService m_InventoryService;
+        private readonly IInventoryService m_InventoryService;
 
         public XInventoryConnectorPostHandler(IInventoryService service, IServiceAuth auth) :
                 base("POST", "/xinventory", auth)
@@ -602,7 +602,7 @@ namespace OpenSim.Server.Handlers.Inventory
             {
                 count = 0;
                 foreach (InventoryItemBase item in itemsList)
-                    resultSet["item_" + count++] = (item == null) ? (object)"NULL" : EncodeItem(item);
+                    resultSet["item_" + count++] = item == null ? (object)"NULL" : EncodeItem(item);
             }
 
             string xmlString = ServerUtils.BuildXmlResponse(resultSet);

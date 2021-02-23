@@ -39,9 +39,9 @@ namespace OpenSim.Framework.Servers.HttpServer
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ConcurrentQueue<PollServiceHttpRequest> m_retryRequests = new ConcurrentQueue<PollServiceHttpRequest>();
+        private readonly ConcurrentQueue<PollServiceHttpRequest> m_retryRequests = new ConcurrentQueue<PollServiceHttpRequest>();
 
-        private int m_WorkerThreadCount = 0;
+        private readonly int m_WorkerThreadCount = 0;
         private ObjectJobEngine m_workerPool;
         private Thread m_retrysThread;
 
@@ -158,7 +158,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 }
                 else
                 {
-                    if ((Environment.TickCount - req.RequestTime) > req.PollServiceArgs.TimeOutms)
+                    if (Environment.TickCount - req.RequestTime > req.PollServiceArgs.TimeOutms)
                     {
                         try
                         {

@@ -81,7 +81,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                     masterVolume = volume;
                 }
 
-                float percent = (c * 100.0f) / masterVolume;
+                float percent = c * 100.0f / masterVolume;
 
                 if (percent > concavePercent) // if great than 5% of the total volume is concave, go ahead and keep splitting.
                 {

@@ -44,9 +44,9 @@ namespace OpenSim.Tests.Common
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        EventWaitHandle wh = new EventWaitHandle (false, EventResetMode.AutoReset, "Crossing");
+        readonly EventWaitHandle wh = new EventWaitHandle (false, EventResetMode.AutoReset, "Crossing");
 
-        private Scene m_scene;
+        private readonly Scene m_scene;
 
         // Properties so that we can get at received data for test purposes
         public List<uint> ReceivedKills { get; private set; }
@@ -350,7 +350,7 @@ namespace OpenSim.Tests.Common
         /// <value>
         /// This agent's UUID
         /// </value>
-        private UUID m_agentId;
+        private readonly UUID m_agentId;
 
         public ISceneAgent SceneAgent { get; set; }
 
@@ -361,7 +361,7 @@ namespace OpenSim.Tests.Common
         /// </value>
         public string CapsSeedUrl;
 
-        private Vector3 startPos = new Vector3(((int)Constants.RegionSize * 0.5f), ((int)Constants.RegionSize * 0.5f), 2);
+        private readonly Vector3 startPos = new Vector3((int)Constants.RegionSize * 0.5f, (int)Constants.RegionSize * 0.5f, 2);
 
         public virtual Vector3 StartPos
         {
@@ -384,13 +384,13 @@ namespace OpenSim.Tests.Common
         {
             get { return m_firstName; }
         }
-        private string m_firstName;
+        private readonly string m_firstName;
 
         public virtual string LastName
         {
             get { return m_lastName; }
         }
-        private string m_lastName;
+        private readonly string m_lastName;
 
         public virtual string Name
         {

@@ -48,8 +48,8 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
         // This maps between inventory server urls and inventory server clients
 //        private Dictionary<string, InventoryClient> m_inventoryServers = new Dictionary<string, InventoryClient>();
 
-        private Scene m_scene;
-        private string m_HomeURI;
+        private readonly Scene m_scene;
+        private readonly string m_HomeURI;
 
         #endregion
 

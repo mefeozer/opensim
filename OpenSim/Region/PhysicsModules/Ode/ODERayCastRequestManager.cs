@@ -60,14 +60,14 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <summary>
         /// ODE contact array to be filled by the collision testing
         /// </summary>
-        SafeNativeMethods.ContactGeom[] contacts = new SafeNativeMethods.ContactGeom[5];
+        readonly SafeNativeMethods.ContactGeom[] contacts = new SafeNativeMethods.ContactGeom[5];
 
         /// <summary>
         /// ODE near callback delegate
         /// </summary>
-        private SafeNativeMethods.NearCallback nearCallback;
+        private readonly SafeNativeMethods.NearCallback nearCallback;
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private List<ContactResult> m_contactResults = new List<ContactResult>();
+        private readonly List<ContactResult> m_contactResults = new List<ContactResult>();
 
 
         public ODERayCastRequestManager(OdeScene pScene)

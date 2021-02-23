@@ -102,7 +102,7 @@ namespace OpenSim.Groups
 
         #region Daily Cleanup
 
-        private Timer m_CleanupTimer;
+        private readonly Timer m_CleanupTimer;
 
         public GroupsService(IConfigSource config, string configName)
             : base(config, configName)
@@ -294,7 +294,7 @@ namespace OpenSim.Groups
             }
 
             MembershipData[] datas = m_Database.RetrieveMembers(GroupID);
-            if (datas == null || (datas != null && datas.Length == 0))
+            if (datas == null || datas != null && datas.Length == 0)
                 return members;
 
             // OK, we have everything we need
@@ -332,12 +332,12 @@ namespace OpenSim.Groups
                     {
                         int unixtime = int.Parse(gud.Data["Login"]);
                         // The viewer is very picky about how these strings are formed. Eg. it will crash on malformed dates!
-                        m.OnlineStatus = (unixtime == 0) ? @"unknown" : Util.ToDateTime(unixtime).ToString("MM/dd/yyyy");
+                        m.OnlineStatus = unixtime == 0 ? @"unknown" : Util.ToDateTime(unixtime).ToString("MM/dd/yyyy");
                     }
                 }
 
                 // Is this person an owner of the group?
-                m.IsOwner = (rolemembershipsList.Find(r => r.RoleID == ownerRoleID) != null) ? true : false;
+                m.IsOwner = rolemembershipsList.Find(r => r.RoleID == ownerRoleID) != null ? true : false;
 
                 members.Add(m);
             }
@@ -586,7 +586,7 @@ namespace OpenSim.Groups
             // TODO: check permissions
 
             RoleMembershipData[] data = m_Database.RetrieveMemberRoles(GroupID, AgentID);
-            if (data == null || (data != null && data.Length ==0))
+            if (data == null || data != null && data.Length ==0)
                 return roles;
 
             foreach (RoleMembershipData d in data)
@@ -685,7 +685,7 @@ namespace OpenSim.Groups
             // 1. Get all the groups that this person is a member of
             MembershipData[] mdata = m_Database.RetrieveMemberships(AgentID);
 
-            if (mdata == null || (mdata != null && mdata.Length == 0))
+            if (mdata == null || mdata != null && mdata.Length == 0)
                 return memberships;
 
             foreach (MembershipData d in mdata)
@@ -754,7 +754,7 @@ namespace OpenSim.Groups
             NoticeData[] data = m_Database.RetrieveNotices(groupID);
             List<ExtendedGroupNoticeData> infos = new List<ExtendedGroupNoticeData>();
 
-            if (data == null || (data != null && data.Length == 0))
+            if (data == null || data != null && data.Length == 0)
                 return infos;
 
             foreach (NoticeData d in data)
@@ -913,7 +913,7 @@ namespace OpenSim.Groups
 
             RoleData[] data = m_Database.RetrieveRoles(groupID);
 
-            if (data == null || (data != null && data.Length == 0))
+            if (data == null || data != null && data.Length == 0)
                 return roles;
 
             foreach (RoleData d in data)
@@ -940,7 +940,7 @@ namespace OpenSim.Groups
             if (!isInGroup)
             {
                 rdata = m_Database.RetrieveRoles(GroupID);
-                if (rdata == null || (rdata != null && rdata.Length == 0))
+                if (rdata == null || rdata != null && rdata.Length == 0)
                     return rmembers;
             }
             List<RoleData> rlist = new List<RoleData>(rdata);
@@ -949,7 +949,7 @@ namespace OpenSim.Groups
 
             RoleMembershipData[] data = m_Database.RetrieveRolesMembers(GroupID);
 
-            if (data == null || (data != null && data.Length == 0))
+            if (data == null || data != null && data.Length == 0)
                 return rmembers;
 
             foreach (RoleMembershipData d in data)
@@ -1057,7 +1057,7 @@ namespace OpenSim.Groups
         private bool HasPower(string agentID, UUID groupID, GroupPowers power)
         {
             RoleMembershipData[] rmembership = m_Database.RetrieveMemberRoles(groupID, agentID);
-            if (rmembership == null || (rmembership != null && rmembership.Length == 0))
+            if (rmembership == null || rmembership != null && rmembership.Length == 0)
                 return false;
 
             foreach (RoleMembershipData rdata in rmembership)

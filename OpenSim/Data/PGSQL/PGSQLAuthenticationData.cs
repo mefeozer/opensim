@@ -37,11 +37,11 @@ namespace OpenSim.Data.PGSQL
 {
     public class PGSQLAuthenticationData : IAuthenticationData
     {
-        private string m_Realm;
+        private readonly string m_Realm;
         private List<string> m_ColumnNames = null;
         private int m_LastExpire = 0;
-        private string m_ConnectionString;
-        private PGSQLManager m_database;
+        private readonly string m_ConnectionString;
+        private readonly PGSQLManager m_database;
 
         protected virtual Assembly Assembly
         {

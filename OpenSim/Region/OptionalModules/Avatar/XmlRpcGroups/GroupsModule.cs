@@ -73,7 +73,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Scene> m_sceneList = new List<Scene>();
+        private readonly List<Scene> m_sceneList = new List<Scene>();
 
         private IMessageTransferModule m_msgTransferModule;
 
@@ -413,7 +413,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             UUID remoteAgentID = remoteClient.AgentId;
 
             // Group invitations
-            if ((im.dialog == (byte)InstantMessageDialog.GroupInvitationAccept) || (im.dialog == (byte)InstantMessageDialog.GroupInvitationDecline))
+            if (im.dialog == (byte)InstantMessageDialog.GroupInvitationAccept || im.dialog == (byte)InstantMessageDialog.GroupInvitationDecline)
             {
                 UUID inviteID = new UUID(im.imSessionID);
                 GroupInviteInfo inviteInfo = m_groupData.GetAgentToGroupInvite(GetRequestingAgentID(remoteClient), inviteID);
@@ -429,7 +429,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                     m_log.DebugFormat("[xmlGROUPS]: Invite is for Agent {0} to Group {1}.", inviteInfo.AgentID, inviteInfo.GroupID);
 
                 UUID fromAgentID = new UUID(im.fromAgentID);
-                if ((inviteInfo != null) && (fromAgentID == inviteInfo.AgentID))
+                if (inviteInfo != null && fromAgentID == inviteInfo.AgentID)
                 {
                     // Accept
                     if (im.dialog == (byte)InstantMessageDialog.GroupInvitationAccept)
@@ -477,7 +477,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             }
 
             // Group notices
-            if ((im.dialog == (byte)InstantMessageDialog.GroupNotice))
+            if (im.dialog == (byte)InstantMessageDialog.GroupNotice)
             {
                 if (!m_groupNoticesEnabled)
                     return;
@@ -753,7 +753,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             // TODO:FIXME: Use a presence server of some kind to find out where the
             // client actually is, and try contacting that region directly to notify them,
             // or provide the notification via xmlrpc update queue
-            else if ((im.dialog == 210))
+            else if (im.dialog == 210)
             {
                 // This is sent from the region that the ejectee was ejected from
                 // if it's being delivered here, then the ejectee is here

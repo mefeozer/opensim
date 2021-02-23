@@ -119,7 +119,7 @@ namespace OpenSim.Framework
         // If entering avatar has no specific coords, this is where they land
         public Vector3 DefaultLandingPoint = new Vector3(128, 128, 30);
 
-        private Dictionary<string, string> m_extraSettings = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> m_extraSettings = new Dictionary<string, string>();
 
         // Apparently, we're applying the same estatesettings regardless of whether it's local or remote.
 
@@ -1089,7 +1089,7 @@ namespace OpenSim.Framework
         {
             OSDMap args = new OSDMap();
             args["region_id"] = OSD.FromUUID(RegionID);
-            if ((RegionName != null) && !RegionName.Equals(""))
+            if (RegionName != null && !RegionName.Equals(""))
                 args["region_name"] = OSD.FromString(RegionName);
             args["external_host_name"] = OSD.FromString(ExternalHostName);
             args["http_port"] = OSD.FromString(HttpPort.ToString());
@@ -1103,10 +1103,10 @@ namespace OpenSim.Framework
 
             args["internal_ep_address"] = OSD.FromString(InternalEndPoint.Address.ToString());
             args["internal_ep_port"] = OSD.FromString(InternalEndPoint.Port.ToString());
-            if ((RemotingAddress != null) && !RemotingAddress.Equals(""))
+            if (RemotingAddress != null && !RemotingAddress.Equals(""))
                 args["remoting_address"] = OSD.FromString(RemotingAddress);
             args["remoting_port"] = OSD.FromString(RemotingPort.ToString());
-            if ((proxyUrl != null) && !proxyUrl.Equals(""))
+            if (proxyUrl != null && !proxyUrl.Equals(""))
                 args["proxy_url"] = OSD.FromString(proxyUrl);
             if (!string.IsNullOrEmpty(RegionType))
                 args["region_type"] = OSD.FromString(RegionType);

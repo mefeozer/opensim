@@ -151,8 +151,8 @@ namespace OpenSim.Region.ClientStack.Linden
             int page_number;
             try
             {
-                page_size = (string.IsNullOrEmpty(psize) ? 500 : int.Parse(psize));
-                page_number = (string.IsNullOrEmpty(pnumber) ? 1 : int.Parse(pnumber));
+                page_size = string.IsNullOrEmpty(psize) ? 500 : int.Parse(psize);
+                page_number = string.IsNullOrEmpty(pnumber) ? 1 : int.Parse(pnumber);
             }
             catch
             {

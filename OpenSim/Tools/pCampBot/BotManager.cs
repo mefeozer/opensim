@@ -67,7 +67,7 @@ namespace pCampBot
         /// <summary>
         /// Used to control locking as we can't lock an enum.
         /// </summary>
-        private object BotConnectingStateChangeObject = new object();
+        private readonly object BotConnectingStateChangeObject = new object();
 
         /// <summary>
         /// Delay between logins of multiple bots.
@@ -148,12 +148,12 @@ namespace pCampBot
         /// <summary>
         /// Behaviour switches for bots.
         /// </summary>
-        private HashSet<string> m_defaultBehaviourSwitches = new HashSet<string>();
+        private readonly HashSet<string> m_defaultBehaviourSwitches = new HashSet<string>();
 
         /// <summary>
         /// Collects general information on this server (which reveals this to be a misnamed class).
         /// </summary>
-        private ServerStatsCollector m_serverStatsCollector;
+        private readonly ServerStatsCollector m_serverStatsCollector;
 
         /// <summary>
         /// Constructor Creates MainConsole.Instance to take commands and provide the place to write data

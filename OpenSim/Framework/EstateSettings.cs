@@ -155,7 +155,7 @@ namespace OpenSim.Framework
         private bool m_DenyAnonymous = false;
         public bool DenyAnonymous
         {
-            get { return (DoDenyAnonymous && m_DenyAnonymous); }
+            get { return DoDenyAnonymous && m_DenyAnonymous; }
             set { m_DenyAnonymous = value; }
         }
 
@@ -235,7 +235,7 @@ namespace OpenSim.Framework
         private bool m_DenyMinors = false;
         public bool DenyMinors
         {
-            get { return (DoDenyMinors && m_DenyMinors); }
+            get { return DoDenyMinors && m_DenyMinors; }
             set { m_DenyMinors = value; }
         }
 
@@ -301,7 +301,7 @@ namespace OpenSim.Framework
             if (avatarID == UUID.Zero)
                 return;
             if (!l_EstateAccess.Contains(avatarID) &&
-                    (l_EstateAccess.Count < (int)Constants.EstateAccessLimits.AllowedAccess))
+                    l_EstateAccess.Count < (int)Constants.EstateAccessLimits.AllowedAccess)
                 l_EstateAccess.Add(avatarID);
         }
 
@@ -321,7 +321,7 @@ namespace OpenSim.Framework
             if (avatarID == UUID.Zero)
                 return;
             if (!l_EstateGroups.Contains(avatarID) &&
-                    (l_EstateGroups.Count < (int)Constants.EstateAccessLimits.AllowedGroups))
+                    l_EstateGroups.Count < (int)Constants.EstateAccessLimits.AllowedGroups)
                 l_EstateGroups.Add(avatarID);
         }
 
@@ -341,7 +341,7 @@ namespace OpenSim.Framework
             if (avatarID == UUID.Zero)
                 return;
             if (!l_EstateManagers.Contains(avatarID) &&
-                (l_EstateManagers.Count < (int)Constants.EstateAccessLimits.EstateManagers))
+                l_EstateManagers.Count < (int)Constants.EstateAccessLimits.EstateManagers)
                 l_EstateManagers.Add(avatarID);
         }
 
@@ -417,7 +417,7 @@ namespace OpenSim.Framework
             if (ban == null)
                 return;
             if (!IsBanned(ban.BannedUserID, 32) &&
-                (l_EstateBans.Count < (int)Constants.EstateAccessLimits.EstateBans)) //Ignore age-based bans
+                l_EstateBans.Count < (int)Constants.EstateAccessLimits.EstateBans) //Ignore age-based bans
                 l_EstateBans.Add(ban);
         }
 
@@ -443,11 +443,11 @@ namespace OpenSim.Framework
 
         public void SetFromFlags(ulong regionFlags)
         {
-            ResetHomeOnTeleport = ((regionFlags & (ulong)OpenMetaverse.RegionFlags.ResetHomeOnTeleport) == (ulong)OpenMetaverse.RegionFlags.ResetHomeOnTeleport);
-            BlockDwell = ((regionFlags & (ulong)OpenMetaverse.RegionFlags.BlockDwell) == (ulong)OpenMetaverse.RegionFlags.BlockDwell);
-            AllowLandmark = ((regionFlags & (ulong)OpenMetaverse.RegionFlags.AllowLandmark) == (ulong)OpenMetaverse.RegionFlags.AllowLandmark);
-            AllowParcelChanges = ((regionFlags & (ulong)OpenMetaverse.RegionFlags.AllowParcelChanges) == (ulong)OpenMetaverse.RegionFlags.AllowParcelChanges);
-            AllowSetHome = ((regionFlags & (ulong)OpenMetaverse.RegionFlags.AllowSetHome) == (ulong)OpenMetaverse.RegionFlags.AllowSetHome);
+            ResetHomeOnTeleport = (regionFlags & (ulong)OpenMetaverse.RegionFlags.ResetHomeOnTeleport) == (ulong)OpenMetaverse.RegionFlags.ResetHomeOnTeleport;
+            BlockDwell = (regionFlags & (ulong)OpenMetaverse.RegionFlags.BlockDwell) == (ulong)OpenMetaverse.RegionFlags.BlockDwell;
+            AllowLandmark = (regionFlags & (ulong)OpenMetaverse.RegionFlags.AllowLandmark) == (ulong)OpenMetaverse.RegionFlags.AllowLandmark;
+            AllowParcelChanges = (regionFlags & (ulong)OpenMetaverse.RegionFlags.AllowParcelChanges) == (ulong)OpenMetaverse.RegionFlags.AllowParcelChanges;
+            AllowSetHome = (regionFlags & (ulong)OpenMetaverse.RegionFlags.AllowSetHome) == (ulong)OpenMetaverse.RegionFlags.AllowSetHome;
         }
 
         public bool GroupAccess(UUID groupID)

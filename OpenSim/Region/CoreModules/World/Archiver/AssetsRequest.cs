@@ -62,7 +62,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// uuids to request
         /// </value>
         protected IDictionary<UUID, sbyte> m_uuids;
-        private int m_previousErrorsCount;
+        private readonly int m_previousErrorsCount;
 
         /// <value>
         /// Callback used when all the assets requested have been received.
@@ -82,7 +82,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <value>
         /// Record the number of asset replies required so we know when we've finished
         /// </value>
-        private int m_repliesRequired;
+        private readonly int m_repliesRequired;
 
         private System.Timers.Timer m_timeOutTimer;
         private bool m_timeout;

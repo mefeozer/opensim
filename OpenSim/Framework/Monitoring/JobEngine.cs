@@ -39,7 +39,7 @@ namespace OpenSim.Framework.Monitoring
 
         public int LogLevel { get; set; }
 
-        private object JobLock = new object();
+        private readonly object JobLock = new object();
 
         public string Name { get; private set; }
 
@@ -68,7 +68,7 @@ namespace OpenSim.Framework.Monitoring
 
         private CancellationTokenSource m_cancelSource;
 
-        private int m_timeout = -1;
+        private readonly int m_timeout = -1;
         private int m_concurrency = 1;
 
         private int m_numberThreads = 0;

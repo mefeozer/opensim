@@ -36,7 +36,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 {
     public class ScriptEngineConsoleCommands
     {
-        IScriptEngine m_engine;
+        readonly IScriptEngine m_engine;
 
         public ScriptEngineConsoleCommands(IScriptEngine engine)
         {

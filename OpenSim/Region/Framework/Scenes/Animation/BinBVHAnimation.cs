@@ -102,7 +102,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// Number of joints defined in the animation
         /// Don't use this..  use joints.Length
         /// </summary>
-        private uint m_jointCount;
+        private readonly uint m_jointCount;
 
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 iostream.Write(BinBVHUtil.ES(Utils.FloatToBytes(EaseInTime)));
                 iostream.Write(BinBVHUtil.ES(Utils.FloatToBytes(EaseOutTime)));
                 iostream.Write(BinBVHUtil.ES(Utils.UIntToBytes(HandPose)));
-                iostream.Write(BinBVHUtil.ES(Utils.UIntToBytes((uint)(Joints.Length))));
+                iostream.Write(BinBVHUtil.ES(Utils.UIntToBytes((uint)Joints.Length)));
 
                 for (int i = 0; i < Joints.Length; i++)
                 {
@@ -170,16 +170,16 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             Random rnd = new Random();
 
             Joints[0].rotationkeys[0] = new binBVHJointKey();
-            Joints[0].rotationkeys[0].time = (0f);
-            Joints[0].rotationkeys[0].key_element.X = ((float)rnd.NextDouble() * 2 - 1);
-            Joints[0].rotationkeys[0].key_element.Y = ((float)rnd.NextDouble() * 2 - 1);
-            Joints[0].rotationkeys[0].key_element.Z = ((float)rnd.NextDouble() * 2 - 1);
+            Joints[0].rotationkeys[0].time = 0f;
+            Joints[0].rotationkeys[0].key_element.X = (float)rnd.NextDouble() * 2 - 1;
+            Joints[0].rotationkeys[0].key_element.Y = (float)rnd.NextDouble() * 2 - 1;
+            Joints[0].rotationkeys[0].key_element.Z = (float)rnd.NextDouble() * 2 - 1;
 
             Joints[0].positionkeys[0] = new binBVHJointKey();
-            Joints[0].positionkeys[0].time = (0f);
-            Joints[0].positionkeys[0].key_element.X = ((float)rnd.NextDouble() * 2 - 1);
-            Joints[0].positionkeys[0].key_element.Y = ((float)rnd.NextDouble() * 2 - 1);
-            Joints[0].positionkeys[0].key_element.Z = ((float)rnd.NextDouble() * 2 - 1);
+            Joints[0].positionkeys[0].time = 0f;
+            Joints[0].positionkeys[0].key_element.X = (float)rnd.NextDouble() * 2 - 1;
+            Joints[0].positionkeys[0].key_element.Y = (float)rnd.NextDouble() * 2 - 1;
+            Joints[0].positionkeys[0].key_element.Z = (float)rnd.NextDouble() * 2 - 1;
 
 
         }
@@ -206,7 +206,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             {
                 InPoint = Utils.BytesToFloat(BinBVHUtil.EndianSwap(animationdata, i, 4), 0); i += 4;
                 OutPoint = Utils.BytesToFloat(BinBVHUtil.EndianSwap(animationdata, i, 4), 0); i += 4;
-                Loop = (Utils.BytesToInt(BinBVHUtil.EndianSwap(animationdata, i, 4)) != 0); i += 4;
+                Loop = Utils.BytesToInt(BinBVHUtil.EndianSwap(animationdata, i, 4)) != 0; i += 4;
                 EaseInTime = Utils.BytesToFloat(BinBVHUtil.EndianSwap(animationdata, i, 4), 0); i += 4;
                 EaseOutTime = Utils.BytesToFloat(BinBVHUtil.EndianSwap(animationdata, i, 4), 0); i += 4;
                 HandPose = Utils.BytesToUInt(BinBVHUtil.EndianSwap(animationdata, i, 4)); i += 4; // Handpose?
@@ -217,7 +217,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             {
                 InPoint = Utils.BytesToFloat(animationdata, i); i += 4;
                 OutPoint = Utils.BytesToFloat(animationdata, i); i += 4;
-                Loop = (Utils.BytesToInt(animationdata, i) != 0); i += 4;
+                Loop = Utils.BytesToInt(animationdata, i) != 0; i += 4;
                 EaseInTime = Utils.BytesToFloat(animationdata, i); i += 4;
                 EaseOutTime = Utils.BytesToFloat(animationdata, i); i += 4;
                 HandPose = Utils.BytesToUInt(animationdata, i); i += 4; // Handpose?
@@ -460,7 +460,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             {
                 rotationkeys[i].WriteBytesToStream(iostream, InPoint, OutPoint,  -1f, 1f);
             }
-            iostream.Write(BinBVHUtil.ES(Utils.IntToBytes((positionkeys.Length))));
+            iostream.Write(BinBVHUtil.ES(Utils.IntToBytes(positionkeys.Length)));
             for (int i = 0; i < positionkeys.Length; i++)
             {
                 positionkeys[i].WriteBytesToStream(iostream, InPoint, OutPoint, -256f, 256f);

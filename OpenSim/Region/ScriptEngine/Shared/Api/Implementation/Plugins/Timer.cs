@@ -72,8 +72,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             return localID.ToString() + itemID.ToString();
         }
 
-        private Dictionary<string,TimerInfo> Timers = new Dictionary<string,TimerInfo>();
-        private object TimerListLock = new object();
+        private readonly Dictionary<string,TimerInfo> Timers = new Dictionary<string,TimerInfo>();
+        private readonly object TimerListLock = new object();
 
         public void SetTimerEvent(uint m_localID, UUID m_itemID, double sec)
         {

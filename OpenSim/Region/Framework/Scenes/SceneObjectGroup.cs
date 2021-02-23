@@ -5430,7 +5430,7 @@ namespace OpenSim.Region.Framework.Scenes
             InvalidateEffectivePerms();
         }
 
-        private Dictionary<string,int> m_partsNameToLinkMap = new Dictionary<string, int>();
+        private readonly Dictionary<string,int> m_partsNameToLinkMap = new Dictionary<string, int>();
         private string GetLinkNumber_lastname;
         private int GetLinkNumber_lastnumber;
 

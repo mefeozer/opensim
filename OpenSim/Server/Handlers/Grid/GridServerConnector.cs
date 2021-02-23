@@ -37,8 +37,8 @@ namespace OpenSim.Server.Handlers.Grid
 {
     public class GridServiceConnector : ServiceConnector
     {
-        private IGridService m_GridService;
-        private string m_ConfigName = "GridService";
+        private readonly IGridService m_GridService;
+        private readonly string m_ConfigName = "GridService";
 
         public GridServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

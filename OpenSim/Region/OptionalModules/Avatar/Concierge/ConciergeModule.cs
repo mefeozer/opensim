@@ -54,8 +54,8 @@ namespace OpenSim.Region.OptionalModules.Avatar.Concierge
 
 //        private const int DEBUG_CHANNEL = 2147483647; use base value
 
-        private new List<IScene> m_scenes = new List<IScene>();
-        private List<IScene> m_conciergedScenes = new List<IScene>();
+        private new readonly List<IScene> m_scenes = new List<IScene>();
+        private readonly List<IScene> m_conciergedScenes = new List<IScene>();
 
         private bool m_replacingChatModule = false;
 
@@ -505,7 +505,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Concierge
             }
         }
 
-        static private Vector3 PosOfGod = new Vector3(128, 128, 9999);
+        static private readonly Vector3 PosOfGod = new Vector3(128, 128, 9999);
 
         // protected void AnnounceToAgentsRegion(Scene scene, string msg)
         // {

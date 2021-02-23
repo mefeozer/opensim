@@ -15,7 +15,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static Dictionary<Scene, ODEScene> m_scenes = new Dictionary<Scene, ODEScene>();
+        private static readonly Dictionary<Scene, ODEScene> m_scenes = new Dictionary<Scene, ODEScene>();
         private bool m_Enabled = false;
         private IConfigSource m_config;
         private bool OSOdeLib;

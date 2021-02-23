@@ -31,7 +31,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public class BSConstraint6Dof : BSConstraint
 {
-    private static string LogHeader = "[BULLETSIM 6DOF CONSTRAINT]";
+    private static readonly string LogHeader = "[BULLETSIM 6DOF CONSTRAINT]";
 
     public override ConstraintType Type { get { return ConstraintType.D6_CONSTRAINT_TYPE; } }
 

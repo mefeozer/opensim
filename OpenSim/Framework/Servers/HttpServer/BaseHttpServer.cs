@@ -53,10 +53,10 @@ namespace OpenSim.Framework.Servers.HttpServer
     public class BaseHttpServer : IHttpServer
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private HttpServerLogWriter httpserverlog = new HttpServerLogWriter();
-        private static Encoding UTF8NoBOM = new System.Text.UTF8Encoding(false);
+        private readonly HttpServerLogWriter httpserverlog = new HttpServerLogWriter();
+        private static readonly Encoding UTF8NoBOM = new System.Text.UTF8Encoding(false);
         public static PollServiceRequestManager m_pollServiceManager;
-        private static object m_generalLock = new object();
+        private static readonly object m_generalLock = new object();
         private string HTTP404;
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             int indx = dns.IndexOf('*');
             if (indx == -1)
-                return (string.Compare(hostname, dns, true, CultureInfo.InvariantCulture) == 0);
+                return string.Compare(hostname, dns, true, CultureInfo.InvariantCulture) == 0;
 
             int dnslen = dns.Length;
             dnslen--;
@@ -296,11 +296,11 @@ namespace OpenSim.Framework.Servers.HttpServer
             if (indx == 0)
             {
                 indx2 = hostname.IndexOf('.');
-                return ((indx2 == -1) || (indx2 >= length));
+                return indx2 == -1 || indx2 >= length;
             }
 
             string start = dns.Substring(0, indx);
-            return (string.Compare(hostname, 0, start, 0, start.Length, true, CultureInfo.InvariantCulture) == 0);
+            return string.Compare(hostname, 0, start, 0, start.Length, true, CultureInfo.InvariantCulture) == 0;
         }
 
         public bool CheckSSLCertHost(string hostname)
@@ -873,7 +873,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                         if (WebUtil.DebugLevel >= 6)
                         {
                             // Always truncate binary blobs. We don't have a ContentType, so detect them using the request name.
-                            if ((requestHandler != null && requestHandler.Name == "GetMesh"))
+                            if (requestHandler != null && requestHandler.Name == "GetMesh")
                             {
                                 if (output.Length > WebUtil.MaxRequestDiagLength)
                                     output = output.Substring(0, WebUtil.MaxRequestDiagLength) + "...";
@@ -1008,7 +1008,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             Stream innerStream = null;
             try
             {
-                if ((request.Headers["Content-Encoding"] == "gzip") || (request.Headers["X-Content-Encoding"] == "gzip"))
+                if (request.Headers["Content-Encoding"] == "gzip" || request.Headers["X-Content-Encoding"] == "gzip")
                 {
                     innerStream = inputStream;
                     inputStream = new GZipStream(innerStream, System.IO.Compression.CompressionMode.Decompress);
@@ -1157,7 +1157,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             Stream innerStream = null;
             try
             {
-                if ((request.Headers["Content-Encoding"] == "gzip") || (request.Headers["X-Content-Encoding"] == "gzip"))
+                if (request.Headers["Content-Encoding"] == "gzip" || request.Headers["X-Content-Encoding"] == "gzip")
                 {
                     innerStream = requestStream;
                     requestStream = new GZipStream(innerStream, CompressionMode.Decompress);
@@ -1306,7 +1306,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             Stream innerStream = null;
             try
             {
-                if ((request.Headers["Content-Encoding"] == "gzip") || (request.Headers["X-Content-Encoding"] == "gzip"))
+                if (request.Headers["Content-Encoding"] == "gzip" || request.Headers["X-Content-Encoding"] == "gzip")
                 {
                     innerStream = requestStream;
                     requestStream = new GZipStream(innerStream, CompressionMode.Decompress);
@@ -2374,7 +2374,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
     public class IndexPHPHandler : SimpleStreamHandler
     {
-        BaseHttpServer m_server;
+        readonly BaseHttpServer m_server;
 
         public IndexPHPHandler(BaseHttpServer server)
             : base("/index.php")

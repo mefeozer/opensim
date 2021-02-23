@@ -53,7 +53,7 @@ namespace OpenSim.Region.ClientStack.Linden
     public partial class  EventQueueGetModule : IEventQueue, INonSharedRegionModule
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static string LogHeader = "[EVENT QUEUE GET MODULE]";
+        private static readonly string LogHeader = "[EVENT QUEUE GET MODULE]";
 
         private const int KEEPALIVE = 60; // this could be larger now, but viewers expect it on opensim
         // we need to go back to close before viwers, or we may lose data
@@ -66,10 +66,10 @@ namespace OpenSim.Region.ClientStack.Linden
 
         protected Scene m_scene;
 
-        private Dictionary<UUID, int> m_ids = new Dictionary<UUID, int>();
+        private readonly Dictionary<UUID, int> m_ids = new Dictionary<UUID, int>();
 
-        private Dictionary<UUID, Queue<byte[]>> queues = new Dictionary<UUID, Queue<byte[]>>();
-        private Dictionary<UUID, UUID> m_AvatarQueueUUIDMapping = new Dictionary<UUID, UUID>();
+        private readonly Dictionary<UUID, Queue<byte[]>> queues = new Dictionary<UUID, Queue<byte[]>>();
+        private readonly Dictionary<UUID, UUID> m_AvatarQueueUUIDMapping = new Dictionary<UUID, UUID>();
 
         #region INonSharedRegionModule methods
         public virtual void Initialise(IConfigSource config)

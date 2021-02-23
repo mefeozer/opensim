@@ -107,11 +107,11 @@ namespace OpenSim.Region.CoreModules.World.Permissions
         /// </value>
         private UserSet m_allowedScriptEditors = UserSet.All;
 
-        private Dictionary<string, bool> GrantLSL = new Dictionary<string, bool>();
-        private Dictionary<string, bool> GrantCS = new Dictionary<string, bool>();
-        private Dictionary<string, bool> GrantVB = new Dictionary<string, bool>();
-        private Dictionary<string, bool> GrantJS = new Dictionary<string, bool>();
-        private Dictionary<string, bool> GrantYP = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> GrantLSL = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> GrantCS = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> GrantVB = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> GrantJS = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> GrantYP = new Dictionary<string, bool>();
 
         private IFriendsModule m_friendsModule;
         private IFriendsModule FriendsModule
@@ -544,7 +544,7 @@ namespace OpenSim.Region.CoreModules.World.Permissions
 
             if (gmd != null)
             {
-                if (((gmd.GroupPowers != 0) && powers == 0) || (gmd.GroupPowers & powers) == powers)
+                if (gmd.GroupPowers != 0 && powers == 0 || (gmd.GroupPowers & powers) == powers)
                     return true;
             }
 
@@ -657,11 +657,11 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             {
                 ScenePresence sp = m_scene.GetScenePresence(user);
                 if (sp != null)
-                    return (sp.GodController.UserLevel >= 200);
+                    return sp.GodController.UserLevel >= 200;
 
                 UserAccount account = m_scene.UserAccountService.GetUserAccount(m_scene.RegionInfo.ScopeID, user);
                 if (account != null)
-                    return (account.UserLevel >= 200);
+                    return account.UserLevel >= 200;
             }
 
             return false;
@@ -953,7 +953,7 @@ namespace OpenSim.Region.CoreModules.World.Permissions
                 return 0;
 
             UUID objectOwner = group.OwnerID;
-            bool locked = denyOnLocked && ((root.OwnerMask & (uint)PermissionMask.Move) == 0);
+            bool locked = denyOnLocked && (root.OwnerMask & (uint)PermissionMask.Move) == 0;
 
             if (IsAdministrator(currentUser))
             {
@@ -1012,7 +1012,7 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             UUID spID = sp.UUID;
             UUID objectOwner = group.OwnerID;
 
-            bool locked = denyOnLocked && ((root.OwnerMask & (uint)PermissionMask.Move) == 0);
+            bool locked = denyOnLocked && (root.OwnerMask & (uint)PermissionMask.Move) == 0;
 
             if (sp.IsGod)
             {
@@ -1613,8 +1613,8 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             float newY = newPoint.Y;
 
             // allow outside region this is needed for crossings
-            if (newX < -1f || newX > (m_scene.RegionInfo.RegionSizeX + 1.0f) ||
-                newY < -1f || newY > (m_scene.RegionInfo.RegionSizeY + 1.0f) )
+            if (newX < -1f || newX > m_scene.RegionInfo.RegionSizeX + 1.0f ||
+                newY < -1f || newY > m_scene.RegionInfo.RegionSizeY + 1.0f )
                 return true;
 
             if(sog == null || sog.IsDeleted)
@@ -1627,7 +1627,7 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             if (parcel == null)
                 return false;
 
-            if ((parcel.LandData.Flags & ((int)ParcelFlags.AllowAPrimitiveEntry)) != 0)
+            if ((parcel.LandData.Flags & (int)ParcelFlags.AllowAPrimitiveEntry) != 0)
                 return true;
 
             if (!enteringRegion)
@@ -1650,7 +1650,7 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             UUID landGroupID = landdata.GroupID;
             if (landGroupID != UUID.Zero)
             {
-                if ((parcel.LandData.Flags & ((int)ParcelFlags.AllowGroupObjectEntry)) != 0)
+                if ((parcel.LandData.Flags & (int)ParcelFlags.AllowGroupObjectEntry) != 0)
                     return IsGroupMember(landGroupID, userID, 0);
 
                  if (landdata.IsGroupOwned && IsGroupMember(landGroupID, userID, (ulong)GroupPowers.AllowRez))
@@ -1674,10 +1674,10 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             if (parcel == null)
                 return true;
 
-            int checkflags = ((int)ParcelFlags.AllowAPrimitiveEntry);
-            bool scripts = (sog.ScriptCount() > 0);
+            int checkflags = (int)ParcelFlags.AllowAPrimitiveEntry;
+            bool scripts = sog.ScriptCount() > 0;
             if(scripts)
-                checkflags |= ((int)ParcelFlags.AllowOtherScripts);
+                checkflags |= (int)ParcelFlags.AllowOtherScripts;
 
             if ((parcel.LandData.Flags & checkflags) == checkflags)
                 return true;
@@ -1696,7 +1696,7 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             {
                 checkflags = (int)ParcelFlags.AllowGroupObjectEntry;
                 if(scripts)
-                    checkflags |= ((int)ParcelFlags.AllowGroupScripts);
+                    checkflags |= (int)ParcelFlags.AllowGroupScripts;
 
                 if ((parcel.LandData.Flags & checkflags) == checkflags)
                     return IsGroupMember(landGroupID, userID, 0);
@@ -1831,7 +1831,7 @@ namespace OpenSim.Region.CoreModules.World.Permissions
                 return false;
 
             LandData landdata = parcel.LandData;
-            if ((userID == landdata.OwnerID))
+            if (userID == landdata.OwnerID)
                 return true;
 
             if ((landdata.Flags & (uint)ParcelFlags.CreateObjects) != 0)
@@ -1887,11 +1887,11 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             if ((lflags & (uint)ParcelFlags.AllowOtherScripts) != 0)
                return true;
 
-            if ((part.OwnerID == ldata.OwnerID))
+            if (part.OwnerID == ldata.OwnerID)
                 return true;
 
-            if (((lflags & (uint)ParcelFlags.AllowGroupScripts) != 0)
-                    && (ldata.GroupID != UUID.Zero) && (ldata.GroupID == part.GroupID))
+            if ((lflags & (uint)ParcelFlags.AllowGroupScripts) != 0
+                    && ldata.GroupID != UUID.Zero && ldata.GroupID == part.GroupID)
                 return true;
             
             return GenericEstatePermission(part.OwnerID);
@@ -2090,7 +2090,7 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             if (landdata == null)
                 return false;
             
-            if ((landdata.Flags & ((int)ParcelFlags.AllowTerraform)) != 0)
+            if ((landdata.Flags & (int)ParcelFlags.AllowTerraform) != 0)
                 return true;
 
             if(landdata.OwnerID == userID)
@@ -2598,33 +2598,33 @@ namespace OpenSim.Region.CoreModules.World.Permissions
             switch (scriptType) {
                 case 0:
                     if (GrantLSL.Count == 0 || GrantLSL.ContainsKey(ownerUUID.ToString())) {
-                        return(true);
+                        return true;
                     }
                     break;
                 case 1:
                     if (GrantCS.Count == 0 || GrantCS.ContainsKey(ownerUUID.ToString())) {
-                        return(true);
+                        return true;
                     }
                     break;
                 case 2:
                     if (GrantVB.Count == 0 || GrantVB.ContainsKey(ownerUUID.ToString())) {
-                        return(true);
+                        return true;
                     }
                     break;
                 case 3:
                     if (GrantJS.Count == 0 || GrantJS.ContainsKey(ownerUUID.ToString()))
                     {
-                        return (true);
+                        return true;
                     }
                     break;
                 case 4:
                     if (GrantYP.Count == 0 || GrantYP.ContainsKey(ownerUUID.ToString()))
                     {
-                        return (true);
+                        return true;
                     }
                     break;
             }
-            return(false);
+            return false;
         }
 
         private bool CanControlPrimMedia(UUID agentID, UUID primID, int face)

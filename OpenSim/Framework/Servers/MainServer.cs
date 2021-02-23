@@ -39,7 +39,7 @@ namespace OpenSim.Framework.Servers
 
         private static BaseHttpServer instance = null;
         private static BaseHttpServer unsecureinstance = null;
-        private static Dictionary<uint, BaseHttpServer> m_Servers = new Dictionary<uint, BaseHttpServer>();
+        private static readonly Dictionary<uint, BaseHttpServer> m_Servers = new Dictionary<uint, BaseHttpServer>();
 
         /// <summary>
         /// Control the printing of certain debug messages.

@@ -307,7 +307,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
                             return;
                         if (TrySendChatMessage(presence, fromPos, regionPos, fromID,
                                     ownerID, fromNamePrefix + fromName, c.Type,
-                                    message, sourceType, (destination != UUID.Zero)))
+                                    message, sourceType, destination != UUID.Zero))
                             receiverIDs.Add(presence.UUID);
                         return;
                     }
@@ -324,7 +324,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
                         {
                             if (TrySendChatMessage(presence, fromPos, regionPos, fromID,
                                         ownerID, fromNamePrefix + fromName, c.Type,
-                                        message, sourceType, (destination != UUID.Zero)))
+                                        message, sourceType, destination != UUID.Zero))
                                 receiverIDs.Add(presence.UUID);
                         }
                     }
@@ -384,9 +384,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
                     {
                         // don't forward SayOwner chat from objects to
                         // non-owner agents
-                        if ((c.Type == ChatTypeEnum.Owner) &&
-                            (null != c.SenderObject) &&
-                            (((SceneObjectPart)c.SenderObject).OwnerID != client.AgentId))
+                        if (c.Type == ChatTypeEnum.Owner &&
+                            null != c.SenderObject &&
+                            ((SceneObjectPart)c.SenderObject).OwnerID != client.AgentId)
                             return;
 
                         client.SendChatMessage(c.Message, (byte)cType, CenterOfRegion, fromName, fromID, fromID,
@@ -462,7 +462,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
             return true;
         }
 
-        Dictionary<UUID, System.Threading.Timer> Timers = new Dictionary<UUID, System.Threading.Timer>();
+        readonly Dictionary<UUID, System.Threading.Timer> Timers = new Dictionary<UUID, System.Threading.Timer>();
         public virtual void ParcelFreezeUser(IClientAPI client, UUID parcelowner, uint flags, UUID target)
         {
             System.Threading.Timer Timer;

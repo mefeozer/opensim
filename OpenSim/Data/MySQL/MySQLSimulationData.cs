@@ -46,7 +46,7 @@ namespace OpenSim.Data.MySQL
     public class MySQLSimulationData : ISimulationDataStore
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static string LogHeader = "[REGION DB MYSQL]";
+        private static readonly string LogHeader = "[REGION DB MYSQL]";
 
         private string m_connectionString;
 
@@ -58,7 +58,7 @@ namespace OpenSim.Data.MySQL
         /// unrelated operations to block each other or unrelated operations on the same tables from blocking each
         /// other.
         /// </summary>
-        private object m_dbLock = new object();
+        private readonly object m_dbLock = new object();
 
         protected virtual Assembly Assembly
         {
@@ -634,7 +634,7 @@ namespace OpenSim.Data.MySQL
                             while (reader.Read())
                             {
                                 rev = Convert.ToInt32(reader["Revision"]);
-                                if ((reader["Heightfield"] != DBNull.Value))
+                                if (reader["Heightfield"] != DBNull.Value)
                                 {
                                     blob = (byte[])reader["Heightfield"];
                                 }
@@ -674,7 +674,7 @@ namespace OpenSim.Data.MySQL
                             while (reader.Read())
                             {
                                 rev = Convert.ToInt32(reader["Revision"]);
-                                if ((reader["Heightfield"] != DBNull.Value))
+                                if (reader["Heightfield"] != DBNull.Value)
                                 {
                                     blob = (byte[])reader["Heightfield"];
                                 }
@@ -1114,8 +1114,8 @@ namespace OpenSim.Data.MySQL
 
             prim.SetForceMouselook((sbyte)row["ForceMouselook"] != 0);
             prim.ScriptAccessPin = (int)row["ScriptAccessPin"];
-            prim.AllowedDrop = ((sbyte)row["AllowedDrop"] != 0);
-            prim.DIE_AT_EDGE = ((sbyte)row["DieAtEdge"] != 0);
+            prim.AllowedDrop = (sbyte)row["AllowedDrop"] != 0;
+            prim.DIE_AT_EDGE = (sbyte)row["DieAtEdge"] != 0;
 
             prim.SalePrice = (int)row["SalePrice"];
             prim.ObjectSaleType = unchecked((byte)(sbyte)row["SaleType"]);
@@ -1128,8 +1128,8 @@ namespace OpenSim.Data.MySQL
             prim.CollisionSound = DBGuid.FromDB(row["CollisionSound"]);
             prim.CollisionSoundVolume = (float)(double)row["CollisionSoundVolume"];
 
-            prim.PassTouches = ((sbyte)row["PassTouches"] != 0);
-            prim.PassCollisions = ((sbyte)row["PassCollisions"] != 0);
+            prim.PassTouches = (sbyte)row["PassTouches"] != 0;
+            prim.PassCollisions = (sbyte)row["PassCollisions"] != 0;
             prim.LinkNum = (int)row["LinkNumber"];
 
             if (!(row["MediaURL"] is System.DBNull))
@@ -1378,8 +1378,8 @@ namespace OpenSim.Data.MySQL
 
             newData.MediaDescription = (string) row["MediaDescription"];
             newData.MediaType = (string) row["MediaType"];
-            newData.MediaWidth = Convert.ToInt32((((string) row["MediaSize"]).Split(','))[0]);
-            newData.MediaHeight = Convert.ToInt32((((string) row["MediaSize"]).Split(','))[1]);
+            newData.MediaWidth = Convert.ToInt32(((string) row["MediaSize"]).Split(',')[0]);
+            newData.MediaHeight = Convert.ToInt32(((string) row["MediaSize"]).Split(',')[1]);
             newData.MediaLoop = Convert.ToBoolean(row["MediaLoop"]);
             newData.ObscureMusic = Convert.ToBoolean(row["ObscureMusic"]);
             newData.ObscureMedia = Convert.ToBoolean(row["ObscureMedia"]);
@@ -1559,12 +1559,12 @@ namespace OpenSim.Data.MySQL
                 cmd.Parameters.AddWithValue("DieAtEdge", 0);
 
             cmd.Parameters.AddWithValue("SalePrice", prim.SalePrice);
-            cmd.Parameters.AddWithValue("SaleType", unchecked((sbyte)(prim.ObjectSaleType)));
+            cmd.Parameters.AddWithValue("SaleType", unchecked((sbyte)prim.ObjectSaleType));
 
             byte clickAction = prim.ClickAction;
-            cmd.Parameters.AddWithValue("ClickAction", unchecked((sbyte)(clickAction)));
+            cmd.Parameters.AddWithValue("ClickAction", unchecked((sbyte)clickAction));
 
-            cmd.Parameters.AddWithValue("Material", unchecked((sbyte)(prim.Material)));
+            cmd.Parameters.AddWithValue("Material", unchecked((sbyte)prim.Material));
 
             cmd.Parameters.AddWithValue("CollisionSound", prim.CollisionSound.ToString());
             cmd.Parameters.AddWithValue("CollisionSoundVolume", prim.CollisionSoundVolume);

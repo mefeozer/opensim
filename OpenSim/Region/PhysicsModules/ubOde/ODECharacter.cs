@@ -92,8 +92,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         public float PID_D;
         public float PID_P;
 
-        private float timeStep;
-        private float invtimeStep;
+        private readonly float timeStep;
+        private readonly float invtimeStep;
 
         private float m_feetOffset = 0;
         private float feetOff = 0;
@@ -129,16 +129,15 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         int m_colliderObjectfilter = 0;
 
         // Default we're a Character
-        private CollisionCategories m_collisionCategories = (CollisionCategories.Character);
+        private readonly CollisionCategories m_collisionCategories = CollisionCategories.Character;
 
         // Default, Collide with Other Geometries, spaces, bodies and characters.
-        private CollisionCategories m_collisionFlags = (CollisionCategories.Character
-                                                        | CollisionCategories.Geom
-                                                        | CollisionCategories.VolumeDtc
-                                                        );
+        private readonly CollisionCategories m_collisionFlags = CollisionCategories.Character
+                                                                | CollisionCategories.Geom
+                                                                | CollisionCategories.VolumeDtc;
         // we do land collisions not ode                | CollisionCategories.Land);
         public IntPtr Body = IntPtr.Zero;
-        private ODEScene m_parent_scene;
+        private readonly ODEScene m_parent_scene;
         private IntPtr capsule = IntPtr.Zero;
         public IntPtr collider = IntPtr.Zero;
 
@@ -148,14 +147,14 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         public int m_eventsubscription = 0;
         private int m_cureventsubscription = 0;
-        private CollisionEventUpdate CollisionEventsThisFrame = new CollisionEventUpdate();
+        private readonly CollisionEventUpdate CollisionEventsThisFrame = new CollisionEventUpdate();
         private bool SentEmptyCollisionsEvent;
 
         // unique UUID of this character object
         public UUID m_uuid;
         public bool bad = false;
 
-        float mu;
+        readonly float mu;
 
         // HoverHeight control
         private float m_PIDHoverHeight;
@@ -188,7 +187,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
             else
             {
-                _position = new Vector3(((float)m_parent_scene.WorldExtents.X * 0.5f),((float)m_parent_scene.WorldExtents.Y * 0.5f),parent_scene.GetTerrainHeightAtXY(128f,128f) + 10f);
+                _position = new Vector3((float)m_parent_scene.WorldExtents.X * 0.5f,(float)m_parent_scene.WorldExtents.Y * 0.5f,parent_scene.GetTerrainHeightAtXY(128f,128f) + 10f);
                 m_log.Warn("[PHYSICS]: Got NaN Position on Character Create");
             }
 
@@ -369,7 +368,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         {
             get
             {
-                return (m_iscolliding || m_iscollidingGround);
+                return m_iscolliding || m_iscollidingGround;
             }
             set
             {
@@ -1036,7 +1035,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 {
                     Vector3 roff = offset * Quaternion.Inverse(m_orientation2D);
                     float r = roff.X *roff.X / AvaAvaSizeXsq;
-                    r += (roff.Y * roff.Y) / AvaAvaSizeYsq;
+                    r += roff.Y * roff.Y / AvaAvaSizeYsq;
                     if(r > 1.0f)
                         return false;
 
@@ -1179,7 +1178,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             // check outbounds forcing to be in world
             bool fixbody = false;
             float tmp = localpos.X;
-            if ((float.IsNaN(tmp) || float.IsInfinity(tmp)))
+            if (float.IsNaN(tmp) || float.IsInfinity(tmp))
             {
                 fixbody = true;
                 localpos.X = 128f;
@@ -1196,7 +1195,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
 
             tmp = localpos.Y;
-            if ((float.IsNaN(tmp) || float.IsInfinity(tmp)))
+            if (float.IsNaN(tmp) || float.IsInfinity(tmp))
             {
                 fixbody = true;
                 localpos.X = 128f;
@@ -1213,7 +1212,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
 
             tmp = localpos.Z;
-            if ((float.IsNaN(tmp) || float.IsInfinity(tmp)))
+            if (float.IsNaN(tmp) || float.IsInfinity(tmp))
             {
                 fixbody = true;
                 localpos.Z = 128f;
@@ -1381,7 +1380,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 // don't go underground
                 if(m_targetHoverHeight > terrainheight + 0.5f * (aabb.MaxZ - aabb.MinZ))
                 {
-                    float fz = (m_targetHoverHeight - localpos.Z);
+                    float fz = m_targetHoverHeight - localpos.Z;
 
                     //  if error is zero, use position control; otherwise, velocity control
                     if(Math.Abs(fz) < 0.01f)
@@ -1408,7 +1407,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if(!m_iscolliding)
                 m_collideNormal.Z = 0;
 
-            bool tviszero = (ctz.X == 0.0f && ctz.Y == 0.0f && ctz.Z == 0.0f);
+            bool tviszero = ctz.X == 0.0f && ctz.Y == 0.0f && ctz.Z == 0.0f;
 
             if(!tviszero)
             {
@@ -1481,8 +1480,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                             {
                                 // moving up or JUMPING
                                 vec.Z += (ctz.Z - vel.Z) * PID_D * 2f;
-                                vec.X += (ctz.X - vel.X) * (PID_D);
-                                vec.Y += (ctz.Y - vel.Y) * (PID_D);
+                                vec.X += (ctz.X - vel.X) * PID_D;
+                                vec.Y += (ctz.Y - vel.Y) * PID_D;
                             }
                             else
                             {
@@ -1491,8 +1490,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                                 {
                                     if(vel.Z > 0)
                                         vec.Z -= vel.Z * PID_D * 2f;
-                                    vec.X += (ctz.X - vel.X) * (PID_D);
-                                    vec.Y += (ctz.Y - vel.Y) * (PID_D);
+                                    vec.X += (ctz.X - vel.X) * PID_D;
+                                    vec.Y += (ctz.Y - vel.Y) * PID_D;
                                 }
                                 // intencionally going down
                                 else
@@ -1504,9 +1503,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                                     }
 
                                     if(Math.Abs(ctz.X) > Math.Abs(vel.X))
-                                        vec.X += (ctz.X - vel.X) * (PID_D);
+                                        vec.X += (ctz.X - vel.X) * PID_D;
                                     if(Math.Abs(ctz.Y) > Math.Abs(vel.Y))
-                                        vec.Y += (ctz.Y - vel.Y) * (PID_D);
+                                        vec.Y += (ctz.Y - vel.Y) * PID_D;
                                 }
                             }
 
@@ -1525,9 +1524,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                         if(m_flying || hoverPIDActive) //(!m_iscolliding && flying)
                         {
                             // we're in mid air suspended
-                            vec.X += (ctz.X - vel.X) * (PID_D);
-                            vec.Y += (ctz.Y - vel.Y) * (PID_D);
-                            vec.Z += (ctz.Z - vel.Z) * (PID_D);
+                            vec.X += (ctz.X - vel.X) * PID_D;
+                            vec.Y += (ctz.Y - vel.Y) * PID_D;
+                            vec.Z += (ctz.Z - vel.Z) * PID_D;
                         }
 
                         else
@@ -1583,7 +1582,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             if(vec.IsFinite())
             {
-                if((vec.X != 0 || vec.Y !=0 || vec.Z !=0))
+                if(vec.X != 0 || vec.Y !=0 || vec.Z !=0)
                     SafeNativeMethods.BodyAddForce(Body,vec.X,vec.Y,vec.Z);
             }
  
@@ -1727,7 +1726,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 float tmp = 0;
                 if(value > 0)
                 {
-                    float mint = (0.05f > timeStep ? 0.05f : timeStep);
+                    float mint = 0.05f > timeStep ? 0.05f : timeStep;
                     if(value < mint)
                         tmp = mint;
                     else

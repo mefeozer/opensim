@@ -46,8 +46,8 @@ namespace OpenSim.OfflineIM
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IOfflineIMService m_OfflineIMService;
-        private string m_ConfigName = "Messaging";
+        private readonly IOfflineIMService m_OfflineIMService;
+        private readonly string m_ConfigName = "Messaging";
 
         public OfflineIMServiceRobustConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)
@@ -69,7 +69,7 @@ namespace OpenSim.OfflineIM
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IOfflineIMService m_OfflineIMService;
+        private readonly IOfflineIMService m_OfflineIMService;
 
         public OfflineIMServicePostHandler(IOfflineIMService service, IServiceAuth auth) :
             base("POST", "/offlineim", auth)

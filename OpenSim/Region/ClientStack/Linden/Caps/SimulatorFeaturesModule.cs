@@ -69,13 +69,13 @@ namespace OpenSim.Region.ClientStack.Linden
         /// <summary>
         /// Simulator features
         /// </summary>
-        private OSDMap m_features = new OSDMap();
+        private readonly OSDMap m_features = new OSDMap();
 
         private bool m_ExportSupported = false;
 
         private bool m_doScriptSyntax;
 
-        static private object m_scriptSyntaxLock = new object();
+        static private readonly object m_scriptSyntaxLock = new object();
         static private UUID m_scriptSyntaxID = UUID.Zero;
         static private byte[] m_scriptSyntaxXML = null;
 
@@ -284,7 +284,7 @@ namespace OpenSim.Region.ClientStack.Linden
             OSDMap copy = DeepCopy();
 
             // Let's add the agentID to the destination guide, if it is expecting that.
-            if (copy.ContainsKey("OpenSimExtras") && ((OSDMap)(copy["OpenSimExtras"])).ContainsKey("destination-guide-url"))
+            if (copy.ContainsKey("OpenSimExtras") && ((OSDMap)copy["OpenSimExtras"]).ContainsKey("destination-guide-url"))
                 ((OSDMap)copy["OpenSimExtras"])["destination-guide-url"] = Replace(((OSDMap)copy["OpenSimExtras"])["destination-guide-url"], "[USERID]", agentID.ToString());
 
             OnSimulatorFeaturesRequest?.Invoke(agentID, ref copy);

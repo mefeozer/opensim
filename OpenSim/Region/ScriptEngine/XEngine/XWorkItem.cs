@@ -32,7 +32,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 {
     public class XWorkItem : IScriptWorkItem
     {
-        private IWorkItemResult wr;
+        private readonly IWorkItemResult wr;
 
         public IWorkItemResult WorkItem
         {

@@ -306,8 +306,8 @@ namespace Amib.Threading.Internal
                     _workItemsQueue.Enqueue(workItem);
                     //_stp.IncrementWorkItemsCount();
 
-                    if ((1 == _workItemsQueue.Count) && 
-                        (0 == _workItemsInStpQueue))
+                    if (1 == _workItemsQueue.Count && 
+                        0 == _workItemsInStpQueue)
                     {
                         _stp.RegisterWorkItemsGroup(this);
                         IsIdle = false;

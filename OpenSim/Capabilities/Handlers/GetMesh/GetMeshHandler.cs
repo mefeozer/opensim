@@ -41,7 +41,7 @@ namespace OpenSim.Capabilities.Handlers
         private static readonly ILog m_log =
                    LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAssetService m_assetService;
+        private readonly IAssetService m_assetService;
 
         public const string DefaultFormat = "vnd.ll.mesh";
 

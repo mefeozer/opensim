@@ -114,17 +114,17 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             bool debug = false;
             
             OptionSet options = new OptionSet();
-            options.Add("m|merge", delegate(string v) { mergeOar = (v != null); });
-            options.Add("mergeReplaceObjects", delegate (string v) { mergeReplaceObjects = (v != null); });
-            options.Add("s|skip-assets", delegate(string v) { skipAssets = (v != null); });
-            options.Add("merge-terrain", delegate(string v) { mergeTerrain = (v != null); });
-            options.Add("force-terrain", delegate (string v) { mergeTerrain = (v != null); });   // downward compatibility
-            options.Add("forceterrain", delegate (string v) { mergeTerrain = (v != null); });   // downward compatibility
-            options.Add("merge-parcels", delegate(string v) { mergeParcels = (v != null); });
-            options.Add("force-parcels", delegate (string v) { mergeParcels = (v != null); });   // downward compatibility
-            options.Add("forceparcels", delegate (string v) { mergeParcels = (v != null); });   // downward compatibility
-            options.Add("no-objects", delegate(string v) { noObjects = (v != null); });
-            options.Add("default-user=", delegate(string v) { defaultUser = (v == null) ? "" : v; });
+            options.Add("m|merge", delegate(string v) { mergeOar = v != null; });
+            options.Add("mergeReplaceObjects", delegate (string v) { mergeReplaceObjects = v != null; });
+            options.Add("s|skip-assets", delegate(string v) { skipAssets = v != null; });
+            options.Add("merge-terrain", delegate(string v) { mergeTerrain = v != null; });
+            options.Add("force-terrain", delegate (string v) { mergeTerrain = v != null; });   // downward compatibility
+            options.Add("forceterrain", delegate (string v) { mergeTerrain = v != null; });   // downward compatibility
+            options.Add("merge-parcels", delegate(string v) { mergeParcels = v != null; });
+            options.Add("force-parcels", delegate (string v) { mergeParcels = v != null; });   // downward compatibility
+            options.Add("forceparcels", delegate (string v) { mergeParcels = v != null; });   // downward compatibility
+            options.Add("no-objects", delegate(string v) { noObjects = v != null; });
+            options.Add("default-user=", delegate(string v) { defaultUser = v == null ? "" : v; });
             options.Add("displacement=", delegate(string v)
             {
                 try
@@ -193,7 +193,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                     return;
                 }
             });
-            options.Add("d|debug", delegate(string v) { debug = (v != null); });
+            options.Add("d|debug", delegate(string v) { debug = v != null; });
 
             // Send a message to the region ready module
             /* bluewall* Disable this for the time being

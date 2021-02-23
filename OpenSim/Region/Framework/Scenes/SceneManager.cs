@@ -338,9 +338,9 @@ namespace OpenSim.Region.Framework.Scenes
 
         public bool TrySetCurrentScene(string regionName)
         {
-            if ((string.Compare(regionName, "root") == 0)
-                || (string.Compare(regionName, "..") == 0)
-                || (string.Compare(regionName, "/") == 0))
+            if (string.Compare(regionName, "root") == 0
+                || string.Compare(regionName, "..") == 0
+                || string.Compare(regionName, "/") == 0)
             {
                 CurrentScene = null;
                 return true;
@@ -406,8 +406,8 @@ namespace OpenSim.Region.Framework.Scenes
             List<Scene> sceneList = Scenes;
             foreach (Scene mscene in sceneList)
             {
-                if ((mscene.RegionInfo.InternalEndPoint.Equals(ipEndPoint.Address)) &&
-                    (mscene.RegionInfo.InternalEndPoint.Port == ipEndPoint.Port))
+                if (mscene.RegionInfo.InternalEndPoint.Equals(ipEndPoint.Address) &&
+                    mscene.RegionInfo.InternalEndPoint.Port == ipEndPoint.Port)
                 {
                     scene = mscene;
                     return true;

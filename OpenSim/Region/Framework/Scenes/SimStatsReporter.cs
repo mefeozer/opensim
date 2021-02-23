@@ -170,7 +170,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <value>
         /// The keys are the stat names.
         /// </value>
-        private Dictionary<string, float> m_lastReportedExtraSimStats = new Dictionary<string, float>();
+        private readonly Dictionary<string, float> m_lastReportedExtraSimStats = new Dictionary<string, float>();
 
         // Sending a stats update every 3 seconds-
         private int m_statsUpdatesEveryMS = 3000;
@@ -180,8 +180,8 @@ namespace OpenSim.Region.Framework.Scenes
         private float m_timeDilation;
         private int m_fps;
 
-        private object m_statsLock = new object();
-        private object m_statsFrameLock = new object();
+        private readonly object m_statsLock = new object();
+        private readonly object m_statsFrameLock = new object();
 
         /// <summary>
         /// Parameter to adjust reported scene fps
@@ -196,11 +196,11 @@ namespace OpenSim.Region.Framework.Scenes
         /// original decision was to use a value of 55fps for all opensim
         /// corresponding, with default heartbeat rate, to a value of 5.
         /// </remarks>
-        private float m_statisticsFPSfactor = 5.0f;
-        private float m_targetFrameTime = 0.1f;
+        private readonly float m_statisticsFPSfactor = 5.0f;
+        private readonly float m_targetFrameTime = 0.1f;
         // saved last reported value so there is something available for llGetRegionFPS
         private float lastReportedSimFPS;
-        private float[] lastReportedSimStats = new float[m_statisticExtraArraySize + m_statisticViewerArraySize];
+        private readonly float[] lastReportedSimStats = new float[m_statisticExtraArraySize + m_statisticViewerArraySize];
         private float m_pfps;
 
         /// <summary>
@@ -233,12 +233,12 @@ namespace OpenSim.Region.Framework.Scenes
         private int m_activePrim;
         private int m_unAckedBytes;
         private int m_pendingDownloads;
-        private int m_pendingUploads = 0;  // FIXME: Not currently filled in
+        private readonly int m_pendingUploads = 0;  // FIXME: Not currently filled in
         private int m_activeScripts;
         private int m_scriptLinesPerSecond;
         private int m_scriptEventsPerSecond;
 
-        private int m_objectCapacity = 45000;
+        private readonly int m_objectCapacity = 45000;
 
          // The current number of users attempting to login to the region
         private int m_usersLoggingIn;
@@ -247,11 +247,11 @@ namespace OpenSim.Region.Framework.Scenes
         // XEngine
         private int m_inUseThreads;
 
-        private Scene m_scene;
+        private readonly Scene m_scene;
 
-        private RegionInfo ReportingRegion;
+        private readonly RegionInfo ReportingRegion;
 
-        private System.Timers.Timer m_report = new System.Timers.Timer();
+        private readonly System.Timers.Timer m_report = new System.Timers.Timer();
 
         private IEstateModule estateModule;
 
@@ -468,7 +468,7 @@ namespace OpenSim.Region.Framework.Scenes
                 }
 
                 sb[0].StatID = (uint) Stats.TimeDilation;
-                sb[0].StatValue = (float.IsNaN(timeDilation)) ? 0.0f : (float)Math.Round(timeDilation,3);
+                sb[0].StatValue = float.IsNaN(timeDilation) ? 0.0f : (float)Math.Round(timeDilation,3);
 
                 sb[1].StatID = (uint) Stats.SimFPS;
                 sb[1].StatValue = (float)Math.Round(reportedFPS,1);;
@@ -603,8 +603,8 @@ namespace OpenSim.Region.Framework.Scenes
                 lastReportedSimStats[38] = m_scriptLinesPerSecond * updateTimeFactor;
 
                 sbex[1].StatID = (uint)Stats.FrameDilation2;
-                sbex[1].StatValue = (float.IsNaN(timeDilation)) ? 0.1f : timeDilation;
-                lastReportedSimStats[39] = (float.IsNaN(timeDilation)) ? 0.1f : timeDilation;
+                sbex[1].StatValue = float.IsNaN(timeDilation) ? 0.1f : timeDilation;
+                lastReportedSimStats[39] = float.IsNaN(timeDilation) ? 0.1f : timeDilation;
 
                 sbex[2].StatID = (uint)Stats.UsersLoggingIn;
                 sbex[2].StatValue = m_usersLoggingIn;

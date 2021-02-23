@@ -32,7 +32,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public sealed class BSLinksetCompound : BSLinkset
 {
 #pragma warning disable 414
-    private static string LogHeader = "[BULLETSIM LINKSET COMPOUND]";
+    private static readonly string LogHeader = "[BULLETSIM LINKSET COMPOUND]";
 #pragma warning restore 414
 
     public BSLinksetCompound(BSScene scene, BSPrimLinkable parent)
@@ -322,7 +322,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // Constraint linksets are rebuilt every time.
     // Note that this works for rebuilding just the root after a linkset is taken apart.
     // Called at taint time!!
-    private bool UseBulletSimRootOffsetHack = false;    // Attempt to have Bullet track the coords of root compound shape
+    private readonly bool UseBulletSimRootOffsetHack = false;    // Attempt to have Bullet track the coords of root compound shape
     private void RecomputeLinksetCompound()
     {
         try

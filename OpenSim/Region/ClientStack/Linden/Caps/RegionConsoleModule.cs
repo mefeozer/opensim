@@ -51,10 +51,10 @@ namespace OpenSim.Region.ClientStack.Linden
 
         private Scene m_scene;
         private IEventQueue m_eventQueue;
-        private Commands m_commands = new Commands();
+        private readonly Commands m_commands = new Commands();
         public ICommands Commands { get { return m_commands; } }
 
-        ConcurrentDictionary<UUID, OnOutputDelegate> currentConsoles = new ConcurrentDictionary<UUID, OnOutputDelegate>();
+        readonly ConcurrentDictionary<UUID, OnOutputDelegate> currentConsoles = new ConcurrentDictionary<UUID, OnOutputDelegate>();
 
         public event ConsoleMessage OnConsoleMessage;
 
@@ -166,10 +166,10 @@ namespace OpenSim.Region.ClientStack.Linden
 //        private static readonly ILog m_log =
 //            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private RegionConsoleModule m_consoleModule;
-        private UUID m_agentID;
-        private bool m_isGod;
-        private Scene m_scene;
+        private readonly RegionConsoleModule m_consoleModule;
+        private readonly UUID m_agentID;
+        private readonly bool m_isGod;
+        private readonly Scene m_scene;
         private bool m_consoleIsOn = false;
 
         public ConsoleHandler(string path, string name, UUID agentID, RegionConsoleModule module, Scene scene)

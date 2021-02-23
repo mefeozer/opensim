@@ -46,7 +46,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         private struct PendingAck
         {
             /// <summary>Sequence number of the packet to remove</summary>
-            public uint SequenceNumber;
+            public readonly uint SequenceNumber;
             /// <summary>Environment.TickCount value when the remove was queued.
             /// This is used to update round-trip times for packets</summary>
             public int RemoveTime;
@@ -65,7 +65,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>Holds the actual unacked packet data, sorted by sequence number</summary>
-        private SortedDictionary<uint, OutgoingPacket> m_packets = new SortedDictionary<uint, OutgoingPacket>();
+        private readonly SortedDictionary<uint, OutgoingPacket> m_packets = new SortedDictionary<uint, OutgoingPacket>();
         /// <summary>Holds packets that need to be added to the unacknowledged list</summary>
         private LocklessQueue<OutgoingPacket> m_pendingAdds = new LocklessQueue<OutgoingPacket>();
         /// <summary>Holds information about pending acknowledgements</summary>

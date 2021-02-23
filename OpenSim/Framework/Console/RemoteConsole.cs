@@ -690,7 +690,7 @@ namespace OpenSim.Framework.Console
                     {
                         res.SetAttribute("Prompt", m_expectingInput ? "true" : "false");
                         res.SetAttribute("Command", m_expectingCommand ? "true" : "false");
-                        res.SetAttribute("Input", (!m_expectingInput) ? "true" : "false");
+                        res.SetAttribute("Input", !m_expectingInput ? "true" : "false");
                     }
                     else
                     {

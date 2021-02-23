@@ -98,7 +98,7 @@ namespace OpenSim.Framework.Monitoring
         /// <remarks>
         /// Will be null if no measures of interest require samples.
         /// </remarks>
-        private Queue<double> m_samples;
+        private readonly Queue<double> m_samples;
 
         /// <summary>
         /// Maximum number of statistical samples.
@@ -107,7 +107,7 @@ namespace OpenSim.Framework.Monitoring
         /// At the moment this corresponds to 1 minute since the sampling rate is every 2.5 seconds as triggered from
         /// the main Watchdog.
         /// </remarks>
-        private static int m_maxSamples = 24;
+        private static readonly int m_maxSamples = 24;
 
         public Stat(
             string shortName,

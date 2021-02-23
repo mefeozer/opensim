@@ -34,7 +34,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
     public class BinaryStreamHandler : BaseStreamHandler
     {
-        private BinaryMethod m_method;
+        private readonly BinaryMethod m_method;
 
         public BinaryStreamHandler(string httpMethod, string path, BinaryMethod binaryMethod)
             : this(httpMethod, path, binaryMethod, null, null) {}

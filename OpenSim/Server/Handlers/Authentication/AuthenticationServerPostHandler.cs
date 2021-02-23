@@ -45,11 +45,11 @@ namespace OpenSim.Server.Handlers.Authentication
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAuthenticationService m_AuthenticationService;
+        private readonly IAuthenticationService m_AuthenticationService;
 
-        private bool m_AllowGetAuthInfo = false;
-        private bool m_AllowSetAuthInfo = false;
-        private bool m_AllowSetPassword = false;
+        private readonly bool m_AllowGetAuthInfo = false;
+        private readonly bool m_AllowSetAuthInfo = false;
+        private readonly bool m_AllowSetPassword = false;
 
         public AuthenticationServerPostHandler(IAuthenticationService service) :
                 this(service, null, null) {}

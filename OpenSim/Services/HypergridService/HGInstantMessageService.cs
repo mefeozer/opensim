@@ -64,7 +64,7 @@ namespace OpenSim.Services.HypergridService
 
         private static bool m_ForwardOfflineGroupMessages;
         private static bool m_InGatekeeper;
-        private string m_messageKey;
+        private readonly string m_messageKey;
 
         public HGInstantMessageService(IConfigSource config)
             : this(config, null)
@@ -229,8 +229,8 @@ namespace OpenSim.Services.HypergridService
                 // check if we've tried this before..
                 // This is one way to end the recursive loop
                 //
-                if (!firstTime && ((previousLocation is PresenceInfo && upd != null && upd.RegionID == ((PresenceInfo)previousLocation).RegionID) ||
-                                    (previousLocation is string && upd == null && previousLocation.Equals(url))))
+                if (!firstTime && (previousLocation is PresenceInfo && upd != null && upd.RegionID == ((PresenceInfo)previousLocation).RegionID ||
+                                    previousLocation is string && upd == null && previousLocation.Equals(url)))
                 {
                     // m_log.Error("[GRID INSTANT MESSAGE]: Unable to deliver an instant message");
                     m_log.DebugFormat("[HG IM SERVICE]: Fail 2 {0} {1}", previousLocation, url);

@@ -40,7 +40,7 @@ namespace OpenSim.Services.AuthenticationService
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<string, IAuthenticationService> m_svcChecks
+        private readonly Dictionary<string, IAuthenticationService> m_svcChecks
             = new Dictionary<string, IAuthenticationService>();
 
         public WebkeyOrPasswordAuthenticationService(IConfigSource config)

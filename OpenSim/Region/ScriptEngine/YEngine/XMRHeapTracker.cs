@@ -66,9 +66,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      */
     public class HeapTrackerList: HeapTrackerBase
     {
-        private static FieldInfo listValueField = typeof(HeapTrackerList).GetField("value");
-        private static MethodInfo listSaveMethod = typeof(HeapTrackerList).GetMethod("Save");
-        private static MethodInfo listRestoreMethod = typeof(HeapTrackerList).GetMethod("Restore");
+        private static readonly FieldInfo listValueField = typeof(HeapTrackerList).GetField("value");
+        private static readonly MethodInfo listSaveMethod = typeof(HeapTrackerList).GetMethod("Save");
+        private static readonly MethodInfo listRestoreMethod = typeof(HeapTrackerList).GetMethod("Restore");
 
         public LSL_List value;
 
@@ -139,9 +139,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      */
     public class HeapTrackerObject: HeapTrackerBase
     {
-        private static FieldInfo objectValueField = typeof(HeapTrackerObject).GetField("value");
-        private static MethodInfo objectSaveMethod = typeof(HeapTrackerObject).GetMethod("Save");
-        private static MethodInfo objectRestoreMethod = typeof(HeapTrackerObject).GetMethod("Restore");
+        private static readonly FieldInfo objectValueField = typeof(HeapTrackerObject).GetField("value");
+        private static readonly MethodInfo objectSaveMethod = typeof(HeapTrackerObject).GetMethod("Save");
+        private static readonly MethodInfo objectRestoreMethod = typeof(HeapTrackerObject).GetMethod("Restore");
 
         public const int HT_CHAR = 2;
         public const int HT_DELE = 8;
@@ -262,9 +262,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      */
     public class HeapTrackerString: HeapTrackerBase
     {
-        private static FieldInfo stringValueField = typeof(HeapTrackerString).GetField("value");
-        private static MethodInfo stringRestoreMethod = typeof(HeapTrackerString).GetMethod("Restore");
-        private static MethodInfo stringSaveMethod = typeof(HeapTrackerString).GetMethod("Save");
+        private static readonly FieldInfo stringValueField = typeof(HeapTrackerString).GetField("value");
+        private static readonly MethodInfo stringRestoreMethod = typeof(HeapTrackerString).GetMethod("Restore");
+        private static readonly MethodInfo stringSaveMethod = typeof(HeapTrackerString).GetMethod("Save");
 
         public string value;
 

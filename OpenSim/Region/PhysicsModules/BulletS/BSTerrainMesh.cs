@@ -32,14 +32,14 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     public sealed class BSTerrainMesh : BSTerrainPhys
 {
-    static string LogHeader = "[BULLETSIM TERRAIN MESH]";
+    static readonly string LogHeader = "[BULLETSIM TERRAIN MESH]";
 
-    private float[] m_savedHeightMap;
-    int m_sizeX;
-    int m_sizeY;
+    private readonly float[] m_savedHeightMap;
+    readonly int m_sizeX;
+    readonly int m_sizeY;
 
-    BulletShape m_terrainShape;
-    BulletBody m_terrainBody;
+    readonly BulletShape m_terrainShape;
+    readonly BulletBody m_terrainBody;
 
     public BSTerrainMesh(BSScene physicsScene, Vector3 regionBase, uint id, Vector3 regionSize)
         : base(physicsScene, regionBase, id)
@@ -277,9 +277,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     private class HeightMapGetter
     {
-        private float[] m_heightMap;
-        private int m_sizeX;
-        private int m_sizeY;
+        private readonly float[] m_heightMap;
+        private readonly int m_sizeX;
+        private readonly int m_sizeY;
         public HeightMapGetter(float[] pHeightMap, int pSizeX, int pSizeY)
         {
             m_heightMap = pHeightMap;

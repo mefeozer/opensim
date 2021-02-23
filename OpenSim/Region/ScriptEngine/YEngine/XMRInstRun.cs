@@ -62,13 +62,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             bool wakeIt = false;
             lock(m_QueueLock)
             {
-                bool construct = (m_IState == XMRInstState.CONSTRUCT);
+                bool construct = m_IState == XMRInstState.CONSTRUCT;
 
                  // Ignore event if we don't even have such an handler in any state.
                  // We can't be state-specific here because state might be different
                  // by the time this event is dequeued and delivered to the script.
                 if(!construct &&                      // make sure m_HaveEventHandlers is filled in 
-                        ((uint)evc < (uint)m_HaveEventHandlers.Length) &&
+                        (uint)evc < (uint)m_HaveEventHandlers.Length &&
                         !m_HaveEventHandlers[(int)evc])  // don't bother if we don't have such a handler in any state
                     return;
 
@@ -168,7 +168,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                             {
                                 EventParams evt2 = lln2.Value;
                                 m_eventCodeMap.TryGetValue(evt2.EventName, out ScriptEventCode evc2);
-                                if((evc2 != ScriptEventCode.state_entry) && (evc2 != ScriptEventCode.attach))
+                                if(evc2 != ScriptEventCode.state_entry && evc2 != ScriptEventCode.attach)
                                     break;
                             }
                             if(lln2 == null)
@@ -198,7 +198,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                  // Flag it now before unlocking so another thread won't try
                  // to do the same thing right now.
                  // Dont' flag it if it's still suspended!
-                if((m_IState == XMRInstState.IDLE) && !m_Suspended)
+                if(m_IState == XMRInstState.IDLE && !m_Suspended)
                 {
                     m_IState = XMRInstState.ONSTARTQ;
                     startIt = true;
@@ -206,12 +206,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                  // If instance is sleeping (ie, possibly in xmrEventDequeue),
                  // wake it up if event is in the mask.
-                if((m_SleepUntil > DateTime.UtcNow) && !m_Suspended)
+                if(m_SleepUntil > DateTime.UtcNow && !m_Suspended)
                 {
                     int evc1 = (int)evc;
                     int evc2 = evc1 - 32;
-                    if((((uint)evc1 < (uint)32) && (((m_SleepEventMask1 >> evc1) & 1) != 0)) ||
-                            (((uint)evc2 < (uint)32) && (((m_SleepEventMask2 >> evc2) & 1) != 0)))
+                    if((uint)evc1 < (uint)32 && ((m_SleepEventMask1 >> evc1) & 1) != 0 ||
+                            (uint)evc2 < (uint)32 && ((m_SleepEventMask2 >> evc2) & 1) != 0)
                         wakeIt = true;
                 }
             }
@@ -446,10 +446,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
              // If not executing any event handler, there shouldn't be any saved stack frames.
              // If executing an event handler, there should be some saved stack frames.
-            bool active = (stackFrames != null);
+            bool active = stackFrames != null;
             ScriptEventCode ec = this.eventCode;
-            if(((ec == ScriptEventCode.None) && active) ||
-                ((ec != ScriptEventCode.None) && !active))
+            if(ec == ScriptEventCode.None && active ||
+                ec != ScriptEventCode.None && !active)
             {
                 m_log.Error("CheckRunLockInvariants: script=" + m_DescName);
                 m_log.Error("CheckRunLockInvariants: eventcode=" + ec.ToString() + ", active=" + active.ToString());
@@ -485,7 +485,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 return new Exception("Can't process ScriptEventCode.None");
 
              // Silly to even try if there is no handler defined for this event.
-            if(((int)newEventCode >= 0) && (m_ObjCode.scriptEventHandlerTable[this.stateCode, (int)newEventCode] == null))
+            if((int)newEventCode >= 0 && m_ObjCode.scriptEventHandlerTable[this.stateCode, (int)newEventCode] == null)
                 return null;
 
              // The microthread shouldn't be processing any event code.
@@ -608,7 +608,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                                            m_Part.Name, m_Part.UUID, false);
             m_log.Debug(string.Format(
                 "[SCRIPT ERROR]: {0} (at event {1}, part {2} {3} at {4} in {5}",
-                (e.Message == null)? "" : e.Message,
+                e.Message == null? "" : e.Message,
                 ev.ToString(),
                 m_Part.Name,
                 m_Part.UUID,
@@ -633,7 +633,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
              // Add exception message.
             string des = e.Message;
-            des = (des == null) ? "" : (": " + des);
+            des = des == null ? "" : ": " + des;
             msg.Append(e.GetType().Name + des + "\n");
 
              // Tell script owner what to do.
@@ -1009,9 +1009,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 m_Suspended = false;
                 m_DetachQuantum = 0;
                 m_DetachReady.Set();
-                if ((m_EventQueue != null) &&
-                    (m_EventQueue.First != null) &&
-                    (m_IState == XMRInstState.IDLE))
+                if (m_EventQueue != null &&
+                    m_EventQueue.First != null &&
+                    m_IState == XMRInstState.IDLE)
                 {
                     m_IState = XMRInstState.ONSTARTQ;
                     m_Engine.QueueToStart(this);

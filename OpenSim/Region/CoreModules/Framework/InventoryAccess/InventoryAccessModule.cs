@@ -376,7 +376,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
             m_Scene.InventoryService.UpdateItem(item);
 
             // remoteClient.SendInventoryItemCreateUpdate(item);
-            return (asset.FullID);
+            return asset.FullID;
         }
 
         public virtual bool UpdateInventoryItemAsset(UUID ownerID, InventoryItemBase item, AssetBase asset)
@@ -396,7 +396,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
             else
             {
                 m_log.ErrorFormat("[INVENTORY ACCESS MODULE]: Given invalid item for inventory update: {0}",
-                    (item == null || asset == null? "null item or asset" : "wrong owner"));
+                    item == null || asset == null? "null item or asset" : "wrong owner");
                 return false;
             }
         }
@@ -501,10 +501,10 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 // This will be applied to the current perms, so
                 // it will do what we want.
                 objectGroup.RootPart.NextOwnerMask &=
-                        ((uint)PermissionMask.Copy |
-                         (uint)PermissionMask.Transfer |
-                         (uint)PermissionMask.Modify |
-                         (uint)PermissionMask.Export);
+                        (uint)PermissionMask.Copy |
+                        (uint)PermissionMask.Transfer |
+                        (uint)PermissionMask.Modify |
+                        (uint)PermissionMask.Export;
                 objectGroup.RootPart.NextOwnerMask |=
                         (uint)PermissionMask.Move;
 
@@ -551,8 +551,8 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 // If the objects have different creators then don't specify a creator at all
                 foreach (SceneObjectGroup objectGroup in objlist)
                 {
-                    if ((objectGroup.RootPart.CreatorID.ToString() != item.CreatorId)
-                        || (objectGroup.RootPart.CreatorData.ToString() != item.CreatorData))
+                    if (objectGroup.RootPart.CreatorID.ToString() != item.CreatorId
+                        || objectGroup.RootPart.CreatorData.ToString() != item.CreatorData)
                     {
                         item.CreatorId = UUID.Zero.ToString();
                         item.CreatorData = string.Empty;
@@ -642,7 +642,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 effectivePerms &= grp.CurrentAndFoldedNextPermissions();
             }
  
-            if (remoteClient != null && (remoteClient.AgentId != so.RootPart.OwnerID) && m_Scene.Permissions.PropagatePermissions())
+            if (remoteClient != null && remoteClient.AgentId != so.RootPart.OwnerID && m_Scene.Permissions.PropagatePermissions())
             {
                 // apply parts inventory items next owner
                 PermissionsUtil.ApplyNoModFoldedPermissions(effectivePerms, ref effectivePerms);
@@ -669,12 +669,12 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 item.GroupPermissions = so.RootPart.GroupMask & effectivePerms;
 
                 item.CurrentPermissions &=
-                        ((uint)PermissionMask.Copy |
-                         (uint)PermissionMask.Transfer |
-                         (uint)PermissionMask.Modify |
-                         (uint)PermissionMask.Move |
-                         (uint)PermissionMask.Export |
-                         (uint)PermissionMask.FoldedMask); // Preserve folded permissions ??
+                        (uint)PermissionMask.Copy |
+                        (uint)PermissionMask.Transfer |
+                        (uint)PermissionMask.Modify |
+                        (uint)PermissionMask.Move |
+                        (uint)PermissionMask.Export |
+                        (uint)PermissionMask.FoldedMask; // Preserve folded permissions ??
             }
 
             return item;
@@ -1007,7 +1007,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 //
                 if (item != null)
                 {
-                    if (((item.CurrentPermissions & (uint)PermissionMask.Copy) == 0) && (!attachment))
+                    if ((item.CurrentPermissions & (uint)PermissionMask.Copy) == 0 && !attachment)
                         remoteClient.SendBulkUpdateInventory(item);
                 }
 
@@ -1161,7 +1161,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                     // if it's no copy.
                     // Put it back if it's not an attachment
                     //
-                    if (((item.CurrentPermissions & (uint)PermissionMask.Copy) == 0) && (!isAttachment))
+                    if ((item.CurrentPermissions & (uint)PermissionMask.Copy) == 0 && !isAttachment)
                         remoteClient.SendBulkUpdateInventory(item);
 
                     ILandObject land = m_Scene.LandChannel.GetLandObject(pos.X, pos.Y);
@@ -1204,7 +1204,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
 //                    "[INVENTORY ACCESS MODULE]: rootPart.OwnedID {0}, item.Owner {1}, item.CurrentPermissions {2:X}",
 //                    rootPart.OwnerID, item.Owner, item.CurrentPermissions);
 
-                if ((rootPart.OwnerID != item.Owner) ||
+                if (rootPart.OwnerID != item.Owner ||
                     (item.CurrentPermissions & (uint)PermissionMask.Slam) != 0 ||
                     (item.Flags & (uint)InventoryItemFlags.ObjectSlamPerm) != 0)
                 {
@@ -1228,7 +1228,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                             if ((item.BasePermissions & (uint)PermissionMask.FoldedMask) != 0)
                             {
                                 // We have permissions stored there so use them
-                                part.NextOwnerMask = ((item.BasePermissions & (uint)PermissionMask.FoldedMask) << (int)PermissionMask.FoldingShift);
+                                part.NextOwnerMask = (item.BasePermissions & (uint)PermissionMask.FoldedMask) << (int)PermissionMask.FoldingShift;
                                 part.NextOwnerMask |= (uint)PermissionMask.Move;
                             }
                             else
@@ -1391,7 +1391,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
         {
             AssetBase asset = new AssetBase(UUID.Random(), name, assetType, creatorID);
             asset.Description = description;
-            asset.Data = (data == null) ? new byte[1] : data;
+            asset.Data = data == null ? new byte[1] : data;
 
             return asset;
         }

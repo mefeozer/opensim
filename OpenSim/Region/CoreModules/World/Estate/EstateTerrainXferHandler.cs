@@ -36,7 +36,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
     {
         //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private AssetBase m_asset;
+        private readonly AssetBase m_asset;
 
         public delegate void TerrainUploadComplete(string name, byte[] filedata, IClientAPI remoteClient);
         public event TerrainUploadComplete TerrainUploadDone;
@@ -44,7 +44,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
         //private string m_description = String.Empty;
         //private string m_name = String.Empty;
         //private UUID TransactionID = UUID.Zero;
-        private sbyte type = 0;
+        private readonly sbyte type = 0;
 
         public ulong mXferID;
 

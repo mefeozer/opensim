@@ -47,7 +47,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Scene> m_scenes = new List<Scene>();
+        private readonly List<Scene> m_scenes = new List<Scene>();
 
 //        private IAvatarFactoryModule m_avatarFactory;
 

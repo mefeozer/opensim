@@ -296,7 +296,7 @@ namespace OpenSim.Data
             Match m = null;
             string sFile = Array.FindLast(names, nm => { m = _match_new.Match(nm); return m.Success; });  // ; nm.StartsWith(sPrefix, StringComparison.InvariantCultureIgnoreCase
 
-            if ((m != null) && !string.IsNullOrEmpty(sFile))
+            if (m != null && !string.IsNullOrEmpty(sFile))
             {
                 /* The filename should be '<StoreName>.migrations[.NNN]' where NNN
                  * is the last version number defined in the file. If the '.NNN' part is recognized, the code can skip
@@ -328,7 +328,7 @@ namespace OpenSim.Data
                         sb.Length = 0;
                     }
 
-                    if ((nVersion > 0) && (nVersion > after) && (script.Count > 0) && !migrations.ContainsKey(nVersion))   // script to the versioned script list
+                    if (nVersion > 0 && nVersion > after && script.Count > 0 && !migrations.ContainsKey(nVersion))   // script to the versioned script list
                     {
                         migrations[nVersion] = script.ToArray();
                     }
@@ -391,7 +391,7 @@ scan_old_style:
                 if (m.Success)
                 {
                     int version = int.Parse(m.Groups[1].ToString());
-                    if ((version > after) && !migrations.ContainsKey(version))
+                    if (version > after && !migrations.ContainsKey(version))
                     {
                         using (Stream resource = _assem.GetManifestResourceStream(s))
                         {

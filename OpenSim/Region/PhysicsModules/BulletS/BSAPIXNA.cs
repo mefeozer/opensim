@@ -43,7 +43,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
 private sealed class BulletWorldXNA : BulletWorld
 {
-    public DiscreteDynamicsWorld world;
+    public readonly DiscreteDynamicsWorld world;
     public BulletWorldXNA(uint id, BSScene physScene, DiscreteDynamicsWorld xx)
         : base(id, physScene)
     {
@@ -99,7 +99,7 @@ private sealed class BulletShapeXNA : BulletShape
     public override bool ReferenceSame(BulletShape other)
     {
         BulletShapeXNA otheru = other as BulletShapeXNA;
-        return (otheru != null) && (this.shape == otheru.shape);
+        return otheru != null && this.shape == otheru.shape;
 
     }
     public override string AddrString
@@ -565,7 +565,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
     public override void SetConstraintEnable(BulletConstraint pConstraint, float p_2)
     {
         Generic6DofConstraint constraint = (pConstraint as BulletConstraintXNA).constrain as Generic6DofConstraint;
-        constraint.SetEnabled((p_2 == 0) ? false : true);
+        constraint.SetEnabled(p_2 == 0 ? false : true);
     }
 
 
@@ -752,7 +752,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
     public override bool UseFrameOffset(BulletConstraint pConstraint, float onOff)
     {
         Generic6DofConstraint constraint = (pConstraint as BulletConstraintXNA).constrain as Generic6DofConstraint;
-        constraint.SetUseFrameOffset((onOff == 0) ? false : true);
+        constraint.SetUseFrameOffset(onOff == 0 ? false : true);
         return true;
     }
     //SetBreakingImpulseThreshold(m_constraint.ptr, threshold);
@@ -774,7 +774,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
     public override bool SpringEnable(BulletConstraint pConstraint, int index, float numericTrueFalse)
     {
         Generic6DofSpringConstraint constraint = (pConstraint as BulletConstraintXNA).constrain as Generic6DofSpringConstraint;
-        constraint.EnableSpring(index, (numericTrueFalse == 0f ? false : true));
+        constraint.EnableSpring(index, numericTrueFalse == 0f ? false : true);
         return true;
     }
 
@@ -2020,7 +2020,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
             childTrans._origin = centroid;
 
             List<IndexedVector3> virts = new List<IndexedVector3>();
-            int ender = ((ii + 4) + (vertexCount*3));
+            int ender = ii + 4 + vertexCount*3;
             for (int iii = ii + 4; iii < ender; iii+=3)
             {
 
@@ -2029,7 +2029,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
             ConvexHullShape convexShape = new ConvexHullShape(virts, vertexCount);
             convexShape.SetMargin(world.WorldSettings.Params.collisionMargin);
             compoundshape.AddChildShape(ref childTrans, convexShape);
-            ii += (vertexCount*3 + 4);
+            ii += vertexCount*3 + 4;
         }
 
         return new BulletShapeXNA(compoundshape, BSPhysicsShapeType.SHAPE_HULL);
@@ -2396,7 +2396,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
 
                                             };
         if (world.LastCollisionDesc < world.UpdatedCollisions.Length)
-            world.UpdatedCollisions[world.LastCollisionDesc++] = (cDesc);
+            world.UpdatedCollisions[world.LastCollisionDesc++] = cDesc;
         m_collisionsThisFrame++;
 
 
@@ -2478,7 +2478,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
 
         private EntityProperties m_properties;
         private EntityProperties m_lastProperties;
-        private BSAPIXNA m_world;
+        private readonly BSAPIXNA m_world;
 
         const float POSITION_TOLERANCE = 0.05f;
         const float VELOCITY_TOLERANCE = 0.001f;
@@ -2543,10 +2543,10 @@ private sealed class BulletConstraintXNA : BulletConstraint
                 // If the Velocity and AngularVelocity are zero, most likely the object has
                 //    been deactivated. If they both are zero and they have become zero recently,
                 //    make sure a property update is sent so the zeros make it to the viewer.
-                || ((m_properties.Velocity == ZeroVect && m_properties.RotationalVelocity == ZeroVect)
-                    &&
-                    (m_properties.Velocity != m_lastProperties.Velocity ||
-                     m_properties.RotationalVelocity != m_lastProperties.RotationalVelocity))
+                || m_properties.Velocity == ZeroVect && m_properties.RotationalVelocity == ZeroVect
+                                                     &&
+                                                     (m_properties.Velocity != m_lastProperties.Velocity ||
+                                                      m_properties.RotationalVelocity != m_lastProperties.RotationalVelocity)
                 //	If Velocity and AngularVelocity are non-zero but have changed, send an update.
                 || !AlmostEqual(ref m_properties.Velocity, ref m_lastProperties.Velocity, VELOCITY_TOLERANCE)
                 ||
@@ -2559,7 +2559,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
                 // Add this update to the list of updates for this frame.
                 m_lastProperties = m_properties;
                 if (m_world.LastEntityProperty < m_world.UpdatedObjects.Length)
-                    m_world.UpdatedObjects[m_world.LastEntityProperty++]=(m_properties);
+                    m_world.UpdatedObjects[m_world.LastEntityProperty++]=m_properties;
 
                 //(*m_updatesThisFrame)[m_properties.ID] = &m_properties;
             }
@@ -2575,18 +2575,13 @@ private sealed class BulletConstraintXNA : BulletConstraint
         internal static bool AlmostEqual(ref Vector3 v1, ref Vector3 v2, float nEpsilon)
         {
             return
-            (((v1.X - nEpsilon) < v2.X) && (v2.X < (v1.X + nEpsilon))) &&
-            (((v1.Y - nEpsilon) < v2.Y) && (v2.Y < (v1.Y + nEpsilon))) &&
-            (((v1.Z - nEpsilon) < v2.Z) && (v2.Z < (v1.Z + nEpsilon)));
+            v1.X - nEpsilon < v2.X && v2.X < v1.X + nEpsilon && v1.Y - nEpsilon < v2.Y && v2.Y < v1.Y + nEpsilon && v1.Z - nEpsilon < v2.Z && v2.Z < v1.Z + nEpsilon;
         }
 
         internal static bool AlmostEqual(ref Quaternion v1, ref Quaternion v2, float nEpsilon)
         {
             return
-            (((v1.X - nEpsilon) < v2.X) && (v2.X < (v1.X + nEpsilon))) &&
-            (((v1.Y - nEpsilon) < v2.Y) && (v2.Y < (v1.Y + nEpsilon))) &&
-            (((v1.Z - nEpsilon) < v2.Z) && (v2.Z < (v1.Z + nEpsilon))) &&
-            (((v1.W - nEpsilon) < v2.W) && (v2.W < (v1.W + nEpsilon)));
+            v1.X - nEpsilon < v2.X && v2.X < v1.X + nEpsilon && v1.Y - nEpsilon < v2.Y && v2.Y < v1.Y + nEpsilon && v1.Z - nEpsilon < v2.Z && v2.Z < v1.Z + nEpsilon && v1.W - nEpsilon < v2.W && v2.W < v1.W + nEpsilon;
         }
 
     }

@@ -38,7 +38,7 @@ namespace OpenSim.Services.Connectors
     public class HGAssetServiceConnector : IAssetService
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private ExpiringCacheOS<string, AssetServicesConnector> m_connectors = new ExpiringCacheOS<string, AssetServicesConnector>(60000);
+        private readonly ExpiringCacheOS<string, AssetServicesConnector> m_connectors = new ExpiringCacheOS<string, AssetServicesConnector>(60000);
 
         public HGAssetServiceConnector(IConfigSource source)
         {
@@ -140,7 +140,7 @@ namespace OpenSim.Services.Connectors
         private struct AssetAndIndex
         {
             public UUID assetID;
-            public int index;
+            public readonly int index;
 
             public AssetAndIndex(UUID assetID, int index)
             {
@@ -201,7 +201,7 @@ namespace OpenSim.Services.Connectors
                 AssetServicesConnector connector = GetConnector(url);
                 // Restore the assetID to a simple UUID
                 asset.ID = assetID;
-                lock ((connector.ConnectorLock))
+                lock (connector.ConnectorLock)
                     return connector.Store(asset);
             }
 

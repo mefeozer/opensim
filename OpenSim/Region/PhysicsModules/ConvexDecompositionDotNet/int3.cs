@@ -90,7 +90,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             if (System.Object.ReferenceEquals(a, b))
                 return true;
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
+            if ((object)a == null || (object)b == null)
                 return false;
 
             for (int i = 0; i < 3; i++)
@@ -117,7 +117,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static bool isa(int3 a, int3 b)
         {
-            return (a == b || roll3(a) == b || a == roll3(b));
+            return a == b || roll3(a) == b || a == roll3(b);
         }
 
         public static bool b2b(int3 a, int3 b)

@@ -49,7 +49,7 @@ namespace OpenSim.Server.Handlers.Grid
         private static string LogHeader = "[GRID HANDLER]";
 #pragma warning restore 414
 
-        private IGridService m_GridService;
+        private readonly IGridService m_GridService;
 
         public GridServerPostHandler(IGridService service, IServiceAuth auth) :
                 base("POST", "/grid", auth)
@@ -171,7 +171,7 @@ namespace OpenSim.Server.Handlers.Grid
             //   Client:   [1 1]
             //   Server: [0 1]
             //   ==> success
-            if ((versionNumberMin > ProtocolVersions.ServerProtocolVersionMax || versionNumberMax < ProtocolVersions.ServerProtocolVersionMin))
+            if (versionNumberMin > ProtocolVersions.ServerProtocolVersionMax || versionNumberMax < ProtocolVersions.ServerProtocolVersionMin)
             {
                 // Can't do, there is no overlap in the acceptable ranges
                 return FailureResult();
@@ -235,7 +235,7 @@ namespace OpenSim.Server.Handlers.Grid
             //m_log.DebugFormat("[GRID HANDLER]: neighbours for region {0}: {1}", regionID, rinfos.Count);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((rinfos == null) || ((rinfos != null) && (rinfos.Count == 0)))
+            if (rinfos == null || rinfos != null && rinfos.Count == 0)
                 result["result"] = "null";
             else
             {
@@ -369,7 +369,7 @@ namespace OpenSim.Server.Handlers.Grid
             //m_log.DebugFormat("[GRID HANDLER]: neighbours for region {0}: {1}", regionID, rinfos.Count);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((rinfos == null) || ((rinfos != null) && (rinfos.Count == 0)))
+            if (rinfos == null || rinfos != null && rinfos.Count == 0)
                 result["result"] = "null";
             else
             {
@@ -419,7 +419,7 @@ namespace OpenSim.Server.Handlers.Grid
             List<GridRegion> rinfos = m_GridService.GetRegionRange(scopeID, xmin, xmax, ymin, ymax);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((rinfos == null) || ((rinfos != null) && (rinfos.Count == 0)))
+            if (rinfos == null || rinfos != null && rinfos.Count == 0)
                 result["result"] = "null";
             else
             {
@@ -449,7 +449,7 @@ namespace OpenSim.Server.Handlers.Grid
             List<GridRegion> rinfos = m_GridService.GetDefaultRegions(scopeID);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((rinfos == null) || ((rinfos != null) && (rinfos.Count == 0)))
+            if (rinfos == null || rinfos != null && rinfos.Count == 0)
                 result["result"] = "null";
             else
             {
@@ -479,7 +479,7 @@ namespace OpenSim.Server.Handlers.Grid
             List<GridRegion> rinfos = m_GridService.GetDefaultHypergridRegions(scopeID);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((rinfos == null) || ((rinfos != null) && (rinfos.Count == 0)))
+            if (rinfos == null || rinfos != null && rinfos.Count == 0)
                 result["result"] = "null";
             else
             {
@@ -520,7 +520,7 @@ namespace OpenSim.Server.Handlers.Grid
             List<GridRegion> rinfos = m_GridService.GetFallbackRegions(scopeID, x, y);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((rinfos == null) || ((rinfos != null) && (rinfos.Count == 0)))
+            if (rinfos == null || rinfos != null && rinfos.Count == 0)
                 result["result"] = "null";
             else
             {
@@ -550,7 +550,7 @@ namespace OpenSim.Server.Handlers.Grid
             List<GridRegion> rinfos = m_GridService.GetHyperlinks(scopeID);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((rinfos == null) || ((rinfos != null) && (rinfos.Count == 0)))
+            if (rinfos == null || rinfos != null && rinfos.Count == 0)
                 result["result"] = "null";
             else
             {

@@ -41,15 +41,15 @@ namespace OpenSim.Framework.Console
         /// <summary>
         /// command delegate used in running
         /// </summary>
-        private ConsoleCommand m_commandDelegate;
+        private readonly ConsoleCommand m_commandDelegate;
         /// <summary>
         /// help text displayed
         /// </summary>
-        private string m_helpText;
+        private readonly string m_helpText;
         /// <summary>
         /// command in the form of "showme new commands"
         /// </summary>
-        private string[] m_cmdText;
+        private readonly string[] m_cmdText;
 
         /// <summary>
         /// Construct a new ConsolePluginCommand

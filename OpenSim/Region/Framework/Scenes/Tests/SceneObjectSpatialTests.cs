@@ -38,7 +38,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
     public class SceneObjectSpatialTests : OpenSimTestCase
     {
         TestScene m_scene;
-        UUID m_ownerId = TestHelpers.ParseTail(0x1);
+        readonly UUID m_ownerId = TestHelpers.ParseTail(0x1);
 
         [SetUp]
         public override void SetUp()

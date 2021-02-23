@@ -279,8 +279,8 @@ namespace OpenSim.Services.Interfaces
         public GridRegion(RegionInfo ConvertFrom)
         {
             m_regionName = ConvertFrom.RegionName;
-            m_regionLocX = (int)(ConvertFrom.WorldLocX);
-            m_regionLocY = (int)(ConvertFrom.WorldLocY);
+            m_regionLocX = (int)ConvertFrom.WorldLocX;
+            m_regionLocY = (int)ConvertFrom.WorldLocY;
             RegionSizeX = (int)ConvertFrom.RegionSizeX;
             RegionSizeY = (int)ConvertFrom.RegionSizeY;
             m_internalEndPoint = ConvertFrom.InternalEndPoint;
@@ -435,7 +435,7 @@ namespace OpenSim.Services.Interfaces
             if ((object)region == null)
                 return false;
             // Return true if the non-zero UUIDs are equal:
-            return (RegionID != UUID.Zero) && RegionID.Equals(region.RegionID);
+            return RegionID != UUID.Zero && RegionID.Equals(region.RegionID);
         }
 
         public override bool Equals(object obj)

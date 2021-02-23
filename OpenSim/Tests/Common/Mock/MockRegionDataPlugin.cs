@@ -35,7 +35,7 @@ namespace OpenSim.Data.Null
 {
     public class NullDataService : ISimulationDataService
     {
-        private NullDataStore m_store;
+        private readonly NullDataStore m_store;
 
         public NullDataService()
         {

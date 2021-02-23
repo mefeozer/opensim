@@ -53,19 +53,19 @@ namespace OpenSim.Region.DataSnapshot
         //Information from config
         private bool m_enabled = false;
         private bool m_configLoaded = false;
-        private List<string> m_disabledModules = new List<string>();
-        private Dictionary<string, string> m_gridinfo = new Dictionary<string, string>();
+        private readonly List<string> m_disabledModules = new List<string>();
+        private readonly Dictionary<string, string> m_gridinfo = new Dictionary<string, string>();
         private string m_snapsDir = "DataSnapshot";
         private string m_exposure_level = "minimum";
 
         //Lists of stuff we need
-        private List<Scene> m_scenes = new List<Scene>();
-        private List<IDataSnapshotProvider> m_dataproviders = new List<IDataSnapshotProvider>();
+        private readonly List<Scene> m_scenes = new List<Scene>();
+        private readonly List<IDataSnapshotProvider> m_dataproviders = new List<IDataSnapshotProvider>();
 
         //Various internal objects
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         internal object m_syncInit = new object();
-        private object m_serializeGen = new object();
+        private readonly object m_serializeGen = new object();
 
         //DataServices and networking
         private string m_dataServices = "noservices";
@@ -314,7 +314,7 @@ namespace OpenSim.Region.DataSnapshot
                 }
             }
 
-            m_dataServices = (m_dataServices == "noservices") ? sb.ToString() : sb.Append(m_dataServices).ToString();
+            m_dataServices = m_dataServices == "noservices" ? sb.ToString() : sb.Append(m_dataServices).ToString();
         }
 
         #endregion

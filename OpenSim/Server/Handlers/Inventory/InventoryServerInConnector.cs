@@ -46,12 +46,12 @@ namespace OpenSim.Server.Handlers.Inventory
 
         protected IInventoryService m_InventoryService;
 
-        private bool m_doLookup = false;
+        private readonly bool m_doLookup = false;
 
         //private static readonly int INVENTORY_DEFAULT_SESSION_TIME = 30; // secs
         //private AuthedSessionCache m_session_cache = new AuthedSessionCache(INVENTORY_DEFAULT_SESSION_TIME);
 
-        private string m_userserver_url;
+        private readonly string m_userserver_url;
         protected string m_ConfigName = "InventoryService";
 
         public InventoryServiceInConnector(IConfigSource config, IHttpServer server, string configName) :
@@ -191,7 +191,7 @@ namespace OpenSim.Server.Handlers.Inventory
                     Dictionary<AssetType, InventoryFolderBase> folders = new Dictionary<AssetType, InventoryFolderBase>();
                     foreach (InventoryFolderBase folder in content.Folders)
                     {
-                        if ((folder.Type != (short)AssetType.Folder) && (folder.Type != (short)AssetType.Unknown))
+                        if (folder.Type != (short)AssetType.Folder && folder.Type != (short)AssetType.Unknown)
                             folders[(AssetType)folder.Type] = folder;
                     }
                     // Put the root folder there, as type Folder

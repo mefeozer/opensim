@@ -197,7 +197,7 @@ namespace OpenSim.Region.ClientStack.Linden
             LLSDxmlEncode2.AddElem("id", transactionID, sb);
             LLSDxmlEncode2.AddElem("from_name", fromName, sb);
             LLSDxmlEncode2.AddElem("timestamp", timeStamp, sb);
-            LLSDxmlEncode2.AddElem("offline", (offline ? 1 : 0), sb);
+            LLSDxmlEncode2.AddElem("offline", offline ? 1 : 0, sb);
             LLSDxmlEncode2.AddElem("parent_estate_id", parentEstateID, sb);
             LLSDxmlEncode2.AddElem("ttl", (int)ttl, sb);
             LLSDxmlEncode2.AddElem("from_id", fromAgent, sb);

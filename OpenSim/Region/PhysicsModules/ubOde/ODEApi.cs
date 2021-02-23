@@ -177,12 +177,12 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         internal enum dSweepAndPruneAxis : int
         {
-            XYZ = ((0)|(1<<2)|(2<<4)),
-            XZY = ((0)|(2<<2)|(1<<4)),
-            YXZ = ((1)|(0<<2)|(2<<4)),
-            YZX = ((1)|(2<<2)|(0<<4)),
-            ZXY = ((2)|(0<<2)|(1<<4)),
-            ZYX = ((2)|(1<<2)|(0<<4))
+            XYZ = 0|(1<<2)|(2<<4),
+            XZY = 0|(2<<2)|(1<<4),
+            YXZ = 1|(0<<2)|(2<<4),
+            YZX = 1|(2<<2)|(0<<4),
+            ZXY = 2|(0<<2)|(1<<4),
+            ZYX = 2|(1<<2)|(0<<4)
         }
 
         #endregion
@@ -299,11 +299,11 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 M02 = m02;  M12 = m12;  M22 = m22;  _m32 = 0.0f;
             }
             internal dReal M00, M10, M20;
-            private dReal _m30;
+            private readonly dReal _m30;
             internal dReal M01, M11, M21;
-            private dReal _m31;
+            private readonly dReal _m31;
             internal dReal M02, M12, M22;
-            private dReal _m32;
+            private readonly dReal _m32;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -358,7 +358,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 X = x;  Y = y;  Z = z;  _w = 0.0f;
             }
             internal dReal X, Y, Z;
-            private dReal _w;
+            private readonly dReal _w;
         }
 
 
@@ -469,7 +469,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Vector3* BodyGetAngularVelUnsafe(IntPtr body);
         internal static Vector3 BodyGetAngularVel(IntPtr body)
         {
-            unsafe { return *(BodyGetAngularVelUnsafe(body)); }
+            unsafe { return *BodyGetAngularVelUnsafe(body); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dBodyGetData"), SuppressUnmanagedCodeSecurity]
@@ -485,7 +485,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Vector3* BodyGetForceUnsafe(IntPtr body);
         internal static Vector3 BodyGetForce(IntPtr body)
         {
-            unsafe { return *(BodyGetForceUnsafe(body)); }
+            unsafe { return *BodyGetForceUnsafe(body); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dBodyGetGravityMode"), SuppressUnmanagedCodeSecurity]
@@ -501,7 +501,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Vector3* BodyGetLinearVelUnsafe(IntPtr body);
         internal static Vector3 BodyGetLinearVel(IntPtr body)
         {
-            unsafe { return *(BodyGetLinearVelUnsafe(body)); }
+            unsafe { return *BodyGetLinearVelUnsafe(body); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dBodyGetMass"), SuppressUnmanagedCodeSecurity]
@@ -517,7 +517,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Vector3* BodyGetPositionUnsafe(IntPtr body);
         internal static Vector3 BodyGetPosition(IntPtr body)
         {
-            unsafe { return *(BodyGetPositionUnsafe(body)); }
+            unsafe { return *BodyGetPositionUnsafe(body); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dBodyGetPosRelPoint"), SuppressUnmanagedCodeSecurity]
@@ -527,7 +527,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Quaternion* BodyGetQuaternionUnsafe(IntPtr body);
         internal static Quaternion BodyGetQuaternion(IntPtr body)
         {
-            unsafe { return *(BodyGetQuaternionUnsafe(body)); }
+            unsafe { return *BodyGetQuaternionUnsafe(body); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dBodyGetRelPointPos"), SuppressUnmanagedCodeSecurity]
@@ -540,14 +540,14 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Matrix3* BodyGetRotationUnsafe(IntPtr body);
         internal static Matrix3 BodyGetRotation(IntPtr body)
         {
-            unsafe { return *(BodyGetRotationUnsafe(body)); }
+            unsafe { return *BodyGetRotationUnsafe(body); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dBodyGetTorque"), SuppressUnmanagedCodeSecurity]
         internal extern unsafe static Vector3* BodyGetTorqueUnsafe(IntPtr body);
         internal static Vector3 BodyGetTorque(IntPtr body)
         {
-            unsafe { return *(BodyGetTorqueUnsafe(body)); }
+            unsafe { return *BodyGetTorqueUnsafe(body); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dBodyGetWorld"), SuppressUnmanagedCodeSecurity]
@@ -900,21 +900,21 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Vector3* GeomGetOffsetPositionUnsafe(IntPtr geom);
         internal static Vector3 GeomGetOffsetPosition(IntPtr geom)
         {
-            unsafe { return *(GeomGetOffsetPositionUnsafe(geom)); }
+            unsafe { return *GeomGetOffsetPositionUnsafe(geom); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dGeomGetOffsetRotation"), SuppressUnmanagedCodeSecurity]
         internal extern unsafe static Matrix3* GeomGetOffsetRotationUnsafe(IntPtr geom);
         internal static Matrix3 GeomGetOffsetRotation(IntPtr geom)
         {
-            unsafe { return *(GeomGetOffsetRotationUnsafe(geom)); }
+            unsafe { return *GeomGetOffsetRotationUnsafe(geom); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dGeomGetPosition"), SuppressUnmanagedCodeSecurity]
         internal extern unsafe static Vector3* GeomGetPositionUnsafe(IntPtr geom);
         internal static Vector3 GeomGetPosition(IntPtr geom)
         {
-            unsafe { return *(GeomGetPositionUnsafe(geom)); }
+            unsafe { return *GeomGetPositionUnsafe(geom); }
         }
         internal static OMV.Vector3 GeomGetPositionOMV(IntPtr geom)
         {
@@ -938,7 +938,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Matrix3* GeomGetRotationUnsafe(IntPtr geom);
         internal static Matrix3 GeomGetRotation(IntPtr geom)
         {
-            unsafe { return *(GeomGetRotationUnsafe(geom)); }
+            unsafe { return *GeomGetRotationUnsafe(geom); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dGeomGetSpace"), SuppressUnmanagedCodeSecurity]
@@ -1276,7 +1276,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static Matrix4* GeomTriMeshGetLastTransformUnsafe(IntPtr geom);
         internal static Matrix4 GeomTriMeshGetLastTransform(IntPtr geom)
         {
-            unsafe { return *(GeomTriMeshGetLastTransformUnsafe(geom)); }
+            unsafe { return *GeomTriMeshGetLastTransformUnsafe(geom); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dGeomTriMeshGetPoint"), SuppressUnmanagedCodeSecurity]
@@ -1448,7 +1448,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal extern unsafe static JointFeedback* JointGetFeedbackUnsafe(IntPtr j);
         internal static JointFeedback JointGetFeedback(IntPtr j)
         {
-            unsafe { return *(JointGetFeedbackUnsafe(j)); }
+            unsafe { return *JointGetFeedbackUnsafe(j); }
         }
 
         [DllImport("ode", CallingConvention = CallingConvention.Cdecl, EntryPoint = "dJointGetHingeAnchor"), SuppressUnmanagedCodeSecurity]

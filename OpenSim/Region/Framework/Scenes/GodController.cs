@@ -40,8 +40,8 @@ namespace OpenSim.Region.Framework.Scenes
             RegionOwner = 220       // region owner implicit god level should be >= than estate
         }
 
-        ScenePresence m_scenePresence;
-        Scene m_scene;
+        readonly ScenePresence m_scenePresence;
+        readonly Scene m_scene;
         protected bool m_allowGridGods;
         protected bool m_forceGridGodsOnly;
         protected bool m_regionOwnerIsGod;
@@ -124,8 +124,8 @@ namespace OpenSim.Region.Framework.Scenes
                 m_godlevel = m_rightsGodLevel;
             }
 
-            m_scenePresence.IsGod = (m_godlevel >= 200);
-            m_scenePresence.IsViewerUIGod = (m_viewergodlevel >= 200);
+            m_scenePresence.IsGod = m_godlevel >= 200;
+            m_scenePresence.IsViewerUIGod = m_viewergodlevel >= 200;
         }
 
         // calculates god level at sp creation from local and grid user god rights
@@ -192,8 +192,8 @@ namespace OpenSim.Region.Framework.Scenes
                     m_godlevel = 0;
                 }
             }
-            m_scenePresence.IsGod = (m_godlevel >= 200);
-            m_scenePresence.IsViewerUIGod = (m_viewergodlevel >= 200);
+            m_scenePresence.IsGod = m_godlevel >= 200;
+            m_scenePresence.IsViewerUIGod = m_viewergodlevel >= 200;
         }
 
         public void SyncViewerState()

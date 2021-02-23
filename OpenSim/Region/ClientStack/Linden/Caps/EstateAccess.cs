@@ -212,7 +212,7 @@ namespace OpenSim.Region.ClientStack.Linden
                         if (ban.BanTime == 0)
                             LLSDxmlEncode2.AddElem("ban_date", "0000-00-00 00:00", sb);
                         else
-                            LLSDxmlEncode2.AddElem("ban_date", (Util.ToDateTime(ban.BanTime)).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture), sb);
+                            LLSDxmlEncode2.AddElem("ban_date", Util.ToDateTime(ban.BanTime).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture), sb);
                     LLSDxmlEncode2.AddEndMap(sb);
                 }
                 LLSDxmlEncode2.AddEndArray(sb);

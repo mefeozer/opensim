@@ -49,7 +49,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Combat.CombatModule
         /// <summary>
         /// Scenes by Region Handle
         /// </summary>
-        private Dictionary<ulong, Scene> m_scenel = new Dictionary<ulong, Scene>();
+        private readonly Dictionary<ulong, Scene> m_scenel = new Dictionary<ulong, Scene>();
 
         /// <summary>
         /// Startup

@@ -363,7 +363,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
             FriendInfo[] finfos = new FriendInfo[0];
             // Foreigner
-            AgentCircuitData agentClientCircuit = ((Scene)(client.Scene)).AuthenticateHandler.GetAgentCircuitData(client.CircuitCode);
+            AgentCircuitData agentClientCircuit = ((Scene)client.Scene).AuthenticateHandler.GetAgentCircuitData(client.CircuitCode);
             if (agentClientCircuit != null)
             {
                 // Note that this is calling a different interface than base; this one calls with a string param!
@@ -474,14 +474,14 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
             if (agentClient != null)
             {
-                agentClientCircuit = ((Scene)(agentClient.Scene)).AuthenticateHandler.GetAgentCircuitData(agentClient.CircuitCode);
+                agentClientCircuit = ((Scene)agentClient.Scene).AuthenticateHandler.GetAgentCircuitData(agentClient.CircuitCode);
                 agentUUI = Util.ProduceUserUniversalIdentifier(agentClientCircuit);
                 agentFriendService = agentClientCircuit.ServiceURLs["FriendsServerURI"].ToString();
                 RecacheFriends(agentClient);
             }
             if (friendClient != null)
             {
-                friendClientCircuit = ((Scene)(friendClient.Scene)).AuthenticateHandler.GetAgentCircuitData(friendClient.CircuitCode);
+                friendClientCircuit = ((Scene)friendClient.Scene).AuthenticateHandler.GetAgentCircuitData(friendClient.CircuitCode);
                 friendUUI = Util.ProduceUserUniversalIdentifier(friendClientCircuit);
                 friendFriendService = friendClientCircuit.ServiceURLs["FriendsServerURI"].ToString();
                 RecacheFriends(friendClient);
@@ -789,7 +789,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                     if (m_uMan.IsLocalGridUser(agentID))
                     {
                         IClientAPI agentClient = LocateClientObject(agentID);
-                        AgentCircuitData agentClientCircuit = ((Scene)(agentClient.Scene)).AuthenticateHandler.GetAgentCircuitData(agentClient.CircuitCode);
+                        AgentCircuitData agentClientCircuit = ((Scene)agentClient.Scene).AuthenticateHandler.GetAgentCircuitData(agentClient.CircuitCode);
                         string agentHomeService = string.Empty;
                         try
                         {

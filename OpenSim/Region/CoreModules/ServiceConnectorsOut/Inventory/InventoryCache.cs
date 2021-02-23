@@ -38,9 +38,9 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
     {
         private const int CACHE_EXPIRATION = 60000; // 1 minute
 
-        private static ExpiringCacheOS<UUID, InventoryFolderBase> m_RootFolders = new ExpiringCacheOS<UUID, InventoryFolderBase>();
-        private static ExpiringCacheOS<UUID, Dictionary<FolderType, InventoryFolderBase>> m_FolderTypes = new ExpiringCacheOS<UUID, Dictionary<FolderType, InventoryFolderBase>>();
-        private static ExpiringCacheOS<UUID, InventoryCollection> m_Inventories = new ExpiringCacheOS<UUID, InventoryCollection>();
+        private static readonly ExpiringCacheOS<UUID, InventoryFolderBase> m_RootFolders = new ExpiringCacheOS<UUID, InventoryFolderBase>();
+        private static readonly ExpiringCacheOS<UUID, Dictionary<FolderType, InventoryFolderBase>> m_FolderTypes = new ExpiringCacheOS<UUID, Dictionary<FolderType, InventoryFolderBase>>();
+        private static readonly ExpiringCacheOS<UUID, InventoryCollection> m_Inventories = new ExpiringCacheOS<UUID, InventoryCollection>();
 
         public void RemoveAll(UUID userID)
         {

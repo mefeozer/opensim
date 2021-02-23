@@ -44,7 +44,7 @@ namespace OpenSim.Server.Handlers.GridUser
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IMuteListService m_service;
+        private readonly IMuteListService m_service;
 
         public MuteListServerPostHandler(IMuteListService service, IServiceAuth auth) :
                 base("POST", "/mutelist", auth)

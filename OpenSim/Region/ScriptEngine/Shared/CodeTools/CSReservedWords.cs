@@ -39,7 +39,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
     /// </summary>
     internal class CSReservedWords
     {
-        private static List<string> reservedWords = new List<string>(new string[] {
+        private static readonly List<string> reservedWords = new List<string>(new string[] {
                                           "abstract","as",
                                           "base","bool","break","byte",
                                           "case","catch","char","checked","class","const","continue",
@@ -85,7 +85,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
             char first = word.ToCharArray(0,1)[0];
             if (first >= 'A' && first <= 'Z') return false;
 
-            return (reservedWords.BinarySearch(word) >= 0);
+            return reservedWords.BinarySearch(word) >= 0;
         }
     }
 }

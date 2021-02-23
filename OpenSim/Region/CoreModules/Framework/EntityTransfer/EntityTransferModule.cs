@@ -509,7 +509,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
             posZLimit += localHalfAVHeight + 0.1f;
 
-            if ((position.Z < posZLimit) && !(float.IsInfinity(posZLimit) || float.IsNaN(posZLimit)))
+            if (position.Z < posZLimit && !(float.IsInfinity(posZLimit) || float.IsNaN(posZLimit)))
             {
                 position.Z = posZLimit;
             }
@@ -581,8 +581,8 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 Util.RegionHandleToRegionLoc(regionHandle, out regX, out regY);
 
                 MapBlockData block = new MapBlockData();
-                block.X = (ushort)(regX);
-                block.Y = (ushort)(regY);
+                block.X = (ushort)regX;
+                block.Y = (ushort)regY;
                 block.Access = (byte)SimAccess.Down; // == not there
 
                 List<MapBlockData> blocks = new List<MapBlockData>();
@@ -1092,7 +1092,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
             List<ulong> childRegionsToClose = null;
             // HG needs a deeper change
-            bool localclose = (ctx.OutboundVersion < 0.7f || !sp.IsInLocalTransit);
+            bool localclose = ctx.OutboundVersion < 0.7f || !sp.IsInLocalTransit;
             if (localclose)
             {
                 childRegionsToClose = sp.GetChildAgentsToClose(destinationHandle, finalDestination.RegionSizeX, finalDestination.RegionSizeY);
@@ -1409,7 +1409,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 remoteClient.SendTeleportFailed("The teleport destination could not be found.");
                 return;
             }
-            ((Scene)(remoteClient.Scene)).RequestTeleportLocation(remoteClient, info.RegionHandle, lm.Position,
+            ((Scene)remoteClient.Scene).RequestTeleportLocation(remoteClient, info.RegionHandle, lm.Position,
                 Vector3.Zero, (uint)(Constants.TeleportFlags.SetLastToTarget | Constants.TeleportFlags.ViaLandmark));
         }
 
@@ -1445,7 +1445,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 }
             }
 
-            ScenePresence sp = ((Scene)(client.Scene)).GetScenePresence(id);
+            ScenePresence sp = ((Scene)client.Scene).GetScenePresence(id);
             if (sp == null || sp.IsDeleted || sp.IsChildAgent || sp.ControllingClient == null || !sp.ControllingClient.IsActive)
             {
                 if (notsame)
@@ -2509,7 +2509,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         //    contains that point. A conservitive estimate.
         private class NotFoundLocationCache
         {
-            private Dictionary<ulong, DateTime> m_notFoundLocations = new Dictionary<ulong, DateTime>();
+            private readonly Dictionary<ulong, DateTime> m_notFoundLocations = new Dictionary<ulong, DateTime>();
             public NotFoundLocationCache()
             {
             }
@@ -2567,7 +2567,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
         #endregion // NotFoundLocationCache class
         #region getregions
-        private NotFoundLocationCache m_notFoundLocationCache = new NotFoundLocationCache();
+        private readonly NotFoundLocationCache m_notFoundLocationCache = new NotFoundLocationCache();
 
         protected GridRegion GetRegionContainingWorldLocation(IGridService pGridService, UUID pScopeID, double px, double py)
         {

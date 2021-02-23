@@ -115,21 +115,21 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
         public void StartRow()
         {
-            m_curY = (m_curY == null) ? 0 : m_curY + 1;
+            m_curY = m_curY == null ? 0 : m_curY + 1;
             m_curX = null;
         }
 
         public void StartRegion()
         {
-            m_curX = (m_curX == null) ? 0 : m_curX + 1;
+            m_curX = m_curX == null ? 0 : m_curX + 1;
            // Note: this doesn't mean we have a real region in this location; this could just be a "hole"
         }
 
         public void SetRegionOriginalID(string id)
         {
             m_curRegion = new RegionInfo();
-            int x = (int)((m_curX == null) ? 0 : m_curX);
-            int y = (int)((m_curY == null) ? 0 : m_curY);
+            int x = (int)(m_curX == null ? 0 : m_curX);
+            int y = (int)(m_curY == null ? 0 : m_curY);
 
             m_curRegion.Location = new Point(x, y);
             m_curRegion.OriginalID = id;
@@ -218,7 +218,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             if (m_directory2region.TryGetValue(regionDirectory, out region))
             {
                 scene = region.Scene;
-                return (scene != null);
+                return scene != null;
             }
             else
             {

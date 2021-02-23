@@ -362,10 +362,10 @@ public class BSPrim : BSPhysObject
         float terrainHeight = PhysScene.TerrainManager.GetTerrainHeightAtXYZ(RawPosition);
         OMV.Vector3 upForce = OMV.Vector3.Zero;
         float approxSize = Math.Max(Size.X, Math.Max(Size.Y, Size.Z));
-        if ((RawPosition.Z + approxSize / 2f) < terrainHeight)
+        if (RawPosition.Z + approxSize / 2f < terrainHeight)
         {
             DetailLog("{0},BSPrim.PositionAdjustUnderGround,call,pos={1},terrain={2}", LocalID, RawPosition, terrainHeight);
-            float targetHeight = terrainHeight + (Size.Z / 2f);
+            float targetHeight = terrainHeight + Size.Z / 2f;
             // If the object is below ground it just has to be moved up because pushing will
             //     not get it through the terrain
             RawPosition = new OMV.Vector3(RawPosition.X, RawPosition.Y, targetHeight);
@@ -499,7 +499,7 @@ public class BSPrim : BSPhysObject
 
         if (!IsStatic)
         {
-            ret *= (1f - buoyancy);
+            ret *= 1f - buoyancy;
             ret *= GravModifier;
         }
 
@@ -648,7 +648,7 @@ public class BSPrim : BSPhysObject
         PhysScene.TaintedObject(LocalID, "BSPrim.SetVehicle", delegate ()
         {
             BSDynamics vehicleActor = GetVehicleActor(true /* createIfNone */);
-            if (vehicleActor != null && (pvdata is VehicleData) )
+            if (vehicleActor != null && pvdata is VehicleData )
             {
                 VehicleData vdata = (VehicleData)pvdata;
                 // vehicleActor.ProcessSetVehicle((VehicleData)vdata);
@@ -698,7 +698,7 @@ public class BSPrim : BSPhysObject
 
     // Allows the detection of collisions with inherently non-physical prims. see llVolumeDetect for more
     public override void SetVolumeDetect(int param) {
-        bool newValue = (param != 0);
+        bool newValue = param != 0;
         if (_isVolumeDetect != newValue)
         {
             _isVolumeDetect = newValue;
@@ -1345,14 +1345,14 @@ public class BSPrim : BSPhysObject
 
                             case HollowShape.Triangle:
 
-                                hollowVolume *= (0.5f * .5f);
+                                hollowVolume *= 0.5f * .5f;
                                 break;
 
                             default:
                                 hollowVolume = 0;
                                 break;
                             }
-                        volume *= (1.0f - hollowVolume);
+                        volume *= 1.0f - hollowVolume;
                         }
                     }
 
@@ -1385,7 +1385,7 @@ public class BSPrim : BSPhysObject
                                 hollowVolume = 0;
                                 break;
                             }
-                        volume *= (1.0f - hollowVolume);
+                        volume *= 1.0f - hollowVolume;
                         }
                     }
 
@@ -1417,7 +1417,7 @@ public class BSPrim : BSPhysObject
                                 hollowVolume = 0;
                                 break;
                             }
-                        volume *= (1.0f - hollowVolume);
+                        volume *= 1.0f - hollowVolume;
                         }
                     }
 
@@ -1425,7 +1425,7 @@ public class BSPrim : BSPhysObject
                     {
                     volume *= 0.61685027506808491367715568749226e-2f * (float)(200 - BaseShape.PathScaleX);
                     tmp = 1.0f - .02f * (float)(200 - BaseShape.PathScaleY);
-                    volume *= (1.0f - tmp * tmp);
+                    volume *= 1.0f - tmp * tmp;
 
                     if (hollowAmount > 0.0)
                         {
@@ -1451,7 +1451,7 @@ public class BSPrim : BSPhysObject
                                 hollowVolume = 0;
                                 break;
                             }
-                        volume *= (1.0f - hollowVolume);
+                        volume *= 1.0f - hollowVolume;
                         }
                     }
                 break;
@@ -1495,7 +1495,7 @@ public class BSPrim : BSPhysObject
                                 hollowVolume = 0;
                                 break;
                             }
-                        volume *= (1.0f - hollowVolume);
+                        volume *= 1.0f - hollowVolume;
                         }
                     }
                 else if (BaseShape.PathCurve == (byte)Extrusion.Curve1)
@@ -1503,7 +1503,7 @@ public class BSPrim : BSPhysObject
                     volume *= 0.32475953f;
                     volume *= 0.01f * (float)(200 - BaseShape.PathScaleX);
                     tmp = 1.0f - .02f * (float)(200 - BaseShape.PathScaleY);
-                    volume *= (1.0f - tmp * tmp);
+                    volume *= 1.0f - tmp * tmp;
 
                     if (hollowAmount > 0.0)
                         {
@@ -1530,7 +1530,7 @@ public class BSPrim : BSPhysObject
                                 hollowVolume = 0;
                                 break;
                             }
-                        volume *= (1.0f - hollowVolume);
+                        volume *= 1.0f - hollowVolume;
                         }
                     }
                     break;
@@ -1577,16 +1577,16 @@ public class BSPrim : BSPhysObject
             }
 
 
-        volume *= (taperX1 * taperY1 + 0.5f * (taperX1 * taperY + taperX * taperY1) + 0.3333333333f * taperX * taperY);
+        volume *= taperX1 * taperY1 + 0.5f * (taperX1 * taperY + taperX * taperY1) + 0.3333333333f * taperX * taperY;
 
         pathBegin = (float)BaseShape.PathBegin * 2.0e-5f;
         pathEnd = 1.0f - (float)BaseShape.PathEnd * 2.0e-5f;
-        volume *= (pathEnd - pathBegin);
+        volume *= pathEnd - pathBegin;
 
         // this is crude aproximation
         profileBegin = (float)BaseShape.ProfileBegin * 2.0e-5f;
         profileEnd = 1.0f - (float)BaseShape.ProfileEnd * 2.0e-5f;
-        volume *= (profileEnd - profileBegin);
+        volume *= profileEnd - profileBegin;
 
         returnMass = Density * BSParam.DensityScaleFactor * volume;
 

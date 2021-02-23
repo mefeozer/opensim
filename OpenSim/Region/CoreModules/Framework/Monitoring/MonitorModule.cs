@@ -396,7 +396,7 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
             m_log.Error("[Monitor] " + reporter.Name + " for " + m_scene.RegionInfo.RegionName + " reports " + reason + " (Fatal: " + fatal + ")");
         }
 
-        private List<Stat> registeredStats = new List<Stat>();
+        private readonly List<Stat> registeredStats = new List<Stat>();
         private void MakeStat(string pName, string pUnitName, Action<Stat> act)
         {
             Stat tempStat = new Stat(pName, pName, pName, pUnitName, "scene", m_scene.RegionInfo.RegionName, StatType.Pull, act, StatVerbosity.Info);

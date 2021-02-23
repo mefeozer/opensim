@@ -386,7 +386,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                     partPermitted = false;
 
                 // If the user is the Creator of the object then it can always be included in the OAR
-                bool creator = (obj.CreatorID.Guid == user.Guid);
+                bool creator = obj.CreatorID.Guid == user.Guid;
                 if (creator)
                     partPermitted = true;
 

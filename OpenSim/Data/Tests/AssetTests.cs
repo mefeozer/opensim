@@ -67,7 +67,7 @@ namespace OpenSim.Data.Tests
 
         public byte[] data1 = new byte[100];
 
-        PropertyScrambler<AssetBase> scrambler = new PropertyScrambler<AssetBase>()
+        readonly PropertyScrambler<AssetBase> scrambler = new PropertyScrambler<AssetBase>()
                 .DontScramble(x => x.ID)
                 .DontScramble(x => x.Type)
                 .DontScramble(x => x.FullID)

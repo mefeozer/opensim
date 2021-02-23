@@ -32,7 +32,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     public sealed class BSTerrainHeightmap : BSTerrainPhys
 {
-    static string LogHeader = "[BULLETSIM TERRAIN HEIGHTMAP]";
+    static readonly string LogHeader = "[BULLETSIM TERRAIN HEIGHTMAP]";
 
     BulletHMapInfo m_mapInfo = null;
 
@@ -89,9 +89,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         // The terrain object initial position is at the center of the object
         Vector3 centerPos;
-        centerPos.X = m_mapInfo.minCoords.X + (m_mapInfo.sizeX / 2f);
-        centerPos.Y = m_mapInfo.minCoords.Y + (m_mapInfo.sizeY / 2f);
-        centerPos.Z = m_mapInfo.minZ + ((m_mapInfo.maxZ - m_mapInfo.minZ) / 2f);
+        centerPos.X = m_mapInfo.minCoords.X + m_mapInfo.sizeX / 2f;
+        centerPos.Y = m_mapInfo.minCoords.Y + m_mapInfo.sizeY / 2f;
+        centerPos.Z = m_mapInfo.minZ + (m_mapInfo.maxZ - m_mapInfo.minZ) / 2f;
 
         m_mapInfo.terrainBody = m_physicsScene.PE.CreateBodyWithDefaultMotionState(m_mapInfo.terrainShape,
                                 m_mapInfo.ID, centerPos, Quaternion.Identity);
@@ -154,7 +154,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             float Xrise = (mapHeight4 - mapHeight3) * diffX;
             float Yrise = (mapHeight2 - mapHeight1) * diffY;
 
-            ret = mapHeight1 + ((Xrise + Yrise) / 2f);
+            ret = mapHeight1 + (Xrise + Yrise) / 2f;
             // m_physicsScene.DetailLog("{0},BSTerrainHeightMap,GetTerrainHeightAtXYZ,pos={1},{2}/{3}/{4}/{5},ret={6}",
             //         BSScene.DetailLogZero, pos, mapHeight1, mapHeight2, mapHeight3, mapHeight4, ret);
         }

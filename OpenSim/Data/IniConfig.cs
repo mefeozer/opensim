@@ -54,7 +54,7 @@ namespace OpenSim.Data
                 RegexOptions.CultureInvariant);
         }
 
-        private static Regex _iniKeyValuePatternRegex;
+        private static readonly Regex _iniKeyValuePatternRegex;
 
         public IniFile(string iniFileName)
         {
@@ -93,6 +93,6 @@ namespace OpenSim.Data
             get { return _iniFileName; }
         }
 
-        private string _iniFileName;
+        private readonly string _iniFileName;
     }
 }

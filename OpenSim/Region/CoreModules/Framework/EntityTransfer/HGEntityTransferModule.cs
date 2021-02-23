@@ -459,7 +459,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 }
             }
 
-            ScenePresence sp = ((Scene)(client.Scene)).GetScenePresence(id);
+            ScenePresence sp = ((Scene)client.Scene).GetScenePresence(id);
             if (sp == null || sp.IsDeleted || sp.IsChildAgent || sp.ControllingClient == null || !sp.ControllingClient.IsActive)
             {
                 if (notsame)
@@ -541,7 +541,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         public override void RequestTeleportLandmark(IClientAPI remoteClient, AssetLandmark lm)
         {
             m_log.DebugFormat("[HG ENTITY TRANSFER MODULE]: Teleporting agent via landmark to {0} region {1} position {2}",
-                (string.IsNullOrEmpty(lm.Gatekeeper)) ? "local" : lm.Gatekeeper, lm.RegionID, lm.Position);
+                string.IsNullOrEmpty(lm.Gatekeeper) ? "local" : lm.Gatekeeper, lm.RegionID, lm.Position);
 
             if (string.IsNullOrEmpty(lm.Gatekeeper))
             {
@@ -776,7 +776,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 return;
             }
 
-            AgentCircuitData aCircuit = ((Scene)(obj.Scene)).AuthenticateHandler.GetAgentCircuitData(obj.CircuitCode);
+            AgentCircuitData aCircuit = ((Scene)obj.Scene).AuthenticateHandler.GetAgentCircuitData(obj.CircuitCode);
             if (aCircuit != null && aCircuit.ServiceURLs != null && aCircuit.ServiceURLs.ContainsKey("HomeURI"))
             {
                 string url = aCircuit.ServiceURLs["HomeURI"].ToString();

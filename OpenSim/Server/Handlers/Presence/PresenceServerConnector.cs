@@ -37,8 +37,8 @@ namespace OpenSim.Server.Handlers.Presence
 {
     public class PresenceServiceConnector : ServiceConnector
     {
-        private IPresenceService m_PresenceService;
-        private string m_ConfigName = "PresenceService";
+        private readonly IPresenceService m_PresenceService;
+        private readonly string m_ConfigName = "PresenceService";
 
         public PresenceServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

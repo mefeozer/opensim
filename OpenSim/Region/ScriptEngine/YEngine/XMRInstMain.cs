@@ -94,7 +94,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         // For a given m_Item.AssetID, do we have the compiled object code and where
         // is it?
         public static object m_CompileLock = new object();
-        private static Dictionary<string, ScriptObjCode> m_CompiledScriptObjCode = new Dictionary<string, ScriptObjCode>();
+        private static readonly Dictionary<string, ScriptObjCode> m_CompiledScriptObjCode = new Dictionary<string, ScriptObjCode>();
 
         public XMRInstState m_IState;
 
@@ -145,10 +145,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public LinkedList<EventParams> m_EventQueue = new LinkedList<EventParams>();
 
         // number of events of each code currently in m_EventQueue.
-        private int[] m_EventCounts = new int[(int)ScriptEventCode.Size];
+        private readonly int[] m_EventCounts = new int[(int)ScriptEventCode.Size];
 
         // locked whilst running on the microthread stack (or about to run on it or just ran on it)
-        private object m_RunLock = new object();
+        private readonly object m_RunLock = new object();
 
         // script won't step while > 0.  bus-atomic updates only.
         private int m_SuspendCount = 0;
@@ -198,7 +198,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         // for it instead of spinning busy.
         // It's born ready, but will be reset when the detach is posted.
         // It will then be set again on suspend/completion
-        private ManualResetEvent m_DetachReady = new ManualResetEvent(true);
+        private readonly ManualResetEvent m_DetachReady = new ManualResetEvent(true);
 
         // llmineventdelay support
         double m_minEventDelay = 0.0;

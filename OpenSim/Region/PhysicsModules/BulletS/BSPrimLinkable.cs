@@ -220,7 +220,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         get
         {
-            return (SomeCollisionSimulationStep == PhysScene.SimulationStep) || base.IsColliding;
+            return SomeCollisionSimulationStep == PhysScene.SimulationStep || base.IsColliding;
         }
         set
         {

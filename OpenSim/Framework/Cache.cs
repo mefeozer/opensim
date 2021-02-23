@@ -201,21 +201,21 @@ namespace OpenSim.Framework
         /// <summary>
         /// Must only be accessed under lock.
         /// </summary>
-        private List<CacheItemBase> m_Index = new List<CacheItemBase>();
+        private readonly List<CacheItemBase> m_Index = new List<CacheItemBase>();
 
         /// <summary>
         /// Must only be accessed under m_Index lock.
         /// </summary>
-        private Dictionary<string, CacheItemBase> m_Lookup =
+        private readonly Dictionary<string, CacheItemBase> m_Lookup =
             new Dictionary<string, CacheItemBase>();
 
-        private CacheStrategy m_Strategy;
-        private CacheMedium m_Medium;
-        private CacheFlags m_Flags = 0;
+        private readonly CacheStrategy m_Strategy;
+        private readonly CacheMedium m_Medium;
+        private readonly CacheFlags m_Flags = 0;
         private int m_Size = 1024;
         private TimeSpan m_DefaultTTL = new TimeSpan(0);
         private DateTime m_nextExpire;
-        private TimeSpan m_expiresTime = new TimeSpan(0,0,30);
+        private readonly TimeSpan m_expiresTime = new TimeSpan(0,0,30);
         public ExpireDelegate OnExpire;
 
         // Comparison interfaces
@@ -231,7 +231,7 @@ namespace OpenSim.Framework
                 if (b == null)
                     return 1;
 
-                return(a.lastUsed.CompareTo(b.lastUsed));
+                return a.lastUsed.CompareTo(b.lastUsed);
             }
         }
         // same as above, reverse order
@@ -246,7 +246,7 @@ namespace OpenSim.Framework
                 if (b == null)
                     return 1;
 
-                return(b.lastUsed.CompareTo(a.lastUsed));
+                return b.lastUsed.CompareTo(a.lastUsed);
             }
         }
 
@@ -495,7 +495,7 @@ namespace OpenSim.Framework
         /// <param name='getting'></param>
         protected virtual void Expire(bool getting)
         {
-            if (getting && (m_Strategy == CacheStrategy.Aggressive))
+            if (getting && m_Strategy == CacheStrategy.Aggressive)
                 return;
 
             DateTime now = DateTime.UtcNow;

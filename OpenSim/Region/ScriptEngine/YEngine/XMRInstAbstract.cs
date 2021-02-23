@@ -58,7 +58,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public XMRSDTypeClObj[] iarSDTClObjs;
         public Delegate[][] iarSDTIntfObjs;
 
-        private XMRInstAbstract instance;
+        private readonly XMRInstAbstract instance;
         public int arraysHeapUse;
 
         private static readonly XMR_Array[] noArrays = new XMR_Array[0];
@@ -126,17 +126,17 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             arraysHeapUse = instance.UpdateArraysHeapUse(arraysHeapUse, newuse);
 
-            iarArrays = (ars.iasArrays > 0) ? new XMR_Array[ars.iasArrays] : noArrays;
-            iarChars = (ars.iasChars > 0) ? new char[ars.iasChars] : noChars;
-            iarFloats = (ars.iasFloats > 0) ? new double[ars.iasFloats] : noFloats;
-            iarIntegers = (ars.iasIntegers > 0) ? new int[ars.iasIntegers] : noIntegers;
-            iarLists = (ars.iasLists > 0) ? new LSL_List[ars.iasLists] : noLists;
-            iarObjects = (ars.iasObjects > 0) ? new object[ars.iasObjects] : noObjects;
-            iarRotations = (ars.iasRotations > 0) ? new LSL_Rotation[ars.iasRotations] : noRotations;
-            iarStrings = (ars.iasStrings > 0) ? new string[ars.iasStrings] : noStrings;
-            iarVectors = (ars.iasVectors > 0) ? new LSL_Vector[ars.iasVectors] : noVectors;
-            iarSDTClObjs = (ars.iasSDTClObjs > 0) ? new XMRSDTypeClObj[ars.iasSDTClObjs] : noSDTClObjs;
-            iarSDTIntfObjs = (ars.iasSDTIntfObjs > 0) ? new Delegate[ars.iasSDTIntfObjs][] : noSDTIntfObjs;
+            iarArrays = ars.iasArrays > 0 ? new XMR_Array[ars.iasArrays] : noArrays;
+            iarChars = ars.iasChars > 0 ? new char[ars.iasChars] : noChars;
+            iarFloats = ars.iasFloats > 0 ? new double[ars.iasFloats] : noFloats;
+            iarIntegers = ars.iasIntegers > 0 ? new int[ars.iasIntegers] : noIntegers;
+            iarLists = ars.iasLists > 0 ? new LSL_List[ars.iasLists] : noLists;
+            iarObjects = ars.iasObjects > 0 ? new object[ars.iasObjects] : noObjects;
+            iarRotations = ars.iasRotations > 0 ? new LSL_Rotation[ars.iasRotations] : noRotations;
+            iarStrings = ars.iasStrings > 0 ? new string[ars.iasStrings] : noStrings;
+            iarVectors = ars.iasVectors > 0 ? new LSL_Vector[ars.iasVectors] : noVectors;
+            iarSDTClObjs = ars.iasSDTClObjs > 0 ? new XMRSDTypeClObj[ars.iasSDTClObjs] : noSDTClObjs;
+            iarSDTIntfObjs = ars.iasSDTIntfObjs > 0 ? new Delegate[ars.iasSDTIntfObjs][] : noSDTIntfObjs;
         }
 
         /**
@@ -506,7 +506,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             // CallMode_NORMAL:  run event handler from the beginning normally
             // CallMode_RESTORE: restore event handler stack from stackFrames
-            callMode = (stackFrames == null) ? XMRInstAbstract.CallMode_NORMAL :
+            callMode = stackFrames == null ? XMRInstAbstract.CallMode_NORMAL :
                                                XMRInstAbstract.CallMode_RESTORE;
 
             while(true)
@@ -927,7 +927,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 Type ot = thrown.GetType();
                 Type tt = sdType.GetSysType();
-                return (ot == tt) ? thrown : null;
+                return ot == tt ? thrown : null;
             }
 
             // If it is a script-defined class object, make sure it is an instance of the expected class.
@@ -1025,9 +1025,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // And there must be a '[' in each meaning that it is a script-defined array type.
             int i = srctypename.IndexOf('[');
             int j = dsttypename.IndexOf('[');
-            if((i < 0) || (j < 0))
+            if(i < 0 || j < 0)
                 throw new InvalidCastException("non-array passed: " + srctypename + " and/or " + dsttypename);
-            if((i != j) || !srctypename.StartsWith(dsttypename.Substring(0, j)))
+            if(i != j || !srctypename.StartsWith(dsttypename.Substring(0, j)))
                 throw new ArrayTypeMismatchException(srctypename + " vs " + dsttypename);
 
             // The number of brackets must match exactly.
@@ -1275,7 +1275,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 int kwin = stline.IndexOf(" in ");
                 int br0x = stline.IndexOf(" [0x");
                 int pastCloseParen = stline.Length;
-                if((kwin >= 0) && (br0x >= 0))
+                if(kwin >= 0 && br0x >= 0)
                     pastCloseParen = Math.Min(kwin, br0x);
                 else if(kwin >= 0)
                     pastCloseParen = kwin;
@@ -1313,7 +1313,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     for(int i = begfn; i < stline.Length; i++)
                     {
                         char c = stline[i];
-                        if((c == '/') || (c == '\\'))
+                        if(c == '/' || c == '\\')
                             slash = i + 1;
                     }
                     stline = stline.Substring(0, begfn) + stline.Substring(slash);
@@ -1695,7 +1695,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private static string SysType2String(Type type)
         {
-            if(type.IsArray && (type.GetArrayRank() == 1))
+            if(type.IsArray && type.GetArrayRank() == 1)
             {
                 string str = KnownSysType2String(type.GetElementType());
                 if(str != null)

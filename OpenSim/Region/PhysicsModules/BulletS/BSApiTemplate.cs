@@ -53,9 +53,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 [StructLayout(LayoutKind.Sequential)]
 public struct ConvexHull
 {
-    Vector3 Offset;
-    int VertexCount;
-    Vector3[] Vertices;
+    readonly Vector3 Offset;
+    readonly int VertexCount;
+    readonly Vector3[] Vertices;
 }
 public enum BSPhysicsShapeType
 {
@@ -126,7 +126,7 @@ public struct SweepHit
         float sum = Fraction
                 + Normal.X + Normal.Y + Normal.Z
                 + Point.X + Point.Y + Point.Z;
-        return (sum != 0) || (ID != 0);
+        return sum != 0 || ID != 0;
     }
 }
 [StructLayout(LayoutKind.Sequential)]
@@ -140,7 +140,7 @@ public struct RaycastHit
     public bool hasHit()
     {
         float sum = Normal.X + Normal.Y + Normal.Z + Point.X + Point.Y + Point.Z;
-        return (sum != 0);
+        return sum != 0;
     }
 }
 [StructLayout(LayoutKind.Sequential)]

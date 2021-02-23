@@ -45,7 +45,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// </summary>
         private readonly Dictionary<PacketType, Stack<Packet>> pool = new Dictionary<PacketType, Stack<Packet>>();
 
-        private static Dictionary<Type, Stack<object>> DataBlocks = new Dictionary<Type, Stack<object>>();
+        private static readonly Dictionary<Type, Stack<object>> DataBlocks = new Dictionary<Type, Stack<object>>();
 
         public static PacketPool Instance
         {
@@ -121,7 +121,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             lock (pool)
             {
-                if (!pool.ContainsKey(type) || pool[type] == null || (pool[type]).Count == 0)
+                if (!pool.ContainsKey(type) || pool[type] == null || pool[type].Count == 0)
                 {
 //                    m_log.DebugFormat("[PACKETPOOL]: Building {0} packet", type);
 
@@ -238,7 +238,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     pool[type] = new Stack<Packet>();
                 }
 
-                if ((pool[type]).Count < 50)
+                if (pool[type].Count < 50)
                 {
 //                  m_log.DebugFormat("[PACKETPOOL]: Pushing {0} packet", type);
                     pool[type].Push(packet);

@@ -36,7 +36,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         {
             get
             {
-                return (jointID != IntPtr.Zero);
+                return jointID != IntPtr.Zero;
             }
         }
         public IntPtr jointID;

@@ -51,52 +51,52 @@ namespace OpenSim.Region.ScriptEngine.Yengine
     {
         private delegate void CastDelegate(IScriptCodeGen scg, Token errorAt);
 
-        private static ConstructorInfo floatConstructorStringInfo = typeof(LSL_Float).GetConstructor(new Type[] { typeof(string) });
-        private static ConstructorInfo integerConstructorStringInfo = typeof(LSL_Integer).GetConstructor(new Type[] { typeof(string) });
-        private static ConstructorInfo lslFloatConstructorInfo = typeof(LSL_Float).GetConstructor(new Type[] { typeof(double) });
-        private static ConstructorInfo lslIntegerConstructorInfo = typeof(LSL_Integer).GetConstructor(new Type[] { typeof(int) });
-        private static ConstructorInfo lslStringConstructorInfo = typeof(LSL_String).GetConstructor(new Type[] { typeof(string) });
-        private static ConstructorInfo rotationConstrucorStringInfo = typeof(LSL_Rotation).GetConstructor(new Type[] { typeof(string) });
-        private static ConstructorInfo vectorConstrucorStringInfo = typeof(LSL_Vector).GetConstructor(new Type[] { typeof(string) });
-        private static FieldInfo lslFloatValueFieldInfo = typeof(LSL_Float).GetField("value");
-        private static FieldInfo lslIntegerValueFieldInfo = typeof(LSL_Integer).GetField("value");
-        private static FieldInfo lslStringValueFieldInfo = typeof(LSL_String).GetField("m_string");
-        private static FieldInfo sdtcITableFieldInfo = typeof(XMRSDTypeClObj).GetField("sdtcITable");
-        private static MethodInfo boolToListMethodInfo = typeof(TypeCast).GetMethod("BoolToList", new Type[] { typeof(bool) });
-        private static MethodInfo boolToStringMethodInfo = typeof(TypeCast).GetMethod("BoolToString", new Type[] { typeof(bool) });
-        private static MethodInfo charToStringMethodInfo = typeof(TypeCast).GetMethod("CharToString", new Type[] { typeof(char) });
-        private static MethodInfo excToStringMethodInfo = typeof(TypeCast).GetMethod("ExceptionToString", new Type[] { typeof(Exception), typeof(XMRInstAbstract) });
-        private static MethodInfo floatToStringMethodInfo = typeof(TypeCast).GetMethod("FloatToString", new Type[] { typeof(double) });
-        private static MethodInfo intToStringMethodInfo = typeof(TypeCast).GetMethod("IntegerToString", new Type[] { typeof(int) });
-        private static MethodInfo keyToBoolMethodInfo = typeof(TypeCast).GetMethod("KeyToBool", new Type[] { typeof(string) });
-        private static MethodInfo listToBoolMethodInfo = typeof(TypeCast).GetMethod("ListToBool", new Type[] { typeof(LSL_List) });
-        private static MethodInfo listToStringMethodInfo = typeof(TypeCast).GetMethod("ListToString", new Type[] { typeof(LSL_List) });
-        private static MethodInfo objectToFloatMethodInfo = typeof(TypeCast).GetMethod("ObjectToFloat", new Type[] { typeof(object) });
-        private static MethodInfo objectToIntegerMethodInfo = typeof(TypeCast).GetMethod("ObjectToInteger", new Type[] { typeof(object) });
-        private static MethodInfo objectToListMethodInfo = typeof(TypeCast).GetMethod("ObjectToList", new Type[] { typeof(object) });
-        private static MethodInfo objectToRotationMethodInfo = typeof(TypeCast).GetMethod("ObjectToRotation", new Type[] { typeof(object) });
-        private static MethodInfo objectToStringMethodInfo = typeof(TypeCast).GetMethod("ObjectToString", new Type[] { typeof(object) });
-        private static MethodInfo objectToVectorMethodInfo = typeof(TypeCast).GetMethod("ObjectToVector", new Type[] { typeof(object) });
-        private static MethodInfo rotationToBoolMethodInfo = typeof(TypeCast).GetMethod("RotationToBool", new Type[] { typeof(LSL_Rotation) });
-        private static MethodInfo rotationToStringMethodInfo = typeof(TypeCast).GetMethod("RotationToString", new Type[] { typeof(LSL_Rotation) });
-        private static MethodInfo stringToBoolMethodInfo = typeof(TypeCast).GetMethod("StringToBool", new Type[] { typeof(string) });
-        private static MethodInfo vectorToBoolMethodInfo = typeof(TypeCast).GetMethod("VectorToBool", new Type[] { typeof(LSL_Vector) });
-        private static MethodInfo vectorToStringMethodInfo = typeof(TypeCast).GetMethod("VectorToString", new Type[] { typeof(LSL_Vector) });
-        private static MethodInfo sdTypeClassCastClass2ClassMethodInfo = typeof(XMRSDTypeClObj).GetMethod("CastClass2Class", new Type[] { typeof(object), typeof(int) });
-        private static MethodInfo sdTypeClassCastIFace2ClassMethodInfo = typeof(XMRSDTypeClObj).GetMethod("CastIFace2Class", new Type[] { typeof(Delegate[]), typeof(int) });
-        private static MethodInfo sdTypeClassCastObj2IFaceMethodInfo = typeof(XMRSDTypeClObj).GetMethod("CastObj2IFace", new Type[] { typeof(object), typeof(string) });
-        private static MethodInfo charToListMethodInfo = typeof(TypeCast).GetMethod("CharToList", new Type[] { typeof(char) });
-        private static MethodInfo excToListMethodInfo = typeof(TypeCast).GetMethod("ExcToList", new Type[] { typeof(Exception) });
-        private static MethodInfo vectorToListMethodInfo = typeof(TypeCast).GetMethod("VectorToList", new Type[] { typeof(LSL_Vector) });
-        private static MethodInfo floatToListMethodInfo = typeof(TypeCast).GetMethod("FloatToList", new Type[] { typeof(double) });
-        private static MethodInfo integerToListMethodInfo = typeof(TypeCast).GetMethod("IntegerToList", new Type[] { typeof(int) });
-        private static MethodInfo rotationToListMethodInfo = typeof(TypeCast).GetMethod("RotationToList", new Type[] { typeof(LSL_Rotation) });
-        private static MethodInfo stringToListMethodInfo = typeof(TypeCast).GetMethod("StringToList", new Type[] { typeof(string) });
+        private static readonly ConstructorInfo floatConstructorStringInfo = typeof(LSL_Float).GetConstructor(new Type[] { typeof(string) });
+        private static readonly ConstructorInfo integerConstructorStringInfo = typeof(LSL_Integer).GetConstructor(new Type[] { typeof(string) });
+        private static readonly ConstructorInfo lslFloatConstructorInfo = typeof(LSL_Float).GetConstructor(new Type[] { typeof(double) });
+        private static readonly ConstructorInfo lslIntegerConstructorInfo = typeof(LSL_Integer).GetConstructor(new Type[] { typeof(int) });
+        private static readonly ConstructorInfo lslStringConstructorInfo = typeof(LSL_String).GetConstructor(new Type[] { typeof(string) });
+        private static readonly ConstructorInfo rotationConstrucorStringInfo = typeof(LSL_Rotation).GetConstructor(new Type[] { typeof(string) });
+        private static readonly ConstructorInfo vectorConstrucorStringInfo = typeof(LSL_Vector).GetConstructor(new Type[] { typeof(string) });
+        private static readonly FieldInfo lslFloatValueFieldInfo = typeof(LSL_Float).GetField("value");
+        private static readonly FieldInfo lslIntegerValueFieldInfo = typeof(LSL_Integer).GetField("value");
+        private static readonly FieldInfo lslStringValueFieldInfo = typeof(LSL_String).GetField("m_string");
+        private static readonly FieldInfo sdtcITableFieldInfo = typeof(XMRSDTypeClObj).GetField("sdtcITable");
+        private static readonly MethodInfo boolToListMethodInfo = typeof(TypeCast).GetMethod("BoolToList", new Type[] { typeof(bool) });
+        private static readonly MethodInfo boolToStringMethodInfo = typeof(TypeCast).GetMethod("BoolToString", new Type[] { typeof(bool) });
+        private static readonly MethodInfo charToStringMethodInfo = typeof(TypeCast).GetMethod("CharToString", new Type[] { typeof(char) });
+        private static readonly MethodInfo excToStringMethodInfo = typeof(TypeCast).GetMethod("ExceptionToString", new Type[] { typeof(Exception), typeof(XMRInstAbstract) });
+        private static readonly MethodInfo floatToStringMethodInfo = typeof(TypeCast).GetMethod("FloatToString", new Type[] { typeof(double) });
+        private static readonly MethodInfo intToStringMethodInfo = typeof(TypeCast).GetMethod("IntegerToString", new Type[] { typeof(int) });
+        private static readonly MethodInfo keyToBoolMethodInfo = typeof(TypeCast).GetMethod("KeyToBool", new Type[] { typeof(string) });
+        private static readonly MethodInfo listToBoolMethodInfo = typeof(TypeCast).GetMethod("ListToBool", new Type[] { typeof(LSL_List) });
+        private static readonly MethodInfo listToStringMethodInfo = typeof(TypeCast).GetMethod("ListToString", new Type[] { typeof(LSL_List) });
+        private static readonly MethodInfo objectToFloatMethodInfo = typeof(TypeCast).GetMethod("ObjectToFloat", new Type[] { typeof(object) });
+        private static readonly MethodInfo objectToIntegerMethodInfo = typeof(TypeCast).GetMethod("ObjectToInteger", new Type[] { typeof(object) });
+        private static readonly MethodInfo objectToListMethodInfo = typeof(TypeCast).GetMethod("ObjectToList", new Type[] { typeof(object) });
+        private static readonly MethodInfo objectToRotationMethodInfo = typeof(TypeCast).GetMethod("ObjectToRotation", new Type[] { typeof(object) });
+        private static readonly MethodInfo objectToStringMethodInfo = typeof(TypeCast).GetMethod("ObjectToString", new Type[] { typeof(object) });
+        private static readonly MethodInfo objectToVectorMethodInfo = typeof(TypeCast).GetMethod("ObjectToVector", new Type[] { typeof(object) });
+        private static readonly MethodInfo rotationToBoolMethodInfo = typeof(TypeCast).GetMethod("RotationToBool", new Type[] { typeof(LSL_Rotation) });
+        private static readonly MethodInfo rotationToStringMethodInfo = typeof(TypeCast).GetMethod("RotationToString", new Type[] { typeof(LSL_Rotation) });
+        private static readonly MethodInfo stringToBoolMethodInfo = typeof(TypeCast).GetMethod("StringToBool", new Type[] { typeof(string) });
+        private static readonly MethodInfo vectorToBoolMethodInfo = typeof(TypeCast).GetMethod("VectorToBool", new Type[] { typeof(LSL_Vector) });
+        private static readonly MethodInfo vectorToStringMethodInfo = typeof(TypeCast).GetMethod("VectorToString", new Type[] { typeof(LSL_Vector) });
+        private static readonly MethodInfo sdTypeClassCastClass2ClassMethodInfo = typeof(XMRSDTypeClObj).GetMethod("CastClass2Class", new Type[] { typeof(object), typeof(int) });
+        private static readonly MethodInfo sdTypeClassCastIFace2ClassMethodInfo = typeof(XMRSDTypeClObj).GetMethod("CastIFace2Class", new Type[] { typeof(Delegate[]), typeof(int) });
+        private static readonly MethodInfo sdTypeClassCastObj2IFaceMethodInfo = typeof(XMRSDTypeClObj).GetMethod("CastObj2IFace", new Type[] { typeof(object), typeof(string) });
+        private static readonly MethodInfo charToListMethodInfo = typeof(TypeCast).GetMethod("CharToList", new Type[] { typeof(char) });
+        private static readonly MethodInfo excToListMethodInfo = typeof(TypeCast).GetMethod("ExcToList", new Type[] { typeof(Exception) });
+        private static readonly MethodInfo vectorToListMethodInfo = typeof(TypeCast).GetMethod("VectorToList", new Type[] { typeof(LSL_Vector) });
+        private static readonly MethodInfo floatToListMethodInfo = typeof(TypeCast).GetMethod("FloatToList", new Type[] { typeof(double) });
+        private static readonly MethodInfo integerToListMethodInfo = typeof(TypeCast).GetMethod("IntegerToList", new Type[] { typeof(int) });
+        private static readonly MethodInfo rotationToListMethodInfo = typeof(TypeCast).GetMethod("RotationToList", new Type[] { typeof(LSL_Rotation) });
+        private static readonly MethodInfo stringToListMethodInfo = typeof(TypeCast).GetMethod("StringToList", new Type[] { typeof(string) });
 
         /*
          * List of all allowed type casts and how to perform the casting.
          */
-        private static Dictionary<string, CastDelegate> legalTypeCasts = CreateLegalTypeCasts();
+        private static readonly Dictionary<string, CastDelegate> legalTypeCasts = CreateLegalTypeCasts();
 
         /**
          * @brief create a dictionary of legal type casts.
@@ -304,7 +304,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             string newString = newType.ToString();
 
              // 'key' -> 'bool' is the only time we care about key being different than string.
-            if((oldString == "key") && (newString == "bool"))
+            if(oldString == "key" && newString == "bool")
             {
                 LSLUnwrap(scg, errorAt, oldType);
                 scg.ilGen.Emit(errorAt, OpCodes.Call, keyToBoolMethodInfo);
@@ -331,7 +331,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // Script-defined classes can be cast up and down the tree.
-            if((oldType is TokenTypeSDTypeClass) && (newType is TokenTypeSDTypeClass))
+            if(oldType is TokenTypeSDTypeClass && newType is TokenTypeSDTypeClass)
             {
                 TokenDeclSDTypeClass oldSDTC = ((TokenTypeSDTypeClass)oldType).decl;
                 TokenDeclSDTypeClass newSDTC = ((TokenTypeSDTypeClass)newType).decl;
@@ -362,7 +362,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // One script-defined interface type cannot be cast to another script-defined interface type, 
              // unless the old interface declares that it implements the new interface.  That proves that 
              // the underlying object, no matter what type, implements the new interface.
-            if((oldType is TokenTypeSDTypeInterface) && (newType is TokenTypeSDTypeInterface))
+            if(oldType is TokenTypeSDTypeInterface && newType is TokenTypeSDTypeInterface)
             {
                 TokenDeclSDTypeInterface oldDecl = ((TokenTypeSDTypeInterface)oldType).decl;
                 TokenDeclSDTypeInterface newDecl = ((TokenTypeSDTypeInterface)newType).decl;
@@ -376,7 +376,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // A script-defined class type can be implicitly cast to a script-defined interface type that it 
              // implements.  The result is an array of delegates that give the class's implementation of the 
              // various methods defined by the interface.
-            if((oldType is TokenTypeSDTypeClass) && (newType is TokenTypeSDTypeInterface))
+            if(oldType is TokenTypeSDTypeClass && newType is TokenTypeSDTypeInterface)
             {
                 TokenDeclSDTypeClass oldSDTC = ((TokenTypeSDTypeClass)oldType).decl;
                 int intfIndex;
@@ -393,7 +393,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // object and making sure it casts to the correct script-defined class type.
              //
              // But then only if the class type implements the interface type.
-            if((oldType is TokenTypeSDTypeInterface) && (newType is TokenTypeSDTypeClass))
+            if(oldType is TokenTypeSDTypeInterface && newType is TokenTypeSDTypeClass)
             {
                 TokenTypeSDTypeInterface oldSDTI = (TokenTypeSDTypeInterface)oldType;
                 TokenTypeSDTypeClass newSDTC = (TokenTypeSDTypeClass)newType;
@@ -408,13 +408,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // A script-defined interface type can be implicitly cast to object.
-            if((oldType is TokenTypeSDTypeInterface) && (newType is TokenTypeObject))
+            if(oldType is TokenTypeSDTypeInterface && newType is TokenTypeObject)
             {
                 return;
             }
 
              // An object can be explicitly cast to a script-defined interface.
-            if((oldType is TokenTypeObject) && (newType is TokenTypeSDTypeInterface))
+            if(oldType is TokenTypeObject && newType is TokenTypeSDTypeInterface)
             {
                 ExplCheck(scg, errorAt, explicitAllowed, oldString, newString);
                 scg.ilGen.Emit(errorAt, OpCodes.Ldstr, newString);
@@ -430,16 +430,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // Cast from undef to object or script-defined type is always allowed.
-            if((oldType is TokenTypeUndef) &&
-                ((newType is TokenTypeObject) ||
-                 (newType is TokenTypeSDTypeClass) ||
-                 (newType is TokenTypeSDTypeInterface)))
+            if(oldType is TokenTypeUndef &&
+                (newType is TokenTypeObject ||
+                 newType is TokenTypeSDTypeClass ||
+                 newType is TokenTypeSDTypeInterface))
             {
                 return;
             }
 
              // Script-defined classes can be implicitly cast to objects.
-            if((oldType is TokenTypeSDTypeClass) && (newType is TokenTypeObject))
+            if(oldType is TokenTypeSDTypeClass && newType is TokenTypeObject)
             {
                 return;
             }
@@ -447,7 +447,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // Script-defined classes can be explicitly cast from objects and other script-defined classes.
              // Note that we must manually check that it is the correct SDTypeClass however because as far as 
              // mono is concerned, all SDTypeClass's are the same.
-            if((oldType is TokenTypeObject) && (newType is TokenTypeSDTypeClass))
+            if(oldType is TokenTypeObject && newType is TokenTypeSDTypeClass)
             {
                 ExplCheck(scg, errorAt, explicitAllowed, oldString, newString);
                 scg.ilGen.Emit(errorAt, OpCodes.Ldc_I4, ((TokenTypeSDTypeClass)newType).decl.sdTypeIndex);
@@ -456,11 +456,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // Delegates can be implicitly cast to/from objects.
-            if((oldType is TokenTypeSDTypeDelegate) && (newType is TokenTypeObject))
+            if(oldType is TokenTypeSDTypeDelegate && newType is TokenTypeObject)
             {
                 return;
             }
-            if((oldType is TokenTypeObject) && (newType is TokenTypeSDTypeDelegate))
+            if(oldType is TokenTypeObject && newType is TokenTypeSDTypeDelegate)
             {
                 scg.ilGen.Emit(errorAt, OpCodes.Castclass, newType.ToSysType());
                 return;
@@ -818,7 +818,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         public static bool KeyToBool(string x)
         {
-            return (x != "") && (x != ScriptBaseClass.NULL_KEY);
+            return x != "" && x != ScriptBaseClass.NULL_KEY;
         }
         public static bool ListToBool(LSL_List x)
         {
@@ -830,7 +830,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         public static string ObjectToString(object x)
         {
-            return (x == null) ? null : x.ToString();
+            return x == null ? null : x.ToString();
         }
         public static string RotationToString(LSL_Rotation x)
         {

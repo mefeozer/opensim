@@ -50,9 +50,9 @@ namespace OpenSim.Server.Handlers.MapImage
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IMapImageService m_MapService;
-        private IGridService m_GridService;
-        private string m_ConfigName = "MapImageService";
+        private readonly IMapImageService m_MapService;
+        private readonly IGridService m_GridService;
+        private readonly string m_ConfigName = "MapImageService";
 
         public MapRemoveServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
@@ -88,8 +88,8 @@ namespace OpenSim.Server.Handlers.MapImage
     class MapServerRemoveHandler : BaseStreamHandler
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private IMapImageService m_MapService;
-        private IGridService m_GridService;
+        private readonly IMapImageService m_MapService;
+        private readonly IGridService m_GridService;
         bool m_Proxy;
 
         public MapServerRemoveHandler(IMapImageService service, IGridService grid, bool proxy) :
@@ -236,10 +236,10 @@ namespace OpenSim.Server.Handlers.MapImage
             // We're behind a proxy
             string xff = "X-Forwarded-For";
             string xffValue = request.Headers[xff.ToLower()];
-            if (xffValue == null || (xffValue != null && string.IsNullOrEmpty(xffValue)))
+            if (xffValue == null || xffValue != null && string.IsNullOrEmpty(xffValue))
                 xffValue = request.Headers[xff];
 
-            if (xffValue == null || (xffValue != null && string.IsNullOrEmpty(xffValue)))
+            if (xffValue == null || xffValue != null && string.IsNullOrEmpty(xffValue))
             {
 //                m_log.WarnFormat("[MAP IMAGE HANDLER]: No XFF header");
                 return request.RemoteIPEndPoint.Address;

@@ -176,8 +176,8 @@ namespace OpenSim.Framework
                     ProcessConcurrency(key, endpoint);
             }
             if (_generalRequestTimes.Size == _generalRequestTimes.Capacity &&
-                (Util.EnvironmentTickCountSubtract(Util.EnvironmentTickCount(), _generalRequestTimes.Get()) <
-                 _options.RequestTimeSpan.TotalMilliseconds))
+                Util.EnvironmentTickCountSubtract(Util.EnvironmentTickCount(), _generalRequestTimes.Get()) <
+                _options.RequestTimeSpan.TotalMilliseconds)
             {
                 //Trigger deeper inspection
                 if (DeeperInspection(key, endpoint))
@@ -230,8 +230,8 @@ namespace OpenSim.Framework
                 {
                     _deeperInspection[clientstring].Put(Util.EnvironmentTickCount());
                     if (_deeperInspection[clientstring].Size == _deeperInspection[clientstring].Capacity &&
-                        (Util.EnvironmentTickCountSubtract(Util.EnvironmentTickCount(), _deeperInspection[clientstring].Get()) <
-                         _options.RequestTimeSpan.TotalMilliseconds))
+                        Util.EnvironmentTickCountSubtract(Util.EnvironmentTickCount(), _deeperInspection[clientstring].Get()) <
+                        _options.RequestTimeSpan.TotalMilliseconds)
                     {
                         //Looks like we're over the limit
                         _blockLockSlim.EnterWriteLock();

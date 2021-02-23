@@ -40,7 +40,7 @@ namespace OpenSim.Server.Handlers.Land
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ILandService m_LandService;
+        private readonly ILandService m_LandService;
         // TODO : private IAuthenticationService m_AuthenticationService;
 
         public LandServiceInConnector(IConfigSource source, IHttpServer server, ILandService service, IScene scene) :

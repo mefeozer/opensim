@@ -45,7 +45,7 @@ namespace OpenSim.Server.Handlers
 {
     public class EstateDataRobustConnector : ServiceConnector
     {
-        private string m_ConfigName = "EstateService";
+        private readonly string m_ConfigName = "EstateService";
 
         public EstateDataRobustConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)
@@ -75,7 +75,7 @@ namespace OpenSim.Server.Handlers
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        IEstateDataService m_EstateService;
+readonly IEstateDataService m_EstateService;
 
         // Possibilities
         // /estates/estate/?region=uuid&create=[t|f]
@@ -148,7 +148,7 @@ namespace OpenSim.Server.Handlers
                         estateIDs = m_EstateService.GetEstatesByOwner(ownerID);
                 }
 
-                if (estateIDs == null || (estateIDs != null && estateIDs.Count == 0))
+                if (estateIDs == null || estateIDs != null && estateIDs.Count == 0)
                     httpResponse.StatusCode = (int)HttpStatusCode.NotFound;
                 else
                 {
@@ -255,7 +255,7 @@ namespace OpenSim.Server.Handlers
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        IEstateDataService m_EstateService;
+        readonly IEstateDataService m_EstateService;
 
         // Possibilities
         // /estates/estate/ (post an estate)

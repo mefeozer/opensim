@@ -78,8 +78,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         // Keep track of all the avatars so we can send them a collision event
         //    every tick so OpenSim will update its animation.
-        private HashSet<BSPhysObject> AvatarsInScene = new HashSet<BSPhysObject>();
-        private object AvatarsInSceneLock = new object();
+        private readonly HashSet<BSPhysObject> AvatarsInScene = new HashSet<BSPhysObject>();
+        private readonly object AvatarsInSceneLock = new object();
 
         // let my minuions use my logger
         public ILog Logger { get { return m_log; } }
@@ -167,9 +167,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         public delegate void TaintCallback();
         private struct TaintCallbackEntry
         {
-            public string originator;
-            public string ident;
-            public TaintCallback callback;
+            public readonly string originator;
+            public readonly string ident;
+            public readonly TaintCallback callback;
             public TaintCallbackEntry(string pIdent, TaintCallback pCallBack)
             {
                 originator = BSScene.DetailLogZero;
@@ -183,7 +183,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 callback = pCallBack;
             }
         }
-        private object _taintLock = new object();   // lock for using the next object
+        private readonly object _taintLock = new object();   // lock for using the next object
         private List<TaintCallbackEntry> _taintOperations;
         private Dictionary<string, TaintCallbackEntry> _postTaintOperations;
         private List<TaintCallbackEntry> _postStepOperations;
@@ -256,7 +256,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             Initialise(m_Config, extent);
 
             base.Initialise(scene.PhysicsRequestAsset,
-                (scene.Heightmap != null ? scene.Heightmap.GetFloatsSerialised() : new float[scene.RegionInfo.RegionSizeX * scene.RegionInfo.RegionSizeY]),
+                scene.Heightmap != null ? scene.Heightmap.GetFloatsSerialised() : new float[scene.RegionInfo.RegionSizeX * scene.RegionInfo.RegionSizeY],
                 (float)scene.RegionInfo.RegionSettings.WaterHeight);
 
         }
@@ -690,7 +690,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 }
 
                 // Make the physics engine dump useful statistics periodically
-                if (PhysicsMetricDumpFrames != 0 && ((m_simulationStep % PhysicsMetricDumpFrames) == 0))
+                if (PhysicsMetricDumpFrames != 0 && m_simulationStep % PhysicsMetricDumpFrames == 0)
                     PE.DumpPhysicsStatistics(World);
 
                 InSimulationTime = false;
@@ -911,7 +911,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     DoPhysicsStep(BSParam.PhysicsTimeStep);
 
                 int simulationRealtimeMS = Util.EnvironmentTickCountSubtract(beginSimulationRealtimeMS);
-                int simulationTimeVsRealtimeDifferenceMS = ((int)(BSParam.PhysicsTimeStep*1000f)) - simulationRealtimeMS;
+                int simulationTimeVsRealtimeDifferenceMS = (int)(BSParam.PhysicsTimeStep*1000f) - simulationRealtimeMS;
 
                 if (simulationTimeVsRealtimeDifferenceMS > 0)
                 {

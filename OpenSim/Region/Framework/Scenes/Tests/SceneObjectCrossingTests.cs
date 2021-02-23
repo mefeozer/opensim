@@ -171,7 +171,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Assert.IsTrue(sp1SceneAPostCross.IsChildAgent, "sp1SceneAPostCross.IsChildAgent unexpectedly false");
 
             ScenePresence sp1SceneBPostCross = sceneB.GetScenePresence(userId);
-            TestClient sceneBTc = ((TestClient)sp1SceneBPostCross.ControllingClient);
+            TestClient sceneBTc = (TestClient)sp1SceneBPostCross.ControllingClient;
             sceneBTc.CompleteMovement();
 
             sceneA.Update(4);
@@ -204,7 +204,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
                 Assert.IsTrue(sp1SceneBPostReCross.IsChildAgent, "sp1SceneBPostReCross.IsChildAgent unexpectedly false");
 
                 ScenePresence sp1SceneAPostReCross = sceneA.GetScenePresence(userId);
-                TestClient sceneATc = ((TestClient)sp1SceneAPostReCross.ControllingClient);
+                TestClient sceneATc = (TestClient)sp1SceneAPostReCross.ControllingClient;
                 sceneATc.CompleteMovement();
 
                 Assert.IsFalse(sp1SceneAPostReCross.IsChildAgent, "sp1SceneAPostCross.IsChildAgent unexpectedly true");

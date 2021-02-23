@@ -41,7 +41,7 @@ namespace OpenSim.Server.Handlers.Login
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ILoginService m_LoginService;
+        private readonly ILoginService m_LoginService;
         private bool m_Proxy;
         private BasicDosProtectorOptions m_DosProtectionOptions;
 

@@ -48,7 +48,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private FriendsModule m_FriendsModule;
+        private readonly FriendsModule m_FriendsModule;
         /*
         public FriendsRequestHandler(FriendsModule fmodule)
                 : base("POST", "/friends", new BasicDosProtectorOptions()
@@ -153,7 +153,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                 return FailureResult();
 
             UserAccount account = m_FriendsModule.UserAccountService.GetUserAccount(UUID.Zero, fromID);
-            string name = (account == null) ? "Unknown" : account.FirstName + " " + account.LastName;
+            string name = account == null ? "Unknown" : account.FirstName + " " + account.LastName;
 
             GridInstantMessage im = new GridInstantMessage(m_FriendsModule.Scene, fromID, name, toID,
                 (byte)InstantMessageDialog.FriendshipOffered, message, false, Vector3.Zero);

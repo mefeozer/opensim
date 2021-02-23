@@ -472,7 +472,7 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
         /// <returns>boolean indication</returns>
         public bool HasMessages()
         {
-            return (m_pending.Count > 0);
+            return m_pending.Count > 0;
         }
 
         /// <summary>
@@ -521,10 +521,10 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
 
     public class ListenerManager
     {
-        private object mainLock = new object();
-        private Dictionary<int, List<ListenerInfo>> m_listenersByChannel = new Dictionary<int, List<ListenerInfo>>();
-        private int m_maxlisteners;
-        private int m_maxhandles;
+        private readonly object mainLock = new object();
+        private readonly Dictionary<int, List<ListenerInfo>> m_listenersByChannel = new Dictionary<int, List<ListenerInfo>>();
+        private readonly int m_maxlisteners;
+        private readonly int m_maxhandles;
         private int m_curlisteners;
 
         /// <summary>
@@ -831,7 +831,7 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
 
             while (idx < data.Length)
             {
-                dataItemLength = (idx + 7 == data.Length || (idx + 7 < data.Length && data[idx + 7] is bool)) ? 7 : 6;
+                dataItemLength = idx + 7 == data.Length || idx + 7 < data.Length && data[idx + 7] is bool ? 7 : 6;
                 item = new object[dataItemLength];
                 Array.Copy(data, idx, item, 0, dataItemLength);
 

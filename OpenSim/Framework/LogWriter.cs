@@ -44,19 +44,19 @@ namespace OpenSim.Framework
     {
         public bool Enabled { get; private set; }
 
-        private string m_logDirectory = ".";
-        private int m_logMaxFileTimeMin = 5;    // 5 minutes
+        private readonly string m_logDirectory = ".";
+        private readonly int m_logMaxFileTimeMin = 5;    // 5 minutes
         public string LogFileHeader { get; set; }
 
         private StreamWriter m_logFile = null;
-        private TimeSpan m_logFileLife;
+        private readonly TimeSpan m_logFileLife;
         private DateTime m_logFileEndTime;
-        private object m_logFileWriteLock = new object();
-        private bool m_flushWrite;
+        private readonly object m_logFileWriteLock = new object();
+        private readonly bool m_flushWrite;
 
         // set externally when debugging. If let 'null', this does not write any error messages.
         public ILog ErrorLogger = null;
-        private string LogHeader = "[LOG WRITER]";
+        private readonly string LogHeader = "[LOG WRITER]";
 
         /// <summary>
         /// Create a log writer that will not write anything. Good for when not enabled

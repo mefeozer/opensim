@@ -94,7 +94,7 @@ namespace OpenSim.Framework
 
                 if (item == null && buffer[bufferIndex] == null)
                     return true;
-                else if ((buffer[bufferIndex] != null) &&
+                else if (buffer[bufferIndex] != null &&
                     comparer.Equals(buffer[bufferIndex], item))
                     return true;
             }

@@ -87,7 +87,7 @@ namespace OpenSim.Tests.Stress
             public int Pass { get; private set; }
             public bool Ready { get; set; }
 
-            private VectorRenderModuleStressTests m_tests;
+            private readonly VectorRenderModuleStressTests m_tests;
 
             public Drawer(VectorRenderModuleStressTests tests, int number)
             {

@@ -1876,8 +1876,8 @@ namespace OpenSim.Data.SQLite
             newData.Dwell = Convert.ToInt32(row["Dwell"]);
             newData.MediaType = (string)row["MediaType"];
             newData.MediaDescription = (string)row["MediaDescription"];
-            newData.MediaWidth = Convert.ToInt32((((string)row["MediaSize"]).Split(','))[0]);
-            newData.MediaHeight = Convert.ToInt32((((string)row["MediaSize"]).Split(','))[1]);
+            newData.MediaWidth = Convert.ToInt32(((string)row["MediaSize"]).Split(',')[0]);
+            newData.MediaHeight = Convert.ToInt32(((string)row["MediaSize"]).Split(',')[1]);
             newData.MediaLoop = Convert.ToBoolean(row["MediaLoop"]);
             newData.ObscureMedia = Convert.ToBoolean(row["ObscureMedia"]);
             newData.ObscureMusic = Convert.ToBoolean(row["ObscureMusic"]);

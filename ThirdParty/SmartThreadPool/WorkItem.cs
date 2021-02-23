@@ -29,10 +29,10 @@ namespace Amib.Threading.Internal
             switch (currentState)
             {
                 case WorkItemState.InQueue:
-                    valid = (WorkItemState.InProgress == nextState) || (WorkItemState.Canceled == nextState);
+                    valid = WorkItemState.InProgress == nextState || WorkItemState.Canceled == nextState;
                     break;
                 case WorkItemState.InProgress:
-                    valid = (WorkItemState.Completed == nextState) || (WorkItemState.Canceled == nextState);
+                    valid = WorkItemState.Completed == nextState || WorkItemState.Canceled == nextState;
                     break;
                 case WorkItemState.Completed:
                 case WorkItemState.Canceled:
@@ -256,7 +256,7 @@ namespace Amib.Threading.Internal
 
         internal bool WasQueuedBy(IWorkItemsGroup workItemsGroup)
         {
-            return (workItemsGroup == _workItemsGroup);
+            return workItemsGroup == _workItemsGroup;
         }
 
 
@@ -292,8 +292,8 @@ namespace Amib.Threading.Internal
             {
                 if (IsCanceled)
                 {
-                    if ((_workItemInfo.PostExecuteWorkItemCallback != null) &&
-                        ((_workItemInfo.CallToPostExecute & CallToPostExecute.WhenWorkItemCanceled) == CallToPostExecute.WhenWorkItemCanceled))
+                    if (_workItemInfo.PostExecuteWorkItemCallback != null &&
+                        (_workItemInfo.CallToPostExecute & CallToPostExecute.WhenWorkItemCanceled) == CallToPostExecute.WhenWorkItemCanceled)
                     {
                         return true;
                     }
@@ -506,7 +506,7 @@ namespace Amib.Threading.Internal
             WaitHandle[] waitHandles = new WaitHandle[waitableResults.Length];
             GetWaitHandles(waitableResults, waitHandles);
 
-            if ((null == cancelWaitHandle) && (waitHandles.Length <= 64))
+            if (null == cancelWaitHandle && waitHandles.Length <= 64)
             {
                 success = STPEventWaitHandle.WaitAll(waitHandles, millisecondsTimeout, exitContext);
             }
@@ -526,7 +526,7 @@ namespace Amib.Threading.Internal
                     whs = new WaitHandle[] { null };
                 }
 
-                bool waitInfinitely = (Timeout.Infinite == millisecondsTimeout);
+                bool waitInfinitely = Timeout.Infinite == millisecondsTimeout;
                 // Iterate over the wait handles and wait for each one to complete.
                 // We cannot use WaitHandle.WaitAll directly, because the cancelWaitHandle
                 // won't affect it.
@@ -534,7 +534,7 @@ namespace Amib.Threading.Internal
                 for (int i = 0; i < waitableResults.Length; ++i)
                 {
                     // WaitAny don't work with negative numbers
-                    if (!waitInfinitely && (millisecondsLeft < 0))
+                    if (!waitInfinitely && millisecondsLeft < 0)
                     {
                         success = false;
                         break;
@@ -542,7 +542,7 @@ namespace Amib.Threading.Internal
 
                     whs[0] = waitHandles[i];
                     int result = STPEventWaitHandle.WaitAny(whs, millisecondsLeft, exitContext);
-                    if ((result > 0) || (STPEventWaitHandle.WaitTimeout == result))
+                    if (result > 0 || STPEventWaitHandle.WaitTimeout == result)
                     {
                         success = false;
                         break;
@@ -933,8 +933,8 @@ namespace Amib.Threading.Internal
                 lock (this)
                 {
                     WorkItemState workItemState = GetWorkItemState();
-                    return ((workItemState == WorkItemState.Completed) ||
-                            (workItemState == WorkItemState.Canceled));
+                    return workItemState == WorkItemState.Completed ||
+                           workItemState == WorkItemState.Canceled;
                 }
             }
         }
@@ -948,7 +948,7 @@ namespace Amib.Threading.Internal
             {
                 lock (this)
                 {
-                    return (GetWorkItemState() == WorkItemState.Canceled);
+                    return GetWorkItemState() == WorkItemState.Canceled;
                 }
             }
         }

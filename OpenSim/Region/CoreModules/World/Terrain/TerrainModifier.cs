@@ -84,7 +84,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                             data.shape = arg.StartsWith("-ell=") ? "ellipse" : "rectangle";
                             val = arg.Substring(arg.IndexOf("=") + 1);
                             string[] coords = val.Split(new char[] {','});
-                            if ((coords.Length < 3) || (coords.Length > 4))
+                            if (coords.Length < 3 || coords.Length > 4)
                             {
                                 result = string.Format("Bad format for shape parameter {0}", arg);
                             }
@@ -112,7 +112,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                                 }
                                 if (string.IsNullOrEmpty(result))
                                 {
-                                    if ((data.dx <= 0) || (data.dy <= 0))
+                                    if (data.dx <= 0 || data.dy <= 0)
                                     {
                                         result = "Shape sizes must be positive integers";
                                     }
@@ -223,14 +223,14 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             while(--yDim >= 0)
             {
                 int yPos = data.y0 + yDim - yMid;
-                if ((yPos >= 0) && (yPos < map.Height))
+                if (yPos >= 0 && yPos < map.Height)
                 {
                     int xDim = xMax;
                     while(--xDim >= 0)
                     {
                         int xPos = data.x0 + xDim - xMid;
                         
-                        if ((xPos >= 0) && (xPos < map.Width) && (mask[xDim, yDim]))
+                        if (xPos >= 0 && xPos < map.Width && mask[xDim, yDim])
                         {
                             double endElevation = this.operate(buffer, data, xPos, yPos);
                             map[xPos, yPos] = (float)endElevation;
@@ -255,8 +255,8 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     deltaY = y - data.y0;
                     xMax = data.dx;
                     yMax = data.dy;
-                    factor = ((deltaX * deltaX) + (deltaY * deltaY));
-                    factor /= ((xMax * xMax) + (yMax * yMax));
+                    factor = deltaX * deltaX + deltaY * deltaY;
+                    factor /= xMax * xMax + yMax * yMax;
                 }
                 else
                 {
@@ -265,7 +265,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     yMax = data.dy / 2 + data.dy % 2;
                     deltaX = Math.Abs(data.x0 + xMax - x);
                     deltaY = Math.Abs(data.y0 + yMax - y);
-                    factor = Math.Max(((float)(deltaY) / yMax), ((float)(deltaX) / xMax));
+                    factor = Math.Max((float)deltaY / yMax, (float)deltaX / xMax);
                 }
             }
             else
@@ -329,7 +329,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                 stoppingY += twoASquared;
                 ellipseError += yChange;
                 yChange += twoASquared;
-                if ((2L * ellipseError + xChange) > 0L)
+                if (2L * ellipseError + xChange > 0L)
                 {
                     xPos--;
                     stoppingX -= twoBSquared;
@@ -366,7 +366,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                 stoppingX += twoBSquared;
                 ellipseError += xChange;
                 xChange += twoBSquared;
-                if ((2L * ellipseError + yChange) > 0L)
+                if (2L * ellipseError + yChange > 0L)
                 {
                     yPos--;
                     stoppingY -= twoASquared;

@@ -105,7 +105,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
             try
             {
                 List<MapBlockData> blocks = new List<MapBlockData>();
-                if (mapName.Length < 3 || (mapName.EndsWith("#") && mapName.Length < 4))
+                if (mapName.Length < 3 || mapName.EndsWith("#") && mapName.Length < 4)
                 {
                     // final block, closing the search result
                     AddFinalBlock(blocks, mapName);

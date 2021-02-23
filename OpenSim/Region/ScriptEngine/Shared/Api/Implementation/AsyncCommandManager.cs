@@ -56,24 +56,24 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         /// This lock exists so that multiple threads from different engines and/or different copies of the same engine
         /// are prevented from running non-thread safe code (e.g. read/write of lists) concurrently.
         /// </remarks>
-        private static object staticLock = new object();
+        private static readonly object staticLock = new object();
 
-        private static List<IScriptEngine> m_ScriptEngines =
+        private static readonly List<IScriptEngine> m_ScriptEngines =
                 new List<IScriptEngine>();
 
         public IScriptEngine m_ScriptEngine;
 
-        private static Dictionary<IScriptEngine, Dataserver> m_Dataserver =
+        private static readonly Dictionary<IScriptEngine, Dataserver> m_Dataserver =
                 new Dictionary<IScriptEngine, Dataserver>();
-        private static Dictionary<IScriptEngine, Timer> m_Timer =
+        private static readonly Dictionary<IScriptEngine, Timer> m_Timer =
                 new Dictionary<IScriptEngine, Timer>();
-        private static Dictionary<IScriptEngine, Listener> m_Listener =
+        private static readonly Dictionary<IScriptEngine, Listener> m_Listener =
                 new Dictionary<IScriptEngine, Listener>();
-        private static Dictionary<IScriptEngine, HttpRequest> m_HttpRequest =
+        private static readonly Dictionary<IScriptEngine, HttpRequest> m_HttpRequest =
                 new Dictionary<IScriptEngine, HttpRequest>();
-        private static Dictionary<IScriptEngine, SensorRepeat> m_SensorRepeat =
+        private static readonly Dictionary<IScriptEngine, SensorRepeat> m_SensorRepeat =
                 new Dictionary<IScriptEngine, SensorRepeat>();
-        private static Dictionary<IScriptEngine, XmlRequest> m_XmlRequest =
+        private static readonly Dictionary<IScriptEngine, XmlRequest> m_XmlRequest =
                 new Dictionary<IScriptEngine, XmlRequest>();
 
         public Dataserver DataserverPlugin

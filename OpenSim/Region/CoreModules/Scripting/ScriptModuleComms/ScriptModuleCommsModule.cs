@@ -44,9 +44,9 @@ namespace OpenSim.Region.CoreModules.Scripting.ScriptModuleComms
     {
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static string LogHeader = "[MODULE COMMS]";
+        private static readonly string LogHeader = "[MODULE COMMS]";
 
-        private Dictionary<string,object> m_constants = new Dictionary<string,object>();
+        private readonly Dictionary<string,object> m_constants = new Dictionary<string,object>();
 
 #region ScriptInvocation
         protected class ScriptInvocationData
@@ -65,7 +65,7 @@ namespace OpenSim.Region.CoreModules.Scripting.ScriptModuleComms
             }
         }
 
-        private Dictionary<string,ScriptInvocationData> m_scriptInvocation = new Dictionary<string,ScriptInvocationData>();
+        private readonly Dictionary<string,ScriptInvocationData> m_scriptInvocation = new Dictionary<string,ScriptInvocationData>();
 #endregion
 
         private IScriptModule m_scriptModule = null;

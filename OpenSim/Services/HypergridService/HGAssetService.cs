@@ -50,14 +50,14 @@ namespace OpenSim.Services.HypergridService
             LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_HomeURL;
-        private IUserAccountService m_UserAccountService;
+        private readonly string m_HomeURL;
+        private readonly IUserAccountService m_UserAccountService;
 
-        private UserAccountCache m_Cache;
+        private readonly UserAccountCache m_Cache;
 
-        private AssetPermissions m_AssetPerms;
+        private readonly AssetPermissions m_AssetPerms;
 
-        IAssetService m_assetService = null;
+        readonly IAssetService m_assetService = null;
 
         public HGAssetService(IConfigSource config, string configName) : base(config)
         {

@@ -147,7 +147,7 @@ namespace PrimMesher
                 {
 
                     if (mirror)
-                        row.Add(new Coord(-((float)redBytes[smNdx] * pixScale - 0.5f), ((float)greenBytes[smNdx] * pixScale - 0.5f), (float)blueBytes[smNdx] * pixScale - 0.5f));
+                        row.Add(new Coord(-((float)redBytes[smNdx] * pixScale - 0.5f), (float)greenBytes[smNdx] * pixScale - 0.5f, (float)blueBytes[smNdx] * pixScale - 0.5f));
                     else
                         row.Add(new Coord((float)redBytes[smNdx] * pixScale - 0.5f, (float)greenBytes[smNdx] * pixScale - 0.5f, (float)blueBytes[smNdx] * pixScale - 0.5f));
 
@@ -175,7 +175,7 @@ namespace PrimMesher
                 {
                     try
                     {
-                        c = srcImage.GetPixel((int)(sx), (int)(sy));
+                        c = srcImage.GetPixel((int)sx, (int)sy);
                         scaledImage.SetPixel(x, y, Color.FromArgb(c.R, c.G, c.B));
                     }
                     catch (IndexOutOfRangeException)

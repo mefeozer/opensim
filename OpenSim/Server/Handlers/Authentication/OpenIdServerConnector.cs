@@ -42,9 +42,9 @@ namespace OpenSim.Server.Handlers.Authentication
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAuthenticationService m_AuthenticationService;
-        private IUserAccountService m_UserAccountService;
-        private string m_ConfigName = "OpenIdService";
+        private readonly IAuthenticationService m_AuthenticationService;
+        private readonly IUserAccountService m_UserAccountService;
+        private readonly string m_ConfigName = "OpenIdService";
 
         public OpenIdServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

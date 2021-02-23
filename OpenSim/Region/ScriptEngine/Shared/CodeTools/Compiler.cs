@@ -66,21 +66,21 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
         private enumCompileType DefaultCompileLanguage;
         private bool WriteScriptSourceToDebugFile;
         private bool CompileWithDebugInformation;
-        private Dictionary<string, bool> AllowedCompilers = new Dictionary<string, bool>(StringComparer.CurrentCultureIgnoreCase);
-        private Dictionary<string, enumCompileType> LanguageMapping = new Dictionary<string, enumCompileType>(StringComparer.CurrentCultureIgnoreCase);
+        private readonly Dictionary<string, bool> AllowedCompilers = new Dictionary<string, bool>(StringComparer.CurrentCultureIgnoreCase);
+        private readonly Dictionary<string, enumCompileType> LanguageMapping = new Dictionary<string, enumCompileType>(StringComparer.CurrentCultureIgnoreCase);
         private bool m_insertCoopTerminationCalls;
 
         private string FilePrefix;
-        private string ScriptEnginesPath = null;
+        private readonly string ScriptEnginesPath = null;
         // mapping between LSL and C# line/column numbers
         private ICodeConverter LSL_Converter;
 
-        private List<string> m_warnings = new List<string>();
+        private readonly List<string> m_warnings = new List<string>();
 
         private static ulong scriptCompileCounter = 0;                                     // And a counter
 
         public IScriptEngine m_scriptEngine;
-        private Dictionary<string, Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>>> m_lineMaps =
+        private readonly Dictionary<string, Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>>> m_lineMaps =
             new Dictionary<string, Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>>>();
 
         public bool in_startup = true;
@@ -715,7 +715,7 @@ namespace SecondLife
                                KeyValuePair<KeyValuePair<int, int>, KeyValuePair<int, int>> b)
             {
                 int kc = a.Key.Key.CompareTo(b.Key.Key);
-                return (kc != 0) ? kc : a.Key.Value.CompareTo(b.Key.Value);
+                return kc != 0 ? kc : a.Key.Value.CompareTo(b.Key.Value);
             }
         }
 
@@ -759,7 +759,7 @@ namespace SecondLife
                 if (posmap.Key.Key == line && posmap.Key.Value > col)
                 {
                   // Never move l,c backwards.
-                  if (nl > l || (nl == l && nc > c))
+                  if (nl > l || nl == l && nc > c)
                   {
                     //m_log.DebugFormat("[Compiler]: Using offset relative to this: {0} + {1} - {2}, {3} + {4} - {5} = {6}, {7}",
                     //    posmap.Value.Key, line, posmap.Key.Key, posmap.Value.Value, col, posmap.Key.Value, nl, nc);

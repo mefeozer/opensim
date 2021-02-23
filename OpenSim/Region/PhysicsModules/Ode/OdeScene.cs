@@ -133,7 +133,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <summary>
         /// Statistics for this scene.
         /// </summary>
-        private Dictionary<string, float> m_stats = new Dictionary<string, float>();
+        private readonly Dictionary<string, float> m_stats = new Dictionary<string, float>();
 
         /// <summary>
         /// Stat name for total number of avatars in this ODE scene.
@@ -402,7 +402,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// </remarks>
         private readonly List<OdeCharacter> defects = new List<OdeCharacter>();
 
-        private bool m_NINJA_physics_joints_enabled = false;
+        private readonly bool m_NINJA_physics_joints_enabled = false;
         //private Dictionary<String, IntPtr> jointpart_name_map = new Dictionary<String,IntPtr>();
         private readonly Dictionary<string, List<PhysicsJoint>> joints_connecting_actor = new Dictionary<string, List<PhysicsJoint>>();
         private SafeNativeMethods.ContactGeom[] contacts;
@@ -427,7 +427,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// </summary>
         private readonly List<string> requestedJointsToBeDeleted = new List<string>();
 
-        private object externalJointRequestsLock = new object();
+        private readonly object externalJointRequestsLock = new object();
         private readonly Dictionary<string, PhysicsJoint> SOPName_to_activeJoint = new Dictionary<string, PhysicsJoint>();
         private readonly Dictionary<string, PhysicsJoint> SOPName_to_pendingJoint = new Dictionary<string, PhysicsJoint>();
         private readonly DoubleDictionary<Vector3, IntPtr, IntPtr> RegionTerrain = new DoubleDictionary<Vector3, IntPtr, IntPtr>();
@@ -481,9 +481,9 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
         private volatile int m_global_contactcount = 0;
 
-        private Vector3 m_worldOffset = Vector3.Zero;
+        private readonly Vector3 m_worldOffset = Vector3.Zero;
         public Vector2 WorldExtents = new Vector2((int)Constants.RegionSize, (int)Constants.RegionSize);
-        private PhysicsScene m_parentScene = null;
+        private readonly PhysicsScene m_parentScene = null;
 
         float spacesPerMeterX;
         float spacesPerMeterY;
@@ -512,7 +512,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
             // This may not be that good since terrain may not be avaiable at this point
             base.Initialise(pscene.PhysicsRequestAsset,
-                (pscene.Heightmap != null ? pscene.Heightmap.GetFloatsSerialised() : new float[(int)(extent.X * extent.Y)]),
+                pscene.Heightmap != null ? pscene.Heightmap.GetFloatsSerialised() : new float[(int)(extent.X * extent.Y)],
                 (float)pscene.RegionInfo.RegionSettings.WaterHeight);
 
         }
@@ -691,7 +691,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
             TerrainContact.surface.bounce = nmTerrainContactBounce;
             TerrainContact.surface.soft_erp = nmTerrainContactERP;
 
-            WaterContact.surface.mode |= (SafeNativeMethods.ContactFlags.SoftERP | SafeNativeMethods.ContactFlags.SoftCFM);
+            WaterContact.surface.mode |= SafeNativeMethods.ContactFlags.SoftERP | SafeNativeMethods.ContactFlags.SoftCFM;
             WaterContact.surface.mu = 0f; // No friction
             WaterContact.surface.bounce = 0.0f; // No bounce
             WaterContact.surface.soft_cfm = 0.010f;
@@ -1071,7 +1071,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     // Testing if the collision is at the feet of the avatar
 
                     //m_log.DebugFormat("[PHYSICS]: {0} - {1} - {2} - {3}", curContact.pos.Z, p2.Position.Z, (p2.Position.Z - curContact.pos.Z), (p2.Size.Z * 0.6f));
-                    if ((p2.Position.Z - curContact.pos.Z) > (p2.Size.Z * 0.6f))
+                    if (p2.Position.Z - curContact.pos.Z > p2.Size.Z * 0.6f)
                         p2.IsColliding = true;
                 }
                 else
@@ -1111,10 +1111,10 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     if (curContact.depth >= 1.00f)
                     {
                         //m_log.Info("[P]: " + contact.depth.ToString());
-                        if ((p2.PhysicsActorType == (int) ActorTypes.Agent &&
-                             p1.PhysicsActorType == (int) ActorTypes.Unknown) ||
-                            (p1.PhysicsActorType == (int) ActorTypes.Agent &&
-                             p2.PhysicsActorType == (int) ActorTypes.Unknown))
+                        if (p2.PhysicsActorType == (int) ActorTypes.Agent &&
+                            p1.PhysicsActorType == (int) ActorTypes.Unknown ||
+                            p1.PhysicsActorType == (int) ActorTypes.Agent &&
+                            p2.PhysicsActorType == (int) ActorTypes.Unknown)
                         {
                             if (p2.PhysicsActorType == (int) ActorTypes.Agent)
                             {
@@ -1126,9 +1126,9 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                     curContact.depth = 0.00000003f;
                                     p2.Velocity = p2.Velocity + new Vector3(0f, 0f, 0.5f);
                                     curContact.pos =
-                                        new SafeNativeMethods.Vector3(curContact.pos.X + (p1.Size.X/2),
-                                                      curContact.pos.Y + (p1.Size.Y/2),
-                                                      curContact.pos.Z + (p1.Size.Z/2));
+                                        new SafeNativeMethods.Vector3(curContact.pos.X + p1.Size.X/2,
+                                                      curContact.pos.Y + p1.Size.Y/2,
+                                                      curContact.pos.Z + p1.Size.Z/2);
                                     character.SetPidStatus(true);
                                 }
                             }
@@ -1143,9 +1143,9 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                     curContact.depth = 0.00000003f;
                                     p1.Velocity = p1.Velocity + new Vector3(0f, 0f, 0.5f);
                                     curContact.pos =
-                                        new SafeNativeMethods.Vector3(curContact.pos.X + (p1.Size.X/2),
-                                                      curContact.pos.Y + (p1.Size.Y/2),
-                                                      curContact.pos.Z + (p1.Size.Z/2));
+                                        new SafeNativeMethods.Vector3(curContact.pos.X + p1.Size.X/2,
+                                                      curContact.pos.Y + p1.Size.Y/2,
+                                                      curContact.pos.Z + p1.Size.Z/2);
                                     character.SetPidStatus(true);
                                 }
                             }
@@ -1161,14 +1161,14 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 // appears to be phantom for the world
                 bool skipThisContact = false;
 
-                if ((p1 is OdePrim) && (((OdePrim)p1).m_isVolumeDetect))
+                if (p1 is OdePrim && ((OdePrim)p1).m_isVolumeDetect)
                     skipThisContact = true;   // No collision on volume detect prims
 
                 if (av_av_collisions_off)
-                    if ((p1 is OdeCharacter) && (p2 is OdeCharacter))
+                    if (p1 is OdeCharacter && p2 is OdeCharacter)
                         skipThisContact = true;
 
-                if (!skipThisContact && (p2 is OdePrim) && (((OdePrim)p2).m_isVolumeDetect))
+                if (!skipThisContact && p2 is OdePrim && ((OdePrim)p2).m_isVolumeDetect)
                     skipThisContact = true;   // No collision on volume detect prims
 
                 if (!skipThisContact && curContact.depth < 0f)
@@ -1186,7 +1186,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
                     if (name1 == "Terrain" || name2 == "Terrain")
                     {
-                        if ((p2.PhysicsActorType == (int) ActorTypes.Agent) &&
+                        if (p2.PhysicsActorType == (int) ActorTypes.Agent &&
                             (Math.Abs(p2.Velocity.X) > 0.01f || Math.Abs(p2.Velocity.Y) > 0.01f))
                         {
                             p2ExpectedPoints = avatarExpectedContacts;
@@ -1311,10 +1311,10 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     }
                     else
                     {
-                        if ((p2.PhysicsActorType == (int)ActorTypes.Agent))
+                        if (p2.PhysicsActorType == (int)ActorTypes.Agent)
                         {
                             p2ExpectedPoints = avatarExpectedContacts;
-                            if ((Math.Abs(p2.Velocity.X) > 0.01f || Math.Abs(p2.Velocity.Y) > 0.01f))
+                            if (Math.Abs(p2.Velocity.X) > 0.01f || Math.Abs(p2.Velocity.Y) > 0.01f)
                             {
                                 // Avatar is moving on a prim, use the Movement prim contact
                                 AvatarMovementprimContact.geom = curContact;
@@ -1368,7 +1368,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
                 collision_accounting_events(p1, p2, maxDepthContact);
 
-                if (count > ((p1ExpectedPoints + p2ExpectedPoints) * 0.25) + (geomContactPointsStartthrottle))
+                if (count > (p1ExpectedPoints + p2ExpectedPoints) * 0.25 + geomContactPointsStartthrottle)
                 {
                     // If there are more then 3 contact points, it's likely
                     // that we've got a pile of objects, so ...
@@ -1397,9 +1397,9 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     // || (contact.g2 == contactGeom.g1 && contact.g1 == contactGeom.g2)
                 if (at == ActorTypes.Agent)
                 {
-                    if (((Math.Abs(contactGeom.normal.X - contact.normal.X) < 1.026f)
-                        && (Math.Abs(contactGeom.normal.Y - contact.normal.Y) < 0.303f)
-                        && (Math.Abs(contactGeom.normal.Z - contact.normal.Z) < 0.065f)))
+                    if (Math.Abs(contactGeom.normal.X - contact.normal.X) < 1.026f
+                        && Math.Abs(contactGeom.normal.Y - contact.normal.Y) < 0.303f
+                        && Math.Abs(contactGeom.normal.Z - contact.normal.Z) < 0.065f)
                     {
                         if (Math.Abs(contact.depth - contactGeom.depth) < 0.052f)
                         {
@@ -1410,7 +1410,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 }
                 else if (at == ActorTypes.Prim)
                 {
-                    if (((Math.Abs(contactGeom.normal.X - contact.normal.X) < 1.026f) && (Math.Abs(contactGeom.normal.Y - contact.normal.Y) < 0.303f) && (Math.Abs(contactGeom.normal.Z - contact.normal.Z) < 0.065f)))
+                    if (Math.Abs(contactGeom.normal.X - contact.normal.X) < 1.026f && Math.Abs(contactGeom.normal.Y - contact.normal.Y) < 0.303f && Math.Abs(contactGeom.normal.Z - contact.normal.Z) < 0.065f)
                     {
                         if (contactGeom.normal.X == contact.normal.X && contactGeom.normal.Y == contact.normal.Y && contactGeom.normal.Z == contact.normal.Z)
                         {
@@ -1577,7 +1577,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
             List<OdePrim> removeprims = null;
             foreach (OdePrim chr in _activeprims)
             {
-                if (chr.Body != IntPtr.Zero && SafeNativeMethods.BodyIsEnabled(chr.Body) && (!chr.m_disabled))
+                if (chr.Body != IntPtr.Zero && SafeNativeMethods.BodyIsEnabled(chr.Body) && !chr.m_disabled)
                 {
                     try
                     {
@@ -2483,9 +2483,9 @@ namespace OpenSim.Region.PhysicsModule.ODE
             // if it's a standard box or sphere with no cuts, hollows, twist or top shear, return false since ODE can use an internal representation for the prim
             if (!forceSimplePrimMeshing && !pbs.SculptEntry)
             {
-                if ((pbs.ProfileShape == ProfileShape.Square && pbs.PathCurve == (byte)Extrusion.Straight)
-                    || (pbs.ProfileShape == ProfileShape.HalfCircle && pbs.PathCurve == (byte)Extrusion.Curve1
-                    && pbs.Scale.X == pbs.Scale.Y && pbs.Scale.Y == pbs.Scale.Z))
+                if (pbs.ProfileShape == ProfileShape.Square && pbs.PathCurve == (byte)Extrusion.Straight
+                    || pbs.ProfileShape == ProfileShape.HalfCircle && pbs.PathCurve == (byte)Extrusion.Curve1
+                                                                   && pbs.Scale.X == pbs.Scale.Y && pbs.Scale.Y == pbs.Scale.Z)
                 {
 
                     if (pbs.ProfileBegin == 0 && pbs.ProfileEnd == 0
@@ -2507,19 +2507,19 @@ namespace OpenSim.Region.PhysicsModule.ODE
             if (pbs.ProfileHollow != 0)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.PathBegin != 0) || pbs.PathEnd != 0)
+            if (pbs.PathBegin != 0 || pbs.PathEnd != 0)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.PathTwistBegin != 0) || (pbs.PathTwist != 0))
+            if (pbs.PathTwistBegin != 0 || pbs.PathTwist != 0)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.ProfileBegin != 0) || pbs.ProfileEnd != 0)
+            if (pbs.ProfileBegin != 0 || pbs.ProfileEnd != 0)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.PathScaleX != 100) || (pbs.PathScaleY != 100))
+            if (pbs.PathScaleX != 100 || pbs.PathScaleY != 100)
                 iPropertiesNotSupportedDefault++;
 
-            if ((pbs.PathShearX != 0) || (pbs.PathShearY != 0))
+            if (pbs.PathShearX != 0 || pbs.PathShearY != 0)
                 iPropertiesNotSupportedDefault++;
 
             if (pbs.ProfileShape == ProfileShape.Circle && pbs.PathCurve == (byte)Extrusion.Straight)
@@ -2599,13 +2599,13 @@ namespace OpenSim.Region.PhysicsModule.ODE
         {
             if (actor is OdePrim)
             {
-                OdePrim taintedprim = ((OdePrim)actor);
+                OdePrim taintedprim = (OdePrim)actor;
                 lock (_taintedPrims)
                     _taintedPrims.Add(taintedprim);
             }
             else if (actor is OdeCharacter)
             {
-                OdeCharacter taintedchar = ((OdeCharacter)actor);
+                OdeCharacter taintedchar = (OdeCharacter)actor;
                 lock (_taintedActors)
                 {
                     _taintedActors.Add(taintedchar);
@@ -2938,7 +2938,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 // Finished with all sim stepping. If requested, dump world state to file for debugging.
                 // TODO: This call to the export function is already inside lock (OdeLock) - but is an extra lock needed?
                 // TODO: This overwrites all dump files in-place. Should this be a growing logfile, or separate snapshots?
-                if (physics_logging && (physics_logging_interval > 0) && (framecount % physics_logging_interval == 0))
+                if (physics_logging && physics_logging_interval > 0 && framecount % physics_logging_interval == 0)
                 {
                     string fname = "state-" + world.ToString() + ".DIF"; // give each physics world a separate filename
                     string prefix = "world" + world.ToString(); // prefix for variable names in exported .DIF file
@@ -3314,8 +3314,8 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 GroundGeom = SafeNativeMethods.CreateHeightfield(space, HeightmapData, 1);
                 if (GroundGeom != IntPtr.Zero)
                 {
-                    SafeNativeMethods.GeomSetCategoryBits(GroundGeom, (int)(CollisionCategories.Land));
-                    SafeNativeMethods.GeomSetCollideBits(GroundGeom, (int)(CollisionCategories.Space));
+                    SafeNativeMethods.GeomSetCategoryBits(GroundGeom, (int)CollisionCategories.Land);
+                    SafeNativeMethods.GeomSetCollideBits(GroundGeom, (int)CollisionCategories.Space);
 
                 }
                 geom_name_map[GroundGeom] = "Terrain";

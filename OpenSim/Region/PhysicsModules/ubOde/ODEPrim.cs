@@ -90,8 +90,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         internal Vector3 m_torque;
         internal Vector3 m_angularForceacc;
 
-        private float m_invTimeStep;
-        private float m_timeStep;
+        private readonly float m_invTimeStep;
+        private readonly float m_timeStep;
 
         private Vector3 m_PIDTarget;
         private float m_PIDTau;
@@ -106,19 +106,19 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         private float m_waterHeight;
         private float m_buoyancy;                //KF: m_buoyancy should be set by llSetBuoyancy() for non-vehicle.
 
-        private int m_body_autodisable_frames;
+        private readonly int m_body_autodisable_frames;
         public int m_bodydisablecontrol = 0;
         private float m_gravmod = 1.0f;
 
         // Default we're a Geometry
-        private CollisionCategories m_collisionCategories = (CollisionCategories.Geom);
+        private CollisionCategories m_collisionCategories = CollisionCategories.Geom;
         // Default colide nonphysical don't try to colide with anything
         private const CollisionCategories m_default_collisionFlagsNotPhysical = 0;
 
-        private const CollisionCategories m_default_collisionFlagsPhysical = (CollisionCategories.Geom |
-                                        CollisionCategories.Character |
-                                        CollisionCategories.Land |
-                                        CollisionCategories.VolumeDtc);
+        private const CollisionCategories m_default_collisionFlagsPhysical = CollisionCategories.Geom |
+                                                                             CollisionCategories.Character |
+                                                                             CollisionCategories.Land |
+                                                                             CollisionCategories.VolumeDtc;
 
 //        private bool m_collidesLand = true;
         private bool m_collidesWater;
@@ -135,7 +135,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         private uint m_localID;
 
         private IMesh m_mesh;
-        private object m_meshlock = new object();
+        private readonly object m_meshlock = new object();
         private PrimitiveBaseShape _pbs;
 
         private UUID? m_assetID;
@@ -153,7 +153,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         private PhysicsActor _parent;
 
-        private List<OdePrim> childrenPrim = new List<OdePrim>();
+        private readonly List<OdePrim> childrenPrim = new List<OdePrim>();
 
         public float m_collisionscore;
         private int m_colliderfilter = 0;
@@ -450,7 +450,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         public override void SetVolumeDetect(int param)
         {
-            m_fakeisVolumeDetect = (param != 0);
+            m_fakeisVolumeDetect = param != 0;
             AddChange(changes.VolumeDtc, m_fakeisVolumeDetect);
         }
 
@@ -829,7 +829,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 float tmp = 0;
                 if (value > 0)
                 {
-                    float mint = (0.05f > m_timeStep ? 0.05f : m_timeStep);
+                    float mint = 0.05f > m_timeStep ? 0.05f : m_timeStep;
                     if (value < mint)
                         tmp = mint;
                     else
@@ -873,7 +873,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 float tmp =0;
                 if (value > 0)
                 {
-                    float mint = (0.05f > m_timeStep ? 0.05f : m_timeStep);
+                    float mint = 0.05f > m_timeStep ? 0.05f : m_timeStep;
                     if (value < mint)
                         tmp = mint;
                     else
@@ -1238,7 +1238,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     SentEmptyCollisionsEvent = true;
 //                    _parent_scene.RemoveCollisionEventReporting(this);
                 }
-                else if(Body == IntPtr.Zero || (SafeNativeMethods.BodyIsEnabled(Body) && m_bodydisablecontrol >= 0 ))
+                else if(Body == IntPtr.Zero || SafeNativeMethods.BodyIsEnabled(Body) && m_bodydisablecontrol >= 0)
                 {
                     SentEmptyCollisionsEvent = false;
                     CollisionEvents.Clear();
@@ -1265,8 +1265,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             if (!pos.IsFinite())
             {
-                pos = new Vector3(((float)Constants.RegionSize * 0.5f), ((float)Constants.RegionSize * 0.5f),
-                    parent_scene.GetTerrainHeightAtXY(((float)Constants.RegionSize * 0.5f), ((float)Constants.RegionSize * 0.5f)) + 0.5f);
+                pos = new Vector3((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f,
+                    parent_scene.GetTerrainHeightAtXY((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f) + 0.5f);
                 m_log.WarnFormat("[PHYSICS]: Got nonFinite Object create Position for {0}", Name);
             }
             _position = pos;
@@ -1543,7 +1543,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             int j = 0;
             if (axisX)
             {
-                ax = (new Vector3(1, 0, 0)) * curr; // rotate world X to current local X
+                ax = new Vector3(1, 0, 0) * curr; // rotate world X to current local X
                 SafeNativeMethods.JointSetAMotorAxis(Amotor, 0, 0, ax.X, ax.Y, ax.Z);
                 SafeNativeMethods.JointSetAMotorAngle(Amotor, 0, 0);
                 SafeNativeMethods.JointSetAMotorParam(Amotor, (int)SafeNativeMethods.JointParam.LoStop, 0f);
@@ -1561,7 +1561,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             if (axisY)
             {
-                ax = (new Vector3(0, 1, 0)) * curr;
+                ax = new Vector3(0, 1, 0) * curr;
                 SafeNativeMethods.JointSetAMotorAxis(Amotor, i, 0, ax.X, ax.Y, ax.Z);
                 SafeNativeMethods.JointSetAMotorAngle(Amotor, i, 0);
                 SafeNativeMethods.JointSetAMotorParam(Amotor, j + (int)SafeNativeMethods.JointParam.LoStop, 0f);
@@ -1579,7 +1579,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             if (axisZ)
             {
-                ax = (new Vector3(0, 0, 1)) * curr;
+                ax = new Vector3(0, 0, 1) * curr;
                 SafeNativeMethods.JointSetAMotorAxis(Amotor, i, 0, ax.X, ax.Y, ax.Z);
                 SafeNativeMethods.JointSetAMotorAngle(Amotor, i, 0);
                 SafeNativeMethods.JointSetAMotorParam(Amotor, j + (int)SafeNativeMethods.JointParam.LoStop, 0f);
@@ -1899,7 +1899,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 m_log.Warn("[PHYSICS]: MakeBody root geom already had a body");
             }
 
-            bool noInertiaOverride = (m_InertiaOverride == null);
+            bool noInertiaOverride = m_InertiaOverride == null;
 
             Body = SafeNativeMethods.BodyCreate(_parent_scene.world);
 
@@ -3686,9 +3686,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     // for now position error
                     _target_velocity =
                         new Vector3(
-                            (m_PIDTarget.X - lpos.X),
-                            (m_PIDTarget.Y - lpos.Y),
-                            (m_PIDTarget.Z - lpos.Z)
+                            m_PIDTarget.X - lpos.X,
+                            m_PIDTarget.Y - lpos.Y,
+                            m_PIDTarget.Z - lpos.Z
                             );
 
                     if (_target_velocity.ApproxEquals(Vector3.Zero, 0.02f))
@@ -3755,7 +3755,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     {
                         SafeNativeMethods.Vector3 vel = SafeNativeMethods.BodyGetLinearVel(Body);
 
-                        fz = (m_targetHoverHeight - lpos.Z);
+                        fz = m_targetHoverHeight - lpos.Z;
 
                         //  if error is zero, use position control; otherwise, velocity control
                         if (Math.Abs(fz) < 0.01f)
@@ -3774,7 +3774,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                             else if (tmp < 0.1)
                                 fz = 0.1f * Math.Sign(fz);
 
-                            fz = ((fz - vel.Z) * m_invTimeStep);
+                            fz = (fz - vel.Z) * m_invTimeStep;
                         }
                     }
                 }
@@ -3947,12 +3947,12 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                         }
 
                         if (
-                            (Math.Abs(_position.X - lpos.X) < poserror)
-                            && (Math.Abs(_position.Y - lpos.Y) < poserror)
-                            && (Math.Abs(_position.Z - lpos.Z) < poserror)
-                            && (Math.Abs(_orientation.X - ori.X) < angerror)
-                            && (Math.Abs(_orientation.Y - ori.Y) < angerror)
-                            && (Math.Abs(_orientation.Z - ori.Z) < angerror)  // ignore W
+                            Math.Abs(_position.X - lpos.X) < poserror
+                            && Math.Abs(_position.Y - lpos.Y) < poserror
+                            && Math.Abs(_position.Z - lpos.Z) < poserror
+                            && Math.Abs(_orientation.X - ori.X) < angerror
+                            && Math.Abs(_orientation.Y - ori.Y) < angerror
+                            && Math.Abs(_orientation.Z - ori.Z) < angerror  // ignore W
                             )
                             _zeroFlag = true;
                         else
@@ -3986,9 +3986,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                         m_acceleration = _velocity;
 
-                        if ((Math.Abs(vel.X) < 0.005f) &&
-                            (Math.Abs(vel.Y) < 0.005f) &&
-                            (Math.Abs(vel.Z) < 0.005f))
+                        if (Math.Abs(vel.X) < 0.005f &&
+                            Math.Abs(vel.Y) < 0.005f &&
+                            Math.Abs(vel.Z) < 0.005f)
                         {
                             _velocity = Vector3.Zero;
                             float t = -m_invTimeStep;
@@ -4002,17 +4002,17 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                             m_acceleration = (_velocity - m_acceleration) * m_invTimeStep;
                         }
 
-                        if ((Math.Abs(m_acceleration.X) < 0.01f) &&
-                            (Math.Abs(m_acceleration.Y) < 0.01f) &&
-                            (Math.Abs(m_acceleration.Z) < 0.01f))
+                        if (Math.Abs(m_acceleration.X) < 0.01f &&
+                            Math.Abs(m_acceleration.Y) < 0.01f &&
+                            Math.Abs(m_acceleration.Z) < 0.01f)
                         {
                             m_acceleration = Vector3.Zero;
                         }
 
                         vel = SafeNativeMethods.BodyGetAngularVel(Body);
-                        if ((Math.Abs(vel.X) < 0.0001) &&
-                            (Math.Abs(vel.Y) < 0.0001) &&
-                            (Math.Abs(vel.Z) < 0.0001)
+                        if (Math.Abs(vel.X) < 0.0001 &&
+                            Math.Abs(vel.Y) < 0.0001 &&
+                            Math.Abs(vel.Z) < 0.0001
                             )
                         {
                             m_rotationalVelocity = Vector3.Zero;
@@ -4061,7 +4061,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             float smass = part.mass;
             theobj.mass -= smass;
 
-            smass *= 1.0f / (theobj.mass); ;
+            smass *= 1.0f / theobj.mass; ;
 
             theobj.c.X -= part.c.X * smass;
             theobj.c.Y -= part.c.Y * smass;

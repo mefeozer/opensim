@@ -192,7 +192,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                             return;
                         }
 
-                        if ((client != null) && !success)
+                        if (client != null && !success)
                         {
                             client.SendInstantMessage(
                                     new GridInstantMessage(

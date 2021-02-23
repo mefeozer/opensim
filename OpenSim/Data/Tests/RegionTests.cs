@@ -61,7 +61,7 @@ namespace OpenSim.Data.Tests
         where TConn : DbConnection, new()
         where TRegStore : class, ISimulationDataStore, new()
     {
-        bool m_rebuildDB;
+        readonly bool m_rebuildDB;
 
         public ISimulationDataStore db;
         public UUID zero = UUID.Zero;
@@ -536,7 +536,7 @@ namespace OpenSim.Data.Tests
             for (int i = 0; i < 30; i++)
             {
                 UUID tmp = UUID.Random();
-                SceneObjectPart sop = NewSOP(("Test SOP " + i.ToString()),tmp);
+                SceneObjectPart sop = NewSOP("Test SOP " + i.ToString(),tmp);
                 Vector3 groupos = new Vector3(random.Next(100000),random.Next(100000),random.Next(100000));
                 Vector3 offset = new Vector3(random.Next(100000),random.Next(100000),random.Next(100000));
                 Quaternion rotoff = new Quaternion(random.Next(1000),random.Next(1000),random.Next(1000),random.Next(1000));

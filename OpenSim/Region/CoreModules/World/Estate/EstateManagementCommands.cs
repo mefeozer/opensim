@@ -82,8 +82,8 @@ namespace OpenSim.Region.CoreModules.World.Estate
         {
             string num = args[3];
             string uuid = args[4];
-            int x = (args.Length > 5 ? int.Parse(args[5]) : -1);
-            int y = (args.Length > 6 ? int.Parse(args[6]) : -1);
+            int x = args.Length > 5 ? int.Parse(args[5]) : -1;
+            int y = args.Length > 6 ? int.Parse(args[6]) : -1;
 
             if (x == -1 || m_module.Scene.RegionInfo.RegionLocX == x)
             {
@@ -121,8 +121,8 @@ namespace OpenSim.Region.CoreModules.World.Estate
         {
             string heightstring = args[3];
 
-            int x = (args.Length > 4 ? int.Parse(args[4]) : -1);
-            int y = (args.Length > 5 ? int.Parse(args[5]) : -1);
+            int x = args.Length > 4 ? int.Parse(args[4]) : -1;
+            int y = args.Length > 5 ? int.Parse(args[5]) : -1;
 
             if (x == -1 || m_module.Scene.RegionInfo.RegionLocX == x)
             {
@@ -145,8 +145,8 @@ namespace OpenSim.Region.CoreModules.World.Estate
             string num = args[3];
             string min = args[4];
             string max = args[5];
-            int x = (args.Length > 6 ? int.Parse(args[6]) : -1);
-            int y = (args.Length > 7 ? int.Parse(args[7]) : -1);
+            int x = args.Length > 6 ? int.Parse(args[6]) : -1;
+            int y = args.Length > 7 ? int.Parse(args[7]) : -1;
 
             if (x == -1 || m_module.Scene.RegionInfo.RegionLocX == x)
             {

@@ -69,14 +69,14 @@ namespace OpenSim.Framework
     public class PluginLoader <T> : IDisposable where T : IPlugin
     {
         
-        private List<T> loaded = new List<T>();
-        private List<string> extpoints = new List<string>();
+        private readonly List<T> loaded = new List<T>();
+        private readonly List<string> extpoints = new List<string>();
         private PluginInitialiserBase initialiser;
 
-        private Dictionary<string,IPluginConstraint> constraints
+        private readonly Dictionary<string,IPluginConstraint> constraints
             = new Dictionary<string,IPluginConstraint>();
 
-        private Dictionary<string,IPluginFilter> filters
+        private readonly Dictionary<string,IPluginFilter> filters
             = new Dictionary<string,IPluginFilter>();
 
         private static readonly ILog log
@@ -95,7 +95,7 @@ namespace OpenSim.Framework
 
         public T Plugin
         {
-            get { return (loaded.Count == 1)? loaded [0] : default (T); }
+            get { return loaded.Count == 1? loaded [0] : default (T); }
         }
 
         public PluginLoader()
@@ -175,7 +175,7 @@ namespace OpenSim.Framework
                 {
                     log.Info("[PLUGINS]: Trying plugin " + node.Path);
 
-                    if ((filter != null) && (filter.Apply(node) == false))
+                    if (filter != null && filter.Apply(node) == false)
                         continue;
 
                     T plugin = (T)node.CreateInstance();
@@ -257,14 +257,11 @@ namespace OpenSim.Framework
       
     public class PluginExtensionNode : ExtensionNode
     {
-        [NodeAttribute]
-        string id = "";
+        [NodeAttribute] readonly string id = "";
 
-        [NodeAttribute]
-        string provider = "";
+        [NodeAttribute] readonly string provider = "";
 
-        [NodeAttribute]
-        string type = "";
+        [NodeAttribute] readonly string type = "";
 
         Type typeobj;
 
@@ -297,8 +294,8 @@ namespace OpenSim.Framework
     /// </summary>
     public class PluginCountConstraint : IPluginConstraint
     {
-        private int min;
-        private int max;
+        private readonly int min;
+        private readonly int max;
 
         public PluginCountConstraint(int exact)
         {
@@ -325,7 +322,7 @@ namespace OpenSim.Framework
         {
             int count = AddinManager.GetExtensionNodes(extpoint).Count;
 
-            if ((count < min) || (count > max))
+            if (count < min || count > max)
                 throw new PluginConstraintViolatedException(Message);
 
             return true;
@@ -338,7 +335,7 @@ namespace OpenSim.Framework
     /// </summary>
     public class PluginProviderFilter : IPluginFilter
     {
-        private string[] m_filters;
+        private readonly string[] m_filters;
 
         /// <summary>
         /// Constructor.
@@ -380,7 +377,7 @@ namespace OpenSim.Framework
     /// </summary>
     public class PluginIdFilter : IPluginFilter
     {
-        private string[] m_filters;
+        private readonly string[] m_filters;
 
         /// <summary>
         /// Constructor.

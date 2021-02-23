@@ -44,7 +44,7 @@ namespace OpenSim.Data.MySQL
         private string m_connectionString;
 
         private FieldInfo[] m_Fields;
-        private Dictionary<string, FieldInfo> m_FieldMap =
+        private readonly Dictionary<string, FieldInfo> m_FieldMap =
                 new Dictionary<string, FieldInfo>();
 
         protected virtual Assembly Assembly
@@ -549,7 +549,7 @@ namespace OpenSim.Data.MySQL
 
                         dbcon.Close();
 
-                        return (ret != 0);
+                        return ret != 0;
                     }
                 }
                 catch (MySqlException ex)

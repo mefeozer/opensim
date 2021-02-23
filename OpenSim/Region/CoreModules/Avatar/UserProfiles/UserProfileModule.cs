@@ -69,7 +69,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         IAssetCache m_assetCache;
         IGroupsModule m_groupsModule = null;
 
-        private JsonRpcRequestManager rpc = new JsonRpcRequestManager();
+        private readonly JsonRpcRequestManager rpc = new JsonRpcRequestManager();
         private bool m_allowUserProfileWebURLs = true;
 
         struct AsyncPropsRequest
@@ -80,8 +80,8 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
             public int reqtype;
         }
 
-        private ConcurrentStack<AsyncPropsRequest> m_asyncRequests = new ConcurrentStack<AsyncPropsRequest>();
-        private object m_asyncRequestsLock = new object();
+        private readonly ConcurrentStack<AsyncPropsRequest> m_asyncRequests = new ConcurrentStack<AsyncPropsRequest>();
+        private readonly object m_asyncRequestsLock = new object();
         private bool m_asyncRequestsRunning = false;
 
         private void ProcessRequests()
@@ -1069,10 +1069,10 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                     {
                         // this is a fail on large regions
                         uint gtmp = (uint)globalPos.X >> 8;
-                        globalPos.X -= (gtmp << 8);
+                        globalPos.X -= gtmp << 8;
 
                         gtmp = (uint)globalPos.Y >> 8;
-                        globalPos.Y -= (gtmp << 8);
+                        globalPos.Y -= gtmp << 8;
 
                         pick.ParcelId = Util.BuildFakeParcelID(target.RegionHandle, (uint)globalPos.X, (uint)globalPos.Y);
 
@@ -1501,9 +1501,9 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
             ScenePresence p = FindPresence(avatarID);
             if (p != null && p.IsNPC)
             {
-                remoteClient.SendAvatarProperties(avatarID, ((INPC)(p.ControllingClient)).profileAbout, ((INPC)(p.ControllingClient)).Born,
+                remoteClient.SendAvatarProperties(avatarID, ((INPC)p.ControllingClient).profileAbout, ((INPC)p.ControllingClient).Born,
                       Utils.StringToBytes("Non Player Character (NPC)"), "NPCs have no life", 0x10,
-                      UUID.Zero, ((INPC)(p.ControllingClient)).profileImage, "", UUID.Zero);
+                      UUID.Zero, ((INPC)p.ControllingClient).profileImage, "", UUID.Zero);
                 remoteClient.SendAvatarInterestsReply(avatarID, 0, "",
                           0, "Getting into trouble", "Droidspeak");
                 return;

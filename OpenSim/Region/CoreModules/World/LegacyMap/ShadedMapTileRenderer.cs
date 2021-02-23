@@ -92,7 +92,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                 for (int y = 0; y < hm.Height; y++)
                 {
                     // Y flip the cordinates for the bitmap: hf origin is lower left, bm origin is upper left
-                    int yr = ((int)hm.Height - 1) - y;
+                    int yr = (int)hm.Height - 1 - y;
 
                     float heightvalue = (float)hm[x, y];
 
@@ -119,12 +119,12 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                             // .
                             //
                             // Shade the terrain for shadows
-                            if (x < (hm.Width - 1) && yr < (hm.Height - 1))
+                            if (x < hm.Width - 1 && yr < hm.Height - 1)
                             {
                                 float hfvalue = (float)hm[x, y];
                                 float hfvaluecompare = 0f;
 
-                                if ((x + 1 < hm.Width) && (y + 1 < hm.Height))
+                                if (x + 1 < hm.Width && y + 1 < hm.Height)
                                 {
                                     hfvaluecompare = (float)hm[x + 1, y + 1]; // light from north-east => look at land height there
                                 }
@@ -147,14 +147,14 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                                     if (hfdiff % 1f != 0)
                                     {
                                         // hfdiffi = hfdiffi + Math.Abs((int)(((hfdiff % 1) * 0.5f) * 10f) - 1);
-                                        hfdiffi = hfdiffi + Math.Abs((int)((hfdiff % 1f) * 5f) - 1);
+                                        hfdiffi = hfdiffi + Math.Abs((int)(hfdiff % 1f * 5f) - 1);
                                     }
 
-                                    hfdiffihighlight = Math.Abs((int)((hfdiff * highlightfactor) * 4.5f)) + 1;
+                                    hfdiffihighlight = Math.Abs((int)(hfdiff * highlightfactor * 4.5f)) + 1;
                                     if (hfdiff % 1f != 0)
                                     {
                                         // hfdiffi = hfdiffi + Math.Abs((int)(((hfdiff % 1) * 0.5f) * 10f) - 1);
-                                        hfdiffihighlight = hfdiffihighlight + Math.Abs((int)(((hfdiff * highlightfactor) % 1f) * 5f) - 1);
+                                        hfdiffihighlight = hfdiffihighlight + Math.Abs((int)(hfdiff * highlightfactor % 1f * 5f) - 1);
                                     }
                                 }
                                 catch (OverflowException)
@@ -175,9 +175,9 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                                         int r = color.R;
                                         int g = color.G;
                                         int b = color.B;
-                                        color = Color.FromArgb((r + hfdiffihighlight < 255) ? r + hfdiffihighlight : 255,
-                                                               (g + hfdiffihighlight < 255) ? g + hfdiffihighlight : 255,
-                                                               (b + hfdiffihighlight < 255) ? b + hfdiffihighlight : 255);
+                                        color = Color.FromArgb(r + hfdiffihighlight < 255 ? r + hfdiffihighlight : 255,
+                                                               g + hfdiffihighlight < 255 ? g + hfdiffihighlight : 255,
+                                                               b + hfdiffihighlight < 255 ? b + hfdiffihighlight : 255);
                                     }
                                 }
                                 else if (hfdiff < -0.3f)
@@ -189,15 +189,15 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
                                     if (ShadowDebugContinue)
                                     {
-                                        if ((x - 1 > 0) && (yr + 1 < hm.Height))
+                                        if (x - 1 > 0 && yr + 1 < hm.Height)
                                         {
                                             color = mapbmp.GetPixel(x - 1, yr + 1);
                                             int r = color.R;
                                             int g = color.G;
                                             int b = color.B;
-                                            color = Color.FromArgb((r - hfdiffi > 0) ? r - hfdiffi : 0,
-                                                                   (g - hfdiffi > 0) ? g - hfdiffi : 0,
-                                                                   (b - hfdiffi > 0) ? b - hfdiffi : 0);
+                                            color = Color.FromArgb(r - hfdiffi > 0 ? r - hfdiffi : 0,
+                                                                   g - hfdiffi > 0 ? g - hfdiffi : 0,
+                                                                   b - hfdiffi > 0 ? b - hfdiffi : 0);
 
                                             mapbmp.SetPixel(x-1, yr+1, color);
                                         }
@@ -229,7 +229,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                         else if (heightvalue < 0f)
                             heightvalue = 0f;
 
-                        heightvalue = 100f - (heightvalue * 100f) / 19f;
+                        heightvalue = 100f - heightvalue * 100f / 19f;
 
                         try
                         {
@@ -243,7 +243,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                                 terraincorruptedwarningsaid = true;
                             }
                             Color black = Color.Black;
-                            mapbmp.SetPixel(x, (hm.Width - y) - 1, black);
+                            mapbmp.SetPixel(x, hm.Width - y - 1, black);
                         }
                     }
                 }

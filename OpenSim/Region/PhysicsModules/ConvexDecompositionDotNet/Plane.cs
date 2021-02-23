@@ -76,7 +76,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static bool operator ==(Plane a, Plane b)
         {
-            return (a.normal == b.normal && a.dist == b.dist);
+            return a.normal == b.normal && a.dist == b.dist;
         }
 
         public static bool operator !=(Plane a, Plane b)
@@ -91,7 +91,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static bool coplanar(Plane a, Plane b)
         {
-            return (a == b || a == PlaneFlip(b));
+            return a == b || a == PlaneFlip(b);
         }
     }
 }

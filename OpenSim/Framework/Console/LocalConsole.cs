@@ -43,23 +43,23 @@ namespace OpenSim.Framework.Console
     public class LocalConsole : CommandConsole
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private string m_historyPath;
-        private bool m_historyEnable;
-        private bool m_historytimestamps;
+        private readonly string m_historyPath;
+        private readonly bool m_historyEnable;
+        private readonly bool m_historytimestamps;
 
         // private readonly object m_syncRoot = new object();
         private const string LOGLEVEL_NONE = "(none)";
 
         // Used to extract categories for colourization.
-        private Regex m_categoryRegex
+        private readonly Regex m_categoryRegex
             = new Regex(
                 @"^(?<Front>.*?)\[(?<Category>[^\]]+)\]:?(?<End>.*)", RegexOptions.Singleline | RegexOptions.Compiled);
 
         private int m_cursorYPosition = -1;
         private int m_cursorXPosition = 0;
-        private StringBuilder m_commandLine = new StringBuilder();
+        private readonly StringBuilder m_commandLine = new StringBuilder();
         private bool m_echo = true;
-        private List<string> m_history = new List<string>();
+        private readonly List<string> m_history = new List<string>();
 
         private static readonly ConsoleColor[] Colors = {
             // the dark colors don't seem to be visible on some black background terminals like putty :(
@@ -80,7 +80,7 @@ namespace OpenSim.Framework.Console
         private static ConsoleColor DeriveColor(string input)
         {
             // it is important to do Abs, hash values can be negative
-            return Colors[(Math.Abs(input.ToUpper().GetHashCode()) % Colors.Length)];
+            return Colors[Math.Abs(input.ToUpper().GetHashCode()) % Colors.Length];
         }
 
         public LocalConsole(string defaultPrompt, IConfig startupConfig = null) : base(defaultPrompt)

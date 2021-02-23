@@ -72,7 +72,7 @@ namespace OpenSim.Region.Framework.Scenes
         private Dictionary<UUID, SceneObjectGroup> m_updateList = new Dictionary<UUID, SceneObjectGroup>();
         private List<ScenePresence> m_scenePresenceList;
 
-        private Scene m_parentScene;
+        private readonly Scene m_parentScene;
         private PhysicsScene _PhyScene;
 
         private int m_numRootAgents = 0;
@@ -94,8 +94,8 @@ namespace OpenSim.Region.Framework.Scenes
         /// </remarks>
         private readonly object m_updateLock = new object();
         private readonly object m_linkLock = new object();
-        private System.Threading.ReaderWriterLockSlim m_scenePresencesLock;
-        private System.Threading.ReaderWriterLockSlim m_scenePartsLock;
+        private readonly System.Threading.ReaderWriterLockSlim m_scenePresencesLock;
+        private readonly System.Threading.ReaderWriterLockSlim m_scenePartsLock;
 
         #endregion
 
@@ -303,7 +303,7 @@ namespace OpenSim.Region.Framework.Scenes
             Vector3 npos = sceneObject.RootPart.GroupPosition;
             bool clampZ = m_parentScene.ClampNegativeZ;
 
-            if (!(((sceneObject.RootPart.Shape.PCode == (byte)PCode.Prim) && (sceneObject.RootPart.Shape.State != 0))) && (npos.X < 0.0 || npos.Y < 0.0 || (npos.Z < 0.0 && clampZ) ||
+            if (!(sceneObject.RootPart.Shape.PCode == (byte)PCode.Prim && sceneObject.RootPart.Shape.State != 0) && (npos.X < 0.0 || npos.Y < 0.0 || npos.Z < 0.0 && clampZ ||
                 npos.X > regionSizeX ||
                 npos.Y > regionSizeY))
             {
@@ -329,7 +329,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             bool ret = AddSceneObject(sceneObject, attachToBackup, sendClientUpdates);
 
-            if (attachToBackup && (!alreadyPersisted))
+            if (attachToBackup && !alreadyPersisted)
             {
                 sceneObject.ForceInventoryPersistence();
                 sceneObject.HasGroupChanged = true;
@@ -395,7 +395,7 @@ namespace OpenSim.Region.Framework.Scenes
             PhysicsActor pa = sceneObject.RootPart.PhysActor;
             if (pa != null && pa.IsPhysical && vel != Vector3.Zero)
             {
-                sceneObject.RootPart.ApplyImpulse((vel * sceneObject.GetMass()), false);
+                sceneObject.RootPart.ApplyImpulse(vel * sceneObject.GetMass(), false);
             }
 
             return true;
@@ -522,7 +522,7 @@ namespace OpenSim.Region.Framework.Scenes
 //                "[SCENE GRAPH]: Deleting scene object with uuid {0}, resultOfObjectLinked = {1}",
 //                uuid, resultOfObjectLinked);
 
-            if (!Entities.TryGetValue(uuid, out EntityBase entity) || (!(entity is SceneObjectGroup)))
+            if (!Entities.TryGetValue(uuid, out EntityBase entity) || !(entity is SceneObjectGroup))
                 return false;
 
             SceneObjectGroup grp = (SceneObjectGroup)entity;
@@ -1050,7 +1050,7 @@ namespace OpenSim.Region.Framework.Scenes
                     break;
                 }
             }
-            return (avatar != null);
+            return avatar != null;
         }
 
         /// <summary>
@@ -1155,7 +1155,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns>null if no such group was found</returns>
         protected internal SceneObjectGroup GetSceneObjectGroup(UUID fullID)
         {
-            if (Entities.TryGetValue(fullID, out EntityBase entity) && (entity is SceneObjectGroup))
+            if (Entities.TryGetValue(fullID, out EntityBase entity) && entity is SceneObjectGroup)
                 return entity as SceneObjectGroup;
             return null;
         }
@@ -1166,7 +1166,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns>null if no such group was found</returns>
         protected internal SceneObjectGroup GetSceneObjectGroup(uint localID)
         {
-            if (Entities.TryGetValue(localID, out EntityBase entity) && (entity is SceneObjectGroup))
+            if (Entities.TryGetValue(localID, out EntityBase entity) && entity is SceneObjectGroup)
                 return entity as SceneObjectGroup;
             return null;
         }
@@ -1426,7 +1426,7 @@ namespace OpenSim.Region.Framework.Scenes
                                 if (m_parentScene.Permissions.CanMoveObject(grp, remoteClient))
                                 {
                                     // Strip all but move and rotation from request
-                                    data.change &= (ObjectChangeType.Group | ObjectChangeType.Position | ObjectChangeType.Rotation);
+                                    data.change &= ObjectChangeType.Group | ObjectChangeType.Position | ObjectChangeType.Rotation;
 
                                     part.StoreUndoState(data.change);
                                     grp.doChangeObject(part, (ObjectChangeData)data);
@@ -1610,7 +1610,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             if (group != null)
             {
-                if (group.IsAttachment || (group.RootPart.Shape.PCode == 9 && group.RootPart.Shape.State != 0))
+                if (group.IsAttachment || @group.RootPart.Shape.PCode == 9 && @group.RootPart.Shape.State != 0)
                 {
                     // Set the new attachment point data in the object
                     byte attachmentPoint = (byte)group.AttachmentPoint;

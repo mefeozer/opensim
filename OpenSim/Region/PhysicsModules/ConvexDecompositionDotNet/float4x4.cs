@@ -115,7 +115,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static bool operator ==(float4x4 a, float4x4 b)
         {
-            return (a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w);
+            return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
         }
 
         public static bool operator !=(float4x4 a, float4x4 b)

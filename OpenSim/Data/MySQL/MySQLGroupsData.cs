@@ -37,13 +37,13 @@ namespace OpenSim.Data.MySQL
 {
     public class MySQLGroupsData : IGroupsData
     {
-        private MySqlGroupsGroupsHandler m_Groups;
-        private MySqlGroupsMembershipHandler m_Membership;
-        private MySqlGroupsRolesHandler m_Roles;
-        private MySqlGroupsRoleMembershipHandler m_RoleMembership;
-        private MySqlGroupsInvitesHandler m_Invites;
-        private MySqlGroupsNoticesHandler m_Notices;
-        private MySqlGroupsPrincipalsHandler m_Principals;
+        private readonly MySqlGroupsGroupsHandler m_Groups;
+        private readonly MySqlGroupsMembershipHandler m_Membership;
+        private readonly MySqlGroupsRolesHandler m_Roles;
+        private readonly MySqlGroupsRoleMembershipHandler m_RoleMembership;
+        private readonly MySqlGroupsInvitesHandler m_Invites;
+        private readonly MySqlGroupsNoticesHandler m_Notices;
+        private readonly MySqlGroupsPrincipalsHandler m_Principals;
 
         public MySQLGroupsData(string connectionString, string realm)
         {

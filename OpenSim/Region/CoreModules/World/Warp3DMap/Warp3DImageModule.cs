@@ -70,8 +70,8 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
         internal IJ2KDecoder m_imgDecoder;
 
         // caches per rendering 
-        private Dictionary<UUID, warp_Texture> m_warpTextures = new Dictionary<UUID, warp_Texture>();
-        private Dictionary<UUID, int> m_colors = new Dictionary<UUID, int>();
+        private readonly Dictionary<UUID, warp_Texture> m_warpTextures = new Dictionary<UUID, warp_Texture>();
+        private readonly Dictionary<UUID, int> m_colors = new Dictionary<UUID, int>();
 
         private IConfigSource m_config;
         private bool m_drawPrimVolume = true;   // true if should render the prims on the tile
@@ -202,8 +202,8 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
             }
 
             cameraPos = new Vector3(
-                            (m_scene.RegionInfo.RegionSizeX) * 0.5f,
-                            (m_scene.RegionInfo.RegionSizeY) * 0.5f,
+                            m_scene.RegionInfo.RegionSizeX * 0.5f,
+                            m_scene.RegionInfo.RegionSizeY * 0.5f,
                             m_cameraHeight);
 
             cameraDir = -Vector3.UnitZ;
@@ -340,8 +340,8 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
             int bitHeight;
 
             const double log2inv = 1.4426950408889634073599246810019;
-            bitWidth = (int)Math.Ceiling((Math.Log(terrain.Width) * log2inv));
-            bitHeight = (int)Math.Ceiling((Math.Log(terrain.Height) * log2inv));
+            bitWidth = (int)Math.Ceiling(Math.Log(terrain.Width) * log2inv);
+            bitHeight = (int)Math.Ceiling(Math.Log(terrain.Height) * log2inv);
 
             if (bitWidth > 8) // more than 256 is very heavy :(
                 bitWidth = 8;
@@ -869,7 +869,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                     height = bitmap.Height;
 
                     BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-                    pixelBytes = (bitmap.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
+                    pixelBytes = bitmap.PixelFormat == PixelFormat.Format24bppRgb ? 3 : 4;
 
                     // Sum up the individual channels
                     unsafe
@@ -878,7 +878,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                         {
                             for (int y = 0; y < height; y++)
                             {
-                                byte* row = (byte*)bitmapData.Scan0 + (y * bitmapData.Stride);
+                                byte* row = (byte*)bitmapData.Scan0 + y * bitmapData.Stride;
 
                                 for (int x = 0; x < width; x++)
                                 {
@@ -893,7 +893,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                         {
                             for (int y = 0; y < height; y++)
                             {
-                                byte* row = (byte*)bitmapData.Scan0 + (y * bitmapData.Stride);
+                                byte* row = (byte*)bitmapData.Scan0 + y * bitmapData.Stride;
 
                                 for (int x = 0; x < width; x++)
                                 {
@@ -909,10 +909,10 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                 const decimal OO_255 = 1m / 255m;
                 decimal totalPixels = (decimal)(width * height);
 
-                decimal rm = ((decimal)r / totalPixels) * OO_255;
-                decimal gm = ((decimal)g / totalPixels) * OO_255;
-                decimal bm = ((decimal)b / totalPixels) * OO_255;
-                decimal am = ((decimal)a / totalPixels) * OO_255;
+                decimal rm = (decimal)r / totalPixels * OO_255;
+                decimal gm = (decimal)g / totalPixels * OO_255;
+                decimal bm = (decimal)b / totalPixels * OO_255;
+                decimal am = (decimal)a / totalPixels * OO_255;
 
                 if (pixelBytes == 3)
                     am = 1m;

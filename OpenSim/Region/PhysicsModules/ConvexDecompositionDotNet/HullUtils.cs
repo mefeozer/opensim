@@ -72,7 +72,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
         {
             float3 vtx = vertices[t.x];
             float3 n = TriNormal(vtx, vertices[t.y], vertices[t.z]);
-            return (float3.dot(n, p - vtx) > epsilon); // EPSILON???
+            return float3.dot(n, p - vtx) > epsilon; // EPSILON???
         }
 
         public static int hasedge(int3 t, int a, int b)
@@ -88,7 +88,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static bool hasvert(int3 t, int v)
         {
-            return (t[0] == v || t[1] == v || t[2] == v);
+            return t[0] == v || t[1] == v || t[2] == v;
         }
 
         public static int shareedge(int3 a, int3 b)
@@ -110,8 +110,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             {
                 int i1 = (i + 1) % 3;
                 int i2 = (i + 2) % 3;
-                int a = (s)[i1];
-                int b = (s)[i2];
+                int a = s[i1];
+                int b = s[i2];
                 Debug.Assert(tris[s.neib(a, b)].neib(b, a) == s.id);
                 Debug.Assert(tris[t.neib(a, b)].neib(b, a) == t.id);
                 tris[s.neib(a, b)].setneib(b, a, t.neib(b, a));
@@ -134,8 +134,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             {
                 int i1 = (i + 1) % 3;
                 int i2 = (i + 2) % 3;
-                int a = (t)[i1];
-                int b = (t)[i2];
+                int a = t[i1];
+                int b = t[i2];
                 Debug.Assert(a != b);
                 Debug.Assert(tris[t.n[i]].neib(b, a) == t.id);
             }
@@ -172,12 +172,12 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             HullTriangle t = null;
             for (i = 0; i < tris.Count; i++)
             {
-                if (t == null || (tris.Count > i && (object)tris[i] != null && t.rise < tris[i].rise))
+                if (t == null || tris.Count > i && (object)tris[i] != null && t.rise < tris[i].rise)
                 {
                     t = tris[i];
                 }
             }
-            return (t.rise > epsilon) ? t : null;
+            return t.rise > epsilon ? t : null;
         }
 
         public static Quaternion RotationArc(float3 v0, float3 v1)
@@ -205,14 +205,14 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             float3 dif = p1 - p0;
             float dn = float3.dot(plane.normal, dif);
             float t = -(plane.dist + float3.dot(plane.normal, p0)) / dn;
-            return p0 + (dif * t);
+            return p0 + dif * t;
         }
 
         public static float3 LineProject(float3 p0, float3 p1, float3 a)
         {
             float3 w = new float3();
             w = p1 - p0;
-            float t = float3.dot(w, (a - p0)) / (w.x * w.x + w.y * w.y + w.z * w.z);
+            float t = float3.dot(w, a - p0) / (w.x * w.x + w.y * w.y + w.z * w.z);
             return p0 + w * t;
         }
 
@@ -225,7 +225,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
         {
             float3 w = new float3();
             w = p1 - p0;
-            float t = float3.dot(w, (a - p0)) / (w.x * w.x + w.y * w.y + w.z * w.z);
+            float t = float3.dot(w, a - p0) / (w.x * w.x + w.y * w.y + w.z * w.z);
             return t;
         }
 
@@ -296,8 +296,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 float3 side = new float3();
                 pp1 = vert[j];
                 pp2 = vert[(j + 1) % vert.Count];
-                side = float3.cross((pp2 - pp1), (the_point - pp1));
-                inside = (float3.dot(nrml, side) >= 0.0);
+                side = float3.cross(pp2 - pp1, the_point - pp1);
+                inside = float3.dot(nrml, side) >= 0.0;
             }
             if (inside)
             {
@@ -315,7 +315,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static bool BoxInside(float3 p, float3 bmin, float3 bmax)
         {
-            return (p.x >= bmin.x && p.x <= bmax.x && p.y >= bmin.y && p.y <= bmax.y && p.z >= bmin.z && p.z <= bmax.z);
+            return p.x >= bmin.x && p.x <= bmax.x && p.y >= bmin.y && p.y <= bmax.y && p.z >= bmin.z && p.z <= bmax.z;
         }
 
         public static bool BoxIntersect(float3 v0, float3 v1, float3 bmin, float3 bmax, float3 impact)
@@ -460,7 +460,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
         public static int PlaneTest(Plane p, float3 v, float planetestepsilon)
         {
             float a = float3.dot(v, p.normal) + p.dist;
-            int flag = (a > planetestepsilon) ? (2) : ((a < -planetestepsilon) ? (1) : (0));
+            int flag = a > planetestepsilon ? 2 : a < -planetestepsilon ? 1 : 0;
             return flag;
         }
 
@@ -501,7 +501,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             }
             else
             {
-                u = u - (nrml * (float)Math.Sqrt(1 - m * m));
+                u = u - nrml * (float)Math.Sqrt(1 - m * m);
             }
             float3 v = PlaneLineIntersection(new Plane(nrml, dist), cop, cop + dir2);
             v = v - cor;
@@ -513,7 +513,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             }
             else
             {
-                v = v - (nrml * (float)Math.Sqrt(1 - m * m));
+                v = v - nrml * (float)Math.Sqrt(1 - m * m);
             }
             return RotationArc(u, v);
         }
@@ -543,8 +543,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             }
             for (i = 0; i < convex.edges.Count; i++)
             {
-                Debug.Assert((0) == PlaneTest(convex.facets[convex.edges[i].p], convex.vertices[convex.edges[i].v], planetestepsilon));
-                if ((0) != PlaneTest(convex.facets[convex.edges[i].p], convex.vertices[convex.edges[i].v], planetestepsilon))
+                Debug.Assert(0 == PlaneTest(convex.facets[convex.edges[i].p], convex.vertices[convex.edges[i].v], planetestepsilon));
+                if (0 != PlaneTest(convex.facets[convex.edges[i].p], convex.vertices[convex.edges[i].v], planetestepsilon))
                     return false;
                 if (convex.edges[estart].p != convex.edges[i].p)
                 {
@@ -690,19 +690,19 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             for (i = 0; i < convex.vertices.Count; i++)
             {
                 vertflag[i].planetest = (byte)PlaneTest(slice, convex.vertices[i], planetestepsilon);
-                if (vertflag[i].planetest == (0))
+                if (vertflag[i].planetest == 0)
                 {
                     // ? vertscoplanar.Add(i);
                     vertflag[i].undermap = (byte)vertcountunder++;
                     vertflag[i].overmap = (byte)vertcountover++;
                 }
-                else if (vertflag[i].planetest == (1))
+                else if (vertflag[i].planetest == 1)
                 {
                     vertflag[i].undermap = (byte)vertcountunder++;
                 }
                 else
                 {
-                    Debug.Assert(vertflag[i].planetest == (2));
+                    Debug.Assert(vertflag[i].planetest == 2);
                     vertflag[i].overmap = (byte)vertcountover++;
                     vertflag[i].undermap = 255; // for debugging purposes
                 }
@@ -740,12 +740,12 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                     //	ecop=e;
                     //}
 
-                    if (vertflag[edge0.v].planetest == (2) && vertflag[edge1.v].planetest == (2))
+                    if (vertflag[edge0.v].planetest == 2 && vertflag[edge1.v].planetest == 2)
                     {
                         // both endpoints over plane
                         edgeflag[e0].undermap = -1;
                     }
-                    else if ((vertflag[edge0.v].planetest | vertflag[edge1.v].planetest) == (1))
+                    else if ((vertflag[edge0.v].planetest | vertflag[edge1.v].planetest) == 1)
                     {
                         // at least one endpoint under, the other coplanar or under
 
@@ -761,7 +761,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                         }
                         under_edge_count++;
                     }
-                    else if ((vertflag[edge0.v].planetest | vertflag[edge1.v].planetest) == (0))
+                    else if ((vertflag[edge0.v].planetest | vertflag[edge1.v].planetest) == 0)
                     {
                         // both endpoints coplanar
                         // must check a 3rd point to see if UNDER
@@ -772,7 +772,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                         }
                         Debug.Assert(convex.edges[e2].p == currentplane);
                         ConvexH.HalfEdge edge2 = convex.edges[e2];
-                        if (vertflag[edge2.v].planetest == (1))
+                        if (vertflag[edge2.v].planetest == 1)
                         {
 
                             edgeflag[e0].undermap = (short)under_edge_count;
@@ -790,7 +790,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                             edgeflag[e0].undermap = -1;
                         }
                     }
-                    else if (vertflag[edge0.v].planetest == (1) && vertflag[edge1.v].planetest == (2))
+                    else if (vertflag[edge0.v].planetest == 1 && vertflag[edge1.v].planetest == 2)
                     {
                         // first is under 2nd is over
 
@@ -832,7 +832,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                         }
 
                     }
-                    else if (vertflag[edge0.v].planetest == (0) && vertflag[edge1.v].planetest == (2))
+                    else if (vertflag[edge0.v].planetest == 0 && vertflag[edge1.v].planetest == 2)
                     {
                         // first is coplanar 2nd is over
 
@@ -856,7 +856,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
                         }
                     }
-                    else if (vertflag[edge0.v].planetest == (2) && vertflag[edge1.v].planetest == (1))
+                    else if (vertflag[edge0.v].planetest == 2 && vertflag[edge1.v].planetest == 1)
                     {
                         // first is over next is under
                         // new vertex!!!
@@ -899,7 +899,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                         Debug.Assert(edgeflag[e0].undermap == under_edge_count);
                         under_edge_count++;
                     }
-                    else if (vertflag[edge0.v].planetest == (2) && vertflag[edge1.v].planetest == (0))
+                    else if (vertflag[edge0.v].planetest == 2 && vertflag[edge1.v].planetest == 0)
                     {
                         // first is over next is coplanar
 
@@ -982,7 +982,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 int k = 0;
                 for (i = 0; i < convex.vertices.Count; i++)
                 {
-                    if (vertflag[i].planetest != (2))
+                    if (vertflag[i].planetest != 2)
                     {
                         under.vertices[k++] = convex.vertices[i];
                     }
@@ -1044,14 +1044,14 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                     md = d;
                 }
             }
-            return (md > epsilon) ? p : -1;
+            return md > epsilon ? p : -1;
         }
 
         public static float3 orth(float3 v)
         {
             float3 a = float3.cross(v, new float3(0f, 0f, 1f));
             float3 b = float3.cross(v, new float3(0f, 1f, 0f));
-            return float3.normalize((float3.magnitude(a) > float3.magnitude(b)) ? a : b);
+            return float3.normalize(float3.magnitude(a) > float3.magnitude(b) ? a : b);
         }
 
         public static int maxdir(List<float3> p, int count, float3 dir)
@@ -1172,7 +1172,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 return new int4(-1, -1, -1, -1);
             basis[1] = float3.cross(new float3(1, 0.02f, 0), basis[0]);
             basis[2] = float3.cross(new float3(-0.02f, 1, 0), basis[0]);
-            basis[1] = float3.normalize((float3.magnitude(basis[1]) > float3.magnitude(basis[2])) ? basis[1] : basis[2]);
+            basis[1] = float3.normalize(float3.magnitude(basis[1]) > float3.magnitude(basis[2]) ? basis[1] : basis[2]);
             int p2 = maxdirsterid(verts, verts.Count, basis[1], allow);
             if (p2 == p0 || p2 == p1)
             {
@@ -1256,9 +1256,9 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 HullTriangle t = tris[j];
                 Debug.Assert((object)t != null);
                 Debug.Assert(t.vmax < 0);
-                float3 n = TriNormal(verts[(t)[0]], verts[(t)[1]], verts[(t)[2]]);
+                float3 n = TriNormal(verts[t[0]], verts[t[1]], verts[t[2]]);
                 t.vmax = maxdirsterid(verts, verts.Count, n, allow);
-                t.rise = float3.dot(n, verts[t.vmax] - verts[(t)[0]]);
+                t.rise = float3.dot(n, verts[t.vmax] - verts[t[0]]);
             }
             HullTriangle te;
             vlimit -= 4;
@@ -1307,7 +1307,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                         continue;
                     if (t.vmax >= 0)
                         break;
-                    float3 n = TriNormal(verts[(t)[0]], verts[(t)[1]], verts[(t)[2]]);
+                    float3 n = TriNormal(verts[t[0]], verts[t[1]], verts[t[2]]);
                     t.vmax = maxdirsterid(verts, verts.Count, n, allow);
                     if (isextreme[t.vmax] != 0)
                     {
@@ -1315,7 +1315,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                     }
                     else
                     {
-                        t.rise = float3.dot(n, verts[t.vmax] - verts[(t)[0]]);
+                        t.rise = float3.dot(n, verts[t.vmax] - verts[t[0]]);
                     }
                 }
                 vlimit--;
@@ -1336,7 +1336,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 if ((object)tris[i] != null)
                 {
                     for (int j = 0; j < 3; j++)
-                        ts.Add((tris[i])[j]);
+                        ts.Add(tris[i][j]);
                     tris[i] = null;
                 }
             }
@@ -1360,15 +1360,15 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 {
                     Plane p = new Plane();
                     HullTriangle t = tris[i];
-                    p.normal = TriNormal(verts[(t)[0]], verts[(t)[1]], verts[(t)[2]]);
-                    p.dist = -float3.dot(p.normal, verts[(t)[0]]);
+                    p.normal = TriNormal(verts[t[0]], verts[t[1]], verts[t[2]]);
+                    p.dist = -float3.dot(p.normal, verts[t[0]]);
                     planes.Add(p);
                     for (j = 0; j < 3; j++)
                     {
                         if (t.n[j] < t.id)
                             continue;
                         HullTriangle s = tris[t.n[j]];
-                        float3 snormal = TriNormal(verts[(s)[0]], verts[(s)[1]], verts[(s)[2]]);
+                        float3 snormal = TriNormal(verts[s[0]], verts[s[1]], verts[s[2]]);
                         if (float3.dot(snormal, p.normal) >= Math.Cos(bevangle * (3.14159264f / 180.0f)))
                             continue;
                         float3 n = float3.normalize(snormal + p.normal);
@@ -1409,7 +1409,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             float3 emin = new float3(bmin);
             float3 emax = new float3(bmax);
             float epsilon = float3.magnitude(emax - emin) * 0.025f;
-            float planetestepsilon = float3.magnitude(emax - emin) * (0.001f);
+            float planetestepsilon = float3.magnitude(emax - emin) * 0.001f;
             // todo: add bounding cube planes to force bevel. or try instead not adding the diameter expansion ??? must think.
             // ConvexH *convex = ConvexHMakeCube(bmin - float3(diameter,diameter,diameter),bmax+float3(diameter,diameter,diameter));
             ConvexH c = ConvexHMakeCube(new float3(bmin), new float3(bmax));
@@ -1525,7 +1525,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                         tris2.Add(new int3(faces[k], faces[k + j - 1], faces[k + j]));
                     k += pn;
                 }
-                Debug.Assert(tris2.Count == faces.Count - 1 - (n * 3));
+                Debug.Assert(tris2.Count == faces.Count - 1 - n * 3);
 
                 result.Indices = new List<int>(tris2.Count * 3);
                 for (int i = 0; i < tris2.Count; i++)

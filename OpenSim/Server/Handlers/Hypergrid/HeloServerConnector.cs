@@ -47,7 +47,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_HandlersType;
+        private readonly string m_HandlersType;
 
         public HeloServerGetAndHeadHandler(string handlersType) : base("/helo")
         {

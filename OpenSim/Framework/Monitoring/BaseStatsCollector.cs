@@ -48,8 +48,8 @@ namespace OpenSim.Framework.Monitoring
 
             sb.AppendFormat(
                 "Heap allocation rate (last/avg): {0}/{1}MB/s\n",
-                Math.Round((MemoryWatchdog.LastHeapAllocationRate * 1000) / 1048576.0, 3),
-                Math.Round((MemoryWatchdog.AverageHeapAllocationRate * 1000) / 1048576.0, 3));
+                Math.Round(MemoryWatchdog.LastHeapAllocationRate * 1000 / 1048576.0, 3),
+                Math.Round(MemoryWatchdog.AverageHeapAllocationRate * 1000 / 1048576.0, 3));
 
             try
             {

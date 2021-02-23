@@ -39,8 +39,9 @@ namespace OpenSim.Framework.ServiceAuth
 
         public string Name { get { return "BasicHttp"; } }
 
-        private string m_Username, m_Password;
-        private string m_CredentialsB64;
+        private readonly string m_Username;
+        private readonly string m_Password;
+        private readonly string m_CredentialsB64;
 
 //        private string remove_me;
 

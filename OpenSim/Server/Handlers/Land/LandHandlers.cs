@@ -43,7 +43,7 @@ namespace OpenSim.Server.Handlers.Land
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ILandService m_LocalService;
+        private readonly ILandService m_LocalService;
 
         public LandHandlers(ILandService service)
         {

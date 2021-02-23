@@ -160,10 +160,10 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             if(buffer == null)
             {
-                if (contentType != null && (!(contentType.Contains("image")
-                    || contentType.Contains("x-shockwave-flash")
-                    || contentType.Contains("application/x-oar")
-                    || contentType.Contains("application/vnd.ll.mesh"))))
+                if (contentType != null && !(contentType.Contains("image")
+                                             || contentType.Contains("x-shockwave-flash")
+                                             || contentType.Contains("application/x-oar")
+                                             || contentType.Contains("application/vnd.ll.mesh")))
                 {
                     // Text
                     buffer = Encoding.UTF8.GetBytes(responseString);

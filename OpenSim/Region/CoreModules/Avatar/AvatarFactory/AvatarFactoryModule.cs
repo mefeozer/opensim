@@ -58,14 +58,14 @@ namespace OpenSim.Region.CoreModules.Avatar.AvatarFactory
         private int m_sendtime = 2; // seconds to wait before sending changed appearance
         private bool m_reusetextures = false;
 
-        private int m_checkTime = 500; // milliseconds to wait between checks for appearance updates
-        private System.Timers.Timer m_updateTimer = new System.Timers.Timer();
-        private ConcurrentDictionary<UUID,long> m_savequeue = new ConcurrentDictionary<UUID,long>();
-        private ConcurrentDictionary<UUID,long> m_sendqueue = new ConcurrentDictionary<UUID,long>();
-        private object m_updatesLock = new object();
+        private readonly int m_checkTime = 500; // milliseconds to wait between checks for appearance updates
+        private readonly System.Timers.Timer m_updateTimer = new System.Timers.Timer();
+        private readonly ConcurrentDictionary<UUID,long> m_savequeue = new ConcurrentDictionary<UUID,long>();
+        private readonly ConcurrentDictionary<UUID,long> m_sendqueue = new ConcurrentDictionary<UUID,long>();
+        private readonly object m_updatesLock = new object();
         private int m_updatesbusy = 0;
 
-        private object m_setAppearanceLock = new object();
+        private readonly object m_setAppearanceLock = new object();
 
         #region Region Module interface
 
@@ -376,7 +376,7 @@ namespace OpenSim.Region.CoreModules.Avatar.AvatarFactory
                 wearableCache = WearableCacheItem.GetDefaultCacheItem();
             else
             {
-                hadSkirt = (wearableCache[19].TextureID != UUID.Zero);
+                hadSkirt = wearableCache[19].TextureID != UUID.Zero;
             }
 
             HashSet<uint> updatedFaces = new HashSet<uint>();
@@ -564,7 +564,7 @@ namespace OpenSim.Region.CoreModules.Avatar.AvatarFactory
                         if (face.TextureID == wearableCache[idx].TextureID &&
                             face.TextureID != UUID.Zero)
                         {
-                            if (cache.Check((wearableCache[idx].TextureID).ToString()))
+                            if (cache.Check(wearableCache[idx].TextureID.ToString()))
                             {
                                 hits++;
                                 continue;
@@ -658,7 +658,7 @@ namespace OpenSim.Region.CoreModules.Avatar.AvatarFactory
                                     sp.Appearance.WearableCacheItems[j].TextureID);
             }
 */
-            return (hits >= AvatarAppearance.BAKE_INDICES.Length); // skirt is optional
+            return hits >= AvatarAppearance.BAKE_INDICES.Length; // skirt is optional
         }
 
         public int RequestRebake(IScenePresence sp, bool missingTexturesOnly)

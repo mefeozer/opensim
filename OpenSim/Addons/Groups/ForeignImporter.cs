@@ -31,7 +31,7 @@ namespace OpenSim.Groups
 {
     public class ForeignImporter
     {
-        IUserManagement m_UserManagement;
+        readonly IUserManagement m_UserManagement;
         public ForeignImporter(IUserManagement uman)
         {
             m_UserManagement = uman;

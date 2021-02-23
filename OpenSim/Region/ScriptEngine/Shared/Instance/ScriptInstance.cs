@@ -68,7 +68,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
         private string m_dataPath;
         private string m_CurrentEvent = string.Empty;
         private bool m_InSelfDelete;
-        private int m_MaxScriptQueue;
+        private readonly int m_MaxScriptQueue;
         private bool m_SaveState;
         private int m_ControlEventsInQueue;
         private int m_LastControlLevel;
@@ -83,10 +83,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
         private bool m_startOnInit = true;
         private UUID m_AttachedAvatar;
         private StateSource m_stateSource;
-        private bool m_postOnRez;
+        private readonly bool m_postOnRez;
         private bool m_startedFromSavedState;
         private UUID m_CurrentStateHash;
-        private UUID m_RegionID;
+        private readonly UUID m_RegionID;
 
         public int DebugLevel { get; set; }
 
@@ -95,7 +95,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
         public Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>> LineMap { get; set; }
 
-        private Dictionary<string,IScriptApi> m_Apis = new Dictionary<string,IScriptApi>();
+        private readonly Dictionary<string,IScriptApi> m_Apis = new Dictionary<string,IScriptApi>();
 
         public object[] PluginData = new object[0];
 
@@ -920,9 +920,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                         //                                ScriptName, ItemID, e.Message, e.StackTrace);
 
                         if ((!(e is TargetInvocationException)
-                            || (!(e.InnerException is SelfDeleteException)
-                                && !(e.InnerException is ScriptDeleteException)
-                                && !(e.InnerException is ScriptCoopStopException)))
+                            || !(e.InnerException is SelfDeleteException)
+                            && !(e.InnerException is ScriptDeleteException)
+                            && !(e.InnerException is ScriptCoopStopException))
                             && !(e is ThreadAbortException))
                         {
                             try
@@ -993,17 +993,17 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                             {
                             }
                         }
-                        else if ((e is TargetInvocationException) && (e.InnerException is SelfDeleteException))
+                        else if (e is TargetInvocationException && e.InnerException is SelfDeleteException)
                         {
                             m_InSelfDelete = true;
                             Engine.World.DeleteSceneObject(Part.ParentGroup, false);
                         }
-                        else if ((e is TargetInvocationException) && (e.InnerException is ScriptDeleteException))
+                        else if (e is TargetInvocationException && e.InnerException is ScriptDeleteException)
                         {
                             m_InSelfDelete = true;
                             Part.Inventory.RemoveInventoryItem(ItemID);
                         }
-                        else if ((e is TargetInvocationException) && (e.InnerException is ScriptCoopStopException))
+                        else if (e is TargetInvocationException && e.InnerException is ScriptCoopStopException)
                         {
                             if (DebugLevel >= 1)
                                 m_log.DebugFormat(
@@ -1022,7 +1022,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
                 if (++EventsProcessed == 1000000)
                     EventsProcessed = 100000;
 
-                if ((EventsProcessed % 100000) == 0 && DebugLevel > 0)
+                if (EventsProcessed % 100000 == 0 && DebugLevel > 0)
                 {
                     m_log.DebugFormat("[SCRIPT INSTANCE]: Script \"{0}\" (Object \"{1}\" {2} @ {3}.{4}, Item ID {5}, Asset {6}) in event {7}: processed {8:n0} script events",
                                     ScriptTask.Name,

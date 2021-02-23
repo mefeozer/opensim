@@ -36,7 +36,7 @@ namespace OpenSim.Data.MySQL
 {
     public class MySqlAuthenticationData : MySqlFramework, IAuthenticationData
     {
-        private string m_Realm;
+        private readonly string m_Realm;
         private List<string> m_ColumnNames;
         private int m_LastExpire;
         // private string m_connectionString;

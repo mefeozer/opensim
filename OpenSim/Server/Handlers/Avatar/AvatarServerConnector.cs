@@ -37,8 +37,8 @@ namespace OpenSim.Server.Handlers.Avatar
 {
     public class AvatarServiceConnector : ServiceConnector
     {
-        private IAvatarService m_AvatarService;
-        private string m_ConfigName = "AvatarService";
+        private readonly IAvatarService m_AvatarService;
+        private readonly string m_ConfigName = "AvatarService";
 
         public AvatarServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

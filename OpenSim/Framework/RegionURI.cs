@@ -32,12 +32,12 @@ namespace OpenSim.Framework
 {
     public class RegionURI
     {
-        private static byte[] schemaSep = osUTF8.GetASCIIBytes("://");
-        private static byte[] altschemaSep = osUTF8.GetASCIIBytes("|!!");
+        private static readonly byte[] schemaSep = osUTF8.GetASCIIBytes("://");
+        private static readonly byte[] altschemaSep = osUTF8.GetASCIIBytes("|!!");
         private static byte[] nameSep = osUTF8.GetASCIIBytes(":/ ");
-        private static byte[] altnameSep = osUTF8.GetASCIIBytes(":/ +|");
-        private static byte[] escapePref = osUTF8.GetASCIIBytes("+%");
-        private static byte[] altPortSepPref = osUTF8.GetASCIIBytes(":|");
+        private static readonly byte[] altnameSep = osUTF8.GetASCIIBytes(":/ +|");
+        private static readonly byte[] escapePref = osUTF8.GetASCIIBytes("+%");
+        private static readonly byte[] altPortSepPref = osUTF8.GetASCIIBytes(":|");
 
         public enum URIFlags : int
         {
@@ -125,7 +125,7 @@ namespace OpenSim.Framework
                 return;
             if (indx > 0)
             {
-                if (indx < 2 || input.Length < indx + 4 || (firstDot > 0 && indx > firstDot))
+                if (indx < 2 || input.Length < indx + 4 || firstDot > 0 && indx > firstDot)
                     return;
 
                 bool issecure = false;
@@ -494,19 +494,19 @@ namespace OpenSim.Framework
 
         public string HostUrl
         {
-            get { return (Flags & URIFlags.HasHost) != 0 ? (Schema + Host + ":" + Port) : ""; }
+            get { return (Flags & URIFlags.HasHost) != 0 ? Schema + Host + ":" + Port : ""; }
         }
 
         public string HostUrlEndSlash
         {
-            get { return (Flags & URIFlags.HasHost) != 0 ? (Schema + Host + ":" + Port + "/") : ""; }
+            get { return (Flags & URIFlags.HasHost) != 0 ? Schema + Host + ":" + Port + "/" : ""; }
         }
 
         public string RegionUrlAndName
         {
             get
             {
-                string ret = (Flags & URIFlags.HasHost) != 0 ? (Schema + Host + ":" + Port + "/") : "";
+                string ret = (Flags & URIFlags.HasHost) != 0 ? Schema + Host + ":" + Port + "/" : "";
                 if ((Flags & URIFlags.HasRegionName) != 0)
                     ret += RegionName;
                 return ret;
@@ -517,7 +517,7 @@ namespace OpenSim.Framework
         {
             get
             {
-                string ret = (Flags & URIFlags.HasHost) != 0 ? (Host + ":" + Port + "/ ") : ""; // space needed for compatibility
+                string ret = (Flags & URIFlags.HasHost) != 0 ? Host + ":" + Port + "/ " : ""; // space needed for compatibility
                 if ((Flags & URIFlags.HasRegionName) != 0)
                     ret += RegionName;
                 return ret;

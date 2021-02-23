@@ -43,7 +43,7 @@ namespace OpenSim.Services.UserProfilesService
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_serverURI;
+        private readonly string m_serverURI;
 
         /// <summary>
         /// Creates a client for accessing a foreign grid's profile server using the OpenProfile protocol.

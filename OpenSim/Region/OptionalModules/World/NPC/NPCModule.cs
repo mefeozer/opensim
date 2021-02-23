@@ -46,7 +46,7 @@ namespace OpenSim.Region.OptionalModules.World.NPC
         private static readonly ILog m_log = LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<UUID, NPCAvatar> m_avatars =
+        private readonly Dictionary<UUID, NPCAvatar> m_avatars =
                 new Dictionary<UUID, NPCAvatar>();
 
 
@@ -60,7 +60,7 @@ namespace OpenSim.Region.OptionalModules.World.NPC
         {
             IConfig config = source.Configs["NPC"];
 
-            Enabled = (config != null && config.GetBoolean("Enabled", false));
+            Enabled = config != null && config.GetBoolean("Enabled", false);
             m_NPCOptionFlags = NPCOptionsFlags.None;
             if(Enabled)
             {

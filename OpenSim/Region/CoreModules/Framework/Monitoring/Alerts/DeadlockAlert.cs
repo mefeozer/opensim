@@ -31,7 +31,7 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Alerts
 {
     class DeadlockAlert : IAlert
     {
-        private LastFrameTimeMonitor m_monitor;
+        private readonly LastFrameTimeMonitor m_monitor;
 
         public DeadlockAlert(LastFrameTimeMonitor m_monitor)
         {

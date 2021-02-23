@@ -50,7 +50,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
             LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<UUID, Scene> regions = new Dictionary<UUID, Scene>();
+        private readonly Dictionary<UUID, Scene> regions = new Dictionary<UUID, Scene>();
 
         public IUserProfilesService ServiceModule
         {

@@ -83,11 +83,11 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
         /// <summary>
         /// Scenes by Region Handle
         /// </summary>
-        private Dictionary<ulong, Scene> m_scenel = new Dictionary<ulong, Scene>();
+        private readonly Dictionary<ulong, Scene> m_scenel = new Dictionary<ulong, Scene>();
 
         // private int m_stipend = 1000;
 
-        private int ObjectCount = 0;
+        private readonly int ObjectCount = 0;
         private int PriceEnergyUnit = 0;
         private int PriceGroupCreate = -1;
         private int PriceObjectClaim = 0;

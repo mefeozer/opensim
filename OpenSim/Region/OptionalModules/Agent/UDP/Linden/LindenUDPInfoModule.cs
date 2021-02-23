@@ -510,18 +510,18 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
 
                                 report.AppendFormat(
                                     "{0,8} {1,8} {2,7} {3,8} {4,7} {5,7} {6,7} {7,7} {8,9} {9,7}\n",
-                                    ci.maxThrottle > 0 ? ((ci.maxThrottle * 8) / 1000).ToString() : "-",
+                                    ci.maxThrottle > 0 ? (ci.maxThrottle * 8 / 1000).ToString() : "-",
                                     llUdpClient.FlowThrottle.AdaptiveEnabled
-                                        ? ((ci.targetThrottle * 8) / 1000).ToString()
+                                        ? (ci.targetThrottle * 8 / 1000).ToString()
                                         : (llUdpClient.FlowThrottle.TotalDripRequest * 8 / 1000).ToString(),
-                                    (ci.totalThrottle * 8) / 1000,
-                                    (ci.resendThrottle * 8) / 1000,
-                                    (ci.landThrottle * 8) / 1000,
-                                    (ci.windThrottle * 8) / 1000,
-                                    (ci.cloudThrottle * 8) / 1000,
-                                    (ci.taskThrottle * 8) / 1000,
-                                    (ci.textureThrottle  * 8) / 1000,
-                                    (ci.assetThrottle  * 8) / 1000);
+                                    ci.totalThrottle * 8 / 1000,
+                                    ci.resendThrottle * 8 / 1000,
+                                    ci.landThrottle * 8 / 1000,
+                                    ci.windThrottle * 8 / 1000,
+                                    ci.cloudThrottle * 8 / 1000,
+                                    ci.taskThrottle * 8 / 1000,
+                                    ci.textureThrottle  * 8 / 1000,
+                                    ci.assetThrottle  * 8 / 1000);
                             }
                         });
                 }

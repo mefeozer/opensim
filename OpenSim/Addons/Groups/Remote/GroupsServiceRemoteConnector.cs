@@ -43,9 +43,9 @@ namespace OpenSim.Groups
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI;
-        private IServiceAuth m_Auth;
-        private object m_Lock = new object();
+        private readonly string m_ServerURI;
+        private readonly IServiceAuth m_Auth;
+        private readonly object m_Lock = new object();
 
         public GroupsServiceRemoteConnector(IConfigSource config)
         {
@@ -70,7 +70,7 @@ namespace OpenSim.Groups
             ///
 
             m_log.DebugFormat("[Groups.RemoteConnector]: Groups server at {0}, authentication {1}",
-                m_ServerURI, (m_Auth == null ? "None" : m_Auth.GetType().ToString()));
+                m_ServerURI, m_Auth == null ? "None" : m_Auth.GetType().ToString());
         }
 
         public ExtendedGroupRecord CreateGroup(string RequestingAgentID, string name, string charter, bool showInList, UUID insigniaID, int membershipFee, bool openEnrollment,
@@ -124,7 +124,7 @@ namespace OpenSim.Groups
             sendData["OP"] = "UPDATE";
             Dictionary<string, object> ret = MakeRequest("PUTGROUP", sendData);
 
-            if (ret == null || (ret != null && (!ret.ContainsKey("RESULT") || ret["RESULT"].ToString() == "NULL")))
+            if (ret == null || ret != null && (!ret.ContainsKey("RESULT") || ret["RESULT"].ToString() == "NULL"))
                 return null;
 
             return GroupsDataUtils.GroupRecord((Dictionary<string, object>)ret["RESULT"]);
@@ -132,7 +132,7 @@ namespace OpenSim.Groups
 
         public ExtendedGroupRecord GetGroupRecord(string RequestingAgentID, UUID GroupID, string GroupName)
         {
-            if (GroupID == UUID.Zero && (GroupName == null || (GroupName != null && string.IsNullOrEmpty(GroupName))))
+            if (GroupID == UUID.Zero && (GroupName == null || GroupName != null && string.IsNullOrEmpty(GroupName)))
                 return null;
 
             Dictionary<string, object> sendData = new Dictionary<string, object>();
@@ -145,7 +145,7 @@ namespace OpenSim.Groups
 
             Dictionary<string, object> ret = MakeRequest("GETGROUP", sendData);
 
-            if (ret == null || (ret != null && (!ret.ContainsKey("RESULT") || ret["RESULT"].ToString() == "NULL")))
+            if (ret == null || ret != null && (!ret.ContainsKey("RESULT") || ret["RESULT"].ToString() == "NULL"))
                 return null;
 
             return GroupsDataUtils.GroupRecord((Dictionary<string, object>)ret["RESULT"]);

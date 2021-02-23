@@ -46,7 +46,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         // This computation is not the real region center if the region is larger than 256.
         //     This computation isn't fixed because there is not a handle back to the region.
-        private static readonly OpenMetaverse.Vector3 CenterOfRegion = new OpenMetaverse.Vector3(((int)Constants.RegionSize * 0.5f), ((int)Constants.RegionSize * 0.5f), 20);
+        private static readonly OpenMetaverse.Vector3 CenterOfRegion = new OpenMetaverse.Vector3((int)Constants.RegionSize * 0.5f, (int)Constants.RegionSize * 0.5f, 20);
         private const int DEBUG_CHANNEL = 2147483647;
 
         private static int _idk_ = 0;
@@ -162,7 +162,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             {
                 if (clients.Contains(client))
                 {
-                    if (enabled && (cs.irc.Enabled) && (cs.irc.Connected) && (cs.ClientReporting))
+                    if (enabled && cs.irc.Enabled && cs.irc.Connected && cs.ClientReporting)
                     {
                         m_log.InfoFormat("[IRC-Region {0}]: {1} has left", Region, client.Name);
                         //Check if this person is excluded from IRC
@@ -195,7 +195,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             {
                 if (clients.Contains(client))
                 {
-                    if (enabled && (cs.irc.Enabled) && (cs.irc.Connected) && (cs.ClientReporting))
+                    if (enabled && cs.irc.Enabled && cs.irc.Connected && cs.ClientReporting)
                     {
                         string clientName = string.Format("{0} {1}", presence.Firstname, presence.Lastname);
                         m_log.DebugFormat("[IRC-Region {0}] {1} has left", Region, clientName);
@@ -228,7 +228,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     client.OnLogout += OnClientLoggedOut;
                     client.OnConnectionClosed += OnClientLoggedOut;
                     clients.Add(client);
-                    if (enabled && (cs.irc.Enabled) && (cs.irc.Connected) && (cs.ClientReporting))
+                    if (enabled && cs.irc.Enabled && cs.irc.Connected && cs.ClientReporting)
                     {
                         string clientName = string.Format("{0} {1}", presence.Firstname, presence.Lastname);
                         m_log.DebugFormat("[IRC-Region {0}] {1} has arrived", Region, clientName);

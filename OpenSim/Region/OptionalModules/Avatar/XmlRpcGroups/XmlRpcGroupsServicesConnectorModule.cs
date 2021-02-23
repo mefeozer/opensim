@@ -128,8 +128,8 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
         // Should be reset per agent, on logon
         // TODO: move this to Flotsam XmlRpc Service
         // SessionID, List<AgentID>
-        private Dictionary<UUID, List<UUID>> m_groupsAgentsDroppedFromChatSession = new Dictionary<UUID, List<UUID>>();
-        private Dictionary<UUID, List<UUID>> m_groupsAgentsInvitedToChatSession = new Dictionary<UUID, List<UUID>>();
+        private readonly Dictionary<UUID, List<UUID>> m_groupsAgentsDroppedFromChatSession = new Dictionary<UUID, List<UUID>>();
+        private readonly Dictionary<UUID, List<UUID>> m_groupsAgentsInvitedToChatSession = new Dictionary<UUID, List<UUID>>();
 
         #region Region Module interfaceBase Members
 
@@ -157,8 +157,8 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             {
                 // if groups aren't enabled, we're not needed.
                 // if we're not specified as the connector to use, then we're not wanted
-                if ((groupsConfig.GetBoolean("Enabled", false) == false)
-                    || (groupsConfig.GetString("ServicesConnectorModule", "XmlRpcGroupsServicesConnector") != Name))
+                if (groupsConfig.GetBoolean("Enabled", false) == false
+                    || groupsConfig.GetString("ServicesConnectorModule", "XmlRpcGroupsServicesConnector") != Name)
                 {
                     m_connectorEnabled = false;
                     return;
@@ -659,11 +659,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             {
                 GroupMembersData data = new GroupMembersData();
 
-                data.AcceptNotices = ((string)membership["AcceptNotices"]) == "1";
+                data.AcceptNotices = (string)membership["AcceptNotices"] == "1";
                 data.AgentID = new UUID((string)membership["AgentID"]);
                 data.Contribution = int.Parse((string)membership["Contribution"]);
-                data.IsOwner = ((string)membership["IsOwner"]) == "1";
-                data.ListInProfile = ((string)membership["ListInProfile"]) == "1";
+                data.IsOwner = (string)membership["IsOwner"] == "1";
+                data.ListInProfile = (string)membership["ListInProfile"] == "1";
                 data.AgentPowers = ulong.Parse((string)membership["AgentPowers"]);
                 data.Title = (string)membership["Title"];
                 if(membership.ContainsKey("OnlineStatus"))
@@ -850,12 +850,12 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 group.Charter = (string)groupProfile["Charter"];
             }
 
-            group.ShowInList = ((string)groupProfile["ShowInList"]) == "1";
+            group.ShowInList = (string)groupProfile["ShowInList"] == "1";
             group.InsigniaID = UUID.Parse((string)groupProfile["InsigniaID"]);
             group.MembershipFee = int.Parse((string)groupProfile["MembershipFee"]);
-            group.OpenEnrollment = ((string)groupProfile["OpenEnrollment"]) == "1";
-            group.AllowPublish = ((string)groupProfile["AllowPublish"]) == "1";
-            group.MaturePublish = ((string)groupProfile["MaturePublish"]) == "1";
+            group.OpenEnrollment = (string)groupProfile["OpenEnrollment"] == "1";
+            group.AllowPublish = (string)groupProfile["AllowPublish"] == "1";
+            group.MaturePublish = (string)groupProfile["MaturePublish"] == "1";
             group.FounderID = UUID.Parse((string)groupProfile["FounderID"]);
             group.OwnerRole = UUID.Parse((string)groupProfile["OwnerRoleID"]);
 
@@ -874,12 +874,12 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             {
                 group.Charter = (string)groupProfile["Charter"];
             }
-            group.ShowInList = ((string)groupProfile["ShowInList"]) == "1";
+            group.ShowInList = (string)groupProfile["ShowInList"] == "1";
             group.GroupPicture = UUID.Parse((string)groupProfile["InsigniaID"]);
             group.MembershipFee = int.Parse((string)groupProfile["MembershipFee"]);
-            group.OpenEnrollment = ((string)groupProfile["OpenEnrollment"]) == "1";
-            group.AllowPublish = ((string)groupProfile["AllowPublish"]) == "1";
-            group.MaturePublish = ((string)groupProfile["MaturePublish"]) == "1";
+            group.OpenEnrollment = (string)groupProfile["OpenEnrollment"] == "1";
+            group.AllowPublish = (string)groupProfile["AllowPublish"] == "1";
+            group.MaturePublish = (string)groupProfile["MaturePublish"] == "1";
             group.FounderID = UUID.Parse((string)groupProfile["FounderID"]);
             group.OwnerRoleID = UUID.Parse((string)groupProfile["OwnerRoleID"]);
 
@@ -889,9 +889,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
         private static GroupMembershipData HashTableToGroupMembershipData(Hashtable respData)
         {
             GroupMembershipData data = new GroupMembershipData();
-            data.AcceptNotices = ((string)respData["AcceptNotices"] == "1");
+            data.AcceptNotices = (string)respData["AcceptNotices"] == "1";
             data.Contribution = int.Parse((string)respData["Contribution"]);
-            data.ListInProfile = ((string)respData["ListInProfile"] == "1");
+            data.ListInProfile = (string)respData["ListInProfile"] == "1";
 
             data.ActiveRole = new UUID((string)respData["SelectedRoleID"]);
             data.GroupTitle = (string)respData["Title"];
@@ -905,7 +905,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             UUID ActiveGroup = new UUID((string)respData["ActiveGroupID"]);
             data.Active = data.GroupID.Equals(ActiveGroup);
 
-            data.AllowPublish = ((string)respData["AllowPublish"] == "1");
+            data.AllowPublish = (string)respData["AllowPublish"] == "1";
             if (respData["Charter"] != null)
             {
                 data.Charter = (string)respData["Charter"];
@@ -914,10 +914,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             data.GroupID = new UUID((string)respData["GroupID"]);
             data.GroupName = (string)respData["GroupName"];
             data.GroupPicture = new UUID((string)respData["InsigniaID"]);
-            data.MaturePublish = ((string)respData["MaturePublish"] == "1");
+            data.MaturePublish = (string)respData["MaturePublish"] == "1";
             data.MembershipFee = int.Parse((string)respData["MembershipFee"]);
-            data.OpenEnrollment = ((string)respData["OpenEnrollment"] == "1");
-            data.ShowInList = ((string)respData["ShowInList"] == "1");
+            data.OpenEnrollment = (string)respData["OpenEnrollment"] == "1";
+            data.ShowInList = (string)respData["ShowInList"] == "1";
 
             return data;
         }
@@ -1002,7 +1002,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                         }
                     }
 
-                    if ((m_cacheTimeout > 0) && (CacheKey != null))
+                    if (m_cacheTimeout > 0 && CacheKey != null)
                     {
                         m_memoryCache.AddOrUpdate(CacheKey, resp, 10.0);
                     }
@@ -1011,7 +1011,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                     return respData;
                 }
 
-                if ((m_cacheTimeout > 0) && (CacheKey != null))
+                if (m_cacheTimeout > 0 && CacheKey != null)
                 {
                     m_memoryCache.AddOrUpdate(CacheKey, resp, 10.0);
                 }
@@ -1114,9 +1114,9 @@ namespace Nwc.XmlRpc
     /// <summary>Class supporting the request side of an XML-RPC transaction.</summary>
     public class ConfigurableKeepAliveXmlRpcRequest : XmlRpcRequest
     {
-        private XmlRpcRequestSerializer _serializer = new XmlRpcRequestSerializer();
-        private XmlRpcResponseDeserializer _deserializer = new XmlRpcResponseDeserializer();
-        private bool _disableKeepAlive = true;
+        private readonly XmlRpcRequestSerializer _serializer = new XmlRpcRequestSerializer();
+        private readonly XmlRpcResponseDeserializer _deserializer = new XmlRpcResponseDeserializer();
+        private readonly bool _disableKeepAlive = true;
 
         public string RequestResponse = string.Empty;
 

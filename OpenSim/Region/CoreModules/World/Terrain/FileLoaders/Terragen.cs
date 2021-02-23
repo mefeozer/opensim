@@ -239,7 +239,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
 
             float baseHeight = (float)Math.Floor(0.5f * (heightMax + heightMin));
 
-            float horizontalScale = (float) Math.Ceiling((heightMax - heightMin));
+            float horizontalScale = (float) Math.Ceiling(heightMax - heightMin);
 
             // if we are completely flat add 1cm range to avoid NaN divisions
             if (horizontalScale < 0.01f)

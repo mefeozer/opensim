@@ -44,9 +44,9 @@ namespace OpenSim.Server.Handlers.Hypergrid
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IUserAgentService m_UserAgentService;
-        private IFriendsSimConnector m_FriendsLocalSimConnector;
-        private IHGFriendsService m_TheService;
+        private readonly IUserAgentService m_UserAgentService;
+        private readonly IFriendsSimConnector m_FriendsLocalSimConnector;
+        private readonly IHGFriendsService m_TheService;
 
         public HGFriendsServerPostHandler(IHGFriendsService service, IUserAgentService uas, IFriendsSimConnector friendsConn) :
                 base("POST", "/hgfriends")
@@ -56,7 +56,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             m_FriendsLocalSimConnector = friendsConn;
 
             m_log.DebugFormat("[HGFRIENDS HANDLER]: HGFriendsServerPostHandler is On ({0})",
-                (m_FriendsLocalSimConnector == null ? "robust" : "standalone"));
+                m_FriendsLocalSimConnector == null ? "robust" : "standalone");
 
             if (m_TheService == null)
                 m_log.ErrorFormat("[HGFRIENDS HANDLER]: TheService is null!");
@@ -260,7 +260,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             List<UUID> onlineFriends = m_TheService.StatusNotification(friends, principalID, online);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((onlineFriends == null) || ((onlineFriends != null) && (onlineFriends.Count == 0)))
+            if (onlineFriends == null || onlineFriends != null && onlineFriends.Count == 0)
                 result["RESULT"] = "NULL";
             else
             {

@@ -40,7 +40,7 @@ namespace OpenSim.Region.CoreModules.World
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Scene> m_SceneList = new List<Scene>();
+        private readonly List<Scene> m_SceneList = new List<Scene>();
 
         public void Initialise(IConfigSource config)
         {

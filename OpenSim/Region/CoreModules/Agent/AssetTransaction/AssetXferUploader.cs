@@ -40,7 +40,7 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
     public class AssetXferUploader
     {
 
-        private List<UUID> defaultIDs = new List<UUID> {
+        private readonly List<UUID> defaultIDs = new List<UUID> {
                 // Viewer's notion of the default texture
                 new UUID("5748decc-f629-461c-9a36-a35a221fe21f"), // others == default blank
                 new UUID("7ca39b4c-bd19-4699-aff7-f93fd03d3e7b"), // hair
@@ -75,11 +75,11 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
         /// Reference to the object that holds this uploader.  Used to remove ourselves from it's list if we
         /// are performing a delayed update.
         /// </summary>
-        AgentAssetTransactions m_transactions;
+        readonly AgentAssetTransactions m_transactions;
 
         private UploadState m_uploadState = UploadState.New;
 
-        private AssetBase m_asset;
+        private readonly AssetBase m_asset;
         private UUID InventFolder = UUID.Zero;
         private sbyte invType = 0;
 
@@ -93,19 +93,19 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
         private TaskInventoryItem m_updateTaskItemData;
 
         private string m_description = string.Empty;
-        private bool m_dumpAssetToFile;
+        private readonly bool m_dumpAssetToFile;
         private string m_name = string.Empty;
 //        private bool m_storeLocal;
         private uint nextPerm = 0;
         private IClientAPI ourClient;
 
-        private UUID m_transactionID;
+        private readonly UUID m_transactionID;
 
         private sbyte type = 0;
         private byte wearableType = 0;
         private byte[] m_oldData = null;
         public ulong XferID;
-        private Scene m_Scene;
+        private readonly Scene m_Scene;
 
         /// <summary>
         /// AssetXferUploader constructor
@@ -555,7 +555,7 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
                             int id = Convert.ToInt32(parts[0]);
 
                             if (defaultIDs.Contains(tx) || tx == UUID.Zero ||
-                                (allowed.ContainsKey(id) && allowed[id] == tx))
+                                allowed.ContainsKey(id) && allowed[id] == tx)
                             {
                                 continue;
                             }

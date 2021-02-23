@@ -63,7 +63,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 // ==========================================================================================
 public sealed class BSTerrainManager : IDisposable
 {
-    static string LogHeader = "[BULLETSIM TERRAIN MANAGER]";
+    static readonly string LogHeader = "[BULLETSIM TERRAIN MANAGER]";
 
     // These height values are fractional so the odd values will be
     //     noticable when debugging.
@@ -87,7 +87,7 @@ public sealed class BSTerrainManager : IDisposable
 
     // If doing mega-regions, if we're region zero we will be managing multiple
     //    region terrains since region zero does the physics for the whole mega-region.
-    private Dictionary<Vector3, BSTerrainPhys> m_terrains;
+    private readonly Dictionary<Vector3, BSTerrainPhys> m_terrains;
 
     // Flags used to know when to recalculate the height.
     private bool m_terrainModified = false;
@@ -422,7 +422,7 @@ public sealed class BSTerrainManager : IDisposable
         float tY = pos.Y;
         // You'd be surprized at the number of times this routine is called
         //    with the same parameters as last time.
-        if (!m_terrainModified && (lastHeightTX == tX) && (lastHeightTY == tY))
+        if (!m_terrainModified && lastHeightTX == tX && lastHeightTY == tY)
             return lastHeight;
         m_terrainModified = false;
 
@@ -480,8 +480,8 @@ public sealed class BSTerrainManager : IDisposable
         }
         else
         {
-            int offsetX = ((int)(pos.X / (int)DefaultRegionSize.X)) * (int)DefaultRegionSize.X;
-            int offsetY = ((int)(pos.Y / (int)DefaultRegionSize.Y)) * (int)DefaultRegionSize.Y;
+            int offsetX = (int)(pos.X / (int)DefaultRegionSize.X) * (int)DefaultRegionSize.X;
+            int offsetY = (int)(pos.Y / (int)DefaultRegionSize.Y) * (int)DefaultRegionSize.Y;
             terrainBaseXYZ = new Vector3(offsetX, offsetY, 0f);
         }
 

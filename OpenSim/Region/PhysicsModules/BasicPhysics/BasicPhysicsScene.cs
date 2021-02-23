@@ -47,8 +47,8 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "BasicPhysicsScene")]
     public class BasicScene : PhysicsScene, INonSharedRegionModule
     {
-        private List<BasicActor> _actors = new List<BasicActor>();
-        private List<BasicPhysicsPrim> _prims = new List<BasicPhysicsPrim>();
+        private readonly List<BasicActor> _actors = new List<BasicActor>();
+        private readonly List<BasicPhysicsPrim> _prims = new List<BasicPhysicsPrim>();
         private float[] _heightMap;
         private Vector3 m_regionExtent;
 
@@ -100,7 +100,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
             scene.RegisterModuleInterface<PhysicsScene>(this);
             m_regionExtent = new Vector3(scene.RegionInfo.RegionSizeX, scene.RegionInfo.RegionSizeY, scene.RegionInfo.RegionSizeZ);
             base.Initialise(scene.PhysicsRequestAsset,
-                (scene.Heightmap != null ? scene.Heightmap.GetFloatsSerialised() : new float[scene.RegionInfo.RegionSizeX * scene.RegionInfo.RegionSizeY]),
+                scene.Heightmap != null ? scene.Heightmap.GetFloatsSerialised() : new float[scene.RegionInfo.RegionSizeX * scene.RegionInfo.RegionSizeY],
                 (float)scene.RegionInfo.RegionSettings.WaterHeight);
 
         }
@@ -182,7 +182,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
                 }
                 else if (actor.Position.Y >= m_regionExtent.Y)
                 {
-                    actorPosition.Y = (m_regionExtent.Y - 0.1f);
+                    actorPosition.Y = m_regionExtent.Y - 0.1f;
                 }
 
                 if (actor.Position.X < 0)
@@ -191,7 +191,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
                 }
                 else if (actor.Position.X >= m_regionExtent.X)
                 {
-                    actorPosition.X = (m_regionExtent.X - 0.1f);
+                    actorPosition.X = m_regionExtent.X - 0.1f;
                 }
 
                 float terrainHeight = 0;
@@ -203,7 +203,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
                 if (actor.Flying)
                 {
-                    if (actor.Position.Z + (actor.Velocity.Z * timeStep) < terrainHeight + 2)
+                    if (actor.Position.Z + actor.Velocity.Z * timeStep < terrainHeight + 2)
                     {
                         actorPosition.Z = height;
                         actorVelocity.Z = 0;

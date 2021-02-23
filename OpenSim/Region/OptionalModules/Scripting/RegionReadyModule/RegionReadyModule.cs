@@ -174,9 +174,9 @@ namespace OpenSim.Region.OptionalModules.Scripting.RegionReady
                 c.Message += numScriptsFailed.ToString() + "," + message;
                 c.Type = ChatTypeEnum.Region;
                 if (m_scene != null)
-                    c.Position = new Vector3((m_scene.RegionInfo.RegionSizeX * 0.5f), (m_scene.RegionInfo.RegionSizeY * 0.5f), 30);
+                    c.Position = new Vector3(m_scene.RegionInfo.RegionSizeX * 0.5f, m_scene.RegionInfo.RegionSizeY * 0.5f, 30);
                 else
-                    c.Position = new Vector3(((int)Constants.RegionSize * 0.5f), ((int)Constants.RegionSize * 0.5f), 30);
+                    c.Position = new Vector3((int)Constants.RegionSize * 0.5f, (int)Constants.RegionSize * 0.5f, 30);
                 c.Sender = null;
                 c.SenderUUID = UUID.Zero;
                 c.Scene = m_scene;

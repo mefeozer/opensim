@@ -69,7 +69,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
             while (currFileYOffset < offsetY)
             {
                 // read a whole strip of regions
-                int heightsToRead = sectionHeight * (fileWidth * sectionWidth);
+                int heightsToRead = sectionHeight * fileWidth * sectionWidth;
                 bs.ReadBytes(heightsToRead * 4); // because the floats are 4 bytes in the file
                 currFileYOffset++;
             }
@@ -123,7 +123,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
             // Guess the square dimensions by using the length of the raw file.
             double dimension = Math.Sqrt((double)(s.Length / 4));
             // Regions are always multiples of 256.
-            int trimmedDimension = (int)dimension - ((int)dimension % (int)Constants.RegionSize);
+            int trimmedDimension = (int)dimension - (int)dimension % (int)Constants.RegionSize;
             if (trimmedDimension < Constants.RegionSize)
                 trimmedDimension = (int)Constants.RegionSize;
 

@@ -48,49 +48,49 @@ namespace OpenSim.Region.Framework.Scenes
         private const int MaxMaterials = 7;
         // part part
 
-        private static UUID snd_StoneStone = new UUID("be7295c0-a158-11e1-b3dd-0800200c9a66");
-        private static UUID snd_StoneMetal = new UUID("be7295c0-a158-11e1-b3dd-0800201c9a66");
-        private static UUID snd_StoneGlass = new UUID("be7295c0-a158-11e1-b3dd-0800202c9a66");
-        private static UUID snd_StoneWood = new UUID("be7295c0-a158-11e1-b3dd-0800203c9a66");
-        private static UUID snd_StoneFlesh = new UUID("be7295c0-a158-11e1-b3dd-0800204c9a66");
-        private static UUID snd_StonePlastic = new UUID("be7295c0-a158-11e1-b3dd-0800205c9a66");
-        private static UUID snd_StoneRubber = new UUID("be7295c0-a158-11e1-b3dd-0800206c9a66");
+        private static readonly UUID snd_StoneStone = new UUID("be7295c0-a158-11e1-b3dd-0800200c9a66");
+        private static readonly UUID snd_StoneMetal = new UUID("be7295c0-a158-11e1-b3dd-0800201c9a66");
+        private static readonly UUID snd_StoneGlass = new UUID("be7295c0-a158-11e1-b3dd-0800202c9a66");
+        private static readonly UUID snd_StoneWood = new UUID("be7295c0-a158-11e1-b3dd-0800203c9a66");
+        private static readonly UUID snd_StoneFlesh = new UUID("be7295c0-a158-11e1-b3dd-0800204c9a66");
+        private static readonly UUID snd_StonePlastic = new UUID("be7295c0-a158-11e1-b3dd-0800205c9a66");
+        private static readonly UUID snd_StoneRubber = new UUID("be7295c0-a158-11e1-b3dd-0800206c9a66");
 
-        private static UUID snd_MetalMetal = new UUID("be7295c0-a158-11e1-b3dd-0801201c9a66");
-        private static UUID snd_MetalGlass = new UUID("be7295c0-a158-11e1-b3dd-0801202c9a66");
-        private static UUID snd_MetalWood  = new UUID("be7295c0-a158-11e1-b3dd-0801203c9a66");
-        private static UUID snd_MetalFlesh = new UUID("be7295c0-a158-11e1-b3dd-0801204c9a66");
-        private static UUID snd_MetalPlastic = new UUID("be7295c0-a158-11e1-b3dd-0801205c9a66");
-        private static UUID snd_MetalRubber = new UUID("be7295c0-a158-11e1-b3dd-0801206c9a66");
+        private static readonly UUID snd_MetalMetal = new UUID("be7295c0-a158-11e1-b3dd-0801201c9a66");
+        private static readonly UUID snd_MetalGlass = new UUID("be7295c0-a158-11e1-b3dd-0801202c9a66");
+        private static readonly UUID snd_MetalWood  = new UUID("be7295c0-a158-11e1-b3dd-0801203c9a66");
+        private static readonly UUID snd_MetalFlesh = new UUID("be7295c0-a158-11e1-b3dd-0801204c9a66");
+        private static readonly UUID snd_MetalPlastic = new UUID("be7295c0-a158-11e1-b3dd-0801205c9a66");
+        private static readonly UUID snd_MetalRubber = new UUID("be7295c0-a158-11e1-b3dd-0801206c9a66");
 
-        private static UUID snd_GlassGlass = new UUID("be7295c0-a158-11e1-b3dd-0802202c9a66");
-        private static UUID snd_GlassWood = new UUID("be7295c0-a158-11e1-b3dd-0802203c9a66");
-        private static UUID snd_GlassFlesh = new UUID("be7295c0-a158-11e1-b3dd-0802204c9a66");
-        private static UUID snd_GlassPlastic = new UUID("be7295c0-a158-11e1-b3dd-0802205c9a66");
-        private static UUID snd_GlassRubber = new UUID("be7295c0-a158-11e1-b3dd-0802206c9a66");
+        private static readonly UUID snd_GlassGlass = new UUID("be7295c0-a158-11e1-b3dd-0802202c9a66");
+        private static readonly UUID snd_GlassWood = new UUID("be7295c0-a158-11e1-b3dd-0802203c9a66");
+        private static readonly UUID snd_GlassFlesh = new UUID("be7295c0-a158-11e1-b3dd-0802204c9a66");
+        private static readonly UUID snd_GlassPlastic = new UUID("be7295c0-a158-11e1-b3dd-0802205c9a66");
+        private static readonly UUID snd_GlassRubber = new UUID("be7295c0-a158-11e1-b3dd-0802206c9a66");
 
-        private static UUID snd_WoodWood = new UUID("be7295c0-a158-11e1-b3dd-0803203c9a66");
-        private static UUID snd_WoodFlesh = new UUID("be7295c0-a158-11e1-b3dd-0803204c9a66");
-        private static UUID snd_WoodPlastic = new UUID("be7295c0-a158-11e1-b3dd-0803205c9a66");
-        private static UUID snd_WoodRubber = new UUID("be7295c0-a158-11e1-b3dd-0803206c9a66");
+        private static readonly UUID snd_WoodWood = new UUID("be7295c0-a158-11e1-b3dd-0803203c9a66");
+        private static readonly UUID snd_WoodFlesh = new UUID("be7295c0-a158-11e1-b3dd-0803204c9a66");
+        private static readonly UUID snd_WoodPlastic = new UUID("be7295c0-a158-11e1-b3dd-0803205c9a66");
+        private static readonly UUID snd_WoodRubber = new UUID("be7295c0-a158-11e1-b3dd-0803206c9a66");
 
-        private static UUID snd_FleshFlesh = new UUID("be7295c0-a158-11e1-b3dd-0804204c9a66");
-        private static UUID snd_FleshPlastic = new UUID("be7295c0-a158-11e1-b3dd-0804205c9a66");
-        private static UUID snd_FleshRubber = new UUID("be7295c0-a158-11e1-b3dd-0804206c9a66");
+        private static readonly UUID snd_FleshFlesh = new UUID("be7295c0-a158-11e1-b3dd-0804204c9a66");
+        private static readonly UUID snd_FleshPlastic = new UUID("be7295c0-a158-11e1-b3dd-0804205c9a66");
+        private static readonly UUID snd_FleshRubber = new UUID("be7295c0-a158-11e1-b3dd-0804206c9a66");
 
-        private static UUID snd_PlasticPlastic = new UUID("be7295c0-a158-11e1-b3dd-0805205c9a66");
-        private static UUID snd_PlasticRubber = new UUID("be7295c0-a158-11e1-b3dd-0805206c9a66");
+        private static readonly UUID snd_PlasticPlastic = new UUID("be7295c0-a158-11e1-b3dd-0805205c9a66");
+        private static readonly UUID snd_PlasticRubber = new UUID("be7295c0-a158-11e1-b3dd-0805206c9a66");
 
-        private static UUID snd_RubberRubber = new UUID("be7295c0-a158-11e1-b3dd-0806206c9a66");
+        private static readonly UUID snd_RubberRubber = new UUID("be7295c0-a158-11e1-b3dd-0806206c9a66");
 
         // terrain part
-        private static UUID snd_TerrainStone = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
-        private static UUID snd_TerrainMetal = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
-        private static UUID snd_TerrainGlass = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
-        private static UUID snd_TerrainWood = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
-        private static UUID snd_TerrainFlesh = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
-        private static UUID snd_TerrainPlastic = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
-        private static UUID snd_TerrainRubber = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
+        private static readonly UUID snd_TerrainStone = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
+        private static readonly UUID snd_TerrainMetal = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
+        private static readonly UUID snd_TerrainGlass = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
+        private static readonly UUID snd_TerrainWood = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
+        private static readonly UUID snd_TerrainFlesh = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
+        private static readonly UUID snd_TerrainPlastic = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
+        private static readonly UUID snd_TerrainRubber = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
 
         public static UUID[] m_TerrainPart = {
             snd_TerrainStone,

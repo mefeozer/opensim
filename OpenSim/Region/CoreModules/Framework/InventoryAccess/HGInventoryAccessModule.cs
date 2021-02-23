@@ -205,7 +205,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
         private void PostInventoryAsset(InventoryItemBase item, int userlevel)
         {
             InventoryFolderBase f = m_Scene.InventoryService.GetFolderForType(item.Owner, FolderType.Trash);
-            if (f == null || (f != null && item.Folder != f.ID))
+            if (f == null || f != null && item.Folder != f.ID)
                 PostInventoryAsset(item.Owner, (AssetType)item.AssetType, item.AssetID, item.Name, userlevel);
         }
 

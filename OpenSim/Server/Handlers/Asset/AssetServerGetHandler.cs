@@ -42,8 +42,8 @@ namespace OpenSim.Server.Handlers.Asset
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAssetService m_AssetService;
-        private string m_RedirectURL;
+        private readonly IAssetService m_AssetService;
+        private readonly string m_RedirectURL;
 
         public AssetServerGetHandler(IAssetService service) :
                 base("GET", "/assets")

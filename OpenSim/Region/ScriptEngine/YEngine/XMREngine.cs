@@ -68,7 +68,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             IScriptModule
     {
         public static readonly DetectParams[] zeroDetectParams = new DetectParams[0];
-        private static ArrayList noScriptErrors = new ArrayList();
+        private static readonly ArrayList noScriptErrors = new ArrayList();
         public static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string[] scriptReferencedAssemblies = new string[0];
@@ -85,9 +85,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private string m_ScriptBasePath;
         private bool m_Enabled = false;
         public bool m_StartProcessing = false;
-        private Dictionary<UUID, ArrayList> m_ScriptErrors = new Dictionary<UUID, ArrayList>();
-        private Dictionary<UUID, List<UUID>> m_ObjectItemList =  new Dictionary<UUID, List<UUID>>();
-        private Dictionary<UUID, XMRInstance[]> m_ObjectInstArray = new Dictionary<UUID, XMRInstance[]>();
+        private readonly Dictionary<UUID, ArrayList> m_ScriptErrors = new Dictionary<UUID, ArrayList>();
+        private readonly Dictionary<UUID, List<UUID>> m_ObjectItemList =  new Dictionary<UUID, List<UUID>>();
+        private readonly Dictionary<UUID, XMRInstance[]> m_ObjectInstArray = new Dictionary<UUID, XMRInstance[]>();
         public Dictionary<string, FieldInfo> m_XMRInstanceApiCtxFieldInfos = new Dictionary<string, FieldInfo>();
         public int m_StackSize;
         private int m_HeapSize;
@@ -99,7 +99,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private System.Timers.Timer m_MaintenanceTimer;
         public int numThreadScriptWorkers;
 
-        private object m_FrameUpdateLock = new object();
+        private readonly object m_FrameUpdateLock = new object();
         private event ThreadStart m_FrameUpdateList = null;
 
         // Various instance lists:
@@ -109,7 +109,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         //   m_YieldQueue = instances that are ready to run right now
         //   m_SleepQueue = instances that have m_SleepUntil valid
         //                  sorted by ascending m_SleepUntil
-        private Dictionary<UUID, XMRInstance> m_InstancesDict =
+        private readonly Dictionary<UUID, XMRInstance> m_InstancesDict =
                 new Dictionary<UUID, XMRInstance>();
         public Queue<ThreadStart> m_ThunkQueue = new Queue<ThreadStart>();
         public XMRInstQueue m_StartQueue = new XMRInstQueue();
@@ -314,10 +314,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             m_log.InfoFormat("[YEngine]: {0}.{1}MB stacksize, {2}.{3}MB heapsize",
                     (m_StackSize >> 20).ToString(),
-                    (((m_StackSize % 0x100000) * 1000)
+                    ((m_StackSize % 0x100000 * 1000)
                             >> 20).ToString("D3"),
                     (m_HeapSize >> 20).ToString(),
-                    (((m_HeapSize % 0x100000) * 1000)
+                    ((m_HeapSize % 0x100000 * 1000)
                             >> 20).ToString("D3"));
 
             m_SleepThread = StartMyThread(RunSleepThread, "Yengine sleep" + " (" + sceneName + ")", ThreadPriority.Normal);
@@ -455,11 +455,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class CommsCallCodeGen: TokenDeclInline
         {
-            private static Type[] modInvokerArgTypes = new Type[] { typeof(string), typeof(object[]) };
+            private static readonly Type[] modInvokerArgTypes = new Type[] { typeof(string), typeof(object[]) };
             public static FieldInfo xmrInstModApiCtxField;
 
-            private MethodInfo modInvokerMeth;
-            private string methName;
+            private readonly MethodInfo modInvokerMeth;
+            private readonly string methName;
 
             /**
              * @brief Constructor
@@ -1151,7 +1151,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(!isX)
             {
                 sen = stateN.GetAttribute("Engine");
-                if ((sen == null) || (sen != ScriptEngineName))
+                if (sen == null || sen != ScriptEngineName)
                     return false;
             }
 
@@ -1691,7 +1691,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 // next event to queue to it will start it up.
                 case XMRInstState.FINISHED:
                     Monitor.Enter(inst.m_QueueLock);
-                    if(!inst.m_Suspended && (inst.m_EventQueue.Count > 0))
+                    if(!inst.m_Suspended && inst.m_EventQueue.Count > 0)
                     {
                         inst.m_IState = XMRInstState.ONSTARTQ;
                         Monitor.Exit(inst.m_QueueLock);
@@ -1927,14 +1927,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             */
         public float GetScriptExecutionTime(List<UUID> itemIDs)
         {
-            if((itemIDs == null) || (itemIDs.Count == 0))
+            if(itemIDs == null || itemIDs.Count == 0)
                 return 0;
 
             float time = 0;
             foreach(UUID itemID in itemIDs)
             {
                 XMRInstance instance = GetInstance(itemID);
-                if((instance != null) && instance.Running)
+                if(instance != null && instance.Running)
                     time += (float)instance.m_CPUTime;
             }
             return time;
@@ -1942,14 +1942,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public int GetScriptsMemory(List<UUID> itemIDs)
         {
-            if ((itemIDs == null) || (itemIDs.Count == 0))
+            if (itemIDs == null || itemIDs.Count == 0)
                 return 0;
 
             int memory = 0;
             foreach (UUID itemID in itemIDs)
             {
                 XMRInstance instance = GetInstance(itemID);
-                if ((instance != null) && instance.Running)
+                if (instance != null && instance.Running)
                     memory += instance.xmrHeapUsed();
             }
             return memory;

@@ -43,9 +43,9 @@ namespace OpenSim.OfflineIM
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
-        private IServiceAuth m_Auth;
-        private object m_Lock = new object();
+        private readonly string m_ServerURI = string.Empty;
+        private readonly IServiceAuth m_Auth;
+        private readonly object m_Lock = new object();
 
         public OfflineIMServiceRemoteConnector(string url)
         {
@@ -75,7 +75,7 @@ namespace OpenSim.OfflineIM
             }
             ///
             m_log.DebugFormat("[OfflineIM.V2.RemoteConnector]: Offline IM server at {0} with auth {1}",
-                m_ServerURI, (m_Auth == null ? "None" : m_Auth.GetType().ToString()));
+                m_ServerURI, m_Auth == null ? "None" : m_Auth.GetType().ToString());
         }
 
         #region IOfflineIMService

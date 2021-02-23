@@ -38,7 +38,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private int m_WakeUpOne = 0;
         public object m_WakeUpLock = new object();
 
-        private Dictionary<int, XMRInstance> m_RunningInstances = new Dictionary<int, XMRInstance>();
+        private readonly Dictionary<int, XMRInstance> m_RunningInstances = new Dictionary<int, XMRInstance>();
 
         private bool m_SuspendScriptThreadFlag = false;
         private bool m_WakeUpThis = false;
@@ -205,11 +205,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 // Nothing to do, sleep.
                 lock(m_WakeUpLock)
                 {
-                    if(!m_WakeUpThis && (m_WakeUpOne <= 0) && !m_Exiting)
+                    if(!m_WakeUpThis && m_WakeUpOne <= 0 && !m_Exiting)
                         Monitor.Wait(m_WakeUpLock, Watchdog.DEFAULT_WATCHDOG_TIMEOUT_MS / 2);
 
                     m_WakeUpThis = false;
-                    if((m_WakeUpOne > 0) && (--m_WakeUpOne > 0))
+                    if(m_WakeUpOne > 0 && --m_WakeUpOne > 0)
                         Monitor.Pulse(m_WakeUpLock);
                 }
             }

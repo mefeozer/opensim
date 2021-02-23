@@ -187,7 +187,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         LinksetImpl = LinksetImplementation.Constraint;
     }
 
-    private static string LogHeader = "[BULLETSIM LINKSET CONSTRAINT]";
+    private static readonly string LogHeader = "[BULLETSIM LINKSET CONSTRAINT]";
 
     // When physical properties are changed the linkset needs to recalculate
     //   its internal properties.
@@ -203,7 +203,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     private void ScheduleRebuild(BSPrimLinkable requestor)
     {
         DetailLog("{0},BSLinksetConstraint.ScheduleRebuild,,rebuilding={1},hasChildren={2},actuallyScheduling={3}",
-                            requestor.LocalID, Rebuilding, HasAnyChildren, (!Rebuilding && HasAnyChildren));
+                            requestor.LocalID, Rebuilding, HasAnyChildren, !Rebuilding && HasAnyChildren);
 
         // When rebuilding, it is possible to set properties that would normally require a rebuild.
         //    If already rebuilding, don't request another rebuild.
@@ -374,7 +374,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 OMV.Vector3 childRelativePosition = linkInfo.member.Position - rootPrim.Position;
 
                 // real world coordinate of midpoint between the two objects
-                OMV.Vector3 midPoint = rootPrim.Position + (childRelativePosition / 2);
+                OMV.Vector3 midPoint = rootPrim.Position + childRelativePosition / 2;
 
                 DetailLog("{0},BSLinksetConstraint.BuildConstraint,6Dof,rBody={1},cBody={2},rLoc={3},cLoc={4},midLoc={5}",
                                                 rootPrim.LocalID, rootPrim.PhysBody, linkInfo.member.PhysBody,
@@ -589,7 +589,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     else
                     {
                         DetailLog("{0},BSLinksetConstraint.SetLinkType,illegalRequestedType,reqested={1},spring={2}",
-                                        LinksetRoot.LocalID, requestedType, ((int)ConstraintType.D6_SPRING_CONSTRAINT_TYPE));
+                                        LinksetRoot.LocalID, requestedType, (int)ConstraintType.D6_SPRING_CONSTRAINT_TYPE);
                     }
                 }
                 break;
@@ -711,13 +711,13 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                             break;
                                         case ExtendedPhysics.PHYS_PARAM_USE_FRAME_OFFSET:
                                             errMsg = "PHYS_PARAM_USE_FRAME_OFFSET takes one parameter of type integer (bool)";
-                                            valueBool = ((int)pParams[opIndex + 1]) != 0;
+                                            valueBool = (int)pParams[opIndex + 1] != 0;
                                             linkInfo.useFrameOffset = valueBool;
                                             opIndex += 2;
                                             break;
                                         case ExtendedPhysics.PHYS_PARAM_ENABLE_TRANSMOTOR:
                                             errMsg = "PHYS_PARAM_ENABLE_TRANSMOTOR takes one parameter of type integer (bool)";
-                                            valueBool = ((int)pParams[opIndex + 1]) != 0;
+                                            valueBool = (int)pParams[opIndex + 1] != 0;
                                             linkInfo.enableTransMotor = valueBool;
                                             opIndex += 2;
                                             break;
@@ -754,7 +754,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                         case ExtendedPhysics.PHYS_PARAM_SPRING_AXIS_ENABLE:
                                             errMsg = "PHYS_PARAM_SPRING_AXIS_ENABLE takes two parameters of types integer and integer (bool)";
                                             valueInt = (int)pParams[opIndex + 1];
-                                            valueBool = ((int)pParams[opIndex + 2]) != 0;
+                                            valueBool = (int)pParams[opIndex + 2] != 0;
                                             GetAxisRange(valueInt, out axisLow, out axisHigh);
                                             for (int ii = axisLow; ii <= axisHigh; ii++)
                                                 linkInfo.springAxisEnable[ii] = valueBool;
@@ -788,7 +788,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                             break;
                                         case ExtendedPhysics.PHYS_PARAM_USE_LINEAR_FRAMEA:
                                             errMsg = "PHYS_PARAM_USE_LINEAR_FRAMEA takes one parameter of type integer (bool)";
-                                            valueBool = ((int)pParams[opIndex + 1]) != 0;
+                                            valueBool = (int)pParams[opIndex + 1] != 0;
                                             linkInfo.useLinearReferenceFrameA = valueBool;
                                             opIndex += 2;
                                             break;

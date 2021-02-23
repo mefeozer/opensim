@@ -51,25 +51,25 @@ namespace OpenSim.Framework.Capabilities
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_httpListenerHostName;
-        private uint m_httpListenPort;
+        private readonly string m_httpListenerHostName;
+        private readonly uint m_httpListenPort;
 
         /// <summary>
         /// This is the uuid portion of every CAPS path.  It is used to make capability urls private to the requester.
         /// </summary>
-        private string m_capsObjectPath;
+        private readonly string m_capsObjectPath;
         public string CapsObjectPath { get { return m_capsObjectPath; } }
 
-        private CapsHandlers m_capsHandlers;
+        private readonly CapsHandlers m_capsHandlers;
 
-        private ConcurrentDictionary<string, PollServiceEventArgs> m_pollServiceHandlers
+        private readonly ConcurrentDictionary<string, PollServiceEventArgs> m_pollServiceHandlers
             = new ConcurrentDictionary<string, PollServiceEventArgs>();
 
-        private Dictionary<string, string> m_externalCapsHandlers = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> m_externalCapsHandlers = new Dictionary<string, string>();
 
-        private IHttpServer m_httpListener;
-        private UUID m_agentID;
-        private string m_regionName;
+        private readonly IHttpServer m_httpListener;
+        private readonly UUID m_agentID;
+        private readonly string m_regionName;
         private ManualResetEvent m_capsActive = new ManualResetEvent(false);
 
         public UUID AgentID
@@ -278,7 +278,7 @@ namespace OpenSim.Framework.Capabilities
                         continue;
 
                         string hostName = m_httpListenerHostName;
-                        uint port = (MainServer.Instance == null) ? 0 : MainServer.Instance.Port;
+                        uint port = MainServer.Instance == null ? 0 : MainServer.Instance.Port;
                         string protocol = "http";
 
                         if (MainServer.Instance.UseSSL)

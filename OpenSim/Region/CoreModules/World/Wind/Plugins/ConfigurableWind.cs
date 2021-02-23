@@ -119,10 +119,10 @@ namespace OpenSim.Region.CoreModules.World.Wind.Plugins
 
             double offset = Math.Sin(theta) * Math.Sin(theta*2) * Math.Sin(theta*9) * Math.Cos(theta*4);
 
-            double windDir = avgAng + (varDir * offset);
+            double windDir = avgAng + varDir * offset;
 
-            offset = Math.Sin(theta) * Math.Sin(theta*4) + (Math.Sin(theta*13) / 3);
-            double windSpeed = m_avgStrength + (m_varStrength * offset);
+            offset = Math.Sin(theta) * Math.Sin(theta*4) + Math.Sin(theta*13) / 3;
+            double windSpeed = m_avgStrength + m_varStrength * offset;
 
             if (windSpeed < 0)
                 windSpeed = -windSpeed;

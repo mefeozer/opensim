@@ -70,7 +70,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         /// <value>
         /// All scenes that this module knows about
         /// </value>
-        private Dictionary<UUID, Scene> m_scenes = new Dictionary<UUID, Scene>();
+        private readonly Dictionary<UUID, Scene> m_scenes = new Dictionary<UUID, Scene>();
         private Scene m_aScene;
 
         private IUserAccountService m_UserAccountService;
@@ -306,7 +306,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
 //                    if (CheckPresence(userInfo.PrincipalID))
 //                    {
                         InventoryArchiveReadRequest request;
-                        bool merge = (options.ContainsKey("merge") ? (bool)options["merge"] : false);
+                        bool merge = options.ContainsKey("merge") ? (bool)options["merge"] : false;
 
                         try
                         {
@@ -354,7 +354,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
 //                    if (CheckPresence(userInfo.PrincipalID))
 //                    {
                         InventoryArchiveReadRequest request;
-                        bool merge = (options.ContainsKey("merge") ? (bool)options["merge"] : false);
+                        bool merge = options.ContainsKey("merge") ? (bool)options["merge"] : false;
 
                         try
                         {
@@ -412,7 +412,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
                 string lastName = mainParams[3];
                 string invPath = mainParams[4];
                 string pass = mainParams[5];
-                string loadPath = (mainParams.Count > 6 ? mainParams[6] : DEFAULT_INV_BACKUP_FILENAME);
+                string loadPath = mainParams.Count > 6 ? mainParams[6] : DEFAULT_INV_BACKUP_FILENAME;
 
                 m_log.InfoFormat(
                     "[INVENTORY ARCHIVER]: Loading archive {0} to inventory path {1} for {2} {3}",
@@ -477,7 +477,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
                 string lastName = mainParams[3];
                 string invPath = mainParams[4];
                 string pass = mainParams[5];
-                string savePath = (mainParams.Count > 6 ? mainParams[6] : DEFAULT_INV_BACKUP_FILENAME);
+                string savePath = mainParams.Count > 6 ? mainParams[6] : DEFAULT_INV_BACKUP_FILENAME;
 
                 m_log.InfoFormat(
                     "[INVENTORY ARCHIVER]: Saving archive {0} using inventory path {1} for {2} {3}",

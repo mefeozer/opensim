@@ -47,9 +47,9 @@ namespace OpenSim.Capabilities.Handlers
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static byte[] EmptyResponse = Util.UTF8NBGetbytes("<llsd><map><key>folders</key><array /></map></llsd>");
-        private IInventoryService m_InventoryService;
-        private ILibraryService m_LibraryService;
+        private static readonly byte[] EmptyResponse = Util.UTF8NBGetbytes("<llsd><map><key>folders</key><array /></map></llsd>");
+        private readonly IInventoryService m_InventoryService;
+        private readonly ILibraryService m_LibraryService;
         private IScene m_Scene;
 
         public FetchInvDescHandler(IInventoryService invService, ILibraryService libService, IScene s)
@@ -319,7 +319,7 @@ namespace OpenSim.Capabilities.Handlers
             HashSet<UUID> libIDs = new HashSet<UUID>();
             HashSet<UUID> otherIDs = new HashSet<UUID>();
 
-            bool dolib = (m_LibraryService != null && m_LibraryService.LibraryRootFolder != null);
+            bool dolib = m_LibraryService != null && m_LibraryService.LibraryRootFolder != null;
             UUID libOwner = UUID.Zero;
             if(dolib)
                 libOwner = m_LibraryService.LibraryRootFolder.Owner;

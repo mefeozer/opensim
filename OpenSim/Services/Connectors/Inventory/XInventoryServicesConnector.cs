@@ -59,10 +59,10 @@ namespace OpenSim.Services.Connectors
         /// In this case, -1 is default timeout (100 seconds), not infinite.
         /// </remarks>
         private int m_requestTimeoutSecs = -1;
-        private string m_configName = "InventoryService";
+        private readonly string m_configName = "InventoryService";
 
         private const double CACHE_EXPIRATION_SECONDS = 20.0;
-        private static ExpiringCache<UUID, InventoryItemBase> m_ItemCache = new ExpiringCache<UUID,InventoryItemBase>();
+        private static readonly ExpiringCache<UUID, InventoryItemBase> m_ItemCache = new ExpiringCache<UUID,InventoryItemBase>();
 
         public XInventoryServicesConnector()
         {

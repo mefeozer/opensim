@@ -656,7 +656,7 @@ namespace OpenSim
                 return;
             }
 
-            float factor = (float)(Convert.ToSingle(args[2]));
+            float factor = (float)Convert.ToSingle(args[2]);
 
             float minZ = float.MaxValue;
 
@@ -862,7 +862,7 @@ namespace OpenSim
         /// </summary>
         private void RefreshPrompt()
         {
-            string regionName = (SceneManager.CurrentScene == null ? "root" : SceneManager.CurrentScene.RegionInfo.RegionName);
+            string regionName = SceneManager.CurrentScene == null ? "root" : SceneManager.CurrentScene.RegionInfo.RegionName;
             MainConsole.Instance.Output(string.Format("Currently selected region is {0}", regionName));
 
 //            m_log.DebugFormat("Original prompt is {0}", m_consolePrompt);

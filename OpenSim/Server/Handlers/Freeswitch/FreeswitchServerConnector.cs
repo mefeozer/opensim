@@ -42,8 +42,8 @@ namespace OpenSim.Server.Handlers.Freeswitch
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IFreeswitchService m_FreeswitchService;
-        private string m_ConfigName = "FreeswitchService";
+        private readonly IFreeswitchService m_FreeswitchService;
+        private readonly string m_ConfigName = "FreeswitchService";
         protected readonly string m_freeSwitchAPIPrefix = "/fsapi";
 
         public FreeswitchServerConnector(IConfigSource config, IHttpServer server, string configName) :

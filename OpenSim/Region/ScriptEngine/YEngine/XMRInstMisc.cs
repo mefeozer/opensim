@@ -94,8 +94,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     ScriptObjCode objCode;
 
                     if(m_CompiledScriptObjCode.TryGetValue(m_ScriptObjCodeKey, out objCode) &&
-                        (objCode == m_ObjCode) &&
-                        (--objCode.refCount == 0))
+                        objCode == m_ObjCode &&
+                        --objCode.refCount == 0)
                     {
                         m_CompiledScriptObjCode.Remove(m_ScriptObjCodeKey);
                     }
@@ -197,8 +197,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public ulong GetStateEventFlags(int state)
         {
-            if((state < 0) ||
-                (state >= m_ObjCode.scriptEventHandlerTable.GetLength(0)))
+            if(state < 0 ||
+                state >= m_ObjCode.scriptEventHandlerTable.GetLength(0))
             {
                 return 0;
             }
@@ -370,7 +370,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                 m_IState = XMRInstState.ONYIELDQ;
                                 m_Engine.QueueToYield(this);
                             }
-                            else if ((m_EventQueue != null) && (m_EventQueue.First != null))
+                            else if (m_EventQueue != null && m_EventQueue.First != null)
                             {
                                 m_IState = XMRInstState.ONSTARTQ;
                                 m_Engine.QueueToStart(this);

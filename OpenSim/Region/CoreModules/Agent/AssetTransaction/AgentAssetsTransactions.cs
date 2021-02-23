@@ -44,9 +44,9 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Fields
-        private bool m_dumpAssetsToFile;
-        private Scene m_Scene;
-        private Dictionary<UUID, AssetXferUploader> XferUploaders = new Dictionary<UUID, AssetXferUploader>();
+        private readonly bool m_dumpAssetsToFile;
+        private readonly Scene m_Scene;
+        private readonly Dictionary<UUID, AssetXferUploader> XferUploaders = new Dictionary<UUID, AssetXferUploader>();
 
         // Methods
         public AgentAssetTransactions(UUID agentID, Scene scene,

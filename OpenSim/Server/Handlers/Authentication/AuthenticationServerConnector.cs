@@ -37,8 +37,8 @@ namespace OpenSim.Server.Handlers.Authentication
 {
     public class AuthenticationServiceConnector : ServiceConnector
     {
-        private IAuthenticationService m_AuthenticationService;
-        private string m_ConfigName = "AuthenticationService";
+        private readonly IAuthenticationService m_AuthenticationService;
+        private readonly string m_ConfigName = "AuthenticationService";
 
         public AuthenticationServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

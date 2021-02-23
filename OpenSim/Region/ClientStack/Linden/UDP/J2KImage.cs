@@ -89,7 +89,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         private bool m_sentInfo;
         private uint m_stopPacket;
         private byte[] m_asset;
-        private LLImageManager m_imageManager;
+        private readonly LLImageManager m_imageManager;
 
         public J2KImage(LLImageManager imageManager)
         {
@@ -112,7 +112,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             {
                 bool sendMore = true;
 
-                if (!m_sentInfo || (m_currentPacket == 0))
+                if (!m_sentInfo || m_currentPacket == 0)
                 {
                     sendMore = !SendFirstPacket(client);
 
@@ -133,7 +133,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 }
             }
 
-            return (m_currentPacket > m_stopPacket);
+            return m_currentPacket > m_stopPacket;
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                         //Calculate the m_stopPacket
                         if (m_layers.Length > 0)
                         {
-                            m_stopPacket = (uint)GetPacketForBytePosition(m_layers[(m_layers.Length - 1) - DiscardLevel].End);
+                            m_stopPacket = (uint)GetPacketForBytePosition(m_layers[m_layers.Length - 1 - DiscardLevel].End);
                             //I don't know why, but the viewer seems to expect the final packet if the file
                             //is just one packet bigger.
                             if (TexturePacketCount() == m_stopPacket + 1)
@@ -283,15 +283,15 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 return false;
 
             bool complete = false;
-            int imagePacketSize = ((int)m_currentPacket == (TexturePacketCount())) ? LastPacketSize() : IMAGE_PACKET_SIZE;
+            int imagePacketSize = (int)m_currentPacket == TexturePacketCount() ? LastPacketSize() : IMAGE_PACKET_SIZE;
 
             try
             {
-                if ((CurrentBytePosition() + IMAGE_PACKET_SIZE) > m_asset.Length)
+                if (CurrentBytePosition() + IMAGE_PACKET_SIZE > m_asset.Length)
                 {
                     imagePacketSize = LastPacketSize();
                     complete = true;
-                    if ((CurrentBytePosition() + imagePacketSize) > m_asset.Length)
+                    if (CurrentBytePosition() + imagePacketSize > m_asset.Length)
                     {
                         imagePacketSize = m_asset.Length - CurrentBytePosition();
                         complete = true;
@@ -337,12 +337,12 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             if (m_asset.Length <= FIRST_PACKET_SIZE)
                 return 1;
 
-            return (ushort)(((m_asset.Length - FIRST_PACKET_SIZE + IMAGE_PACKET_SIZE - 1) / IMAGE_PACKET_SIZE) + 1);
+            return (ushort)((m_asset.Length - FIRST_PACKET_SIZE + IMAGE_PACKET_SIZE - 1) / IMAGE_PACKET_SIZE + 1);
         }
 
         private int GetPacketForBytePosition(int bytePosition)
         {
-            return ((bytePosition - FIRST_PACKET_SIZE + IMAGE_PACKET_SIZE - 1) / IMAGE_PACKET_SIZE) + 1;
+            return (bytePosition - FIRST_PACKET_SIZE + IMAGE_PACKET_SIZE - 1) / IMAGE_PACKET_SIZE + 1;
         }
 
         private int LastPacketSize()
@@ -417,7 +417,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 if(asset.Type != (byte)AssetType.Texture)
                     asset = null;
             }
-            else if ((InventoryAccessModule != null) && (sender != InventoryAccessModule))
+            else if (InventoryAccessModule != null && sender != InventoryAccessModule)
             {
                 // Unfortunately we need this here, there's no other way.
                 // This is due to the fact that textures opened directly from the agent's inventory

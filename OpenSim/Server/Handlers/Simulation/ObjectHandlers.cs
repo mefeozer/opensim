@@ -44,7 +44,7 @@ namespace OpenSim.Server.Handlers.Simulation
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ISimulationService m_SimulationService;
+        private readonly ISimulationService m_SimulationService;
         protected bool m_Proxy = false;
 
         public ObjectSimpleHandler(ISimulationService service) : base("/object")
@@ -146,7 +146,7 @@ namespace OpenSim.Server.Handlers.Simulation
             else
                 sog.HasGroupChanged = false;
 
-            if ((args["state"] != null) && s.AllowScriptCrossings)
+            if (args["state"] != null && s.AllowScriptCrossings)
             {
                 stateXmlStr = args["state"].AsString();
                 if (stateXmlStr != "")

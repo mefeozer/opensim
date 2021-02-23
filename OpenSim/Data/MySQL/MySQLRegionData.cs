@@ -38,7 +38,7 @@ namespace OpenSim.Data.MySQL
 {
     public class MySqlRegionData : MySqlFramework, IRegionData
     {
-        private string m_Realm;
+        private readonly string m_Realm;
         private List<string> m_ColumnNames;
         //private string m_connectionString;
 

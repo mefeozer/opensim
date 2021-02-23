@@ -43,13 +43,13 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         protected Scene m_Scene;
-        private bool m_dumpAssetsToFile = false;
+        private readonly bool m_dumpAssetsToFile = false;
         private int  m_levelUpload = 0;
 
         /// <summary>
         /// Each agent has its own singleton collection of transactions
         /// </summary>
-        private Dictionary<UUID, AgentAssetTransactions> AgentTransactions =
+        private readonly Dictionary<UUID, AgentAssetTransactions> AgentTransactions =
             new Dictionary<UUID, AgentAssetTransactions>();
 
         #region Region Module interface

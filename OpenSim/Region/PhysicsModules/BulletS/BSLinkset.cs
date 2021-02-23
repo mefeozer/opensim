@@ -172,13 +172,13 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // Return 'true' if the passed object is the root object of this linkset
     public bool IsRoot(BSPrimLinkable requestor)
     {
-        return (requestor.LocalID == LinksetRoot.LocalID);
+        return requestor.LocalID == LinksetRoot.LocalID;
     }
 
     public int NumberOfChildren { get { return m_children.Count; } }
 
     // Return 'true' if this linkset has any children (more than the root member)
-    public bool HasAnyChildren { get { return (m_children.Count > 0); } }
+    public bool HasAnyChildren { get { return m_children.Count > 0; } }
 
     // Return 'true' if this child is in this linkset
     public bool HasChild(BSPrimLinkable child)
@@ -263,7 +263,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         // prims in the same linkset cannot collide with each other
         BSPrimLinkable convCollidee = collidee as BSPrimLinkable;
-        if (convCollidee != null && (LinksetID == convCollidee.Linkset.LinksetID))
+        if (convCollidee != null && LinksetID == convCollidee.Linkset.LinksetID)
         {
             // By returning 'true', we tell the caller the collision has been 'handled' so it won't
             //     do anything about this collision and thus, effectivily, ignoring the collision.
@@ -321,7 +321,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             bool ret = true;
             this.ForEachMember((member) =>
             {
-                if ((!member.IsInitialized) || member.IsIncomplete || member.PrimAssetState == BSPhysObject.PrimAssetCondition.Waiting)
+                if (!member.IsInitialized || member.IsIncomplete || member.PrimAssetState == BSPhysObject.PrimAssetCondition.Waiting)
                 {
                     ret = false;
                     return true;    // exit loop
@@ -479,7 +479,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             {
                 com += bp.Position;
             }
-            com /= (m_children.Count + 1);
+            com /= m_children.Count + 1;
         }
 
         return com;

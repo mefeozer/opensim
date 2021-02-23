@@ -98,24 +98,24 @@ namespace OpenSim.Region.CoreModules.World.Terrain.Modifiers
         {
             float[] scale = new float[3];
             scale[0] = data.elevation;
-            scale[1] = ((1.0f - scale[0]) * data.bevelevation) / 8.0f;
-            scale[2] = ((1.0f - scale[0]) * (1.0f - data.bevelevation)) / 16.0f;
+            scale[1] = (1.0f - scale[0]) * data.bevelevation / 8.0f;
+            scale[2] = (1.0f - scale[0]) * (1.0f - data.bevelevation) / 16.0f;
             int xMax = map.GetLength(0);
             int yMax = map.GetLength(1);
             float result;
-            if ((x == 0) || (y == 0) || (x == (xMax - 1)) || (y == (yMax - 1)))
+            if (x == 0 || y == 0 || x == xMax - 1 || y == yMax - 1)
             {
                 result = map[x, y];
             }
             else
             {
                 result = 0.0f;
-                for(int yPos = (y - 2); yPos < (y + 3); yPos++)
+                for(int yPos = y - 2; yPos < y + 3; yPos++)
                 {
-                    int yVal = (yPos <= 0) ? 0 : ((yPos < yMax) ? yPos : yMax - 1);
-                    for(int xPos = (x - 2); xPos < (x + 3); xPos++)
+                    int yVal = yPos <= 0 ? 0 : yPos < yMax ? yPos : yMax - 1;
+                    for(int xPos = x - 2; xPos < x + 3; xPos++)
                     {
-                        int xVal = (xPos <= 0) ? 0 : ((xPos < xMax) ? xPos : xMax - 1);
+                        int xVal = xPos <= 0 ? 0 : xPos < xMax ? xPos : xMax - 1;
                         int dist = Math.Max(Math.Abs(x - xVal), Math.Abs(y - yVal));
                         result += map[xVal, yVal] * scale[dist];
                     }

@@ -53,9 +53,9 @@ namespace OpenSim.Server.Handlers.Authentication
             public byte[] PrivateData;
         }
 
-        Dictionary<string, AssociationItem> m_store = new Dictionary<string, AssociationItem>();
-        SortedList<DateTime, AssociationItem> m_sortedStore = new SortedList<DateTime, AssociationItem>();
-        object m_syncRoot = new object();
+        readonly Dictionary<string, AssociationItem> m_store = new Dictionary<string, AssociationItem>();
+        readonly SortedList<DateTime, AssociationItem> m_sortedStore = new SortedList<DateTime, AssociationItem>();
+        readonly object m_syncRoot = new object();
 
         #region IAssociationStore<AssociationRelyingPartyType> Members
 
@@ -188,9 +188,9 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
 
         #endregion HTML
 
-        IAuthenticationService m_authenticationService;
-        IUserAccountService m_userAccountService;
-        ProviderMemoryStore m_openidStore = new ProviderMemoryStore();
+        readonly IAuthenticationService m_authenticationService;
+        readonly IUserAccountService m_userAccountService;
+        readonly ProviderMemoryStore m_openidStore = new ProviderMemoryStore();
 
         public override string ContentType { get { return "text/html"; } }
 
@@ -224,7 +224,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
                     forPost = sr.ReadToEnd();
                 NameValueCollection postQuery = HttpUtility.ParseQueryString(forPost);
                 NameValueCollection getQuery = HttpUtility.ParseQueryString(httpRequest.Url.Query);
-                NameValueCollection openIdQuery = (postQuery.GetValues("openid.mode") != null ? postQuery : getQuery);
+                NameValueCollection openIdQuery = postQuery.GetValues("openid.mode") != null ? postQuery : getQuery;
 
                 OpenIdProvider provider = new OpenIdProvider(m_openidStore, providerEndpoint, httpRequest.Url, openIdQuery);
 
@@ -242,7 +242,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
                             if (passwordValues != null && passwordValues.Length == 1)
                             {
                                 if (account != null &&
-                                    (!string.IsNullOrEmpty(m_authenticationService.Authenticate(account.PrincipalID, Util.Md5Hash(passwordValues[0]), 30))))
+                                    !string.IsNullOrEmpty(m_authenticationService.Authenticate(account.PrincipalID, Util.Md5Hash(passwordValues[0]), 30)))
                                     authRequest.IsAuthenticated = true;
                                 else
                                     authRequest.IsAuthenticated = false;
@@ -328,7 +328,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
                 if (name.Length == 2)
                 {
                     account = m_userAccountService.GetUserAccount(UUID.Zero, name[0], name[1]);
-                    return (account != null);
+                    return account != null;
                 }
             }
 

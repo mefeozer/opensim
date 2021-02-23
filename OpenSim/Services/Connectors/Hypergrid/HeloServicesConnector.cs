@@ -38,7 +38,7 @@ namespace OpenSim.Services.Connectors
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
+        private readonly string m_ServerURI = string.Empty;
 
         public HeloServicesConnector()
         {

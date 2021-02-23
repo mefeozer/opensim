@@ -44,11 +44,11 @@ namespace OpenSim.Region.CoreModules.Agent.Xfer
     public class XferModule : INonSharedRegionModule, IXfer
     {
         private Scene m_scene;
-        private Dictionary<string, FileData> NewFiles = new Dictionary<string, FileData>();
-        private Dictionary<ulong, XferDownLoad> Transfers = new Dictionary<ulong, XferDownLoad>();
+        private readonly Dictionary<string, FileData> NewFiles = new Dictionary<string, FileData>();
+        private readonly Dictionary<ulong, XferDownLoad> Transfers = new Dictionary<ulong, XferDownLoad>();
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private object  timeTickLock = new object();
+        private readonly object  timeTickLock = new object();
         private int  lastTimeTick = 0;
         private int  lastFilesExpire = 0;
         private bool    inTimeTick = false;
@@ -326,7 +326,7 @@ namespace OpenSim.Region.CoreModules.Agent.Xfer
             public ulong XferID = 0;
             public bool isDeleted = false;
 
-            private object myLock = new object();
+            private readonly object myLock = new object();
             private int lastACKTimeMS;
             private int LastPacket;
             private int lastBytes;

@@ -44,7 +44,7 @@ namespace OpenSim.OfflineIM
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private const int MAX_IM = 25;
 
-        private XmlSerializer m_serializer;
+        private readonly XmlSerializer m_serializer;
         private static bool m_Initialized = false;
 
         public OfflineIMService(IConfigSource config)
@@ -64,7 +64,7 @@ namespace OpenSim.OfflineIM
 
             OfflineIMData[] messages = m_Database.Get("PrincipalID", principalID.ToString());
 
-            if (messages == null || (messages != null && messages.Length == 0))
+            if (messages == null || messages != null && messages.Length == 0)
                 return ims;
 
             foreach (OfflineIMData m in messages)

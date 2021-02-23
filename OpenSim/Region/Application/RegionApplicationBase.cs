@@ -68,7 +68,7 @@ namespace OpenSim
             uint mainport = m_networkServersInfo.HttpListenerPort;
             uint mainSSLport = m_networkServersInfo.httpSSLPort;
 
-            if (m_networkServersInfo.HttpUsesSSL && (mainport == mainSSLport))
+            if (m_networkServersInfo.HttpUsesSSL && mainport == mainSSLport)
             {
                 m_log.Error("[REGION SERVER]: HTTP Server config failed.   HTTP Server and HTTPS server must be on different ports");
             }

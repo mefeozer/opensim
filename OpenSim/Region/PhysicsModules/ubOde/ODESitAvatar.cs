@@ -36,7 +36,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
     /// </summary>
     public class ODESitAvatar
     {
-        private ODEScene m_scene;
+        private readonly ODEScene m_scene;
         private ODERayCastRequestManager m_raymanager;
 
         public ODESitAvatar(ODEScene pScene, ODERayCastRequestManager raymanager)

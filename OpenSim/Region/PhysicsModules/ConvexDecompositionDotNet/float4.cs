@@ -146,10 +146,10 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             if (System.Object.ReferenceEquals(a, b))
                 return true;
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
+            if ((object)a == null || (object)b == null)
                 return false;
 
-            return (a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w);
+            return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
         }
 
         public static bool operator !=(float4 a, float4 b)

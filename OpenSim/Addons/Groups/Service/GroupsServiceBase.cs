@@ -44,7 +44,7 @@ namespace OpenSim.Groups
             string connString = string.Empty;
             string realm = "os_groups";
             string usersRealm = "GridUser";
-            string configName = (string.IsNullOrEmpty(cName)) ? "Groups" : cName;
+            string configName = string.IsNullOrEmpty(cName) ? "Groups" : cName;
 
             //
             // Try reading the [DatabaseService] section, if it exists

@@ -87,7 +87,7 @@ namespace OpenSim.Framework
                 return; 
 
             folded <<= (int)PermissionMask.FoldingShift;
-            folded |= (~(uint)PermissionMask.UnfoldedMask | (uint)PermissionMask.Modify);
+            folded |= ~(uint)PermissionMask.UnfoldedMask | (uint)PermissionMask.Modify;
 
             uint tmp = target;
             tmp &= folded;
@@ -106,7 +106,7 @@ namespace OpenSim.Framework
             tmp |= (uint)PermissionMask.Move;
 
             tmp &= ~(uint)PermissionMask.FoldedMask;
-            tmp |= ((tmp >> (int)PermissionMask.FoldingShift) & (uint)PermissionMask.FoldedMask);
+            tmp |= (tmp >> (int)PermissionMask.FoldingShift) & (uint)PermissionMask.FoldedMask;
 
             return tmp;
         }

@@ -47,7 +47,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Scene> m_sceneList = new List<Scene>();
+        private readonly List<Scene> m_sceneList = new List<Scene>();
         private IPresenceService m_presenceService;
 
         private IMessageTransferModule m_msgTransferModule = null;
@@ -77,7 +77,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
         /// </remarks>
         private ExpiringCache<UUID, PresenceInfo[]> m_usersOnlineCache;
 
-        private int m_usersOnlineCacheExpirySeconds = 20;
+        private readonly int m_usersOnlineCacheExpirySeconds = 20;
 
         #region Region Module interfaceBase Members
 
@@ -94,8 +94,8 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             {
                 // if groups aren't enabled, we're not needed.
                 // if we're not specified as the connector to use, then we're not wanted
-                if ((groupsConfig.GetBoolean("Enabled", false) == false)
-                     || (groupsConfig.GetString("MessagingModule", "") != Name))
+                if (groupsConfig.GetBoolean("Enabled", false) == false
+                     || groupsConfig.GetString("MessagingModule", "") != Name)
                 {
                     m_groupMessagingEnabled = false;
                     return;
@@ -428,10 +428,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             }
 
             // Incoming message from a group
-            if ((msg.fromGroup == true) &&
-                ((msg.dialog == (byte)InstantMessageDialog.SessionSend)
-                 || (msg.dialog == (byte)InstantMessageDialog.SessionAdd)
-                 || (msg.dialog == (byte)InstantMessageDialog.SessionDrop)))
+            if (msg.fromGroup == true &&
+                (msg.dialog == (byte)InstantMessageDialog.SessionSend
+                 || msg.dialog == (byte)InstantMessageDialog.SessionAdd
+                 || msg.dialog == (byte)InstantMessageDialog.SessionDrop))
             {
                 IClientAPI client = null;
 
@@ -551,7 +551,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             UUID AgentID = new UUID(im.fromAgentID);
 
             // Start group IM session
-            if ((im.dialog == (byte)InstantMessageDialog.SessionGroupStart))
+            if (im.dialog == (byte)InstantMessageDialog.SessionGroupStart)
             {
                 if (m_debugEnabled) m_log.InfoFormat("[GROUPS-MESSAGING]: imSessionID({0}) toAgentID({1})", im.imSessionID, im.toAgentID);
 
@@ -570,7 +570,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             }
 
             // Send a message from locally connected client to a group
-            if ((im.dialog == (byte)InstantMessageDialog.SessionSend))
+            if (im.dialog == (byte)InstantMessageDialog.SessionSend)
             {
                 if (m_debugEnabled)
                     m_log.DebugFormat("[GROUPS-MESSAGING]: Send message to session for group {0} with session ID {1}", GroupID, im.imSessionID.ToString());
@@ -581,7 +581,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 SendMessageToGroup(im, GroupID);
             }
 
-            if ((im.dialog == (byte)InstantMessageDialog.SessionDrop))
+            if (im.dialog == (byte)InstantMessageDialog.SessionDrop)
             {
                 if (m_debugEnabled)
                     m_log.DebugFormat("[GROUPS-MESSAGING]: Send message to session for group {0} with session ID {1}", GroupID, im.imSessionID.ToString());

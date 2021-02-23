@@ -116,11 +116,7 @@ namespace OpenSim.Framework
             get
             {
                 return
-                    IsTextualAsset && (
-                    Type != (sbyte)AssetType.Notecard
-                    && Type != (sbyte)AssetType.CallingCard
-                    && Type != (sbyte)AssetType.LSLText
-                    && Type != (sbyte)AssetType.Landmark);
+                    IsTextualAsset && Type != (sbyte)AssetType.Notecard && Type != (sbyte)AssetType.CallingCard && Type != (sbyte)AssetType.LSLText && Type != (sbyte)AssetType.Landmark;
             }
         }
 
@@ -141,20 +137,20 @@ namespace OpenSim.Framework
             get
             {
                 return
-                    (Type == (sbyte)AssetType.Animation ||
-                     Type == (sbyte)AssetType.Gesture ||
-                     Type == (sbyte)AssetType.Simstate ||
-                     Type == (sbyte)AssetType.Unknown ||
-                     Type == (sbyte)AssetType.Object ||
-                     Type == (sbyte)AssetType.Sound ||
-                     Type == (sbyte)AssetType.SoundWAV ||
-                     Type == (sbyte)AssetType.Texture ||
-                     Type == (sbyte)AssetType.TextureTGA ||
-                     Type == (sbyte)AssetType.Folder ||
-                     Type == (sbyte)AssetType.ImageJPEG ||
-                     Type == (sbyte)AssetType.ImageTGA ||
-                     Type == (sbyte)AssetType.Mesh ||
-                     Type == (sbyte) AssetType.LSLBytecode);
+                    Type == (sbyte)AssetType.Animation ||
+                    Type == (sbyte)AssetType.Gesture ||
+                    Type == (sbyte)AssetType.Simstate ||
+                    Type == (sbyte)AssetType.Unknown ||
+                    Type == (sbyte)AssetType.Object ||
+                    Type == (sbyte)AssetType.Sound ||
+                    Type == (sbyte)AssetType.SoundWAV ||
+                    Type == (sbyte)AssetType.Texture ||
+                    Type == (sbyte)AssetType.TextureTGA ||
+                    Type == (sbyte)AssetType.Folder ||
+                    Type == (sbyte)AssetType.ImageJPEG ||
+                    Type == (sbyte)AssetType.ImageTGA ||
+                    Type == (sbyte)AssetType.Mesh ||
+                    Type == (sbyte) AssetType.LSLBytecode;
             }
         }
 

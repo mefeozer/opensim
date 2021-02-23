@@ -74,7 +74,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             get { return m_regionModules; }
         }
-        private Dictionary<string, IRegionModuleBase> m_regionModules = new Dictionary<string, IRegionModuleBase>();
+        private readonly Dictionary<string, IRegionModuleBase> m_regionModules = new Dictionary<string, IRegionModuleBase>();
 
         /// <value>
         /// The module interfaces available from this scene.
@@ -393,7 +393,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             foreach (UUID render in renderFormats)
             {
-                if (!(FormatsOffered.Contains(render)))
+                if (!FormatsOffered.Contains(render))
                     FormatsOffered.Add(render);
             }
 
@@ -501,7 +501,7 @@ namespace OpenSim.Region.Framework.Scenes
         public T RequestModuleInterface<T>()
         {
             if (ModuleInterfaces.ContainsKey(typeof(T)) &&
-                    (ModuleInterfaces[typeof(T)].Count > 0))
+                    ModuleInterfaces[typeof(T)].Count > 0)
                 return (T)ModuleInterfaces[typeof(T)][0];
             else
                 return default(T);

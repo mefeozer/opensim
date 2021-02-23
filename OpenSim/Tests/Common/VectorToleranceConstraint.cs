@@ -33,7 +33,7 @@ namespace OpenSim.Tests.Common
 {
     public class VectorToleranceConstraint : ANumericalToleranceConstraint
     {
-        private Vector3 _baseValue;
+        private readonly Vector3 _baseValue;
         private Vector3 _valueToBeTested;
 
         public VectorToleranceConstraint(Vector3 baseValue, double tolerance) : base(tolerance)
@@ -61,9 +61,9 @@ namespace OpenSim.Tests.Common
 
             _valueToBeTested = (Vector3) valueToBeTested;
 
-            return (IsWithinDoubleConstraint(_valueToBeTested.X, _baseValue.X) &&
-                    IsWithinDoubleConstraint(_valueToBeTested.Y, _baseValue.Y) &&
-                    IsWithinDoubleConstraint(_valueToBeTested.Z, _baseValue.Z));
+            return IsWithinDoubleConstraint(_valueToBeTested.X, _baseValue.X) &&
+                   IsWithinDoubleConstraint(_valueToBeTested.Y, _baseValue.Y) &&
+                   IsWithinDoubleConstraint(_valueToBeTested.Z, _baseValue.Z);
         }
 
         public override void WriteDescriptionTo(MessageWriter writer)

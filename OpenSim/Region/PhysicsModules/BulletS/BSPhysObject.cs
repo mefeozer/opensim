@@ -167,8 +167,8 @@ public abstract class BSPhysObject : PhysicsActor
     public PrimAssetCondition PrimAssetState { get; set; }
     public virtual bool AssetFailed()
     {
-        return ( (this.PrimAssetState == PrimAssetCondition.FailedAssetFetch)
-              || (this.PrimAssetState == PrimAssetCondition.FailedMeshing) );
+        return this.PrimAssetState == PrimAssetCondition.FailedAssetFetch
+               || this.PrimAssetState == PrimAssetCondition.FailedMeshing;
     }
 
     // The objects base shape information. Null if not a prim type shape.
@@ -465,7 +465,7 @@ public abstract class BSPhysObject : PhysicsActor
     protected long CollisionAccumulation { get; set; }
 
     public override bool IsColliding {
-        get { return (CollidingStep == PhysScene.SimulationStep); }
+        get { return CollidingStep == PhysScene.SimulationStep; }
         set {
             if (value)
                 CollidingStep = PhysScene.SimulationStep;
@@ -484,7 +484,7 @@ public abstract class BSPhysObject : PhysicsActor
         set { IsColliding = value; }
     }
     public override bool CollidingGround {
-        get { return (CollidingGroundStep == PhysScene.SimulationStep); }
+        get { return CollidingGroundStep == PhysScene.SimulationStep; }
         set
         {
             if (value)
@@ -494,7 +494,7 @@ public abstract class BSPhysObject : PhysicsActor
         }
     }
     public override bool CollidingObj {
-        get { return (CollidingObjectStep == PhysScene.SimulationStep); }
+        get { return CollidingObjectStep == PhysScene.SimulationStep; }
         set {
             if (value)
                 CollidingObjectStep = PhysScene.SimulationStep;
@@ -522,7 +522,7 @@ public abstract class BSPhysObject : PhysicsActor
         bool ret = false;
 
         // if 'collidee' is null, that means it is terrain
-        uint collideeLocalID = (collidee == null) ? BSScene.TERRAIN_ID : collidee.LocalID;
+        uint collideeLocalID = collidee == null ? BSScene.TERRAIN_ID : collidee.LocalID;
         // All terrain goes by the TERRAIN_ID id when passed up as a collision
         if (collideeLocalID <= PhysScene.TerrainManager.HighestTerrainID) {
             collideeLocalID = BSScene.TERRAIN_ID;
@@ -544,8 +544,8 @@ public abstract class BSPhysObject : PhysicsActor
         // For movement tests, if the collider is me, remember if we are colliding with an object that is moving.
         // Here the 'collider'/'collidee' thing gets messed up. In the larger context, when something is checking
         //     if the thing it is colliding with is moving, for instance, it asks if the its collider is moving.
-        ColliderIsMoving = collidee != null ? (collidee.RawVelocity != OMV.Vector3.Zero || collidee.RotationalVelocity != OMV.Vector3.Zero) : false;
-        ColliderIsVolumeDetect = collidee != null ? (collidee.IsVolumeDetect) : false;
+        ColliderIsMoving = collidee != null ? collidee.RawVelocity != OMV.Vector3.Zero || collidee.RotationalVelocity != OMV.Vector3.Zero : false;
+        ColliderIsVolumeDetect = collidee != null ? collidee.IsVolumeDetect : false;
 
 
         // Make a collection of the collisions that happened the last simulation tick.
@@ -595,10 +595,10 @@ public abstract class BSPhysObject : PhysicsActor
 
         // If no collisions this call but there were collisions last call, force the collision
         //     event to be happen right now so quick collision_end.
-        bool force = (CollisionCollection.Count == 0 && CollisionsLastReported.Count != 0);
+        bool force = CollisionCollection.Count == 0 && CollisionsLastReported.Count != 0;
 
         // throttle the collisions to the number of milliseconds specified in the subscription
-        if (force || (PhysScene.SimulationNowTime >= NextCollisionOkTime))
+        if (force || PhysScene.SimulationNowTime >= NextCollisionOkTime)
         {
             NextCollisionOkTime = PhysScene.SimulationNowTime + SubscribedEventsMs;
 
@@ -663,7 +663,7 @@ public abstract class BSPhysObject : PhysicsActor
     }
     // Return 'true' if the simulator wants collision events
     public override bool SubscribedEvents() {
-        return (SubscribedEventsMs > 0);
+        return SubscribedEventsMs > 0;
     }
     // Because 'CollisionScore' is called many times while sorting, it should not be recomputed
     //    each time called. So this is built to be light weight for each collision and to do

@@ -55,7 +55,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             get { return m_contentEncoding; }
         }
-        private Encoding m_contentEncoding;
+        private readonly Encoding m_contentEncoding;
 
         public long ContentLength
         {
@@ -71,7 +71,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             get { return m_contentType; }
         }
-        private string m_contentType;
+        private readonly string m_contentType;
 
         public HttpCookieCollection Cookies
         {
@@ -190,7 +190,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             get { return m_userAgent; }
         }
-        private string m_userAgent;
+        private readonly string m_userAgent;
 
         public double ArrivalTS
         {
@@ -215,7 +215,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             get { return _whiteboard; }
         }
-        private Dictionary<string, object> _whiteboard = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _whiteboard = new Dictionary<string, object>();
 
         public OSHttpRequest() {}
 

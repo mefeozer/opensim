@@ -41,8 +41,8 @@ namespace OpenSim.Server.Handlers.Asset
 {
     public class AssetServiceConnector : ServiceConnector
     {
-        private IAssetService m_AssetService;
-        private string m_ConfigName = "AssetService";
+        private readonly IAssetService m_AssetService;
+        private readonly string m_ConfigName = "AssetService";
 
         public AssetServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

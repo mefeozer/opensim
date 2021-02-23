@@ -42,7 +42,7 @@ namespace Robust.Tests
 //                LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        private UUID m_userID = new UUID("00000000-0000-0000-0000-333333333333");
+        private readonly UUID m_userID = new UUID("00000000-0000-0000-0000-333333333333");
         private UUID m_rootFolderID;
         private UUID m_notecardsFolder;
         private UUID m_objectsFolder;

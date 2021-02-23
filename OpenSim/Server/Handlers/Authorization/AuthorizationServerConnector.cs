@@ -36,8 +36,8 @@ namespace OpenSim.Server.Handlers.Authorization
 {
     public class AuthorizationServerConnector : ServiceConnector
     {
-        private IAuthorizationService m_AuthorizationService;
-        private string m_ConfigName = "AuthorizationService";
+        private readonly IAuthorizationService m_AuthorizationService;
+        private readonly string m_ConfigName = "AuthorizationService";
 
         public AuthorizationServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)

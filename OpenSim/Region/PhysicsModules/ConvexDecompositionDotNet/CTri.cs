@@ -268,9 +268,9 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
             float t = -(plane[3] + dot2) / dot1;
 
-            split.x = (dir[0] * t) + p1[0];
-            split.y = (dir[1] * t) + p1[1];
-            split.z = (dir[2] * t) + p1[2];
+            split.x = dir[0] * t + p1[0];
+            split.y = dir[1] * t + p1[1];
+            split.z = dir[2] * t + p1[2];
         }
 
         private static bool rayIntersectsTriangle(float3 p, float3 d, float3 v0, float3 v1, float3 v2, out float t)

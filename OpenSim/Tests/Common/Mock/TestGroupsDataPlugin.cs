@@ -46,13 +46,13 @@ namespace OpenSim.Tests.Common.Mock
             }
         }
 
-        private Dictionary<UUID, GroupData> m_Groups;
-        private Dictionary<CompositeKey, MembershipData> m_Membership;
-        private Dictionary<CompositeKey, RoleData> m_Roles;
-        private Dictionary<CompositeKey, RoleMembershipData> m_RoleMembership;
+        private readonly Dictionary<UUID, GroupData> m_Groups;
+        private readonly Dictionary<CompositeKey, MembershipData> m_Membership;
+        private readonly Dictionary<CompositeKey, RoleData> m_Roles;
+        private readonly Dictionary<CompositeKey, RoleMembershipData> m_RoleMembership;
         private Dictionary<UUID, InvitationData> m_Invites;
         private Dictionary<UUID, NoticeData> m_Notices;
-        private Dictionary<string, PrincipalData> m_Principals;
+        private readonly Dictionary<string, PrincipalData> m_Principals;
 
         public TestGroupsDataPlugin(string connectionString, string realm)
         {
@@ -91,7 +91,7 @@ namespace OpenSim.Tests.Common.Mock
 
             IEnumerable<GroupData> groups = m_Groups.Values.Where(g => g.Data.ContainsKey("Name") && (g.Data["Name"].StartsWith(pattern) || g.Data["Name"].EndsWith(pattern)));
 
-            return (groups != null) ? groups.ToArray() : new GroupData[0];
+            return groups != null ? groups.ToArray() : new GroupData[0];
         }
 
         public bool DeleteGroup(UUID groupID)

@@ -143,8 +143,8 @@ namespace OpenSim.Region.DataSnapshot.Providers
 
                     LandData parcel = land.LandData;
                     if (m_parent.ExposureLevel.Equals("all") ||
-                        (m_parent.ExposureLevel.Equals("minimum") &&
-                        (parcel.Flags & (uint)ParcelFlags.ShowDirectory) == (uint)ParcelFlags.ShowDirectory))
+                        m_parent.ExposureLevel.Equals("minimum") &&
+                        (parcel.Flags & (uint)ParcelFlags.ShowDirectory) == (uint)ParcelFlags.ShowDirectory)
                     {
 
                         //TODO: make better method of marshalling data from LandData to XmlNode

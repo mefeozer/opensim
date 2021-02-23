@@ -173,7 +173,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
     class MockRegionModulesControllerPlugin : IRegionModulesController, IApplicationPlugin
     {
         // List of shared module instances, for adding to Scenes
-        private List<ISharedRegionModule> m_sharedInstances = new List<ISharedRegionModule>();
+        private readonly List<ISharedRegionModule> m_sharedInstances = new List<ISharedRegionModule>();
 
         // Config access
         private OpenSimBase m_openSim;

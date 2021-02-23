@@ -76,18 +76,18 @@ namespace OpenSim.Region.PhysicsModule.ODE
         private Vector3 _target_velocity;
         private Vector3 _acceleration;
         private Vector3 m_rotationalVelocity;
-        private float m_mass = 80f;
-        private float m_density = 60f;
+        private readonly float m_mass = 80f;
+        private readonly float m_density = 60f;
         private bool m_pidControllerActive = true;
-        private float PID_D = 800.0f;
-        private float PID_P = 900.0f;
+        private readonly float PID_D = 800.0f;
+        private readonly float PID_P = 900.0f;
         //private static float POSTURE_SERVO = 10000.0f;
         private float CAPSULE_RADIUS = 0.37f;
         private float CAPSULE_LENGTH = 2.140599f;
-        private float m_tensor = 3800000f;
+        private readonly float m_tensor = 3800000f;
 //        private float heightFudgeFactor = 0.52f;
-        private float walkDivisor = 1.3f;
-        private float runDivisor = 0.8f;
+        private readonly float walkDivisor = 1.3f;
+        private readonly float runDivisor = 0.8f;
         private bool flying = false;
         private bool m_iscolliding = false;
         private bool m_iscollidingGround = false;
@@ -116,34 +116,34 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <summary>
         /// Base movement for calculating tilt.
         /// </summary>
-        private float m_tiltBaseMovement = (float)Math.Sqrt(2);
+        private readonly float m_tiltBaseMovement = (float)Math.Sqrt(2);
 
         /// <summary>
         /// Used to introduce a fixed tilt because a straight-up capsule falls through terrain, probably a bug in terrain collider
         /// </summary>
-        private float m_tiltMagnitudeWhenProjectedOnXYPlane = 0.1131371f;
+        private readonly float m_tiltMagnitudeWhenProjectedOnXYPlane = 0.1131371f;
 
         private float m_buoyancy = 0f;
 
         // private CollisionLocker ode;
-        private bool[] m_colliderarr = new bool[11];
-        private bool[] m_colliderGroundarr = new bool[11];
+        private readonly bool[] m_colliderarr = new bool[11];
+        private readonly bool[] m_colliderGroundarr = new bool[11];
 
         // Default we're a Character
-        private CollisionCategories m_collisionCategories = (CollisionCategories.Character);
+        private readonly CollisionCategories m_collisionCategories = CollisionCategories.Character;
 
         // Default, Collide with Other Geometries, spaces, bodies and characters.
-        private CollisionCategories m_collisionFlags = (CollisionCategories.Geom
-                                                        | CollisionCategories.Space
-                                                        | CollisionCategories.Body
-                                                        | CollisionCategories.Character
-                                                        | CollisionCategories.Land);
+        private readonly CollisionCategories m_collisionFlags = CollisionCategories.Geom
+                                                                | CollisionCategories.Space
+                                                                | CollisionCategories.Body
+                                                                | CollisionCategories.Character
+                                                                | CollisionCategories.Land;
         /// <summary>
         /// Body for dynamics simulation
         /// </summary>
         internal IntPtr Body { get; private set; }
 
-        private OdeScene _parent_scene;
+        private readonly OdeScene _parent_scene;
 
         /// <summary>
         /// Collision geometry
@@ -154,7 +154,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         private SafeNativeMethods.Mass ShellMass;
 
         private int m_eventsubscription = 0;
-        private CollisionEventUpdate CollisionEventsThisFrame = new CollisionEventUpdate();
+        private readonly CollisionEventUpdate CollisionEventsThisFrame = new CollisionEventUpdate();
 
         // unique UUID of this character object
         internal UUID m_uuid { get; private set; }
@@ -859,11 +859,11 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     // Prim to avatar collisions
 
                     SafeNativeMethods.Vector3 pos = SafeNativeMethods.BodyGetPosition(Body);
-                    vec.X = (_target_velocity.X - vel.X) * (PID_D) + (_zeroPosition.X - pos.X) * (PID_P * 2);
-                    vec.Y = (_target_velocity.Y - vel.Y) * (PID_D) + (_zeroPosition.Y - pos.Y)* (PID_P * 2);
+                    vec.X = (_target_velocity.X - vel.X) * PID_D + (_zeroPosition.X - pos.X) * (PID_P * 2);
+                    vec.Y = (_target_velocity.Y - vel.Y) * PID_D + (_zeroPosition.Y - pos.Y)* (PID_P * 2);
                     if (flying)
                     {
-                        vec.Z = (_target_velocity.Z - vel.Z) * (PID_D) + (_zeroPosition.Z - pos.Z) * PID_P;
+                        vec.Z = (_target_velocity.Z - vel.Z) * PID_D + (_zeroPosition.Z - pos.Z) * PID_P;
                     }
                 }
                 //PidStatus = true;
@@ -875,20 +875,20 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 if (m_iscolliding && !flying)
                 {
                     // We're standing on something
-                    vec.X = ((_target_velocity.X / movementdivisor) - vel.X) * (PID_D);
-                    vec.Y = ((_target_velocity.Y / movementdivisor) - vel.Y) * (PID_D);
+                    vec.X = (_target_velocity.X / movementdivisor - vel.X) * PID_D;
+                    vec.Y = (_target_velocity.Y / movementdivisor - vel.Y) * PID_D;
                 }
                 else if (m_iscolliding && flying)
                 {
                     // We're flying and colliding with something
-                    vec.X = ((_target_velocity.X / movementdivisor) - vel.X) * (PID_D / 16);
-                    vec.Y = ((_target_velocity.Y / movementdivisor) - vel.Y) * (PID_D / 16);
+                    vec.X = (_target_velocity.X / movementdivisor - vel.X) * (PID_D / 16);
+                    vec.Y = (_target_velocity.Y / movementdivisor - vel.Y) * (PID_D / 16);
                 }
                 else if (!m_iscolliding && flying)
                 {
                     // we're in mid air suspended
-                    vec.X = ((_target_velocity.X / movementdivisor) - vel.X) * (PID_D / 6);
-                    vec.Y = ((_target_velocity.Y / movementdivisor) - vel.Y) * (PID_D / 6);
+                    vec.X = (_target_velocity.X / movementdivisor - vel.X) * (PID_D / 6);
+                    vec.Y = (_target_velocity.Y / movementdivisor - vel.Y) * (PID_D / 6);
 
 //                    m_log.DebugFormat(
 //                        "[ODE CHARACTER]: !m_iscolliding && flying, vec {0}, _target_velocity {1}, movementdivisor {2}, vel {3}",
@@ -898,7 +898,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 if (flying)
                 {
                     // This also acts as anti-gravity so that we hover when flying rather than fall.
-                    vec.Z = (_target_velocity.Z - vel.Z) * (PID_D);
+                    vec.Z = (_target_velocity.Z - vel.Z) * PID_D;
                 }
                 else
                 {
@@ -908,15 +908,15 @@ namespace OpenSim.Region.PhysicsModule.ODE
                         // This means we're walking or running.
                         SafeNativeMethods.Vector3 pos = SafeNativeMethods.BodyGetPosition(Body);
                         vec.Z = (_target_velocity.Z - vel.Z) * PID_D + (_zeroPosition.Z - pos.Z) * PID_P;
-                        vec.X = ((_target_velocity.X - vel.X) / 1.2f) * PID_D;
-                        vec.Y = ((_target_velocity.Y - vel.Y) / 1.2f) * PID_D;
+                        vec.X = (_target_velocity.X - vel.X) / 1.2f * PID_D;
+                        vec.Y = (_target_velocity.Y - vel.Y) / 1.2f * PID_D;
                     }
                     else if (!m_iscolliding)
                     {
                         // we're not colliding and we're not flying so that means we're falling!
                         // m_iscolliding includes collisions with the ground.
-                        vec.X = ((_target_velocity.X - vel.X) / 1.2f) * PID_D;
-                        vec.Y = ((_target_velocity.Y - vel.Y) / 1.2f) * PID_D;
+                        vec.X = (_target_velocity.X - vel.X) / 1.2f * PID_D;
+                        vec.Y = (_target_velocity.Y - vel.Y) / 1.2f * PID_D;
                     }
                 }
             }
@@ -924,7 +924,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
             if (flying)
             {
                 // Anti-gravity so that we hover when flying rather than fall.
-                vec.Z += ((-1 * _parent_scene.gravityz) * m_mass);
+                vec.Z += -1 * _parent_scene.gravityz * m_mass;
 
                 //Added for auto fly height. Kitto Flora
                 //d.Vector3 pos = d.BodyGetPosition(Body);
@@ -1381,7 +1381,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     CreateOdeStructures(
                         _position.X,
                         _position.Y,
-                        _position.Z + (Math.Abs(CAPSULE_LENGTH - prevCapsule) * 2), m_tensor);
+                        _position.Z + Math.Abs(CAPSULE_LENGTH - prevCapsule) * 2, m_tensor);
 
                     // As with Size, we reset velocity.  However, this isn't strictly necessary since it doesn't
                     // appear to stall initial region crossings when done here.  Being done for consistency.

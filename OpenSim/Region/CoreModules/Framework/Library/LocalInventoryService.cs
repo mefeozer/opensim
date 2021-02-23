@@ -40,7 +40,7 @@ namespace OpenSim.Region.CoreModules.Framework.Library
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private InventoryFolderImpl m_Library;
+        private readonly InventoryFolderImpl m_Library;
 
         public LocalInventoryService(InventoryFolderImpl lib)
         {

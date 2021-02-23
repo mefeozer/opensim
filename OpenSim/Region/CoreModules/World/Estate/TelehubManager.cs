@@ -35,7 +35,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
     {
         // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        Scene m_Scene;
+        readonly Scene m_Scene;
 
         public TelehubManager(Scene scene)
         {

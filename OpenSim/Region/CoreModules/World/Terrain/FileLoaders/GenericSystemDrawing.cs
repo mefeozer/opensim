@@ -72,7 +72,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
                 {
                     for (int y = 0; y < retval.Height; y++)
                     {
-                        retval[x, y] = bitmap.GetPixel(offsetX * retval.Width + x, (bitmap.Height - (retval.Height * (offsetY + 1))) + retval.Height - y - 1).GetBrightness() * 128;
+                        retval[x, y] = bitmap.GetPixel(offsetX * retval.Width + x, bitmap.Height - retval.Height * (offsetY + 1) + retval.Height - y - 1).GetBrightness() * 128;
                     }
                 }
 

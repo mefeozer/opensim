@@ -59,16 +59,16 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
         private string SMTP_SERVER_LOGIN = string.Empty;
         private string SMTP_SERVER_PASSWORD = string.Empty;
 
-        private int m_MaxQueueSize = 50; // maximum size of an object mail queue
-        private Dictionary<UUID, List<Email>> m_MailQueues = new Dictionary<UUID, List<Email>>();
-        private Dictionary<UUID, DateTime> m_LastGetEmailCall = new Dictionary<UUID, DateTime>();
-        private TimeSpan m_QueueTimeout = new TimeSpan(2, 0, 0); // 2 hours without llGetNextEmail drops the queue
+        private readonly int m_MaxQueueSize = 50; // maximum size of an object mail queue
+        private readonly Dictionary<UUID, List<Email>> m_MailQueues = new Dictionary<UUID, List<Email>>();
+        private readonly Dictionary<UUID, DateTime> m_LastGetEmailCall = new Dictionary<UUID, DateTime>();
+        private readonly TimeSpan m_QueueTimeout = new TimeSpan(2, 0, 0); // 2 hours without llGetNextEmail drops the queue
         private string m_InterObjectHostname = "lsl.opensim.local";
 
         private int m_MaxEmailSize = 4096;  // largest email allowed by default, as per lsl docs.
 
         // Scenes by Region Handle
-        private Dictionary<ulong, Scene> m_Scenes =
+        private readonly Dictionary<ulong, Scene> m_Scenes =
             new Dictionary<ulong, Scene>();
 
         private bool m_Enabled = false;
@@ -85,7 +85,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
 
             IConfig startupConfig = m_Config.Configs["Startup"];
 
-            m_Enabled = (startupConfig.GetString("emailmodule", "DefaultEmailModule") == "DefaultEmailModule");
+            m_Enabled = startupConfig.GetString("emailmodule", "DefaultEmailModule") == "DefaultEmailModule";
 
             //Load SMTP SERVER config
             try
@@ -199,7 +199,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
         private bool IsLocal(UUID objectID)
         {
             string unused;
-            return (null != findPrim(objectID, out unused));
+            return null != findPrim(objectID, out unused);
         }
 
         private SceneObjectPart findPrim(UUID objectID, out string ObjectRegionName)
@@ -270,7 +270,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
                 m_log.Error("[EMAIL]: REGEX Problem in EMail Address: "+address);
                 return;
             }
-            if ((subject.Length + body.Length) > m_MaxEmailSize)
+            if (subject.Length + body.Length > m_MaxEmailSize)
             {
                 m_log.Error("[EMAIL]: subject + body larger than limit of " + m_MaxEmailSize + " bytes");
                 return;
@@ -328,7 +328,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
             {
                 // inter object email, keep it in the family
                 Email email = new Email();
-                email.time = ((int)((DateTime.UtcNow - new DateTime(1970,1,1,0,0,0)).TotalSeconds)).ToString();
+                email.time = ((int)(DateTime.UtcNow - new DateTime(1970,1,1,0,0,0)).TotalSeconds).ToString();
                 email.subject = subject;
                 email.sender = objectID.ToString() + "@" + m_InterObjectHostname;
                 email.message = "Object-Name: " + LastObjectName +
@@ -376,7 +376,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
                 List<UUID> removal = new List<UUID>();
                 foreach (UUID uuid in m_LastGetEmailCall.Keys)
                 {
-                    if ((now - m_LastGetEmailCall[uuid]) > m_QueueTimeout)
+                    if (now - m_LastGetEmailCall[uuid] > m_QueueTimeout)
                     {
                         removal.Add(uuid);
                     }

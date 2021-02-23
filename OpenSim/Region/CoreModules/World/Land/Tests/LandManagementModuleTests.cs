@@ -70,7 +70,7 @@ namespace OpenSim.Region.CoreModules.World.Land.Tests
             }
 
             {
-                ILandObject loAtCoord = lmm.GetLandObject((int)Constants.RegionSize - 1, ((int)Constants.RegionSize - 1));
+                ILandObject loAtCoord = lmm.GetLandObject((int)Constants.RegionSize - 1, (int)Constants.RegionSize - 1);
                 Assert.That(loAtCoord.LandData.LocalID, Is.EqualTo(lo.LandData.LocalID));
                 Assert.That(loAtCoord.LandData.GlobalID, Is.EqualTo(lo.LandData.GlobalID));
             }
@@ -96,7 +96,7 @@ namespace OpenSim.Region.CoreModules.World.Land.Tests
             Assert.That(loAtCoord1.LandData.LocalID, Is.Not.EqualTo(0));
             Assert.That(loAtCoord1.LandData.GlobalID, Is.Not.EqualTo(UUID.Zero));
 
-            ILandObject loAtCoord2 = lmm.GetLandObject((int)Constants.RegionSize - 1, ((int)Constants.RegionSize - 1));
+            ILandObject loAtCoord2 = lmm.GetLandObject((int)Constants.RegionSize - 1, (int)Constants.RegionSize - 1);
             Assert.That(loAtCoord2.LandData.LocalID, Is.EqualTo(loAtCoord1.LandData.LocalID));
             Assert.That(loAtCoord2.LandData.GlobalID, Is.EqualTo(loAtCoord1.LandData.GlobalID));
         }
@@ -130,7 +130,7 @@ namespace OpenSim.Region.CoreModules.World.Land.Tests
             Assert.That(loAtCoord1.LandData.Name, Is.EqualTo(originalLo1.LandData.Name));
             Assert.That(loAtCoord1.LandData.GlobalID, Is.EqualTo(originalLo1.LandData.GlobalID));
 
-            ILandObject loAtCoord2 = lmm.GetLandObject((int)Constants.RegionSize - 1, ((int)Constants.RegionSize - 1));
+            ILandObject loAtCoord2 = lmm.GetLandObject((int)Constants.RegionSize - 1, (int)Constants.RegionSize - 1);
             Assert.That(loAtCoord2.LandData.LocalID, Is.EqualTo(loAtCoord1.LandData.LocalID));
             Assert.That(loAtCoord2.LandData.GlobalID, Is.EqualTo(loAtCoord1.LandData.GlobalID));
         }
@@ -162,7 +162,7 @@ namespace OpenSim.Region.CoreModules.World.Land.Tests
             originalLo2.LandData.Name = "lo2";
             originalLo2.SetLandBitmap(
                 originalLo2.GetSquareLandBitmap(
-                0, (int)Constants.RegionSize / 2, (int)Constants.RegionSize, ((int)Constants.RegionSize / 4) * 3));
+                0, (int)Constants.RegionSize / 2, (int)Constants.RegionSize, (int)Constants.RegionSize / 4 * 3));
 
             sh.SimDataService.StoreLandObject(originalLo2);
 
@@ -173,11 +173,11 @@ namespace OpenSim.Region.CoreModules.World.Land.Tests
             Assert.That(loAtCoord1.LandData.GlobalID, Is.EqualTo(originalLo1.LandData.GlobalID));
 
             ILandObject loAtCoord2
-                = lmm.GetLandObject((int)Constants.RegionSize - 1, (((int)Constants.RegionSize / 4) * 3) - 1);
+                = lmm.GetLandObject((int)Constants.RegionSize - 1, (int)Constants.RegionSize / 4 * 3 - 1);
             Assert.That(loAtCoord2.LandData.Name, Is.EqualTo(originalLo2.LandData.Name));
             Assert.That(loAtCoord2.LandData.GlobalID, Is.EqualTo(originalLo2.LandData.GlobalID));
 
-            ILandObject loAtCoord3 = lmm.GetLandObject((int)Constants.RegionSize - 1, ((int)Constants.RegionSize - 1));
+            ILandObject loAtCoord3 = lmm.GetLandObject((int)Constants.RegionSize - 1, (int)Constants.RegionSize - 1);
             Assert.That(loAtCoord3.LandData.LocalID, Is.Not.EqualTo(loAtCoord1.LandData.LocalID));
             Assert.That(loAtCoord3.LandData.LocalID, Is.Not.EqualTo(loAtCoord2.LandData.LocalID));
             Assert.That(loAtCoord3.LandData.GlobalID, Is.Not.EqualTo(loAtCoord1.LandData.GlobalID));
@@ -223,7 +223,7 @@ namespace OpenSim.Region.CoreModules.World.Land.Tests
             }
 
             {
-                ILandObject loAtCoord = lmm.GetLandObject((int)Constants.RegionSize - 1, ((int)Constants.RegionSize - 1));
+                ILandObject loAtCoord = lmm.GetLandObject((int)Constants.RegionSize - 1, (int)Constants.RegionSize - 1);
                 Assert.That(loAtCoord.LandData.Name, Is.EqualTo(originalLo2.LandData.Name));
                 Assert.That(loAtCoord.LandData.GlobalID, Is.EqualTo(originalLo2.LandData.GlobalID));
             }

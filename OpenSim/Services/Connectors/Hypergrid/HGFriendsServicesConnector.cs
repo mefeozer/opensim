@@ -43,8 +43,8 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
-        private string m_ServiceKey = string.Empty;
+        private readonly string m_ServerURI = string.Empty;
+        private readonly string m_ServiceKey = string.Empty;
         private UUID m_SessionID;
 
         public HGFriendsServicesConnector()
@@ -92,7 +92,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                    if ((replyData != null) && replyData.ContainsKey("Value") && (replyData["Value"] != null))
+                    if (replyData != null && replyData.ContainsKey("Value") && replyData["Value"] != null)
                     {
                         uint perms = 0;
                         uint.TryParse(replyData["Value"].ToString(), out perms);
@@ -143,7 +143,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             {
                 Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
 
-                if ((replyData != null) && replyData.ContainsKey("Result") && (replyData["Result"] != null))
+                if (replyData != null && replyData.ContainsKey("Result") && replyData["Result"] != null)
                 {
                     bool success = false;
                     bool.TryParse(replyData["Result"].ToString(), out success);

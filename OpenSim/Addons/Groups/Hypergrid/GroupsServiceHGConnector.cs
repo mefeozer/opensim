@@ -40,8 +40,8 @@ namespace OpenSim.Groups
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI;
-        private object m_Lock = new object();
+        private readonly string m_ServerURI;
+        private readonly object m_Lock = new object();
 
         public GroupsServiceHGConnector(string url)
         {
@@ -92,7 +92,7 @@ namespace OpenSim.Groups
 
         public ExtendedGroupRecord GetGroupRecord(string RequestingAgentID, UUID GroupID, string GroupName, string token)
         {
-            if (GroupID == UUID.Zero && (GroupName == null || (GroupName != null && string.IsNullOrEmpty(GroupName))))
+            if (GroupID == UUID.Zero && (GroupName == null || GroupName != null && string.IsNullOrEmpty(GroupName)))
                 return null;
 
             Dictionary<string, object> sendData = new Dictionary<string, object>();

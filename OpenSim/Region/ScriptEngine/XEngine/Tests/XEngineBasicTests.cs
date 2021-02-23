@@ -43,7 +43,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine.Tests
     {
         private TestScene m_scene;
         private XEngine m_xEngine;
-        private AutoResetEvent m_chatEvent = new AutoResetEvent(false);
+        private readonly AutoResetEvent m_chatEvent = new AutoResetEvent(false);
         private OSChatMessage m_osChatMessageReceived;
 
         [TestFixtureSetUp]

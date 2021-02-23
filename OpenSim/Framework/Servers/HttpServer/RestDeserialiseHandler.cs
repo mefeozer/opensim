@@ -36,7 +36,7 @@ namespace OpenSim.Framework.Servers.HttpServer
     public class RestDeserialiseHandler<TRequest, TResponse> : BaseOutputStreamHandler, IStreamHandler
         where TRequest : new()
     {
-        private RestDeserialiseMethod<TRequest, TResponse> m_method;
+        private readonly RestDeserialiseMethod<TRequest, TResponse> m_method;
 
         public RestDeserialiseHandler(string httpMethod, string path, RestDeserialiseMethod<TRequest, TResponse> method)
             : this(httpMethod, path, method, null, null) {}

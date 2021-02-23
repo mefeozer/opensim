@@ -44,7 +44,7 @@ namespace OpenSim.Server.Handlers.Login
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ILoginService m_LocalService;
+        private readonly ILoginService m_LocalService;
         private bool m_Proxy;
 
 
@@ -83,8 +83,8 @@ namespace OpenSim.Server.Handlers.Login
 
                 if (requestData.ContainsKey("first") && requestData["first"] != null &&
                     requestData.ContainsKey("last") && requestData["last"] != null && (
-                        (requestData.ContainsKey("passwd") && requestData["passwd"] != null) ||
-                        (!requestData.ContainsKey("passwd") && requestData.ContainsKey("web_login_key") && requestData["web_login_key"] != null && requestData["web_login_key"].ToString() != UUID.Zero.ToString())
+                        requestData.ContainsKey("passwd") && requestData["passwd"] != null ||
+                        !requestData.ContainsKey("passwd") && requestData.ContainsKey("web_login_key") && requestData["web_login_key"] != null && requestData["web_login_key"].ToString() != UUID.Zero.ToString()
                     ))
                 {
                     string first = requestData["first"].ToString();

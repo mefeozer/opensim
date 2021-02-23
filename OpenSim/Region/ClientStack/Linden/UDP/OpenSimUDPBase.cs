@@ -106,7 +106,7 @@ namespace OpenMetaverse
         /// For debugging purposes only... random number generator for dropping
         /// outbound packets.
         /// </summary>
-        private Random m_dropRandomGenerator = new Random();
+        private readonly Random m_dropRandomGenerator = new Random();
 
         /// <summary>
         /// For debugging purposes only... parameters for a simplified
@@ -114,8 +114,8 @@ namespace OpenMetaverse
         /// be roughly 1 - m_dropLengthProbability / (m_dropProbabiliy + m_dropLengthProbability)
         /// which is about 1% for parameters 0.0015 and 0.15
         /// </summary>
-        private double m_dropProbability = 0.0030;
-        private double m_dropLengthProbability = 0.15;
+        private readonly double m_dropProbability = 0.0030;
+        private readonly double m_dropLengthProbability = 0.15;
         private bool m_dropState = false;
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace OpenMetaverse
         /// state of the packet dropper to its default.
         /// </summary>
         private int m_dropLastTick = 0;
-        private int m_dropResetTicks = 500;
+        private readonly int m_dropResetTicks = 500;
 
         /// <summary>
         /// Debugging code used to simulate dropped packets with bursts
@@ -146,11 +146,11 @@ namespace OpenMetaverse
             // this packet is the probability that we stay in the burst
             if (m_dropState)
             {
-                m_dropState = (rnum < (1.0 - m_dropLengthProbability)) ? true : false;
+                m_dropState = rnum < 1.0 - m_dropLengthProbability ? true : false;
             }
             else
             {
-                m_dropState = (rnum < m_dropProbability) ? true : false;
+                m_dropState = rnum < m_dropProbability ? true : false;
             }
 
             return m_dropState;

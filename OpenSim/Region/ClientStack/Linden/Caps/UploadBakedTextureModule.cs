@@ -155,12 +155,12 @@ namespace OpenSim.Region.ClientStack.Linden
     {
         // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_uploaderPath = string.Empty;
-        private IHttpServer m_httpListener;
+        private readonly string m_uploaderPath = string.Empty;
+        private readonly IHttpServer m_httpListener;
         private UUID m_agentID = UUID.Zero;
-        private IPAddress m_remoteAddress;
-        private IAssetCache m_assetCache;
-        private Timer m_timeout;
+        private readonly IPAddress m_remoteAddress;
+        private readonly IAssetCache m_assetCache;
+        private readonly Timer m_timeout;
 
         public BakedTextureUploader(string path, IHttpServer httpServer, UUID agentID, IAssetCache cache, IPAddress remoteAddress)
         {

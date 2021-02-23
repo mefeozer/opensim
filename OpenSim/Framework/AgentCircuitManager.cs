@@ -42,12 +42,12 @@ namespace OpenSim.Framework
         /// <remarks>
         /// We lock this for operations both on this dictionary and on m_agentCircuitsByUUID
         /// </remarks>
-        private ConcurrentDictionary<uint, AgentCircuitData> m_agentCircuits = new ConcurrentDictionary<uint, AgentCircuitData>();
+        private readonly ConcurrentDictionary<uint, AgentCircuitData> m_agentCircuits = new ConcurrentDictionary<uint, AgentCircuitData>();
 
         /// <summary>
         /// Agent circuits indexed by agent UUID.
         /// </summary>
-        private ConcurrentDictionary<UUID, AgentCircuitData> m_agentCircuitsByUUID = new ConcurrentDictionary<UUID, AgentCircuitData>();
+        private readonly ConcurrentDictionary<UUID, AgentCircuitData> m_agentCircuitsByUUID = new ConcurrentDictionary<UUID, AgentCircuitData>();
 
         public virtual AuthenticateResponse AuthenticateSession(UUID sessionID, UUID agentID, uint circuitcode)
         {
@@ -59,7 +59,7 @@ namespace OpenSim.Framework
                 return user;
             }
 
-            if ((sessionID == validcircuit.SessionID) && (agentID == validcircuit.AgentID))
+            if (sessionID == validcircuit.SessionID && agentID == validcircuit.AgentID)
             {
                 user.Authorised = true;
                 user.LoginInfo = new Login();

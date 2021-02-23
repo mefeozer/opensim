@@ -137,7 +137,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
             try
             {
-                Vector3 pos = avatar.AbsolutePosition + (Vector3.UnitX * avatar.Rotation);
+                Vector3 pos = avatar.AbsolutePosition + Vector3.UnitX * avatar.Rotation;
                 Quaternion rot = Quaternion.Identity;
                 Vector3 rootpos = Vector3.Zero;
 
@@ -247,7 +247,7 @@ namespace OpenSim.Region.ClientStack.Linden
                         primFace.Glow = face.Glow;
                         primFace.TextureID = face.ImageID;
                         primFace.Rotation = face.ImageRot;
-                        primFace.MediaFlags = ((face.MediaFlags & 1) != 0);
+                        primFace.MediaFlags = (face.MediaFlags & 1) != 0;
 
                         primFace.OffsetU = face.OffsetS;
                         primFace.OffsetV = face.OffsetT;

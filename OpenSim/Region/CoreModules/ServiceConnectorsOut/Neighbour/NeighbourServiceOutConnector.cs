@@ -48,7 +48,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Neighbour
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Scene> m_Scenes = new List<Scene>();
+        private readonly List<Scene> m_Scenes = new List<Scene>();
         private bool m_Enabled = false;
 
         public Type ReplaceableInterface

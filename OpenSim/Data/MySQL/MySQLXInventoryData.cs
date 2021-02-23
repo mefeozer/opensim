@@ -38,8 +38,8 @@ namespace OpenSim.Data.MySQL
     /// </summary>
     public class MySQLXInventoryData : IXInventoryData
     {
-        private MySqlFolderHandler m_Folders;
-        private MySqlItemHandler m_Items;
+        private readonly MySqlFolderHandler m_Folders;
+        private readonly MySqlItemHandler m_Items;
 
         public MySQLXInventoryData(string conn, string realm)
         {

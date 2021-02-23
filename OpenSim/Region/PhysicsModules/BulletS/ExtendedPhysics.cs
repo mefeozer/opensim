@@ -42,7 +42,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public class ExtendedPhysics : INonSharedRegionModule
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static string LogHeader = "[EXTENDED PHYSICS]";
+        private static readonly string LogHeader = "[EXTENDED PHYSICS]";
 
         // =============================================================
         // Since BulletSim is a plugin, this these values aren't defined easily in one place.
@@ -91,7 +91,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 m_log.ErrorFormat("{0} Initialization error: {0}", LogHeader, e);
             }
 
-            m_log.InfoFormat("{0} module {1} enabled", LogHeader, (Enabled ? "is" : "is not"));
+            m_log.InfoFormat("{0} module {1} enabled", LogHeader, Enabled ? "is" : "is not");
         }
 
         public void Close()

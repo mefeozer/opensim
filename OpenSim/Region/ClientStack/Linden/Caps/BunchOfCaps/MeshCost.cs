@@ -593,7 +593,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 if (subMeshOsd is OSDMap)
                 {
                     OSDMap subtmpmap = (OSDMap)subMeshOsd;
-                    if (subtmpmap.ContainsKey("NoGeometry") && ((OSDBoolean)subtmpmap["NoGeometry"]))
+                    if (subtmpmap.ContainsKey("NoGeometry") && (OSDBoolean)subtmpmap["NoGeometry"])
                         continue;
 
                     if (!subtmpmap.ContainsKey("Position"))

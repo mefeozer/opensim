@@ -227,7 +227,7 @@ namespace OpenSim.Services.HypergridService
             List<UUID> localFriendsOnline = new List<UUID>();
 
             m_log.DebugFormat("[HGFRIENDS SERVICE]: Status notification: foreign user {0} wants to notify {1} local friends of {2} status",
-                foreignUserID, friends.Count, (online ? "online" : "offline"));
+                foreignUserID, friends.Count, online ? "online" : "offline");
 
             // First, let's double check that the reported friends are, indeed, friends of that user
             // And let's check that the secret matches
@@ -388,7 +388,7 @@ namespace OpenSim.Services.HypergridService
             {
                 if (m_FriendsLocalSimConnector != null)
                 {
-                    m_log.DebugFormat("[HGFRIENDS SERVICE]: Local Notify, user {0} is {1}", foreignUserID, (online ? "online" : "offline"));
+                    m_log.DebugFormat("[HGFRIENDS SERVICE]: Local Notify, user {0} is {1}", foreignUserID, online ? "online" : "offline");
                     m_FriendsLocalSimConnector.StatusNotify(foreignUserID, userID, online);
                 }
                 else
@@ -396,7 +396,7 @@ namespace OpenSim.Services.HypergridService
                     GridRegion region = m_GridService.GetRegionByUUID(UUID.Zero /* !!! */, regionID);
                     if (region != null)
                     {
-                        m_log.DebugFormat("[HGFRIENDS SERVICE]: Remote Notify to region {0}, user {1} is {2}", region.RegionName, foreignUserID, (online ? "online" : "offline"));
+                        m_log.DebugFormat("[HGFRIENDS SERVICE]: Remote Notify to region {0}, user {1} is {2}", region.RegionName, foreignUserID, online ? "online" : "offline");
                         m_FriendsSimConnector.StatusNotify(region, foreignUserID, userID.ToString(), online);
                     }
                 }

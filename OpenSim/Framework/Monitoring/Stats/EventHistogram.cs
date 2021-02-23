@@ -38,12 +38,12 @@ namespace OpenSim.Framework.Monitoring
     public class EventHistogram
 {
     private int m_timeBase;
-    private int m_numBuckets;
-    private int m_bucketMilliseconds;
+    private readonly int m_numBuckets;
+    private readonly int m_bucketMilliseconds;
     private int m_lastBucket;
-    private int m_totalHistogramMilliseconds;
-    private long[] m_histogram;
-    private object histoLock = new object();
+    private readonly int m_totalHistogramMilliseconds;
+    private readonly long[] m_histogram;
+    private readonly object histoLock = new object();
 
     public EventHistogram(int numberOfBuckets, int millisecondsPerBucket)
     {
@@ -132,7 +132,7 @@ namespace OpenSim.Framework.Monitoring
 
         // Compute a number for the first bucket in the histogram.
         // This will allow readers to know how this histogram relates to any previously read histogram.
-        int baseBucketNum = (m_timeBase / m_bucketMilliseconds) + m_lastBucket + 1;
+        int baseBucketNum = m_timeBase / m_bucketMilliseconds + m_lastBucket + 1;
         ret.Add("BaseNumber", OSD.FromInteger(baseBucketNum));
 
         ret.Add("Values", GetHistogramAsOSDArray());

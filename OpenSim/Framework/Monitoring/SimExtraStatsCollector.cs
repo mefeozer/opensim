@@ -169,7 +169,7 @@ namespace OpenSim.Framework.Monitoring
         /// <summary>
         /// Retain a dictionary of all packet queues stats reporters
         /// </summary>
-        private IDictionary<UUID, PacketQueueStatsCollector> packetQueueStatsCollectors
+        private readonly IDictionary<UUID, PacketQueueStatsCollector> packetQueueStatsCollectors
             = new Dictionary<UUID, PacketQueueStatsCollector>();
 
 //        public void AddAsset(AssetBase asset)
@@ -514,7 +514,7 @@ Asset service request failures: {3}" + Environment.NewLine,
     /// </summary>
     public class PacketQueueStatsCollector : IStatsCollector
     {
-        private IPullStatsProvider m_statsProvider;
+        private readonly IPullStatsProvider m_statsProvider;
 
         public PacketQueueStatsCollector(IPullStatsProvider provider)
         {

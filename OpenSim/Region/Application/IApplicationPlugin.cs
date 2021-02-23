@@ -51,7 +51,7 @@ namespace OpenSim
 
     public class ApplicationPluginInitialiser : PluginInitialiserBase
     {
-        private OpenSimBase server;
+        private readonly OpenSimBase server;
 
         public ApplicationPluginInitialiser(OpenSimBase s)
         {

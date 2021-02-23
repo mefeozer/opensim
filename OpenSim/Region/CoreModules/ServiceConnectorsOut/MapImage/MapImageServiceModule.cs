@@ -56,12 +56,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MapImage
     {
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static string LogHeader = "[MAP IMAGE SERVICE MODULE]:";
+        private static readonly string LogHeader = "[MAP IMAGE SERVICE MODULE]:";
 
         private bool m_enabled = false;
         private IMapImageService m_MapService;
 
-        private Dictionary<UUID, Scene> m_scenes = new Dictionary<UUID, Scene>();
+        private readonly Dictionary<UUID, Scene> m_scenes = new Dictionary<UUID, Scene>();
 
         private int m_refreshtime = 0;
         private int m_lastrefresh = 0;
@@ -223,7 +223,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MapImage
             else
             {
             m_log.DebugFormat("{0} Upload {1} maptiles for {2}", LogHeader,
-                    (mapTile.Width * mapTile.Height) / (Constants.RegionSize * Constants.RegionSize),
+                    mapTile.Width * mapTile.Height / (Constants.RegionSize * Constants.RegionSize),
                     scene.Name);
 
                 // For larger regions (varregion) we must cut the region image into legacy sized
@@ -243,8 +243,8 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MapImage
                         using (Bitmap subMapTile = mapTile.Clone(rect, mapTile.PixelFormat))
                         {
                             if(!ConvertAndUploadMaptile(scene, subMapTile,
-                                                    scene.RegionInfo.RegionLocX + (xx / Constants.RegionSize),
-                                                    scene.RegionInfo.RegionLocY + (yy / Constants.RegionSize),
+                                                    scene.RegionInfo.RegionLocX + xx / Constants.RegionSize,
+                                                    scene.RegionInfo.RegionLocY + yy / Constants.RegionSize,
                                                     scene.Name))
                             {
                                 m_log.DebugFormat("{0} Upload maptileS for {1} aborted!", LogHeader, scene.Name);

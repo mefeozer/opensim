@@ -38,9 +38,9 @@ namespace OpenSim.Region.Framework.Scenes
     {
         //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string osXStatsURI = string.Empty;
+        private readonly string osXStatsURI = string.Empty;
         //private string osSecret = String.Empty;
-        private OpenSim.Framework.RegionInfo regionInfo;
+        private readonly OpenSim.Framework.RegionInfo regionInfo;
         public string localZone = TimeZone.CurrentTimeZone.StandardName;
         public TimeSpan utcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
 
@@ -89,9 +89,9 @@ namespace OpenSim.Region.Framework.Scenes
     {
         //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string osXStatsURI = string.Empty;
+        private readonly string osXStatsURI = string.Empty;
         //private string osSecret = String.Empty;
-        private OpenSim.Framework.RegionInfo regionInfo;
+        private readonly OpenSim.Framework.RegionInfo regionInfo;
         public string localZone = TimeZone.CurrentTimeZone.StandardName;
         public TimeSpan utcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
 

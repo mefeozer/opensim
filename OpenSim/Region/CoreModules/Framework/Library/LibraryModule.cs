@@ -145,7 +145,7 @@ namespace OpenSim.Region.CoreModules.Framework.Library
         #endregion ISharedRegionModule
 
         #region LoadLibraries
-        private string pathToLibraries = "Library";
+        private readonly string pathToLibraries = "Library";
 
         protected void LoadLibrariesFromArchives()
         {

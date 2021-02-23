@@ -44,7 +44,7 @@ namespace OpenSim.Framework.Monitoring
         private readonly string LogHeader = "[SERVER STATS]";
 
         public bool Enabled = false;
-        private static Dictionary<string, Stat> RegisteredStats = new Dictionary<string, Stat>();
+        private static readonly Dictionary<string, Stat> RegisteredStats = new Dictionary<string, Stat>();
 
         public readonly string CategoryServer = "server";
 
@@ -61,7 +61,7 @@ namespace OpenSim.Framework.Monitoring
 
         private class PerfCounterControl
         {
-            public PerformanceCounter perfCounter;
+            public readonly PerformanceCounter perfCounter;
             public int lastFetch;
             public string name;
             public PerfCounterControl(PerformanceCounter pPc)

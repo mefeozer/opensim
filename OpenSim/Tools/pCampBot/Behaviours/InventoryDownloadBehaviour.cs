@@ -40,8 +40,8 @@ namespace pCampBot
     {
         private bool m_initialized;
         private int m_Requests = 2;
-        private Stopwatch m_StopWatch = new Stopwatch();
-        private List<UUID> m_processed = new List<UUID>();
+        private readonly Stopwatch m_StopWatch = new Stopwatch();
+        private readonly List<UUID> m_processed = new List<UUID>();
 
         public InventoryDownloadBehaviour()
         {

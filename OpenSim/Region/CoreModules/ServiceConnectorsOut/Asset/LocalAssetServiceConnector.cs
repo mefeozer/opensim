@@ -249,7 +249,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
 
             return m_AssetService.Get(id, sender, delegate (string assetID, object s, AssetBase a)
             {
-                if ((a != null) && (m_Cache != null))
+                if (a != null && m_Cache != null)
                     m_Cache.Cache(a);
 
 //                if (null == a)

@@ -147,12 +147,12 @@ namespace OpenSim.Framework
 
         public string HostAndPort
         {
-            get { return (Flags == OSHTTPURIFlags.None) ? "" : Host + ":" + Port.ToString(); }
+            get { return Flags == OSHTTPURIFlags.None ? "" : Host + ":" + Port.ToString(); }
         }
 
         public int CompareTo(OSHTTPURI other)
         {
-            if (Port == other.Port && ((Flags & other.Flags) & OSHTTPURIFlags.ValidHost) != 0)
+            if (Port == other.Port && (Flags & other.Flags & OSHTTPURIFlags.ValidHost) != 0)
             {
                 if (Path.Equals(other.Path))
                     return Host.CompareTo(other.Host);
@@ -162,7 +162,7 @@ namespace OpenSim.Framework
 
         public bool Equals(OSHTTPURI other)
         {
-            if (Port == other.Port && ((Flags & other.Flags) & OSHTTPURIFlags.ValidHost) != 0)
+            if (Port == other.Port && (Flags & other.Flags & OSHTTPURIFlags.ValidHost) != 0)
             {
                 if (Path.Equals(other.Path))
                     return Host.Equals(other.Host);
@@ -319,17 +319,17 @@ namespace OpenSim.Framework
 
         public string URIwEndSlash
         {
-            get { return (Flags == OSHTTPURIFlags.None) ? "" : URI + "/"; }
+            get { return Flags == OSHTTPURIFlags.None ? "" : URI + "/"; }
         }
 
         public string HostAndPort
         {
-            get { return (Flags == OSHTTPURIFlags.None) ? "" : Host + ":" + Port.ToString(); }
+            get { return Flags == OSHTTPURIFlags.None ? "" : Host + ":" + Port.ToString(); }
         }
 
         public int CompareTo(OSHHTPHost other)
         {
-            if (Port == other.Port && ((Flags & other.Flags) & OSHTTPURIFlags.ValidHost) != 0)
+            if (Port == other.Port && (Flags & other.Flags & OSHTTPURIFlags.ValidHost) != 0)
             {
                 return Host.CompareTo(other.Host);
             }
@@ -338,7 +338,7 @@ namespace OpenSim.Framework
 
         public bool Equals(OSHHTPHost other)
         {
-            if (Port == other.Port && ((Flags & other.Flags) & OSHTTPURIFlags.ValidHost) != 0)
+            if (Port == other.Port && (Flags & other.Flags & OSHTTPURIFlags.ValidHost) != 0)
             {
                 return Host.Equals(other.Host);
             }
@@ -355,12 +355,12 @@ namespace OpenSim.Framework
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_hasHGconfig;
+        private readonly bool m_hasHGconfig;
         private OSHHTPHost m_gateKeeperURL;
         private HashSet<OSHHTPHost> m_gateKeeperAlias;
 
         private OSHHTPHost m_homeURL;
-        private HashSet<OSHHTPHost> m_homeURLAlias;
+        private readonly HashSet<OSHHTPHost> m_homeURLAlias;
         private string m_gridUrl = string.Empty;
         private string[] m_gridUrlAlias = null;
         private string m_GridName = string.Empty;
@@ -590,7 +590,7 @@ namespace OpenSim.Framework
         {
             OSHHTPHost tmp = new OSHHTPHost(othergatekeeper, false);
             if (!tmp.IsValidHost)
-                return ((tmp.Flags & OSHTTPURIFlags.Empty) == 0) ? -1 : 1;
+                return (tmp.Flags & OSHTTPURIFlags.Empty) == 0 ? -1 : 1;
             if (tmp.Equals(m_gateKeeperURL))
                 return 1;
             if (m_gateKeeperAlias != null && m_gateKeeperAlias.Contains(tmp))
@@ -602,7 +602,7 @@ namespace OpenSim.Framework
         {
             OSHHTPHost tmp = new OSHHTPHost(othergatekeeper, false);
             if (!tmp.IsValidHost)
-                return ((tmp.Flags & OSHTTPURIFlags.Empty) == 0) ? -1 : 1;
+                return (tmp.Flags & OSHTTPURIFlags.Empty) == 0 ? -1 : 1;
             if (tmp.Equals(m_gateKeeperURL))
                 return 1;
             if (m_gateKeeperAlias != null && m_gateKeeperAlias.Contains(tmp))
@@ -619,7 +619,7 @@ namespace OpenSim.Framework
         public int IsLocalGrid(OSHHTPHost othergatekeeper)
         {
             if (!othergatekeeper.IsValidHost)
-                return ((othergatekeeper.Flags & OSHTTPURIFlags.Empty) == 0) ? -1 : 1;
+                return (othergatekeeper.Flags & OSHTTPURIFlags.Empty) == 0 ? -1 : 1;
 
             if (othergatekeeper.Equals(m_gateKeeperURL))
                 return 1;
@@ -632,7 +632,7 @@ namespace OpenSim.Framework
         {
             OSHHTPHost tmp = new OSHHTPHost(otherhome, false);
             if (!tmp.IsValidHost)
-                return ((tmp.Flags & OSHTTPURIFlags.Empty) == 0) ? -1 : 1;
+                return (tmp.Flags & OSHTTPURIFlags.Empty) == 0 ? -1 : 1;
             if (tmp.Equals(m_homeURL))
                 return 1;
             if (m_homeURLAlias != null && m_homeURLAlias.Contains(tmp))
@@ -644,7 +644,7 @@ namespace OpenSim.Framework
         {
             OSHHTPHost tmp = new OSHHTPHost(otherhome, false);
             if (!tmp.IsValidHost)
-                return ((tmp.Flags & OSHTTPURIFlags.Empty) == 0) ? -1 : 1;
+                return (tmp.Flags & OSHTTPURIFlags.Empty) == 0 ? -1 : 1;
             if (tmp.Equals(m_homeURL))
                 return 1;
             if (m_homeURLAlias != null && m_homeURLAlias.Contains(tmp))

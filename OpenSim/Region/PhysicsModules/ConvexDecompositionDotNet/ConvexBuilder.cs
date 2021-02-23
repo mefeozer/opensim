@@ -149,7 +149,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
     public class ConvexBuilder
     {
         public List<CHull> mChulls = new List<CHull>();
-        private ConvexDecompositionCallback mCallback;
+        private readonly ConvexDecompositionCallback mCallback;
 
         private int MAXDEPTH = 8;
         private float CONCAVE_PERCENT = 1f;
@@ -248,8 +248,8 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 float combineVolume = Concavity.computeMeshVolume(hresult.OutputVertices, hresult.Indices);
                 float sumVolume = a.mVolume + b.mVolume;
 
-                float percent = (sumVolume * 100) / combineVolume;
-                if (percent >= (100.0f - MERGE_PERCENT))
+                float percent = sumVolume * 100 / combineVolume;
+                if (percent >= 100.0f - MERGE_PERCENT)
                 {
                     ConvexResult cr = new ConvexResult(hresult.OutputVertices, hresult.Indices);
                     ret = new CHull(cr);

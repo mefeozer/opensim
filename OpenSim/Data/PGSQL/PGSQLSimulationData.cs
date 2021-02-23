@@ -556,7 +556,7 @@ namespace OpenSim.Data.PGSQL
                         if (reader.Read())
                         {
                             rev = Convert.ToInt32(reader["Revision"]);
-                            if ((reader["Heightfield"] != DBNull.Value))
+                            if (reader["Heightfield"] != DBNull.Value)
                             {
                                 byte[] blob = (byte[])reader["Heightfield"];
                                 terrData = TerrainData.CreateFromDatabaseBlobFactory(pSizeX, pSizeY, pSizeZ, rev, blob);
@@ -595,7 +595,7 @@ namespace OpenSim.Data.PGSQL
                         if (reader.Read())
                         {
                             rev = Convert.ToInt32(reader["Revision"]);
-                            if ((reader["Heightfield"] != DBNull.Value))
+                            if (reader["Heightfield"] != DBNull.Value)
                             {
                                 byte[] blob = (byte[])reader["Heightfield"];
                                 terrData = TerrainData.CreateFromDatabaseBlobFactory(pSizeX, pSizeY, pSizeZ, rev, blob);
@@ -1154,8 +1154,8 @@ namespace OpenSim.Data.PGSQL
             newData.ParcelAccessList = new List<LandAccessEntry>();
             newData.MediaDescription = (string)row["MediaDescription"];
             newData.MediaType = (string)row["MediaType"];
-            newData.MediaWidth = Convert.ToInt32((((string)row["MediaSize"]).Split(','))[0]);
-            newData.MediaHeight = Convert.ToInt32((((string)row["MediaSize"]).Split(','))[1]);
+            newData.MediaWidth = Convert.ToInt32(((string)row["MediaSize"]).Split(',')[0]);
+            newData.MediaHeight = Convert.ToInt32(((string)row["MediaSize"]).Split(',')[1]);
             newData.MediaLoop = Convert.ToBoolean(row["MediaLoop"]);
             newData.ObscureMusic = Convert.ToBoolean(row["ObscureMusic"]);
             newData.ObscureMedia = Convert.ToBoolean(row["ObscureMedia"]);

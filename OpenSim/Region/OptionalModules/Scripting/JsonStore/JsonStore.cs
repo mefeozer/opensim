@@ -663,7 +663,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
 
             string pkey = "";
             foreach (string k in path)
-                pkey = (pkey == "") ? k : (k + "." + pkey);
+                pkey = pkey == "" ? k : k + "." + pkey;
 
             return pkey;
         }
@@ -720,8 +720,8 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
-        private UUID m_objectID;
+        private readonly Scene m_scene;
+        private readonly UUID m_objectID;
 
         protected override OSD ValueStore
         {

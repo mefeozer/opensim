@@ -61,7 +61,7 @@ namespace OpenSim.Framework.Servers
         /// </summary>
 
         private int m_periodDiagnosticTimerMS = 60 * 60 * 1000;
-        private Timer m_periodicDiagnosticsTimer = new Timer(60 * 60 * 1000);
+        private readonly Timer m_periodicDiagnosticsTimer = new Timer(60 * 60 * 1000);
 
         /// <summary>
         /// Random uuid for private data

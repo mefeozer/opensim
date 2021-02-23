@@ -51,13 +51,13 @@ namespace OpenSim.Region.CoreModules.World.Land
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private Scene m_Scene;
-        private Dictionary<UUID, PrimCounts> m_PrimCounts =
+        private readonly Dictionary<UUID, PrimCounts> m_PrimCounts =
                 new Dictionary<UUID, PrimCounts>();
-        private Dictionary<UUID, UUID> m_OwnerMap =
+        private readonly Dictionary<UUID, UUID> m_OwnerMap =
                 new Dictionary<UUID, UUID>();
-        private Dictionary<UUID, int> m_SimwideCounts =
+        private readonly Dictionary<UUID, int> m_SimwideCounts =
                 new Dictionary<UUID, int>();
-        private Dictionary<UUID, ParcelCounts> m_ParcelCounts =
+        private readonly Dictionary<UUID, ParcelCounts> m_ParcelCounts =
                 new Dictionary<UUID, ParcelCounts>();
 
         /// <value>
@@ -69,7 +69,7 @@ namespace OpenSim.Region.CoreModules.World.Land
         /// </value>
         private bool m_Tainted = true;
 
-        private object m_TaintLock = new object();
+        private readonly object m_TaintLock = new object();
 
         public Type ReplaceableInterface
         {
@@ -170,7 +170,7 @@ namespace OpenSim.Region.CoreModules.World.Land
         {
             if (obj.IsAttachment)
                 return;
-            if (((obj.RootPart.Flags & PrimFlags.TemporaryOnRez) != 0))
+            if ((obj.RootPart.Flags & PrimFlags.TemporaryOnRez) != 0)
                 return;
 
             Vector3 pos = obj.AbsolutePosition;
@@ -484,9 +484,9 @@ namespace OpenSim.Region.CoreModules.World.Land
 
     public class PrimCounts : IPrimCounts
     {
-        private PrimCountModule m_Parent;
-        private UUID m_ParcelID;
-        private UserPrimCounts m_UserPrimCounts;
+        private readonly PrimCountModule m_Parent;
+        private readonly UUID m_ParcelID;
+        private readonly UserPrimCounts m_UserPrimCounts;
 
         public PrimCounts (UUID parcelID, PrimCountModule parent)
         {
@@ -560,7 +560,7 @@ namespace OpenSim.Region.CoreModules.World.Land
 
     public class UserPrimCounts : IUserPrimCounts
     {
-        private PrimCounts m_Parent;
+        private readonly PrimCounts m_Parent;
 
         public UserPrimCounts(PrimCounts parent)
         {

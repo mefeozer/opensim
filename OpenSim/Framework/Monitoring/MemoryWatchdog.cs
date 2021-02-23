@@ -79,7 +79,7 @@ namespace OpenSim.Framework.Monitoring
         /// At the moment this corresponds to 1 minute since the sampling rate is every 2.5 seconds as triggered from
         /// the main Watchdog.
         /// </remarks>
-        private static int m_maxSamples = 24;
+        private static readonly int m_maxSamples = 24;
 
         /// <summary>
         /// Time when the watchdog was last updated.
@@ -99,7 +99,7 @@ namespace OpenSim.Framework.Monitoring
         /// <summary>
         /// Historical samples for calculating moving average.
         /// </summary>
-        private static Queue<double> m_samples = new Queue<double>(m_maxSamples);
+        private static readonly Queue<double> m_samples = new Queue<double>(m_maxSamples);
 
         public static void Update()
         {

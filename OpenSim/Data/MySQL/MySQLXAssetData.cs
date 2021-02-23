@@ -53,7 +53,7 @@ namespace OpenSim.Data.MySQL
         /// </summary>
         private const int DaysBetweenAccessTimeUpdates = 30;
 
-        private bool m_enableCompression = false;
+        private readonly bool m_enableCompression = false;
         private string m_connectionString;
 
         #region IPlugin Members

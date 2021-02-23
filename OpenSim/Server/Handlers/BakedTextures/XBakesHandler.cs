@@ -39,7 +39,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
 {
     public class XBakesConnector : ServiceConnector
     {
-        private string m_ConfigName = "BakedTextureService";
+        private readonly string m_ConfigName = "BakedTextureService";
 
         public XBakesConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
@@ -67,7 +67,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
 
     public class BakesServerHandler : SimpleStreamHandler
     {
-        private IBakedTextureService m_BakesService;
+        private readonly IBakedTextureService m_BakesService;
 
         public BakesServerHandler(IBakedTextureService service, IServiceAuth auth) :
                 base("/bakes", auth)

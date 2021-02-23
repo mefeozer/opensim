@@ -162,7 +162,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         private double m_nextOnQueueEmpty = 0;
 
         /// <summary>Throttle bucket for this agent's connection</summary>
-        private AdaptiveTokenBucket m_throttleClient;
+        private readonly AdaptiveTokenBucket m_throttleClient;
         public AdaptiveTokenBucket FlowThrottle
         {
             get { return m_throttleClient; }
@@ -171,22 +171,22 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// <summary>Throttle buckets for each packet category</summary>
         private readonly TokenBucket[] m_throttleCategories;
         /// <summary>Outgoing queues for throttled packets</summary>
-        private DoubleLocklessQueue<OutgoingPacket>[] m_packetOutboxes = new DoubleLocklessQueue<OutgoingPacket>[THROTTLE_CATEGORY_COUNT];
+        private readonly DoubleLocklessQueue<OutgoingPacket>[] m_packetOutboxes = new DoubleLocklessQueue<OutgoingPacket>[THROTTLE_CATEGORY_COUNT];
         /// <summary>A container that can hold one packet for each outbox, used to store
         /// dequeued packets that are being held for throttling</summary>
-        private OutgoingPacket[] m_nextPackets = new OutgoingPacket[THROTTLE_CATEGORY_COUNT];
+        private readonly OutgoingPacket[] m_nextPackets = new OutgoingPacket[THROTTLE_CATEGORY_COUNT];
         /// <summary>A reference to the LLUDPServer that is managing this client</summary>
         private readonly LLUDPServer m_udpServer;
 
         /// <summary>Caches packed throttle information</summary>
         private byte[] m_packedThrottles;
 
-        private int m_defaultRTO = 1000; // 1sec is the recommendation in the RFC
-        private int m_maxRTO = 3000;
-        private int m_minRTO = 250;
+        private readonly int m_defaultRTO = 1000; // 1sec is the recommendation in the RFC
+        private readonly int m_maxRTO = 3000;
+        private readonly int m_minRTO = 250;
 
-        private float m_burstTime;
-        private int m_maxRate;
+        private readonly float m_burstTime;
+        private readonly int m_maxRate;
 
         public double m_lastStartpingTimeMS;
         public int m_pingMS;
@@ -203,7 +203,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             }
         }
 
-        private ClientInfo m_info = new ClientInfo();
+        private readonly ClientInfo m_info = new ClientInfo();
 
         /// <summary>
         /// Default constructor
@@ -840,7 +840,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
     public class DoubleLocklessQueue<T> : OpenSim.Framework.LocklessQueue<T>
     {
-        OpenSim.Framework.LocklessQueue<T> highQueue = new OpenSim.Framework.LocklessQueue<T>();
+        readonly OpenSim.Framework.LocklessQueue<T> highQueue = new OpenSim.Framework.LocklessQueue<T>();
 
         public override int Count
         {

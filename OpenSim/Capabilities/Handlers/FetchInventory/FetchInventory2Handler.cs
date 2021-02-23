@@ -43,8 +43,8 @@ namespace OpenSim.Capabilities.Handlers
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IInventoryService m_inventoryService;
-        private UUID m_agentID;
+        private readonly IInventoryService m_inventoryService;
+        private readonly UUID m_agentID;
 
         public FetchInventory2Handler(IInventoryService invService, UUID agentId)
         {

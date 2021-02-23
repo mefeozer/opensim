@@ -224,7 +224,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID itemId = TestHelpers.ParseTail(0x20);
             TaskInventoryItem tii
                 = TaskInventoryHelpers.AddSceneObject(m_scene.AssetService, so1.RootPart, inventoryItemName, itemId, user1Id);
-            tii.NextPermissions &= ~((uint)PermissionMask.Modify);
+            tii.NextPermissions &= ~(uint)PermissionMask.Modify;
 
             UserAccountHelpers.CreateUserWithInventory(m_scene, user2Id);
 

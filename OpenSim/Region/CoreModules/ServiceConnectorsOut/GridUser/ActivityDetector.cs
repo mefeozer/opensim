@@ -39,7 +39,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IGridUserService m_GridUserService;
+        private readonly IGridUserService m_GridUserService;
 
         public ActivityDetector(IGridUserService guservice)
         {

@@ -78,7 +78,7 @@ namespace OpenSim.Data.Null
 
         #region Environment Settings
 
-        private Dictionary<UUID, string> EnvironmentSettings = new Dictionary<UUID, string>();
+        private readonly Dictionary<UUID, string> EnvironmentSettings = new Dictionary<UUID, string>();
 
         public string LoadRegionEnvironmentSettings(UUID regionUUID)
         {
@@ -132,8 +132,8 @@ namespace OpenSim.Data.Null
             return new List<SceneObjectGroup>();
         }
 
-        Dictionary<UUID, TerrainData> m_terrains = new Dictionary<UUID, TerrainData>();
-        Dictionary<UUID, TerrainData> m_bakedterrains = new Dictionary<UUID, TerrainData>();
+        readonly Dictionary<UUID, TerrainData> m_terrains = new Dictionary<UUID, TerrainData>();
+        readonly Dictionary<UUID, TerrainData> m_bakedterrains = new Dictionary<UUID, TerrainData>();
         public void StoreTerrain(TerrainData ter, UUID regionID)
         {
             if (m_terrains.ContainsKey(regionID))

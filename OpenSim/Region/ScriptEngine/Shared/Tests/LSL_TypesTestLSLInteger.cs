@@ -133,10 +133,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             LSL_Types.LSLInteger testInteger;
 
-            testInteger = (1 == 0);
+            testInteger = 1 == 0;
             Assert.AreEqual(0, testInteger.value);
 
-            testInteger = (1 == 1);
+            testInteger = 1 == 1;
             Assert.AreEqual(1, testInteger.value);
 
             testInteger = false;

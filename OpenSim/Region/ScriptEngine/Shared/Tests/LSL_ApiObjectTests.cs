@@ -240,7 +240,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 new LSL_Types.Vector3(0.7d + 0.2d, 0.0d, 0.0d),     // Prim twist
                 // Expression for y selected to test precision problems during sbyte
                 // cast in SetPrimitiveShapeParams.
-                new LSL_Types.Vector3(2.0d, (1.3d + 0.1d), 0.0d),   // Prim taper
+                new LSL_Types.Vector3(2.0d, 1.3d + 0.1d, 0.0d),   // Prim taper
                 new LSL_Types.Vector3(0.0d, 0.0d, 0.0d),    // Prim shear
                 0.70f);                                     // Prim hollow check
 

@@ -68,12 +68,12 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
         /// to work around this problem.</remarks>
         public bool ReuseLowDataTextures { get; set; }
 
-        private Dictionary<UUID, Scene> RegisteredScenes = new Dictionary<UUID, Scene>();
+        private readonly Dictionary<UUID, Scene> RegisteredScenes = new Dictionary<UUID, Scene>();
 
-        private Dictionary<string, IDynamicTextureRender> RenderPlugins =
+        private readonly Dictionary<string, IDynamicTextureRender> RenderPlugins =
             new Dictionary<string, IDynamicTextureRender>();
 
-        private Dictionary<UUID, DynamicTextureUpdater> Updaters = new Dictionary<UUID, DynamicTextureUpdater>();
+        private readonly Dictionary<UUID, DynamicTextureUpdater> Updaters = new Dictionary<UUID, DynamicTextureUpdater>();
 
         /// <summary>
         /// Record dynamic textures that we can reuse for a given data and parameter combination rather than
@@ -178,7 +178,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                                          string extraParams, bool SetBlending, byte AlphaValue)
         {
             return AddDynamicTextureURL(simID, primID, contentType, url, extraParams, SetBlending,
-                                         (DISP_TEMP|DISP_EXPIRE), AlphaValue, ALL_SIDES);
+                                         DISP_TEMP|DISP_EXPIRE, AlphaValue, ALL_SIDES);
         }
 
         public UUID AddDynamicTextureURL(UUID simID, UUID primID, string contentType, string url,
@@ -217,14 +217,14 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                                           string extraParams)
         {
             return AddDynamicTextureData(simID, primID, contentType, data, extraParams, false,
-                                            (DISP_TEMP|DISP_EXPIRE), 255, ALL_SIDES);
+                                            DISP_TEMP|DISP_EXPIRE, 255, ALL_SIDES);
         }
 
         public UUID AddDynamicTextureData(UUID simID, UUID primID, string contentType, string data,
                                           string extraParams, bool SetBlending, byte AlphaValue)
         {
             return AddDynamicTextureData(simID, primID, contentType, data, extraParams, SetBlending,
-                                          (DISP_TEMP|DISP_EXPIRE), AlphaValue, ALL_SIDES);
+                                          DISP_TEMP|DISP_EXPIRE, AlphaValue, ALL_SIDES);
         }
 
         public UUID AddDynamicTextureData(UUID simID, UUID primID, string contentType, string data,
@@ -529,7 +529,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                 if (asset.Description.Length > 128)
                     asset.Description = asset.Description.Substring(0, 128);
                 asset.Local = true;     // dynamic images aren't saved in the assets server
-                asset.Temporary = ((Disp & DISP_TEMP) != 0);
+                asset.Temporary = (Disp & DISP_TEMP) != 0;
                 scene.AssetService.Store(asset);    // this will only save the asset in the local asset cache
 
                 IJ2KDecoder cacheLayerDecode = scene.RequestModuleInterface<IJ2KDecoder>();
@@ -543,7 +543,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
 
                 UUID oldID = UpdatePart(part, asset.FullID);
 
-                if (oldID != UUID.Zero && ((Disp & DISP_EXPIRE) != 0))
+                if (oldID != UUID.Zero && (Disp & DISP_EXPIRE) != 0)
                 {
                     if (oldAsset == null)
                         oldAsset = scene.AssetService.Get(oldID.ToString());

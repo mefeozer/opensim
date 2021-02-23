@@ -128,11 +128,11 @@ namespace OpenSim.Region.Framework.Scenes
             private set
             {
                 m_presenceType = value;
-                IsNPC = (m_presenceType == PresenceType.Npc);
+                IsNPC = m_presenceType == PresenceType.Npc;
             }
         }
 
-        private ScenePresenceStateMachine m_stateMachine;
+        private readonly ScenePresenceStateMachine m_stateMachine;
 
         /// <summary>
         /// The current state of this presence.  Governs only the existence lifecycle.  See ScenePresenceStateMachine
@@ -292,11 +292,11 @@ namespace OpenSim.Region.Framework.Scenes
         /// TODO: For some reason, we effectively have a list both here and in Appearance.  Need to work out if this is
         /// necessary.
         /// </remarks>
-        private List<SceneObjectGroup> m_attachments = new List<SceneObjectGroup>();
+        private readonly List<SceneObjectGroup> m_attachments = new List<SceneObjectGroup>();
 
         public object AttachmentsSyncLock { get; private set; }
 
-        private Dictionary<UUID, ScriptControllers> scriptedcontrols = new Dictionary<UUID, ScriptControllers>();
+        private readonly Dictionary<UUID, ScriptControllers> scriptedcontrols = new Dictionary<UUID, ScriptControllers>();
         private ScriptControlled IgnoredControls = ScriptControlled.CONTROL_ZERO;
         private ScriptControlled LastCommands = ScriptControlled.CONTROL_ZERO;
         private bool MouseDown = false;
@@ -313,7 +313,7 @@ namespace OpenSim.Region.Framework.Scenes
         private Vector3 m_lastSize = new Vector3(0.45f,0.6f,1.9f);
         private int NeedInitialData = 1;
 
-        private int m_userFlags;
+        private readonly int m_userFlags;
         public int UserFlags
         {
             get { return m_userFlags; }
@@ -2000,8 +2000,8 @@ namespace OpenSim.Region.Framework.Scenes
 
         struct spRegionSizeInfo
         {
-            public int sizeX;
-            public int sizeY;
+            public readonly int sizeX;
+            public readonly int sizeY;
 
             public spRegionSizeInfo(int x, int y)
             {
@@ -2010,7 +2010,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
         }
 
-        private Dictionary<ulong, spRegionSizeInfo> m_knownChildRegionsSizeInfo = new Dictionary<ulong, spRegionSizeInfo>();
+        private readonly Dictionary<ulong, spRegionSizeInfo> m_knownChildRegionsSizeInfo = new Dictionary<ulong, spRegionSizeInfo>();
 
         public void AddNeighbourRegion(GridRegion region, string capsPath)
         {
@@ -2752,7 +2752,7 @@ namespace OpenSim.Region.Framework.Scenes
                 else if(mvToTarget)
                     newFlying = actor.Flying;
                 else
-                    newFlying = ((flags & AgentManager.ControlFlags.AGENT_CONTROL_FLY) != 0);
+                    newFlying = (flags & AgentManager.ControlFlags.AGENT_CONTROL_FLY) != 0;
 
                 if (actor.Flying != newFlying)
                 {
@@ -2792,7 +2792,7 @@ namespace OpenSim.Region.Framework.Scenes
                                 // Why did I get this?
                             }
 
-                            if (((MovementFlag & (uint)DCF) == 0))
+                            if ((MovementFlag & (uint)DCF) == 0)
                             {
                                 //m_log.DebugFormat("[SCENE PRESENCE]: Updating MovementFlag for {0} with {1}", Name, DCF);
                                 MovementFlag |= (uint)DCF;
@@ -2866,8 +2866,8 @@ namespace OpenSim.Region.Framework.Scenes
                         // Landing detection code
 
                         // Are the landing controls requirements filled?
-                        bool controlland = (((flags & AgentManager.ControlFlags.AGENT_CONTROL_UP_NEG) != 0) ||
-                                            ((flags & AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_NEG) != 0));
+                        bool controlland = (flags & AgentManager.ControlFlags.AGENT_CONTROL_UP_NEG) != 0 ||
+                                           (flags & AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_UP_NEG) != 0;
 
                         //m_log.Debug("[CONTROL]: " +flags);
                         // Applies a satisfying roll effect to the avatar when flying.
@@ -2917,7 +2917,7 @@ namespace OpenSim.Region.Framework.Scenes
                 // avatar location in place).
 
                 if (update_movementflag
-                    || (update_rotation && DCFlagKeyPressed && (!AgentControlStopActive || MovementFlag != 0)))
+                    || update_rotation && DCFlagKeyPressed && (!AgentControlStopActive || MovementFlag != 0))
                 {
 
                     if (AgentControlStopActive)
@@ -2933,8 +2933,8 @@ namespace OpenSim.Region.Framework.Scenes
                     else
                     {
                         if(m_movingToTarget ||
-                                 (Animator.currentControlState != ScenePresenceAnimator.motionControlStates.flying &&
-                                    Animator.currentControlState != ScenePresenceAnimator.motionControlStates.onsurface)
+                                 Animator.currentControlState != ScenePresenceAnimator.motionControlStates.flying &&
+                                 Animator.currentControlState != ScenePresenceAnimator.motionControlStates.onsurface
                                  )
                             AddNewMovement(agent_control_v3);
                         else
@@ -7110,7 +7110,7 @@ namespace OpenSim.Region.Framework.Scenes
         }
 
         // http caps assets bandwidth control
-        private int m_capbandwidth = -1;
+        private readonly int m_capbandwidth = -1;
         private int m_bandwidth = 100000;
         private int m_bandwidthBurst = 20000;
         private int m_bytesControl;

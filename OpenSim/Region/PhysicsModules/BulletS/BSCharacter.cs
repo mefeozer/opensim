@@ -55,7 +55,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     private float _buoyancy;
 
     private OMV.Vector3 _size;
-    private float _footOffset;
+    private readonly float _footOffset;
 
     private BSActorAvatarMove m_moveActor;
     private const string AvatarMoveActorName = "BSCharacter.AvatarMove";
@@ -746,12 +746,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 if (midHeightOffset < 0f)
                 {
                     // Small avatar. Add the adjustment based on the distance from midheight
-                    heightAdjust += ((-1f * midHeightOffset) / (AVATAR_MID - AVATAR_LOW)) * BSParam.AvatarHeightLowFudge;
+                    heightAdjust += -1f * midHeightOffset / (AVATAR_MID - AVATAR_LOW) * BSParam.AvatarHeightLowFudge;
                 }
                 else
                 {
                     // Large avatar. Add the adjustment based on the distance from midheight
-                    heightAdjust += ((midHeightOffset) / (AVATAR_HI - AVATAR_MID)) * BSParam.AvatarHeightHighFudge;
+                    heightAdjust += midHeightOffset / (AVATAR_HI - AVATAR_MID) * BSParam.AvatarHeightHighFudge;
                 }
             }
             if (BSParam.AvatarShape == BSShapeCollection.AvatarShapeCapsule)
@@ -759,7 +759,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 newScale.X = size.X / 2f;
                 newScale.Y = size.Y / 2f;
                 // The total scale height is the central cylindar plus the caps on the two ends.
-                newScale.Z = (size.Z + (Math.Min(size.X, size.Y) * 2) + heightAdjust) / 2f;
+                newScale.Z = (size.Z + Math.Min(size.X, size.Y) * 2 + heightAdjust) / 2f;
             }
             else
             {

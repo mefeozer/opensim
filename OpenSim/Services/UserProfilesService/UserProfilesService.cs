@@ -43,7 +43,7 @@ namespace OpenSim.Services.ProfilesService
             LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        IUserAccountService userAccounts;
+        readonly IUserAccountService userAccounts;
 
         public UserProfilesService(IConfigSource config, string configName):
             base(config, configName)

@@ -50,13 +50,13 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         // This computation is not the real region center if the region is larger than 256.
         //     This computation isn't fixed because there is not a handle back to the region.
-        private static readonly Vector3 CenterOfRegion = new Vector3(((int)Constants.RegionSize * 0.5f), ((int)Constants.RegionSize * 0.5f), 20);
+        private static readonly Vector3 CenterOfRegion = new Vector3((int)Constants.RegionSize * 0.5f, (int)Constants.RegionSize * 0.5f, 20);
         private static readonly char[] CS_SPACE = { ' ' };
 
         private const int WD_INTERVAL = 1000;     // base watchdog interval
         private static int PING_PERIOD = 15;       // WD intervals per PING
         private static int ICCD_PERIOD = 10;       // WD intervals between Connects
-        private static int L_TIMEOUT = 25;       // Login time out interval
+        private static readonly int L_TIMEOUT = 25;       // Login time out interval
 
         private static int _idk_ = 0;        // core connector identifier
         private static int _pdk_ = 0;        // ping interval counter
@@ -64,11 +64,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         // List of configured connectors
 
-        private static List<IRCConnector> m_connectors = new List<IRCConnector>();
+        private static readonly List<IRCConnector> m_connectors = new List<IRCConnector>();
 
         // Watchdog state
 
-        private static System.Timers.Timer m_watchdog = null;
+        private static readonly System.Timers.Timer m_watchdog = null;
 
         // The watch-dog gets started as soon as the class is instantiated, and
         // ticks once every second (WD_INTERVAL)
@@ -105,7 +105,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         internal int m_resetk = 0;
 
-        private object msyncConnect = new object();
+        private readonly object msyncConnect = new object();
 
         internal bool m_randomizeNick = true; // add random suffix
         internal string m_baseNick = null;      // base name for randomizing
@@ -158,7 +158,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             set { m_password = value; }
         }
 
-        private string m_user = "USER OpenSimBot 8 * :I'm an OpenSim to IRC bot";
+        private readonly string m_user = "USER OpenSimBot 8 * :I'm an OpenSim to IRC bot";
         public string User
         {
             get { return m_user; }
@@ -271,7 +271,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             lock (msyncConnect)
             {
 
-                if ((depends == 0) && Enabled)
+                if (depends == 0 && Enabled)
                 {
 
                     m_enabled = false;
@@ -509,7 +509,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                             // Is message "\001ACTION foo bar\001"?
                             // Then change to: "/me foo bar"
 
-                            if ((1 == c.Message[0]) && c.Message.Substring(1).StartsWith("ACTION"))
+                            if (1 == c.Message[0] && c.Message.Substring(1).StartsWith("ACTION"))
                                 c.Message = string.Format("/me {0}", c.Message.Substring(8, c.Message.Length - 9));
 
                             ChannelState.OSChat(this, c, false);
@@ -531,13 +531,13 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             // The connection is marked as not connected the first time
             // through reconnect.
 
-            if (m_enabled && (m_resetk == resetk))
+            if (m_enabled && m_resetk == resetk)
                 Reconnect();
 
             Watchdog.RemoveThread();
         }
 
-        private Regex RE = new Regex(@":(?<nick>[\w-]*)!(?<user>\S*) PRIVMSG (?<channel>\S+) :(?<msg>.*)",
+        private readonly Regex RE = new Regex(@":(?<nick>[\w-]*)!(?<user>\S*) PRIVMSG (?<channel>\S+) :(?<msg>.*)",
                                      RegexOptions.Multiline);
 
         private Dictionary<string, string> ExtractMsg(string input)
@@ -551,7 +551,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             MatchCollection matches = RE.Matches(input);
 
             // Get some direct matches $1 $4 is a
-            if ((matches.Count == 0) || (matches.Count != 1) || (matches[0].Groups.Count != 5))
+            if (matches.Count == 0 || matches.Count != 1 || matches[0].Groups.Count != 5)
             {
                 // m_log.Info("[IRCConnector]: Number of matches: " + matches.Count);
                 // if (matches.Count > 0)

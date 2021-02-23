@@ -32,7 +32,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 {
     public class CollisionLocker
     {
-        private List<IntPtr> worldlock = new List<IntPtr>();
+        private readonly List<IntPtr> worldlock = new List<IntPtr>();
 
         public CollisionLocker()
         {
@@ -58,7 +58,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public bool lockquery()
         {
-            return (worldlock.Count > 0);
+            return worldlock.Count > 0;
         }
 
         public void drelease(IntPtr world)

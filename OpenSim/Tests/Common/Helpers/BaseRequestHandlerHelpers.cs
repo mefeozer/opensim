@@ -33,7 +33,7 @@ namespace OpenSim.Tests.Common
 {
     public class BaseRequestHandlerHelpers
     {
-        private static string[] m_emptyStringArray = new string[] { };
+        private static readonly string[] m_emptyStringArray = new string[] { };
 
         public static void BaseTestGetParams(BaseRequestHandler handler, string assetsPath)
         {

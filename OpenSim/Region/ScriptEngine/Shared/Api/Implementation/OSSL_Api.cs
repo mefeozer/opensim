@@ -476,7 +476,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             if (functionControl == AllowedControlFlags.ALL)
                 return string.Empty;
 
-            if (((functionControl & AllowedControlFlags.OWNERUUID) != 0) && perms.AllowedOwners.Contains(m_host.OwnerID))
+            if ((functionControl & AllowedControlFlags.OWNERUUID) != 0 && perms.AllowedOwners.Contains(m_host.OwnerID))
             {
                 // prim owner is in the list of allowed owners
                 return string.Empty;
@@ -555,9 +555,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 return string.Format("{0} permission denied.", function);
 
             if (!perms.AllowedCreators.Contains(m_item.CreatorID))
-                return(
-                    string.Format("{0} permission denied. Script creator is not in the list of users allowed to execute this function and prim owner also has no permission.",
-                    function));
+                return string.Format("{0} permission denied. Script creator is not in the list of users allowed to execute this function and prim owner also has no permission.",
+                    function);
 
             if (m_item.CreatorID != ownerID)
             {

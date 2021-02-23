@@ -129,7 +129,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             touches(localID, originalID, offsetPos, remoteClient, surfaceArgs, "touch");
         }
 
-        private static Vector3 zeroVec3 = new Vector3(0, 0, 0);
+        private static readonly Vector3 zeroVec3 = new Vector3(0, 0, 0);
         public void touch_end(uint localID, uint originalID, IClientAPI remoteClient,
                               SurfaceTouchEventArgs surfaceArgs)
         {

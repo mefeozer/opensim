@@ -38,7 +38,7 @@ namespace OpenSim.Server.Handlers.Authorization
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAuthorizationService m_AuthorizationService;
+        private readonly IAuthorizationService m_AuthorizationService;
 
         public AuthorizationServerPostHandler(IAuthorizationService service) :
                 base("POST", "/authorization")

@@ -98,7 +98,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         {
             get { return m_burst; }
             set {
-                float rate = (value < 0 ? 0 : value);
+                float rate = value < 0 ? 0 : value;
                 if (rate > MAXBURST)
                     rate = MAXBURST;
 
@@ -127,9 +127,9 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         public float RequestedDripRate
         {
-            get { return (m_dripRate == 0 ? m_totalDripRequest : m_dripRate); }
+            get { return m_dripRate == 0 ? m_totalDripRequest : m_dripRate; }
             set {
-                m_dripRate = (value < 0 ? 0 : value);
+                m_dripRate = value < 0 ? 0 : value;
                 m_totalDripRequest = m_dripRate;
 
                 if (m_parent != null)
@@ -199,7 +199,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         protected float DripRateModifier()
         {
             float driprate = DripRate;
-            return driprate >= TotalDripRequest ? 1.0f : (driprate / TotalDripRequest);
+            return driprate >= TotalDripRequest ? 1.0f : driprate / TotalDripRequest;
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         public bool CheckTokens(int amount)
         {
-            return  (m_tokenCount > 0);
+            return  m_tokenCount > 0;
         }
 
         public int GetCatBytesCanSend(int timeMS)
@@ -331,14 +331,14 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         public override float MaxDripRate
         {
-            get { return (m_maxDripRate == 0 ? m_totalDripRequest : m_maxDripRate); }
+            get { return m_maxDripRate == 0 ? m_totalDripRequest : m_maxDripRate; }
             set
             {
-                m_maxDripRate = (value == 0 ? m_totalDripRequest : Math.Max(value, m_minimumFlow));
+                m_maxDripRate = value == 0 ? m_totalDripRequest : Math.Max(value, m_minimumFlow);
             }
         }
 
-        private bool m_enabled = false;
+        private readonly bool m_enabled = false;
 
         // <summary>
         // Adjust drip rate in response to network conditions.
@@ -364,7 +364,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         {
             m_enabled = enabled;
 
-            m_maxDripRate = (maxDripRate == 0 ? m_totalDripRequest : Math.Max(maxDripRate, m_minimumFlow));
+            m_maxDripRate = maxDripRate == 0 ? m_totalDripRequest : Math.Max(maxDripRate, m_minimumFlow);
 
             if (enabled)
                 m_dripRate = m_maxDripRate * .5f;

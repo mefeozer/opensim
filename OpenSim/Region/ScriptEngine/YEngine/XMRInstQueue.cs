@@ -47,7 +47,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void InsertHead(XMRInstance inst)
         {
-            if((inst.m_PrevInst != inst) || (inst.m_NextInst != inst))
+            if(inst.m_PrevInst != inst || inst.m_NextInst != inst)
                 throw new Exception("already in list");
 
             inst.m_PrevInst = null;
@@ -65,7 +65,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void InsertTail(XMRInstance inst)
         {
-            if((inst.m_PrevInst != inst) || (inst.m_NextInst != inst))
+            if(inst.m_PrevInst != inst || inst.m_NextInst != inst)
                 throw new Exception("already in list");
 
             inst.m_NextInst = null;
@@ -84,7 +84,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void InsertBefore(XMRInstance inst, XMRInstance after)
         {
-            if((inst.m_PrevInst != inst) || (inst.m_NextInst != inst))
+            if(inst.m_PrevInst != inst || inst.m_NextInst != inst)
                 throw new Exception("already in list");
 
             if(after == null)
@@ -162,7 +162,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             XMRInstance next = inst.m_NextInst;
             XMRInstance prev = inst.m_PrevInst;
-            if((prev == inst) || (next == inst))
+            if(prev == inst || next == inst)
                 throw new Exception("not in a list");
 
             if(next == null)

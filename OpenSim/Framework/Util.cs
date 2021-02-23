@@ -76,7 +76,7 @@ namespace OpenSim.Framework
         // this legacy slam bit. It comes from prior incomplete
         // understanding of the code and the prohibition on
         // reading viewer code that used to be in place.
-        Slam = (1 << 4),
+        Slam = 1 << 4,
 
         FoldedMask = 0x0f,
 
@@ -220,7 +220,7 @@ namespace OpenSim.Framework
         /// <returns></returns>
         public static double lerp(double a, double b, double c)
         {
-            return (b*a) + (c*(1 - a));
+            return b*a + c*(1 - a);
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace OpenSim.Framework
         /// <returns></returns>
         public static bool DistanceLessThan(Vector3 a, Vector3 b, double amount)
         {
-            return Vector3.DistanceSquared(a,b) < (amount * amount);
+            return Vector3.DistanceSquared(a,b) < amount * amount;
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace OpenSim.Framework
         /// <returns>The magnitude of the vector</returns>
         public static double GetMagnitude(Vector3 a)
         {
-            return Math.Sqrt((a.X * a.X) + (a.Y * a.Y) + (a.Z * a.Z));
+            return Math.Sqrt(a.X * a.X + a.Y * a.Y + a.Z * a.Z);
         }
 
         /// <summary>
@@ -343,11 +343,11 @@ namespace OpenSim.Framework
             }
             else
             {
-                float max = (left.Y > up.Z) ? left.Y : up.Z;
+                float max = left.Y > up.Z ? left.Y : up.Z;
 
                 if (max < fwd.X)
                 {
-                    s = (float) (Math.Sqrt(fwd.X - (left.Y + up.Z) + 1.0));
+                    s = (float) Math.Sqrt(fwd.X - (left.Y + up.Z) + 1.0);
                     float x = (float) (s * 0.5);
                     s = (float) (0.5 / s);
                     return new Quaternion(
@@ -358,7 +358,7 @@ namespace OpenSim.Framework
                 }
                 else if (max == left.Y)
                 {
-                    s = (float) (Math.Sqrt(left.Y - (up.Z + fwd.X) + 1.0));
+                    s = (float) Math.Sqrt(left.Y - (up.Z + fwd.X) + 1.0);
                     float y = (float) (s * 0.5);
                     s = (float) (0.5 / s);
                     return new Quaternion(
@@ -369,7 +369,7 @@ namespace OpenSim.Framework
                 }
                 else
                 {
-                    s = (float) (Math.Sqrt(up.Z - (fwd.X + left.Y) + 1.0));
+                    s = (float) Math.Sqrt(up.Z - (fwd.X + left.Y) + 1.0);
                     float z = (float) (s * 0.5);
                     s = (float) (0.5 / s);
                     return new Quaternion(
@@ -401,7 +401,7 @@ namespace OpenSim.Framework
         {
            ulong handle = X & 0xffffff00; // make sure it matchs grid coord points.
            handle <<= 32; // to higher half
-           handle |= (Y & 0xffffff00);
+           handle |= Y & 0xffffff00;
            return handle;
         }
 
@@ -410,7 +410,7 @@ namespace OpenSim.Framework
         {
             ulong handle = X;
             handle <<= 40; // shift to higher half and mult by 256)
-            handle |= (Y << 8);  // mult by 256)
+            handle |= Y << 8;  // mult by 256)
             return handle;
         }
 
@@ -604,7 +604,7 @@ namespace OpenSim.Framework
         public static Vector3 ClampV(Vector3 x, float max)
         {
             float lenSq = x.LengthSquared();
-            if (lenSq > (max * max))
+            if (lenSq > max * max)
             {
                 lenSq = max / (float)Math.Sqrt(lenSq);
                 x = x * lenSq;
@@ -1004,10 +1004,10 @@ namespace OpenSim.Framework
         {
             PlatformID platformId = Environment.OSVersion.Platform;
 
-            return (platformId == PlatformID.Win32NT
-                || platformId == PlatformID.Win32S
-                || platformId == PlatformID.Win32Windows
-                || platformId == PlatformID.WinCE);
+            return platformId == PlatformID.Win32NT
+                   || platformId == PlatformID.Win32S
+                   || platformId == PlatformID.Win32Windows
+                   || platformId == PlatformID.WinCE;
         }
 
         public static bool LoadArchSpecificWindowsDll(string libraryName)
@@ -1239,7 +1239,7 @@ namespace OpenSim.Framework
 
             int min = Math.Min(x, y);
 
-            return (x + y - (min >> 1) - (min >> 2) + (min >> 4));
+            return x + y - (min >> 1) - (min >> 2) + (min >> 4);
         }
 
         /// <summary>
@@ -1343,13 +1343,13 @@ namespace OpenSim.Framework
 
                     for (int j = 0; j < 16; j++)
                     {
-                        if ((i + j) < bytes.Length)
+                        if (i + j < bytes.Length)
                             output.Append(string.Format("{0:X2} ", bytes[i + j]));
                         else
                             output.Append("   ");
                     }
 
-                    for (int j = 0; j < 16 && (i + j) < bytes.Length; j++)
+                    for (int j = 0; j < 16 && i + j < bytes.Length; j++)
                     {
                         if (bytes[i + j] >= 0x20 && bytes[i + j] < 0x7E)
                             output.Append((char) bytes[i + j]);
@@ -1362,7 +1362,7 @@ namespace OpenSim.Framework
             return output.ToString();
         }
 
-        private static ExpiringCacheOS<string, IPAddress> dnscache = new ExpiringCacheOS<string, IPAddress>(10000);
+        private static readonly ExpiringCacheOS<string, IPAddress> dnscache = new ExpiringCacheOS<string, IPAddress>(10000);
 
         /// <summary>
         /// Converts a URL to a IPAddress
@@ -1853,7 +1853,7 @@ namespace OpenSim.Framework
             PropertyInfo[] propertyInfos = settingsType.GetProperties();
             foreach (PropertyInfo propInfo in propertyInfos)
             {
-                if ((propInfo.CanRead) && (propInfo.CanWrite))
+                if (propInfo.CanRead && propInfo.CanWrite)
                 {
                     if (propInfo.PropertyType == typeof(string))
                     {
@@ -2213,9 +2213,9 @@ namespace OpenSim.Framework
             x = Utils.BytesToUInt(bytes, 8) & 0xffff;
             y = Utils.BytesToUInt(bytes, 12) & 0xffff;
             // validation may fail, just reducing the odds of using a real UUID as encoded parcel
-            return  ( bytes[0] == 0 && bytes[4] == 0 && // handler x,y multiples of 256
-                         bytes[9] < 64 && bytes[13] < 64 && // positions < 16km
-                         bytes[14] == 0 && bytes[15] == 0);
+            return  bytes[0] == 0 && bytes[4] == 0 && // handler x,y multiples of 256
+                    bytes[9] < 64 && bytes[13] < 64 && // positions < 16km
+                    bytes[14] == 0 && bytes[15] == 0;
         }
 
         public static void ParseFakeParcelID(UUID parcelID, out ulong regionHandle, out uint x, out uint y, out uint z)
@@ -2448,7 +2448,7 @@ namespace OpenSim.Framework
                 else
                 {
                     // uh?
-                    m_log.Debug(("[UTILS]: Got OSD of unexpected type " + buffer.Type.ToString()));
+                    m_log.Debug("[UTILS]: Got OSD of unexpected type " + buffer.Type.ToString());
                     return null;
                 }
             }
@@ -2561,7 +2561,7 @@ namespace OpenSim.Framework
             catch { }
 
             // We tried our best to convert the domain names to IP addresses
-            return (ipaddr1 != null) ? "http://" + ipaddr1.ToString() + ":" + port1 : uri;
+            return ipaddr1 != null ? "http://" + ipaddr1.ToString() + ":" + port1 : uri;
         }
 
         /// <summary>
@@ -2942,7 +2942,7 @@ namespace OpenSim.Framework
             public bool Running { get; set; }
             public bool Aborted { get; set; }
             private int started;
-            public bool DoTimeout;
+            public readonly bool DoTimeout;
 
             public ThreadInfo(long threadFuncNum, string context, bool dotimeout = true)
             {
@@ -2988,7 +2988,7 @@ namespace OpenSim.Framework
             /// </remarks>
             public string GetStackTrace()
             {
-                string ret = (context == null) ? "" : ("(" + context + ") ");
+                string ret = context == null ? "" : "(" + context + ") ";
 
                 StackTrace activeStackTrace = Util.GetStackTrace(Thread);
                 if (activeStackTrace != null)
@@ -3010,7 +3010,7 @@ namespace OpenSim.Framework
         public static long TotalRunningFireAndForgetCalls { get { return numRunningThreadFuncs; } }
 
         // Maps (ThreadFunc number -> Thread)
-        private static ConcurrentDictionary<long, ThreadInfo> activeThreads = new ConcurrentDictionary<long, ThreadInfo>();
+        private static readonly ConcurrentDictionary<long, ThreadInfo> activeThreads = new ConcurrentDictionary<long, ThreadInfo>();
 
         private static readonly int THREAD_TIMEOUT = 10 * 60 * 1000;    // 10 minutes
 
@@ -3022,7 +3022,7 @@ namespace OpenSim.Framework
             foreach (KeyValuePair<long, ThreadInfo> entry in activeThreads)
             {
                 ThreadInfo t = entry.Value;
-                if (t.DoTimeout && t.Running && !t.Aborted && (t.Elapsed() >= THREAD_TIMEOUT))
+                if (t.DoTimeout && t.Running && !t.Aborted && t.Elapsed() >= THREAD_TIMEOUT)
                 {
                     m_log.WarnFormat("Timeout in threadfunc {0} ({1}) {2}", t.ThreadFuncNum, t.Thread.Name, t.GetStackTrace());
                     t.Abort();
@@ -3209,7 +3209,7 @@ namespace OpenSim.Framework
                     partial = line;
                 }
 
-                bool last = (i == lines.Length - 1);
+                bool last = i == lines.Length - 1;
                 if (last)
                     dest.Append(line);
                 else
@@ -3373,7 +3373,7 @@ namespace OpenSim.Framework
         public static int EnvironmentTickCountSubtract(int newValue, int prevValue)
         {
             int diff = newValue - prevValue;
-            return (diff >= 0) ? diff : (diff + EnvironmentTickCountMask + 1);
+            return diff >= 0 ? diff : diff + EnvironmentTickCountMask + 1;
         }
 
         /// <summary>
@@ -3463,7 +3463,7 @@ namespace OpenSim.Framework
                 suffix = "hours";
             }
 
-            if ((hours > 0) || (span.Minutes > 0))
+            if (hours > 0 || span.Minutes > 0)
             {
                 if (str.Length > 0)
                     str += ":";
@@ -3472,7 +3472,7 @@ namespace OpenSim.Framework
                     suffix = "min";
             }
 
-            if ((hours > 0) || (span.Minutes > 0) || (span.Seconds > 0))
+            if (hours > 0 || span.Minutes > 0 || span.Seconds > 0)
             {
                 if (str.Length > 0)
                     str += ":";
@@ -3920,7 +3920,7 @@ namespace OpenSim.Framework
 
             // The 'Viewer' string contains just a version number. If there's anything in
             // 'Channel' then assume that it's the viewer name.
-            if ((agent.Channel != null) && (agent.Channel.Length > 0))
+            if (agent.Channel != null && agent.Channel.Length > 0)
                 name = agent.Channel.Trim() + " " + name;
 
             return name;
@@ -4103,9 +4103,9 @@ namespace OpenSim.Framework
     public class BetterRandom
     {
         private const int BufferSize = 1024;  // must be a multiple of 4
-        private byte[] RandomBuffer;
+        private readonly byte[] RandomBuffer;
         private int BufferOffset;
-        private RNGCryptoServiceProvider rng;
+        private readonly RNGCryptoServiceProvider rng;
         public BetterRandom()
         {
             RandomBuffer = new byte[BufferSize];

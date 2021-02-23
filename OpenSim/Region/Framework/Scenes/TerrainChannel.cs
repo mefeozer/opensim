@@ -45,7 +45,7 @@ namespace OpenSim.Region.Framework.Scenes
     public class TerrainChannel : ITerrainChannel
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static string LogHeader = "[TERRAIN CHANNEL]";
+        private static readonly string LogHeader = "[TERRAIN CHANNEL]";
 
         protected TerrainData m_terrainData;
 
@@ -345,8 +345,8 @@ namespace OpenSim.Region.Framework.Scenes
                     else
                     {
                         // arbitary rotation: hmmm should I be using (centreX - 0.5) and (centreY - 0.5) and round cosR and sinR to say only 5 decimal places?
-                        sx = centreX + (int)Math.Round((((double)x - centreX) * cosR) + (((double)y - centreY) * sinR)) - offsetX;
-                        sy = centreY + (int)Math.Round((((double)y - centreY) * cosR) - (((double)x - centreX) * sinR)) - offsetY;
+                        sx = centreX + (int)Math.Round(((double)x - centreX) * cosR + ((double)y - centreY) * sinR) - offsetX;
+                        sy = centreY + (int)Math.Round(((double)y - centreY) * cosR - ((double)x - centreX) * sinR) - offsetY;
                     }
 
                     if (sx >= 0 && sx < baseX && sy >= 0 && sy < baseY)
@@ -464,7 +464,7 @@ namespace OpenSim.Region.Framework.Scenes
             for (int i = 0; i < mapData.Length; i++)
             {
                 byte[] value = BitConverter.GetBytes(mapData[i]);
-                Array.Copy(value, 0, buffer, (i * 4), 4);
+                Array.Copy(value, 0, buffer, i * 4, 4);
             }
             XmlSerializer serializer = new XmlSerializer(typeof(byte[]));
             serializer.Serialize(xmlWriter, buffer);
@@ -494,11 +494,11 @@ namespace OpenSim.Region.Framework.Scenes
         private class TerrainChannelXMLPackage
         {
             public int Version;
-            public int SizeX;
-            public int SizeY;
-            public int SizeZ;
-            public float CompressionFactor;
-            public float[] Map;
+            public readonly int SizeX;
+            public readonly int SizeY;
+            public readonly int SizeZ;
+            public readonly float CompressionFactor;
+            public readonly float[] Map;
             public TerrainChannelXMLPackage(int pX, int pY, int pZ, float pCompressionFactor, float[] pMap)
             {
                 Version = 1;

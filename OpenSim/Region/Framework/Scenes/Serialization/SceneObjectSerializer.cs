@@ -422,13 +422,13 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
         #region manual serialization
 
-        private static Dictionary<string, Action<SceneObjectPart, XmlReader>> m_SOPXmlProcessors
+        private static readonly Dictionary<string, Action<SceneObjectPart, XmlReader>> m_SOPXmlProcessors
             = new Dictionary<string, Action<SceneObjectPart, XmlReader>>();
 
-        private static Dictionary<string, Action<TaskInventoryItem, XmlReader>> m_TaskInventoryXmlProcessors
+        private static readonly Dictionary<string, Action<TaskInventoryItem, XmlReader>> m_TaskInventoryXmlProcessors
             = new Dictionary<string, Action<TaskInventoryItem, XmlReader>>();
 
-        private static Dictionary<string, Action<PrimitiveBaseShape, XmlReader>> m_ShapeXmlProcessors
+        private static readonly Dictionary<string, Action<PrimitiveBaseShape, XmlReader>> m_ShapeXmlProcessors
             = new Dictionary<string, Action<PrimitiveBaseShape, XmlReader>>();
 
         static SceneObjectSerializer()

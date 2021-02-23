@@ -34,7 +34,7 @@ namespace OpenSim.Data.Null
     {
 //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static List<FriendsData> m_Data = new List<FriendsData>();
+        private static readonly List<FriendsData> m_Data = new List<FriendsData>();
 
         public NullFriendsData(string connectionString, string realm)
         {

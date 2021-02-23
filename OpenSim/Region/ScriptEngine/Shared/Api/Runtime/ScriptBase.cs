@@ -36,7 +36,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 {
     public partial class ScriptBaseClass : MarshalByRefObject, IScript
     {
-        private Dictionary<string, MethodInfo> inits = new Dictionary<string, MethodInfo>();
+        private readonly Dictionary<string, MethodInfo> inits = new Dictionary<string, MethodInfo>();
 //        private ScriptSponsor m_sponser;
 
         public override object InitializeLifetimeService()
@@ -78,7 +78,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 //            m_sponser = new ScriptSponsor();
         }
 
-        private Executor m_Executor = null;
+        private readonly Executor m_Executor = null;
 
         public ulong GetStateEventFlags(string state)
         {
@@ -100,7 +100,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
         private Dictionary<string, object> m_InitialValues =
                 new Dictionary<string, object>();
-        private Dictionary<string, FieldInfo> m_Fields =
+        private readonly Dictionary<string, FieldInfo> m_Fields =
                 new Dictionary<string, FieldInfo>();
 
         public void InitApi(string api, IScriptApi data)

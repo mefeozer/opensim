@@ -36,8 +36,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 {
     public class LLUDPServerCommands
     {
-        private ICommandConsole m_console;
-        private LLUDPServer m_udpServer;
+        private readonly ICommandConsole m_console;
+        private readonly LLUDPServer m_udpServer;
 
         public LLUDPServerCommands(ICommandConsole console, LLUDPServer udpServer)
         {
@@ -269,14 +269,14 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             ThrottleRates throttleRates = udpServer.ThrottleRates;
             report.AppendFormat(
                 "{0,7} {1,8} {2,7} {3,7} {4,7} {5,7} {6,9} {7,7}",
-                (throttleRates.Total * 8) / 1000,
-                (throttleRates.Resend * 8) / 1000,
-                (throttleRates.Land * 8) / 1000,
-                (throttleRates.Wind * 8) / 1000,
-                (throttleRates.Cloud * 8) / 1000,
-                (throttleRates.Task * 8) / 1000,
-                (throttleRates.Texture  * 8) / 1000,
-                (throttleRates.Asset  * 8) / 1000);
+                throttleRates.Total * 8 / 1000,
+                throttleRates.Resend * 8 / 1000,
+                throttleRates.Land * 8 / 1000,
+                throttleRates.Wind * 8 / 1000,
+                throttleRates.Cloud * 8 / 1000,
+                throttleRates.Task * 8 / 1000,
+                throttleRates.Texture  * 8 / 1000,
+                throttleRates.Asset  * 8 / 1000);
 
             return report.ToString();
         }
@@ -350,7 +350,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             m_udpServer.Scene.ForEachScenePresence(sp =>
             {
-                if (all || (sp.Firstname == firstName && sp.Lastname == lastName))
+                if (all || sp.Firstname == firstName && sp.Lastname == lastName)
                 {
                     MainConsole.Instance.Output(
                         "Throttle log level for {0} ({1}) set to {2} in {3}",
@@ -396,7 +396,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
                 m_udpServer.Scene.ForEachScenePresence(sp =>
                 {
-                    if (all || (sp.Firstname == firstName && sp.Lastname == lastName))
+                    if (all || sp.Firstname == firstName && sp.Lastname == lastName)
                     {
                         MainConsole.Instance.Output(
                             "Setting param {0} to {1} for {2} ({3}) in {4}",
@@ -419,7 +419,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
                 m_udpServer.Scene.ForEachScenePresence(sp =>
                                                        {
-                    if (all || (sp.Firstname == firstName && sp.Lastname == lastName))
+                    if (all || sp.Firstname == firstName && sp.Lastname == lastName)
                     {
                         MainConsole.Instance.Output(
                             "Setting param {0} to {1} for {2} ({3}) in {4}",
@@ -440,7 +440,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
                 m_udpServer.Scene.ForEachScenePresence(sp =>
                 {
-                    if (all || (sp.Firstname == firstName && sp.Lastname == lastName))
+                    if (all || sp.Firstname == firstName && sp.Lastname == lastName)
                     {
                         MainConsole.Instance.Output(
                             "Setting param {0} to {1} for {2} ({3}) in {4}",
@@ -479,7 +479,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             m_udpServer.Scene.ForEachScenePresence(sp =>
              {
-                if (all || (sp.Firstname == firstName && sp.Lastname == lastName))
+                if (all || sp.Firstname == firstName && sp.Lastname == lastName)
                 {
                     m_console.Output(
                         "Status for {0} ({1}) in {2}",
@@ -617,8 +617,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             bool setAsDefaultLevel = false;
             bool setAll = false;
             OptionSet optionSet = new OptionSet()
-                .Add("default", o => setAsDefaultLevel = (o != null))
-                    .Add("all", o => setAll = (o != null));
+                .Add("default", o => setAsDefaultLevel = o != null)
+                    .Add("all", o => setAll = o != null);
             List<string> filteredArgs = optionSet.Parse(args);
 
             string name = null;
@@ -647,7 +647,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
                         MainConsole.Instance.Output(
                             "Packet debug for {0} clients set to {1} in {2}",
-                            (setAll ? "all" : "future"), m_udpServer.DefaultClientPacketDebugLevel, m_udpServer.Scene.Name);
+                            setAll ? "all" : "future", m_udpServer.DefaultClientPacketDebugLevel, m_udpServer.Scene.Name);
 
                         if (setAll)
                         {

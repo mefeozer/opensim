@@ -36,7 +36,7 @@ namespace OpenSim.Tests.Common
 {
     public class TestHelpers
     {
-        private static Stream EnableLoggingConfigStream
+        private static readonly Stream EnableLoggingConfigStream
             = new MemoryStream(
                 Encoding.UTF8.GetBytes(
 @"<log4net>
@@ -58,7 +58,7 @@ namespace OpenSim.Tests.Common
   </root>
 </log4net>"));
 
-        private static MemoryStream DisableLoggingConfigStream
+        private static readonly MemoryStream DisableLoggingConfigStream
             = new MemoryStream(
                 Encoding.UTF8.GetBytes(
 //                        "<?xml version=\"1.0\" encoding=\"utf-8\" ?><configuration><log4net><root><level value=\"OFF\"/><appender-ref ref=\"A1\"/></root></log4net></configuration>"));

@@ -41,7 +41,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
 
         private IConfigSource m_configSource;
 
-        private OpenSimBase m_application;
+        private readonly OpenSimBase m_application;
 
         public EstateLoaderFileSystem(OpenSimBase openSim)
         {

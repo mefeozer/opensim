@@ -279,7 +279,7 @@ namespace PrimMesher
     {
         private float iX, iY; // intersection point
 
-        private static Angle[] angles3 =
+        private static readonly Angle[] angles3 =
         {
             new Angle(0.0f, 1.0f, 0.0f),
             new Angle(0.33333333333333333f, -0.5f, 0.86602540378443871f),
@@ -287,7 +287,7 @@ namespace PrimMesher
             new Angle(1.0f, 1.0f, 0.0f)
         };
 
-        private static Angle[] angles4 =
+        private static readonly Angle[] angles4 =
         {
             new Angle(0.0f, 1.0f, 0.0f),
             new Angle(0.25f, 0.0f, 1.0f),
@@ -296,7 +296,7 @@ namespace PrimMesher
             new Angle(1.0f, 1.0f, 0.0f)
         };
 
-        private static Angle[] angles6 =
+        private static readonly Angle[] angles6 =
         {
             new Angle(0.0f, 1.0f, 0.0f),
             new Angle(0.16666666666666667f, 0.5f, 0.8660254037844386f),
@@ -307,7 +307,7 @@ namespace PrimMesher
             new Angle(1.0f, 1.0f, 0.0f)
         };
 
-        private static Angle[] angles12 =
+        private static readonly Angle[] angles12 =
         {
             new Angle(0.0f, 1.0f, 0.0f),
             new Angle(0.083333333333333329f, 0.86602540378443871f, 0.5f),
@@ -324,7 +324,7 @@ namespace PrimMesher
             new Angle(1.0f, 1.0f, 0.0f)
         };
 
-        private static Angle[] angles24 =
+        private static readonly Angle[] angles24 =
         {
             new Angle(0.0f, 1.0f, 0.0f),
             new Angle(0.041666666666666664f, 0.96592582628906831f, 0.25881904510252074f),
@@ -386,7 +386,7 @@ namespace PrimMesher
             if (stopAngle <= startAngle)
                 throw new Exception("stopAngle not greater than startAngle");
 
-            if ((sides == 3 || sides == 4 || sides == 6 || sides == 12 || sides == 24))
+            if (sides == 3 || sides == 4 || sides == 6 || sides == 12 || sides == 24)
             {
                 startAngle *= twoPiInv;
                 stopAngle *= twoPiInv;
@@ -533,7 +533,7 @@ namespace PrimMesher
 
             List<Coord> hollowCoords = new List<Coord>();
 
-            bool hasHollow = (hollow > 0.0f);
+            bool hasHollow = hollow > 0.0f;
 
             AngleList angles = new AngleList();
             AngleList hollowAngles = new AngleList();
@@ -564,7 +564,7 @@ namespace PrimMesher
             Coord newVert = new Coord();
 
             // flag to create as few triangles as possible for 3 or 4 side profile
-            bool simpleFace = (sides < 5 && !hasHollow && !hasProfileCut);
+            bool simpleFace = sides < 5 && !hasHollow && !hasProfileCut;
 
             if (hasHollow)
             {
@@ -601,7 +601,7 @@ namespace PrimMesher
             }
 
             int numAngles = angles.angles.Count;
-            bool hollowsame = (hasHollow && hollowSides == sides);
+            bool hollowsame = hasHollow && hollowSides == sides;
 
             for (int i = 0; i < numAngles; i++)
             {
@@ -1086,8 +1086,8 @@ namespace PrimMesher
                 // the meshes generated with this technique appear nearly identical in shape to the same prims when
                 // displayed by the viewer.
 
-                float startAngle = (twoPi * pathCutBegin * revolutions) - topShearY * 0.9f;
-                float endAngle = (twoPi * pathCutEnd * revolutions) - topShearY * 0.9f;
+                float startAngle = twoPi * pathCutBegin * revolutions - topShearY * 0.9f;
+                float endAngle = twoPi * pathCutEnd * revolutions - topShearY * 0.9f;
                 float stepSize = twoPi / stepsPerRevolution;
 
                 int step = (int)(startAngle / stepSize);
@@ -1173,11 +1173,11 @@ namespace PrimMesher
 //        public List<Coord> normals;
         public List<Face> faces;
 
-        private int sides = 4;
-        private int hollowSides = 4;
-        private float profileStart = 0.0f;
-        private float profileEnd = 1.0f;
-        private float hollow = 0.0f;
+        private readonly int sides = 4;
+        private readonly int hollowSides = 4;
+        private readonly float profileStart = 0.0f;
+        private readonly float profileEnd = 1.0f;
+        private readonly float hollow = 0.0f;
         public float twistBegin = 0;
         public float twistEnd = 0;
         public float topShearX = 0.0f;

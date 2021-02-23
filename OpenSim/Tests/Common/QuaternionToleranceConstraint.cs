@@ -33,7 +33,7 @@ namespace OpenSim.Tests.Common
 {
     public class QuaternionToleranceConstraint : ANumericalToleranceConstraint
     {
-        private Quaternion _baseValue;
+        private readonly Quaternion _baseValue;
         private Quaternion _valueToBeTested;
 
         public QuaternionToleranceConstraint(Quaternion baseValue, double tolerance) : base(tolerance)
@@ -61,10 +61,10 @@ namespace OpenSim.Tests.Common
 
             _valueToBeTested = (Quaternion)valueToBeTested;
 
-            return (IsWithinDoubleConstraint(_valueToBeTested.X, _baseValue.X) &&
-                    IsWithinDoubleConstraint(_valueToBeTested.Y, _baseValue.Y) &&
-                    IsWithinDoubleConstraint(_valueToBeTested.Z, _baseValue.Z) &&
-                    IsWithinDoubleConstraint(_valueToBeTested.W, _baseValue.W));
+            return IsWithinDoubleConstraint(_valueToBeTested.X, _baseValue.X) &&
+                   IsWithinDoubleConstraint(_valueToBeTested.Y, _baseValue.Y) &&
+                   IsWithinDoubleConstraint(_valueToBeTested.Z, _baseValue.Z) &&
+                   IsWithinDoubleConstraint(_valueToBeTested.W, _baseValue.W);
         }
 
         public override void WriteDescriptionTo(MessageWriter writer)

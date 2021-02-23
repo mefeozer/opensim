@@ -41,7 +41,7 @@ namespace pCampBot
     /// </remarks>
     public class PhysicsBehaviour : AbstractBehaviour
     {
-        private string[] talkarray;
+        private readonly string[] talkarray;
 
         public PhysicsBehaviour()
         {

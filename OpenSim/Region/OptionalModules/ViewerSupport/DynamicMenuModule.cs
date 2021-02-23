@@ -58,7 +58,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             public CustomMenuHandler Handler;
         }
 
-        private Dictionary<UUID, List<MenuItemData>> m_menuItems =
+        private readonly Dictionary<UUID, List<MenuItemData>> m_menuItems =
                 new Dictionary<UUID, List<MenuItemData>>();
 
         private Scene m_scene;
@@ -128,7 +128,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                 {
                     if (!m_scene.Permissions.IsGod(agentID))
                     {
-                        if (d.Mode == UserMode.RegionManager && (!m_scene.Permissions.IsAdministrator(agentID)))
+                        if (d.Mode == UserMode.RegionManager && !m_scene.Permissions.IsAdministrator(agentID))
                             continue;
                     }
 
@@ -163,7 +163,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             {
                 foreach (MenuItemData d in m_menuItems[agentID])
                 {
-                    if (d.Mode == UserMode.God && (!m_scene.Permissions.IsGod(agentID)))
+                    if (d.Mode == UserMode.God && !m_scene.Permissions.IsGod(agentID))
                         continue;
 
                     OSDMap loc = null;
@@ -264,9 +264,9 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
         private static readonly ILog m_log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private UUID m_agentID;
+        private readonly UUID m_agentID;
         private Scene m_scene;
-        private DynamicMenuModule m_module;
+        private readonly DynamicMenuModule m_module;
 
         public MenuActionHandler(string path, string name, UUID agentID, DynamicMenuModule module, Scene scene)
                 :base("POST", path)

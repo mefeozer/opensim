@@ -53,13 +53,13 @@ namespace OpenSim.Services.HypergridService
                 MethodBase.GetCurrentMethod().DeclaringType);
 
 //        private string m_HomeURL;
-        private IUserAccountService m_UserAccountService;
-        private IAvatarService m_AvatarService;
+        private readonly IUserAccountService m_UserAccountService;
+        private readonly IAvatarService m_AvatarService;
 
 //        private UserAccountCache m_Cache;
 
-        private ExpiringCache<UUID, List<XInventoryFolder>> m_SuitcaseTrees = new ExpiringCache<UUID, List<XInventoryFolder>>();
-        private ExpiringCache<UUID, AvatarAppearance> m_Appearances = new ExpiringCache<UUID, AvatarAppearance>();
+        private readonly ExpiringCache<UUID, List<XInventoryFolder>> m_SuitcaseTrees = new ExpiringCache<UUID, List<XInventoryFolder>>();
+        private readonly ExpiringCache<UUID, AvatarAppearance> m_Appearances = new ExpiringCache<UUID, AvatarAppearance>();
 
         public HGSuitcaseInventoryService(IConfigSource config, string configName)
             : base(config, configName)
@@ -595,10 +595,10 @@ namespace OpenSim.Services.HypergridService
 
             XInventoryFolder f = tree.Find(delegate(XInventoryFolder fl)
             {
-                return (fl.folderID == folderID);
+                return fl.folderID == folderID;
             });
 
-            return (f != null);
+            return f != null;
         }
         #endregion
 

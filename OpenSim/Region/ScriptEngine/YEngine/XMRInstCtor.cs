@@ -158,13 +158,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     continue;
                 if(c != '/')
                     break;
-                if((i + 1 >= len) || (m_SourceCode[i + 1] != '/'))
+                if(i + 1 >= len || m_SourceCode[i + 1] != '/')
                     break;
                 i = m_SourceCode.IndexOf('\n', i);
                 if(i < 0)
                     i = len - 1;
             }
-            if((i >= len))
+            if(i >= len)
             {
                 // Source consists of nothing but // comments and whitespace,
                 // or we are being forced to use the asset-id as the key, to
@@ -441,9 +441,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
         }
 
-        private static object[] sbcCRS = new object[] { ScriptBaseClass.CHANGED_REGION_START };
-        private static object[] sbcCR = new object[] { ScriptBaseClass.CHANGED_REGION };
-        private static object[] sbcCT = new object[] { ScriptBaseClass.CHANGED_TELEPORT };
+        private static readonly object[] sbcCRS = new object[] { ScriptBaseClass.CHANGED_REGION_START };
+        private static readonly object[] sbcCR = new object[] { ScriptBaseClass.CHANGED_REGION };
+        private static readonly object[] sbcCT = new object[] { ScriptBaseClass.CHANGED_TELEPORT };
 
         /**
          * @brief Save compilation error messages for later retrieval
@@ -490,7 +490,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             XmlElement XvariablesN = null;
             string sen = scriptStateN.GetAttribute("Engine");
-            if((sen == null) || (sen != m_Engine.ScriptEngineName))
+            if(sen == null || sen != m_Engine.ScriptEngineName)
             {
                 XvariablesN = (XmlElement)scriptStateN.SelectSingleNode("Variables");
                 if(XvariablesN == null)
@@ -508,7 +508,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // Also match the sourceHash in case script was
             // loaded via 'xmroption fetchsource' and has changed
             string sourceHash = scriptStateN.GetAttribute("SourceHash");
-            if((sourceHash == null) || (sourceHash != m_ObjCode.sourceHash))
+            if(sourceHash == null || sourceHash != m_ObjCode.sourceHash)
                 throw new Exception("<ScriptState> SourceHash mismatch");
 
             // Get various attributes
@@ -680,20 +680,20 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                 if (otype == typeof(LSL_Integer))
                                 {
                                     if (intNames.TryGetValue(varName, out indx))
-                                        ints[indx] = ((LSL_Integer)o);
+                                        ints[indx] = (LSL_Integer)o;
                                     continue;
                                 }
                                 if (otype == typeof(LSL_Float))
                                 {
                                     if (doubleNames.TryGetValue(varName, out indx))
-                                        doubles[indx] = ((LSL_Float)o);
+                                        doubles[indx] = (LSL_Float)o;
                                     continue;
                                 }
                                 if (otype == typeof(LSL_String))
                                 {
                                     if (stringNames.TryGetValue(varName, out indx))
                                     {
-                                        strings[indx] = ((LSL_String)o);
+                                        strings[indx] = (LSL_String)o;
                                         heapsz += ((LSL_String)o).Length;
                                     }
                                     continue;
@@ -701,20 +701,20 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                 if (otype == typeof(LSL_Rotation))
                                 {
                                     if (rotationNames.TryGetValue(varName, out indx))
-                                        rotations[indx] = ((LSL_Rotation)o);
+                                        rotations[indx] = (LSL_Rotation)o;
                                     continue;
                                 }
                                 if (otype == typeof(LSL_Vector))
                                 {
                                     if (vectorNames.TryGetValue(varName, out indx))
-                                        vectors[indx] = ((LSL_Vector)o);
+                                        vectors[indx] = (LSL_Vector)o;
                                     continue;
                                 }
                                 if (otype == typeof(LSL_Key))
                                 {
                                     if (stringNames.TryGetValue(varName, out indx))
                                     {
-                                        strings[indx] = ((LSL_Key)o);
+                                        strings[indx] = (LSL_Key)o;
                                         heapsz += ((LSL_String)o).Length;
                                     }
                                     continue;
@@ -724,7 +724,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                     if (stringNames.TryGetValue(varName, out indx))
                                     {
                                         LSL_String id = ((UUID)o).ToString();
-                                        strings[indx] = (id);
+                                        strings[indx] = id;
                                         heapsz += id.Length;
                                     }
                                     continue;
@@ -734,7 +734,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                     if (listNames.TryGetValue(varName, out indx))
                                     {
                                         LSL_List lo = (LSL_List)o;
-                                        lists[indx] = (lo);
+                                        lists[indx] = lo;
                                         heapsz += lo.Size;
                                     }
                                     continue;

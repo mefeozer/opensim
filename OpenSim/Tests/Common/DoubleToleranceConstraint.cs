@@ -32,7 +32,7 @@ namespace OpenSim.Tests.Common
 {
     public class DoubleToleranceConstraint : ANumericalToleranceConstraint
     {
-        private double _baseValue;
+        private readonly double _baseValue;
         private double _valueToBeTested;
 
         public DoubleToleranceConstraint(double baseValue, double tolerance) : base(tolerance)

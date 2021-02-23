@@ -209,7 +209,7 @@ namespace OpenSim.Framework
             m_serial = appearance.Serial;
             AvatarPreferencesHoverZ = appearance.AvatarPreferencesHoverZ;
 
-            if (copyWearables && (appearance.Wearables != null))
+            if (copyWearables && appearance.Wearables != null)
             {
                 m_wearables = new AvatarWearable[appearance.Wearables.Length];
                 for (int i = 0; i < appearance.Wearables.Length; i++)
@@ -912,13 +912,13 @@ namespace OpenSim.Framework
                 OSDArray wears8 = null;
                 int wears8Count = 0;
 
-                if (data.TryGetValue("wrbls8", out tmpOSD8) && (tmpOSD8 is OSDArray))
+                if (data.TryGetValue("wrbls8", out tmpOSD8) && tmpOSD8 is OSDArray)
                 {
                     wears8 = (OSDArray)tmpOSD8;
                     wears8Count = wears8.Count;
                 }
 
-                if (data.TryGetValue("wearables", out tmpOSD) && (tmpOSD is OSDArray))
+                if (data.TryGetValue("wearables", out tmpOSD) && tmpOSD is OSDArray)
                 {
                     OSDArray wears = (OSDArray)tmpOSD;
                     if(wears.Count + wears8Count > 0)
@@ -941,7 +941,7 @@ namespace OpenSim.Framework
                     Primitive.TextureEntry te = new Primitive.TextureEntry(teb, 0, teb.Length);
                     m_texture = te;
                 }
-                else if (data.TryGetValue("textures", out tmpOSD) && (tmpOSD is OSDArray))
+                else if (data.TryGetValue("textures", out tmpOSD) && tmpOSD is OSDArray)
                 {
                     OSDArray textures = (OSDArray)tmpOSD;
                     for (int i = 0; i < textures.Count && i < TEXTURE_COUNT_PV7; ++i)
@@ -952,7 +952,7 @@ namespace OpenSim.Framework
                     }
                 }
 
-                if (data.TryGetValue("bakedcache", out tmpOSD) && (tmpOSD is OSDArray))
+                if (data.TryGetValue("bakedcache", out tmpOSD) && tmpOSD is OSDArray)
                 {
                     OSDArray bakedOSDArray = (OSDArray)tmpOSD;
                     m_cacheitems = WearableCacheItem.GetDefaultCacheItem();
@@ -968,7 +968,7 @@ namespace OpenSim.Framework
                         m_cacheitems[idx].TextureAsset = null;
                     }
 
-                    if (data.TryGetValue("bc8", out tmpOSD) && (tmpOSD is OSDArray))
+                    if (data.TryGetValue("bc8", out tmpOSD) && tmpOSD is OSDArray)
                     {
                         bakedOSDArray = (OSDArray)tmpOSD;
                         foreach (OSDMap item in bakedOSDArray)

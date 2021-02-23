@@ -78,8 +78,8 @@ namespace OpenSim.Groups
             if (groupsConfig == null)
                 return;
 
-            if ((groupsConfig.GetBoolean("Enabled", false) == false)
-                    || (groupsConfig.GetString("ServicesConnectorModule", string.Empty) != Name))
+            if (groupsConfig.GetBoolean("Enabled", false) == false
+                    || groupsConfig.GetString("ServicesConnectorModule", string.Empty) != Name)
             {
                 return;
             }

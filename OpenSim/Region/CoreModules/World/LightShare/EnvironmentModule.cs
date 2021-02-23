@@ -66,12 +66,12 @@ namespace OpenSim.Region.CoreModules.World.LightShare
         // 1/1 night day ratio
         //private static readonly string m_defaultDayAssetID = "5646d39e-d3d7-6aff-ed71-30fc87d64a91";
         // 3/1 night day ratio
-        private static string m_defaultDayAssetID = "5646d39e-d3d7-6aff-ed71-30fc87d64a92";
-        private static UUID m_defaultDayAssetUUID = new UUID("5646d39e-d3d7-6aff-ed71-30fc87d64a92");
+        private static readonly string m_defaultDayAssetID = "5646d39e-d3d7-6aff-ed71-30fc87d64a92";
+        private static readonly UUID m_defaultDayAssetUUID = new UUID("5646d39e-d3d7-6aff-ed71-30fc87d64a92");
         //private static string m_defaultSkyAssetID = "3ae23978-ac82-bcf3-a9cb-ba6e52dcb9ad";
-        private static UUID m_defaultSkyAssetUUID = new UUID("3ae23978-ac82-bcf3-a9cb-ba6e52dcb9ad");
+        private static readonly UUID m_defaultSkyAssetUUID = new UUID("3ae23978-ac82-bcf3-a9cb-ba6e52dcb9ad");
         //private static string m_defaultWaterAssetID = "59d1a851-47e7-0e5f-1ed7-6b715154f41a";
-        private static UUID m_defaultWaterAssetUUID = new UUID("59d1a851-47e7-0e5f-1ed7-6b715154f41a");
+        private static readonly UUID m_defaultWaterAssetUUID = new UUID("59d1a851-47e7-0e5f-1ed7-6b715154f41a");
 
         private int m_regionEnvVersion = -1;
 
@@ -1013,7 +1013,7 @@ namespace OpenSim.Region.CoreModules.World.LightShare
         public float GetDayFractionTime(ViewerEnvironment env)
         {
             double dayfrac = env.DayLength;
-            dayfrac = ((Util.UnixTimeSinceEpochSecs() + env.DayOffset) % dayfrac) / dayfrac;
+            dayfrac = (Util.UnixTimeSinceEpochSecs() + env.DayOffset) % dayfrac / dayfrac;
             return (float)Utils.Clamp(dayfrac, 0, 1);
         }
 

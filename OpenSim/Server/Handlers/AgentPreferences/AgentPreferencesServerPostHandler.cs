@@ -44,7 +44,7 @@ namespace OpenSim.Server.Handlers.AgentPreferences
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAgentPreferencesService m_AgentPreferencesService;
+        private readonly IAgentPreferencesService m_AgentPreferencesService;
 
         public AgentPreferencesServerPostHandler(IAgentPreferencesService service, IServiceAuth auth) :
         base("POST", "/agentprefs", auth)

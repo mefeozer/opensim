@@ -32,7 +32,7 @@ namespace OpenSim.Data.Null
 {
     public class NullAvatarData : IAvatarData
     {
-        private static Dictionary<UUID, AvatarBaseData> m_DataByUUID = new Dictionary<UUID, AvatarBaseData>();
+        private static readonly Dictionary<UUID, AvatarBaseData> m_DataByUUID = new Dictionary<UUID, AvatarBaseData>();
 
         public NullAvatarData(string connectionString, string realm)
         {

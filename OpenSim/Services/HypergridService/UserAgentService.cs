@@ -80,9 +80,9 @@ namespace OpenSim.Services.HypergridService
 
         protected static bool m_BypassClientVerification;
 
-        private static Dictionary<int, bool> m_ForeignTripsAllowed = new Dictionary<int, bool>();
-        private static Dictionary<int, List<string>> m_TripsAllowedExceptions = new Dictionary<int, List<string>>();
-        private static Dictionary<int, List<string>> m_TripsDisallowedExceptions = new Dictionary<int, List<string>>();
+        private static readonly Dictionary<int, bool> m_ForeignTripsAllowed = new Dictionary<int, bool>();
+        private static readonly Dictionary<int, List<string>> m_TripsAllowedExceptions = new Dictionary<int, List<string>>();
+        private static readonly Dictionary<int, List<string>> m_TripsDisallowedExceptions = new Dictionary<int, List<string>>();
 
         public UserAgentService(IConfigSource config) : this(config, null)
         {
@@ -231,7 +231,7 @@ namespace OpenSim.Services.HypergridService
         public bool LoginAgentToGrid(GridRegion source, AgentCircuitData agentCircuit, GridRegion gatekeeper, GridRegion finalDestination, bool fromLogin, out string reason)
         {
             m_log.DebugFormat("[USER AGENT SERVICE]: Request to login user {0} {1} (@{2}) to grid {3}",
-                agentCircuit.firstname, agentCircuit.lastname, (fromLogin ? agentCircuit.IPAddress : "stored IP"), gatekeeper.ServerURI);
+                agentCircuit.firstname, agentCircuit.lastname, fromLogin ? agentCircuit.IPAddress : "stored IP", gatekeeper.ServerURI);
 
             string gridName = gatekeeper.ServerURI.ToLowerInvariant();
 
@@ -505,7 +505,7 @@ namespace OpenSim.Services.HypergridService
             {
                 if (m_FriendsLocalSimConnector != null)
                 {
-                    m_log.DebugFormat("[USER AGENT SERVICE]: Local Notify, user {0} is {1}", foreignUserID, (online ? "online" : "offline"));
+                    m_log.DebugFormat("[USER AGENT SERVICE]: Local Notify, user {0} is {1}", foreignUserID, online ? "online" : "offline");
                     m_FriendsLocalSimConnector.StatusNotify(foreignUserID, userID, online);
                 }
                 else
@@ -513,7 +513,7 @@ namespace OpenSim.Services.HypergridService
                     GridRegion region = m_GridService.GetRegionByUUID(UUID.Zero /* !!! */, regionID);
                     if (region != null)
                     {
-                        m_log.DebugFormat("[USER AGENT SERVICE]: Remote Notify to region {0}, user {1} is {2}", region.RegionName, foreignUserID, (online ? "online" : "offline"));
+                        m_log.DebugFormat("[USER AGENT SERVICE]: Remote Notify to region {0}, user {1} is {2}", region.RegionName, foreignUserID, online ? "online" : "offline");
                         m_FriendsSimConnector.StatusNotify(region, foreignUserID, userID.ToString(), online);
                     }
                 }
@@ -545,7 +545,7 @@ namespace OpenSim.Services.HypergridService
                     foreach (FriendInfo finfo in friendInfos)
                     {
                         if (finfo.Friend.StartsWith(foreignUserID.ToString()) && finfo.Friend.EndsWith(secret) &&
-                            (finfo.TheirFlags & (int)FriendRights.CanSeeOnline) != 0 && (finfo.TheirFlags != -1))
+                            (finfo.TheirFlags & (int)FriendRights.CanSeeOnline) != 0 && finfo.TheirFlags != -1)
                         {
                             // great!
                             usersToBeNotified.Add(localUserID.ToString());

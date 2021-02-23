@@ -56,8 +56,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
 
         protected TarArchiveReader archive;
 
-        private UserAccount m_userInfo;
-        private string m_invPath;
+        private readonly UserAccount m_userInfo;
+        private readonly string m_invPath;
 
         /// <value>
         /// ID of this request
@@ -73,12 +73,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         protected IAssetService m_AssetService;
         protected IUserAccountService m_UserAccountService;
 
-        private InventoryArchiverModule m_module;
+        private readonly InventoryArchiverModule m_module;
 
         /// <value>
         /// The stream from which the inventory archive will be loaded.
         /// </value>
-        private Stream m_loadStream;
+        private readonly Stream m_loadStream;
 
         /// <summary>
         /// Has the control file been loaded for this archive?
@@ -112,7 +112,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         /// In order to load identically named folders, we need to keep track of the folders that we have already
         /// resolved.
         /// </summary>
-        Dictionary <string, InventoryFolderBase> m_resolvedFolders = new Dictionary<string, InventoryFolderBase>();
+        readonly Dictionary <string, InventoryFolderBase> m_resolvedFolders = new Dictionary<string, InventoryFolderBase>();
 
         /// <summary>
         /// Record the creator id that should be associated with an asset.  This is used to adjust asset creator ids
@@ -689,7 +689,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
             else
                 m_failedAssetRestores++;
 
-            if ((m_successfulAssetRestores) % 50 == 0)
+            if (m_successfulAssetRestores % 50 == 0)
                 m_log.DebugFormat(
                     "[INVENTORY ARCHIVER]: Loaded {0} assets...",
                     m_successfulAssetRestores);

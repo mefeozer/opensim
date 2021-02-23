@@ -74,7 +74,7 @@ namespace OSHttpServer
         public int Priority
         {
             get { return m_priority;}
-            set { m_priority = (value > 0 && m_priority < 3)? value : 0;}
+            set { m_priority = value > 0 && m_priority < 3? value : 0;}
         }
 
         #region IHttpResponse Members
@@ -381,7 +381,7 @@ namespace OSHttpServer
                     bool sendRes;
                     if(RawBufferLen > bytesLimit)
                     {
-                        sendRes = (await m_context.SendAsync(RawBuffer, RawBufferStart, bytesLimit).ConfigureAwait(false));
+                        sendRes = await m_context.SendAsync(RawBuffer, RawBufferStart, bytesLimit).ConfigureAwait(false);
                         if (sendRes)
                         {
                             RawBufferLen -= bytesLimit;

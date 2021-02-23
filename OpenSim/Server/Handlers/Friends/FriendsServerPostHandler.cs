@@ -45,7 +45,7 @@ namespace OpenSim.Server.Handlers.Friends
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IFriendsService m_FriendsService;
+        private readonly IFriendsService m_FriendsService;
 
         public FriendsServerPostHandler(IFriendsService service, IServiceAuth auth) :
                 base("POST", "/friends", auth)
@@ -134,7 +134,7 @@ namespace OpenSim.Server.Handlers.Friends
         {
 
             Dictionary<string, object> result = new Dictionary<string, object>();
-            if ((finfos == null) || ((finfos != null) && (finfos.Length == 0)))
+            if (finfos == null || finfos != null && finfos.Length == 0)
                 result["result"] = "null";
             else
             {

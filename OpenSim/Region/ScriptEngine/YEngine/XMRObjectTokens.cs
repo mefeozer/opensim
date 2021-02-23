@@ -94,8 +94,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private Dictionary<int, string> labelNames;
         private Dictionary<int, string> localNames;
-        private StringBuilder lbuf = new StringBuilder();
-        private TextWriter twout;
+        private readonly StringBuilder lbuf = new StringBuilder();
+        private readonly TextWriter twout;
 
         public OTDisassemble(ScriptObjCode scriptObjCode, TextWriter twout) : base(scriptObjCode)
         {
@@ -419,7 +419,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private const string INDENT = "    ";
         private const string LABELINDENT = "  ";
 
-        private static Dictionary<string, string> typeTranslator = InitTypeTranslator();
+        private static readonly Dictionary<string, string> typeTranslator = InitTypeTranslator();
         private static Dictionary<string, string> InitTypeTranslator()
         {
             Dictionary<string, string> d = new Dictionary<string, string>();
@@ -447,7 +447,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private Dictionary<int, OTLocal> eharglist;
         private Dictionary<int, OTLabel> labels;
         private Dictionary<int, OTLocal> locals;
-        private Dictionary<string, string[]> methargnames;
+        private readonly Dictionary<string, string[]> methargnames;
         private LinkedList<OTCilInstr> cilinstrs;
         private OTStmtBlock topBlock;
         private Stack<OTOpnd> opstack;
@@ -457,7 +457,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private int dupNo;
         private DynamicMethod method;
         private string laststate;
-        private TextWriter twout;
+        private readonly TextWriter twout;
 
         public OTDecompile(ScriptObjCode scriptObjCode, TextWriter twout) : base(scriptObjCode)
         {
@@ -515,12 +515,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // including a possible final return statement
             // - delete if void return value
             // - delete if returning __retval cuz we converted all __retval assignments to return statements
-            if((topBlock.blkstmts.Last != null) && (topBlock.blkstmts.Last.Value is OTStmtRet))
+            if(topBlock.blkstmts.Last != null && topBlock.blkstmts.Last.Value is OTStmtRet)
             {
                 OTStmtRet finalret = (OTStmtRet)topBlock.blkstmts.Last.Value;
-                if((finalret.value == null) ||
-                        ((finalret.value is OTOpndLocal) &&
-                                ((OTOpndLocal)finalret.value).local.name.StartsWith(_retval)))
+                if(finalret.value == null ||
+                        finalret.value is OTOpndLocal &&
+                        ((OTOpndLocal)finalret.value).local.name.StartsWith(_retval))
                 {
                     topBlock.blkstmts.RemoveLast();
                 }
@@ -545,7 +545,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             for(IEnumerator<int> localenum = locals.Keys.GetEnumerator(); localenum.MoveNext();)
             {
                 OTLocal local = locals[localenum.Current];
-                if(((local.nlclreads | local.nlclwrites) == 0) || local.name.StartsWith(_xmrinstlocal))
+                if((local.nlclreads | local.nlclwrites) == 0 || local.name.StartsWith(_xmrinstlocal))
                 {
                     locals.Remove(localenum.Current);
                     localenum = locals.Keys.GetEnumerator();
@@ -945,7 +945,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public string MethArgName(int index)
         {
             string[] argnames;
-            if(methargnames.TryGetValue(method.Name, out argnames) && (index < argnames.Length))
+            if(methargnames.TryGetValue(method.Name, out argnames) && index < argnames.Length)
             {
                 return argnames[index];
             }
@@ -960,7 +960,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(op is OTOpndCast)
             {
                 OTOpndCast opcast = (OTOpndCast)op;
-                if((opcast.type == typeof(double)) && (opcast.value is OTOpndInt))
+                if(opcast.type == typeof(double) && opcast.value is OTOpndInt)
                 {
                     return opcast.value;
                 }
@@ -987,9 +987,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTLocal
         {
-            public int number;
+            public readonly int number;
             public string name;
-            public string type;
+            public readonly string type;
 
             public int nlclreads;
             public int nlclwrites;
@@ -1041,8 +1041,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTLabel: OTCilInstr
         {
-            public int number;
-            public string name;
+            public readonly int number;
+            public readonly string name;
 
             public int lbljumps;
 
@@ -1119,7 +1119,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTCilBegCatBlk: OTCilInstr
         {
-            public Type excType;
+            public readonly Type excType;
 
             public OTCilBegCatBlk(int offset, Type excType) : base(offset)
             {
@@ -1214,7 +1214,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTCilNull: OTCilInstr
         {
-            public MyOp opCode;
+            public readonly MyOp opCode;
 
             public OTCilNull(int offset, OpCode opCode) : base(offset)
             {
@@ -1423,7 +1423,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilField: OTCilNull
         {
-            public FieldInfo field;
+            public readonly FieldInfo field;
 
             public OTCilField(int offset, OpCode opCode, FieldInfo field) : base(offset, opCode)
             {
@@ -1471,7 +1471,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilLocal: OTCilNull
         {
-            public OTLocal local;
+            public readonly OTLocal local;
 
             public OTCilLocal(int offset, OpCode opCode, OTLocal local) : base(offset, opCode)
             {
@@ -1511,7 +1511,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilType: OTCilNull
         {
-            public Type type;
+            public readonly Type type;
 
             public OTCilType(int offset, OpCode opCode, Type type) : base(offset, opCode)
             {
@@ -1574,7 +1574,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilLabel: OTCilNull
         {
-            public OTLabel label;
+            public readonly OTLabel label;
 
             public OTCilLabel(int offset, OpCode opCode, OTLabel label) : base(offset, opCode)
             {
@@ -1608,17 +1608,17 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                             OTOpnd rite = decompile.opstack.Pop();  // alleged zero
                             OTOpnd left = decompile.opstack.Pop();  // alleged dup
 
-                            if((label.name == _llAbstemp) && (decompile.opstack.Count > 0))
+                            if(label.name == _llAbstemp && decompile.opstack.Count > 0)
                             {
                                 LinkedListNode<OTCilInstr> linkneg = link.Next;
-                                if((left is OTOpndDup) && (rite is OTOpndInt) &&
-                                        (linkneg != null) && (linkneg.Value is OTCilNull) &&
-                                        (((OTCilNull)linkneg.Value).opCode == MyOp.Neg))
+                                if(left is OTOpndDup && rite is OTOpndInt &&
+                                        linkneg != null && linkneg.Value is OTCilNull &&
+                                        ((OTCilNull)linkneg.Value).opCode == MyOp.Neg)
                                 {
                                     OTOpndInt riteint = (OTOpndInt)rite;
                                     LinkedListNode<OTCilInstr> linklbl = linkneg.Next;
-                                    if((riteint.value == 0) && (linklbl != null) && (linklbl.Value is OTLabel) &&
-                                            (((OTLabel)linklbl.Value) == label))
+                                    if(riteint.value == 0 && linklbl != null && linklbl.Value is OTLabel &&
+                                            (OTLabel)linklbl.Value == label)
                                     {
                                         linkneg.List.Remove(linkneg);
                                         linklbl.List.Remove(linklbl);
@@ -1686,7 +1686,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilLabels: OTCilNull
         {
-            public OTLabel[] labels;
+            public readonly OTLabel[] labels;
 
             public OTCilLabels(int offset, OpCode opCode, OTLabel[] labels) : base(offset, opCode)
             {
@@ -1724,7 +1724,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilMethod: OTCilNull
         {
-            public MethodInfo method;
+            public readonly MethodInfo method;
 
             public OTCilMethod(int offset, OpCode opCode, MethodInfo method) : base(offset, opCode)
             {
@@ -1762,7 +1762,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilCtor: OTCilNull
         {
-            public ConstructorInfo ctor;
+            public readonly ConstructorInfo ctor;
 
             public OTCilCtor(int offset, OpCode opCode, ConstructorInfo ctor) : base(offset, opCode)
             {
@@ -1797,7 +1797,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilDouble: OTCilNull
         {
-            public double value;
+            public readonly double value;
 
             public OTCilDouble(int offset, OpCode opCode, double value) : base(offset, opCode)
             {
@@ -1826,7 +1826,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilFloat: OTCilNull
         {
-            public float value;
+            public readonly float value;
 
             public OTCilFloat(int offset, OpCode opCode, float value) : base(offset, opCode)
             {
@@ -1855,7 +1855,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilInteger: OTCilNull
         {
-            public int value;
+            public readonly int value;
 
             public OTCilInteger(int offset, OpCode opCode, int value) : base(offset, opCode)
             {
@@ -1903,7 +1903,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private class OTCilString: OTCilNull
         {
-            public string value;
+            public readonly string value;
 
             public OTCilString(int offset, OpCode opCode, string value) : base(offset, opCode)
             {
@@ -2001,10 +2001,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndArg: OTOpnd
         {
-            public int index;
-            public bool byref;
+            public readonly int index;
+            public readonly bool byref;
 
-            private OTDecompile decompile;
+            private readonly OTDecompile decompile;
 
             public OTOpndArg(int index, bool byref, OTDecompile decompile)
             {
@@ -2032,7 +2032,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 if(!(other is OTOpndArg))
                     return false;
-                return (((OTOpndArg)other).byref == byref) && (((OTOpndArg)other).index == index);
+                return ((OTOpndArg)other).byref == byref && ((OTOpndArg)other).index == index;
             }
 
             public override string PrintableString
@@ -2040,7 +2040,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 get
                 {
                     string argname = decompile.MethArgName(index);
-                    return byref ? ("ref " + argname) : argname;
+                    return byref ? "ref " + argname : argname;
                 }
             }
         }
@@ -2058,7 +2058,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                  // arg$0.glblVars.iar<type>[<intconst>] is a reference to a global variable
                  // likewise so is __xmrinst.glblVars.iar<type>[<intconst>]
-                if((array is OTOpndField) && (index is OTOpndInt))
+                if(array is OTOpndField && index is OTOpndInt)
                 {
                      // arrayfield = (arg$0.glblVars).iar<type>
                      // arrayfieldobj = arg$0.glblVars
@@ -2068,13 +2068,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     string iartypename = arrayfield.field.Name;
 
                      // See if they are what they are supposed to be.
-                    if((arrayfieldobj is OTOpndField) && iartypename.StartsWith("iar"))
+                    if(arrayfieldobj is OTOpndField && iartypename.StartsWith("iar"))
                     {
                          // arrayfieldobjfield = arg$0.glblVars
                         OTOpndField arrayfieldobjfield = (OTOpndField)arrayfieldobj;
 
                          // See if the parts are what they are supposed to be.
-                        if(IsArg0OrXMRInst(arrayfieldobjfield.obj) && (arrayfieldobjfield.field.Name == "glblVars"))
+                        if(IsArg0OrXMRInst(arrayfieldobjfield.obj) && arrayfieldobjfield.field.Name == "glblVars")
                         {
                              // Everything matches up, make a global variable instead of an array reference.
                             return new OTOpndGlobal(iartypename, ((OTOpndInt)index).value, byref, decompile.scriptObjCode);
@@ -2174,7 +2174,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public MyOp opCode;
             public OTOpnd rite;
 
-            private static Dictionary<string, string> xor1ops = InitXor1Ops();
+            private static readonly Dictionary<string, string> xor1ops = InitXor1Ops();
 
             private static Dictionary<string, string> InitXor1Ops()
             {
@@ -2192,9 +2192,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 // ((x clt y) xor 1)  =>  (x cge y)  etc
                 string xor1op;
-                if((left is OTOpndBinOp) && xor1ops.TryGetValue(((OTOpndBinOp)left).opCode.name, out xor1op) &&
-                    (opCode == MyOp.Xor) &&
-                    (rite is OTOpndInt) && (((OTOpndInt)rite).value == 1))
+                if(left is OTOpndBinOp && xor1ops.TryGetValue(((OTOpndBinOp)left).opCode.name, out xor1op) &&
+                    opCode == MyOp.Xor &&
+                    rite is OTOpndInt && ((OTOpndInt)rite).value == 1)
                 {
                     opCode = MyOp.GetByName(xor1op);
                 }
@@ -2250,7 +2250,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(!(other is OTOpndBinOp))
                     return false;
                 OTOpndBinOp otherbo = (OTOpndBinOp)other;
-                return left.SameAs(otherbo.left) && (opCode.ToString() == otherbo.opCode.ToString()) && rite.SameAs(otherbo.rite);
+                return left.SameAs(otherbo.left) && opCode.ToString() == otherbo.opCode.ToString() && rite.SameAs(otherbo.rite);
             }
 
             public override string PrintableString
@@ -2324,7 +2324,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
             // see MMRScriptReduce.PrecedenceInit()
-            private static Dictionary<string, int> precedence = InitPrecedence();
+            private static readonly Dictionary<string, int> precedence = InitPrecedence();
             private static Dictionary<string, int> InitPrecedence()
             {
                 Dictionary<string, int> d = new Dictionary<string, int>();
@@ -2347,7 +2347,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndCall: OTOpnd
         {
-            private static Dictionary<string, MethodInfo> mathmeths = InitMathMeths();
+            private static readonly Dictionary<string, MethodInfo> mathmeths = InitMathMeths();
             private static Dictionary<string, MethodInfo> InitMathMeths()
             {
                 Dictionary<string, MethodInfo> d = new Dictionary<string, MethodInfo>();
@@ -2375,65 +2375,65 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 int nargs = args.Length;
 
                 // heap tracker push is just the single arg value as far as we're concerned
-                if((nargs == 1) && (method.Name == _heapTrackerPush) && method.DeclaringType.Name.StartsWith("HeapTracker"))
+                if(nargs == 1 && method.Name == _heapTrackerPush && method.DeclaringType.Name.StartsWith("HeapTracker"))
                 {
                     decompile.opstack.Push(args[0]);
                     return;
                 }
 
                 // heap tracker pop is just a store as far as we're concerned
-                if((nargs == 2) && (method.Name == _heapTrackerPop) && method.DeclaringType.Name.StartsWith("HeapTracker"))
+                if(nargs == 2 && method.Name == _heapTrackerPop && method.DeclaringType.Name.StartsWith("HeapTracker"))
                 {
                     OTStmtStore.AddLast(decompile, args[0], args[1]);
                     return;
                 }
 
                 // string.Compare() is its own thing cuz it has to decompile many ways
-                if((nargs == 2) && (method.DeclaringType == typeof(string)) && (method.Name == "Compare"))
+                if(nargs == 2 && method.DeclaringType == typeof(string) && method.Name == "Compare")
                 {
                     decompile.opstack.Push(new OTOpndStrCmp(args[0], args[1]));
                     return;
                 }
 
                 // ObjectToString, etc, should appear as casts
-                if((nargs == 1) && (method.DeclaringType == typeof(TypeCast)) && method.Name.EndsWith("ToBool"))
+                if(nargs == 1 && method.DeclaringType == typeof(TypeCast) && method.Name.EndsWith("ToBool"))
                 {
                     MethodInfo meth = typeof(XMRInstAbstract).GetMethod("xmr" + method.Name);
                     AddLast(decompile, meth, new OTOpnd[] { new OTOpndNull(), args[0] });
                     return;
                 }
-                if((nargs == 1) && (method.DeclaringType == typeof(TypeCast)) && method.Name.EndsWith("ToFloat"))
+                if(nargs == 1 && method.DeclaringType == typeof(TypeCast) && method.Name.EndsWith("ToFloat"))
                 {
                     decompile.opstack.Push(new OTOpndCast(typeof(double), args[0]));
                     return;
                 }
-                if((nargs == 1) && (method.DeclaringType == typeof(TypeCast)) && method.Name.EndsWith("ToInteger"))
+                if(nargs == 1 && method.DeclaringType == typeof(TypeCast) && method.Name.EndsWith("ToInteger"))
                 {
                     decompile.opstack.Push(new OTOpndCast(typeof(int), args[0]));
                     return;
                 }
-                if((nargs == 1) && (method.DeclaringType == typeof(TypeCast)) && method.Name.EndsWith("ToList"))
+                if(nargs == 1 && method.DeclaringType == typeof(TypeCast) && method.Name.EndsWith("ToList"))
                 {
                     decompile.opstack.Push(new OTOpndCast(typeof(LSL_List), args[0]));
                     return;
                 }
-                if((nargs == 1) && (method.DeclaringType == typeof(TypeCast)) && method.Name.EndsWith("ToRotation"))
+                if(nargs == 1 && method.DeclaringType == typeof(TypeCast) && method.Name.EndsWith("ToRotation"))
                 {
                     decompile.opstack.Push(new OTOpndCast(typeof(LSL_Rotation), args[0]));
                     return;
                 }
-                if((nargs == 1) && (method.DeclaringType == typeof(TypeCast)) && method.Name.EndsWith("ToString"))
+                if(nargs == 1 && method.DeclaringType == typeof(TypeCast) && method.Name.EndsWith("ToString"))
                 {
                     decompile.opstack.Push(new OTOpndCast(typeof(string), args[0]));
                     return;
                 }
-                if((nargs == 1) && (method.DeclaringType == typeof(TypeCast)) && method.Name.EndsWith("ToVector"))
+                if(nargs == 1 && method.DeclaringType == typeof(TypeCast) && method.Name.EndsWith("ToVector"))
                 {
                     decompile.opstack.Push(new OTOpndCast(typeof(LSL_Vector), args[0]));
                     return;
                 }
 
-                if((method.DeclaringType == typeof(XMRInstAbstract)) && (method.Name == "xmrHeapLeft"))
+                if(method.DeclaringType == typeof(XMRInstAbstract) && method.Name == "xmrHeapLeft")
                 {
                     AddLast(decompile, typeof(ScriptBaseClass).GetMethod("llGetFreeMemory"), new OTOpnd[] { new OTOpndNull() });
                     return;
@@ -2444,7 +2444,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     return;
 
                 // strip off event handler argument unwrapper calls
-                if((nargs == 1) && (method.DeclaringType == typeof(TypeCast)) && method.Name.StartsWith("EHArgUnwrap"))
+                if(nargs == 1 && method.DeclaringType == typeof(TypeCast) && method.Name.StartsWith("EHArgUnwrap"))
                 {
                     decompile.opstack.Push(args[0]);
                     return;
@@ -2452,24 +2452,24 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                 // translate Math method to ll method
                 MethodInfo mathmeth;
-                if((method.DeclaringType == typeof(Math)) && mathmeths.TryGetValue(method.Name, out mathmeth))
+                if(method.DeclaringType == typeof(Math) && mathmeths.TryGetValue(method.Name, out mathmeth))
                 {
                     AddLast(decompile, mathmeth, new OTOpnd[] { new OTOpndNull(), args[0] });
                     return;
                 }
-                if((method.DeclaringType == typeof(Math)) && (method.Name == "Atan2"))
+                if(method.DeclaringType == typeof(Math) && method.Name == "Atan2")
                 {
                     AddLast(decompile, typeof(ScriptBaseClass).GetMethod("llAtan2"), new OTOpnd[] { new OTOpndNull(), args[0], args[1] });
                     return;
                 }
-                if((method.DeclaringType == typeof(Math)) && (method.Name == "Pow"))
+                if(method.DeclaringType == typeof(Math) && method.Name == "Pow")
                 {
                     AddLast(decompile, typeof(ScriptBaseClass).GetMethod("llPow"), new OTOpnd[] { new OTOpndNull(), args[0], args[1] });
                     return;
                 }
 
                 // string concat should be a bunch of adds
-                if((method.Name == "Concat") && (method.DeclaringType == typeof(string)))
+                if(method.Name == "Concat" && method.DeclaringType == typeof(string))
                 {
                     int k = args.Length;
                     while(k > 1)
@@ -2490,14 +2490,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                 // bunch of calls for rotation and vector arithmetic
-                if((method.DeclaringType == typeof(BinOpStr)) && BinOpStrCall(decompile, method, args))
+                if(method.DeclaringType == typeof(BinOpStr) && BinOpStrCall(decompile, method, args))
                     return;
-                if((method.DeclaringType == typeof(ScriptCodeGen)) && (method.Name == "LSLRotationNegate"))
+                if(method.DeclaringType == typeof(ScriptCodeGen) && method.Name == "LSLRotationNegate")
                 {
                     decompile.opstack.Push(OTOpndUnOp.Make(MyOp.Neg, args[0]));
                     return;
                 }
-                if((method.DeclaringType == typeof(ScriptCodeGen)) && (method.Name == "LSLVectorNegate"))
+                if(method.DeclaringType == typeof(ScriptCodeGen) && method.Name == "LSLVectorNegate")
                 {
                     decompile.opstack.Push(OTOpndUnOp.Make(MyOp.Neg, args[0]));
                     return;
@@ -2671,7 +2671,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     StringBuilder sb = new StringBuilder();
 
                     // GetByKey(a,i) => a[i]
-                    if((method.DeclaringType == typeof(XMR_Array)) && (method.Name == "GetByKey") && (args.Length == 2))
+                    if(method.DeclaringType == typeof(XMR_Array) && method.Name == "GetByKey" && args.Length == 2)
                     {
                         sb.Append(args[0].PrintableString);
                         sb.Append('[');
@@ -2681,7 +2681,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     }
 
                     // SetByKey(a,i,v) => a[i] = v
-                    if((method.DeclaringType == typeof(XMR_Array)) && (method.Name == "SetByKey") && (args.Length == 3))
+                    if(method.DeclaringType == typeof(XMR_Array) && method.Name == "SetByKey" && args.Length == 3)
                     {
                         sb.Append(args[0].PrintableString);
                         sb.Append('[');
@@ -2692,7 +2692,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     }
 
                     // CompValuListEl.GetElementFromList accesses list elements like an array.
-                    if((method.DeclaringType == typeof(CompValuListEl)) && (method.Name == "GetElementFromList"))
+                    if(method.DeclaringType == typeof(CompValuListEl) && method.Name == "GetElementFromList")
                     {
                         sb.Append(args[0].PrintableString);
                         sb.Append('[');
@@ -2705,9 +2705,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     // so we want to skip outputting "arg$0," as it is the hidden "this" argument.
                     // and there are also XMRInstAbstract functions such as xmrEventDequeue().
                     int starti = 0;
-                    if((method.DeclaringType == typeof(ScriptBaseClass)) && !method.IsStatic)
+                    if(method.DeclaringType == typeof(ScriptBaseClass) && !method.IsStatic)
                         starti = 1;
-                    if((method.DeclaringType == typeof(XMRInstAbstract)) && !method.IsStatic)
+                    if(method.DeclaringType == typeof(XMRInstAbstract) && !method.IsStatic)
                         starti = 1;
 
                     // likewise, method that have null as the declaring type are script-defined
@@ -2754,7 +2754,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndCast: OTOpnd
         {
-            public Type type;
+            public readonly Type type;
             public OTOpnd value;
 
             public OTOpndCast(Type type, OTOpnd value)
@@ -2792,7 +2792,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(!(other is OTOpndCast))
                     return false;
                 OTOpndCast othercast = (OTOpndCast)other;
-                return (type == othercast.type) && value.SameAs(othercast.value);
+                return type == othercast.type && value.SameAs(othercast.value);
             }
 
             public override string PrintableString
@@ -2819,7 +2819,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndDup: OTOpnd
         {
-            public int index;
+            public readonly int index;
             public int ndupreads;
 
             public OTOpndDup(int index)
@@ -2868,19 +2868,19 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public static OTOpnd Make(OTOpnd obj, FieldInfo field)
             {
                 //  LSL_Float.value => the object itself
-                if((field.DeclaringType == typeof(LSL_Float)) && (field.Name == "value"))
+                if(field.DeclaringType == typeof(LSL_Float) && field.Name == "value")
                 {
                     return obj;
                 }
 
                 //  LSL_Integer.value => the object itself
-                if((field.DeclaringType == typeof(LSL_Integer)) && (field.Name == "value"))
+                if(field.DeclaringType == typeof(LSL_Integer) && field.Name == "value")
                 {
                     return obj;
                 }
 
                 // LSL_String.m_string => the object itself
-                if((field.DeclaringType == typeof(LSL_String)) && (field.Name == "m_string"))
+                if(field.DeclaringType == typeof(LSL_String) && field.Name == "m_string")
                 {
                     return obj;
                 }
@@ -2927,7 +2927,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(!(other is OTOpndField))
                     return false;
                 OTOpndField otherfield = (OTOpndField)other;
-                return (field.Name == otherfield.field.Name) && obj.SameAs(otherfield.obj);
+                return field.Name == otherfield.field.Name && obj.SameAs(otherfield.obj);
             }
 
             public override string PrintableString
@@ -2952,10 +2952,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndGlobal: OTOpnd
         {
-            public string iartypename;
-            public int iararrayidx;
-            public bool byref;
-            public ScriptObjCode scriptObjCode;
+            public readonly string iartypename;
+            public readonly int iararrayidx;
+            public readonly bool byref;
+            public readonly ScriptObjCode scriptObjCode;
 
             public OTOpndGlobal(string iartypename, int iararrayidx, bool byref, ScriptObjCode scriptObjCode)
             {
@@ -2985,7 +2985,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(!(other is OTOpndGlobal))
                     return false;
                 OTOpndGlobal otherglobal = (OTOpndGlobal)other;
-                return (iartypename == otherglobal.iartypename) && (iararrayidx == otherglobal.iararrayidx);
+                return iartypename == otherglobal.iartypename && iararrayidx == otherglobal.iararrayidx;
             }
 
             public override string PrintableString
@@ -3158,7 +3158,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndLocal: OTOpnd
         {
-            public OTLocal local;
+            public readonly OTLocal local;
 
             public OTOpndLocal(OTLocal local)
             {
@@ -3199,7 +3199,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         private class OTOpndLocalRef: OTOpnd
         {
-            public OTLocal local;
+            public readonly OTLocal local;
 
             public OTOpndLocalRef(OTLocal local)
             {
@@ -3247,7 +3247,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndNewarr: OTOpnd
         {
-            public Type type;
+            public readonly Type type;
             public OTOpnd index;
 
             public OTOpndNewarr(Type type, OTOpnd index)
@@ -3305,7 +3305,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public static OTOpnd Make(ConstructorInfo ctor, OTOpnd[] args)
             {
                 // newobj LSL_Float (x)  =>  x
-                if((ctor.DeclaringType == typeof(LSL_Float)) && (args.Length == 1))
+                if(ctor.DeclaringType == typeof(LSL_Float) && args.Length == 1)
                 {
                     Type ptype = ctor.GetParameters()[0].ParameterType;
                     if(ptype == typeof(string))
@@ -3316,7 +3316,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                 // newobj LSL_Integer (x)  =>  x
-                if((ctor.DeclaringType == typeof(LSL_Integer)) && (args.Length == 1))
+                if(ctor.DeclaringType == typeof(LSL_Integer) && args.Length == 1)
                 {
                     Type ptype = ctor.GetParameters()[0].ParameterType;
                     if(ptype == typeof(string))
@@ -3327,40 +3327,40 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                 // newobj LSL_String (x)  =>  x
-                if((ctor.DeclaringType == typeof(LSL_String)) && (args.Length == 1))
+                if(ctor.DeclaringType == typeof(LSL_String) && args.Length == 1)
                 {
                     return args[0];
                 }
 
                 // newobj LSL_Rotation (x, y, z, w)  =>  <x, y, z, w>
-                if((ctor.DeclaringType == typeof(LSL_Rotation)) && (args.Length == 4))
+                if(ctor.DeclaringType == typeof(LSL_Rotation) && args.Length == 4)
                 {
                     return new OTOpndRot(args[0], args[1], args[2], args[3]);
                 }
 
                 // newobj LSL_Vector (x, y, z)  =>  <x, y, z>
-                if((ctor.DeclaringType == typeof(LSL_Vector)) && (args.Length == 3))
+                if(ctor.DeclaringType == typeof(LSL_Vector) && args.Length == 3)
                 {
                     return new OTOpndVec(args[0], args[1], args[2]);
                 }
 
                 // newobj LSL_Rotation (string)  => (rotation) string
-                if((ctor.DeclaringType == typeof(LSL_Rotation)) && (args.Length == 1))
+                if(ctor.DeclaringType == typeof(LSL_Rotation) && args.Length == 1)
                 {
                     return new OTOpndCast(typeof(LSL_Rotation), args[0]);
                 }
 
                 // newobj LSL_Vector (string)  => (rotation) string
-                if((ctor.DeclaringType == typeof(LSL_Vector)) && (args.Length == 1))
+                if(ctor.DeclaringType == typeof(LSL_Vector) && args.Length == 1)
                 {
                     return new OTOpndCast(typeof(LSL_Vector), args[0]);
                 }
 
                 // newobj LSL_List (newarr object[0])  =>  [ ]
-                if((ctor.DeclaringType == typeof(LSL_List)) && (args.Length == 1) && (args[0] is OTOpndNewarr))
+                if(ctor.DeclaringType == typeof(LSL_List) && args.Length == 1 && args[0] is OTOpndNewarr)
                 {
                     OTOpndNewarr arg0 = (OTOpndNewarr)args[0];
-                    if((arg0.type == typeof(object)) && (arg0.index is OTOpndInt) && (((OTOpndInt)arg0.index).value == 0))
+                    if(arg0.type == typeof(object) && arg0.index is OTOpndInt && ((OTOpndInt)arg0.index).value == 0)
                     {
                         OTOpndListIni listini = new OTOpndListIni();
                         listini.values = new OTOpnd[0];
@@ -3520,7 +3520,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndSField: OTOpnd
         {
-            private FieldInfo field;
+            private readonly FieldInfo field;
 
             public OTOpndSField(FieldInfo field)
             {
@@ -3540,7 +3540,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(!(other is OTOpndSField))
                     return false;
                 OTOpndSField othersfield = (OTOpndSField)other;
-                return (field.Name == othersfield.field.Name) && (field.DeclaringType == othersfield.field.DeclaringType);
+                return field.Name == othersfield.field.Name && field.DeclaringType == othersfield.field.DeclaringType;
             }
 
             public override string PrintableString
@@ -3593,7 +3593,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndStrCmp: OTOpnd
         {
-            private static Dictionary<string, string> binops = InitBinops();
+            private static readonly Dictionary<string, string> binops = InitBinops();
             private static Dictionary<string, string> InitBinops()
             {
                 Dictionary<string, string> d = new Dictionary<string, string>();
@@ -3702,7 +3702,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public MyOp opCode;
             public OTOpnd value;
 
-            private static Dictionary<string, string> brfops = InitBrfOps();
+            private static readonly Dictionary<string, string> brfops = InitBrfOps();
             private static Dictionary<string, string> InitBrfOps()
             {
                 Dictionary<string, string> d = new Dictionary<string, string>();
@@ -3724,41 +3724,41 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public static OTOpnd Make(MyOp opCode, OTOpnd value)
             {
                 // (brfalse (brfalse (x)))  =>  (brtrue (x))
-                if((opCode == MyOp.Brfalse) && (value is OTOpndUnOp) && (((OTOpndUnOp)value).opCode == MyOp.Brfalse))
+                if(opCode == MyOp.Brfalse && value is OTOpndUnOp && ((OTOpndUnOp)value).opCode == MyOp.Brfalse)
                 {
                     ((OTOpndUnOp)value).opCode = MyOp.Brtrue;
                     return value;
                 }
 
                 // (brfalse (brtrue (x)))  =>  (brfalse (x))
-                if((opCode == MyOp.Brfalse) && (value is OTOpndUnOp) && (((OTOpndUnOp)value).opCode == MyOp.Brtrue))
+                if(opCode == MyOp.Brfalse && value is OTOpndUnOp && ((OTOpndUnOp)value).opCode == MyOp.Brtrue)
                 {
                     ((OTOpndUnOp)value).opCode = MyOp.Brfalse;
                     return value;
                 }
 
                 // (brtrue (brfalse (x)))  =>  (brfalse (x))
-                if((opCode == MyOp.Brtrue) && (value is OTOpndUnOp) && (((OTOpndUnOp)value).opCode == MyOp.Brfalse))
+                if(opCode == MyOp.Brtrue && value is OTOpndUnOp && ((OTOpndUnOp)value).opCode == MyOp.Brfalse)
                 {
                     return value;
                 }
 
                 // (brtrue (brtrue (x)))  =>  (brtrue (x))
-                if((opCode == MyOp.Brtrue) && (value is OTOpndUnOp) && (((OTOpndUnOp)value).opCode == MyOp.Brtrue))
+                if(opCode == MyOp.Brtrue && value is OTOpndUnOp && ((OTOpndUnOp)value).opCode == MyOp.Brtrue)
                 {
                     return value;
                 }
 
                 // (brfalse (x beq y))  =>  (x bne y)  etc
                 string brfop;
-                if((opCode == MyOp.Brfalse) && (value is OTOpndBinOp) && brfops.TryGetValue(((OTOpndBinOp)value).opCode.name, out brfop))
+                if(opCode == MyOp.Brfalse && value is OTOpndBinOp && brfops.TryGetValue(((OTOpndBinOp)value).opCode.name, out brfop))
                 {
                     ((OTOpndBinOp)value).opCode = MyOp.GetByName(brfop);
                     return value;
                 }
 
                 // (brtrue  (x beq y))  =>  (x beq y)  etc
-                if((opCode == MyOp.Brtrue) && (value is OTOpndBinOp) && brfops.ContainsKey(((OTOpndBinOp)value).opCode.name))
+                if(opCode == MyOp.Brtrue && value is OTOpndBinOp && brfops.ContainsKey(((OTOpndBinOp)value).opCode.name))
                 {
                     return value;
                 }
@@ -3811,7 +3811,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(!(other is OTOpndUnOp))
                     return false;
                 OTOpndUnOp otherop = (OTOpndUnOp)other;
-                return (opCode.ToString() == otherop.opCode.ToString()) && value.SameAs(otherop.value);
+                return opCode.ToString() == otherop.opCode.ToString() && value.SameAs(otherop.value);
             }
 
             public override string PrintableString
@@ -3895,7 +3895,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTOpndDouble: OTOpnd
         {
-            public double value;
+            public readonly double value;
             public OTOpndDouble(double value)
             {
                 this.value = value;
@@ -3929,7 +3929,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         private class OTOpndFloat: OTOpnd
         {
-            public float value;
+            public readonly float value;
             public OTOpndFloat(float value)
             {
                 this.value = value;
@@ -3963,7 +3963,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         private class OTOpndInt: OTOpnd
         {
-            public int value;
+            public readonly int value;
             public OTOpndInt(int value)
             {
                 this.value = value;
@@ -4012,7 +4012,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         private class OTOpndString: OTOpnd
         {
-            public string value;
+            public readonly string value;
             public OTOpndString(string value)
             {
                 this.value = value;
@@ -4125,7 +4125,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public OTStmtBegExcBlk tryblock;
             public OTStmtBlock catchblock;
 
-            private Type excType;
+            private readonly Type excType;
 
             public OTStmtBegCatBlk(Type excType)
             {
@@ -4178,7 +4178,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public OTStmtBlock tryblock;
 
             // list of all catch { } blocks associated with this try { }
-            public LinkedList<OTStmtBegCatBlk> catches = new LinkedList<OTStmtBegCatBlk>();
+            public readonly LinkedList<OTStmtBegCatBlk> catches = new LinkedList<OTStmtBegCatBlk>();
 
             // possible single finally { } associated with this try
             public OTStmtBegFinBlk finblock;  // might be null
@@ -4220,7 +4220,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 //    }
                 // note that an empty catch () { } has meaning so can't be stripped
                 // empty finally { } blocks strips itself from the try
-                if((catches.Count == 0) && (finblock == null) && (link != null))
+                if(catches.Count == 0 && finblock == null && link != null)
                 {
                     link.List.AddAfter(link, tryblock);
                     tryblock = null;
@@ -4384,7 +4384,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(valu is OTOpndBinOp)
                 {
                     OTOpndBinOp binop = (OTOpndBinOp)valu;
-                    if((binop.left is OTOpndField) && (binop.opCode.ToString() == "bne.un") && (binop.rite is OTOpndInt))
+                    if(binop.left is OTOpndField && binop.opCode.ToString() == "bne.un" && binop.rite is OTOpndInt)
                     {
                         OTOpndField leftfield = (OTOpndField)binop.left;
                         if(leftfield.field.Name == _callMode)
@@ -4425,7 +4425,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(valu is OTOpndUnOp)
                 {
                     OTOpndUnOp unop = (OTOpndUnOp)valu;
-                    if((unop.opCode == MyOp.Brfalse) && (unop.value is OTOpndField))
+                    if(unop.opCode == MyOp.Brfalse && unop.value is OTOpndField)
                     {
                         OTOpndField valuefield = (OTOpndField)unop.value;
                         if(valuefield.field.Name == _doGblInit)
@@ -4588,7 +4588,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              */
             public override OTStmt ReplaceStatement(OTStmt oldstmt, OTStmt newstmt)
             {
-                if((oldstmt is OTStmtJump) && (((OTStmtJump)oldstmt).label == label))
+                if(oldstmt is OTStmtJump && ((OTStmtJump)oldstmt).label == label)
                     return newstmt;
                 return this;
             }
@@ -4729,7 +4729,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public OTOpnd varwr;
             public OTOpnd value;
 
-            private OTDecompile decompile;
+            private readonly OTDecompile decompile;
 
             public static void AddLast(OTDecompile decompile, OTOpnd varwr, OTOpnd value)
             {
@@ -4827,7 +4827,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         temp.local.nlclreads = 0;
                         temp.local.nlclwrites = 0;
                         decompile.topBlock.CountRefs();
-                        if((temp.local.nlclreads == 1) && (temp.local.nlclwrites == 1) && (link.Next != null))
+                        if(temp.local.nlclreads == 1 && temp.local.nlclwrites == 1 && link.Next != null)
                         {
                             OTStmt nextstmt = link.Next.Value;
                             if(!(nextstmt is OTStmtBlock))
@@ -4848,11 +4848,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         // to:
                         //    lcl = ... asdf ...
                         //    ... qwer lcl ...
-                        if((temp.local.nlclreads == 2) && (temp.local.nlclwrites == 1) &&
-                                (link.Next != null) && (link.Next.Value is OTStmtStore))
+                        if(temp.local.nlclreads == 2 && temp.local.nlclwrites == 1 &&
+                                link.Next != null && link.Next.Value is OTStmtStore)
                         {
                             OTStmtStore nextstore = (OTStmtStore)link.Next.Value;
-                            if((nextstore.varwr is OTOpndLocal) && (nextstore.value is OTOpndLocal) && (link.Next.Next != null))
+                            if(nextstore.varwr is OTOpndLocal && nextstore.value is OTOpndLocal && link.Next.Next != null)
                             {
                                 OTOpndLocal localopnd = (OTOpndLocal)nextstore.varwr;
                                 OTOpndLocal tempopnd = (OTOpndLocal)nextstore.value;
@@ -4879,19 +4879,19 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 // to:
                 //    lcl = ... asdf ...
                 //    ... qwer lcl ...
-                if((varwr is OTOpndDup) && (link != null))
+                if(varwr is OTOpndDup && link != null)
                 {
                     OTOpndDup vardup = (OTOpndDup)varwr;
                     LinkedListNode<OTStmt> nextlink = link.Next;
                     vardup.ndupreads = 0;
                     decompile.topBlock.CountRefs();
-                    if((vardup.ndupreads == 2) && (nextlink != null) && (nextlink.Value is OTStmtStore))
+                    if(vardup.ndupreads == 2 && nextlink != null && nextlink.Value is OTStmtStore)
                     {
 
                         // point to the supposed lcl = dup$n statement
                         OTStmtStore nextstore = (OTStmtStore)nextlink.Value;
                         LinkedListNode<OTStmt> nextlink2 = nextlink.Next;
-                        if((nextstore.varwr is OTOpndLocal) && (nextstore.value == vardup) && (nextlink2 != null))
+                        if(nextstore.varwr is OTOpndLocal && nextstore.value == vardup && nextlink2 != null)
                         {
 
                             // get the local var being written and point to the ... qwer dup$n ... statement
@@ -4918,13 +4918,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 //    ... no further references to dup$n
                 // to:
                 //    ... qwer ... asdf ... ...
-                if((varwr is OTOpndDup) && (link != null))
+                if(varwr is OTOpndDup && link != null)
                 {
                     OTOpndDup vardup = (OTOpndDup)varwr;
                     LinkedListNode<OTStmt> nextlink = link.Next;
                     vardup.ndupreads = 0;
                     decompile.topBlock.CountRefs();
-                    if((vardup.ndupreads == 1) && (nextlink != null))
+                    if(vardup.ndupreads == 1 && nextlink != null)
                     {
 
                         // point to the ... qwer dup$n ... statement
@@ -4947,11 +4947,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                 // __xmrinst = (XMRInstAbstract) arg$0 indicates this is an event handler
                 // so strip it out and set the flag
-                if((varwr is OTOpndLocal) && (value is OTOpndCast))
+                if(varwr is OTOpndLocal && value is OTOpndCast)
                 {
                     OTOpndLocal lcl = (OTOpndLocal)varwr;
                     OTOpndCast cast = (OTOpndCast)value;
-                    if(lcl.local.name.StartsWith(_xmrinstlocal) && (cast.value is OTOpndArg))
+                    if(lcl.local.name.StartsWith(_xmrinstlocal) && cast.value is OTOpndArg)
                     {
                         link.List.Remove(link);
                         return true;
@@ -4963,15 +4963,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 OTOpnd valuenocast = value;
                 if(valuenocast is OTOpndCast)
                     valuenocast = ((OTOpndCast)value).value;
-                if((varwr is OTOpndLocal) && (valuenocast is OTOpndArrayElem))
+                if(varwr is OTOpndLocal && valuenocast is OTOpndArrayElem)
                 {
                     OTOpndArrayElem array = (OTOpndArrayElem)valuenocast;
-                    if((array.array is OTOpndField) && (array.index is OTOpndInt))
+                    if(array.array is OTOpndField && array.index is OTOpndInt)
                     {
                         OTOpndField arrayfield = (OTOpndField)array.array;
-                        if((arrayfield.obj is OTOpndLocal) &&
+                        if(arrayfield.obj is OTOpndLocal &&
                                 ((OTOpndLocal)arrayfield.obj).local.name.StartsWith(_xmrinstlocal) &&
-                                (arrayfield.field.Name == _ehArgs))
+                                arrayfield.field.Name == _ehArgs)
                         {
                             int index = ((OTOpndInt)array.index).value;
                             decompile.eharglist[index] = ((OTOpndLocal)varwr).local;
@@ -5031,7 +5031,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private class OTStmtSwitch: OTStmt
         {
             private OTOpnd index;
-            private OTLabel[] labels;
+            private readonly OTLabel[] labels;
 
             public OTStmtSwitch(OTOpnd index, OTLabel[] labels)
             {
@@ -5078,7 +5078,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private class OTStmtThrow: OTStmt
         {
             private OTOpnd value;
-            private OTDecompile decompile;
+            private readonly OTDecompile decompile;
 
             public OTStmtThrow(OTOpnd value, OTDecompile decompile)
             {
@@ -5115,8 +5115,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(value is OTOpndNewobj)
                 {
                     OTOpndNewobj valueno = (OTOpndNewobj)value;
-                    if((valueno.ctor.DeclaringType == typeof(ScriptUndefinedStateException)) &&
-                        (valueno.args.Length == 1) && (valueno.args[0] is OTOpndString))
+                    if(valueno.ctor.DeclaringType == typeof(ScriptUndefinedStateException) &&
+                        valueno.args.Length == 1 && valueno.args[0] is OTOpndString)
                     {
                         OTOpndString arg0 = (OTOpndString)valueno.args[0];
                         twout.Write("state " + arg0.value + ";  /* throws undefined state exception */");
@@ -5128,8 +5128,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(value is OTOpndNewobj)
                 {
                     OTOpndNewobj valueno = (OTOpndNewobj)value;
-                    if((valueno.ctor.DeclaringType == typeof(ScriptChangeStateException)) &&
-                        (valueno.args.Length == 1) && (valueno.args[0] is OTOpndInt))
+                    if(valueno.ctor.DeclaringType == typeof(ScriptChangeStateException) &&
+                        valueno.args.Length == 1 && valueno.args[0] is OTOpndInt)
                     {
                         OTOpndInt arg0 = (OTOpndInt)valueno.args[0];
                         twout.Write("state " + decompile.scriptObjCode.stateNames[arg0.value] + ';');
@@ -5188,7 +5188,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 {
                     OTOpndCall call = (OTOpndCall)value;
                     MethodInfo method = call.method;
-                    if((method.Name == _checkRunQuick) || (method.Name == _checkRunStack))
+                    if(method.Name == _checkRunQuick || method.Name == _checkRunStack)
                     {
                         link.List.Remove(link);
                         return true;
@@ -5218,7 +5218,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private class OTStmtBlock: OTStmt
         {
-            public LinkedList<OTStmt> blkstmts = new LinkedList<OTStmt>();
+            public readonly LinkedList<OTStmt> blkstmts = new LinkedList<OTStmt>();
 
             public override void CountRefs()
             {
@@ -5401,7 +5401,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     {
                         maybejump = ((OTStmtCond)nextstmt).stmt;
                     }
-                    if((maybejump is OTStmtJump) && (((OTStmtJump)maybejump).label == looplabel))
+                    if(maybejump is OTStmtJump && ((OTStmtJump)maybejump).label == looplabel)
                     {
                         break;
                     }
@@ -5551,17 +5551,17 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                 // if statement before loop label is an assignment, use it for the init statement
-                if(!iswhile && (link.Previous != null) && (link.Previous.Value is OTStmtStore))
+                if(!iswhile && link.Previous != null && link.Previous.Value is OTStmtStore)
                 {
                     it.forinit = link.Previous.Value;
                     link.List.Remove(link.Previous);
                 }
 
                 // if first statement of for body is 'if (...) jump breaklabel' use it for the test value
-                if((it.forbody.blkstmts.First != null) && (it.forbody.blkstmts.First.Value is OTStmtCond))
+                if(it.forbody.blkstmts.First != null && it.forbody.blkstmts.First.Value is OTStmtCond)
                 {
                     OTStmtCond condstmt = (OTStmtCond)it.forbody.blkstmts.First.Value;
-                    if((condstmt.stmt is OTStmtJump) && (((OTStmtJump)condstmt.stmt).label.name == breakname + suffix))
+                    if(condstmt.stmt is OTStmtJump && ((OTStmtJump)condstmt.stmt).label.name == breakname + suffix)
                     {
                         it.fortest = OTOpndUnOp.Make(MyOp.Brfalse, condstmt.valu);
                         it.forbody.blkstmts.RemoveFirst();
@@ -5570,8 +5570,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                 // if last statement of body is an assigment,
                 // use the assignment as the step statement
-                if(!iswhile && (it.forbody.blkstmts.Last != null) &&
-                        (it.forbody.blkstmts.Last.Value is OTStmtStore))
+                if(!iswhile && it.forbody.blkstmts.Last != null &&
+                        it.forbody.blkstmts.Last.Value is OTStmtStore)
                 {
                     LinkedListNode<OTStmt> storelink = it.forbody.blkstmts.Last;
                     storelink.List.Remove(storelink);
@@ -5600,15 +5600,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public override bool ReplaceOperand(OTOpnd oldopnd, OTOpnd newopnd)
             {
                 return forbody.ReplaceOperand(oldopnd, newopnd) |
-                        ((forinit != null) && forinit.ReplaceOperand(oldopnd, newopnd)) |
-                        ((forstep != null) && forstep.ReplaceOperand(oldopnd, newopnd));
+                        (forinit != null && forinit.ReplaceOperand(oldopnd, newopnd)) |
+                        (forstep != null && forstep.ReplaceOperand(oldopnd, newopnd));
             }
 
             public override bool DetectDoForIfWhile(LinkedListNode<OTStmt> link)
             {
                 return forbody.DetectDoForIfWhile(link) |
-                            ((forinit != null) && forinit.DetectDoForIfWhile(link)) |
-                            ((forstep != null) && forstep.DetectDoForIfWhile(link));
+                            (forinit != null && forinit.DetectDoForIfWhile(link)) |
+                            (forstep != null && forstep.DetectDoForIfWhile(link));
             }
 
             /**
@@ -5662,7 +5662,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         forstep.PrintStmt(sw, indent + INDENT);
                         StringBuilder sb = sw.GetStringBuilder();
                         int sl = sb.Length;
-                        if((sl > 0) && (sb[sl - 1] == ';'))
+                        if(sl > 0 && sb[sl - 1] == ';')
                             sb.Remove(--sl, 1);
                         twout.Write(sb.ToString());
                     }
@@ -5753,7 +5753,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                         // the last statement of the then body might be a jump ifdone_<suffix>
                         LinkedListNode<OTStmt> lastthenlink = thenbody.blkstmts.Last;
-                        if((lastthenlink != null) && (lastthenlink.Value is OTStmtJump))
+                        if(lastthenlink != null && lastthenlink.Value is OTStmtJump)
                         {
                             OTStmtJump jumpifdone = (OTStmtJump)lastthenlink.Value;
                             if(jumpifdone.label.name == _ifDone + suffix)
@@ -5810,7 +5810,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         // there's a dangling unused ifdone_<suffix> label ahead that has to be stripped
                         for(LinkedListNode<OTStmt> donelink = link; (donelink = donelink.Next) != null;)
                         {
-                            if((donelink.Value is OTStmtLabel) && (((OTStmtLabel)donelink.Value).label.name == _ifDone + suffix))
+                            if(donelink.Value is OTStmtLabel && ((OTStmtLabel)donelink.Value).label.name == _ifDone + suffix)
                             {
                                 donelink.List.Remove(donelink);
                                 break;
@@ -5851,8 +5851,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             public override bool DetectDoForIfWhile(LinkedListNode<OTStmt> link)
             {
-                return ((thenstmt != null) && thenstmt.DetectDoForIfWhile(link)) |
-                       ((elsestmt != null) && elsestmt.DetectDoForIfWhile(link));
+                return (thenstmt != null && thenstmt.DetectDoForIfWhile(link)) |
+                       (elsestmt != null && elsestmt.DetectDoForIfWhile(link));
             }
 
             /**
@@ -5885,10 +5885,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             private static OTStmt ReduceStmtBody(OTStmt statement, bool stripif)
             {
                 OTStmt onestmt = statement;
-                if((onestmt is OTStmtBlock) && (((OTStmtBlock)onestmt).blkstmts.Count == 1))
+                if(onestmt is OTStmtBlock && ((OTStmtBlock)onestmt).blkstmts.Count == 1)
                 {
                     onestmt = ((OTStmtBlock)onestmt).blkstmts.First.Value;
-                    if((onestmt is OTStmtJump) || (stripif && (onestmt is OTStmtIf)))
+                    if(onestmt is OTStmtJump || stripif && onestmt is OTStmtIf)
                     {
                         return onestmt;
                     }
@@ -5939,10 +5939,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             public int index;
             public OpCode sysop;
-            public string name;
-            public string source;
+            public readonly string name;
+            public readonly string source;
 
-            private static Dictionary<string, MyOp> myopsbyname = new Dictionary<string, MyOp>();
+            private static readonly Dictionary<string, MyOp> myopsbyname = new Dictionary<string, MyOp>();
             private static int nextindex = 0;
 
             public MyOp(OpCode sysop)
