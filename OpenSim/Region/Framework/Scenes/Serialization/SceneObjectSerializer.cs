@@ -84,8 +84,10 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 --len;
 
             XmlReaderSettings xset = new XmlReaderSettings() { IgnoreWhitespace = true, ConformanceLevel = ConformanceLevel.Fragment, CloseInput = true };
-            XmlParserContext xpc = new XmlParserContext(null, null, null, XmlSpace.None);
-            xpc.Encoding = Util.UTF8NoBomEncoding;
+            XmlParserContext xpc = new XmlParserContext(null, null, null, XmlSpace.None)
+            {
+                Encoding = Util.UTF8NoBomEncoding
+            };
             MemoryStream ms = new MemoryStream(data, 0, len, false);
             using (XmlReader reader = XmlReader.Create(ms, xset, xpc))
             {

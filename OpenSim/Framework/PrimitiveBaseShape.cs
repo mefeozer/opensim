@@ -337,12 +337,13 @@ namespace OpenSim.Framework
 
         public static PrimitiveBaseShape CreateMesh(int numberOfFaces, UUID meshAssetID)
         {
-            PrimitiveBaseShape shape = new PrimitiveBaseShape();
+            PrimitiveBaseShape shape = new PrimitiveBaseShape
+            {
+                _pathScaleX = 100,
+                _pathScaleY = 100
+            };
 
-            shape._pathScaleX = 100;
-            shape._pathScaleY = 100;
-
-            if(numberOfFaces <= 0) // oops ?
+            if (numberOfFaces <= 0) // oops ?
                 numberOfFaces = 1;
 
             switch(numberOfFaces)
@@ -1405,17 +1406,20 @@ namespace OpenSim.Framework
         /// <returns></returns>
         public Primitive ToOmvPrimitive(Vector3 position, Quaternion rotation)
         {
-            OpenMetaverse.Primitive prim = new OpenMetaverse.Primitive();
-
-            prim.Scale = this.Scale;
-            prim.Position = position;
-            prim.Rotation = rotation;
+            OpenMetaverse.Primitive prim = new OpenMetaverse.Primitive
+            {
+                Scale = this.Scale,
+                Position = position,
+                Rotation = rotation
+            };
 
             if (this.SculptEntry)
             {
-                prim.Sculpt = new Primitive.SculptData();
-                prim.Sculpt.Type = (OpenMetaverse.SculptType)this.SculptType;
-                prim.Sculpt.SculptTexture = this.SculptTexture;
+                prim.Sculpt = new Primitive.SculptData
+                {
+                    Type = (OpenMetaverse.SculptType)this.SculptType,
+                    SculptTexture = this.SculptTexture
+                };
             }
 
             prim.PrimData.PathShearX = this.PathShearX < 128 ? (float)this.PathShearX * 0.01f : (float)(this.PathShearX - 256) * 0.01f;
@@ -1449,36 +1453,42 @@ namespace OpenSim.Framework
 
             if (this.FlexiEntry)
             {
-                prim.Flexible = new Primitive.FlexibleData();
-                prim.Flexible.Drag = this.FlexiDrag;
-                prim.Flexible.Force = new Vector3(this.FlexiForceX, this.FlexiForceY, this.FlexiForceZ);
-                prim.Flexible.Gravity = this.FlexiGravity;
-                prim.Flexible.Softness = this.FlexiSoftness;
-                prim.Flexible.Tension = this.FlexiTension;
-                prim.Flexible.Wind = this.FlexiWind;
+                prim.Flexible = new Primitive.FlexibleData
+                {
+                    Drag = this.FlexiDrag,
+                    Force = new Vector3(this.FlexiForceX, this.FlexiForceY, this.FlexiForceZ),
+                    Gravity = this.FlexiGravity,
+                    Softness = this.FlexiSoftness,
+                    Tension = this.FlexiTension,
+                    Wind = this.FlexiWind
+                };
             }
 
             if (this.LightEntry)
             {
-                prim.Light = new Primitive.LightData();
-                prim.Light.Color = new Color4(this.LightColorR, this.LightColorG, this.LightColorB, this.LightColorA);
-                prim.Light.Cutoff = this.LightCutoff;
-                prim.Light.Falloff = this.LightFalloff;
-                prim.Light.Intensity = this.LightIntensity;
-                prim.Light.Radius = this.LightRadius;
+                prim.Light = new Primitive.LightData
+                {
+                    Color = new Color4(this.LightColorR, this.LightColorG, this.LightColorB, this.LightColorA),
+                    Cutoff = this.LightCutoff,
+                    Falloff = this.LightFalloff,
+                    Intensity = this.LightIntensity,
+                    Radius = this.LightRadius
+                };
             }
 
             prim.Textures = this.Textures;
 
-            prim.Properties = new Primitive.ObjectProperties();
-            prim.Properties.Name = "Object";
-            prim.Properties.Description = "";
-            prim.Properties.CreatorID = UUID.Zero;
-            prim.Properties.GroupID = UUID.Zero;
-            prim.Properties.OwnerID = UUID.Zero;
-            prim.Properties.Permissions = new Permissions();
-            prim.Properties.SalePrice = 10;
-            prim.Properties.SaleType = new SaleType();
+            prim.Properties = new Primitive.ObjectProperties
+            {
+                Name = "Object",
+                Description = "",
+                CreatorID = UUID.Zero,
+                GroupID = UUID.Zero,
+                OwnerID = UUID.Zero,
+                Permissions = new Permissions(),
+                SalePrice = 10,
+                SaleType = new SaleType()
+            };
 
             return prim;
         }

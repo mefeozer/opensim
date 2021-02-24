@@ -212,10 +212,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Lure
 
             Util.ParseFakeParcelID(lureID, out handle, out x, out y, out z);
 
-            Vector3 position = new Vector3();
-            position.X = (float)x;
-            position.Y = (float)y;
-            position.Z = (float)z;
+            Vector3 position = new Vector3
+            {
+                X = (float)x,
+                Y = (float)y,
+                Z = (float)z
+            };
 
             scene.RequestTeleportLocation(client, handle, position,
                     Vector3.Zero, teleportFlags);

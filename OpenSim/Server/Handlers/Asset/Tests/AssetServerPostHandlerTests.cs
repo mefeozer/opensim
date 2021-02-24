@@ -61,8 +61,10 @@ namespace OpenSim.Server.Handlers.Asset.Test
 
             MemoryStream buffer = new MemoryStream();
 
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = Encoding.UTF8;
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Encoding = Encoding.UTF8
+            };
 
             using (XmlWriter writer = XmlWriter.Create(buffer, settings))
             {

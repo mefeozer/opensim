@@ -744,13 +744,15 @@ namespace OpenSim.Data.PGSQL
         {
             try
             {
-                InventoryFolderBase folder = new InventoryFolderBase();
-                folder.Owner = DBGuid.FromDB(reader["agentID"]);
-                folder.ParentID = DBGuid.FromDB(reader["parentFolderID"]);
-                folder.ID = DBGuid.FromDB(reader["folderID"]);
-                folder.Name = (string)reader["folderName"];
-                folder.Type = (short)reader["type"];
-                folder.Version = Convert.ToUInt16(reader["version"]);
+                InventoryFolderBase folder = new InventoryFolderBase
+                {
+                    Owner = DBGuid.FromDB(reader["agentID"]),
+                    ParentID = DBGuid.FromDB(reader["parentFolderID"]),
+                    ID = DBGuid.FromDB(reader["folderID"]),
+                    Name = (string)reader["folderName"],
+                    Type = (short)reader["type"],
+                    Version = Convert.ToUInt16(reader["version"])
+                };
 
                 return folder;
             }
@@ -771,28 +773,29 @@ namespace OpenSim.Data.PGSQL
         {
             try
             {
-                InventoryItemBase item = new InventoryItemBase();
-
-                item.ID = DBGuid.FromDB(reader["inventoryID"]);
-                item.AssetID = DBGuid.FromDB(reader["assetID"]);
-                item.AssetType = Convert.ToInt32(reader["assetType"].ToString());
-                item.Folder = DBGuid.FromDB(reader["parentFolderID"]);
-                item.Owner = DBGuid.FromDB(reader["avatarID"]);
-                item.Name = reader["inventoryName"].ToString();
-                item.Description = reader["inventoryDescription"].ToString();
-                item.NextPermissions = Convert.ToUInt32(reader["inventoryNextPermissions"]);
-                item.CurrentPermissions = Convert.ToUInt32(reader["inventoryCurrentPermissions"]);
-                item.InvType = Convert.ToInt32(reader["invType"].ToString());
-                item.CreatorId = reader["creatorID"].ToString();
-                item.BasePermissions = Convert.ToUInt32(reader["inventoryBasePermissions"]);
-                item.EveryOnePermissions = Convert.ToUInt32(reader["inventoryEveryOnePermissions"]);
-                item.GroupPermissions = Convert.ToUInt32(reader["inventoryGroupPermissions"]);
-                item.SalePrice = Convert.ToInt32(reader["salePrice"]);
-                item.SaleType = Convert.ToByte(reader["saleType"]);
-                item.CreationDate = Convert.ToInt32(reader["creationDate"]);
-                item.GroupID = DBGuid.FromDB(reader["groupID"]);
-                item.GroupOwned = Convert.ToBoolean(reader["groupOwned"]);
-                item.Flags = Convert.ToUInt32(reader["flags"]);
+                InventoryItemBase item = new InventoryItemBase
+                {
+                    ID = DBGuid.FromDB(reader["inventoryID"]),
+                    AssetID = DBGuid.FromDB(reader["assetID"]),
+                    AssetType = Convert.ToInt32(reader["assetType"].ToString()),
+                    Folder = DBGuid.FromDB(reader["parentFolderID"]),
+                    Owner = DBGuid.FromDB(reader["avatarID"]),
+                    Name = reader["inventoryName"].ToString(),
+                    Description = reader["inventoryDescription"].ToString(),
+                    NextPermissions = Convert.ToUInt32(reader["inventoryNextPermissions"]),
+                    CurrentPermissions = Convert.ToUInt32(reader["inventoryCurrentPermissions"]),
+                    InvType = Convert.ToInt32(reader["invType"].ToString()),
+                    CreatorId = reader["creatorID"].ToString(),
+                    BasePermissions = Convert.ToUInt32(reader["inventoryBasePermissions"]),
+                    EveryOnePermissions = Convert.ToUInt32(reader["inventoryEveryOnePermissions"]),
+                    GroupPermissions = Convert.ToUInt32(reader["inventoryGroupPermissions"]),
+                    SalePrice = Convert.ToInt32(reader["salePrice"]),
+                    SaleType = Convert.ToByte(reader["saleType"]),
+                    CreationDate = Convert.ToInt32(reader["creationDate"]),
+                    GroupID = DBGuid.FromDB(reader["groupID"]),
+                    GroupOwned = Convert.ToBoolean(reader["groupOwned"]),
+                    Flags = Convert.ToUInt32(reader["flags"])
+                };
 
                 return item;
             }

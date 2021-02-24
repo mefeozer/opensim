@@ -204,11 +204,13 @@ namespace OpenSim.Data.SQLite
         ///<returns>a built sqlite parameter</returns>
         public static SqliteParameter createSqliteParameter(string name, Type type)
         {
-            SqliteParameter param = new SqliteParameter();
-            param.ParameterName = ":" + name;
-            param.DbType = dbtypeFromType(type);
-            param.SourceColumn = name;
-            param.SourceVersion = DataRowVersion.Current;
+            SqliteParameter param = new SqliteParameter
+            {
+                ParameterName = ":" + name,
+                DbType = dbtypeFromType(type),
+                SourceColumn = name,
+                SourceVersion = DataRowVersion.Current
+            };
             return param;
         }
 

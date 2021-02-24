@@ -59,8 +59,10 @@ namespace OpenSim.Region.PhysicsModule.ODE.Tests
 
             //PhysicsScene pScene = physicsPluginManager.GetPhysicsScene(
             //                "BulletSim", "Meshmerizer", openSimINI, "BSTestRegion", regionExtent);
-            RegionInfo info = new RegionInfo();
-            info.RegionName = "ODETestRegion";
+            RegionInfo info = new RegionInfo
+            {
+                RegionName = "ODETestRegion"
+            };
             info.RegionSizeX = info.RegionSizeY = info.RegionSizeZ = Constants.RegionSize;
             OpenSim.Region.Framework.Scenes.Scene scene = new OpenSim.Region.Framework.Scenes.Scene(info);
 

@@ -321,13 +321,15 @@ namespace OpenSim.Framework.Console
                 return;
             }
 
-            info = new CommandInfo();
-            info.module = module;
-            info.shared = shared;
-            info.help_text = help;
-            info.long_help = longhelp;
-            info.descriptive_help = descriptivehelp;
-            info.fn = new List<CommandDelegate>();
+            info = new CommandInfo
+            {
+                module = module,
+                shared = shared,
+                help_text = help,
+                long_help = longhelp,
+                descriptive_help = descriptivehelp,
+                fn = new List<CommandDelegate>()
+            };
             info.fn.Add(fn);
             current[string.Empty] = info;
 

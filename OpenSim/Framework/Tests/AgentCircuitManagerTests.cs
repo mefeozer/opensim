@@ -66,35 +66,39 @@ namespace OpenSim.Framework.Tests
             UUID SecureSessionId = UUID.Random();
             // TODO: unused: UUID SessionId = UUID.Random();
 
-            m_agentCircuitData1 = new AgentCircuitData();
-            m_agentCircuitData1.AgentID = AgentId1;
-            m_agentCircuitData1.Appearance = new AvatarAppearance();
-            m_agentCircuitData1.BaseFolder = BaseFolder;
-            m_agentCircuitData1.CapsPath = CapsPath;
-            m_agentCircuitData1.child = false;
-            m_agentCircuitData1.ChildrenCapSeeds = ChildrenCapsPaths;
-            m_agentCircuitData1.circuitcode = circuitcode1;
-            m_agentCircuitData1.firstname = firstname;
-            m_agentCircuitData1.InventoryFolder = BaseFolder;
-            m_agentCircuitData1.lastname = lastname;
-            m_agentCircuitData1.SecureSessionID = SecureSessionId;
-            m_agentCircuitData1.SessionID = SessionId1;
-            m_agentCircuitData1.startpos = StartPos;
+            m_agentCircuitData1 = new AgentCircuitData
+            {
+                AgentID = AgentId1,
+                Appearance = new AvatarAppearance(),
+                BaseFolder = BaseFolder,
+                CapsPath = CapsPath,
+                child = false,
+                ChildrenCapSeeds = ChildrenCapsPaths,
+                circuitcode = circuitcode1,
+                firstname = firstname,
+                InventoryFolder = BaseFolder,
+                lastname = lastname,
+                SecureSessionID = SecureSessionId,
+                SessionID = SessionId1,
+                startpos = StartPos
+            };
 
-            m_agentCircuitData2 = new AgentCircuitData();
-            m_agentCircuitData2.AgentID = AgentId2;
-            m_agentCircuitData2.Appearance = new AvatarAppearance();
-            m_agentCircuitData2.BaseFolder = BaseFolder;
-            m_agentCircuitData2.CapsPath = CapsPath;
-            m_agentCircuitData2.child = false;
-            m_agentCircuitData2.ChildrenCapSeeds = ChildrenCapsPaths;
-            m_agentCircuitData2.circuitcode = circuitcode2;
-            m_agentCircuitData2.firstname = firstname;
-            m_agentCircuitData2.InventoryFolder = BaseFolder;
-            m_agentCircuitData2.lastname = lastname;
-            m_agentCircuitData2.SecureSessionID = SecureSessionId;
-            m_agentCircuitData2.SessionID = SessionId2;
-            m_agentCircuitData2.startpos = StartPos;
+            m_agentCircuitData2 = new AgentCircuitData
+            {
+                AgentID = AgentId2,
+                Appearance = new AvatarAppearance(),
+                BaseFolder = BaseFolder,
+                CapsPath = CapsPath,
+                child = false,
+                ChildrenCapSeeds = ChildrenCapsPaths,
+                circuitcode = circuitcode2,
+                firstname = firstname,
+                InventoryFolder = BaseFolder,
+                lastname = lastname,
+                SecureSessionID = SecureSessionId,
+                SessionID = SessionId2,
+                startpos = StartPos
+            };
         }
 
         /// <summary>

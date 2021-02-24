@@ -874,12 +874,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             if(defaultStateEntry == null)
             {
-                defaultStateEntry = new TokenDeclVar(tokenScript.defaultState.body, null, tokenScript);
-                defaultStateEntry.name = new TokenName(tokenScript.defaultState.body, "state_entry");
-                defaultStateEntry.retType = new TokenTypeVoid(tokenScript.defaultState.body);
-                defaultStateEntry.argDecl = new TokenArgDecl(tokenScript.defaultState.body);
-                defaultStateEntry.body = new TokenStmtBlock(tokenScript.defaultState.body);
-                defaultStateEntry.body.function = defaultStateEntry;
+                defaultStateEntry = new TokenDeclVar(tokenScript.defaultState.body, null, tokenScript)
+                {
+                    name = new TokenName(tokenScript.defaultState.body, "state_entry"),
+                    retType = new TokenTypeVoid(tokenScript.defaultState.body),
+                    argDecl = new TokenArgDecl(tokenScript.defaultState.body)
+                };
+                defaultStateEntry.body = new TokenStmtBlock(tokenScript.defaultState.body)
+                {
+                    function = defaultStateEntry
+                };
 
                 defaultStateEntry.nextToken = tokenScript.defaultState.body.eventFuncs;
                 tokenScript.defaultState.body.eventFuncs = defaultStateEntry;
@@ -1178,56 +1182,70 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             newobjDeclFunc.sdtClass = ctorDeclFunc.sdtClass;
             newobjDeclFunc.sdtFlags = ScriptReduce.SDT_STATIC | ctorDeclFunc.sdtFlags;
 
-             // Declare local variable named '$objptr' in a frame just under 
-             // what the '$new(...)' function's arguments are declared in.
-            TokenDeclVar objptrVar = new TokenDeclVar(newobjDeclFunc, newobjDeclFunc, tokenScript);
-            objptrVar.type = newobjDeclFunc.retType;
-            objptrVar.name = new TokenName(newobjDeclFunc, "$objptr");
-            VarDict newFrame = new VarDict(false);
-            newFrame.outerVarDict = ctorDeclFunc.argDecl.varDict;
+            // Declare local variable named '$objptr' in a frame just under 
+            // what the '$new(...)' function's arguments are declared in.
+            TokenDeclVar objptrVar = new TokenDeclVar(newobjDeclFunc, newobjDeclFunc, tokenScript)
+            {
+                type = newobjDeclFunc.retType,
+                name = new TokenName(newobjDeclFunc, "$objptr")
+            };
+            VarDict newFrame = new VarDict(false)
+            {
+                outerVarDict = ctorDeclFunc.argDecl.varDict
+            };
             newFrame.AddEntry(objptrVar);
 
              // Set up '$objptr.$ctor'
             TokenLValName objptrLValName = new TokenLValName(objptrVar.name, newFrame);
 
             // ref a var by giving its name
-            TokenLValIField objptrDotCtor = new TokenLValIField(newobjDeclFunc);  // an instance member reference
-            objptrDotCtor.baseRVal = objptrLValName;                        // '$objptr'
-            objptrDotCtor.fieldName = ctorDeclFunc.name;                     // '.' '$ctor'
+            TokenLValIField objptrDotCtor = new TokenLValIField(newobjDeclFunc)
+            {
+                baseRVal = objptrLValName,                        // '$objptr'
+                fieldName = ctorDeclFunc.name                     // '.' '$ctor'
+            };  // an instance member reference
 
-             // Set up '$objptr.$ctor(arglist)' call for use in the '$new(...)' body.
-             // Copy the arglist from the constructor declaration so triviality 
-             // processing will pick the correct overloaded constructor.
-            TokenRValCall callCtorRVal = new TokenRValCall(newobjDeclFunc);   // doing a call of some sort
-            callCtorRVal.meth = objptrDotCtor;                        // calling $objptr.$ctor()
+            // Set up '$objptr.$ctor(arglist)' call for use in the '$new(...)' body.
+            // Copy the arglist from the constructor declaration so triviality 
+            // processing will pick the correct overloaded constructor.
+            TokenRValCall callCtorRVal = new TokenRValCall(newobjDeclFunc)
+            {
+                meth = objptrDotCtor                        // calling $objptr.$ctor()
+            };   // doing a call of some sort
             TokenDeclVar[] argList = newobjDeclFunc.argDecl.vars;          // get args $new() was declared with
             callCtorRVal.nArgs = argList.Length;                       // ...that is nArgs we are passing to $objptr.$ctor()
             for(int i = argList.Length; --i >= 0;)
             {
                 TokenDeclVar arg = argList[i];                    // find out about one of the args
-                TokenLValName argLValName = new TokenLValName(arg.name, ctorDeclFunc.argDecl.varDict);
-                // pass arg of that name to $objptr.$ctor()
-                argLValName.nextToken = callCtorRVal.args;             // link to list of args passed to $objptr.$ctor()
+                TokenLValName argLValName = new TokenLValName(arg.name, ctorDeclFunc.argDecl.varDict)
+                {
+                    // pass arg of that name to $objptr.$ctor()
+                    nextToken = callCtorRVal.args             // link to list of args passed to $objptr.$ctor()
+                };
                 callCtorRVal.args = argLValName;
             }
 
-             // Set up a funky call to the constructor for the code body.
-             // This will let code generator know there is some craziness.
-             // See GenerateStmtNewobj().
-             //
-             // This is in essence:
-             //    {
-             //        classname $objptr = newobj (classname);
-             //        $objptr.$ctor (...);
-             //        return $objptr;
-             //    }
-            TokenStmtNewobj newobjStmtBody = new TokenStmtNewobj(ctorDeclFunc);
-            newobjStmtBody.objptrVar = objptrVar;
-            newobjStmtBody.rValCall = callCtorRVal;
-            TokenStmtBlock newobjBody = new TokenStmtBlock(ctorDeclFunc);
-            newobjBody.statements = newobjStmtBody;
+            // Set up a funky call to the constructor for the code body.
+            // This will let code generator know there is some craziness.
+            // See GenerateStmtNewobj().
+            //
+            // This is in essence:
+            //    {
+            //        classname $objptr = newobj (classname);
+            //        $objptr.$ctor (...);
+            //        return $objptr;
+            //    }
+            TokenStmtNewobj newobjStmtBody = new TokenStmtNewobj(ctorDeclFunc)
+            {
+                objptrVar = objptrVar,
+                rValCall = callCtorRVal
+            };
+            TokenStmtBlock newobjBody = new TokenStmtBlock(ctorDeclFunc)
+            {
+                statements = newobjStmtBody
+            };
 
-             // Link that code as the body of the function.
+            // Link that code as the body of the function.
             newobjDeclFunc.body = newobjBody;
 
              // Say the function calls '$objptr.$ctor(arglist)' so we will inherit ctor's triviality.
@@ -2316,9 +2334,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 IntermediateLeave iLeave;
                 if(!finallyBlock.iLeaves.TryGetValue(intername, out iLeave))
                 {
-                    iLeave = new IntermediateLeave();
-                    iLeave.jumpIntoLabel = ilGen.DefineLabel(intername);
-                    iLeave.jumpAwayLabel = target;
+                    iLeave = new IntermediateLeave
+                    {
+                        jumpIntoLabel = ilGen.DefineLabel(intername),
+                        jumpAwayLabel = target
+                    };
                     finallyBlock.iLeaves.Add(intername, iLeave);
                 }
                 target = iLeave.jumpIntoLabel;
@@ -5508,10 +5528,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         TokenDeclVar var = fal.vars[j];
                         shortArgList.AddArg(var.type, var.name);
                     }
-                    TokenDeclVar shortArgProto = new TokenDeclVar(null, null, null);
-                    shortArgProto.name = new TokenName(null, fap.GetSimpleName());
-                    shortArgProto.retType = fap.retType;
-                    shortArgProto.argDecl = shortArgList;
+                    TokenDeclVar shortArgProto = new TokenDeclVar(null, null, null)
+                    {
+                        name = new TokenName(null, fap.GetSimpleName()),
+                        retType = fap.retType,
+                        argDecl = shortArgList
+                    };
                     leh.AddEntry(shortArgProto);
                 }
             }
@@ -5896,10 +5918,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 ScriptConst scriptConst = ScriptConst.Lookup(lValName.name.val);
                 if(scriptConst != null)
                 {
-                    TokenDeclVar var = new TokenDeclVar(lValName.name, null, tokenScript);
-                    var.name = lValName.name;
-                    var.type = scriptConst.rVal.type;
-                    var.location = scriptConst.rVal;
+                    TokenDeclVar var = new TokenDeclVar(lValName.name, null, tokenScript)
+                    {
+                        name = lValName.name,
+                        type = scriptConst.rVal.type,
+                        location = scriptConst.rVal
+                    };
                     return var;
                 }
             }

@@ -156,8 +156,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
                     LSL_Types.list v = (LSL_Types.list)field.GetValue(this);
                     object[] data = new object[v.Data.Length];
                     Array.Copy(v.Data, 0, data, 0, v.Data.Length);
-                    LSL_Types.list c = new LSL_Types.list();
-                    c.Data = data;
+                    LSL_Types.list c = new LSL_Types.list
+                    {
+                        Data = data
+                    };
                     vars[field.Name] = c;
                 }
                 else if (field.FieldType == typeof(LSL_Types.LSLInteger) ||

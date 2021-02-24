@@ -213,8 +213,10 @@ namespace OpenSim.Framework.Serialization.External
         public static string Serialize(InventoryItemBase inventoryItem, Dictionary<string, object> options, IUserAccountService userAccountService)
         {
             StringWriter sw = new StringWriter();
-            XmlTextWriter writer = new XmlTextWriter(sw);
-            writer.Formatting = Formatting.Indented;
+            XmlTextWriter writer = new XmlTextWriter(sw)
+            {
+                Formatting = Formatting.Indented
+            };
             writer.WriteStartDocument();
 
             writer.WriteStartElement("InventoryItem");

@@ -39,14 +39,16 @@ namespace OpenSim.Groups
 
         public GroupMembersData ConvertGroupMembersData(ExtendedGroupMembersData _m)
         {
-            GroupMembersData m = new GroupMembersData();
-            m.AcceptNotices = _m.AcceptNotices;
-            m.AgentPowers = _m.AgentPowers;
-            m.Contribution = _m.Contribution;
-            m.IsOwner = _m.IsOwner;
-            m.ListInProfile = _m.ListInProfile;
-            m.OnlineStatus = _m.OnlineStatus;
-            m.Title = _m.Title;
+            GroupMembersData m = new GroupMembersData
+            {
+                AcceptNotices = _m.AcceptNotices,
+                AgentPowers = _m.AgentPowers,
+                Contribution = _m.Contribution,
+                IsOwner = _m.IsOwner,
+                ListInProfile = _m.ListInProfile,
+                OnlineStatus = _m.OnlineStatus,
+                Title = _m.Title
+            };
 
             string url = string.Empty, first = string.Empty, last = string.Empty, tmp = string.Empty;
             Util.ParseUniversalUserIdentifier(_m.AgentID, out m.AgentID, out url, out first, out last, out tmp);
@@ -58,8 +60,10 @@ namespace OpenSim.Groups
 
         public GroupRoleMembersData ConvertGroupRoleMembersData(ExtendedGroupRoleMembersData _rm)
         {
-            GroupRoleMembersData rm = new GroupRoleMembersData();
-            rm.RoleID = _rm.RoleID;
+            GroupRoleMembersData rm = new GroupRoleMembersData
+            {
+                RoleID = _rm.RoleID
+            };
 
             string url = string.Empty, first = string.Empty, last = string.Empty, tmp = string.Empty;
             Util.ParseUniversalUserIdentifier(_rm.MemberID, out rm.MemberID, out url, out first, out last, out tmp);

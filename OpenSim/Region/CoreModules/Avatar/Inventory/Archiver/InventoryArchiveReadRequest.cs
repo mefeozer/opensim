@@ -560,8 +560,10 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
 
             //m_log.DebugFormat("[INVENTORY ARCHIVER]: Importing asset {0}, type {1}", uuid, assetType);
 
-            AssetBase asset = new AssetBase(assetId, "From IAR", assetType, UUID.Zero.ToString());
-            asset.Data = data;
+            AssetBase asset = new AssetBase(assetId, "From IAR", assetType, UUID.Zero.ToString())
+            {
+                Data = data
+            };
 
             m_AssetService.Store(asset);
 

@@ -613,11 +613,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public object[] CaptureStackFrame(string funcName, int callNo, int nSaves)
         {
-            XMRStackFrame sf = new XMRStackFrame();
-            sf.nextSF = stackFrames;
-            sf.funcName = funcName;
-            sf.callNo = callNo;
-            sf.objArray = new object[nSaves];
+            XMRStackFrame sf = new XMRStackFrame
+            {
+                nextSF = stackFrames,
+                funcName = funcName,
+                callNo = callNo,
+                objArray = new object[nSaves]
+            };
             stackFrames = sf;
             return sf.objArray;
         }
@@ -1581,8 +1583,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 ObjLslList oll;
                 if(!this.migrateOutLists.TryGetValue(data, out oll))
                 {
-                    oll = new ObjLslList();
-                    oll.objarray = data;
+                    oll = new ObjLslList
+                    {
+                        objarray = data
+                    };
                     this.migrateOutLists[data] = oll;
                 }
                 graph = oll;
@@ -1797,11 +1801,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         this.newStateCode = mir.ReadInt32();
                         continue;
                     }
-                    XMRStackFrame thisSF = new XMRStackFrame();
-                    thisSF.funcName = funcName;
-                    thisSF.callNo = mir.ReadInt32();
-                    thisSF.objArray = (object[])this.RecvObjValue();
-                    if(lastSF == null)
+                    XMRStackFrame thisSF = new XMRStackFrame
+                    {
+                        funcName = funcName,
+                        callNo = mir.ReadInt32(),
+                        objArray = (object[])this.RecvObjValue()
+                    };
+                    if (lastSF == null)
                         this.stackFrames = thisSF;
                     else
                         lastSF.nextSF = thisSF;

@@ -173,8 +173,10 @@ namespace OpenSim.Services.UserAccountService
 
         private GridUserInfo ToInfo(GridUserData d)
         {
-            GridUserInfo info = new GridUserInfo();
-            info.UserID = d.UserID;
+            GridUserInfo info = new GridUserInfo
+            {
+                UserID = d.UserID
+            };
             Dictionary<string, string> kvp = d.Data;
             string tmpstr;
 
@@ -254,8 +256,10 @@ namespace OpenSim.Services.UserAccountService
 
             if (d == null)
             {
-                d = new GridUserData();
-                d.UserID = userID;
+                d = new GridUserData
+                {
+                    UserID = userID
+                };
             }
 
             d.Data["Online"] = true.ToString();
@@ -276,8 +280,10 @@ namespace OpenSim.Services.UserAccountService
 
             if (d == null)
             {
-                d = new GridUserData();
-                d.UserID = userID;
+                d = new GridUserData
+                {
+                    UserID = userID
+                };
             }
 
             d.Data["Online"] = false.ToString();
@@ -298,8 +304,10 @@ namespace OpenSim.Services.UserAccountService
 
             if (d == null)
             {
-                d = new GridUserData();
-                d.UserID = userID;
+                d = new GridUserData
+                {
+                    UserID = userID
+                };
             }
 
             d.Data["HomeRegionID"] = homeID.ToString();
@@ -320,8 +328,10 @@ namespace OpenSim.Services.UserAccountService
 
             if (d == null)
             {
-                d = new GridUserData();
-                d.UserID = userID;
+                d = new GridUserData
+                {
+                    UserID = userID
+                };
             }
 
             d.Data["LastRegionID"] = regionID.ToString();

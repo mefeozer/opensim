@@ -98,8 +98,10 @@ namespace OpenSim.OfflineIM
             string imXml;
             using (MemoryStream mstream = new MemoryStream())
             {
-                XmlWriterSettings settings = new XmlWriterSettings();
-                settings.Encoding = Util.UTF8NoBomEncoding;
+                XmlWriterSettings settings = new XmlWriterSettings
+                {
+                    Encoding = Util.UTF8NoBomEncoding
+                };
 
                 using (XmlWriter writer = XmlWriter.Create(mstream, settings))
                 {
@@ -109,10 +111,12 @@ namespace OpenSim.OfflineIM
                 }
             }
 
-            OfflineIMData data = new OfflineIMData();
-            data.PrincipalID = principalID;
-            data.FromID = new UUID(im.fromAgentID);
-            data.Data = new Dictionary<string, string>();
+            OfflineIMData data = new OfflineIMData
+            {
+                PrincipalID = principalID,
+                FromID = new UUID(im.fromAgentID),
+                Data = new Dictionary<string, string>()
+            };
             data.Data["Message"] = imXml;
 
             return m_Database.Store(data);

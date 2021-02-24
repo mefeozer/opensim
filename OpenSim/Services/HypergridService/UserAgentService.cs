@@ -266,14 +266,16 @@ namespace OpenSim.Services.HypergridService
             }
 
             // Take the IP address + port of the gatekeeper (reg) plus the info of finalDestination
-            GridRegion region = new GridRegion(gatekeeper);
-            region.ServerURI = gatekeeper.ServerURI;
-            region.ExternalHostName = finalDestination.ExternalHostName;
-            region.InternalEndPoint = finalDestination.InternalEndPoint;
-            region.RegionName = finalDestination.RegionName;
-            region.RegionID = finalDestination.RegionID;
-            region.RegionLocX = finalDestination.RegionLocX;
-            region.RegionLocY = finalDestination.RegionLocY;
+            GridRegion region = new GridRegion(gatekeeper)
+            {
+                ServerURI = gatekeeper.ServerURI,
+                ExternalHostName = finalDestination.ExternalHostName,
+                InternalEndPoint = finalDestination.InternalEndPoint,
+                RegionName = finalDestination.RegionName,
+                RegionID = finalDestination.RegionID,
+                RegionLocX = finalDestination.RegionLocX,
+                RegionLocY = finalDestination.RegionLocY
+            };
 
             // Generate a new service session
             agentCircuit.ServiceSessionID = region.ServerURI + ";" + UUID.Random();
@@ -341,11 +343,13 @@ namespace OpenSim.Services.HypergridService
                 agentCircuit.IPAddress = existing.ClientIPAddress;
             }
 
-            TravelingAgentInfo travel = new TravelingAgentInfo(existing);
-            travel.SessionID = agentCircuit.SessionID;
-            travel.UserID = agentCircuit.AgentID;
-            travel.GridExternalName = region.ServerURI;
-            travel.ServiceToken = agentCircuit.ServiceSessionID;
+            TravelingAgentInfo travel = new TravelingAgentInfo(existing)
+            {
+                SessionID = agentCircuit.SessionID,
+                UserID = agentCircuit.AgentID,
+                GridExternalName = region.ServerURI,
+                ServiceToken = agentCircuit.ServiceSessionID
+            };
 
             if (fromLogin)
                 travel.ClientIPAddress = agentCircuit.IPAddress;
@@ -709,10 +713,12 @@ namespace OpenSim.Services.HypergridService
             if (travel == null)
                 return;
 
-            HGTravelingData hgt = new HGTravelingData();
-            hgt.SessionID = travel.SessionID;
-            hgt.UserID = travel.UserID;
-            hgt.Data = new Dictionary<string, string>();
+            HGTravelingData hgt = new HGTravelingData
+            {
+                SessionID = travel.SessionID,
+                UserID = travel.UserID,
+                Data = new Dictionary<string, string>()
+            };
             hgt.Data["GridExternalName"] = travel.GridExternalName;
             hgt.Data["ServiceToken"] = travel.ServiceToken;
             hgt.Data["ClientIPAddress"] = travel.ClientIPAddress;

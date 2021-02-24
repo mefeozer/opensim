@@ -143,8 +143,10 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
 
                 part1
                     = new SceneObjectPart(
-                        ownerId, shape, groupPosition, rotationOffset, offsetPosition);
-                part1.Name = partName;
+                        ownerId, shape, groupPosition, rotationOffset, offsetPosition)
+                    {
+                        Name = partName
+                    };
 
                 object1 = new SceneObjectGroup(part1);
                 scene.AddNewSceneObject(object1, false);
@@ -156,10 +158,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
 
             // Create item
             UUID item1Id = UUID.Parse("00000000-0000-0000-0000-000000000080");
-            InventoryItemBase item1 = new InventoryItemBase();
-            item1.Name = itemName;
-            item1.AssetID = asset1.FullID;
-            item1.ID = item1Id;
+            InventoryItemBase item1 = new InventoryItemBase
+            {
+                Name = itemName,
+                AssetID = asset1.FullID,
+                ID = item1Id
+            };
             InventoryFolderBase objsFolder
                 = InventoryArchiveUtils.FindFoldersByPath(scene.InventoryService, userId, "Objects")[0];
             item1.Folder = objsFolder.ID;

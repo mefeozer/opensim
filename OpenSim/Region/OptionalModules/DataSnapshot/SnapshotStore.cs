@@ -129,8 +129,10 @@ namespace OpenSim.Region.DataSnapshot
             {
                 string path = DataFileNameFragment(provider.GetParentScene, provider.Name);
 
-                XmlDocument fragDocument = new XmlDocument();
-                fragDocument.PreserveWhitespace = true;
+                XmlDocument fragDocument = new XmlDocument
+                {
+                    PreserveWhitespace = true
+                };
                 fragDocument.Load(path);
                 foreach (XmlNode node in fragDocument)
                 {
@@ -161,8 +163,10 @@ namespace OpenSim.Region.DataSnapshot
                 //get snapshot from cache
                 string path = DataFileNameScene(scene);
 
-                XmlDocument fragDocument = new XmlDocument();
-                fragDocument.PreserveWhitespace = true;
+                XmlDocument fragDocument = new XmlDocument
+                {
+                    PreserveWhitespace = true
+                };
 
                 fragDocument.Load(path);
 

@@ -632,8 +632,10 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
 
             // Create new asset
             UUID assetID = UUID.Random();
-            AssetBase asset = new AssetBase(assetID, name, (sbyte)AssetType.Notecard, host.OwnerID.ToString());
-            asset.Description = "Json store";
+            AssetBase asset = new AssetBase(assetID, name, (sbyte)AssetType.Notecard, host.OwnerID.ToString())
+            {
+                Description = "Json store"
+            };
 
             int textLength = data.Length;
             data = "Linden text version 2\n{\nLLEmbeddedItems version 1\n{\ncount 0\n}\nText length "

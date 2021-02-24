@@ -86,18 +86,18 @@ public class Vertex : IComparable<Vertex>
     {
         // From http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/
 
-        Vertex v2 = new Vertex(0f, 0f, 0f);
-
-        v2.X =   q.W * q.W * v.X +
+        Vertex v2 = new Vertex(0f, 0f, 0f)
+        {
+            X = q.W * q.W * v.X +
             2f * q.Y * q.W * v.Z -
             2f * q.Z * q.W * v.Y +
                  q.X * q.X * v.X +
             2f * q.Y * q.X * v.Y +
             2f * q.Z * q.X * v.Z -
                  q.Z * q.Z * v.X -
-                 q.Y * q.Y * v.X;
+                 q.Y * q.Y * v.X,
 
-        v2.Y =
+            Y =
             2f * q.X * q.Y * v.X +
                  q.Y * q.Y * v.Y +
             2f * q.Z * q.Y * v.Z +
@@ -105,9 +105,9 @@ public class Vertex : IComparable<Vertex>
                  q.Z * q.Z * v.Y +
                  q.W * q.W * v.Y -
             2f * q.X * q.W * v.Z -
-                 q.X * q.X * v.Y;
+                 q.X * q.X * v.Y,
 
-        v2.Z =
+            Z =
             2f * q.X * q.Z * v.X +
             2f * q.Y * q.Z * v.Y +
                  q.Z * q.Z * v.Z -
@@ -115,7 +115,8 @@ public class Vertex : IComparable<Vertex>
                  q.Y * q.Y * v.Z +
             2f * q.W * q.X * v.Y -
                  q.X * q.X * v.Z +
-                 q.W * q.W * v.Z;
+                 q.W * q.W * v.Z
+        };
 
         return v2;
     }
@@ -251,9 +252,11 @@ public class Vertex : IComparable<Vertex>
         // The german notation uses these characters exactly vice versa!
         // The Float.ToString() routine is a localized one, giving different results depending on the country
         // settings your machine works with. Unusable for a machine readable file format :-(
-        NumberFormatInfo nfi = new NumberFormatInfo();
-        nfi.NumberDecimalSeparator = ".";
-        nfi.NumberDecimalDigits = 3;
+        NumberFormatInfo nfi = new NumberFormatInfo
+        {
+            NumberDecimalSeparator = ".",
+            NumberDecimalDigits = 3
+        };
 
         string s1 = X.ToString("N2", nfi) + " " + Y.ToString("N2", nfi) + " " + Z.ToString("N2", nfi);
 
@@ -381,9 +384,11 @@ public class Triangle
 
     public override string ToString()
     {
-        NumberFormatInfo nfi = new NumberFormatInfo();
-        nfi.CurrencyDecimalDigits = 2;
-        nfi.CurrencyDecimalSeparator = ".";
+        NumberFormatInfo nfi = new NumberFormatInfo
+        {
+            CurrencyDecimalDigits = 2,
+            CurrencyDecimalSeparator = "."
+        };
 
         string s1 = "<" + v1.X.ToString(nfi) + "," + v1.Y.ToString(nfi) + "," + v1.Z.ToString(nfi) + ">";
         string s2 = "<" + v2.X.ToString(nfi) + "," + v2.Y.ToString(nfi) + "," + v2.Z.ToString(nfi) + ">";

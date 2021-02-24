@@ -304,8 +304,10 @@ namespace OpenSim.Tests.Common
 
             foreach (XGroupMember xgm in group.members.Values)
             {
-                GroupMembersData gmd = new GroupMembersData();
-                gmd.AgentID = xgm.agentID;
+                GroupMembersData gmd = new GroupMembersData
+                {
+                    AgentID = xgm.agentID
+                };
                 gmd.IsOwner = group.founderID == gmd.AgentID;
                 gmd.AcceptNotices = xgm.acceptNotices;
                 gmd.ListInProfile = xgm.listInProfile;
@@ -363,10 +365,12 @@ namespace OpenSim.Tests.Common
                 {
                     XGroupNotice n = group.notices[noticeID];
 
-                    GroupNoticeInfo gni = new GroupNoticeInfo();
-                    gni.GroupID = n.groupID;
-                    gni.Message = n.message;
-                    gni.BinaryBucket = n.binaryBucket;
+                    GroupNoticeInfo gni = new GroupNoticeInfo
+                    {
+                        GroupID = n.groupID,
+                        Message = n.message,
+                        BinaryBucket = n.binaryBucket
+                    };
                     gni.noticeData.NoticeID = n.noticeID;
                     gni.noticeData.Timestamp = n.timestamp;
                     gni.noticeData.FromName = n.fromName;

@@ -288,13 +288,15 @@ namespace OpenSim.Capabilities.Handlers
             {
                 if ((fold = m_LibraryService.LibraryRootFolder.FindFolder(f.folder_id)) != null)
                 {
-                    InventoryCollection Collection = new InventoryCollection();
-//                        ret.Collection.Folders = new List<InventoryFolderBase>();
-                    Collection.Folders = fold.RequestListOfFolders();
-                    Collection.Items = fold.RequestListOfItems();
-                    Collection.OwnerID = m_LibraryService.LibraryRootFolder.Owner;
-                    Collection.FolderID = f.folder_id;
-                    Collection.Version = fold.Version;
+                    InventoryCollection Collection = new InventoryCollection
+                    {
+                        //                        ret.Collection.Folders = new List<InventoryFolderBase>();
+                        Folders = fold.RequestListOfFolders(),
+                        Items = fold.RequestListOfItems(),
+                        OwnerID = m_LibraryService.LibraryRootFolder.Owner,
+                        FolderID = f.folder_id,
+                        Version = fold.Version
+                    };
 
                     Collection.Descendents = Collection.Items.Count + Collection.Folders.Count;
                     total_folders += Collection.Folders.Count;
@@ -335,11 +337,13 @@ namespace OpenSim.Capabilities.Handlers
                     if(doneZeroID)
                         continue;
                     doneZeroID = true;
-                    InventoryCollection Collection = new InventoryCollection();
-                    Collection.OwnerID = f.owner_id;
-                    Collection.Version = 0;
-                    Collection.FolderID = f.folder_id;
-                    Collection.Descendents = 0;
+                    InventoryCollection Collection = new InventoryCollection
+                    {
+                        OwnerID = f.owner_id,
+                        Version = 0,
+                        FolderID = f.folder_id,
+                        Descendents = 0
+                    };
                     result.Add(Collection);
                     continue;
                 }

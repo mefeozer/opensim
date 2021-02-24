@@ -76,10 +76,12 @@ namespace OpenSim.Framework.Tests
 
             Assert.That(anim3.ObjectID == objUUID2 && anim3.AnimID == animUUID2 && anim3.SequenceNum == 1, "Animation.UnpackUpdateMessage failed to set the properties correctly.");
 
-            Animation anim4 = new Animation();
-            anim4.AnimID = anim2.AnimID;
-            anim4.ObjectID = anim2.ObjectID;
-            anim4.SequenceNum = anim2.SequenceNum;
+            Animation anim4 = new Animation
+            {
+                AnimID = anim2.AnimID,
+                ObjectID = anim2.ObjectID,
+                SequenceNum = anim2.SequenceNum
+            };
 
             Assert.That(anim4.ObjectID == objUUID2 && anim4.AnimID == animUUID2 && anim4.SequenceNum == 1, "void constructor and manual field population failed to set the properties correctly.");
         }

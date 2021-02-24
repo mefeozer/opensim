@@ -583,8 +583,10 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
             m_log.InfoFormat("[INVENTORY ARCHIVER]: Creating version {0}.{1} IAR", majorVersion, minorVersion);
 
             StringWriter sw = new StringWriter();
-            XmlTextWriter xtw = new XmlTextWriter(sw);
-            xtw.Formatting = Formatting.Indented;
+            XmlTextWriter xtw = new XmlTextWriter(sw)
+            {
+                Formatting = Formatting.Indented
+            };
             xtw.WriteStartDocument();
             xtw.WriteStartElement("archive");
             xtw.WriteAttributeString("major_version", majorVersion.ToString());

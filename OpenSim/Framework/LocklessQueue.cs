@@ -52,8 +52,10 @@ namespace OpenSim.Framework
             SingleLinkNode oldTail = null;
             SingleLinkNode oldTailNext;
 
-            SingleLinkNode newNode = new SingleLinkNode();
-            newNode.Item = item;
+            SingleLinkNode newNode = new SingleLinkNode
+            {
+                Item = item
+            };
 
             bool newNodeWasAdded = false;
 

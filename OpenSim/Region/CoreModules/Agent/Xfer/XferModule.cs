@@ -170,10 +170,12 @@ namespace OpenSim.Region.CoreModules.Agent.Xfer
                 }
                 else
                 {
-                    FileData fd = new FileData();
-                    fd.refsCount = 1;
-                    fd.Data = data;
-                    fd.timeStampMS = now;
+                    FileData fd = new FileData
+                    {
+                        refsCount = 1,
+                        Data = data,
+                        timeStampMS = now
+                    };
                     NewFiles.Add(fileName, fd);
                 }
             }

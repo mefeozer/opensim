@@ -274,10 +274,12 @@ namespace OpenSim.Region.ClientStack.Linden
 
                 Request = (requestID, request) =>
                 {
-                    APollRequest reqinfo = new APollRequest();
-                    reqinfo.thepoll = this;
-                    reqinfo.reqID = requestID;
-                    reqinfo.request = request;
+                    APollRequest reqinfo = new APollRequest
+                    {
+                        thepoll = this,
+                        reqID = requestID,
+                        request = request
+                    };
                     m_workerpool.Enqueue(reqinfo);
                     return null;
                 };

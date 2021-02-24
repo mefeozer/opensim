@@ -801,8 +801,10 @@ namespace OpenSim.Framework
                 {
                     request.ContentType = "text/xml";
 
-                    XmlWriterSettings settings = new XmlWriterSettings();
-                    settings.Encoding = Encoding.UTF8;
+                    XmlWriterSettings settings = new XmlWriterSettings
+                    {
+                        Encoding = Encoding.UTF8
+                    };
                     using (MemoryStream buffer = new MemoryStream())
                     using (XmlWriter writer = XmlWriter.Create(buffer, settings))
                     {

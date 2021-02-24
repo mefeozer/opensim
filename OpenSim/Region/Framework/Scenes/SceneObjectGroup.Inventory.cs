@@ -151,17 +151,18 @@ namespace OpenSim.Region.Framework.Scenes
                 return false;
             }
 
-            TaskInventoryItem taskItem = new TaskInventoryItem();
-
-            taskItem.ItemID = newItemId;
-            taskItem.AssetID = item.AssetID;
-            taskItem.Name = item.Name;
-            taskItem.Description = item.Description;
-            taskItem.OwnerID = part.OwnerID; // Transfer ownership
-            taskItem.CreatorID = item.CreatorIdAsUuid;
-            taskItem.Type = item.AssetType;
-            taskItem.InvType = item.InvType;
-            taskItem.Flags = item.Flags;
+            TaskInventoryItem taskItem = new TaskInventoryItem
+            {
+                ItemID = newItemId,
+                AssetID = item.AssetID,
+                Name = item.Name,
+                Description = item.Description,
+                OwnerID = part.OwnerID, // Transfer ownership
+                CreatorID = item.CreatorIdAsUuid,
+                Type = item.AssetType,
+                InvType = item.InvType,
+                Flags = item.Flags
+            };
 
             if (agentID != part.OwnerID && m_scene.Permissions.PropagatePermissions())
             {

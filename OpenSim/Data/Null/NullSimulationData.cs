@@ -110,8 +110,10 @@ namespace OpenSim.Data.Null
 
         public RegionSettings LoadRegionSettings(UUID regionUUID)
         {
-            RegionSettings rs = new RegionSettings();
-            rs.RegionUUID = regionUUID;
+            RegionSettings rs = new RegionSettings
+            {
+                RegionUUID = regionUUID
+            };
             return rs;
         }
 

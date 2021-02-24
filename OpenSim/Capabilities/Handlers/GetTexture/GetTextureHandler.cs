@@ -155,8 +155,10 @@ namespace OpenSim.Capabilities.Handlers
                     }
                     else
                     {
-                        AssetBase newTexture = new AssetBase(texture.ID + "-" + format, texture.Name, (sbyte)AssetType.Texture, texture.Metadata.CreatorID);
-                        newTexture.Data = ConvertTextureData(texture, format);
+                        AssetBase newTexture = new AssetBase(texture.ID + "-" + format, texture.Name, (sbyte)AssetType.Texture, texture.Metadata.CreatorID)
+                        {
+                            Data = ConvertTextureData(texture, format)
+                        };
                         if (newTexture.Data.Length == 0)
                             return false; // !!! Caller try another codec, please!
 

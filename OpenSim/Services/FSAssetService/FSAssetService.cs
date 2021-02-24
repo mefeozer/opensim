@@ -457,8 +457,10 @@ namespace OpenSim.Services.FSAssetService
                 }
                 return asset;
             }
-            AssetBase newAsset = new AssetBase();
-            newAsset.Metadata = metadata;
+            AssetBase newAsset = new AssetBase
+            {
+                Metadata = metadata
+            };
             try
             {
                 newAsset.Data = GetFsData(hash);

@@ -174,8 +174,10 @@ namespace OpenSim.Region.Framework.Scenes
         // ITerrainChannel.SaveToXmlString()
         public string SaveToXmlString()
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = Util.UTF8;
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Encoding = Util.UTF8
+            };
             using (StringWriter sw = new StringWriter())
             {
                 using (XmlWriter writer = XmlWriter.Create(sw, settings))
@@ -417,8 +419,10 @@ namespace OpenSim.Region.Framework.Scenes
 
         public TerrainChannel Copy()
         {
-            TerrainChannel copy = new TerrainChannel();
-            copy.m_terrainData = m_terrainData.Clone();
+            TerrainChannel copy = new TerrainChannel
+            {
+                m_terrainData = m_terrainData.Clone()
+            };
             return copy;
         }
 

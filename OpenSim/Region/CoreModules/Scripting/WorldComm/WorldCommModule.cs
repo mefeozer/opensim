@@ -965,8 +965,10 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
         {
             ListenerInfo linfo = new ListenerInfo((int)data[1], localID,
                     ItemID, hostID, (int)data[2], (string)data[3],
-                    (UUID)data[4], (string)data[5]);
-            linfo.m_active = (bool)data[0];
+                    (UUID)data[4], (string)data[5])
+            {
+                m_active = (bool)data[0]
+            };
             if (data.Length >= 7)
             {
                 linfo.RegexBitfield = (int)data[6];

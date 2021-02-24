@@ -691,15 +691,17 @@ namespace OpenSim.Region.CoreModules.World.Serialiser.Tests
             UUID rpUuid = UUID.Parse("00000000-0000-0000-0000-000000000964");
             UUID rpCreatorId = UUID.Parse("00000000-0000-0000-0000-000000000915");
             PrimitiveBaseShape shape = PrimitiveBaseShape.CreateSphere();
-//            Vector3 groupPosition = new Vector3(10, 20, 30);
-//            Quaternion rotationOffset = new Quaternion(20, 30, 40, 50);
-//            Vector3 offsetPosition = new Vector3(5, 10, 15);
+            //            Vector3 groupPosition = new Vector3(10, 20, 30);
+            //            Quaternion rotationOffset = new Quaternion(20, 30, 40, 50);
+            //            Vector3 offsetPosition = new Vector3(5, 10, 15);
 
-            SceneObjectPart rp = new SceneObjectPart();
-            rp.UUID = rpUuid;
-            rp.Name = rpName;
-            rp.CreatorID = rpCreatorId;
-            rp.Shape = shape;
+            SceneObjectPart rp = new SceneObjectPart
+            {
+                UUID = rpUuid,
+                Name = rpName,
+                CreatorID = rpCreatorId,
+                Shape = shape
+            };
 
             string daNamespace = "MyNamespace";
             string daStoreName = "MyStore";
@@ -800,15 +802,17 @@ namespace OpenSim.Region.CoreModules.World.Serialiser.Tests
             UUID rpUuid = UUID.Parse("00000000-0000-0000-0000-000000000064");
             UUID rpCreatorId = UUID.Parse("00000000-0000-0000-0000-000000000015");
             PrimitiveBaseShape shape = PrimitiveBaseShape.CreateSphere();
-//            Vector3 groupPosition = new Vector3(10, 20, 30);
-//            Quaternion rotationOffset = new Quaternion(20, 30, 40, 50);
-//            Vector3 offsetPosition = new Vector3(5, 10, 15);
+            //            Vector3 groupPosition = new Vector3(10, 20, 30);
+            //            Quaternion rotationOffset = new Quaternion(20, 30, 40, 50);
+            //            Vector3 offsetPosition = new Vector3(5, 10, 15);
 
-            SceneObjectPart rp = new SceneObjectPart();
-            rp.UUID = rpUuid;
-            rp.Name = rpName;
-            rp.CreatorID = rpCreatorId;
-            rp.Shape = shape;
+            SceneObjectPart rp = new SceneObjectPart
+            {
+                UUID = rpUuid,
+                Name = rpName,
+                CreatorID = rpCreatorId,
+                Shape = shape
+            };
 
             string daNamespace = "MyNamespace";
             string daStoreName = "MyStore";

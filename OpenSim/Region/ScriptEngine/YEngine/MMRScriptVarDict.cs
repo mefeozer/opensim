@@ -180,16 +180,17 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // will not be seen by lookups done in the frozen dictionary.
             if(frozenLocals == null || frozenLocals.count != this.count)
             {
-                 // Make a copy of the current var dictionary frame.
-                 // We copy a reference to the dictionary, and though it may
-                 // contain additions made after this point, those additions
-                 // will have a count .gt. frozen count and will be ignored.
-                frozenLocals = new VarDict(true);
-
-                frozenLocals.outerVarDict = this.outerVarDict;
-                frozenLocals.thisClass = this.thisClass;
-                frozenLocals.master = this.master;
-                frozenLocals.count = this.count;
+                // Make a copy of the current var dictionary frame.
+                // We copy a reference to the dictionary, and though it may
+                // contain additions made after this point, those additions
+                // will have a count .gt. frozen count and will be ignored.
+                frozenLocals = new VarDict(true)
+                {
+                    outerVarDict = this.outerVarDict,
+                    thisClass = this.thisClass,
+                    master = this.master,
+                    count = this.count
+                };
                 frozenLocals.frozenLocals = frozenLocals;
 
                  // Mark it as being frozen.

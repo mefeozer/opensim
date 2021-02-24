@@ -75,12 +75,14 @@ namespace OpenSim.Framework
             {
                 if (!m_childFolders.ContainsKey(folderID))
                 {
-                    InventoryFolderImpl subFold = new InventoryFolderImpl();
-                    subFold.Name = folderName;
-                    subFold.ID = folderID;
-                    subFold.Type = (short)type;
-                    subFold.ParentID = this.ID;
-                    subFold.Owner = Owner;
+                    InventoryFolderImpl subFold = new InventoryFolderImpl
+                    {
+                        Name = folderName,
+                        ID = folderID,
+                        Type = (short)type,
+                        ParentID = this.ID,
+                        Owner = Owner
+                    };
                     m_childFolders.Add(subFold.ID, subFold);
 
                     return subFold;

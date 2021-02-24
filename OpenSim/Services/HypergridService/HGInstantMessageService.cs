@@ -152,8 +152,10 @@ namespace OpenSim.Services.HypergridService
                 return TrySendInstantMessage(im, url, true, foreigner);
             else
             {
-                PresenceInfo upd = new PresenceInfo();
-                upd.RegionID = UUID.Zero;
+                PresenceInfo upd = new PresenceInfo
+                {
+                    RegionID = UUID.Zero
+                };
                 return TrySendInstantMessage(im, upd, true, foreigner);
             }
 

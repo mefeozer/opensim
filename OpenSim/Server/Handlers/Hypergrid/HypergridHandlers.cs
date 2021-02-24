@@ -83,8 +83,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
             hash["region_image"] = imageURL;
             hash["external_name"] = externalName;
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
         }
 
@@ -130,8 +132,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (message != null)
                 hash["message"] = message;
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }

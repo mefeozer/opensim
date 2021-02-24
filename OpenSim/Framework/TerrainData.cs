@@ -229,8 +229,10 @@ namespace OpenSim.Framework
 
         public TerrainData Clone()
         {
-            TerrainData ret = new TerrainData(SizeX, SizeY, SizeZ);
-            ret.m_heightmap = (float[,])this.m_heightmap.Clone();
+            TerrainData ret = new TerrainData(SizeX, SizeY, SizeZ)
+            {
+                m_heightmap = (float[,])this.m_heightmap.Clone()
+            };
             return ret;
         }
 

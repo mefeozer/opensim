@@ -217,10 +217,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             sourceHash = null;
 
-             // Now do the tokenization.
-            TokenBegin tokenBegin = new TokenBegin(emsg, "", 0, 0);
-            tokenBegin.cameFrom = cameFrom;
-            tokenBegin.saveSource = saveSource;
+            // Now do the tokenization.
+            TokenBegin tokenBegin = new TokenBegin(emsg, "", 0, 0)
+            {
+                cameFrom = cameFrom,
+                saveSource = saveSource
+            };
             tokenBegin.lastToken = tokenBegin;
             tokenBegin.source = source;
             tokenBegin.filNam = cameFrom;

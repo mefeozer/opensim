@@ -357,8 +357,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 //      public OSSL_Api   m_ApiManager_OSSL;  // 'this' value for all os...() functions
                 //              ....
                 //  }
-                AssemblyName assemblyName = new AssemblyName();
-                assemblyName.Name = "XMRInstanceSuperAssembly";
+                AssemblyName assemblyName = new AssemblyName
+                {
+                    Name = "XMRInstanceSuperAssembly"
+                };
                 AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
                 ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("XMRInstanceSuperModule");
                 TypeBuilder typeBuilder = moduleBuilder.DefineType("XMRInstanceSuperType", TypeAttributes.Public | TypeAttributes.Class);
@@ -1907,10 +1909,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         }
                         else
                         {
-                            sd = new ScriptTopStatsData();
-                            sd.localID = rootLocalID;
-                            sd.time = time;
-                            sd.memory = mem;
+                            sd = new ScriptTopStatsData
+                            {
+                                localID = rootLocalID,
+                                time = time,
+                                memory = mem
+                            };
                             topScripts[rootLocalID] = sd;
                         }
                     }

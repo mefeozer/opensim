@@ -84,10 +84,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
 
             // Add to timer
-            TimerInfo ts = new TimerInfo();
-            ts.localID = m_localID;
-            ts.itemID = m_itemID;
-            ts.interval = Convert.ToInt64(sec * 10000000); // How many 100 nanoseconds (ticks) should we wait
+            TimerInfo ts = new TimerInfo
+            {
+                localID = m_localID,
+                itemID = m_itemID,
+                interval = Convert.ToInt64(sec * 10000000) // How many 100 nanoseconds (ticks) should we wait
+            };
             //       2193386136332921 ticks
             //       219338613 seconds
 
@@ -173,12 +175,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 
             while (idx < data.Length)
             {
-                TimerInfo ts = new TimerInfo();
-
-                ts.localID = localID;
-                ts.itemID = itemID;
-                ts.interval = (long)data[idx];
-                ts.next = DateTime.Now.Ticks + (long)data[idx+1];
+                TimerInfo ts = new TimerInfo
+                {
+                    localID = localID,
+                    itemID = itemID,
+                    interval = (long)data[idx],
+                    next = DateTime.Now.Ticks + (long)data[idx + 1]
+                };
                 idx += 2;
 
                 lock (TimerListLock)

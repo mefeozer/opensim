@@ -54,9 +54,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 if(!delegateCommons.TryGetValue(sig, out dc))
                 {
-                    dc = new DelegateCommon();
-                    dc.sig = sig;
-                    dc.type = CreateDelegateType(sig, ret, args);
+                    dc = new DelegateCommon
+                    {
+                        sig = sig,
+                        type = CreateDelegateType(sig, ret, args)
+                    };
                     delegateCommons.Add(sig, dc);
                     delegateCommonsBySysType.Add(dc.type, dc);
                 }
@@ -91,8 +93,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             if(delegateModuleBuilder == null)
             {
-                AssemblyName assembly = new AssemblyName();
-                assembly.Name = "CustomDelegateAssembly";
+                AssemblyName assembly = new AssemblyName
+                {
+                    Name = "CustomDelegateAssembly"
+                };
                 AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assembly, AssemblyBuilderAccess.Run);
                 delegateModuleBuilder = assemblyBuilder.DefineDynamicModule("CustomDelegateModule");
             }

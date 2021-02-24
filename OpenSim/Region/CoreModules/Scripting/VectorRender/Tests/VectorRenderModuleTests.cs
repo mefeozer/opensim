@@ -46,9 +46,11 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
             TestsAssetCache cache = new TestsAssetCache();
             m_scene = new SceneHelpers(cache).SetupScene();
 
-            m_dtm = new DynamicTextureModule();
-            m_dtm.ReuseTextures = reuseTextures;
-//            m_dtm.ReuseLowDataTextures = reuseTextures;
+            m_dtm = new DynamicTextureModule
+            {
+                ReuseTextures = reuseTextures
+            };
+            //            m_dtm.ReuseLowDataTextures = reuseTextures;
 
             m_vrm = new VectorRenderModule();
 

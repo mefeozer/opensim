@@ -761,32 +761,40 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             anim.Joints = new binBVHJoint[strjoints.Length];
             for (int j = 0; j < strjoints.Length; j++)
             {
-                anim.Joints[j] = new binBVHJoint();
-                anim.Joints[j].Name = strjoints[j];
-                anim.Joints[j].Priority = 7;
-                anim.Joints[j].positionkeys = new binBVHJointKey[rnditerations];
-                anim.Joints[j].rotationkeys = new binBVHJointKey[rnditerations];
+                anim.Joints[j] = new binBVHJoint
+                {
+                    Name = strjoints[j],
+                    Priority = 7,
+                    positionkeys = new binBVHJointKey[rnditerations],
+                    rotationkeys = new binBVHJointKey[rnditerations]
+                };
                 Random rnd = new Random();
                 for (int i = 0; i < rnditerations; i++)
                 {
-                    anim.Joints[j].rotationkeys[i] = new binBVHJointKey();
-                    anim.Joints[j].rotationkeys[i].time = i * .10f;
+                    anim.Joints[j].rotationkeys[i] = new binBVHJointKey
+                    {
+                        time = i * .10f
+                    };
                     anim.Joints[j].rotationkeys[i].key_element.X = (float)rnd.NextDouble() * 2 - 1;
                     anim.Joints[j].rotationkeys[i].key_element.Y = (float)rnd.NextDouble() * 2 - 1;
                     anim.Joints[j].rotationkeys[i].key_element.Z = (float)rnd.NextDouble() * 2 - 1;
-                    anim.Joints[j].positionkeys[i] = new binBVHJointKey();
-                    anim.Joints[j].positionkeys[i].time = i * .10f;
+                    anim.Joints[j].positionkeys[i] = new binBVHJointKey
+                    {
+                        time = i * .10f
+                    };
                     anim.Joints[j].positionkeys[i].key_element.X = 0;
                     anim.Joints[j].positionkeys[i].key_element.Y = 0;
                     anim.Joints[j].positionkeys[i].key_element.Z = 0;
                 }
             }
 
-            AssetBase Animasset = new AssetBase(UUID.Random(), "Random Animation", (sbyte)AssetType.Animation, m_scenePresence.UUID.ToString());
-            Animasset.Data = anim.ToBytes();
-            Animasset.Temporary = true;
-            Animasset.Local = true;
-            Animasset.Description = "dance";
+            AssetBase Animasset = new AssetBase(UUID.Random(), "Random Animation", (sbyte)AssetType.Animation, m_scenePresence.UUID.ToString())
+            {
+                Data = anim.ToBytes(),
+                Temporary = true,
+                Local = true,
+                Description = "dance"
+            };
             //BinBVHAnimation bbvhanim = new BinBVHAnimation(Animasset.Data);
 
             m_scenePresence.Scene.AssetService.Store(Animasset);

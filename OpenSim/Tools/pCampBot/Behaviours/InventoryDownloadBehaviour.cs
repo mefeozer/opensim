@@ -90,8 +90,10 @@ namespace pCampBot
                     {
                         if (item is InventoryFolder)
                         {
-                            InventoryFolder f = new InventoryFolder(item.UUID);
-                            f.OwnerID = item.OwnerID;
+                            InventoryFolder f = new InventoryFolder(item.UUID)
+                            {
+                                OwnerID = item.OwnerID
+                            };
                             m_foldersToFetch.Add(f);
                         }
                     }

@@ -129,13 +129,15 @@ namespace OpenSim.Data.PGSQL
                             (string)reader["name"],
                             Convert.ToSByte(reader["assetType"]),
                             reader["creatorid"].ToString()
-                        );
-                        // Region Main
-                        asset.Description = (string)reader["description"];
-                        asset.Local = Convert.ToBoolean(reader["local"]);
-                        asset.Temporary = Convert.ToBoolean(reader["temporary"]);
-                        asset.Flags = (AssetFlags)Convert.ToInt32(reader["asset_flags"]);
-                        asset.Data = (byte[])reader["data"];
+                        )
+                        {
+                            // Region Main
+                            Description = (string)reader["description"],
+                            Local = Convert.ToBoolean(reader["local"]),
+                            Temporary = Convert.ToBoolean(reader["temporary"]),
+                            Flags = (AssetFlags)Convert.ToInt32(reader["asset_flags"]),
+                            Data = (byte[])reader["data"]
+                        };
                         return asset;
                     }
                     return null; // throw new Exception("No rows to return");
@@ -291,13 +293,15 @@ namespace OpenSim.Data.PGSQL
                 {
                     while (reader.Read())
                     {
-                        AssetMetadata metadata = new AssetMetadata();
-                        metadata.FullID = DBGuid.FromDB(reader["id"]);
-                        metadata.Name = (string)reader["name"];
-                        metadata.Description = (string)reader["description"];
-                        metadata.Type = Convert.ToSByte(reader["assetType"]);
-                        metadata.Temporary = Convert.ToBoolean(reader["temporary"]);
-                        metadata.CreatorID = (string)reader["creatorid"];
+                        AssetMetadata metadata = new AssetMetadata
+                        {
+                            FullID = DBGuid.FromDB(reader["id"]),
+                            Name = (string)reader["name"],
+                            Description = (string)reader["description"],
+                            Type = Convert.ToSByte(reader["assetType"]),
+                            Temporary = Convert.ToBoolean(reader["temporary"]),
+                            CreatorID = (string)reader["creatorid"]
+                        };
                         retList.Add(metadata);
                     }
                 }

@@ -88,11 +88,13 @@ namespace OpenSim.Region.PhysicsModule.ODE
         {
             lock (m_PendingRequests)
             {
-                ODERayCastRequest req = new ODERayCastRequest();
-                req.callbackMethod = retMethod;
-                req.length = length;
-                req.Normal = direction;
-                req.Origin = position;
+                ODERayCastRequest req = new ODERayCastRequest
+                {
+                    callbackMethod = retMethod,
+                    length = length,
+                    Normal = direction,
+                    Origin = position
+                };
 
                 m_PendingRequests.Add(req);
             }
@@ -110,12 +112,14 @@ namespace OpenSim.Region.PhysicsModule.ODE
         {
             lock (m_PendingRequests)
             {
-                ODERayRequest req = new ODERayRequest();
-                req.callbackMethod = retMethod;
-                req.length = length;
-                req.Normal = direction;
-                req.Origin = position;
-                req.Count = count;
+                ODERayRequest req = new ODERayRequest
+                {
+                    callbackMethod = retMethod,
+                    length = length,
+                    Normal = direction,
+                    Origin = position,
+                    Count = count
+                };
 
                 m_PendingRayRequests.Add(req);
             }
@@ -324,13 +328,14 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 {
                     if (p1 is OdePrim)
                     {
-                        ContactResult collisionresult = new ContactResult();
-
-                        collisionresult.ConsumerID = p1.LocalID;
-                        collisionresult.Pos = new Vector3(contacts[i].pos.X, contacts[i].pos.Y, contacts[i].pos.Z);
-                        collisionresult.Depth = contacts[i].depth;
-                        collisionresult.Normal = new Vector3(contacts[i].normal.X, contacts[i].normal.Y,
-                                                             contacts[i].normal.Z);
+                        ContactResult collisionresult = new ContactResult
+                        {
+                            ConsumerID = p1.LocalID,
+                            Pos = new Vector3(contacts[i].pos.X, contacts[i].pos.Y, contacts[i].pos.Z),
+                            Depth = contacts[i].depth,
+                            Normal = new Vector3(contacts[i].normal.X, contacts[i].normal.Y,
+                                                             contacts[i].normal.Z)
+                        };
                         lock (m_contactResults)
                             m_contactResults.Add(collisionresult);
                     }
@@ -340,13 +345,14 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 {
                     if (p2 is OdePrim)
                     {
-                        ContactResult collisionresult = new ContactResult();
-
-                        collisionresult.ConsumerID = p2.LocalID;
-                        collisionresult.Pos = new Vector3(contacts[i].pos.X, contacts[i].pos.Y, contacts[i].pos.Z);
-                        collisionresult.Depth = contacts[i].depth;
-                        collisionresult.Normal = new Vector3(contacts[i].normal.X, contacts[i].normal.Y,
-                                      contacts[i].normal.Z);
+                        ContactResult collisionresult = new ContactResult
+                        {
+                            ConsumerID = p2.LocalID,
+                            Pos = new Vector3(contacts[i].pos.X, contacts[i].pos.Y, contacts[i].pos.Z),
+                            Depth = contacts[i].depth,
+                            Normal = new Vector3(contacts[i].normal.X, contacts[i].normal.Y,
+                                      contacts[i].normal.Z)
+                        };
 
                         lock (m_contactResults)
                             m_contactResults.Add(collisionresult);

@@ -172,11 +172,13 @@ namespace OpenSim.Region.CoreModules.Framework.Search
                 int count = 0;
                 foreach (UserAccount acc in accounts)
                 {
-                    DirPeopleReplyData d = new DirPeopleReplyData();
-                    d.agentID = acc.PrincipalID;
-                    d.firstName = acc.FirstName;
-                    d.lastName = acc.LastName;
-                    d.online = false;
+                    DirPeopleReplyData d = new DirPeopleReplyData
+                    {
+                        agentID = acc.PrincipalID,
+                        firstName = acc.FirstName,
+                        lastName = acc.LastName,
+                        online = false
+                    };
 
                     hits[count++] = d;
                 }

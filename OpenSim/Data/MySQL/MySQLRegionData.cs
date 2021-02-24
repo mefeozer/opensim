@@ -223,17 +223,19 @@ namespace OpenSim.Data.MySQL
                 {
                     while (result.Read())
                     {
-                        RegionData ret = new RegionData();
-                        ret.Data = new Dictionary<string, object>();
+                        RegionData ret = new RegionData
+                        {
+                            Data = new Dictionary<string, object>(),
 
-                        ret.RegionID = DBGuid.FromDB(result["uuid"]);
-                        ret.ScopeID = DBGuid.FromDB(result["ScopeID"]);
+                            RegionID = DBGuid.FromDB(result["uuid"]),
+                            ScopeID = DBGuid.FromDB(result["ScopeID"]),
 
-                        ret.RegionName = result["regionName"].ToString();
-                        ret.posX = Convert.ToInt32(result["locX"]);
-                        ret.posY = Convert.ToInt32(result["locY"]);
-                        ret.sizeX = Convert.ToInt32(result["sizeX"]);
-                        ret.sizeY = Convert.ToInt32(result["sizeY"]);
+                            RegionName = result["regionName"].ToString(),
+                            posX = Convert.ToInt32(result["locX"]),
+                            posY = Convert.ToInt32(result["locY"]),
+                            sizeX = Convert.ToInt32(result["sizeX"]),
+                            sizeY = Convert.ToInt32(result["sizeY"])
+                        };
 
                         CheckColumnNames(result);
 

@@ -62,16 +62,18 @@ namespace OpenSim.Framework
             if (sessionID == validcircuit.SessionID && agentID == validcircuit.AgentID)
             {
                 user.Authorised = true;
-                user.LoginInfo = new Login();
-                user.LoginInfo.Agent = agentID;
-                user.LoginInfo.Session = sessionID;
-                user.LoginInfo.SecureSession = validcircuit.SecureSessionID;
-                user.LoginInfo.First = validcircuit.firstname;
-                user.LoginInfo.Last = validcircuit.lastname;
-                user.LoginInfo.InventoryFolder = validcircuit.InventoryFolder;
-                user.LoginInfo.BaseFolder = validcircuit.BaseFolder;
-                user.LoginInfo.StartPos = validcircuit.startpos;
-                user.LoginInfo.StartFar = (float)validcircuit.startfar;
+                user.LoginInfo = new Login
+                {
+                    Agent = agentID,
+                    Session = sessionID,
+                    SecureSession = validcircuit.SecureSessionID,
+                    First = validcircuit.firstname,
+                    Last = validcircuit.lastname,
+                    InventoryFolder = validcircuit.InventoryFolder,
+                    BaseFolder = validcircuit.BaseFolder,
+                    StartPos = validcircuit.startpos,
+                    StartFar = (float)validcircuit.startfar
+                };
             }
             else
             {

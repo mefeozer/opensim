@@ -751,9 +751,11 @@ namespace OpenSim.Region.OptionalModules.Materials
             AssetBase asset = null;
             byte[] data = fm.toLLSDxml();
 
-            asset = new AssetBase(fm.ID, "llmaterial", (sbyte)OpenSimAssetType.Material, "00000000-0000-0000-0000-000000000000");
-            asset.Data = data;
-            asset.Local = local;
+            asset = new AssetBase(fm.ID, "llmaterial", (sbyte)OpenSimAssetType.Material, "00000000-0000-0000-0000-000000000000")
+            {
+                Data = data,
+                Local = local
+            };
             return asset;
         }
 

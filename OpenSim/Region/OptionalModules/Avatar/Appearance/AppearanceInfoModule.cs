@@ -422,8 +422,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
                                 {
                                     WearableItem wi = aw[j];
 
-                                    ConsoleDisplayList cdl = new ConsoleDisplayList();
-                                    cdl.Indent = 2;
+                                    ConsoleDisplayList cdl = new ConsoleDisplayList
+                                    {
+                                        Indent = 2
+                                    };
                                     cdl.AddRow("Item UUID", wi.ItemID);
                                     cdl.AddRow("Assets", "");
                                     sb.Append(cdl.ToString());
@@ -435,8 +437,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
 
                                     bool[] existChecks = scene.AssetService.AssetsExist(assetStrings);
 
-                                    ConsoleDisplayTable cdt = new ConsoleDisplayTable();
-                                    cdt.Indent = 4;
+                                    ConsoleDisplayTable cdt = new ConsoleDisplayTable
+                                    {
+                                        Indent = 4
+                                    };
                                     cdt.AddColumn("Type", 10);
                                     cdt.AddColumn("UUID", ConsoleDisplayUtil.UuidSize);
                                     cdt.AddColumn("Found", 5);

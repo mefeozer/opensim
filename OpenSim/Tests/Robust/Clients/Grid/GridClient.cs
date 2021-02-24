@@ -116,12 +116,14 @@ namespace Robust.Tests
 
         private static GridRegion CreateRegion(string name, uint xcell, uint ycell)
         {
-            GridRegion region = new GridRegion(xcell, ycell);
-            region.RegionName = name;
-            region.RegionID = UUID.Random();
-            region.ExternalHostName = "127.0.0.1";
-            region.HttpPort = 9000;
-            region.InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 9000);
+            GridRegion region = new GridRegion(xcell, ycell)
+            {
+                RegionName = name,
+                RegionID = UUID.Random(),
+                ExternalHostName = "127.0.0.1",
+                HttpPort = 9000,
+                InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 9000)
+            };
 
             return region;
         }

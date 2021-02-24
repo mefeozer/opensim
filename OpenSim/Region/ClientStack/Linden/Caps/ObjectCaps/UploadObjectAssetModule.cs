@@ -217,11 +217,13 @@ namespace OpenSim.Region.ClientStack.Linden
                     pbs.Scale = obj.Scale;
                     pbs.State = (byte) 0;
                     pbs.LastAttachPoint = (byte) 0;
-                    SceneObjectPart prim = new SceneObjectPart();
-                    prim.UUID = UUID.Random();
-                    prim.CreatorID = agentID;
-                    prim.OwnerID = agentID;
-                    prim.GroupID = obj.GroupID;
+                    SceneObjectPart prim = new SceneObjectPart
+                    {
+                        UUID = UUID.Random(),
+                        CreatorID = agentID,
+                        OwnerID = agentID,
+                        GroupID = obj.GroupID
+                    };
                     prim.LastOwnerID = prim.OwnerID;
                     prim.RezzerID = agentID;
                     prim.CreationDate = Util.UnixTimeSinceEpoch();

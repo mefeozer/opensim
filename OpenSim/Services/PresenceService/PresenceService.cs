@@ -78,12 +78,13 @@ namespace OpenSim.Services.PresenceService
                 }
             }
 
-            PresenceData data = new PresenceData();
-
-            data.UserID = userID;
-            data.RegionID = UUID.Zero;
-            data.SessionID = sessionID;
-            data.Data = new Dictionary<string, string>();
+            PresenceData data = new PresenceData
+            {
+                UserID = userID,
+                RegionID = UUID.Zero,
+                SessionID = sessionID,
+                Data = new Dictionary<string, string>()
+            };
             data.Data["SecureSessionID"] = secureSessionID.ToString();
 
             m_Database.Store(data);

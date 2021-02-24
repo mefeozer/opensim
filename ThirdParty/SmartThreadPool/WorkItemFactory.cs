@@ -155,11 +155,13 @@ namespace Amib.Threading.Internal
             ValidateCallback(callback);
             ValidateCallback(postExecuteWorkItemCallback);
 
-            WorkItemInfo workItemInfo = new WorkItemInfo();
-            workItemInfo.UseCallerCallContext = wigStartInfo.UseCallerCallContext;
-            workItemInfo.PostExecuteWorkItemCallback = postExecuteWorkItemCallback;
-            workItemInfo.CallToPostExecute = wigStartInfo.CallToPostExecute;
-            workItemInfo.DisposeOfStateObjects = wigStartInfo.DisposeOfStateObjects;
+            WorkItemInfo workItemInfo = new WorkItemInfo
+            {
+                UseCallerCallContext = wigStartInfo.UseCallerCallContext,
+                PostExecuteWorkItemCallback = postExecuteWorkItemCallback,
+                CallToPostExecute = wigStartInfo.CallToPostExecute,
+                DisposeOfStateObjects = wigStartInfo.DisposeOfStateObjects
+            };
 
             WorkItem workItem = new WorkItem(
                 workItemsGroup,
@@ -195,11 +197,13 @@ namespace Amib.Threading.Internal
             ValidateCallback(callback);
             ValidateCallback(postExecuteWorkItemCallback);
 
-            WorkItemInfo workItemInfo = new WorkItemInfo();
-            workItemInfo.UseCallerCallContext = wigStartInfo.UseCallerCallContext;
-            workItemInfo.PostExecuteWorkItemCallback = postExecuteWorkItemCallback;
-            workItemInfo.CallToPostExecute = callToPostExecute;
-            workItemInfo.DisposeOfStateObjects = wigStartInfo.DisposeOfStateObjects;
+            WorkItemInfo workItemInfo = new WorkItemInfo
+            {
+                UseCallerCallContext = wigStartInfo.UseCallerCallContext,
+                PostExecuteWorkItemCallback = postExecuteWorkItemCallback,
+                CallToPostExecute = callToPostExecute,
+                DisposeOfStateObjects = wigStartInfo.DisposeOfStateObjects
+            };
 
             WorkItem workItem = new WorkItem(
                 workItemsGroup,

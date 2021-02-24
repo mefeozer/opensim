@@ -287,39 +287,41 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                InventoryItemBase item = new InventoryItemBase();
+                InventoryItemBase item = new InventoryItemBase
+                {
 
-                // TODO: this is to handle a case where NULLs creep in there, which we are not sure is endemic to the system, or legacy.  It would be nice to live fix these.
-                // (DBGuid.FromDB() reads db NULLs as well, returns UUID.Zero)
-                item.CreatorId = reader["creatorID"].ToString();
+                    // TODO: this is to handle a case where NULLs creep in there, which we are not sure is endemic to the system, or legacy.  It would be nice to live fix these.
+                    // (DBGuid.FromDB() reads db NULLs as well, returns UUID.Zero)
+                    CreatorId = reader["creatorID"].ToString(),
 
-                // Be a bit safer in parsing these because the
-                // database doesn't enforce them to be not null, and
-                // the inventory still works if these are weird in the
-                // db
+                    // Be a bit safer in parsing these because the
+                    // database doesn't enforce them to be not null, and
+                    // the inventory still works if these are weird in the
+                    // db
 
-                // (Empty is Ok, but "weird" will throw!)
-                item.Owner = DBGuid.FromDB(reader["avatarID"]);
-                item.GroupID = DBGuid.FromDB(reader["groupID"]);
+                    // (Empty is Ok, but "weird" will throw!)
+                    Owner = DBGuid.FromDB(reader["avatarID"]),
+                    GroupID = DBGuid.FromDB(reader["groupID"]),
 
-                // Rest of the parsing.  If these UUID's fail, we're dead anyway
-                item.ID = DBGuid.FromDB(reader["inventoryID"]);
-                item.AssetID = DBGuid.FromDB(reader["assetID"]);
-                item.AssetType = (int) reader["assetType"];
-                item.Folder = DBGuid.FromDB(reader["parentFolderID"]);
-                item.Name = (string)(reader["inventoryName"] ?? string.Empty);
-                item.Description = (string)(reader["inventoryDescription"] ?? string.Empty);
-                item.NextPermissions = (uint) reader["inventoryNextPermissions"];
-                item.CurrentPermissions = (uint) reader["inventoryCurrentPermissions"];
-                item.InvType = (int) reader["invType"];
-                item.BasePermissions = (uint) reader["inventoryBasePermissions"];
-                item.EveryOnePermissions = (uint) reader["inventoryEveryOnePermissions"];
-                item.GroupPermissions = (uint) reader["inventoryGroupPermissions"];
-                item.SalePrice = (int) reader["salePrice"];
-                item.SaleType = unchecked((byte)Convert.ToSByte(reader["saleType"]));
-                item.CreationDate = (int) reader["creationDate"];
-                item.GroupOwned = Convert.ToBoolean(reader["groupOwned"]);
-                item.Flags = (uint) reader["flags"];
+                    // Rest of the parsing.  If these UUID's fail, we're dead anyway
+                    ID = DBGuid.FromDB(reader["inventoryID"]),
+                    AssetID = DBGuid.FromDB(reader["assetID"]),
+                    AssetType = (int)reader["assetType"],
+                    Folder = DBGuid.FromDB(reader["parentFolderID"]),
+                    Name = (string)(reader["inventoryName"] ?? string.Empty),
+                    Description = (string)(reader["inventoryDescription"] ?? string.Empty),
+                    NextPermissions = (uint)reader["inventoryNextPermissions"],
+                    CurrentPermissions = (uint)reader["inventoryCurrentPermissions"],
+                    InvType = (int)reader["invType"],
+                    BasePermissions = (uint)reader["inventoryBasePermissions"],
+                    EveryOnePermissions = (uint)reader["inventoryEveryOnePermissions"],
+                    GroupPermissions = (uint)reader["inventoryGroupPermissions"],
+                    SalePrice = (int)reader["salePrice"],
+                    SaleType = unchecked((byte)Convert.ToSByte(reader["saleType"])),
+                    CreationDate = (int)reader["creationDate"],
+                    GroupOwned = Convert.ToBoolean(reader["groupOwned"]),
+                    Flags = (uint)reader["flags"]
+                };
 
                 return item;
             }
@@ -379,13 +381,15 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                InventoryFolderBase folder = new InventoryFolderBase();
-                folder.Owner = DBGuid.FromDB(reader["agentID"]);
-                folder.ParentID = DBGuid.FromDB(reader["parentFolderID"]);
-                folder.ID = DBGuid.FromDB(reader["folderID"]);
-                folder.Name = (string) reader["folderName"];
-                folder.Type = (short) reader["type"];
-                folder.Version = (ushort) (int) reader["version"];
+                InventoryFolderBase folder = new InventoryFolderBase
+                {
+                    Owner = DBGuid.FromDB(reader["agentID"]),
+                    ParentID = DBGuid.FromDB(reader["parentFolderID"]),
+                    ID = DBGuid.FromDB(reader["folderID"]),
+                    Name = (string)reader["folderName"],
+                    Type = (short)reader["type"],
+                    Version = (ushort)(int)reader["version"]
+                };
                 return folder;
             }
             catch (Exception e)

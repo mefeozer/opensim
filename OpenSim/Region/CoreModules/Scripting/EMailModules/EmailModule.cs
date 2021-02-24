@@ -289,9 +289,11 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
                 try
                 {
                     //Creation EmailMessage
-                    EmailMessage emailMessage = new EmailMessage();
-                    //From
-                    emailMessage.FromAddress = new EmailAddress(objectID.ToString() + "@" + m_HostName);
+                    EmailMessage emailMessage = new EmailMessage
+                    {
+                        //From
+                        FromAddress = new EmailAddress(objectID.ToString() + "@" + m_HostName)
+                    };
                     //To - Only One
                     emailMessage.AddToAddress(new EmailAddress(address));
                     //Subject
@@ -327,13 +329,15 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
             else
             {
                 // inter object email, keep it in the family
-                Email email = new Email();
-                email.time = ((int)(DateTime.UtcNow - new DateTime(1970,1,1,0,0,0)).TotalSeconds).ToString();
-                email.subject = subject;
-                email.sender = objectID.ToString() + "@" + m_InterObjectHostname;
-                email.message = "Object-Name: " + LastObjectName +
+                Email email = new Email
+                {
+                    time = ((int)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds).ToString(),
+                    subject = subject,
+                    sender = objectID.ToString() + "@" + m_InterObjectHostname,
+                    message = "Object-Name: " + LastObjectName +
                               "\nRegion: " + LastObjectRegionName + "\nLocal-Position: " +
-                              LastObjectPosition + "\n\n" + body;
+                              LastObjectPosition + "\n\n" + body
+                };
 
                 string guid = address.Substring(0, address.IndexOf("@"));
                 UUID toID = new UUID(guid);

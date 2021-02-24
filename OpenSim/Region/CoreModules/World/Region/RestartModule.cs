@@ -230,9 +230,11 @@ namespace OpenSim.Region.CoreModules.World.Region
         {
             if (intervalSeconds > 0)
             {
-                m_CountdownTimer = new Timer();
-                m_CountdownTimer.AutoReset = false;
-                m_CountdownTimer.Interval = intervalSeconds * 1000;
+                m_CountdownTimer = new Timer
+                {
+                    AutoReset = false,
+                    Interval = intervalSeconds * 1000
+                };
                 m_CountdownTimer.Elapsed += OnTimer;
                 m_CountdownTimer.Start();
             }

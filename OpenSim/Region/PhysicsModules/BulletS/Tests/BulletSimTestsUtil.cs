@@ -78,9 +78,11 @@ namespace OpenSim.Region.PhysicsModule.BulletS.Tests
 
         Vector3 regionExtent = new Vector3(Constants.RegionSize, Constants.RegionSize, Constants.RegionHeight);
 
-        RegionInfo info = new RegionInfo();
-        info.RegionName = "BSTestRegion";
-        info.RegionSizeX = info.RegionSizeY = info.RegionSizeZ = Constants.RegionSize;
+            RegionInfo info = new RegionInfo
+            {
+                RegionName = "BSTestRegion"
+            };
+            info.RegionSizeX = info.RegionSizeY = info.RegionSizeZ = Constants.RegionSize;
         OpenSim.Region.Framework.Scenes.Scene scene = new OpenSim.Region.Framework.Scenes.Scene(info);
 
         IMesher mesher = new OpenSim.Region.PhysicsModule.Meshing.Meshmerizer();

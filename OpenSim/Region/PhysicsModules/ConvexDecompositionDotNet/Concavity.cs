@@ -39,10 +39,11 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             volume = 1f;
 
             HullResult result = new HullResult();
-            HullDesc desc = new HullDesc();
-
-            desc.MaxFaces = 256;
-            desc.MaxVertices = 256;
+            HullDesc desc = new HullDesc
+            {
+                MaxFaces = 256,
+                MaxVertices = 256
+            };
             desc.SetHullFlag(HullFlag.QF_TRIANGLES);
             desc.Vertices = vertices;
 

@@ -852,12 +852,14 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 }
             }
 
-            item = new InventoryItemBase();
-            item.ID = UUID.Random();
-            item.InvType = (int)InventoryType.Object;
-            item.Folder = folder.ID;
-            item.Owner = userID;
-            item.CreationDate = Util.UnixTimeSinceEpoch();
+            item = new InventoryItemBase
+            {
+                ID = UUID.Random(),
+                InvType = (int)InventoryType.Object,
+                Folder = folder.ID,
+                Owner = userID,
+                CreationDate = Util.UnixTimeSinceEpoch()
+            };
 
             return item;
         }
@@ -1389,9 +1391,11 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
         /// <returns></returns>
         private AssetBase CreateAsset(string name, string description, sbyte assetType, byte[] data, string creatorID)
         {
-            AssetBase asset = new AssetBase(UUID.Random(), name, assetType, creatorID);
-            asset.Description = description;
-            asset.Data = data == null ? new byte[1] : data;
+            AssetBase asset = new AssetBase(UUID.Random(), name, assetType, creatorID)
+            {
+                Description = description,
+                Data = data == null ? new byte[1] : data
+            };
 
             return asset;
         }

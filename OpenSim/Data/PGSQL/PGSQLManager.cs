@@ -309,10 +309,11 @@ namespace OpenSim.Data.PGSQL
             //HACK if object is null, it is turned into a string, there are no nullable type till now
             if (parameterObject == null) parameterObject = "";
 
-            NpgsqlParameter parameter = new NpgsqlParameter(parameterName, DbtypeFromString(parameterObject.GetType(), PGFieldType));
-
-            parameter.Direction = ParameterDirection.Input;
-            parameter.Value = CreateParameterValue(parameterObject, PGFieldType);
+            NpgsqlParameter parameter = new NpgsqlParameter(parameterName, DbtypeFromString(parameterObject.GetType(), PGFieldType))
+            {
+                Direction = ParameterDirection.Input,
+                Value = CreateParameterValue(parameterObject, PGFieldType)
+            };
 
             return parameter;
         }

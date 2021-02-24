@@ -69,8 +69,10 @@ namespace OpenSim.Tests.Common
         public static TaskInventoryItem AddNotecard(
             IAssetService assetService, SceneObjectPart part, string itemName, UUID itemID, UUID assetID, string text)
         {
-            AssetNotecard nc = new AssetNotecard();
-            nc.BodyText = text;
+            AssetNotecard nc = new AssetNotecard
+            {
+                BodyText = text
+            };
             nc.Encode();
 
             AssetBase ncAsset
@@ -136,8 +138,10 @@ namespace OpenSim.Tests.Common
         public static TaskInventoryItem AddScript(
             IAssetService assetService, SceneObjectPart part, UUID itemId, UUID assetId, string scriptName, string scriptSource)
         {
-            AssetScriptText ast = new AssetScriptText();
-            ast.Source = scriptSource;
+            AssetScriptText ast = new AssetScriptText
+            {
+                Source = scriptSource
+            };
             ast.Encode();
 
             AssetBase asset

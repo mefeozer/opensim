@@ -445,11 +445,13 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 return null;
             }
 
-            GroupInviteInfo inviteInfo = new GroupInviteInfo();
-            inviteInfo.InviteID = inviteID;
-            inviteInfo.GroupID = UUID.Parse((string)respData["GroupID"]);
-            inviteInfo.RoleID = UUID.Parse((string)respData["RoleID"]);
-            inviteInfo.AgentID = UUID.Parse((string)respData["AgentID"]);
+            GroupInviteInfo inviteInfo = new GroupInviteInfo
+            {
+                InviteID = inviteID,
+                GroupID = UUID.Parse((string)respData["GroupID"]),
+                RoleID = UUID.Parse((string)respData["RoleID"]),
+                AgentID = UUID.Parse((string)respData["AgentID"])
+            };
 
             return inviteInfo;
         }
@@ -515,8 +517,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 Hashtable results = (Hashtable)respData["results"];
                 foreach (Hashtable groupFind in results.Values)
                 {
-                    DirGroupsReplyData data = new DirGroupsReplyData();
-                    data.groupID = new UUID((string)groupFind["GroupID"]); ;
+                    DirGroupsReplyData data = new DirGroupsReplyData
+                    {
+                        groupID = new UUID((string)groupFind["GroupID"])
+                    };
+                    ;
                     data.groupName = (string)groupFind["Name"];
                     data.members = int.Parse((string)groupFind["Members"]);
                     // data.searchOrder = order;
@@ -598,12 +603,14 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
             foreach (Hashtable role in respData.Values)
             {
-                GroupRolesData data = new GroupRolesData();
-                data.RoleID = new UUID((string)role["RoleID"]);
-                data.Name = (string)role["Name"];
-                data.Description = (string)role["Description"];
-                data.Powers = ulong.Parse((string)role["Powers"]);
-                data.Title = (string)role["Title"];
+                GroupRolesData data = new GroupRolesData
+                {
+                    RoleID = new UUID((string)role["RoleID"]),
+                    Name = (string)role["Name"],
+                    Description = (string)role["Description"],
+                    Powers = ulong.Parse((string)role["Powers"]),
+                    Title = (string)role["Title"]
+                };
 
                 Roles.Add(data);
             }
@@ -627,13 +634,15 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
             foreach (Hashtable role in respData.Values)
             {
-                GroupRolesData data = new GroupRolesData();
-                data.Description = (string)role["Description"];
-                data.Members = int.Parse((string)role["Members"]);
-                data.Name = (string)role["Name"];
-                data.Powers = ulong.Parse((string)role["Powers"]);
-                data.RoleID = new UUID((string)role["RoleID"]);
-                data.Title = (string)role["Title"];
+                GroupRolesData data = new GroupRolesData
+                {
+                    Description = (string)role["Description"],
+                    Members = int.Parse((string)role["Members"]),
+                    Name = (string)role["Name"],
+                    Powers = ulong.Parse((string)role["Powers"]),
+                    RoleID = new UUID((string)role["RoleID"]),
+                    Title = (string)role["Title"]
+                };
 
                 Roles.Add(data);
             }
@@ -657,16 +666,17 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
             foreach (Hashtable membership in respData.Values)
             {
-                GroupMembersData data = new GroupMembersData();
-
-                data.AcceptNotices = (string)membership["AcceptNotices"] == "1";
-                data.AgentID = new UUID((string)membership["AgentID"]);
-                data.Contribution = int.Parse((string)membership["Contribution"]);
-                data.IsOwner = (string)membership["IsOwner"] == "1";
-                data.ListInProfile = (string)membership["ListInProfile"] == "1";
-                data.AgentPowers = ulong.Parse((string)membership["AgentPowers"]);
-                data.Title = (string)membership["Title"];
-                if(membership.ContainsKey("OnlineStatus"))
+                GroupMembersData data = new GroupMembersData
+                {
+                    AcceptNotices = (string)membership["AcceptNotices"] == "1",
+                    AgentID = new UUID((string)membership["AgentID"]),
+                    Contribution = int.Parse((string)membership["Contribution"]),
+                    IsOwner = (string)membership["IsOwner"] == "1",
+                    ListInProfile = (string)membership["ListInProfile"] == "1",
+                    AgentPowers = ulong.Parse((string)membership["AgentPowers"]),
+                    Title = (string)membership["Title"]
+                };
+                if (membership.ContainsKey("OnlineStatus"))
                     data.OnlineStatus = (string)membership["OnlineStatus"];
 
                 members.Add(data);
@@ -688,10 +698,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             {
                 foreach (Hashtable membership in respData.Values)
                 {
-                    GroupRoleMembersData data = new GroupRoleMembersData();
-
-                    data.MemberID = new UUID((string)membership["AgentID"]);
-                    data.RoleID = new UUID((string)membership["RoleID"]);
+                    GroupRoleMembersData data = new GroupRoleMembersData
+                    {
+                        MemberID = new UUID((string)membership["AgentID"]),
+                        RoleID = new UUID((string)membership["RoleID"])
+                    };
 
                     members.Add(data);
                 }
@@ -712,13 +723,15 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             {
                 foreach (Hashtable value in respData.Values)
                 {
-                    GroupNoticeData data = new GroupNoticeData();
-                    data.NoticeID = UUID.Parse((string)value["NoticeID"]);
-                    data.Timestamp = uint.Parse((string)value["Timestamp"]);
-                    data.FromName = (string)value["FromName"];
-                    data.Subject = (string)value["Subject"];
-                    data.HasAttachment = false;
-                    data.AssetType = 0;
+                    GroupNoticeData data = new GroupNoticeData
+                    {
+                        NoticeID = UUID.Parse((string)value["NoticeID"]),
+                        Timestamp = uint.Parse((string)value["Timestamp"]),
+                        FromName = (string)value["FromName"],
+                        Subject = (string)value["Subject"],
+                        HasAttachment = false,
+                        AssetType = 0
+                    };
 
                     values.Add(data);
                 }
@@ -739,10 +752,12 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 return null;
             }
 
-            GroupNoticeInfo data = new GroupNoticeInfo();
-            data.GroupID = UUID.Parse((string)respData["GroupID"]);
-            data.Message = (string)respData["Message"];
-            data.BinaryBucket = Utils.HexStringToBytes((string)respData["BinaryBucket"], true);
+            GroupNoticeInfo data = new GroupNoticeInfo
+            {
+                GroupID = UUID.Parse((string)respData["GroupID"]),
+                Message = (string)respData["Message"],
+                BinaryBucket = Utils.HexStringToBytes((string)respData["BinaryBucket"], true)
+            };
             data.noticeData.NoticeID = UUID.Parse((string)respData["NoticeID"]);
             data.noticeData.Timestamp = uint.Parse((string)respData["Timestamp"]);
             data.noticeData.FromName = (string)respData["FromName"];
@@ -841,9 +856,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
         #region XmlRpcHashtableMarshalling
         private GroupProfileData GroupProfileHashtableToGroupProfileData(Hashtable groupProfile)
         {
-            GroupProfileData group = new GroupProfileData();
-            group.GroupID = UUID.Parse((string)groupProfile["GroupID"]);
-            group.Name = (string)groupProfile["Name"];
+            GroupProfileData group = new GroupProfileData
+            {
+                GroupID = UUID.Parse((string)groupProfile["GroupID"]),
+                Name = (string)groupProfile["Name"]
+            };
 
             if (groupProfile["Charter"] != null)
             {
@@ -867,9 +884,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
         private GroupRecord GroupProfileHashtableToGroupRecord(Hashtable groupProfile)
         {
-            GroupRecord group = new GroupRecord();
-            group.GroupID = UUID.Parse((string)groupProfile["GroupID"]);
-            group.GroupName = groupProfile["Name"].ToString();
+            GroupRecord group = new GroupRecord
+            {
+                GroupID = UUID.Parse((string)groupProfile["GroupID"]),
+                GroupName = groupProfile["Name"].ToString()
+            };
             if (groupProfile["Charter"] != null)
             {
                 group.Charter = (string)groupProfile["Charter"];
@@ -888,19 +907,21 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
         private static GroupMembershipData HashTableToGroupMembershipData(Hashtable respData)
         {
-            GroupMembershipData data = new GroupMembershipData();
-            data.AcceptNotices = (string)respData["AcceptNotices"] == "1";
-            data.Contribution = int.Parse((string)respData["Contribution"]);
-            data.ListInProfile = (string)respData["ListInProfile"] == "1";
+            GroupMembershipData data = new GroupMembershipData
+            {
+                AcceptNotices = (string)respData["AcceptNotices"] == "1",
+                Contribution = int.Parse((string)respData["Contribution"]),
+                ListInProfile = (string)respData["ListInProfile"] == "1",
 
-            data.ActiveRole = new UUID((string)respData["SelectedRoleID"]);
-            data.GroupTitle = (string)respData["Title"];
+                ActiveRole = new UUID((string)respData["SelectedRoleID"]),
+                GroupTitle = (string)respData["Title"],
 
-            data.GroupPowers = ulong.Parse((string)respData["GroupPowers"]);
+                GroupPowers = ulong.Parse((string)respData["GroupPowers"]),
 
-            // Is this group the agent's active group
+                // Is this group the agent's active group
 
-            data.GroupID = new UUID((string)respData["GroupID"]);
+                GroupID = new UUID((string)respData["GroupID"])
+            };
 
             UUID ActiveGroup = new UUID((string)respData["ActiveGroupID"]);
             data.Active = data.GroupID.Equals(ActiveGroup);

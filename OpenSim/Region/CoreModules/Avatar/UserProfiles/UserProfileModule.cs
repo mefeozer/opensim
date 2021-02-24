@@ -131,10 +131,12 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                             else
                                 ok = false;
 
-                            UserProfileProperties props = new UserProfileProperties();
-                            props.UserId = avatarID;
+                            UserProfileProperties props = new UserProfileProperties
+                            {
+                                UserId = avatarID
+                            };
 
-                            if(ok)
+                            if (ok)
                             {
                                 string result = string.Empty;
                                 if (!GetProfileData(ref props, foreign, serverURI, out result))
@@ -609,8 +611,10 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         public void ClassifiedInfoRequest(UUID queryClassifiedID, IClientAPI remoteClient)
         {
             UUID target = remoteClient.AgentId;
-            UserClassifiedAdd ad = new UserClassifiedAdd();
-            ad.ClassifiedId = queryClassifiedID;
+            UserClassifiedAdd ad = new UserClassifiedAdd
+            {
+                ClassifiedId = queryClassifiedID
+            };
 
             lock (m_classifiedCache)
             {
@@ -784,21 +788,22 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                 }
             }
 
-            UserClassifiedAdd ad = new UserClassifiedAdd();
-
-            ad.ParcelName = land == null ? string.Empty : land.LandData.Name;
-            ad.CreatorId = remoteClient.AgentId;
-            ad.ClassifiedId = queryclassifiedID;
-            ad.Category = Convert.ToInt32(queryCategory);
-            ad.Name = queryName;
-            ad.Description = queryDescription;
-            ad.ParentEstate = Convert.ToInt32(queryParentEstate);
-            ad.SnapshotId = querySnapshotID;
-            ad.SimName = remoteClient.Scene.RegionInfo.RegionName;
-            ad.GlobalPos = queryGlobalPos.ToString ();
-            ad.Flags = queryclassifiedFlags;
-            ad.Price = queryclassifiedPrice;
-            ad.ParcelId = p.currentParcelUUID;
+            UserClassifiedAdd ad = new UserClassifiedAdd
+            {
+                ParcelName = land == null ? string.Empty : land.LandData.Name,
+                CreatorId = remoteClient.AgentId,
+                ClassifiedId = queryclassifiedID,
+                Category = Convert.ToInt32(queryCategory),
+                Name = queryName,
+                Description = queryDescription,
+                ParentEstate = Convert.ToInt32(queryParentEstate),
+                SnapshotId = querySnapshotID,
+                SimName = remoteClient.Scene.RegionInfo.RegionName,
+                GlobalPos = queryGlobalPos.ToString(),
+                Flags = queryclassifiedFlags,
+                Price = queryclassifiedPrice,
+                ParcelId = p.currentParcelUUID
+            };
 
             object Ad = ad;
 
@@ -1333,11 +1338,12 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                 return;
             }
 
-            UserProfileNotes note = new UserProfileNotes();
-
-            note.UserId = remoteClient.AgentId;
-            note.TargetId = queryTargetID;
-            note.Notes = queryNotes;
+            UserProfileNotes note = new UserProfileNotes
+            {
+                UserId = remoteClient.AgentId,
+                TargetId = queryTargetID,
+                Notes = queryNotes
+            };
 
             string serverURI = string.Empty;
             GetUserProfileServerURI(remoteClient.AgentId, out serverURI);
@@ -1370,11 +1376,12 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         /// </param>
         public void UpdateUserPreferences(bool imViaEmail, bool visible, IClientAPI remoteClient)
         {
-            UserPreferences pref = new UserPreferences();
-
-            pref.UserId = remoteClient.AgentId;
-            pref.IMViaEmail = imViaEmail;
-            pref.Visible = visible;
+            UserPreferences pref = new UserPreferences
+            {
+                UserId = remoteClient.AgentId,
+                IMViaEmail = imViaEmail,
+                Visible = visible
+            };
 
             string serverURI = string.Empty;
             bool foreign = GetUserProfileServerURI(remoteClient.AgentId, out serverURI);
@@ -1398,9 +1405,10 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         /// </param>
         public void UserPreferencesRequest(IClientAPI remoteClient)
         {
-            UserPreferences pref = new UserPreferences();
-
-            pref.UserId = remoteClient.AgentId;
+            UserPreferences pref = new UserPreferences
+            {
+                UserId = remoteClient.AgentId
+            };
 
             string serverURI = string.Empty;
             bool foreign = GetUserProfileServerURI(remoteClient.AgentId, out serverURI);
@@ -1446,14 +1454,15 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         public void AvatarInterestsUpdate(IClientAPI remoteClient, uint wantmask, string wanttext, uint skillsmask, string skillstext, string languages)
         {
 
-            UserProfileProperties prop = new UserProfileProperties();
-
-            prop.UserId = remoteClient.AgentId;
-            prop.WantToMask = (int)wantmask;
-            prop.WantToText = wanttext;
-            prop.SkillsMask = (int)skillsmask;
-            prop.SkillsText = skillstext;
-            prop.Language = languages;
+            UserProfileProperties prop = new UserProfileProperties
+            {
+                UserId = remoteClient.AgentId,
+                WantToMask = (int)wantmask,
+                WantToText = wanttext,
+                SkillsMask = (int)skillsmask,
+                SkillsText = skillstext,
+                Language = languages
+            };
 
             string serverURI = string.Empty;
             GetUserProfileServerURI(remoteClient.AgentId, out serverURI);
@@ -1544,18 +1553,22 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                 }
                 else
                 {
-                    uce = new UserProfileCacheEntry();
-                    uce.ClientsWaitingProps = new HashSet<IClientAPI>();
+                    uce = new UserProfileCacheEntry
+                    {
+                        ClientsWaitingProps = new HashSet<IClientAPI>()
+                    };
                     uce.ClientsWaitingProps.Add(remoteClient);
                     m_profilesCache.AddOrUpdate(avatarID, uce, PROFILECACHEEXPIRE);
                 }
             }
 
-            AsyncPropsRequest req = new AsyncPropsRequest();
-            req.client = remoteClient;
-            req.presence = p;
-            req.agent = avatarID;
-            req.reqtype = 0;
+            AsyncPropsRequest req = new AsyncPropsRequest
+            {
+                client = remoteClient,
+                presence = p,
+                agent = avatarID,
+                reqtype = 0
+            };
 
             m_asyncRequests.Push(req);
 
@@ -1690,16 +1703,17 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
         {
             if (remoteClient.AgentId == newProfile.ID)
             {
-                UserProfileProperties prop = new UserProfileProperties();
+                UserProfileProperties prop = new UserProfileProperties
+                {
+                    UserId = remoteClient.AgentId,
+                    WebUrl = newProfile.ProfileUrl,
+                    ImageId = newProfile.Image,
+                    AboutText = newProfile.AboutText,
+                    FirstLifeImageId = newProfile.FirstLifeImage,
+                    FirstLifeText = newProfile.FirstLifeAboutText
+                };
 
-                prop.UserId = remoteClient.AgentId;
-                prop.WebUrl = newProfile.ProfileUrl;
-                prop.ImageId = newProfile.Image;
-                prop.AboutText = newProfile.AboutText;
-                prop.FirstLifeImageId = newProfile.FirstLifeImage;
-                prop.FirstLifeText = newProfile.FirstLifeAboutText;
-
-                if(!m_allowUserProfileWebURLs)
+                if (!m_allowUserProfileWebURLs)
                     prop.WebUrl ="";
 
                 string serverURI = string.Empty;

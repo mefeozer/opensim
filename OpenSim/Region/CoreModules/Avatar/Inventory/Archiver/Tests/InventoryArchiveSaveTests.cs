@@ -244,10 +244,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             // Create item
             UUID item1Id = UUID.Parse("00000000-0000-0000-0000-000000000080");
             string item1Name = "My Little Dog";
-            InventoryItemBase item1 = new InventoryItemBase();
-            item1.Name = item1Name;
-            item1.AssetID = asset1.FullID;
-            item1.ID = item1Id;
+            InventoryItemBase item1 = new InventoryItemBase
+            {
+                Name = item1Name,
+                AssetID = asset1.FullID,
+                ID = item1Id
+            };
             InventoryFolderBase objsFolder
                 = InventoryArchiveUtils.FindFoldersByPath(m_scene.InventoryService, userId, "Objects")[0];
             item1.Folder = objsFolder.ID;
@@ -339,10 +341,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             // Create item
             UUID item1Id = UUID.Parse("00000000-0000-0000-0000-000000000080");
             string item1Name = "My Little Dog";
-            InventoryItemBase item1 = new InventoryItemBase();
-            item1.Name = item1Name;
-            item1.AssetID = asset1.FullID;
-            item1.ID = item1Id;
+            InventoryItemBase item1 = new InventoryItemBase
+            {
+                Name = item1Name,
+                AssetID = asset1.FullID,
+                ID = item1Id
+            };
             InventoryFolderBase objsFolder
                 = InventoryArchiveUtils.FindFoldersByPath(m_scene.InventoryService, userId, "Objects")[0];
             item1.Folder = objsFolder.ID;

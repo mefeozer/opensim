@@ -53,8 +53,10 @@ namespace OpenSim.Services.UserAccountService
 
         public bool StoreAgentPreferences(AgentPrefs data)
         {
-            AgentPreferencesData d = new AgentPreferencesData();
-            d.Data = new Dictionary<string, string>();
+            AgentPreferencesData d = new AgentPreferencesData
+            {
+                Data = new Dictionary<string, string>()
+            };
             d.Data["PrincipalID"] = data.PrincipalID.ToString();
             d.Data["AccessPrefs"] = data.AccessPrefs;
             d.Data["HoverHeight"] = data.HoverHeight.ToString();

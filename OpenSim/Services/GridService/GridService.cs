@@ -712,14 +712,16 @@ namespace OpenSim.Services.GridService
 
         public RegionData RegionInfo2RegionData(GridRegion rinfo)
         {
-            RegionData rdata = new RegionData();
-            rdata.posX = (int)rinfo.RegionLocX;
-            rdata.posY = (int)rinfo.RegionLocY;
-            rdata.sizeX = rinfo.RegionSizeX;
-            rdata.sizeY = rinfo.RegionSizeY;
-            rdata.RegionID = rinfo.RegionID;
-            rdata.RegionName = rinfo.RegionName;
-            rdata.Data = rinfo.ToKeyValuePairs();
+            RegionData rdata = new RegionData
+            {
+                posX = (int)rinfo.RegionLocX,
+                posY = (int)rinfo.RegionLocY,
+                sizeX = rinfo.RegionSizeX,
+                sizeY = rinfo.RegionSizeY,
+                RegionID = rinfo.RegionID,
+                RegionName = rinfo.RegionName,
+                Data = rinfo.ToKeyValuePairs()
+            };
             rdata.Data["regionHandle"] = Utils.UIntsToLong((uint)rdata.posX, (uint)rdata.posY);
             rdata.Data["owner_uuid"] = rinfo.EstateOwner.ToString();
             return rdata;
@@ -727,14 +729,16 @@ namespace OpenSim.Services.GridService
 
         public GridRegion RegionData2RegionInfo(RegionData rdata)
         {
-            GridRegion rinfo = new GridRegion(rdata.Data);
-            rinfo.RegionLocX = rdata.posX;
-            rinfo.RegionLocY = rdata.posY;
-            rinfo.RegionSizeX = rdata.sizeX;
-            rinfo.RegionSizeY = rdata.sizeY;
-            rinfo.RegionID = rdata.RegionID;
-            rinfo.RegionName = rdata.RegionName;
-            rinfo.ScopeID = rdata.ScopeID;
+            GridRegion rinfo = new GridRegion(rdata.Data)
+            {
+                RegionLocX = rdata.posX,
+                RegionLocY = rdata.posY,
+                RegionSizeX = rdata.sizeX,
+                RegionSizeY = rdata.sizeY,
+                RegionID = rdata.RegionID,
+                RegionName = rdata.RegionName,
+                ScopeID = rdata.ScopeID
+            };
 
             return rinfo;
         }

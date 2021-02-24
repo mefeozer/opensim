@@ -84,8 +84,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             // Add to queue for all scripts in ObjectID object
             DetectParams[] det = new DetectParams[1];
-            det[0] = new DetectParams();
-            det[0].Key = agentID;
+            det[0] = new DetectParams
+            {
+                Key = agentID
+            };
             det[0].Populate(this.World);
 
             // Since this is an event from a shared module, all scenes will
@@ -151,8 +153,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 part = this.World.GetSceneObjectPart(originalID);
             }
 
-            DetectParams det = new DetectParams();
-            det.Key = remoteClient.AgentId;
+            DetectParams det = new DetectParams
+            {
+                Key = remoteClient.AgentId
+            };
             det.Populate(this.World);
             det.OffsetPos = new LSL_Vector(offsetPos.X,
                                            offsetPos.Y,
@@ -183,8 +187,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             if ( parameter is UUID)
             {
-                DetectParams det = new DetectParams();
-                det.Key = (UUID)parameter;
+                DetectParams det = new DetectParams
+                {
+                    Key = (UUID)parameter
+                };
                 PostObjectEvent(localID, new EventParams(
                     "changed", new object[] { ch },
                     new DetectParams[] { det }));

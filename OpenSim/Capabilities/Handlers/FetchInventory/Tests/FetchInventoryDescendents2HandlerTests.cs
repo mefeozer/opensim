@@ -71,22 +71,26 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             m_objectsFolder = of.ID;
 
             // Add an object
-            InventoryItemBase item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-00000000000b"), m_userID);
-            item.AssetID = UUID.Random();
-            item.AssetType = (int)AssetType.Object;
-            item.Folder = m_objectsFolder;
-            item.Name = "Some Object";
+            InventoryItemBase item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-00000000000b"), m_userID)
+            {
+                AssetID = UUID.Random(),
+                AssetType = (int)AssetType.Object,
+                Folder = m_objectsFolder,
+                Name = "Some Object"
+            };
             m_scene.InventoryService.AddItem(item);
 
             InventoryFolderBase ncf = m_scene.InventoryService.GetFolderForType(m_userID, FolderType.Notecard);
             m_notecardsFolder = ncf.ID;
 
             // Add a notecard
-            item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-000000000001"), m_userID);
-            item.AssetID = UUID.Random();
-            item.AssetType = (int)AssetType.Notecard;
-            item.Folder = m_notecardsFolder;
-            item.Name = "Test Notecard 1";
+            item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-000000000001"), m_userID)
+            {
+                AssetID = UUID.Random(),
+                AssetType = (int)AssetType.Notecard,
+                Folder = m_notecardsFolder,
+                Name = "Test Notecard 1"
+            };
             m_scene.InventoryService.AddItem(item);
             // Add another notecard
             item.ID = new UUID("20000000-0000-0000-0000-000000000002");
@@ -95,8 +99,10 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             m_scene.InventoryService.AddItem(item);
 
             // Add a folder
-            InventoryFolderBase folder = new InventoryFolderBase(new UUID("f0000000-0000-0000-0000-00000000000f"), "Test Folder", m_userID, m_rootFolderID);
-            folder.Type = (short)FolderType.None;
+            InventoryFolderBase folder = new InventoryFolderBase(new UUID("f0000000-0000-0000-0000-00000000000f"), "Test Folder", m_userID, m_rootFolderID)
+            {
+                Type = (short)FolderType.None
+            };
             m_scene.InventoryService.AddFolder(folder);
 
             // Add a link to notecard 2 in Test Folder

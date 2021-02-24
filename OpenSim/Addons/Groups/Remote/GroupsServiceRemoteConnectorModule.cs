@@ -360,19 +360,23 @@ namespace OpenSim.Groups
         public bool AddGroupNotice(string RequestingAgentID, UUID groupID, UUID noticeID, string fromName, string subject, string message,
             bool hasAttachment, byte attType, string attName, UUID attItemID, string attOwnerID)
         {
-            GroupNoticeInfo notice = new GroupNoticeInfo();
-            notice.GroupID = groupID;
-            notice.Message = message;
-            notice.noticeData = new ExtendedGroupNoticeData();
-            notice.noticeData.AttachmentItemID = attItemID;
-            notice.noticeData.AttachmentName = attName;
-            notice.noticeData.AttachmentOwnerID = attOwnerID.ToString();
-            notice.noticeData.AttachmentType = attType;
-            notice.noticeData.FromName = fromName;
-            notice.noticeData.HasAttachment = hasAttachment;
-            notice.noticeData.NoticeID = noticeID;
-            notice.noticeData.Subject = subject;
-            notice.noticeData.Timestamp = (uint)Util.UnixTimeSinceEpoch();
+            GroupNoticeInfo notice = new GroupNoticeInfo
+            {
+                GroupID = groupID,
+                Message = message,
+                noticeData = new ExtendedGroupNoticeData
+                {
+                    AttachmentItemID = attItemID,
+                    AttachmentName = attName,
+                    AttachmentOwnerID = attOwnerID.ToString(),
+                    AttachmentType = attType,
+                    FromName = fromName,
+                    HasAttachment = hasAttachment,
+                    NoticeID = noticeID,
+                    Subject = subject,
+                    Timestamp = (uint)Util.UnixTimeSinceEpoch()
+                }
+            };
 
             return m_CacheWrapper.AddGroupNotice(groupID, noticeID, notice, delegate
             {

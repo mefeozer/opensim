@@ -120,8 +120,10 @@ namespace OpenSim.Region.Framework.Scenes.Tests
 
         private SceneObjectGroup NewSOG()
         {
-            SceneObjectPart sop = new SceneObjectPart(UUID.Random(), PrimitiveBaseShape.Default, Vector3.Zero, Quaternion.Identity, Vector3.Zero);
-            sop.Name = RandomName();
+            SceneObjectPart sop = new SceneObjectPart(UUID.Random(), PrimitiveBaseShape.Default, Vector3.Zero, Quaternion.Identity, Vector3.Zero)
+            {
+                Name = RandomName()
+            };
             sop.Description = sop.Name;
             sop.Text = RandomName();
             sop.SitName = RandomName();

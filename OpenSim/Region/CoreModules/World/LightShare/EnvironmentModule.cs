@@ -802,29 +802,39 @@ namespace OpenSim.Region.CoreModules.World.LightShare
             switch(type)
             {
                 case 0:
-                    SkyData sky = new SkyData();
-                    sky.Name = "DefaultSky";
+                    SkyData sky = new SkyData
+                    {
+                        Name = "DefaultSky"
+                    };
                     osddata = sky.ToOSD();
                     break;
                 case 1:
-                    WaterData water = new WaterData();
-                    water.Name = "DefaultWater";
+                    WaterData water = new WaterData
+                    {
+                        Name = "DefaultWater"
+                    };
                     osddata = water.ToOSD();
                     break;
                 case 2:
-                    DayCycle day = new DayCycle();
-                    day.Name="New Daycycle";
+                    DayCycle day = new DayCycle
+                    {
+                        Name = "New Daycycle"
+                    };
                     DayCycle.TrackEntry te = new DayCycle.TrackEntry();
 
-                    WaterData dwater = new WaterData();
-                    dwater.Name = "DefaultWater";
+                    WaterData dwater = new WaterData
+                    {
+                        Name = "DefaultWater"
+                    };
                     day.waterframes["DefaultWater"] = dwater;
                     te.time = 0;
                     te.frameName = "DefaultWater";
                     day.waterTrack.Add(te);
 
-                    SkyData dsky = new SkyData();
-                    dsky.Name = "DefaultSky";
+                    SkyData dsky = new SkyData
+                    {
+                        Name = "DefaultSky"
+                    };
                     day.skyframes["DefaultSky"] = dsky;
                     te.time = 0;
                     te.frameName = "DefaultSky";

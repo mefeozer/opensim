@@ -167,8 +167,10 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
             m_log.Debug(m_defaultState.ToString());
 
             m_log.Info("[AUTO BACKUP]: AutoBackupModule enabled");
-            m_masterTimer = new Timer();
-            m_masterTimer.Interval = m_baseInterval;
+            m_masterTimer = new Timer
+            {
+                Interval = m_baseInterval
+            };
             m_masterTimer.Elapsed += HandleElapsed;
             m_masterTimer.AutoReset = false;
 
@@ -406,12 +408,13 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
             if (regionConfig == null)
                 return null;
 
-            state = new AutoBackupModuleState();
+            state = new AutoBackupModuleState
+            {
+                Enabled = regionConfig.GetBoolean("AutoBackup", m_defaultState.Enabled),
 
-            state.Enabled = regionConfig.GetBoolean("AutoBackup", m_defaultState.Enabled);
-
-            // Included Option To Skip Assets
-            state.SkipAssets = regionConfig.GetBoolean("AutoBackupSkipAssets", m_defaultState.SkipAssets);
+                // Included Option To Skip Assets
+                SkipAssets = regionConfig.GetBoolean("AutoBackupSkipAssets", m_defaultState.SkipAssets)
+            };
 
             // Set file naming algorithm
             string stmpNamingType = regionConfig.GetString("AutoBackupNaming", m_defaultState.NamingType.ToString());
@@ -591,9 +594,11 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                 FileInfo fi = new FileInfo(scriptName);
                 if (fi.Exists)
                 {
-                    ProcessStartInfo psi = new ProcessStartInfo(scriptName);
-                    psi.Arguments = savePath;
-                    psi.CreateNoWindow = true;
+                    ProcessStartInfo psi = new ProcessStartInfo(scriptName)
+                    {
+                        Arguments = savePath,
+                        CreateNoWindow = true
+                    };
                     Process proc = Process.Start(psi);
                     proc.ErrorDataReceived += HandleProcErrorDataReceived;
                 }

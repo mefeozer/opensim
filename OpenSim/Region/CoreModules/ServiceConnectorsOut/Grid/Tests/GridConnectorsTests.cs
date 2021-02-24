@@ -68,53 +68,61 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid.Tests
         public void TestRegisterRegion()
         {
             TestHelpers.InMethod();
-//            log4net.Config.XmlConfigurator.Configure();
+            //            log4net.Config.XmlConfigurator.Configure();
 
             // Create 4 regions
-            GridRegion r1 = new GridRegion();
-            r1.RegionName = "Test Region 1";
-            r1.RegionID = new UUID(1);
-            r1.RegionLocX = 1000 * (int)Constants.RegionSize;
-            r1.RegionLocY = 1000 * (int)Constants.RegionSize;
-            r1.ExternalHostName = "127.0.0.1";
-            r1.HttpPort = 9001;
-            r1.InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0);
+            GridRegion r1 = new GridRegion
+            {
+                RegionName = "Test Region 1",
+                RegionID = new UUID(1),
+                RegionLocX = 1000 * (int)Constants.RegionSize,
+                RegionLocY = 1000 * (int)Constants.RegionSize,
+                ExternalHostName = "127.0.0.1",
+                HttpPort = 9001,
+                InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0)
+            };
             Scene s = new Scene(new RegionInfo());
             s.RegionInfo.RegionID = r1.RegionID;
             m_LocalConnector.AddRegion(s);
 
-            GridRegion r2 = new GridRegion();
-            r2.RegionName = "Test Region 2";
-            r2.RegionID = new UUID(2);
-            r2.RegionLocX = 1001 * (int)Constants.RegionSize;
-            r2.RegionLocY = 1000 * (int)Constants.RegionSize;
-            r2.ExternalHostName = "127.0.0.1";
-            r2.HttpPort = 9002;
-            r2.InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0);
+            GridRegion r2 = new GridRegion
+            {
+                RegionName = "Test Region 2",
+                RegionID = new UUID(2),
+                RegionLocX = 1001 * (int)Constants.RegionSize,
+                RegionLocY = 1000 * (int)Constants.RegionSize,
+                ExternalHostName = "127.0.0.1",
+                HttpPort = 9002,
+                InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0)
+            };
             s = new Scene(new RegionInfo());
             s.RegionInfo.RegionID = r2.RegionID;
             m_LocalConnector.AddRegion(s);
 
-            GridRegion r3 = new GridRegion();
-            r3.RegionName = "Test Region 3";
-            r3.RegionID = new UUID(3);
-            r3.RegionLocX = 1005 * (int)Constants.RegionSize;
-            r3.RegionLocY = 1000 * (int)Constants.RegionSize;
-            r3.ExternalHostName = "127.0.0.1";
-            r3.HttpPort = 9003;
-            r3.InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0);
+            GridRegion r3 = new GridRegion
+            {
+                RegionName = "Test Region 3",
+                RegionID = new UUID(3),
+                RegionLocX = 1005 * (int)Constants.RegionSize,
+                RegionLocY = 1000 * (int)Constants.RegionSize,
+                ExternalHostName = "127.0.0.1",
+                HttpPort = 9003,
+                InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0)
+            };
             s = new Scene(new RegionInfo());
             s.RegionInfo.RegionID = r3.RegionID;
             m_LocalConnector.AddRegion(s);
 
-            GridRegion r4 = new GridRegion();
-            r4.RegionName = "Other Region 4";
-            r4.RegionID = new UUID(4);
-            r4.RegionLocX = 1004 * (int)Constants.RegionSize;
-            r4.RegionLocY = 1002 * (int)Constants.RegionSize;
-            r4.ExternalHostName = "127.0.0.1";
-            r4.HttpPort = 9004;
-            r4.InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0);
+            GridRegion r4 = new GridRegion
+            {
+                RegionName = "Other Region 4",
+                RegionID = new UUID(4),
+                RegionLocX = 1004 * (int)Constants.RegionSize,
+                RegionLocY = 1002 * (int)Constants.RegionSize,
+                ExternalHostName = "127.0.0.1",
+                HttpPort = 9004,
+                InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0)
+            };
             s = new Scene(new RegionInfo());
             s.RegionInfo.RegionID = r4.RegionID;
             m_LocalConnector.AddRegion(s);

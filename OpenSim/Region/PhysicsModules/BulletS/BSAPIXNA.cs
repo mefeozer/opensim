@@ -1322,11 +1322,12 @@ private sealed class BulletConstraintXNA : BulletConstraint
                         int mMaxUpdatesPerFrame, ref EntityProperties[] updateArray,
                         object mDebugLogCallbackHandle)
     {
-        CollisionWorld.WorldData.ParamData p = new CollisionWorld.WorldData.ParamData();
-
-        p.angularDamping = BSParam.AngularDamping;
-        p.defaultFriction = o[0].defaultFriction;
-        p.defaultFriction = o[0].defaultFriction;
+            CollisionWorld.WorldData.ParamData p = new CollisionWorld.WorldData.ParamData
+            {
+                angularDamping = BSParam.AngularDamping,
+                defaultFriction = o[0].defaultFriction
+            };
+            p.defaultFriction = o[0].defaultFriction;
         p.defaultDensity = o[0].defaultDensity;
         p.defaultRestitution = o[0].defaultRestitution;
         p.collisionMargin = o[0].collisionMargin;
@@ -1398,12 +1399,13 @@ private sealed class BulletConstraintXNA : BulletConstraint
 
         SequentialImpulseConstraintSolver m_solver = new SequentialImpulseConstraintSolver();
 
-        DiscreteDynamicsWorld world = new DiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, cci);
+            DiscreteDynamicsWorld world = new DiscreteDynamicsWorld(m_dispatcher, m_broadphase, m_solver, cci)
+            {
+                LastCollisionDesc = 0,
+                LastEntityProperty = 0
+            };
 
-        world.LastCollisionDesc = 0;
-        world.LastEntityProperty = 0;
-
-        world.WorldSettings.Params = p;
+            world.WorldSettings.Params = p;
         world.SetForceUpdateAllAabbs(p.shouldForceUpdateAllAabbs != 0);
         world.GetSolverInfo().m_solverMode = SolverMode.SOLVER_USE_WARMSTARTING | SolverMode.SOLVER_SIMD;
         if (p.shouldRandomizeSolverOrder != 0)
@@ -1607,9 +1609,11 @@ private sealed class BulletConstraintXNA : BulletConstraint
     public override BulletBody CreateGhostFromShape(BulletWorld pWorld, BulletShape pShape, uint pLocalID, Vector3 pRawPosition, Quaternion pRawOrientation)
     {
         DiscreteDynamicsWorld world = (pWorld as BulletWorldXNA).world;
-        IndexedMatrix bodyTransform = new IndexedMatrix();
-        bodyTransform._origin = new IndexedVector3(pRawPosition.X, pRawPosition.Y, pRawPosition.Z);
-        bodyTransform.SetRotation(new IndexedQuaternion(pRawOrientation.X,pRawOrientation.Y,pRawOrientation.Z,pRawOrientation.W));
+            IndexedMatrix bodyTransform = new IndexedMatrix
+            {
+                _origin = new IndexedVector3(pRawPosition.X, pRawPosition.Y, pRawPosition.Z)
+            };
+            bodyTransform.SetRotation(new IndexedQuaternion(pRawOrientation.X,pRawOrientation.Y,pRawOrientation.Z,pRawOrientation.W));
         GhostObject gObj = new PairCachingGhostObject();
         gObj.SetWorldTransform(bodyTransform);
         CollisionShape shape = (pShape as BulletShapeXNA).shape;
@@ -2064,17 +2068,19 @@ private sealed class BulletConstraintXNA : BulletConstraint
         ObjectArray<float> vertices = new ObjectArray<float>(verticesAsFloats);
         DumpRaw(indicesarr,vertices,pIndicesCount,pVerticesCount);
         DiscreteDynamicsWorld world = (pWorld as BulletWorldXNA).world;
-        IndexedMesh mesh = new IndexedMesh();
-        mesh.m_indexType = PHY_ScalarType.PHY_INTEGER;
-        mesh.m_numTriangles = pIndicesCount/3;
-        mesh.m_numVertices = pVerticesCount;
-        mesh.m_triangleIndexBase = indicesarr;
-        mesh.m_vertexBase = vertices;
-        mesh.m_vertexStride = 3;
-        mesh.m_vertexType = PHY_ScalarType.PHY_FLOAT;
-        mesh.m_triangleIndexStride = 3;
+            IndexedMesh mesh = new IndexedMesh
+            {
+                m_indexType = PHY_ScalarType.PHY_INTEGER,
+                m_numTriangles = pIndicesCount / 3,
+                m_numVertices = pVerticesCount,
+                m_triangleIndexBase = indicesarr,
+                m_vertexBase = vertices,
+                m_vertexStride = 3,
+                m_vertexType = PHY_ScalarType.PHY_FLOAT,
+                m_triangleIndexStride = 3
+            };
 
-        TriangleIndexVertexArray tribuilder = new TriangleIndexVertexArray();
+            TriangleIndexVertexArray tribuilder = new TriangleIndexVertexArray();
         tribuilder.AddIndexedMesh(mesh, PHY_ScalarType.PHY_INTEGER);
         BvhTriangleMeshShape meshShape = new BvhTriangleMeshShape(tribuilder, true,true);
         meshShape.SetMargin(world.WorldSettings.Params.collisionMargin);
@@ -2093,18 +2099,19 @@ private sealed class BulletConstraintXNA : BulletConstraint
             string fileName = "objTest3.raw";
             string completePath = System.IO.Path.Combine(Util.configDir(), fileName);
         StreamWriter sw = new StreamWriter(completePath);
-        IndexedMesh mesh = new IndexedMesh();
+            IndexedMesh mesh = new IndexedMesh
+            {
+                m_indexType = PHY_ScalarType.PHY_INTEGER,
+                m_numTriangles = pIndicesCount / 3,
+                m_numVertices = pVerticesCount,
+                m_triangleIndexBase = indices,
+                m_vertexBase = vertices,
+                m_vertexStride = 3,
+                m_vertexType = PHY_ScalarType.PHY_FLOAT,
+                m_triangleIndexStride = 3
+            };
 
-        mesh.m_indexType = PHY_ScalarType.PHY_INTEGER;
-        mesh.m_numTriangles = pIndicesCount / 3;
-        mesh.m_numVertices = pVerticesCount;
-        mesh.m_triangleIndexBase = indices;
-        mesh.m_vertexBase = vertices;
-        mesh.m_vertexStride = 3;
-        mesh.m_vertexType = PHY_ScalarType.PHY_FLOAT;
-        mesh.m_triangleIndexStride = 3;
-
-        TriangleIndexVertexArray tribuilder = new TriangleIndexVertexArray();
+            TriangleIndexVertexArray tribuilder = new TriangleIndexVertexArray();
         tribuilder.AddIndexedMesh(mesh, PHY_ScalarType.PHY_INTEGER);
 
 
@@ -2127,18 +2134,19 @@ private sealed class BulletConstraintXNA : BulletConstraint
             string fileName = "objTest6.raw";
             string completePath = System.IO.Path.Combine(Util.configDir(), fileName);
         StreamWriter sw = new StreamWriter(completePath);
-        IndexedMesh mesh = new IndexedMesh();
+            IndexedMesh mesh = new IndexedMesh
+            {
+                m_indexType = PHY_ScalarType.PHY_INTEGER,
+                m_numTriangles = pIndicesCount / 3,
+                m_numVertices = pVerticesCount,
+                m_triangleIndexBase = indices,
+                m_vertexBase = vertices,
+                m_vertexStride = 3,
+                m_vertexType = PHY_ScalarType.PHY_FLOAT,
+                m_triangleIndexStride = 3
+            };
 
-        mesh.m_indexType = PHY_ScalarType.PHY_INTEGER;
-        mesh.m_numTriangles = pIndicesCount / 3;
-        mesh.m_numVertices = pVerticesCount;
-        mesh.m_triangleIndexBase = indices;
-        mesh.m_vertexBase = vertices;
-        mesh.m_vertexStride = 3;
-        mesh.m_vertexType = PHY_ScalarType.PHY_FLOAT;
-        mesh.m_triangleIndexStride = 3;
-
-        TriangleIndexVertexArray tribuilder = new TriangleIndexVertexArray();
+            TriangleIndexVertexArray tribuilder = new TriangleIndexVertexArray();
         tribuilder.AddIndexedMesh(mesh, PHY_ScalarType.PHY_INTEGER);
 
 

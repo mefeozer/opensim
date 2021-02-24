@@ -62,7 +62,7 @@ namespace OpenSim.Groups
         public bool CreateGroupProxy(string RequestingAgentID, string agentID,  string accessToken, UUID groupID, string serviceLocation, string name, out string reason)
         {
             reason = string.Empty;
-            Uri uri = null;
+            Uri uri;
             try
             {
                 uri = new Uri(serviceLocation);
@@ -76,12 +76,14 @@ namespace OpenSim.Groups
             // Check if it already exists
             GroupData grec = m_Database.RetrieveGroup(groupID);
             if (grec == null ||
-                grec != null && !string.IsNullOrEmpty(grec.Data["Location"]) && grec.Data["Location"].ToLower() != serviceLocation.ToLower())
+                !string.IsNullOrEmpty(grec.Data["Location"]) && !string.Equals(grec.Data["Location"], serviceLocation, StringComparison.CurrentCultureIgnoreCase))
             {
                 // Create the group
-                grec = new GroupData();
-                grec.GroupID = groupID;
-                grec.Data = new Dictionary<string, string>();
+                grec = new GroupData
+                {
+                    GroupID = groupID,
+                    Data = new Dictionary<string, string>()
+                };
                 grec.Data["Name"] = name + " @ " + uri.Authority;
                 grec.Data["Location"] = serviceLocation;
                 grec.Data["Charter"] = string.Empty;
@@ -115,10 +117,12 @@ namespace OpenSim.Groups
 
             // Stick the proxy membership in the DB already
             // we'll delete it if the agent declines the invitation
-            MembershipData membership = new MembershipData();
-            membership.PrincipalID = agentID;
-            membership.GroupID = groupID;
-            membership.Data = new Dictionary<string, string>();
+            MembershipData membership = new MembershipData
+            {
+                PrincipalID = agentID,
+                GroupID = groupID,
+                Data = new Dictionary<string, string>()
+            };
             membership.Data["SelectedRoleID"] = UUID.Zero.ToString();
             membership.Data["Contribution"] = "0";
             membership.Data["ListInProfile"] = "1";
@@ -286,24 +290,25 @@ namespace OpenSim.Groups
             {
                 Guid inviteUUID = InviteID.Guid;
 
-                GridInstantMessage msg = new GridInstantMessage();
+                GridInstantMessage msg = new GridInstantMessage
+                {
+                    imSessionID = inviteUUID,
 
-                msg.imSessionID = inviteUUID;
-
-                // msg.fromAgentID = agentID.Guid;
-                msg.fromAgentID = groupID.Guid;
-                msg.toAgentID = invitedAgentID.Guid;
-                //msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
-                msg.timestamp = 0;
-                msg.fromAgentName = fromName;
-                msg.message = string.Format("Please confirm your acceptance to join group {0}.", groupName);
-                msg.dialog = (byte)OpenMetaverse.InstantMessageDialog.GroupInvitation;
-                msg.fromGroup = true;
-                msg.offline = (byte)0;
-                msg.ParentEstateID = 0;
-                msg.Position = Vector3.Zero;
-                msg.RegionID = UUID.Zero.Guid;
-                msg.binaryBucket = new byte[20];
+                    // msg.fromAgentID = agentID.Guid;
+                    fromAgentID = groupID.Guid,
+                    toAgentID = invitedAgentID.Guid,
+                    //msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
+                    timestamp = 0,
+                    fromAgentName = fromName,
+                    message = string.Format("Please confirm your acceptance to join group {0}.", groupName),
+                    dialog = (byte)OpenMetaverse.InstantMessageDialog.GroupInvitation,
+                    fromGroup = true,
+                    offline = (byte)0,
+                    ParentEstateID = 0,
+                    Position = Vector3.Zero,
+                    RegionID = UUID.Zero.Guid,
+                    binaryBucket = new byte[20]
+                };
 
                 string reason = string.Empty;
                 m_OfflineIM.StoreMessage(msg, out reason);
@@ -323,12 +328,14 @@ namespace OpenSim.Groups
             if (invite != null)
                 m_Database.DeleteInvite(invite.InviteID);
 
-            invite = new InvitationData();
-            invite.InviteID = inviteID;
-            invite.PrincipalID = agentID;
-            invite.GroupID = groupID;
-            invite.RoleID = UUID.Zero;
-            invite.Data = new Dictionary<string, string>();
+            invite = new InvitationData
+            {
+                InviteID = inviteID,
+                PrincipalID = agentID,
+                GroupID = groupID,
+                RoleID = UUID.Zero,
+                Data = new Dictionary<string, string>()
+            };
 
             return m_Database.StoreInvitation(invite);
         }

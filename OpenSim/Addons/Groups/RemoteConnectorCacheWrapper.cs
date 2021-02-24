@@ -394,13 +394,15 @@ namespace OpenSim.Groups
         {
             if (d())
             {
-                GroupRolesData role = new GroupRolesData();
-                role.Description = description;
-                role.Members = 0;
-                role.Name = name;
-                role.Powers = powers;
-                role.RoleID = roleID;
-                role.Title = title;
+                GroupRolesData role = new GroupRolesData
+                {
+                    Description = description,
+                    Members = 0,
+                    Name = name,
+                    Powers = powers,
+                    RoleID = roleID,
+                    Title = title
+                };
 
                 m_Cache.AddOrUpdate("role-" + roleID.ToString(), role, GROUPS_CACHE_TIMEOUT);
 
@@ -577,9 +579,11 @@ namespace OpenSim.Groups
                             UUID id = new UUID(AgentID);
                             List<ExtendedGroupRoleMembersData> xx = (List<ExtendedGroupRoleMembersData>)obj;
                             List<GroupRoleMembersData> rmlist = xx.ConvertAll<GroupRoleMembersData>(m_ForeignImporter.ConvertGroupRoleMembersData);
-                            GroupRoleMembersData rm = new GroupRoleMembersData();
-                            rm.MemberID = id;
-                            rm.RoleID = RoleID;
+                            GroupRoleMembersData rm = new GroupRoleMembersData
+                            {
+                                MemberID = id,
+                                RoleID = RoleID
+                            };
                             rmlist.Add(rm);
                         }
                         catch

@@ -333,22 +333,24 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 }
 
                 // Copy Message
-                GridInstantMessage msg = new GridInstantMessage();
-                msg.imSessionID = im.imSessionID;
-                msg.fromAgentName = im.fromAgentName;
-                msg.message = im.message;
-                msg.dialog = im.dialog;
-                msg.offline = im.offline;
-                msg.ParentEstateID = im.ParentEstateID;
-                msg.Position = im.Position;
-                msg.RegionID = im.RegionID;
-                msg.binaryBucket = im.binaryBucket;
-                msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
+                GridInstantMessage msg = new GridInstantMessage
+                {
+                    imSessionID = im.imSessionID,
+                    fromAgentName = im.fromAgentName,
+                    message = im.message,
+                    dialog = im.dialog,
+                    offline = im.offline,
+                    ParentEstateID = im.ParentEstateID,
+                    Position = im.Position,
+                    RegionID = im.RegionID,
+                    binaryBucket = im.binaryBucket,
+                    timestamp = (uint)Util.UnixTimeSinceEpoch(),
 
-                msg.fromAgentID = im.fromAgentID;
-                msg.fromGroup = true;
+                    fromAgentID = im.fromAgentID,
+                    fromGroup = true,
 
-                msg.toAgentID = member.AgentID.Guid;
+                    toAgentID = member.AgentID.Guid
+                };
 
                 if (attemptDeliveryUuidSet.Contains(member.AgentID.ToString()))
                 {

@@ -78,12 +78,14 @@ namespace Robust.Tests
             Assert.AreNotEqual(m_objectsFolder, UUID.Zero, "Objects folder ID must not be UUID.Zero");
 
             // Add an object
-            InventoryItemBase item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-00000000000b"), m_userID);
-            item.AssetID = UUID.Random();
-            item.AssetType = (int)AssetType.Object;
-            item.Folder = m_objectsFolder;
-            item.Name = "Some Object";
-            item.Description = string.Empty;
+            InventoryItemBase item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-00000000000b"), m_userID)
+            {
+                AssetID = UUID.Random(),
+                AssetType = (int)AssetType.Object,
+                Folder = m_objectsFolder,
+                Name = "Some Object",
+                Description = string.Empty
+            };
             success = m_Connector.AddItem(item);
             Assert.IsTrue(success, "Failed to add object to inventory");
 
@@ -94,12 +96,14 @@ namespace Robust.Tests
             m_notecardsFolder = ncf.ID;
 
             // Add a notecard
-            item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-000000000001"), m_userID);
-            item.AssetID = UUID.Random();
-            item.AssetType = (int)AssetType.Notecard;
-            item.Folder = m_notecardsFolder;
-            item.Name = "Test Notecard 1";
-            item.Description = string.Empty;
+            item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-000000000001"), m_userID)
+            {
+                AssetID = UUID.Random(),
+                AssetType = (int)AssetType.Notecard,
+                Folder = m_notecardsFolder,
+                Name = "Test Notecard 1",
+                Description = string.Empty
+            };
             success = m_Connector.AddItem(item);
             Assert.IsTrue(success, "Failed to add Notecard 1 to inventory");
             // Add another notecard
@@ -111,8 +115,10 @@ namespace Robust.Tests
             Assert.IsTrue(success, "Failed to add Notecard 2 to inventory");
 
             // Add a folder
-            InventoryFolderBase folder = new InventoryFolderBase(new UUID("f0000000-0000-0000-0000-00000000000f"), "Test Folder", m_userID, m_rootFolderID);
-            folder.Type = (int)FolderType.None;
+            InventoryFolderBase folder = new InventoryFolderBase(new UUID("f0000000-0000-0000-0000-00000000000f"), "Test Folder", m_userID, m_rootFolderID)
+            {
+                Type = (int)FolderType.None
+            };
             success = m_Connector.AddFolder(folder);
             Assert.IsTrue(success, "Failed to add Test Folder to inventory");
 

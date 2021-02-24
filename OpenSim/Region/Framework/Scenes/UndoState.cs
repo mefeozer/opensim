@@ -46,8 +46,10 @@ namespace OpenSim.Region.Framework.Scenes
         ///
         public UndoState(SceneObjectPart part, ObjectChangeType change)
         {
-            data = new ObjectChangeData();
-            data.change = change;
+            data = new ObjectChangeData
+            {
+                change = change
+            };
             creationtime = DateTime.UtcNow;
             SceneObjectGroup sog = part.ParentGroup;
             if (sog.RootPart == part)

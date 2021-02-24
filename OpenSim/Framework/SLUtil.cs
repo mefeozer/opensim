@@ -505,27 +505,29 @@ namespace OpenSim.Framework
                 return null;
             string desc = valuestr;
 
-            InventoryItemBase item = new InventoryItemBase();
-            item.AssetID = assetID;
-            item.AssetType = (sbyte)assetType;
-            item.BasePermissions = basemask;
-            item.CreationDate = Util.UnixTimeSinceEpoch();
-            item.CreatorData = "";
-            item.CreatorId = creatorID.ToString();
-            item.CurrentPermissions = ownermask;
-            item.Description = desc;
-            item.Flags = flags;
-            item.Folder = UUID.Zero;
-            item.GroupID = UUID.Zero;
-            item.GroupOwned = false;
-            item.GroupPermissions = groupmask;
-            item.InvType = (sbyte)invType;
-            item.Name = name;
-            item.NextPermissions = nextownermask;
-            item.Owner = ownerID;
-            item.SalePrice = 0;
-            item.SaleType = (byte)SaleType.Not;
-            item.ID = UUID.Random();
+            InventoryItemBase item = new InventoryItemBase
+            {
+                AssetID = assetID,
+                AssetType = (sbyte)assetType,
+                BasePermissions = basemask,
+                CreationDate = Util.UnixTimeSinceEpoch(),
+                CreatorData = "",
+                CreatorId = creatorID.ToString(),
+                CurrentPermissions = ownermask,
+                Description = desc,
+                Flags = flags,
+                Folder = UUID.Zero,
+                GroupID = UUID.Zero,
+                GroupOwned = false,
+                GroupPermissions = groupmask,
+                InvType = (sbyte)invType,
+                Name = name,
+                NextPermissions = nextownermask,
+                Owner = ownerID,
+                SalePrice = 0,
+                SaleType = (byte)SaleType.Not,
+                ID = UUID.Random()
+            };
             return item;
         }
 

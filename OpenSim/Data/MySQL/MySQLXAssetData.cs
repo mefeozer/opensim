@@ -141,9 +141,11 @@ namespace OpenSim.Data.MySQL
                         {
                             if (dbReader.Read())
                             {
-                                asset = new AssetBase(assetID, (string)dbReader["Name"], (sbyte)dbReader["AssetType"], dbReader["CreatorID"].ToString());
-                                asset.Data = (byte[])dbReader["Data"];
-                                asset.Description = (string)dbReader["Description"];
+                                asset = new AssetBase(assetID, (string)dbReader["Name"], (sbyte)dbReader["AssetType"], dbReader["CreatorID"].ToString())
+                                {
+                                    Data = (byte[])dbReader["Data"],
+                                    Description = (string)dbReader["Description"]
+                                };
 
                                 string local = dbReader["Local"].ToString();
                                 if (local.Equals("1") || local.Equals("true", StringComparison.InvariantCultureIgnoreCase))
@@ -462,17 +464,19 @@ namespace OpenSim.Data.MySQL
                         {
                             while (dbReader.Read())
                             {
-                                AssetMetadata metadata = new AssetMetadata();
-                                metadata.Name = (string)dbReader["Name"];
-                                metadata.Description = (string)dbReader["Description"];
-                                metadata.Type = (sbyte)dbReader["AssetType"];
-                                metadata.Temporary = Convert.ToBoolean(dbReader["Temporary"]); // Not sure if this is correct.
-                                metadata.Flags = (AssetFlags)Convert.ToInt32(dbReader["AssetFlags"]);
-                                metadata.FullID = DBGuid.FromDB(dbReader["ID"]);
-                                metadata.CreatorID = dbReader["CreatorID"].ToString();
+                                AssetMetadata metadata = new AssetMetadata
+                                {
+                                    Name = (string)dbReader["Name"],
+                                    Description = (string)dbReader["Description"],
+                                    Type = (sbyte)dbReader["AssetType"],
+                                    Temporary = Convert.ToBoolean(dbReader["Temporary"]), // Not sure if this is correct.
+                                    Flags = (AssetFlags)Convert.ToInt32(dbReader["AssetFlags"]),
+                                    FullID = DBGuid.FromDB(dbReader["ID"]),
+                                    CreatorID = dbReader["CreatorID"].ToString()
+                                };
 
                                 // We'll ignore this for now - it appears unused!
-    //                                metadata.SHA1 = dbReader["hash"]);
+                                //                                metadata.SHA1 = dbReader["hash"]);
 
                                 UpdateAccessTime(metadata, (int)dbReader["AccessTime"]);
 

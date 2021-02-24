@@ -6103,13 +6103,15 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             vd.ToBytes(data, 32);
             data[56] = (byte)(int)ltype;
 
-            OpenMetaverse.Packets.ViewerEffectPacket.EffectBlock effect = new OpenMetaverse.Packets.ViewerEffectPacket.EffectBlock();
-            effect.AgentID = npc;
-            effect.Color = new byte[4];
-            effect.Duration = 0;
-            effect.ID = UUID.Random();
-            effect.Type = 14;
-            effect.TypeData = data;
+            OpenMetaverse.Packets.ViewerEffectPacket.EffectBlock effect = new OpenMetaverse.Packets.ViewerEffectPacket.EffectBlock
+            {
+                AgentID = npc,
+                Color = new byte[4],
+                Duration = 0,
+                ID = UUID.Random(),
+                Type = 14,
+                TypeData = data
+            };
 
             OpenMetaverse.Packets.ViewerEffectPacket.EffectBlock[] effectblock = new OpenMetaverse.Packets.ViewerEffectPacket.EffectBlock[1];
             effectblock[0] = effect;

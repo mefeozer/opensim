@@ -97,18 +97,20 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             // We're taking over after this.
             m_controllingPrim.ZeroMotion(true);
 
-            /* Someday use the PID controller
-            m_targetMotor = new BSPIDVMotor("BSActorMoveToTarget-" + m_controllingPrim.LocalID.ToString());
-            m_targetMotor.TimeScale = m_controllingPrim.MoveToTargetTau;
-            m_targetMotor.Efficiency = 1f;
-             */
-            m_targetMotor = new BSVMotor("BSActorMoveToTarget-" + m_controllingPrim.LocalID.ToString(),
-                                        m_controllingPrim.MoveToTargetTau,  // timeScale
-                                        BSMotor.Infinite,                   // decay time scale
-                                        1f                                  // efficiency
-            );
-            m_targetMotor.PhysicsScene = m_physicsScene; // DEBUG DEBUG so motor will output detail log messages.
-            m_targetMotor.SetTarget(m_controllingPrim.MoveToTargetTarget);
+                /* Someday use the PID controller
+                m_targetMotor = new BSPIDVMotor("BSActorMoveToTarget-" + m_controllingPrim.LocalID.ToString());
+                m_targetMotor.TimeScale = m_controllingPrim.MoveToTargetTau;
+                m_targetMotor.Efficiency = 1f;
+                 */
+                m_targetMotor = new BSVMotor("BSActorMoveToTarget-" + m_controllingPrim.LocalID.ToString(),
+                                            m_controllingPrim.MoveToTargetTau,  // timeScale
+                                            BSMotor.Infinite,                   // decay time scale
+                                            1f                                  // efficiency
+                )
+                {
+                    PhysicsScene = m_physicsScene // DEBUG DEBUG so motor will output detail log messages.
+                };
+                m_targetMotor.SetTarget(m_controllingPrim.MoveToTargetTarget);
             m_targetMotor.SetCurrent(m_controllingPrim.RawPosition);
 
             // m_physicsScene.BeforeStep += Mover;

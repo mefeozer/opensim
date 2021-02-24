@@ -595,8 +595,10 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     if (!GetCurContactGeom(i, ref curcontact))
                         break;
 
-                    ContactResult collisionresult = new ContactResult();
-                    collisionresult.ConsumerID = ID;
+                    ContactResult collisionresult = new ContactResult
+                    {
+                        ConsumerID = ID
+                    };
                     collisionresult.Pos.X = curcontact.pos.X;
                     collisionresult.Pos.Y = curcontact.pos.Y;
                     collisionresult.Pos.Z = curcontact.pos.Z;
@@ -615,9 +617,11 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             else
             {
                 // keep only closest contact
-                ContactResult collisionresult = new ContactResult();
-                collisionresult.ConsumerID = ID;
-                collisionresult.Depth = float.MaxValue;
+                ContactResult collisionresult = new ContactResult
+                {
+                    ConsumerID = ID,
+                    Depth = float.MaxValue
+                };
 
                 for (int i = 0; i < count; i++)
                 {

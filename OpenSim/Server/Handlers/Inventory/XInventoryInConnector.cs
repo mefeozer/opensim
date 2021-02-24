@@ -519,8 +519,10 @@ namespace OpenSim.Server.Handlers.Inventory
                         UUID fid = UUID.Zero;
                         if (UUID.TryParse(destlist[n++], out fid))
                         {
-                            InventoryItemBase item = new InventoryItemBase(u, principal);
-                            item.Folder = fid;
+                            InventoryItemBase item = new InventoryItemBase(u, principal)
+                            {
+                                Folder = fid
+                            };
                             items.Add(item);
                         }
                     }
@@ -723,43 +725,45 @@ namespace OpenSim.Server.Handlers.Inventory
 
         private InventoryFolderBase BuildFolder(Dictionary<string,object> data)
         {
-            InventoryFolderBase folder = new InventoryFolderBase();
-
-            folder.ParentID =  new UUID(data["ParentID"].ToString());
-            folder.Type = short.Parse(data["Type"].ToString());
-            folder.Version = ushort.Parse(data["Version"].ToString());
-            folder.Name = data["Name"].ToString();
-            folder.Owner =  new UUID(data["Owner"].ToString());
-            folder.ID = new UUID(data["ID"].ToString());
+            InventoryFolderBase folder = new InventoryFolderBase
+            {
+                ParentID = new UUID(data["ParentID"].ToString()),
+                Type = short.Parse(data["Type"].ToString()),
+                Version = ushort.Parse(data["Version"].ToString()),
+                Name = data["Name"].ToString(),
+                Owner = new UUID(data["Owner"].ToString()),
+                ID = new UUID(data["ID"].ToString())
+            };
 
             return folder;
         }
 
         private InventoryItemBase BuildItem(Dictionary<string,object> data)
         {
-            InventoryItemBase item = new InventoryItemBase();
-
-            item.AssetID = new UUID(data["AssetID"].ToString());
-            item.AssetType = int.Parse(data["AssetType"].ToString());
-            item.Name = data["Name"].ToString();
-            item.Owner = new UUID(data["Owner"].ToString());
-            item.ID = new UUID(data["ID"].ToString());
-            item.InvType = int.Parse(data["InvType"].ToString());
-            item.Folder = new UUID(data["Folder"].ToString());
-            item.CreatorId = data["CreatorId"].ToString();
-            item.CreatorData = data["CreatorData"].ToString();
-            item.Description = data["Description"].ToString();
-            item.NextPermissions = uint.Parse(data["NextPermissions"].ToString());
-            item.CurrentPermissions = uint.Parse(data["CurrentPermissions"].ToString());
-            item.BasePermissions = uint.Parse(data["BasePermissions"].ToString());
-            item.EveryOnePermissions = uint.Parse(data["EveryOnePermissions"].ToString());
-            item.GroupPermissions = uint.Parse(data["GroupPermissions"].ToString());
-            item.GroupID = new UUID(data["GroupID"].ToString());
-            item.GroupOwned = bool.Parse(data["GroupOwned"].ToString());
-            item.SalePrice = int.Parse(data["SalePrice"].ToString());
-            item.SaleType = byte.Parse(data["SaleType"].ToString());
-            item.Flags = uint.Parse(data["Flags"].ToString());
-            item.CreationDate = int.Parse(data["CreationDate"].ToString());
+            InventoryItemBase item = new InventoryItemBase
+            {
+                AssetID = new UUID(data["AssetID"].ToString()),
+                AssetType = int.Parse(data["AssetType"].ToString()),
+                Name = data["Name"].ToString(),
+                Owner = new UUID(data["Owner"].ToString()),
+                ID = new UUID(data["ID"].ToString()),
+                InvType = int.Parse(data["InvType"].ToString()),
+                Folder = new UUID(data["Folder"].ToString()),
+                CreatorId = data["CreatorId"].ToString(),
+                CreatorData = data["CreatorData"].ToString(),
+                Description = data["Description"].ToString(),
+                NextPermissions = uint.Parse(data["NextPermissions"].ToString()),
+                CurrentPermissions = uint.Parse(data["CurrentPermissions"].ToString()),
+                BasePermissions = uint.Parse(data["BasePermissions"].ToString()),
+                EveryOnePermissions = uint.Parse(data["EveryOnePermissions"].ToString()),
+                GroupPermissions = uint.Parse(data["GroupPermissions"].ToString()),
+                GroupID = new UUID(data["GroupID"].ToString()),
+                GroupOwned = bool.Parse(data["GroupOwned"].ToString()),
+                SalePrice = int.Parse(data["SalePrice"].ToString()),
+                SaleType = byte.Parse(data["SaleType"].ToString()),
+                Flags = uint.Parse(data["Flags"].ToString()),
+                CreationDate = int.Parse(data["CreationDate"].ToString())
+            };
 
             return item;
         }

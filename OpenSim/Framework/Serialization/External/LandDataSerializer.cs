@@ -208,8 +208,10 @@ namespace OpenSim.Framework.Serialization.External
         public static string Serialize(LandData landData, Dictionary<string, object> options)
         {
             StringWriter sw = new StringWriter();
-            XmlTextWriter xtw = new XmlTextWriter(sw);
-            xtw.Formatting = Formatting.Indented;
+            XmlTextWriter xtw = new XmlTextWriter(sw)
+            {
+                Formatting = Formatting.Indented
+            };
 
             xtw.WriteStartDocument();
             xtw.WriteStartElement("LandData");

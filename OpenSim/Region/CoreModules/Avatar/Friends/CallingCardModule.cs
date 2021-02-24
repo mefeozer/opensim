@@ -191,10 +191,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
             m_log.DebugFormat("[XCALLINGCARD]: Creating calling card for {0} in inventory of {1}", info.Name, userID);
 
-            InventoryItemBase item = new InventoryItemBase();
-            item.AssetID = UUID.Zero;
-            item.AssetType = (int)AssetType.CallingCard;
-            item.BasePermissions = (uint)(PermissionMask.Copy | PermissionMask.Modify);
+            InventoryItemBase item = new InventoryItemBase
+            {
+                AssetID = UUID.Zero,
+                AssetType = (int)AssetType.CallingCard,
+                BasePermissions = (uint)(PermissionMask.Copy | PermissionMask.Modify)
+            };
             if (isGod)
                 item.BasePermissions = (uint)(PermissionMask.Copy | PermissionMask.Modify | PermissionMask.Transfer | PermissionMask.Move);
 

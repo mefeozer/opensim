@@ -792,18 +792,22 @@ namespace PrimMesher
                 {
                     for (int i = 1; i < numAngles ; i++)
                     {
-                        Face newFace = new Face();
-                        newFace.v1 = 0;
-                        newFace.v2 = i;
-                        newFace.v3 = i + 1;
+                        Face newFace = new Face
+                        {
+                            v1 = 0,
+                            v2 = i,
+                            v3 = i + 1
+                        };
                         faces.Add(newFace);
                     }
                     if (!hasProfileCut)
                     {
-                        Face newFace = new Face();
-                        newFace.v1 = 0;
-                        newFace.v2 = numAngles;
-                        newFace.v3 = 1;
+                        Face newFace = new Face
+                        {
+                            v1 = 0,
+                            v2 = numAngles,
+                            v3 = 1
+                        };
                         faces.Add(newFace);
                     }
                 }
@@ -1019,9 +1023,10 @@ namespace PrimMesher
 
                 while (!done)
                 {
-                    PathNode newNode = new PathNode();
-
-                    newNode.xScale = 1.0f;
+                    PathNode newNode = new PathNode
+                    {
+                        xScale = 1.0f
+                    };
                     if (taperX > 0.0f)
                         newNode.xScale -= percentOfPath * taperX;
                     else if(taperX < 0.0f)
@@ -1388,23 +1393,25 @@ namespace PrimMesher
                 profile.AddRot(new Quat(Quat.MainAxis.Z, initialProfileRot));
             }
 
-            Path path = new Path();
-            path.twistBegin = twistBegin;
-            path.twistEnd = twistEnd;
-            path.topShearX = topShearX;
-            path.topShearY = topShearY;
-            path.pathCutBegin = pathCutBegin;
-            path.pathCutEnd = pathCutEnd;
-            path.dimpleBegin = dimpleBegin;
-            path.dimpleEnd = dimpleEnd;
-            path.skew = skew;
-            path.holeSizeX = holeSizeX;
-            path.holeSizeY = holeSizeY;
-            path.taperX = taperX;
-            path.taperY = taperY;
-            path.radius = radius;
-            path.revolutions = revolutions;
-            path.stepsPerRevolution = stepsPerRevolution;
+            Path path = new Path
+            {
+                twistBegin = twistBegin,
+                twistEnd = twistEnd,
+                topShearX = topShearX,
+                topShearY = topShearY,
+                pathCutBegin = pathCutBegin,
+                pathCutEnd = pathCutEnd,
+                dimpleBegin = dimpleBegin,
+                dimpleEnd = dimpleEnd,
+                skew = skew,
+                holeSizeX = holeSizeX,
+                holeSizeY = holeSizeY,
+                taperX = taperX,
+                taperY = taperY,
+                radius = radius,
+                revolutions = revolutions,
+                stepsPerRevolution = stepsPerRevolution
+            };
 
             path.Create(pathType, steps);
 
@@ -1569,29 +1576,31 @@ namespace PrimMesher
         /// <returns></returns>
         public PrimMesh Copy()
         {
-            PrimMesh copy = new PrimMesh(sides, profileStart, profileEnd, hollow, hollowSides);
-            copy.twistBegin = twistBegin;
-            copy.twistEnd = twistEnd;
-            copy.topShearX = topShearX;
-            copy.topShearY = topShearY;
-            copy.pathCutBegin = pathCutBegin;
-            copy.pathCutEnd = pathCutEnd;
-            copy.dimpleBegin = dimpleBegin;
-            copy.dimpleEnd = dimpleEnd;
-            copy.skew = skew;
-            copy.holeSizeX = holeSizeX;
-            copy.holeSizeY = holeSizeY;
-            copy.taperX = taperX;
-            copy.taperY = taperY;
-            copy.radius = radius;
-            copy.revolutions = revolutions;
-            copy.stepsPerRevolution = stepsPerRevolution;
+            PrimMesh copy = new PrimMesh(sides, profileStart, profileEnd, hollow, hollowSides)
+            {
+                twistBegin = twistBegin,
+                twistEnd = twistEnd,
+                topShearX = topShearX,
+                topShearY = topShearY,
+                pathCutBegin = pathCutBegin,
+                pathCutEnd = pathCutEnd,
+                dimpleBegin = dimpleBegin,
+                dimpleEnd = dimpleEnd,
+                skew = skew,
+                holeSizeX = holeSizeX,
+                holeSizeY = holeSizeY,
+                taperX = taperX,
+                taperY = taperY,
+                radius = radius,
+                revolutions = revolutions,
+                stepsPerRevolution = stepsPerRevolution,
 
-            copy.numPrimFaces = numPrimFaces;
-            copy.errorMessage = errorMessage;
+                numPrimFaces = numPrimFaces,
+                errorMessage = errorMessage,
 
-            copy.coords = new List<Coord>(coords);
-            copy.faces = new List<Face>(faces);
+                coords = new List<Coord>(coords),
+                faces = new List<Face>(faces)
+            };
 
             return copy;
         }

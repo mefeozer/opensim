@@ -340,8 +340,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal ChannelState UpdateServer(RegionState rs, string server)
         {
             RemoveRegion(rs);
-            ChannelState cs = new ChannelState(this);
-            cs.Server = server;
+            ChannelState cs = new ChannelState(this)
+            {
+                Server = server
+            };
             cs = Integrate(rs, cs);
             cs.AddRegion(rs);
             return cs;
@@ -350,8 +352,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal ChannelState UpdatePort(RegionState rs, string port)
         {
             RemoveRegion(rs);
-            ChannelState cs = new ChannelState(this);
-            cs.Port = Convert.ToUInt32(port);
+            ChannelState cs = new ChannelState(this)
+            {
+                Port = Convert.ToUInt32(port)
+            };
             cs = Integrate(rs, cs);
             cs.AddRegion(rs);
             return cs;
@@ -360,8 +364,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal ChannelState UpdateChannel(RegionState rs, string channel)
         {
             RemoveRegion(rs);
-            ChannelState cs = new ChannelState(this);
-            cs.IrcChannel = channel;
+            ChannelState cs = new ChannelState(this)
+            {
+                IrcChannel = channel
+            };
             cs = Integrate(rs, cs);
             cs.AddRegion(rs);
             return cs;
@@ -370,8 +376,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal ChannelState UpdateNickname(RegionState rs, string nickname)
         {
             RemoveRegion(rs);
-            ChannelState cs = new ChannelState(this);
-            cs.BaseNickname = nickname;
+            ChannelState cs = new ChannelState(this)
+            {
+                BaseNickname = nickname
+            };
             cs = Integrate(rs, cs);
             cs.AddRegion(rs);
             return cs;
@@ -380,8 +388,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal ChannelState UpdateClientReporting(RegionState rs, string cr)
         {
             RemoveRegion(rs);
-            ChannelState cs = new ChannelState(this);
-            cs.ClientReporting = Convert.ToBoolean(cr);
+            ChannelState cs = new ChannelState(this)
+            {
+                ClientReporting = Convert.ToBoolean(cr)
+            };
             cs = Integrate(rs, cs);
             cs.AddRegion(rs);
             return cs;
@@ -390,8 +400,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal ChannelState UpdateRelayIn(RegionState rs, string channel)
         {
             RemoveRegion(rs);
-            ChannelState cs = new ChannelState(this);
-            cs.RelayChannel = Convert.ToInt32(channel);
+            ChannelState cs = new ChannelState(this)
+            {
+                RelayChannel = Convert.ToInt32(channel)
+            };
             cs = Integrate(rs, cs);
             cs.AddRegion(rs);
             return cs;
@@ -400,8 +412,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         internal ChannelState UpdateRelayOut(RegionState rs, string channel)
         {
             RemoveRegion(rs);
-            ChannelState cs = new ChannelState(this);
-            cs.RelayChannelOut = Convert.ToInt32(channel);
+            ChannelState cs = new ChannelState(this)
+            {
+                RelayChannelOut = Convert.ToInt32(channel)
+            };
             cs = Integrate(rs, cs);
             cs.AddRegion(rs);
             return cs;

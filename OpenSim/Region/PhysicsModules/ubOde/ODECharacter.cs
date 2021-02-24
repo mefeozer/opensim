@@ -572,9 +572,11 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 if(size.Z < 0.01f)
                     size.Z = 0.01f;
 
-                strAvatarSize st = new strAvatarSize();
-                st.size = size;
-                st.offset = feetOffset;
+                strAvatarSize st = new strAvatarSize
+                {
+                    size = size,
+                    offset = feetOffset
+                };
                 AddChange(changes.AvatarSize,st);
             }
             else
@@ -1318,8 +1320,10 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                         m_iscollidingGround = true;
 
-                        ContactPoint contact = new ContactPoint();
-                        contact.PenetrationDepth = depth;
+                        ContactPoint contact = new ContactPoint
+                        {
+                            PenetrationDepth = depth
+                        };
                         contact.Position.X = localpos.X;
                         contact.Position.Y = localpos.Y;
                         contact.Position.Z = terrainheight;
@@ -1977,11 +1981,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                 if (Body != IntPtr.Zero)
                 {
-                    SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-                    myrot.X = m_orientation2D.X;
-                    myrot.Y = m_orientation2D.Y;
-                    myrot.Z = m_orientation2D.Z;
-                    myrot.W = m_orientation2D.W;
+                    SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+                    {
+                        X = m_orientation2D.X,
+                        Y = m_orientation2D.Y,
+                        Z = m_orientation2D.Z,
+                        W = m_orientation2D.W
+                    };
                     SafeNativeMethods.BodySetQuaternion(Body,ref myrot);
                     SafeNativeMethods.BodyEnable(Body);
                 }

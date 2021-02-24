@@ -233,20 +233,22 @@ namespace OpenSim.Framework.Tests
         public void HistoricalAgentCircuitDataOSDConversion()
         {
             string oldSerialization = "{\"agent_id\":\"522675bd-8214-40c1-b3ca-9c7f7fd170be\",\"base_folder\":\"c40b5f5f-476f-496b-bd69-b5a539c434d8\",\"caps_path\":\"http://www.opensimulator.org/Caps/Foo\",\"children_seeds\":[{\"handle\":\"18446744073709551615\",\"seed\":\"http://www.opensimulator.org/Caps/Foo2\"}],\"child\":false,\"circuit_code\":\"949030\",\"first_name\":\"CoolAvatarTest\",\"last_name\":\"test\",\"inventory_folder\":\"c40b5f5f-476f-496b-bd69-b5a539c434d8\",\"secure_session_id\":\"1e608e2b-0ddb-41f6-be0f-926f61cd3e0a\",\"session_id\":\"aa06f798-9d70-4bdb-9bbf-012a02ee2baf\",\"start_pos\":\"<5, 23, 125>\"}";
-            AgentCircuitData Agent1Data = new AgentCircuitData();
-            Agent1Data.AgentID = new UUID("522675bd-8214-40c1-b3ca-9c7f7fd170be");
-            Agent1Data.Appearance = AvAppearance;
-            Agent1Data.BaseFolder = new UUID("c40b5f5f-476f-496b-bd69-b5a539c434d8");
-            Agent1Data.CapsPath = CapsPath;
-            Agent1Data.child = false;
-            Agent1Data.ChildrenCapSeeds = ChildrenCapsPaths;
-            Agent1Data.circuitcode = circuitcode;
-            Agent1Data.firstname = firstname;
-            Agent1Data.InventoryFolder = new UUID("c40b5f5f-476f-496b-bd69-b5a539c434d8");
-            Agent1Data.lastname = lastname;
-            Agent1Data.SecureSessionID = new UUID("1e608e2b-0ddb-41f6-be0f-926f61cd3e0a");
-            Agent1Data.SessionID = new UUID("aa06f798-9d70-4bdb-9bbf-012a02ee2baf");
-            Agent1Data.startpos = StartPos;
+            AgentCircuitData Agent1Data = new AgentCircuitData
+            {
+                AgentID = new UUID("522675bd-8214-40c1-b3ca-9c7f7fd170be"),
+                Appearance = AvAppearance,
+                BaseFolder = new UUID("c40b5f5f-476f-496b-bd69-b5a539c434d8"),
+                CapsPath = CapsPath,
+                child = false,
+                ChildrenCapSeeds = ChildrenCapsPaths,
+                circuitcode = circuitcode,
+                firstname = firstname,
+                InventoryFolder = new UUID("c40b5f5f-476f-496b-bd69-b5a539c434d8"),
+                lastname = lastname,
+                SecureSessionID = new UUID("1e608e2b-0ddb-41f6-be0f-926f61cd3e0a"),
+                SessionID = new UUID("aa06f798-9d70-4bdb-9bbf-012a02ee2baf"),
+                startpos = StartPos
+            };
 
 
             OSDMap map2;
@@ -290,20 +292,22 @@ namespace OpenSim.Framework.Tests
        [Test]
        public void TestAgentCircuitDataOSDConversion()
        {
-           AgentCircuitData Agent1Data = new AgentCircuitData();
-           Agent1Data.AgentID = AgentId;
-           Agent1Data.Appearance = AvAppearance;
-           Agent1Data.BaseFolder = BaseFolder;
-           Agent1Data.CapsPath = CapsPath;
-           Agent1Data.child = false;
-           Agent1Data.ChildrenCapSeeds = ChildrenCapsPaths;
-           Agent1Data.circuitcode = circuitcode;
-           Agent1Data.firstname = firstname;
-           Agent1Data.InventoryFolder = BaseFolder;
-           Agent1Data.lastname = lastname;
-           Agent1Data.SecureSessionID = SecureSessionId;
-           Agent1Data.SessionID = SessionId;
-           Agent1Data.startpos = StartPos;
+            AgentCircuitData Agent1Data = new AgentCircuitData
+            {
+                AgentID = AgentId,
+                Appearance = AvAppearance,
+                BaseFolder = BaseFolder,
+                CapsPath = CapsPath,
+                child = false,
+                ChildrenCapSeeds = ChildrenCapsPaths,
+                circuitcode = circuitcode,
+                firstname = firstname,
+                InventoryFolder = BaseFolder,
+                lastname = lastname,
+                SecureSessionID = SecureSessionId,
+                SessionID = SessionId,
+                startpos = StartPos
+            };
 
             EntityTransferContext ctx = new EntityTransferContext();
             OSDMap map2;

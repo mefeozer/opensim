@@ -119,10 +119,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MapImage
             {
                 m_refreshtime = refreshminutes * 60 * 1000; // convert from minutes to ms
 
-                m_refreshTimer = new System.Timers.Timer();
-                m_refreshTimer.Enabled = true;
-                m_refreshTimer.AutoReset = true;
-                m_refreshTimer.Interval = m_refreshtime;
+                m_refreshTimer = new System.Timers.Timer
+                {
+                    Enabled = true,
+                    AutoReset = true,
+                    Interval = m_refreshtime
+                };
                 m_refreshTimer.Elapsed += new ElapsedEventHandler(HandleMaptileRefresh);
 
 

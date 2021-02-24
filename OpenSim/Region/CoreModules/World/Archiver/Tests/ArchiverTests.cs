@@ -133,8 +133,10 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
             sog1 = new SceneObjectGroup(part1);
             scene.AddNewSceneObject(sog1, false);
 
-            AssetNotecard nc = new AssetNotecard();
-            nc.BodyText = "Hello World!";
+            AssetNotecard nc = new AssetNotecard
+            {
+                BodyText = "Hello World!"
+            };
             nc.Encode();
             ncAssetUuid = UUID.Random();
             UUID ncItemUuid = UUID.Random();
@@ -264,8 +266,10 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
 
             SceneObjectPart part2 = CreateSceneObjectPart2();
 
-            AssetNotecard nc = new AssetNotecard();
-            nc.BodyText = "Hello World!";
+            AssetNotecard nc = new AssetNotecard
+            {
+                BodyText = "Hello World!"
+            };
             nc.Encode();
             UUID ncAssetUuid = new UUID("00000000-0000-0000-1000-000000000000");
             UUID ncItemUuid = new UUID("00000000-0000-0000-1100-000000000000");
@@ -473,8 +477,10 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
 
             SceneObjectPart part2 = CreateSceneObjectPart2();
 
-            AssetNotecard nc = new AssetNotecard();
-            nc.BodyText = "Hello World!";
+            AssetNotecard nc = new AssetNotecard
+            {
+                BodyText = "Hello World!"
+            };
             nc.Encode();
             UUID ncAssetUuid = new UUID("00000000-0000-0000-1000-000000000000");
             UUID ncItemUuid = new UUID("00000000-0000-0000-1100-000000000000");
@@ -620,38 +626,40 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
                 ArchiveConstants.CONTROL_FILE_PATH,
                 new ArchiveWriteRequest(m_scene, (Stream)null, Guid.Empty).CreateControlFile(new ArchiveScenesGroup()));
 
-            RegionSettings rs = new RegionSettings();
-            rs.AgentLimit = 17;
-            rs.AllowDamage = true;
-            rs.AllowLandJoinDivide = true;
-            rs.AllowLandResell = true;
-            rs.BlockFly = true;
-            rs.BlockShowInSearch = true;
-            rs.BlockTerraform = true;
-            rs.DisableCollisions = true;
-            rs.DisablePhysics = true;
-            rs.DisableScripts = true;
-            rs.Elevation1NW = 15.9;
-            rs.Elevation1NE = 45.3;
-            rs.Elevation1SE = 49;
-            rs.Elevation1SW = 1.9;
-            rs.Elevation2NW = 4.5;
-            rs.Elevation2NE = 19.2;
-            rs.Elevation2SE = 9.2;
-            rs.Elevation2SW = 2.1;
-            rs.FixedSun = true;
-            rs.SunPosition = 12.0;
-            rs.ObjectBonus = 1.4;
-            rs.RestrictPushing = true;
-            rs.TerrainLowerLimit = 0.4;
-            rs.TerrainRaiseLimit = 17.9;
-            rs.TerrainTexture1 = UUID.Parse("00000000-0000-0000-0000-000000000020");
-            rs.TerrainTexture2 = UUID.Parse("00000000-0000-0000-0000-000000000040");
-            rs.TerrainTexture3 = UUID.Parse("00000000-0000-0000-0000-000000000060");
-            rs.TerrainTexture4 = UUID.Parse("00000000-0000-0000-0000-000000000080");
-            rs.UseEstateSun = true;
-            rs.WaterHeight = 23;
-            rs.TelehubObject = UUID.Parse("00000000-0000-0000-0000-111111111111");
+            RegionSettings rs = new RegionSettings
+            {
+                AgentLimit = 17,
+                AllowDamage = true,
+                AllowLandJoinDivide = true,
+                AllowLandResell = true,
+                BlockFly = true,
+                BlockShowInSearch = true,
+                BlockTerraform = true,
+                DisableCollisions = true,
+                DisablePhysics = true,
+                DisableScripts = true,
+                Elevation1NW = 15.9,
+                Elevation1NE = 45.3,
+                Elevation1SE = 49,
+                Elevation1SW = 1.9,
+                Elevation2NW = 4.5,
+                Elevation2NE = 19.2,
+                Elevation2SE = 9.2,
+                Elevation2SW = 2.1,
+                FixedSun = true,
+                SunPosition = 12.0,
+                ObjectBonus = 1.4,
+                RestrictPushing = true,
+                TerrainLowerLimit = 0.4,
+                TerrainRaiseLimit = 17.9,
+                TerrainTexture1 = UUID.Parse("00000000-0000-0000-0000-000000000020"),
+                TerrainTexture2 = UUID.Parse("00000000-0000-0000-0000-000000000040"),
+                TerrainTexture3 = UUID.Parse("00000000-0000-0000-0000-000000000060"),
+                TerrainTexture4 = UUID.Parse("00000000-0000-0000-0000-000000000080"),
+                UseEstateSun = true,
+                WaterHeight = 23,
+                TelehubObject = UUID.Parse("00000000-0000-0000-0000-111111111111")
+            };
             rs.AddSpawnPoint(SpawnPoint.Parse("1,-2,0.33"));
 
             tar.WriteFile(ArchiveConstants.SETTINGS_PATH + "region1.xml", RegionSettingsSerializer.Serialize(rs, null));
@@ -943,8 +951,10 @@ namespace OpenSim.Region.CoreModules.World.Archiver.Tests
             MemoryStream archiveWriteStream = new MemoryStream();
             TarArchiveWriter tar = new TarArchiveWriter(archiveWriteStream);
 
-            ArchiveWriteRequest writeRequest = new ArchiveWriteRequest(m_scene, (Stream)null, Guid.Empty);
-            writeRequest.MultiRegionFormat = true;
+            ArchiveWriteRequest writeRequest = new ArchiveWriteRequest(m_scene, (Stream)null, Guid.Empty)
+            {
+                MultiRegionFormat = true
+            };
             tar.WriteFile(
                 ArchiveConstants.CONTROL_FILE_PATH, writeRequest.CreateControlFile(scenesGroup));
 

@@ -654,20 +654,22 @@ namespace OpenSim.Services.HypergridService
             if(string.IsNullOrEmpty(regURL))
                 return false;
 
-            GridInstantMessage msg = new GridInstantMessage();
-            msg.imSessionID = UUID.Zero.Guid;
-            msg.fromAgentID = Constants.servicesGodAgentID.Guid;
-            msg.toAgentID = agentID.Guid;
-            msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
-            msg.fromAgentName = "GRID";
-            msg.message = string.Format("New login detected");
-            msg.dialog = 250; // God kick
-            msg.fromGroup = false;
-            msg.offline = (byte)0;
-            msg.ParentEstateID = 0;
-            msg.Position = Vector3.Zero;
-            msg.RegionID = scopeID.Guid;
-            msg.binaryBucket = new byte[1] {0};
+            GridInstantMessage msg = new GridInstantMessage
+            {
+                imSessionID = UUID.Zero.Guid,
+                fromAgentID = Constants.servicesGodAgentID.Guid,
+                toAgentID = agentID.Guid,
+                timestamp = (uint)Util.UnixTimeSinceEpoch(),
+                fromAgentName = "GRID",
+                message = string.Format("New login detected"),
+                dialog = 250, // God kick
+                fromGroup = false,
+                offline = (byte)0,
+                ParentEstateID = 0,
+                Position = Vector3.Zero,
+                RegionID = scopeID.Guid,
+                binaryBucket = new byte[1] { 0 }
+            };
             InstantMessageServiceConnector.SendInstantMessage(regURL,msg, m_messageKey);
 
             m_GridUserService.LoggedOut(agentID.ToString(),

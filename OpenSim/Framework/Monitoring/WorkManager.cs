@@ -128,10 +128,12 @@ namespace OpenSim.Framework.Monitoring
             ThreadStart start, string name, ThreadPriority priority, bool isBackground,
             bool alarmIfTimeout, Func<string> alarmMethod, int timeout, bool log = true)
         {
-            Thread thread = new Thread(start);
-            thread.Priority = priority;
-            thread.IsBackground = isBackground;
-            thread.Name = name;
+            Thread thread = new Thread(start)
+            {
+                Priority = priority,
+                IsBackground = isBackground,
+                Name = name
+            };
 
             Watchdog.ThreadWatchdogInfo twi
                 = new Watchdog.ThreadWatchdogInfo(thread, timeout, name)

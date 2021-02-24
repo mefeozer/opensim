@@ -202,8 +202,10 @@ TD.align_top { vertical-align: top; }
 
         public stats_default_page_values rep_DefaultReport_data(SqliteConnection db, List<Scene> m_scene)
         {
-            stats_default_page_values returnstruct = new stats_default_page_values();
-            returnstruct.all_scenes = m_scene.ToArray();
+            stats_default_page_values returnstruct = new stats_default_page_values
+            {
+                all_scenes = m_scene.ToArray()
+            };
             lock (db)
             {
                 string SQL = @"SELECT COUNT(DISTINCT agent_id) as agents, COUNT(*) as sessions, AVG(avg_fps) as client_fps,

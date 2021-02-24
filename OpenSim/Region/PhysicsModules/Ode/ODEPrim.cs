@@ -417,11 +417,13 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
                 setMass();
                 SafeNativeMethods.BodySetPosition(Body, _position.X, _position.Y, _position.Z);
-                SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-                myrot.X = _orientation.X;
-                myrot.Y = _orientation.Y;
-                myrot.Z = _orientation.Z;
-                myrot.W = _orientation.W;
+                SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+                {
+                    X = _orientation.X,
+                    Y = _orientation.Y,
+                    Z = _orientation.Z,
+                    W = _orientation.W
+                };
                 SafeNativeMethods.BodySetQuaternion(Body, ref myrot);
                 SafeNativeMethods.GeomSetBody(prim_geom, Body);
 
@@ -1125,11 +1127,13 @@ Console.WriteLine("ZProcessTaints for " + Name);
                     SafeNativeMethods.MassSetZero(out m2);
                     SafeNativeMethods.MassSetBoxTotal(out m2, prm.CalculateMass(), prm._size.X, prm._size.Y, prm._size.Z);
 
-                    SafeNativeMethods.Quaternion quat = new SafeNativeMethods.Quaternion();
-                    quat.W = prm._orientation.W;
-                    quat.X = prm._orientation.X;
-                    quat.Y = prm._orientation.Y;
-                    quat.Z = prm._orientation.Z;
+                    SafeNativeMethods.Quaternion quat = new SafeNativeMethods.Quaternion
+                    {
+                        W = prm._orientation.W,
+                        X = prm._orientation.X,
+                        Y = prm._orientation.Y,
+                        Z = prm._orientation.Z
+                    };
 
                     SafeNativeMethods.Matrix3 mat = new SafeNativeMethods.Matrix3();
                     SafeNativeMethods.RfromQ(out mat, ref quat);
@@ -1155,11 +1159,13 @@ Console.WriteLine("ZProcessTaints for " + Name);
                         SafeNativeMethods.GeomSetCollideBits(prm.prim_geom, (uint)prm.m_collisionFlags);
                     }
 
-                    SafeNativeMethods.Quaternion quat = new SafeNativeMethods.Quaternion();
-                    quat.W = prm._orientation.W;
-                    quat.X = prm._orientation.X;
-                    quat.Y = prm._orientation.Y;
-                    quat.Z = prm._orientation.Z;
+                    SafeNativeMethods.Quaternion quat = new SafeNativeMethods.Quaternion
+                    {
+                        W = prm._orientation.W,
+                        X = prm._orientation.X,
+                        Y = prm._orientation.Y,
+                        Z = prm._orientation.Z
+                    };
 
                     SafeNativeMethods.Matrix3 mat = new SafeNativeMethods.Matrix3();
                     SafeNativeMethods.RfromQ(out mat, ref quat);
@@ -1206,11 +1212,13 @@ Console.WriteLine("ZProcessTaints for " + Name);
                     SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
                 }
 
-                SafeNativeMethods.Quaternion quat2 = new SafeNativeMethods.Quaternion();
-                quat2.W = _orientation.W;
-                quat2.X = _orientation.X;
-                quat2.Y = _orientation.Y;
-                quat2.Z = _orientation.Z;
+                SafeNativeMethods.Quaternion quat2 = new SafeNativeMethods.Quaternion
+                {
+                    W = _orientation.W,
+                    X = _orientation.X,
+                    Y = _orientation.Y,
+                    Z = _orientation.Z
+                };
 
                 SafeNativeMethods.Matrix3 mat2 = new SafeNativeMethods.Matrix3();
                 SafeNativeMethods.RfromQ(out mat2, ref quat2);
@@ -1592,11 +1600,13 @@ Console.WriteLine("changeadd 1");
             CreateGeom(m_targetSpace, mesh);
 
             SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
-            SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-            myrot.X = _orientation.X;
-            myrot.Y = _orientation.Y;
-            myrot.Z = _orientation.Z;
-            myrot.W = _orientation.W;
+            SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+            {
+                X = _orientation.X,
+                Y = _orientation.Y,
+                Z = _orientation.Z,
+                W = _orientation.W
+            };
             SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
 
             if (IsPhysical && Body == IntPtr.Zero)
@@ -1920,11 +1930,13 @@ Console.WriteLine(" JointCreateFixed");
 
         private void rotate()
         {
-            SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-            myrot.X = _orientation.X;
-            myrot.Y = _orientation.Y;
-            myrot.Z = _orientation.Z;
-            myrot.W = _orientation.W;
+            SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+            {
+                X = _orientation.X,
+                Y = _orientation.Y,
+                Z = _orientation.Z,
+                W = _orientation.W
+            };
             if (Body != IntPtr.Zero)
             {
                 // KF: If this is a root prim do BodySet
@@ -2083,11 +2095,13 @@ Console.WriteLine(" JointCreateFixed");
 
             CreateGeom(m_targetSpace, mesh);
             SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
-            SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-            myrot.X = _orientation.X;
-            myrot.Y = _orientation.Y;
-            myrot.Z = _orientation.Z;
-            myrot.W = _orientation.W;
+            SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+            {
+                X = _orientation.X,
+                Y = _orientation.Y,
+                Z = _orientation.Z,
+                W = _orientation.W
+            };
             SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
 
             //d.GeomBoxSetLengths(prim_geom, _size.X, _size.Y, _size.Z);
@@ -2189,12 +2203,14 @@ Console.WriteLine(" JointCreateFixed");
 
             CreateGeom(m_targetSpace, mesh);
             SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
-            SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-            //myrot.W = _orientation.w;
-            myrot.W = _orientation.W;
-            myrot.X = _orientation.X;
-            myrot.Y = _orientation.Y;
-            myrot.Z = _orientation.Z;
+            SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+            {
+                //myrot.W = _orientation.w;
+                W = _orientation.W,
+                X = _orientation.X,
+                Y = _orientation.Y,
+                Z = _orientation.Z
+            };
             SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
 
             //d.GeomBoxSetLengths(prim_geom, _size.X, _size.Y, _size.Z);

@@ -53,11 +53,13 @@ namespace OpenSim.Region.CoreModules.World.Terrain
             string val;
             string arg;
             string result;
-            data = new TerrainModifierData();
-            data.shape = string.Empty;
-            data.bevel = string.Empty;
-            data.dx = 0;
-            data.dy = 0;
+            data = new TerrainModifierData
+            {
+                shape = string.Empty,
+                bevel = string.Empty,
+                dx = 0,
+                dy = 0
+            };
             if (args.Length < 4)
             {
                 result = "Usage: " + GetUsage();

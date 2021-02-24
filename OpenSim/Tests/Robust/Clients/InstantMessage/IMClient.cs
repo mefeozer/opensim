@@ -39,11 +39,13 @@ namespace Robust.Tests
         [Test]
         public void HGIM_001()
         {
-            GridInstantMessage im = new GridInstantMessage();
-            im.fromAgentID = new Guid();
-            im.toAgentID = new Guid();
-            im.message = "Hello";
-            im.imSessionID = new Guid();
+            GridInstantMessage im = new GridInstantMessage
+            {
+                fromAgentID = new Guid(),
+                toAgentID = new Guid(),
+                message = "Hello",
+                imSessionID = new Guid()
+            };
 
             bool success = InstantMessageServiceConnector.SendInstantMessage(DemonServer.Address, im, string.Empty);
             Assert.IsFalse(success, "Sending of IM succeeded, but it should have failed");

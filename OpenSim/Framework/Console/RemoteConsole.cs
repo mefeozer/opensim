@@ -232,14 +232,15 @@ namespace OpenSim.Framework.Console
             m_lineNumber++;
 
             // Create and populate the new entry.
-            ScrollbackEntry newEntry = new ScrollbackEntry();
-
-            newEntry.lineNumber = m_lineNumber;
-            newEntry.text = text;
-            newEntry.level = level;
-            newEntry.isPrompt = isPrompt;
-            newEntry.isCommand = isCommand;
-            newEntry.isInput = isInput;
+            ScrollbackEntry newEntry = new ScrollbackEntry
+            {
+                lineNumber = m_lineNumber,
+                text = text,
+                level = level,
+                isPrompt = isPrompt,
+                isCommand = isCommand,
+                isInput = isInput
+            };
 
             // Add a line to the scrollback. In some cases, that may not
             // actually be a line of text.
@@ -412,9 +413,11 @@ namespace OpenSim.Framework.Console
             }
 
             // Set up the new console connection record
-            ConsoleConnection c = new ConsoleConnection();
-            c.last = System.Environment.TickCount;
-            c.lastLineSeen = 0;
+            ConsoleConnection c = new ConsoleConnection
+            {
+                last = System.Environment.TickCount,
+                lastLineSeen = 0
+            };
 
             // Assign session ID
             UUID sessionID = UUID.Random();

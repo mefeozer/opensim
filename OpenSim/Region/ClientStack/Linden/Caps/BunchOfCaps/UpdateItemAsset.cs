@@ -63,9 +63,11 @@ namespace OpenSim.Region.ClientStack.Linden
 
             if (itemID == UUID.Zero)
             {
-                LLSDAssetUploadError error = new LLSDAssetUploadError();
-                error.message = "failed to recode request";
-                error.identifier = UUID.Zero;
+                LLSDAssetUploadError error = new LLSDAssetUploadError
+                {
+                    message = "failed to recode request",
+                    identifier = UUID.Zero
+                };
                 httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(error));
                 return;
             }
@@ -75,18 +77,22 @@ namespace OpenSim.Region.ClientStack.Linden
                 SceneObjectPart sop = m_Scene.GetSceneObjectPart(objectID);
                 if (sop == null)
                 {
-                    LLSDAssetUploadError error = new LLSDAssetUploadError();
-                    error.message = "object not found";
-                    error.identifier = UUID.Zero;
+                    LLSDAssetUploadError error = new LLSDAssetUploadError
+                    {
+                        message = "object not found",
+                        identifier = UUID.Zero
+                    };
                     httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(error));
                     return;
                 }
 
                 if (!m_Scene.Permissions.CanEditObjectInventory(objectID, m_AgentID))
                 {
-                    LLSDAssetUploadError error = new LLSDAssetUploadError();
-                    error.message = "No permissions to edit objec";
-                    error.identifier = UUID.Zero;
+                    LLSDAssetUploadError error = new LLSDAssetUploadError
+                    {
+                        message = "No permissions to edit objec",
+                        identifier = UUID.Zero
+                    };
                     httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(error));
                     return;
                 }
@@ -96,19 +102,24 @@ namespace OpenSim.Region.ClientStack.Linden
 
             string protocol = m_HostCapsObj.SSLCaps ? "https://" : "http://";
             string uploaderURL = protocol + m_HostCapsObj.HostName + ":" + m_HostCapsObj.Port.ToString() + uploaderPath;
-            LLSDAssetUploadResponse uploadResponse = new LLSDAssetUploadResponse();
-            uploadResponse.uploader = uploaderURL;
-            uploadResponse.state = "upload";
+            LLSDAssetUploadResponse uploadResponse = new LLSDAssetUploadResponse
+            {
+                uploader = uploaderURL,
+                state = "upload"
+            };
 
-            ItemUpdater uploader = new ItemUpdater(itemID, objectID, atype, uploaderPath, m_HostCapsObj.HttpListener, m_dumpAssetsToFile);
-            uploader.m_remoteAdress = httpRequest.RemoteIPEndPoint.Address;
+            ItemUpdater uploader = new ItemUpdater(itemID, objectID, atype, uploaderPath, m_HostCapsObj.HttpListener, m_dumpAssetsToFile)
+            {
+                m_remoteAdress = httpRequest.RemoteIPEndPoint.Address
+            };
 
             uploader.OnUpLoad += ItemUpdated;
 
-            var uploaderHandler = new SimpleBinaryHandler("POST", uploaderPath, uploader.process);
+            var uploaderHandler = new SimpleBinaryHandler("POST", uploaderPath, uploader.process)
+            {
+                MaxDataSize = 10000000 // change per asset type?
+            };
 
-            uploaderHandler.MaxDataSize = 10000000; // change per asset type?
-            
             m_HostCapsObj.HttpListener.AddSimpleStreamHandler(uploaderHandler);
 
             // m_log.InfoFormat("[CAPS]: UpdateAgentInventoryAsset response: {0}",
@@ -164,9 +175,11 @@ namespace OpenSim.Region.ClientStack.Linden
 
                 if (itemID == UUID.Zero || objectID == UUID.Zero)
                 {
-                    LLSDAssetUploadError error = new LLSDAssetUploadError();
-                    error.message = "failed to recode request";
-                    error.identifier = UUID.Zero;
+                    LLSDAssetUploadError error = new LLSDAssetUploadError
+                    {
+                        message = "failed to recode request",
+                        identifier = UUID.Zero
+                    };
                     httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(error));
                     return;
                 }
@@ -174,27 +187,33 @@ namespace OpenSim.Region.ClientStack.Linden
                 SceneObjectPart sop = m_Scene.GetSceneObjectPart(objectID);
                 if (sop == null)
                 {
-                    LLSDAssetUploadError error = new LLSDAssetUploadError();
-                    error.message = "object not found";
-                    error.identifier = UUID.Zero;
+                    LLSDAssetUploadError error = new LLSDAssetUploadError
+                    {
+                        message = "object not found",
+                        identifier = UUID.Zero
+                    };
                     httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(error));
                     return;
                 }
 
                 if (!m_Scene.Permissions.CanEditObjectInventory(objectID, m_AgentID))
                 {
-                    LLSDAssetUploadError error = new LLSDAssetUploadError();
-                    error.message = "No permissions to edit objec";
-                    error.identifier = UUID.Zero;
+                    LLSDAssetUploadError error = new LLSDAssetUploadError
+                    {
+                        message = "No permissions to edit objec",
+                        identifier = UUID.Zero
+                    };
                     httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(error));
                     return;
                 }
 
                 if (!m_Scene.Permissions.CanEditScript(itemID, objectID, m_AgentID))
                 {
-                    LLSDAssetUploadError error = new LLSDAssetUploadError();
-                    error.message = "No permissions to edit script";
-                    error.identifier = UUID.Zero;
+                    LLSDAssetUploadError error = new LLSDAssetUploadError
+                    {
+                        message = "No permissions to edit script",
+                        identifier = UUID.Zero
+                    };
                     httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(error));
                     return;
                 }
@@ -202,17 +221,20 @@ namespace OpenSim.Region.ClientStack.Linden
                 string uploaderPath = GetNewCapPath();
                 string protocol = m_HostCapsObj.SSLCaps ? "https://" : "http://";
                 string uploaderURL = protocol + m_HostCapsObj.HostName + ":" + m_HostCapsObj.Port.ToString() + uploaderPath;
-                LLSDAssetUploadResponse uploadResponse = new LLSDAssetUploadResponse();
-                uploadResponse.uploader = uploaderURL;
-                uploadResponse.state = "upload";
+                LLSDAssetUploadResponse uploadResponse = new LLSDAssetUploadResponse
+                {
+                    uploader = uploaderURL,
+                    state = "upload"
+                };
 
                 TaskInventoryScriptUpdater uploader = new TaskInventoryScriptUpdater(itemID, objectID, is_script_running,
                         uploaderPath, m_HostCapsObj.HttpListener, httpRequest.RemoteIPEndPoint.Address, m_dumpAssetsToFile);
                 uploader.OnUpLoad += TaskScriptUpdated;
 
-                var uploaderHandler = new SimpleBinaryHandler("POST", uploaderPath, uploader.process);
-
-                uploaderHandler.MaxDataSize = 10000000; // change per asset type?
+                var uploaderHandler = new SimpleBinaryHandler("POST", uploaderPath, uploader.process)
+                {
+                    MaxDataSize = 10000000 // change per asset type?
+                };
 
                 m_HostCapsObj.HttpListener.AddSimpleStreamHandler(uploaderHandler);
 
@@ -310,17 +332,21 @@ namespace OpenSim.Region.ClientStack.Linden
 
                 if (assetID == UUID.Zero)
                 {
-                    LLSDAssetUploadError uperror = new LLSDAssetUploadError();
-                    uperror.message = "Failed to update inventory item asset";
-                    uperror.identifier = m_inventoryItemID;
+                    LLSDAssetUploadError uperror = new LLSDAssetUploadError
+                    {
+                        message = "Failed to update inventory item asset",
+                        identifier = m_inventoryItemID
+                    };
                     res = LLSDHelpers.SerialiseLLSDReply(uperror);
                 }
                 else
                 {
-                    LLSDAssetUploadComplete uploadComplete = new LLSDAssetUploadComplete();
-                    uploadComplete.new_asset = assetID.ToString();
-                    uploadComplete.new_inventory_item = m_inventoryItemID;
-                    uploadComplete.state = "complete";
+                    LLSDAssetUploadComplete uploadComplete = new LLSDAssetUploadComplete
+                    {
+                        new_asset = assetID.ToString(),
+                        new_inventory_item = m_inventoryItemID,
+                        state = "complete"
+                    };
                     res = LLSDHelpers.SerialiseLLSDReply(uploadComplete);
                 }
 
@@ -401,8 +427,10 @@ namespace OpenSim.Region.ClientStack.Linden
                     uploadComplete.new_asset = m_inventoryItemID;
                     uploadComplete.compiled = errors.Count > 0 ? false : true;
                     uploadComplete.state = "complete";
-                    uploadComplete.errors = new OpenSim.Framework.Capabilities.OSDArray();
-                    uploadComplete.errors.Array = errors;
+                    uploadComplete.errors = new OpenSim.Framework.Capabilities.OSDArray
+                    {
+                        Array = errors
+                    };
 
                     res = LLSDHelpers.SerialiseLLSDReply(uploadComplete);
 
@@ -416,9 +444,11 @@ namespace OpenSim.Region.ClientStack.Linden
                 }
                 catch
                 {
-                    LLSDAssetUploadError error = new LLSDAssetUploadError();
-                    error.message = "could not compile script";
-                    error.identifier = UUID.Zero;
+                    LLSDAssetUploadError error = new LLSDAssetUploadError
+                    {
+                        message = "could not compile script",
+                        identifier = UUID.Zero
+                    };
                     response.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(error));
                     return;
                 }

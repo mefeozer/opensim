@@ -311,10 +311,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                 }
                 else
                 {
-                    friendsData = new UserFriendData();
-                    friendsData.PrincipalID = agentID;
-                    friendsData.Friends = GetFriendsFromService(client);
-                    friendsData.Refcount = 1;
+                    friendsData = new UserFriendData
+                    {
+                        PrincipalID = agentID,
+                        Friends = GetFriendsFromService(client),
+                        Refcount = 1
+                    };
 
                     m_Friends[agentID] = friendsData;
                     return true;

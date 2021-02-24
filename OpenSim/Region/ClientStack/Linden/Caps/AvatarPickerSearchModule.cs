@@ -162,8 +162,10 @@ namespace OpenSim.Region.ClientStack.Linden
             // Full content request
             List<UserData> users = m_People.GetUserData(names, page_size, page_number);
 
-            LLSDAvatarPicker osdReply = new LLSDAvatarPicker();
-            osdReply.next_page_url = httpRequest.RawUrl;
+            LLSDAvatarPicker osdReply = new LLSDAvatarPicker
+            {
+                next_page_url = httpRequest.RawUrl
+            };
             foreach (UserData u in users)
                 osdReply.agents.Array.Add(ConvertUserData(u));
 
@@ -175,10 +177,12 @@ namespace OpenSim.Region.ClientStack.Linden
 
         private LLSDPerson ConvertUserData(UserData user)
         {
-            LLSDPerson p = new LLSDPerson();
-            p.legacy_first_name = user.FirstName;
-            p.legacy_last_name = user.LastName;
-            p.display_name = user.FirstName + " " + user.LastName;
+            LLSDPerson p = new LLSDPerson
+            {
+                legacy_first_name = user.FirstName,
+                legacy_last_name = user.LastName,
+                display_name = user.FirstName + " " + user.LastName
+            };
             if (user.LastName.StartsWith("@"))
                 p.username = user.FirstName.ToLower() + user.LastName.ToLower();
             else

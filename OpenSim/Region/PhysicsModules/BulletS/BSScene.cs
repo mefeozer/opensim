@@ -315,8 +315,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             //     can be left in and every call doesn't have to check for null.
             if (m_physicsLoggingEnabled)
             {
-                PhysicsLogging = new LogWriter(m_physicsLoggingDir, m_physicsLoggingPrefix, m_physicsLoggingFileMinutes, m_physicsLoggingDoFlush);
-                PhysicsLogging.ErrorLogger = m_log; // for DEBUG. Let's the logger output its own error messages.
+                PhysicsLogging = new LogWriter(m_physicsLoggingDir, m_physicsLoggingPrefix, m_physicsLoggingFileMinutes, m_physicsLoggingDoFlush)
+                {
+                    ErrorLogger = m_log // for DEBUG. Let's the logger output its own error messages.
+                };
             }
             else
             {
@@ -1080,11 +1082,13 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     RaycastHit hitInfo = PE.RayTest2(World, posFrom, posTo, collisionFilter, collisionMask);
                     if (hitInfo.hasHit())
                     {
-                        ContactResult result = new ContactResult();
-                        result.Pos = hitInfo.Point;
-                        result.Normal = hitInfo.Normal;
-                        result.ConsumerID = hitInfo.ID;
-                        result.Depth = hitInfo.Fraction;
+                        ContactResult result = new ContactResult
+                        {
+                            Pos = hitInfo.Point,
+                            Normal = hitInfo.Normal,
+                            ConsumerID = hitInfo.ID,
+                            Depth = hitInfo.Fraction
+                        };
                         ret.Add(result);
                         DetailLog("{0},RaycastWorld,hit,pos={1},norm={2},depth={3},id={4}",
                             DetailLogZero, result.Pos, result.Normal, result.Depth, result.ConsumerID);

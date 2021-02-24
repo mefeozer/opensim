@@ -204,20 +204,22 @@ namespace OpenSim.Server.Handlers.Hypergrid
                     }
 
                     // Create a New GridInstantMessageObject the the data
-                    GridInstantMessage gim = new GridInstantMessage();
-                    gim.fromAgentID = fromAgentID.Guid;
-                    gim.fromAgentName = fromAgentName;
-                    gim.fromGroup = fromGroup;
-                    gim.imSessionID = imSessionID.Guid;
-                    gim.RegionID = RegionID.Guid;
-                    gim.timestamp = timestamp;
-                    gim.toAgentID = toAgentID.Guid;
-                    gim.message = message;
-                    gim.dialog = dialog;
-                    gim.offline = offline;
-                    gim.ParentEstateID = ParentEstateID;
-                    gim.Position = Position;
-                    gim.binaryBucket = binaryBucket;
+                    GridInstantMessage gim = new GridInstantMessage
+                    {
+                        fromAgentID = fromAgentID.Guid,
+                        fromAgentName = fromAgentName,
+                        fromGroup = fromGroup,
+                        imSessionID = imSessionID.Guid,
+                        RegionID = RegionID.Guid,
+                        timestamp = timestamp,
+                        toAgentID = toAgentID.Guid,
+                        message = message,
+                        dialog = dialog,
+                        offline = offline,
+                        ParentEstateID = ParentEstateID,
+                        Position = Position,
+                        binaryBucket = binaryBucket
+                    };
 
                     successful = m_IMService.IncomingInstantMessage(gim);
 

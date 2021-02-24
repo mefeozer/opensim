@@ -61,10 +61,12 @@ namespace OpenSim.Region.CoreModules.Avatar.AvatarFactory
             AssetBase bakedTextureAsset;
             bakedTextureAsset
                 = new AssetBase(
-                    bakedTextureID, "Test Baked Texture", (sbyte)AssetType.Texture, userId.ToString());
-            bakedTextureAsset.Data = new byte[] { 2 }; // Not necessary to have a genuine JPEG2000 asset here yet
-            bakedTextureAsset.Temporary = true;
-            bakedTextureAsset.Local = true;
+                    bakedTextureID, "Test Baked Texture", (sbyte)AssetType.Texture, userId.ToString())
+                {
+                    Data = new byte[] { 2 }, // Not necessary to have a genuine JPEG2000 asset here yet
+                    Temporary = true,
+                    Local = true
+                };
             scene.AssetService.Store(bakedTextureAsset);
 
             byte[] visualParams = new byte[AvatarAppearance.VISUALPARAM_COUNT];
@@ -118,10 +120,12 @@ namespace OpenSim.Region.CoreModules.Avatar.AvatarFactory
             AssetBase libraryAsset;
             libraryAsset
                 = new AssetBase(
-                    alphaTextureID, "Default Alpha Layer Texture", (sbyte)AssetType.Texture, userId.ToString());
-            libraryAsset.Data = new byte[] { 2 }; // Not necessary to have a genuine JPEG2000 asset here yet
-            libraryAsset.Temporary = false;
-            libraryAsset.Local = false;
+                    alphaTextureID, "Default Alpha Layer Texture", (sbyte)AssetType.Texture, userId.ToString())
+                {
+                    Data = new byte[] { 2 }, // Not necessary to have a genuine JPEG2000 asset here yet
+                    Temporary = false,
+                    Local = false
+                };
             scene.AssetService.Store(libraryAsset);
 
             byte[] visualParams = new byte[AvatarAppearance.VISUALPARAM_COUNT];
@@ -162,10 +166,12 @@ namespace OpenSim.Region.CoreModules.Avatar.AvatarFactory
 
             // TODO: Use the actual BunchOfCaps functionality once we slot in the CapabilitiesModules
             AssetBase uploadedAsset;
-            uploadedAsset = new AssetBase(eyesTextureId, "Baked Texture", (sbyte)AssetType.Texture, userId.ToString());
-            uploadedAsset.Data = new byte[] { 2 };
-            uploadedAsset.Temporary = true;
-            uploadedAsset.Local = true; // Local assets aren't persisted, non-local are
+            uploadedAsset = new AssetBase(eyesTextureId, "Baked Texture", (sbyte)AssetType.Texture, userId.ToString())
+            {
+                Data = new byte[] { 2 },
+                Temporary = true,
+                Local = true // Local assets aren't persisted, non-local are
+            };
             scene.AssetService.Store(uploadedAsset);
 
             byte[] visualParams = new byte[AvatarAppearance.VISUALPARAM_COUNT];

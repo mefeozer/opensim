@@ -146,15 +146,19 @@ namespace PrimMesher
 
                         if (viewerMode)
                         {
-                            f1 = new Face(p1, p4, p3, p1, p4, p3);
-                            f1.uv1 = p1;
-                            f1.uv2 = p4;
-                            f1.uv3 = p3;
+                            f1 = new Face(p1, p4, p3, p1, p4, p3)
+                            {
+                                uv1 = p1,
+                                uv2 = p4,
+                                uv3 = p3
+                            };
 
-                            f2 = new Face(p1, p2, p4, p1, p2, p4);
-                            f2.uv1 = p1;
-                            f2.uv2 = p2;
-                            f2.uv3 = p4;
+                            f2 = new Face(p1, p2, p4, p1, p2, p4)
+                            {
+                                uv1 = p1,
+                                uv2 = p2,
+                                uv3 = p4
+                            };
                         }
                         else
                         {
@@ -413,27 +417,35 @@ namespace PrimMesher
                         {
                             if (invert)
                             {
-                                f1 = new Face(p1, p4, p3, p1, p4, p3);
-                                f1.uv1 = p1;
-                                f1.uv2 = p4;
-                                f1.uv3 = p3;
+                                f1 = new Face(p1, p4, p3, p1, p4, p3)
+                                {
+                                    uv1 = p1,
+                                    uv2 = p4,
+                                    uv3 = p3
+                                };
 
-                                f2 = new Face(p1, p2, p4, p1, p2, p4);
-                                f2.uv1 = p1;
-                                f2.uv2 = p2;
-                                f2.uv3 = p4;
+                                f2 = new Face(p1, p2, p4, p1, p2, p4)
+                                {
+                                    uv1 = p1,
+                                    uv2 = p2,
+                                    uv3 = p4
+                                };
                             }
                             else
                             {
-                                f1 = new Face(p1, p3, p4, p1, p3, p4);
-                                f1.uv1 = p1;
-                                f1.uv2 = p3;
-                                f1.uv3 = p4;
+                                f1 = new Face(p1, p3, p4, p1, p3, p4)
+                                {
+                                    uv1 = p1,
+                                    uv2 = p3,
+                                    uv3 = p4
+                                };
 
-                                f2 = new Face(p1, p4, p2, p1, p4, p2);
-                                f2.uv1 = p1;
-                                f2.uv2 = p4;
-                                f2.uv3 = p2;
+                                f2 = new Face(p1, p4, p2, p1, p4, p2)
+                                {
+                                    uv1 = p1,
+                                    uv2 = p4,
+                                    uv3 = p2
+                                };
                             }
                         }
                         else
@@ -507,22 +519,24 @@ namespace PrimMesher
 
             foreach (Face face in this.faces)
             {
-                ViewerFace vf = new ViewerFace(0);
-                vf.v1 = this.coords[face.v1];
-                vf.v2 = this.coords[face.v2];
-                vf.v3 = this.coords[face.v3];
+                ViewerFace vf = new ViewerFace(0)
+                {
+                    v1 = this.coords[face.v1],
+                    v2 = this.coords[face.v2],
+                    v3 = this.coords[face.v3],
 
-                vf.coordIndex1 = face.v1;
-                vf.coordIndex2 = face.v2;
-                vf.coordIndex3 = face.v3;
+                    coordIndex1 = face.v1,
+                    coordIndex2 = face.v2,
+                    coordIndex3 = face.v3,
 
-                vf.n1 = this.normals[face.n1];
-                vf.n2 = this.normals[face.n2];
-                vf.n3 = this.normals[face.n3];
+                    n1 = this.normals[face.n1],
+                    n2 = this.normals[face.n2],
+                    n3 = this.normals[face.n3],
 
-                vf.uv1 = this.uvs[face.uv1];
-                vf.uv2 = this.uvs[face.uv2];
-                vf.uv3 = this.uvs[face.uv3];
+                    uv1 = this.uvs[face.uv1],
+                    uv2 = this.uvs[face.uv2],
+                    uv3 = this.uvs[face.uv3]
+                };
 
                 this.viewerFaces.Add(vf);
             }

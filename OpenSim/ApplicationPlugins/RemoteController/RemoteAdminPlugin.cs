@@ -597,8 +597,10 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             }
 
             // Perform shutdown
-            System.Timers.Timer shutdownTimer = new System.Timers.Timer(timeout); // Wait before firing
-            shutdownTimer.AutoReset = false;
+            System.Timers.Timer shutdownTimer = new System.Timers.Timer(timeout)
+            {
+                AutoReset = false
+            }; // Wait before firing
             shutdownTimer.Elapsed += new ElapsedEventHandler(shutdownTimer_Elapsed);
             lock (shutdownTimer)
             {
@@ -723,13 +725,14 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 }
 
                 // create volatile or persistent region info
-                RegionInfo region = new RegionInfo();
-
-                region.RegionID = regionID;
-                region.originRegionID = regionID;
-                region.RegionName = (string) requestData["region_name"];
-                region.RegionLocX = Convert.ToUInt32(requestData["region_x"]);
-                region.RegionLocY = Convert.ToUInt32(requestData["region_y"]);
+                RegionInfo region = new RegionInfo
+                {
+                    RegionID = regionID,
+                    originRegionID = regionID,
+                    RegionName = (string)requestData["region_name"],
+                    RegionLocX = Convert.ToUInt32(requestData["region_x"]),
+                    RegionLocY = Convert.ToUInt32(requestData["region_y"])
+                };
 
                 // check for collisions: region name, region UUID,
                 // region location
@@ -747,9 +750,10 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                                       scene.RegionInfo.RegionLocX, scene.RegionInfo.RegionLocY));
 
                 region.InternalEndPoint =
-                    new IPEndPoint(IPAddress.Parse((string) requestData["listen_ip"]), 0);
-
-                region.InternalEndPoint.Port = Convert.ToInt32(requestData["listen_port"]);
+                    new IPEndPoint(IPAddress.Parse((string)requestData["listen_ip"]), 0)
+                    {
+                        Port = Convert.ToInt32(requestData["listen_port"])
+                    };
                 if (0 == region.InternalEndPoint.Port) throw new Exception("listen_port is 0");
                 if (m_application.SceneManager.TryGetScene(region.InternalEndPoint, out scene))
                     throw new Exception(
@@ -2845,14 +2849,15 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             // Missing destination folder? This should *never* be the case
             if (destinationFolder.Type != (short)FolderType.Clothing)
             {
-                destinationFolder = new InventoryFolderBase();
-
-                destinationFolder.ID       = UUID.Random();
-                destinationFolder.Name     = "Clothing";
-                destinationFolder.Owner    = destination;
-                destinationFolder.Type = (short)FolderType.Clothing;
-                destinationFolder.ParentID = inventoryService.GetRootFolder(destination).ID;
-                destinationFolder.Version  = 1;
+                destinationFolder = new InventoryFolderBase
+                {
+                    ID = UUID.Random(),
+                    Name = "Clothing",
+                    Owner = destination,
+                    Type = (short)FolderType.Clothing,
+                    ParentID = inventoryService.GetRootFolder(destination).ID,
+                    Version = 1
+                };
                 inventoryService.AddFolder(destinationFolder);     // store base record
                 m_log.ErrorFormat("[RADMIN]: Created folder for destination {0}", source);
             }
@@ -2871,27 +2876,29 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
                     if (item != null)
                     {
-                        InventoryItemBase destinationItem = new InventoryItemBase(UUID.Random(), destination);
-                        destinationItem.Name = item.Name;
-                        destinationItem.Owner = destination;
-                        destinationItem.Description = item.Description;
-                        destinationItem.InvType = item.InvType;
-                        destinationItem.CreatorId = item.CreatorId;
-                        destinationItem.CreatorData = item.CreatorData;
-                        destinationItem.NextPermissions = item.NextPermissions;
-                        destinationItem.CurrentPermissions = item.CurrentPermissions;
-                        destinationItem.BasePermissions = item.BasePermissions;
-                        destinationItem.EveryOnePermissions = item.EveryOnePermissions;
-                        destinationItem.GroupPermissions = item.GroupPermissions;
-                        destinationItem.AssetType = item.AssetType;
-                        destinationItem.AssetID = item.AssetID;
-                        destinationItem.GroupID = item.GroupID;
-                        destinationItem.GroupOwned = item.GroupOwned;
-                        destinationItem.SalePrice = item.SalePrice;
-                        destinationItem.SaleType = item.SaleType;
-                        destinationItem.Flags = item.Flags;
-                        destinationItem.CreationDate = item.CreationDate;
-                        destinationItem.Folder = destinationFolder.ID;
+                        InventoryItemBase destinationItem = new InventoryItemBase(UUID.Random(), destination)
+                        {
+                            Name = item.Name,
+                            Owner = destination,
+                            Description = item.Description,
+                            InvType = item.InvType,
+                            CreatorId = item.CreatorId,
+                            CreatorData = item.CreatorData,
+                            NextPermissions = item.NextPermissions,
+                            CurrentPermissions = item.CurrentPermissions,
+                            BasePermissions = item.BasePermissions,
+                            EveryOnePermissions = item.EveryOnePermissions,
+                            GroupPermissions = item.GroupPermissions,
+                            AssetType = item.AssetType,
+                            AssetID = item.AssetID,
+                            GroupID = item.GroupID,
+                            GroupOwned = item.GroupOwned,
+                            SalePrice = item.SalePrice,
+                            SaleType = item.SaleType,
+                            Flags = item.Flags,
+                            CreationDate = item.CreationDate,
+                            Folder = destinationFolder.ID
+                        };
                         ApplyNextOwnerPermissions(destinationItem);
 
                         m_application.SceneManager.CurrentOrFirstScene.AddInventoryItem(destinationItem);
@@ -2924,27 +2931,29 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
                     if (item != null)
                     {
-                        InventoryItemBase destinationItem = new InventoryItemBase(UUID.Random(), destination);
-                        destinationItem.Name = item.Name;
-                        destinationItem.Owner = destination;
-                        destinationItem.Description = item.Description;
-                        destinationItem.InvType = item.InvType;
-                        destinationItem.CreatorId = item.CreatorId;
-                        destinationItem.CreatorData = item.CreatorData;
-                        destinationItem.NextPermissions = item.NextPermissions;
-                        destinationItem.CurrentPermissions = item.CurrentPermissions;
-                        destinationItem.BasePermissions = item.BasePermissions;
-                        destinationItem.EveryOnePermissions = item.EveryOnePermissions;
-                        destinationItem.GroupPermissions = item.GroupPermissions;
-                        destinationItem.AssetType = item.AssetType;
-                        destinationItem.AssetID = item.AssetID;
-                        destinationItem.GroupID = item.GroupID;
-                        destinationItem.GroupOwned = item.GroupOwned;
-                        destinationItem.SalePrice = item.SalePrice;
-                        destinationItem.SaleType = item.SaleType;
-                        destinationItem.Flags = item.Flags;
-                        destinationItem.CreationDate = item.CreationDate;
-                        destinationItem.Folder = destinationFolder.ID;
+                        InventoryItemBase destinationItem = new InventoryItemBase(UUID.Random(), destination)
+                        {
+                            Name = item.Name,
+                            Owner = destination,
+                            Description = item.Description,
+                            InvType = item.InvType,
+                            CreatorId = item.CreatorId,
+                            CreatorData = item.CreatorData,
+                            NextPermissions = item.NextPermissions,
+                            CurrentPermissions = item.CurrentPermissions,
+                            BasePermissions = item.BasePermissions,
+                            EveryOnePermissions = item.EveryOnePermissions,
+                            GroupPermissions = item.GroupPermissions,
+                            AssetType = item.AssetType,
+                            AssetID = item.AssetID,
+                            GroupID = item.GroupID,
+                            GroupOwned = item.GroupOwned,
+                            SalePrice = item.SalePrice,
+                            SaleType = item.SaleType,
+                            Flags = item.Flags,
+                            CreationDate = item.CreationDate,
+                            Folder = destinationFolder.ID
+                        };
                         ApplyNextOwnerPermissions(destinationItem);
 
                         m_application.SceneManager.CurrentOrFirstScene.AddInventoryItem(destinationItem);
@@ -2980,8 +2989,10 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             // Missing source folder? This should *never* be the case
             if (sourceFolder.Type != (short)assetType)
             {
-                sourceFolder = new InventoryFolderBase();
-                sourceFolder.ID       = UUID.Random();
+                sourceFolder = new InventoryFolderBase
+                {
+                    ID = UUID.Random()
+                };
                 if (assetType == FolderType.Clothing)
                 {
                     sourceFolder.Name     = "Clothing";
@@ -3001,8 +3012,10 @@ namespace OpenSim.ApplicationPlugins.RemoteController
             // Missing destination folder? This should *never* be the case
             if (destinationFolder.Type != (short)assetType)
             {
-                destinationFolder = new InventoryFolderBase();
-                destinationFolder.ID       = UUID.Random();
+                destinationFolder = new InventoryFolderBase
+                {
+                    ID = UUID.Random()
+                };
                 if (assetType == FolderType.Clothing)
                 {
                     destinationFolder.Name  = "Clothing";
@@ -3024,13 +3037,15 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
             foreach (InventoryFolderBase folder in folders)
             {
-                extraFolder = new InventoryFolderBase();
-                extraFolder.ID = UUID.Random();
-                extraFolder.Name = folder.Name;
-                extraFolder.Owner = destination;
-                extraFolder.Type = folder.Type;
-                extraFolder.Version = folder.Version;
-                extraFolder.ParentID = destinationFolder.ID;
+                extraFolder = new InventoryFolderBase
+                {
+                    ID = UUID.Random(),
+                    Name = folder.Name,
+                    Owner = destination,
+                    Type = folder.Type,
+                    Version = folder.Version,
+                    ParentID = destinationFolder.ID
+                };
                 inventoryService.AddFolder(extraFolder);
 
                 m_log.DebugFormat("[RADMIN]: Added folder {0} to folder {1}", extraFolder.ID, sourceFolder.ID);
@@ -3039,27 +3054,29 @@ namespace OpenSim.ApplicationPlugins.RemoteController
 
                 foreach (InventoryItemBase item in items)
                 {
-                    InventoryItemBase destinationItem = new InventoryItemBase(UUID.Random(), destination);
-                    destinationItem.Name = item.Name;
-                    destinationItem.Owner = destination;
-                    destinationItem.Description = item.Description;
-                    destinationItem.InvType = item.InvType;
-                    destinationItem.CreatorId = item.CreatorId;
-                    destinationItem.CreatorData = item.CreatorData;
-                    destinationItem.NextPermissions = item.NextPermissions;
-                    destinationItem.CurrentPermissions = item.CurrentPermissions;
-                    destinationItem.BasePermissions = item.BasePermissions;
-                    destinationItem.EveryOnePermissions = item.EveryOnePermissions;
-                    destinationItem.GroupPermissions = item.GroupPermissions;
-                    destinationItem.AssetType = item.AssetType;
-                    destinationItem.AssetID = item.AssetID;
-                    destinationItem.GroupID = item.GroupID;
-                    destinationItem.GroupOwned = item.GroupOwned;
-                    destinationItem.SalePrice = item.SalePrice;
-                    destinationItem.SaleType = item.SaleType;
-                    destinationItem.Flags = item.Flags;
-                    destinationItem.CreationDate = item.CreationDate;
-                    destinationItem.Folder = extraFolder.ID;
+                    InventoryItemBase destinationItem = new InventoryItemBase(UUID.Random(), destination)
+                    {
+                        Name = item.Name,
+                        Owner = destination,
+                        Description = item.Description,
+                        InvType = item.InvType,
+                        CreatorId = item.CreatorId,
+                        CreatorData = item.CreatorData,
+                        NextPermissions = item.NextPermissions,
+                        CurrentPermissions = item.CurrentPermissions,
+                        BasePermissions = item.BasePermissions,
+                        EveryOnePermissions = item.EveryOnePermissions,
+                        GroupPermissions = item.GroupPermissions,
+                        AssetType = item.AssetType,
+                        AssetID = item.AssetID,
+                        GroupID = item.GroupID,
+                        GroupOwned = item.GroupOwned,
+                        SalePrice = item.SalePrice,
+                        SaleType = item.SaleType,
+                        Flags = item.Flags,
+                        CreationDate = item.CreationDate,
+                        Folder = extraFolder.ID
+                    };
                     ApplyNextOwnerPermissions(destinationItem);
 
                     m_application.SceneManager.CurrentOrFirstScene.AddInventoryItem(destinationItem);
@@ -3156,11 +3173,13 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     assets = doc.GetElementsByTagName("RequiredAsset");
                     foreach (XmlNode assetNode in assets)
                     {
-                        AssetBase asset = new AssetBase(UUID.Random(), GetStringAttribute(assetNode, "name", ""), sbyte.Parse(GetStringAttribute(assetNode, "type", "")), UUID.Zero.ToString());
-                        asset.Description = GetStringAttribute(assetNode,"desc","");
-                        asset.Local       = bool.Parse(GetStringAttribute(assetNode,"local",""));
-                        asset.Temporary   = bool.Parse(GetStringAttribute(assetNode,"temporary",""));
-                        asset.Data        = Convert.FromBase64String(assetNode.InnerText);
+                        AssetBase asset = new AssetBase(UUID.Random(), GetStringAttribute(assetNode, "name", ""), sbyte.Parse(GetStringAttribute(assetNode, "type", "")), UUID.Zero.ToString())
+                        {
+                            Description = GetStringAttribute(assetNode, "desc", ""),
+                            Local = bool.Parse(GetStringAttribute(assetNode, "local", "")),
+                            Temporary = bool.Parse(GetStringAttribute(assetNode, "temporary", "")),
+                            Data = Convert.FromBase64String(assetNode.InnerText)
+                        };
                         assetService.Store(asset);
                     }
 
@@ -3247,13 +3266,15 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                                 // This should *never* be the case
                                 if (clothingFolder == null || clothingFolder.Type != (short)FolderType.Clothing)
                                 {
-                                    clothingFolder = new InventoryFolderBase();
-                                    clothingFolder.ID       = UUID.Random();
-                                    clothingFolder.Name     = "Clothing";
-                                    clothingFolder.Owner    = ID;
-                                    clothingFolder.Type     = (short)FolderType.Clothing;
-                                    clothingFolder.ParentID = inventoryService.GetRootFolder(ID).ID;
-                                    clothingFolder.Version  = 1;
+                                    clothingFolder = new InventoryFolderBase
+                                    {
+                                        ID = UUID.Random(),
+                                        Name = "Clothing",
+                                        Owner = ID,
+                                        Type = (short)FolderType.Clothing,
+                                        ParentID = inventoryService.GetRootFolder(ID).ID,
+                                        Version = 1
+                                    };
                                     inventoryService.AddFolder(clothingFolder);     // store base record
                                     m_log.ErrorFormat("[RADMIN]: Created clothing folder for {0}/{1}", name, ID);
                                 }
@@ -3293,13 +3314,15 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                                     if (extraFolder == null)
                                     {
                                         m_log.DebugFormat("[RADMIN]: Creating outfit folder {0} for {1}", outfitName, name);
-                                        extraFolder          = new InventoryFolderBase();
-                                        extraFolder.ID       = UUID.Random();
-                                        extraFolder.Name     = outfitName;
-                                        extraFolder.Owner    = ID;
-                                        extraFolder.Type     = (short)FolderType.Clothing;
-                                        extraFolder.Version  = 1;
-                                        extraFolder.ParentID = clothingFolder.ID;
+                                        extraFolder = new InventoryFolderBase
+                                        {
+                                            ID = UUID.Random(),
+                                            Name = outfitName,
+                                            Owner = ID,
+                                            Type = (short)FolderType.Clothing,
+                                            Version = 1,
+                                            ParentID = clothingFolder.ID
+                                        };
                                         inventoryService.AddFolder(extraFolder);
                                         m_log.DebugFormat("[RADMIN]: Adding outfile folder {0} to folder {1}", extraFolder.ID, clothingFolder.ID);
                                     }
@@ -3343,26 +3366,28 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                                         // Create inventory item
                                         if (inventoryItem == null)
                                         {
-                                            inventoryItem = new InventoryItemBase(UUID.Random(), ID);
-                                            inventoryItem.Name = GetStringAttribute(item,"name","");
-                                            inventoryItem.Description = GetStringAttribute(item,"desc","");
-                                            inventoryItem.InvType = GetIntegerAttribute(item,"invtype",-1);
-                                            inventoryItem.CreatorId = GetStringAttribute(item,"creatorid","");
-                                            inventoryItem.CreatorData = GetStringAttribute(item, "creatordata", "");
-                                            inventoryItem.NextPermissions = GetUnsignedAttribute(perms, "next", 0x7fffffff);
-                                            inventoryItem.CurrentPermissions = GetUnsignedAttribute(perms,"current",0x7fffffff);
-                                            inventoryItem.BasePermissions = GetUnsignedAttribute(perms,"base",0x7fffffff);
-                                            inventoryItem.EveryOnePermissions = GetUnsignedAttribute(perms,"everyone",0x7fffffff);
-                                            inventoryItem.GroupPermissions = GetUnsignedAttribute(perms,"group",0x7fffffff);
-                                            inventoryItem.AssetType = GetIntegerAttribute(item,"assettype",-1);
-                                            inventoryItem.AssetID = assetid; // associated asset
-                                            inventoryItem.GroupID = (UUID)GetStringAttribute(item,"groupid","");
-                                            inventoryItem.GroupOwned = GetStringAttribute(item,"groupowned","false") == "true";
-                                            inventoryItem.SalePrice = GetIntegerAttribute(item,"saleprice",0);
-                                            inventoryItem.SaleType = (byte)GetIntegerAttribute(item,"saletype",0);
-                                            inventoryItem.Flags = GetUnsignedAttribute(item,"flags",0);
-                                            inventoryItem.CreationDate = GetIntegerAttribute(item,"creationdate",Util.UnixTimeSinceEpoch());
-                                            inventoryItem.Folder = extraFolder.ID; // Parent folder
+                                            inventoryItem = new InventoryItemBase(UUID.Random(), ID)
+                                            {
+                                                Name = GetStringAttribute(item, "name", ""),
+                                                Description = GetStringAttribute(item, "desc", ""),
+                                                InvType = GetIntegerAttribute(item, "invtype", -1),
+                                                CreatorId = GetStringAttribute(item, "creatorid", ""),
+                                                CreatorData = GetStringAttribute(item, "creatordata", ""),
+                                                NextPermissions = GetUnsignedAttribute(perms, "next", 0x7fffffff),
+                                                CurrentPermissions = GetUnsignedAttribute(perms, "current", 0x7fffffff),
+                                                BasePermissions = GetUnsignedAttribute(perms, "base", 0x7fffffff),
+                                                EveryOnePermissions = GetUnsignedAttribute(perms, "everyone", 0x7fffffff),
+                                                GroupPermissions = GetUnsignedAttribute(perms, "group", 0x7fffffff),
+                                                AssetType = GetIntegerAttribute(item, "assettype", -1),
+                                                AssetID = assetid, // associated asset
+                                                GroupID = (UUID)GetStringAttribute(item, "groupid", ""),
+                                                GroupOwned = GetStringAttribute(item, "groupowned", "false") == "true",
+                                                SalePrice = GetIntegerAttribute(item, "saleprice", 0),
+                                                SaleType = (byte)GetIntegerAttribute(item, "saletype", 0),
+                                                Flags = GetUnsignedAttribute(item, "flags", 0),
+                                                CreationDate = GetIntegerAttribute(item, "creationdate", Util.UnixTimeSinceEpoch()),
+                                                Folder = extraFolder.ID // Parent folder
+                                            };
 
                                             m_application.SceneManager.CurrentOrFirstScene.AddInventoryItem(inventoryItem);
                                             m_log.DebugFormat("[RADMIN]: Added item {0} to folder {1}", inventoryItem.ID, extraFolder.ID);

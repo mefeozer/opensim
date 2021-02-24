@@ -61,9 +61,10 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
                             TestHelpers.ParseTail(0x1),
                             "Test Image",
                             (sbyte)AssetType.Texture,
-                            TestHelpers.ParseTail(0x2).ToString());
-
-                    m_testImageAsset.Data = br.ReadBytes(99999999);
+                            TestHelpers.ParseTail(0x2).ToString())
+                        {
+                            Data = br.ReadBytes(99999999)
+                        };
                 }
             }
         }
@@ -101,12 +102,14 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
 
             scene.AssetService.Store(m_testImageAsset);
 
-            TextureRequestArgs args = new TextureRequestArgs();
-            args.RequestedAssetID = m_testImageAsset.FullID;
-            args.DiscardLevel = 0;
-            args.PacketNumber = 1;
-            args.Priority = 5;
-            args.requestSequence = 1;
+            TextureRequestArgs args = new TextureRequestArgs
+            {
+                RequestedAssetID = m_testImageAsset.FullID,
+                DiscardLevel = 0,
+                PacketNumber = 1,
+                Priority = 5,
+                requestSequence = 1
+            };
 
             llim.EnqueueReq(args);
             llim.ProcessImageQueue(20);
@@ -122,21 +125,25 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
 
             scene.AssetService.Store(m_testImageAsset);
 
-            TextureRequestArgs args = new TextureRequestArgs();
-            args.RequestedAssetID = m_testImageAsset.FullID;
-            args.DiscardLevel = 0;
-            args.PacketNumber = 1;
-            args.Priority = 5;
-            args.requestSequence = 1;
+            TextureRequestArgs args = new TextureRequestArgs
+            {
+                RequestedAssetID = m_testImageAsset.FullID,
+                DiscardLevel = 0,
+                PacketNumber = 1,
+                Priority = 5,
+                requestSequence = 1
+            };
             llim.EnqueueReq(args);
 
             // Now create a discard request
-            TextureRequestArgs discardArgs = new TextureRequestArgs();
-            discardArgs.RequestedAssetID = m_testImageAsset.FullID;
-            discardArgs.DiscardLevel = -1;
-            discardArgs.PacketNumber = 1;
-            discardArgs.Priority = 0;
-            discardArgs.requestSequence = 2;
+            TextureRequestArgs discardArgs = new TextureRequestArgs
+            {
+                RequestedAssetID = m_testImageAsset.FullID,
+                DiscardLevel = -1,
+                PacketNumber = 1,
+                Priority = 0,
+                requestSequence = 2
+            };
             llim.EnqueueReq(discardArgs);
 
             llim.ProcessImageQueue(20);
@@ -148,14 +155,16 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
         public void TestMissingImage()
         {
             TestHelpers.InMethod();
-//            XmlConfigurator.Configure();
+            //            XmlConfigurator.Configure();
 
-            TextureRequestArgs args = new TextureRequestArgs();
-            args.RequestedAssetID = m_testImageAsset.FullID;
-            args.DiscardLevel = 0;
-            args.PacketNumber = 1;
-            args.Priority = 5;
-            args.requestSequence = 1;
+            TextureRequestArgs args = new TextureRequestArgs
+            {
+                RequestedAssetID = m_testImageAsset.FullID,
+                DiscardLevel = 0,
+                PacketNumber = 1,
+                Priority = 5,
+                requestSequence = 1
+            };
 
             llim.EnqueueReq(args);
             llim.ProcessImageQueue(20);

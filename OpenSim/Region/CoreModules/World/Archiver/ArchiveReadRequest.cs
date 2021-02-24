@@ -775,8 +775,10 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 // this is ok, but just beware that some of the LandObject functions (that we haven't used here) still
                 // assume we're always using the destination region size
                 LandData ld = new LandData();
-                landObject = new LandObject(ld, scene);
-                landObject.LandData = parcel;
+                landObject = new LandObject(ld, scene)
+                {
+                    LandData = parcel
+                };
 
                 bool[,] srcLandBitmap = landObject.ConvertBytesToLandBitmap(overrideRegionSize);
                 if (landObject.IsLandBitmapEmpty(srcLandBitmap))
@@ -995,8 +997,10 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
                 //m_log.DebugFormat("[ARCHIVER]: Importing asset {0}, type {1}", uuid, assetType);
 
-                AssetBase asset = new AssetBase(new UUID(uuid), string.Empty, assetType, UUID.Zero.ToString());
-                asset.Data = data;
+                AssetBase asset = new AssetBase(new UUID(uuid), string.Empty, assetType, UUID.Zero.ToString())
+                {
+                    Data = data
+                };
 
                 // We're relying on the asset service to do the sensible thing and not store the asset if it already
                 // exists.

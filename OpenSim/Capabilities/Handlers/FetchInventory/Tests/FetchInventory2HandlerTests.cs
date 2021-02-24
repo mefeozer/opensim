@@ -73,11 +73,13 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             InventoryItemBase item;
             for (int i = 1; i <= 3; i++)
             {
-                item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-0000000000b" + i), m_userID);
-                item.AssetID = UUID.Random();
-                item.AssetType = (int)AssetType.Object;
-                item.Folder = m_objectsFolder;
-                item.Name = "Object " + i;
+                item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-0000000000b" + i), m_userID)
+                {
+                    AssetID = UUID.Random(),
+                    AssetType = (int)AssetType.Object,
+                    Folder = m_objectsFolder,
+                    Name = "Object " + i
+                };
                 m_scene.InventoryService.AddItem(item);
             }
 
@@ -87,11 +89,13 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             // Add 5 notecards
             for (int i = 1; i <= 5; i++)
             {
-                item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-00000000000" + i), m_userID);
-                item.AssetID = UUID.Random();
-                item.AssetType = (int)AssetType.Notecard;
-                item.Folder = m_notecardsFolder;
-                item.Name = "Notecard " + i;
+                item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-00000000000" + i), m_userID)
+                {
+                    AssetID = UUID.Random(),
+                    AssetType = (int)AssetType.Notecard,
+                    Folder = m_notecardsFolder,
+                    Name = "Notecard " + i
+                };
                 m_scene.InventoryService.AddItem(item);
             }
 

@@ -117,9 +117,11 @@ namespace OpenSim.Region.PhysicsModule.POS
         public override PhysicsActor AddAvatar(
             string avName, Vector3 position, Vector3 velocity, Vector3 size, bool isFlying)
         {
-            POSCharacter act = new POSCharacter();
-            act.Position = position;
-            act.Flying = isFlying;
+            POSCharacter act = new POSCharacter
+            {
+                Position = position,
+                Flying = isFlying
+            };
             _characters.Add(act);
             return act;
         }
@@ -152,10 +154,12 @@ namespace OpenSim.Region.PhysicsModule.POS
         public override PhysicsActor AddPrimShape(string primName, PrimitiveBaseShape pbs, Vector3 position,
                                                   Vector3 size, Quaternion rotation, bool isPhysical, uint localid)
         {
-            POSPrim prim = new POSPrim();
-            prim.Position = position;
-            prim.Orientation = rotation;
-            prim.Size = size;
+            POSPrim prim = new POSPrim
+            {
+                Position = position,
+                Orientation = rotation,
+                Size = size
+            };
             _prims.Add(prim);
             return prim;
         }

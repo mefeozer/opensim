@@ -95,11 +95,13 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static Quaternion operator *(Quaternion a, Quaternion b)
         {
-            Quaternion c = new Quaternion();
-            c.w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
-            c.x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
-            c.y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x;
-            c.z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w;
+            Quaternion c = new Quaternion
+            {
+                w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
+                x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+                y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+                z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w
+            };
             return c;
         }
 

@@ -161,14 +161,15 @@ namespace OpenSim.Services.InventoryService
 
         protected XInventoryFolder CreateFolder(UUID principalID, UUID parentID, int type, string name)
         {
-            XInventoryFolder newFolder = new XInventoryFolder();
-
-            newFolder.folderName = name;
-            newFolder.type = type;
-            newFolder.version = 1;
-            newFolder.folderID = UUID.Random();
-            newFolder.agentID = principalID;
-            newFolder.parentFolderID = parentID;
+            XInventoryFolder newFolder = new XInventoryFolder
+            {
+                folderName = name,
+                type = type,
+                version = 1,
+                folderID = UUID.Random(),
+                agentID = principalID,
+                parentFolderID = parentID
+            };
 
             m_Database.StoreFolder(newFolder);
 
@@ -292,10 +293,12 @@ namespace OpenSim.Services.InventoryService
             // by ID.
             //
             //m_log.DebugFormat("[XINVENTORY SERVICE]: Fetch contents for folder {0}", folderID.ToString());
-            InventoryCollection inventory = new InventoryCollection();
-            inventory.OwnerID = principalID;
-            inventory.Folders = new List<InventoryFolderBase>();
-            inventory.Items = new List<InventoryItemBase>();
+            InventoryCollection inventory = new InventoryCollection
+            {
+                OwnerID = principalID,
+                Folders = new List<InventoryFolderBase>(),
+                Items = new List<InventoryItemBase>()
+            };
 
             XInventoryFolder[] folders = m_Database.GetFolders(
                     new string[] { "parentFolderID"},
@@ -460,8 +463,10 @@ namespace OpenSim.Services.InventoryService
                 if (onlyIfTrash && !ParentIsTrashOrLost(id))
                     continue;
                 //m_log.InfoFormat("[XINVENTORY SERVICE]: Delete folder {0}", id);
-                InventoryFolderBase f = new InventoryFolderBase();
-                f.ID = id;
+                InventoryFolderBase f = new InventoryFolderBase
+                {
+                    ID = id
+                };
                 PurgeFolder(f, onlyIfTrash);
                 m_Database.DeleteFolders("folderID", id.ToString());
             }
@@ -666,54 +671,57 @@ namespace OpenSim.Services.InventoryService
         //
         protected InventoryFolderBase ConvertToOpenSim(XInventoryFolder folder)
         {
-            InventoryFolderBase newFolder = new InventoryFolderBase();
-
-            newFolder.ParentID = folder.parentFolderID;
-            newFolder.Type = (short)folder.type;
-            //// Viewer can't understand anything that's not in it's LLFolderType enum
-            //if (newFolder.Type == InventoryItemBase.SUITCASE_FOLDER_TYPE)
-            //    newFolder.Type = InventoryItemBase.SUITCASE_FOLDER_FAKE_TYPE;
-            newFolder.Version = (ushort)folder.version;
-            newFolder.Name = folder.folderName;
-            newFolder.Owner = folder.agentID;
-            newFolder.ID = folder.folderID;
+            InventoryFolderBase newFolder = new InventoryFolderBase
+            {
+                ParentID = folder.parentFolderID,
+                Type = (short)folder.type,
+                //// Viewer can't understand anything that's not in it's LLFolderType enum
+                //if (newFolder.Type == InventoryItemBase.SUITCASE_FOLDER_TYPE)
+                //    newFolder.Type = InventoryItemBase.SUITCASE_FOLDER_FAKE_TYPE;
+                Version = (ushort)folder.version,
+                Name = folder.folderName,
+                Owner = folder.agentID,
+                ID = folder.folderID
+            };
 
             return newFolder;
         }
 
         protected XInventoryFolder ConvertFromOpenSim(InventoryFolderBase folder)
         {
-            XInventoryFolder newFolder = new XInventoryFolder();
-
-            newFolder.parentFolderID = folder.ParentID;
-            newFolder.type = (int)folder.Type;
-            newFolder.version = (int)folder.Version;
-            newFolder.folderName = folder.Name;
-            newFolder.agentID = folder.Owner;
-            newFolder.folderID = folder.ID;
+            XInventoryFolder newFolder = new XInventoryFolder
+            {
+                parentFolderID = folder.ParentID,
+                type = (int)folder.Type,
+                version = (int)folder.Version,
+                folderName = folder.Name,
+                agentID = folder.Owner,
+                folderID = folder.ID
+            };
 
             return newFolder;
         }
 
         protected InventoryItemBase ConvertToOpenSim(XInventoryItem item)
         {
-            InventoryItemBase newItem = new InventoryItemBase();
-
-            newItem.AssetID = item.assetID;
-            newItem.AssetType = item.assetType;
-            newItem.Name = item.inventoryName;
-            newItem.Owner = item.avatarID;
-            newItem.ID = item.inventoryID;
-            newItem.InvType = item.invType;
-            newItem.Folder = item.parentFolderID;
-            newItem.CreatorIdentification = item.creatorID;
-            newItem.Description = item.inventoryDescription;
-            newItem.NextPermissions = (uint)item.inventoryNextPermissions;
-            newItem.CurrentPermissions = (uint)item.inventoryCurrentPermissions;
-            newItem.BasePermissions = (uint)item.inventoryBasePermissions;
-            newItem.EveryOnePermissions = (uint)item.inventoryEveryOnePermissions;
-            newItem.GroupPermissions = (uint)item.inventoryGroupPermissions;
-            newItem.GroupID = item.groupID;
+            InventoryItemBase newItem = new InventoryItemBase
+            {
+                AssetID = item.assetID,
+                AssetType = item.assetType,
+                Name = item.inventoryName,
+                Owner = item.avatarID,
+                ID = item.inventoryID,
+                InvType = item.invType,
+                Folder = item.parentFolderID,
+                CreatorIdentification = item.creatorID,
+                Description = item.inventoryDescription,
+                NextPermissions = (uint)item.inventoryNextPermissions,
+                CurrentPermissions = (uint)item.inventoryCurrentPermissions,
+                BasePermissions = (uint)item.inventoryBasePermissions,
+                EveryOnePermissions = (uint)item.inventoryEveryOnePermissions,
+                GroupPermissions = (uint)item.inventoryGroupPermissions,
+                GroupID = item.groupID
+            };
             if (item.groupOwned == 0)
                 newItem.GroupOwned = false;
             else
@@ -728,23 +736,24 @@ namespace OpenSim.Services.InventoryService
 
         protected XInventoryItem ConvertFromOpenSim(InventoryItemBase item)
         {
-            XInventoryItem newItem = new XInventoryItem();
-
-            newItem.assetID = item.AssetID;
-            newItem.assetType = item.AssetType;
-            newItem.inventoryName = item.Name;
-            newItem.avatarID = item.Owner;
-            newItem.inventoryID = item.ID;
-            newItem.invType = item.InvType;
-            newItem.parentFolderID = item.Folder;
-            newItem.creatorID = item.CreatorIdentification;
-            newItem.inventoryDescription = item.Description;
-            newItem.inventoryNextPermissions = (int)item.NextPermissions;
-            newItem.inventoryCurrentPermissions = (int)item.CurrentPermissions;
-            newItem.inventoryBasePermissions = (int)item.BasePermissions;
-            newItem.inventoryEveryOnePermissions = (int)item.EveryOnePermissions;
-            newItem.inventoryGroupPermissions = (int)item.GroupPermissions;
-            newItem.groupID = item.GroupID;
+            XInventoryItem newItem = new XInventoryItem
+            {
+                assetID = item.AssetID,
+                assetType = item.AssetType,
+                inventoryName = item.Name,
+                avatarID = item.Owner,
+                inventoryID = item.ID,
+                invType = item.InvType,
+                parentFolderID = item.Folder,
+                creatorID = item.CreatorIdentification,
+                inventoryDescription = item.Description,
+                inventoryNextPermissions = (int)item.NextPermissions,
+                inventoryCurrentPermissions = (int)item.CurrentPermissions,
+                inventoryBasePermissions = (int)item.BasePermissions,
+                inventoryEveryOnePermissions = (int)item.EveryOnePermissions,
+                inventoryGroupPermissions = (int)item.GroupPermissions,
+                groupID = item.GroupID
+            };
             if (item.GroupOwned)
                 newItem.groupOwned = 1;
             else

@@ -234,9 +234,11 @@ namespace OpenSim.Services.Connectors
 
                     m_AssetHandlers.Add(id, handlers);
 
-                    QueuedAssetRequest request = new QueuedAssetRequest();
-                    request.id = id;
-                    request.uri = uri;
+                    QueuedAssetRequest request = new QueuedAssetRequest
+                    {
+                        id = id,
+                        uri = uri
+                    };
                     Util.FireAndForget(x =>
                     {
                         AssetRequestProcessor(request);
@@ -404,8 +406,10 @@ namespace OpenSim.Services.Connectors
                 if (metadata == null)
                     return false;
 
-                asset = new AssetBase(metadata.FullID, metadata.Name, metadata.Type, UUID.Zero.ToString());
-                asset.Metadata = metadata;
+                asset = new AssetBase(metadata.FullID, metadata.Name, metadata.Type, UUID.Zero.ToString())
+                {
+                    Metadata = metadata
+                };
             }
             asset.Data = data;
 

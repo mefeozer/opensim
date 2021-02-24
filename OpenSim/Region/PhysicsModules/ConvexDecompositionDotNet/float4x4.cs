@@ -210,8 +210,10 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
         public static float4x4 MatrixRigidInverse(float4x4 m)
         {
             float4x4 trans_inverse = MatrixTranslation(-m.w.xyz());
-            float4x4 rot = new float4x4(m);
-            rot.w = new float4(0f, 0f, 0f, 1f);
+            float4x4 rot = new float4x4(m)
+            {
+                w = new float4(0f, 0f, 0f, 1f)
+            };
             return trans_inverse * MatrixTranspose(rot);
         }
         public static float4x4 MatrixTranspose(float4x4 m)

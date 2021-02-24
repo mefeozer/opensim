@@ -179,8 +179,10 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             sogd.Enabled = false;
 
             SceneObjectPart part
-                = new SceneObjectPart(objectOwnerId, PrimitiveBaseShape.Default, Vector3.Zero, Quaternion.Identity, Vector3.Zero);
-            part.Name = "obj1";
+                = new SceneObjectPart(objectOwnerId, PrimitiveBaseShape.Default, Vector3.Zero, Quaternion.Identity, Vector3.Zero)
+                {
+                    Name = "obj1"
+                };
             scene.AddNewSceneObject(new SceneObjectGroup(part), false);
             List<uint> localIds = new List<uint>();
             localIds.Add(part.LocalId);

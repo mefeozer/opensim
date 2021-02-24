@@ -810,10 +810,14 @@ readonly float TerrainFriction = 0.3f;
 
             int i = 0;
 
-            maxDepthContact = new ContactPoint();
-            maxDepthContact.PenetrationDepth = float.MinValue;
-            ContactPoint minDepthContact = new ContactPoint();
-            minDepthContact.PenetrationDepth = float.MaxValue;
+            maxDepthContact = new ContactPoint
+            {
+                PenetrationDepth = float.MinValue
+            };
+            ContactPoint minDepthContact = new ContactPoint
+            {
+                PenetrationDepth = float.MaxValue
+            };
 
             SharedTmpcontact.geom.depth = 0;
             SharedTmpcontact.surface.mu = mu;
@@ -1128,9 +1132,11 @@ readonly float TerrainFriction = 0.3f;
         public override PhysicsActor AddAvatar(uint localID, string avName, Vector3 position, Vector3 size, float feetOffset, bool isFlying)
         {
             OdeCharacter newAv = new OdeCharacter(localID, avName, this, position,
-                size, feetOffset, avDensity, avMovementDivisorWalk, avMovementDivisorRun);
-            newAv.Flying = isFlying;
-            newAv.MinimumGroundFlightOffset = minimumGroundFlightOffset;
+                size, feetOffset, avDensity, avMovementDivisorWalk, avMovementDivisorRun)
+            {
+                Flying = isFlying,
+                MinimumGroundFlightOffset = minimumGroundFlightOffset
+            };
 
             return newAv;
         }
@@ -2004,10 +2010,12 @@ readonly float TerrainFriction = 0.3f;
                     SafeNativeMethods.GeomSetCategoryBits(m_terrainGeom, (uint)CollisionCategories.Land);
                     SafeNativeMethods.GeomSetCollideBits(m_terrainGeom, 0);
 
-                    PhysicsActor pa = new NullPhysicsActor();
-                    pa.Name = "Terrain";
-                    pa.PhysicsActorType = (int)ActorTypes.Ground;
-                    actor_name_map[m_terrainGeom] = pa;
+                        PhysicsActor pa = new NullPhysicsActor
+                        {
+                            Name = "Terrain",
+                            PhysicsActorType = (int)ActorTypes.Ground
+                        };
+                        actor_name_map[m_terrainGeom] = pa;
 
                     //geom_name_map[GroundGeom] = "Terrain";
 
@@ -2190,14 +2198,16 @@ readonly float TerrainFriction = 0.3f;
         {
             if (retMethod != null)
             {
-                ODERayRequest req = new ODERayRequest();
-                req.actor = null;
-                req.callbackMethod = retMethod;
-                req.length = length;
-                req.Normal = direction;
-                req.Origin = position;
-                req.Count = 0;
-                req.filter = RayFilterFlags.AllPrims;
+                ODERayRequest req = new ODERayRequest
+                {
+                    actor = null,
+                    callbackMethod = retMethod,
+                    length = length,
+                    Normal = direction,
+                    Origin = position,
+                    Count = 0,
+                    filter = RayFilterFlags.AllPrims
+                };
 
                 m_rayCastManager.QueueRequest(req);
             }
@@ -2207,14 +2217,16 @@ readonly float TerrainFriction = 0.3f;
         {
             if (retMethod != null)
             {
-                ODERayRequest req = new ODERayRequest();
-                req.actor = null;
-                req.callbackMethod = retMethod;
-                req.length = length;
-                req.Normal = direction;
-                req.Origin = position;
-                req.Count = Count;
-                req.filter = RayFilterFlags.AllPrims;
+                ODERayRequest req = new ODERayRequest
+                {
+                    actor = null,
+                    callbackMethod = retMethod,
+                    length = length,
+                    Normal = direction,
+                    Origin = position,
+                    Count = Count,
+                    filter = RayFilterFlags.AllPrims
+                };
 
                 m_rayCastManager.QueueRequest(req);
             }
@@ -2234,14 +2246,16 @@ readonly float TerrainFriction = 0.3f;
                 }
             };
 
-            ODERayRequest req = new ODERayRequest();
-            req.actor = null;
-            req.callbackMethod = retMethod;
-            req.length = length;
-            req.Normal = direction;
-            req.Origin = position;
-            req.Count = Count;
-            req.filter = RayFilterFlags.AllPrims;
+            ODERayRequest req = new ODERayRequest
+            {
+                actor = null,
+                callbackMethod = retMethod,
+                length = length,
+                Normal = direction,
+                Origin = position,
+                Count = Count,
+                filter = RayFilterFlags.AllPrims
+            };
 
             lock (SyncObject)
             {
@@ -2272,14 +2286,16 @@ readonly float TerrainFriction = 0.3f;
                 }
             };
 
-            ODERayRequest req = new ODERayRequest();
-            req.actor = null;
-            req.callbackMethod = retMethod;
-            req.length = length;
-            req.Normal = direction;
-            req.Origin = position;
-            req.Count = Count;
-            req.filter = filter;
+            ODERayRequest req = new ODERayRequest
+            {
+                actor = null,
+                callbackMethod = retMethod,
+                length = length,
+                Normal = direction,
+                Origin = position,
+                Count = Count,
+                filter = filter
+            };
 
             lock (SyncObject)
             {
@@ -2319,14 +2335,16 @@ readonly float TerrainFriction = 0.3f;
                 }
             };
 
-            ODERayRequest req = new ODERayRequest();
-            req.actor = actor;
-            req.callbackMethod = retMethod;
-            req.length = length;
-            req.Normal = direction;
-            req.Origin = position;
-            req.Count = Count;
-            req.filter = flags;
+            ODERayRequest req = new ODERayRequest
+            {
+                actor = actor,
+                callbackMethod = retMethod,
+                length = length,
+                Normal = direction,
+                Origin = position,
+                Count = Count,
+                filter = flags
+            };
 
             lock (SyncObject)
             {
@@ -2354,14 +2372,16 @@ readonly float TerrainFriction = 0.3f;
                 }
             };
 
-            ODERayRequest req = new ODERayRequest();
-            req.actor = null;
-            req.callbackMethod = retMethod;
-            req.Normal = size;
-            req.Origin = position;
-            req.orientation = orientation;
-            req.Count = Count;
-            req.filter = flags;
+            ODERayRequest req = new ODERayRequest
+            {
+                actor = null,
+                callbackMethod = retMethod,
+                Normal = size,
+                Origin = position,
+                orientation = orientation,
+                Count = Count,
+                filter = flags
+            };
 
             lock (SyncObject)
             {
@@ -2386,13 +2406,15 @@ readonly float TerrainFriction = 0.3f;
                 Monitor.PulseAll(SyncObject);
             };
 
-            ODERayRequest req = new ODERayRequest();
-            req.actor = null;
-            req.callbackMethod = retMethod;
-            req.length = radius;
-            req.Origin = position;
-            req.Count = Count;
-            req.filter = flags;
+            ODERayRequest req = new ODERayRequest
+            {
+                actor = null,
+                callbackMethod = retMethod,
+                length = radius,
+                Origin = position,
+                Count = Count,
+                filter = flags
+            };
 
 
             lock (SyncObject)
@@ -2428,10 +2450,12 @@ readonly float TerrainFriction = 0.3f;
                 Monitor.PulseAll(SyncObject);
             };
 
-            ODERayRequest req = new ODERayRequest();
-            req.actor = null;
-            req.callbackMethod = retMethod;
-            req.length = plane.W;
+            ODERayRequest req = new ODERayRequest
+            {
+                actor = null,
+                callbackMethod = retMethod,
+                length = plane.W
+            };
             req.Normal.X = plane.X;
             req.Normal.Y = plane.Y;
             req.Normal.Z = plane.Z;

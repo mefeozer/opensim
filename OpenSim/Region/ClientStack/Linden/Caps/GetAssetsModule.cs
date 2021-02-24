@@ -254,10 +254,12 @@ namespace OpenSim.Region.ClientStack.Linden
                 // x is request id, y is request data hashtable
                 Request = (requestID, request) =>
                 {
-                    APollRequest reqinfo = new APollRequest();
-                    reqinfo.thepoll = this;
-                    reqinfo.reqID = requestID;
-                    reqinfo.request = request;
+                    APollRequest reqinfo = new APollRequest
+                    {
+                        thepoll = this,
+                        reqID = requestID,
+                        request = request
+                    };
 
                     m_workerpool.Enqueue(reqinfo);
                     return null;

@@ -551,12 +551,14 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
         public SceneObjectGroup AddTree(
             UUID uuid, UUID groupID, Vector3 scale, Quaternion rotation, Vector3 position, Tree treeType, bool newTree)
         {
-            PrimitiveBaseShape treeShape = new PrimitiveBaseShape();
-            treeShape.PathCurve = 16;
-            treeShape.PathEnd = 49900;
-            treeShape.PCode = newTree ? (byte)PCode.NewTree : (byte)PCode.Tree;
-            treeShape.Scale = scale;
-            treeShape.State = (byte)treeType;
+            PrimitiveBaseShape treeShape = new PrimitiveBaseShape
+            {
+                PathCurve = 16,
+                PathEnd = 49900,
+                PCode = newTree ? (byte)PCode.NewTree : (byte)PCode.Tree,
+                Scale = scale,
+                State = (byte)treeType
+            };
 
             SceneObjectGroup sog = new SceneObjectGroup(uuid, position, rotation, treeShape);
             SceneObjectPart rootPart = sog.RootPart;

@@ -201,19 +201,21 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
                         rootpart.CreatorID);
                     m_scene.AssetService.Store(asset);
 
-                    InventoryItemBase item = new InventoryItemBase();
-                    item.CreatorId = rootpart.CreatorID.ToString();
-                    item.CreatorData = rootpart.CreatorData;
+                    InventoryItemBase item = new InventoryItemBase
+                    {
+                        CreatorId = rootpart.CreatorID.ToString(),
+                        CreatorData = rootpart.CreatorData,
 
-                    item.ID = UUID.Random();
-                    item.Owner = remoteClient.AgentId;
-                    item.AssetID = asset.FullID;
-                    item.Description = desc;
-                    item.Name = name;
-                    item.AssetType = asset.Type;
-                    item.InvType = (int)InventoryType.Object;
-                    item.Folder = categoryID;
-                
+                        ID = UUID.Random(),
+                        Owner = remoteClient.AgentId,
+                        AssetID = asset.FullID,
+                        Description = desc,
+                        Name = name,
+                        AssetType = asset.Type,
+                        InvType = (int)InventoryType.Object,
+                        Folder = categoryID
+                    };
+
                     perms = group.CurrentAndFoldedNextPermissions();
                     // apply parts inventory next perms            
                     PermissionsUtil.ApplyNoModFoldedPermissions(perms, ref perms);

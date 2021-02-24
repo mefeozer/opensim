@@ -78,16 +78,18 @@ namespace OpenSim.Groups
         {
             reason = string.Empty;
 
-            ExtendedGroupRecord rec = new ExtendedGroupRecord();
-            rec.AllowPublish = allowPublish;
-            rec.Charter = charter;
-            rec.FounderID = founderID;
-            rec.GroupName = name;
-            rec.GroupPicture = insigniaID;
-            rec.MaturePublish = maturePublish;
-            rec.MembershipFee = membershipFee;
-            rec.OpenEnrollment = openEnrollment;
-            rec.ShowInList = showInList;
+            ExtendedGroupRecord rec = new ExtendedGroupRecord
+            {
+                AllowPublish = allowPublish,
+                Charter = charter,
+                FounderID = founderID,
+                GroupName = name,
+                GroupPicture = insigniaID,
+                MaturePublish = maturePublish,
+                MembershipFee = membershipFee,
+                OpenEnrollment = openEnrollment,
+                ShowInList = showInList
+            };
 
             Dictionary<string, object> sendData = GroupsDataUtils.GroupRecord(rec);
             sendData["RequestingAgentID"] = RequestingAgentID;
@@ -109,15 +111,17 @@ namespace OpenSim.Groups
 
         public ExtendedGroupRecord UpdateGroup(string RequestingAgentID, UUID groupID, string charter, bool showInList, UUID insigniaID, int membershipFee, bool openEnrollment, bool allowPublish, bool maturePublish)
         {
-            ExtendedGroupRecord rec = new ExtendedGroupRecord();
-            rec.AllowPublish = allowPublish;
-            rec.Charter = charter;
-            rec.GroupPicture = insigniaID;
-            rec.MaturePublish = maturePublish;
-            rec.GroupID = groupID;
-            rec.MembershipFee = membershipFee;
-            rec.OpenEnrollment = openEnrollment;
-            rec.ShowInList = showInList;
+            ExtendedGroupRecord rec = new ExtendedGroupRecord
+            {
+                AllowPublish = allowPublish,
+                Charter = charter,
+                GroupPicture = insigniaID,
+                MaturePublish = maturePublish,
+                GroupID = groupID,
+                MembershipFee = membershipFee,
+                OpenEnrollment = openEnrollment,
+                ShowInList = showInList
+            };
 
             Dictionary<string, object> sendData = GroupsDataUtils.GroupRecord(rec);
             sendData["RequestingAgentID"] = RequestingAgentID;

@@ -160,8 +160,10 @@ namespace OpenSim.Data.Tests
 
         protected virtual DbConnection Connect()
         {
-            DbConnection cnn = new TConn();
-            cnn.ConnectionString = m_connStr;
+            DbConnection cnn = new TConn
+            {
+                ConnectionString = m_connStr
+            };
             cnn.Open();
             return cnn;
         }

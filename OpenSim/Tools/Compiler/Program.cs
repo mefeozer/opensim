@@ -113,9 +113,10 @@ namespace OpenSim.Tools.LSL.Compiler
             }
 
             // Do actual compile
-            CompilerParameters parameters = new CompilerParameters();
-
-            parameters.IncludeDebugInformation = true;
+            CompilerParameters parameters = new CompilerParameters
+            {
+                IncludeDebugInformation = true
+            };
 
             string rootPath =
                 Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);

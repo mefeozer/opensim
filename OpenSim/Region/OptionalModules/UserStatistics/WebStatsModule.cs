@@ -382,10 +382,12 @@ namespace OpenSim.Region.UserStatistics
                 if (!m_sessions.ContainsKey(agent.UUID))
                 {
                     UserSessionData usd = UserSessionUtil.newUserSessionData();
-                    uid = new UserSession();
-                    uid.name_f = agent.Firstname;
-                    uid.name_l = agent.Lastname;
-                    uid.session_data = usd;
+                    uid = new UserSession
+                    {
+                        name_f = agent.Firstname,
+                        name_l = agent.Lastname,
+                        session_data = usd
+                    };
 
                     m_sessions.Add(agent.UUID, uid);
                 }

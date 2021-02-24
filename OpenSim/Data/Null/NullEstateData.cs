@@ -47,8 +47,10 @@ namespace OpenSim.Data.Null
             {
                 // This fools the initialization caller into thinking an estate was fetched (a check in OpenSimBase).
                 // The estate info is pretty empty so don't try banning anyone.
-                m_estate = new EstateSettings();
-                m_estate.EstateID = 1;
+                m_estate = new EstateSettings
+                {
+                    EstateID = 1
+                };
                 m_estate.OnSave += StoreEstateSettings;
             }
             return m_estate;

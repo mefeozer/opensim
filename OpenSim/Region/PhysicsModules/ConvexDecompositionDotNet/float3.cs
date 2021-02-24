@@ -180,10 +180,12 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 axis[1].NearestPointInLine(triangle1, triangle0, triangle2);
                 axis[2].NearestPointInLine(triangle2, triangle0, triangle1);
 
-                float3 axisDot = new float3();
-                axisDot.x = dot(triangle0 - axis[0], point - axis[0]);
-                axisDot.y = dot(triangle1 - axis[1], point - axis[1]);
-                axisDot.z = dot(triangle2 - axis[2], point - axis[2]);
+                float3 axisDot = new float3
+                {
+                    x = dot(triangle0 - axis[0], point - axis[0]),
+                    y = dot(triangle1 - axis[1], point - axis[1]),
+                    z = dot(triangle2 - axis[2], point - axis[2])
+                };
 
                 bool bForce = true;
                 float bestMagnitude2 = 0;

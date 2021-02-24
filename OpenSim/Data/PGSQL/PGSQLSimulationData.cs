@@ -915,8 +915,10 @@ namespace OpenSim.Data.PGSQL
             }
 
             //If we reach this point then there are new region settings for that region
-            regionSettings = new RegionSettings();
-            regionSettings.RegionUUID = regionUUID;
+            regionSettings = new RegionSettings
+            {
+                RegionUUID = regionUUID
+            };
             regionSettings.OnSave += StoreRegionSettings;
 
             //Store new values
@@ -1025,49 +1027,50 @@ namespace OpenSim.Data.PGSQL
         private static RegionSettings BuildRegionSettings(IDataRecord row)
         {
             //TODO change this is some more generic code so we doesnt have to change it every time a new field is added?
-            RegionSettings newSettings = new RegionSettings();
-
-            newSettings.RegionUUID = new UUID((Guid)row["regionUUID"]);
-            newSettings.BlockTerraform = Convert.ToBoolean(row["block_terraform"]);
-            newSettings.AllowDamage = Convert.ToBoolean(row["allow_damage"]);
-            newSettings.BlockFly = Convert.ToBoolean(row["block_fly"]);
-            newSettings.RestrictPushing = Convert.ToBoolean(row["restrict_pushing"]);
-            newSettings.AllowLandResell = Convert.ToBoolean(row["allow_land_resell"]);
-            newSettings.AllowLandJoinDivide = Convert.ToBoolean(row["allow_land_join_divide"]);
-            newSettings.BlockShowInSearch = Convert.ToBoolean(row["block_show_in_search"]);
-            newSettings.AgentLimit = Convert.ToInt32(row["agent_limit"]);
-            newSettings.ObjectBonus = Convert.ToDouble(row["object_bonus"]);
-            newSettings.Maturity = Convert.ToInt32(row["maturity"]);
-            newSettings.DisableScripts = Convert.ToBoolean(row["disable_scripts"]);
-            newSettings.DisableCollisions = Convert.ToBoolean(row["disable_collisions"]);
-            newSettings.DisablePhysics = Convert.ToBoolean(row["disable_physics"]);
-            newSettings.TerrainTexture1 = new UUID((Guid)row["terrain_texture_1"]);
-            newSettings.TerrainTexture2 = new UUID((Guid)row["terrain_texture_2"]);
-            newSettings.TerrainTexture3 = new UUID((Guid)row["terrain_texture_3"]);
-            newSettings.TerrainTexture4 = new UUID((Guid)row["terrain_texture_4"]);
-            newSettings.Elevation1NW = Convert.ToDouble(row["elevation_1_nw"]);
-            newSettings.Elevation2NW = Convert.ToDouble(row["elevation_2_nw"]);
-            newSettings.Elevation1NE = Convert.ToDouble(row["elevation_1_ne"]);
-            newSettings.Elevation2NE = Convert.ToDouble(row["elevation_2_ne"]);
-            newSettings.Elevation1SE = Convert.ToDouble(row["elevation_1_se"]);
-            newSettings.Elevation2SE = Convert.ToDouble(row["elevation_2_se"]);
-            newSettings.Elevation1SW = Convert.ToDouble(row["elevation_1_sw"]);
-            newSettings.Elevation2SW = Convert.ToDouble(row["elevation_2_sw"]);
-            newSettings.WaterHeight = Convert.ToDouble(row["water_height"]);
-            newSettings.TerrainRaiseLimit = Convert.ToDouble(row["terrain_raise_limit"]);
-            newSettings.TerrainLowerLimit = Convert.ToDouble(row["terrain_lower_limit"]);
-            newSettings.UseEstateSun = Convert.ToBoolean(row["use_estate_sun"]);
-            newSettings.Sandbox = Convert.ToBoolean(row["Sandbox"]);
-            newSettings.FixedSun = Convert.ToBoolean(row["fixed_sun"]);
-            newSettings.SunPosition = Convert.ToDouble(row["sun_position"]);
-            newSettings.SunVector = new Vector3(
+            RegionSettings newSettings = new RegionSettings
+            {
+                RegionUUID = new UUID((Guid)row["regionUUID"]),
+                BlockTerraform = Convert.ToBoolean(row["block_terraform"]),
+                AllowDamage = Convert.ToBoolean(row["allow_damage"]),
+                BlockFly = Convert.ToBoolean(row["block_fly"]),
+                RestrictPushing = Convert.ToBoolean(row["restrict_pushing"]),
+                AllowLandResell = Convert.ToBoolean(row["allow_land_resell"]),
+                AllowLandJoinDivide = Convert.ToBoolean(row["allow_land_join_divide"]),
+                BlockShowInSearch = Convert.ToBoolean(row["block_show_in_search"]),
+                AgentLimit = Convert.ToInt32(row["agent_limit"]),
+                ObjectBonus = Convert.ToDouble(row["object_bonus"]),
+                Maturity = Convert.ToInt32(row["maturity"]),
+                DisableScripts = Convert.ToBoolean(row["disable_scripts"]),
+                DisableCollisions = Convert.ToBoolean(row["disable_collisions"]),
+                DisablePhysics = Convert.ToBoolean(row["disable_physics"]),
+                TerrainTexture1 = new UUID((Guid)row["terrain_texture_1"]),
+                TerrainTexture2 = new UUID((Guid)row["terrain_texture_2"]),
+                TerrainTexture3 = new UUID((Guid)row["terrain_texture_3"]),
+                TerrainTexture4 = new UUID((Guid)row["terrain_texture_4"]),
+                Elevation1NW = Convert.ToDouble(row["elevation_1_nw"]),
+                Elevation2NW = Convert.ToDouble(row["elevation_2_nw"]),
+                Elevation1NE = Convert.ToDouble(row["elevation_1_ne"]),
+                Elevation2NE = Convert.ToDouble(row["elevation_2_ne"]),
+                Elevation1SE = Convert.ToDouble(row["elevation_1_se"]),
+                Elevation2SE = Convert.ToDouble(row["elevation_2_se"]),
+                Elevation1SW = Convert.ToDouble(row["elevation_1_sw"]),
+                Elevation2SW = Convert.ToDouble(row["elevation_2_sw"]),
+                WaterHeight = Convert.ToDouble(row["water_height"]),
+                TerrainRaiseLimit = Convert.ToDouble(row["terrain_raise_limit"]),
+                TerrainLowerLimit = Convert.ToDouble(row["terrain_lower_limit"]),
+                UseEstateSun = Convert.ToBoolean(row["use_estate_sun"]),
+                Sandbox = Convert.ToBoolean(row["Sandbox"]),
+                FixedSun = Convert.ToBoolean(row["fixed_sun"]),
+                SunPosition = Convert.ToDouble(row["sun_position"]),
+                SunVector = new Vector3(
                                                  Convert.ToSingle(row["sunvectorx"]),
                                                  Convert.ToSingle(row["sunvectory"]),
                                                  Convert.ToSingle(row["sunvectorz"])
-                                                 );
-            newSettings.Covenant = new UUID((Guid)row["covenant"]);
-            newSettings.CovenantChangedDateTime = Convert.ToInt32(row["covenant_datetime"]);
-            newSettings.LoadedCreationDateTime = Convert.ToInt32(row["loaded_creation_datetime"]);
+                                                 ),
+                Covenant = new UUID((Guid)row["covenant"]),
+                CovenantChangedDateTime = Convert.ToInt32(row["covenant_datetime"]),
+                LoadedCreationDateTime = Convert.ToInt32(row["loaded_creation_datetime"])
+            };
 
             if (row["loaded_creation_id"] is DBNull)
                 newSettings.LoadedCreationID = "";
@@ -1090,50 +1093,51 @@ namespace OpenSim.Data.PGSQL
         /// <returns></returns>
         private static LandData BuildLandData(IDataRecord row)
         {
-            LandData newData = new LandData();
+            LandData newData = new LandData
+            {
+                GlobalID = new UUID((Guid)row["UUID"]),
+                LocalID = Convert.ToInt32(row["LocalLandID"]),
 
-            newData.GlobalID = new UUID((Guid)row["UUID"]);
-            newData.LocalID = Convert.ToInt32(row["LocalLandID"]);
+                // Bitmap is a byte[512]
+                Bitmap = (byte[])row["Bitmap"],
 
-            // Bitmap is a byte[512]
-            newData.Bitmap = (byte[])row["Bitmap"];
+                Name = (string)row["Name"],
+                Description = (string)row["Description"],
+                OwnerID = new UUID((Guid)row["OwnerUUID"]),
+                IsGroupOwned = Convert.ToBoolean(row["IsGroupOwned"]),
+                Area = Convert.ToInt32(row["Area"]),
+                AuctionID = Convert.ToUInt32(row["AuctionID"]), //Unemplemented
+                Category = (ParcelCategory)Convert.ToInt32(row["Category"]),
+                //Enum libsecondlife.Parcel.ParcelCategory
+                ClaimDate = Convert.ToInt32(row["ClaimDate"]),
+                ClaimPrice = Convert.ToInt32(row["ClaimPrice"]),
+                GroupID = new UUID((Guid)row["GroupUUID"]),
+                SalePrice = Convert.ToInt32(row["SalePrice"]),
+                Status = (ParcelStatus)Convert.ToInt32(row["LandStatus"]),
+                //Enum. libsecondlife.Parcel.ParcelStatus
+                Flags = Convert.ToUInt32(row["LandFlags"]),
+                LandingType = Convert.ToByte(row["LandingType"]),
+                MediaAutoScale = Convert.ToByte(row["MediaAutoScale"]),
+                MediaID = new UUID((Guid)row["MediaTextureUUID"]),
+                MediaURL = (string)row["MediaURL"],
+                MusicURL = (string)row["MusicURL"],
+                PassHours = Convert.ToSingle(row["PassHours"]),
+                PassPrice = Convert.ToInt32(row["PassPrice"]),
 
-            newData.Name = (string)row["Name"];
-            newData.Description = (string)row["Description"];
-            newData.OwnerID = new UUID((Guid)row["OwnerUUID"]);
-            newData.IsGroupOwned = Convert.ToBoolean(row["IsGroupOwned"]);
-            newData.Area = Convert.ToInt32(row["Area"]);
-            newData.AuctionID = Convert.ToUInt32(row["AuctionID"]); //Unemplemented
-            newData.Category = (ParcelCategory)Convert.ToInt32(row["Category"]);
-            //Enum libsecondlife.Parcel.ParcelCategory
-            newData.ClaimDate = Convert.ToInt32(row["ClaimDate"]);
-            newData.ClaimPrice = Convert.ToInt32(row["ClaimPrice"]);
-            newData.GroupID = new UUID((Guid)row["GroupUUID"]);
-            newData.SalePrice = Convert.ToInt32(row["SalePrice"]);
-            newData.Status = (ParcelStatus)Convert.ToInt32(row["LandStatus"]);
-            //Enum. libsecondlife.Parcel.ParcelStatus
-            newData.Flags = Convert.ToUInt32(row["LandFlags"]);
-            newData.LandingType = Convert.ToByte(row["LandingType"]);
-            newData.MediaAutoScale = Convert.ToByte(row["MediaAutoScale"]);
-            newData.MediaID = new UUID((Guid)row["MediaTextureUUID"]);
-            newData.MediaURL = (string)row["MediaURL"];
-            newData.MusicURL = (string)row["MusicURL"];
-            newData.PassHours = Convert.ToSingle(row["PassHours"]);
-            newData.PassPrice = Convert.ToInt32(row["PassPrice"]);
+                //            UUID authedbuyer;
+                //            UUID snapshotID;
+                //
+                //            if (UUID.TryParse((string)row["AuthBuyerID"], out authedbuyer))
+                //                newData.AuthBuyerID = authedbuyer;
+                //
+                //            if (UUID.TryParse((string)row["SnapshotUUID"], out snapshotID))
+                //                newData.SnapshotID = snapshotID;
+                AuthBuyerID = new UUID((Guid)row["AuthBuyerID"]),
+                SnapshotID = new UUID((Guid)row["SnapshotUUID"]),
 
-            //            UUID authedbuyer;
-            //            UUID snapshotID;
-            //
-            //            if (UUID.TryParse((string)row["AuthBuyerID"], out authedbuyer))
-            //                newData.AuthBuyerID = authedbuyer;
-            //
-            //            if (UUID.TryParse((string)row["SnapshotUUID"], out snapshotID))
-            //                newData.SnapshotID = snapshotID;
-            newData.AuthBuyerID = new UUID((Guid)row["AuthBuyerID"]);
-            newData.SnapshotID = new UUID((Guid)row["SnapshotUUID"]);
-
-            newData.OtherCleanTime = Convert.ToInt32(row["OtherCleanTime"]);
-            newData.Dwell = Convert.ToSingle(row["Dwell"]);
+                OtherCleanTime = Convert.ToInt32(row["OtherCleanTime"]),
+                Dwell = Convert.ToSingle(row["Dwell"])
+            };
 
             try
             {
@@ -1203,10 +1207,12 @@ namespace OpenSim.Data.PGSQL
         /// <returns></returns>
         private static LandAccessEntry BuildLandAccessData(IDataRecord row)
         {
-            LandAccessEntry entry = new LandAccessEntry();
-            entry.AgentID = new UUID((Guid)row["AccessUUID"]);
-            entry.Flags = (AccessList)Convert.ToInt32(row["Flags"]);
-            entry.Expires = Convert.ToInt32(row["Expires"]);
+            LandAccessEntry entry = new LandAccessEntry
+            {
+                AgentID = new UUID((Guid)row["AccessUUID"]),
+                Flags = (AccessList)Convert.ToInt32(row["Flags"]),
+                Expires = Convert.ToInt32(row["Expires"])
+            };
             return entry;
         }
 
@@ -1217,30 +1223,31 @@ namespace OpenSim.Data.PGSQL
         /// <returns></returns>
         private static SceneObjectPart BuildPrim(IDataRecord primRow)
         {
-            SceneObjectPart prim = new SceneObjectPart();
-
-            prim.UUID = new UUID((Guid)primRow["UUID"]);
-            // explicit conversion of integers is required, which sort
-            // of sucks.  No idea if there is a shortcut here or not.
-            prim.CreationDate = Convert.ToInt32(primRow["CreationDate"]);
-            prim.Name = (string)primRow["Name"];
-            // various text fields
-            prim.Text = (string)primRow["Text"];
-            prim.Color = Color.FromArgb(Convert.ToInt32(primRow["ColorA"]),
+            SceneObjectPart prim = new SceneObjectPart
+            {
+                UUID = new UUID((Guid)primRow["UUID"]),
+                // explicit conversion of integers is required, which sort
+                // of sucks.  No idea if there is a shortcut here or not.
+                CreationDate = Convert.ToInt32(primRow["CreationDate"]),
+                Name = (string)primRow["Name"],
+                // various text fields
+                Text = (string)primRow["Text"],
+                Color = Color.FromArgb(Convert.ToInt32(primRow["ColorA"]),
                                         Convert.ToInt32(primRow["ColorR"]),
                                         Convert.ToInt32(primRow["ColorG"]),
-                                        Convert.ToInt32(primRow["ColorB"]));
-            prim.Description = (string)primRow["Description"];
-            prim.SitName = (string)primRow["SitName"];
-            prim.TouchName = (string)primRow["TouchName"];
-            // permissions
-            prim.Flags = (PrimFlags)Convert.ToUInt32(primRow["ObjectFlags"]);
-            //prim.creatorID = new UUID((Guid)primRow["creatorID"]);
-            prim.CreatorIdentification = (string)primRow["CreatorID"].ToString();
-            prim.OwnerID = new UUID((Guid)primRow["OwnerID"]);
-            prim.GroupID = new UUID((Guid)primRow["GroupID"]);
-            prim.LastOwnerID = new UUID((Guid)primRow["LastOwnerID"]);
-            
+                                        Convert.ToInt32(primRow["ColorB"])),
+                Description = (string)primRow["Description"],
+                SitName = (string)primRow["SitName"],
+                TouchName = (string)primRow["TouchName"],
+                // permissions
+                Flags = (PrimFlags)Convert.ToUInt32(primRow["ObjectFlags"]),
+                //prim.creatorID = new UUID((Guid)primRow["creatorID"]);
+                CreatorIdentification = (string)primRow["CreatorID"].ToString(),
+                OwnerID = new UUID((Guid)primRow["OwnerID"]),
+                GroupID = new UUID((Guid)primRow["GroupID"]),
+                LastOwnerID = new UUID((Guid)primRow["LastOwnerID"])
+            };
+
             if (primRow["RezzerID"] != DBNull.Value)
                 prim.RezzerID = new UUID((Guid)primRow["RezzerID"]);
             else
@@ -1400,34 +1407,35 @@ namespace OpenSim.Data.PGSQL
         /// <returns></returns>
         private static PrimitiveBaseShape BuildShape(IDataRecord shapeRow)
         {
-            PrimitiveBaseShape baseShape = new PrimitiveBaseShape();
-
-            baseShape.Scale = new Vector3(
+            PrimitiveBaseShape baseShape = new PrimitiveBaseShape
+            {
+                Scale = new Vector3(
                         (float)Convert.ToDouble(shapeRow["ScaleX"]),
                         (float)Convert.ToDouble(shapeRow["ScaleY"]),
-                        (float)Convert.ToDouble(shapeRow["ScaleZ"]));
+                        (float)Convert.ToDouble(shapeRow["ScaleZ"])),
 
-            // paths
-            baseShape.PCode = Convert.ToByte(shapeRow["PCode"]);
-            baseShape.PathBegin = Convert.ToUInt16(shapeRow["PathBegin"]);
-            baseShape.PathEnd = Convert.ToUInt16(shapeRow["PathEnd"]);
-            baseShape.PathScaleX = Convert.ToByte(shapeRow["PathScaleX"]);
-            baseShape.PathScaleY = Convert.ToByte(shapeRow["PathScaleY"]);
-            baseShape.PathShearX = Convert.ToByte(shapeRow["PathShearX"]);
-            baseShape.PathShearY = Convert.ToByte(shapeRow["PathShearY"]);
-            baseShape.PathSkew = Convert.ToSByte(shapeRow["PathSkew"]);
-            baseShape.PathCurve = Convert.ToByte(shapeRow["PathCurve"]);
-            baseShape.PathRadiusOffset = Convert.ToSByte(shapeRow["PathRadiusOffset"]);
-            baseShape.PathRevolutions = Convert.ToByte(shapeRow["PathRevolutions"]);
-            baseShape.PathTaperX = Convert.ToSByte(shapeRow["PathTaperX"]);
-            baseShape.PathTaperY = Convert.ToSByte(shapeRow["PathTaperY"]);
-            baseShape.PathTwist = Convert.ToSByte(shapeRow["PathTwist"]);
-            baseShape.PathTwistBegin = Convert.ToSByte(shapeRow["PathTwistBegin"]);
-            // profile
-            baseShape.ProfileBegin = Convert.ToUInt16(shapeRow["ProfileBegin"]);
-            baseShape.ProfileEnd = Convert.ToUInt16(shapeRow["ProfileEnd"]);
-            baseShape.ProfileCurve = Convert.ToByte(shapeRow["ProfileCurve"]);
-            baseShape.ProfileHollow = Convert.ToUInt16(shapeRow["ProfileHollow"]);
+                // paths
+                PCode = Convert.ToByte(shapeRow["PCode"]),
+                PathBegin = Convert.ToUInt16(shapeRow["PathBegin"]),
+                PathEnd = Convert.ToUInt16(shapeRow["PathEnd"]),
+                PathScaleX = Convert.ToByte(shapeRow["PathScaleX"]),
+                PathScaleY = Convert.ToByte(shapeRow["PathScaleY"]),
+                PathShearX = Convert.ToByte(shapeRow["PathShearX"]),
+                PathShearY = Convert.ToByte(shapeRow["PathShearY"]),
+                PathSkew = Convert.ToSByte(shapeRow["PathSkew"]),
+                PathCurve = Convert.ToByte(shapeRow["PathCurve"]),
+                PathRadiusOffset = Convert.ToSByte(shapeRow["PathRadiusOffset"]),
+                PathRevolutions = Convert.ToByte(shapeRow["PathRevolutions"]),
+                PathTaperX = Convert.ToSByte(shapeRow["PathTaperX"]),
+                PathTaperY = Convert.ToSByte(shapeRow["PathTaperY"]),
+                PathTwist = Convert.ToSByte(shapeRow["PathTwist"]),
+                PathTwistBegin = Convert.ToSByte(shapeRow["PathTwistBegin"]),
+                // profile
+                ProfileBegin = Convert.ToUInt16(shapeRow["ProfileBegin"]),
+                ProfileEnd = Convert.ToUInt16(shapeRow["ProfileEnd"]),
+                ProfileCurve = Convert.ToByte(shapeRow["ProfileCurve"]),
+                ProfileHollow = Convert.ToUInt16(shapeRow["ProfileHollow"])
+            };
 
             byte[] textureEntry = (byte[])shapeRow["Texture"];
             baseShape.TextureEntry = textureEntry;
@@ -1457,31 +1465,32 @@ namespace OpenSim.Data.PGSQL
         /// <returns></returns>
         private static TaskInventoryItem BuildItem(IDataRecord inventoryRow)
         {
-            TaskInventoryItem taskItem = new TaskInventoryItem();
+            TaskInventoryItem taskItem = new TaskInventoryItem
+            {
+                ItemID = new UUID((Guid)inventoryRow["itemID"]),
+                ParentPartID = new UUID((Guid)inventoryRow["primID"]),
+                AssetID = new UUID((Guid)inventoryRow["assetID"]),
+                ParentID = new UUID((Guid)inventoryRow["parentFolderID"]),
 
-            taskItem.ItemID = new UUID((Guid)inventoryRow["itemID"]);
-            taskItem.ParentPartID = new UUID((Guid)inventoryRow["primID"]);
-            taskItem.AssetID = new UUID((Guid)inventoryRow["assetID"]);
-            taskItem.ParentID = new UUID((Guid)inventoryRow["parentFolderID"]);
+                InvType = Convert.ToInt32(inventoryRow["invType"]),
+                Type = Convert.ToInt32(inventoryRow["assetType"]),
 
-            taskItem.InvType = Convert.ToInt32(inventoryRow["invType"]);
-            taskItem.Type = Convert.ToInt32(inventoryRow["assetType"]);
+                Name = (string)inventoryRow["name"],
+                Description = (string)inventoryRow["description"],
+                CreationDate = Convert.ToUInt32(inventoryRow["creationDate"]),
+                //taskItem.creatorID = new UUID((Guid)inventoryRow["creatorID"]);
+                CreatorIdentification = (string)inventoryRow["creatorID"].ToString(),
+                OwnerID = new UUID((Guid)inventoryRow["ownerID"]),
+                LastOwnerID = new UUID((Guid)inventoryRow["lastOwnerID"]),
+                GroupID = new UUID((Guid)inventoryRow["groupID"]),
 
-            taskItem.Name = (string)inventoryRow["name"];
-            taskItem.Description = (string)inventoryRow["description"];
-            taskItem.CreationDate = Convert.ToUInt32(inventoryRow["creationDate"]);
-            //taskItem.creatorID = new UUID((Guid)inventoryRow["creatorID"]);
-            taskItem.CreatorIdentification = (string)inventoryRow["creatorID"].ToString();
-            taskItem.OwnerID = new UUID((Guid)inventoryRow["ownerID"]);
-            taskItem.LastOwnerID = new UUID((Guid)inventoryRow["lastOwnerID"]);
-            taskItem.GroupID = new UUID((Guid)inventoryRow["groupID"]);
-
-            taskItem.NextPermissions = Convert.ToUInt32(inventoryRow["nextPermissions"]);
-            taskItem.CurrentPermissions = Convert.ToUInt32(inventoryRow["currentPermissions"]);
-            taskItem.BasePermissions = Convert.ToUInt32(inventoryRow["basePermissions"]);
-            taskItem.EveryonePermissions = Convert.ToUInt32(inventoryRow["everyonePermissions"]);
-            taskItem.GroupPermissions = Convert.ToUInt32(inventoryRow["groupPermissions"]);
-            taskItem.Flags = Convert.ToUInt32(inventoryRow["flags"]);
+                NextPermissions = Convert.ToUInt32(inventoryRow["nextPermissions"]),
+                CurrentPermissions = Convert.ToUInt32(inventoryRow["currentPermissions"]),
+                BasePermissions = Convert.ToUInt32(inventoryRow["basePermissions"]),
+                EveryonePermissions = Convert.ToUInt32(inventoryRow["everyonePermissions"]),
+                GroupPermissions = Convert.ToUInt32(inventoryRow["groupPermissions"]),
+                Flags = Convert.ToUInt32(inventoryRow["flags"])
+            };
 
             return taskItem;
         }
@@ -1927,11 +1936,12 @@ namespace OpenSim.Data.PGSQL
                 {
                     if (reader.Read())
                     {
-                        SpawnPoint sp = new SpawnPoint();
-
-                        sp.Yaw = (float)reader["Yaw"];
-                        sp.Pitch = (float)reader["Pitch"];
-                        sp.Distance = (float)reader["Distance"];
+                        SpawnPoint sp = new SpawnPoint
+                        {
+                            Yaw = (float)reader["Yaw"],
+                            Pitch = (float)reader["Pitch"],
+                            Distance = (float)reader["Distance"]
+                        };
 
                         rs.AddSpawnPoint(sp);
                     }

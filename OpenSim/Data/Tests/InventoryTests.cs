@@ -345,24 +345,28 @@ namespace OpenSim.Data.Tests
 
         private InventoryItemBase NewItem(UUID id, UUID parent, UUID owner, string name, UUID asset)
         {
-            InventoryItemBase i = new InventoryItemBase();
-            i.ID = id;
-            i.Folder = parent;
-            i.Owner = owner;
-            i.CreatorId = owner.ToString();
-            i.Name = name;
-            i.Description = name;
-            i.AssetID = asset;
+            InventoryItemBase i = new InventoryItemBase
+            {
+                ID = id,
+                Folder = parent,
+                Owner = owner,
+                CreatorId = owner.ToString(),
+                Name = name,
+                Description = name,
+                AssetID = asset
+            };
             return i;
         }
 
         private InventoryFolderBase NewFolder(UUID id, UUID parent, UUID owner, string name)
         {
-            InventoryFolderBase f = new InventoryFolderBase();
-            f.ID = id;
-            f.ParentID = parent;
-            f.Owner = owner;
-            f.Name = name;
+            InventoryFolderBase f = new InventoryFolderBase
+            {
+                ID = id,
+                ParentID = parent,
+                Owner = owner,
+                Name = name
+            };
             return f;
         }
     }

@@ -104,17 +104,19 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
             InventoryCollection c;
             if (m_Inventories.TryGetValue(userID, out InventoryCollection inv))
             {
-                c = new InventoryCollection();
-                c.OwnerID = userID;
+                c = new InventoryCollection
+                {
+                    OwnerID = userID,
 
-                c.Folders = inv.Folders.FindAll(delegate(InventoryFolderBase f)
-                {
-                    return f.ParentID == folderID;
-                });
-                c.Items = inv.Items.FindAll(delegate(InventoryItemBase i)
-                {
-                    return i.Folder == folderID;
-                });
+                    Folders = inv.Folders.FindAll(delegate (InventoryFolderBase f)
+                    {
+                        return f.ParentID == folderID;
+                    }),
+                    Items = inv.Items.FindAll(delegate (InventoryItemBase i)
+                    {
+                        return i.Folder == folderID;
+                    })
+                };
                 return c;
             }
             return null;

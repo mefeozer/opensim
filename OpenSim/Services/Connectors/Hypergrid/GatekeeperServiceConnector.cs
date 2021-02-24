@@ -190,12 +190,14 @@ namespace OpenSim.Services.Connectors.Hypergrid
                     imageData = OpenJPEG.EncodeFromImage(bitmap, false);
                 }
 
-                AssetBase ass = new AssetBase(UUID.Random(), "region " + name, (sbyte)AssetType.Texture, regionID.ToString());
+                AssetBase ass = new AssetBase(UUID.Random(), "region " + name, (sbyte)AssetType.Texture, regionID.ToString())
+                {
 
-                // !!! for now
-                //info.RegionSettings.TerrainImageID = ass.FullID;
+                    // !!! for now
+                    //info.RegionSettings.TerrainImageID = ass.FullID;
 
-                ass.Data = imageData;
+                    Data = imageData
+                };
 
                 m_AssetService.Store(ass);
 

@@ -126,16 +126,19 @@ namespace OpenSim.Region.ClientStack.Linden
                 string protocol = caps.SSLCaps ? "https://" : "http://";
                 string uploaderURL = protocol + caps.HostName + ":" + caps.Port.ToString() + capsBase;
 
-                LLSDAssetUploadResponse uploadResponse = new LLSDAssetUploadResponse();
-                uploadResponse.uploader = uploaderURL;
-                uploadResponse.state = "upload";
+                LLSDAssetUploadResponse uploadResponse = new LLSDAssetUploadResponse
+                {
+                    uploader = uploaderURL,
+                    state = "upload"
+                };
 
                 BakedTextureUploader uploader =
                     new BakedTextureUploader(capsBase, caps.HttpListener, agentID, cache, httpRequest.RemoteIPEndPoint.Address);
 
-                var uploaderHandler = new SimpleBinaryHandler("POST", capsBase, uploader.process);
-
-                uploaderHandler.MaxDataSize = 6000000; // change per asset type?
+                var uploaderHandler = new SimpleBinaryHandler("POST", capsBase, uploader.process)
+                {
+                    MaxDataSize = 6000000 // change per asset type?
+                };
 
                 caps.HttpListener.AddSimpleStreamHandler(uploaderHandler);
 
@@ -205,17 +208,21 @@ namespace OpenSim.Region.ClientStack.Linden
             try
             {
                 UUID newAssetID = UUID.Random();
-                AssetBase asset = new AssetBase(newAssetID, "Baked Texture", (sbyte)AssetType.Texture, m_agentID.ToString());
-                asset.Data = data;
-                asset.Temporary = true;
-                asset.Local = true;
+                AssetBase asset = new AssetBase(newAssetID, "Baked Texture", (sbyte)AssetType.Texture, m_agentID.ToString())
+                {
+                    Data = data,
+                    Temporary = true,
+                    Local = true
+                };
                 //asset.Flags = AssetFlags.AvatarBake;
                 m_assetCache.Cache(asset);
 
-                LLSDAssetUploadComplete uploadComplete = new LLSDAssetUploadComplete();
-                uploadComplete.new_asset = newAssetID.ToString();
-                uploadComplete.new_inventory_item = UUID.Zero;
-                uploadComplete.state = "complete";
+                LLSDAssetUploadComplete uploadComplete = new LLSDAssetUploadComplete
+                {
+                    new_asset = newAssetID.ToString(),
+                    new_inventory_item = UUID.Zero,
+                    state = "complete"
+                };
 
                 httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(uploadComplete));
                 httpResponse.StatusCode = (int)HttpStatusCode.OK;

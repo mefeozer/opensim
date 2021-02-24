@@ -47,41 +47,47 @@ namespace OpenSim.Framework.Serialization.Tests
         public void setup()
         {
             // setup LandData object
-            this.land = new LandData();
-            this.land.AABBMax = new Vector3(1, 2, 3);
-            this.land.AABBMin = new Vector3(129, 130, 131);
-            this.land.Area = 128;
-            this.land.AuctionID = 4;
-            this.land.AuthBuyerID = new UUID("7176df0c-6c50-45db-8a37-5e78be56a0cd");
-            this.land.Category = ParcelCategory.Residential;
-            this.land.ClaimDate = 1;
-            this.land.ClaimPrice = 2;
-            this.land.GlobalID = new UUID("54ff9641-dd40-4a2c-b1f1-47dd3af24e50");
-            this.land.GroupID = new UUID("d740204e-bbbf-44aa-949d-02c7d739f6a5");
-            this.land.Description = "land data to test LandDataSerializer";
-            this.land.Flags = (uint)(ParcelFlags.AllowDamage | ParcelFlags.AllowVoiceChat);
-            this.land.LandingType = (byte)LandingType.Direct;
-            this.land.Name = "LandDataSerializerTest Land";
-            this.land.Status = ParcelStatus.Leased;
-            this.land.LocalID = 1;
-            this.land.MediaAutoScale = (byte)0x01;
-            this.land.MediaID = new UUID("d4452578-2f25-4b97-a81b-819af559cfd7");
-            this.land.MediaURL = "http://videos.opensimulator.org/bumblebee.mp4";
-            this.land.OwnerID = new UUID("1b8eedf9-6d15-448b-8015-24286f1756bf");
+            this.land = new LandData
+            {
+                AABBMax = new Vector3(1, 2, 3),
+                AABBMin = new Vector3(129, 130, 131),
+                Area = 128,
+                AuctionID = 4,
+                AuthBuyerID = new UUID("7176df0c-6c50-45db-8a37-5e78be56a0cd"),
+                Category = ParcelCategory.Residential,
+                ClaimDate = 1,
+                ClaimPrice = 2,
+                GlobalID = new UUID("54ff9641-dd40-4a2c-b1f1-47dd3af24e50"),
+                GroupID = new UUID("d740204e-bbbf-44aa-949d-02c7d739f6a5"),
+                Description = "land data to test LandDataSerializer",
+                Flags = (uint)(ParcelFlags.AllowDamage | ParcelFlags.AllowVoiceChat),
+                LandingType = (byte)LandingType.Direct,
+                Name = "LandDataSerializerTest Land",
+                Status = ParcelStatus.Leased,
+                LocalID = 1,
+                MediaAutoScale = (byte)0x01,
+                MediaID = new UUID("d4452578-2f25-4b97-a81b-819af559cfd7"),
+                MediaURL = "http://videos.opensimulator.org/bumblebee.mp4",
+                OwnerID = new UUID("1b8eedf9-6d15-448b-8015-24286f1756bf")
+            };
 
             this.landWithParcelAccessList = this.land.Copy();
             this.landWithParcelAccessList.ParcelAccessList.Clear();
 
-            LandAccessEntry pae0 = new LandAccessEntry();
-            pae0.AgentID = new UUID("62d65d45-c91a-4f77-862c-46557d978b6c");
-            pae0.Flags = AccessList.Ban;
-            pae0.Expires = 0;
+            LandAccessEntry pae0 = new LandAccessEntry
+            {
+                AgentID = new UUID("62d65d45-c91a-4f77-862c-46557d978b6c"),
+                Flags = AccessList.Ban,
+                Expires = 0
+            };
             this.landWithParcelAccessList.ParcelAccessList.Add(pae0);
 
-            LandAccessEntry pae1 = new LandAccessEntry();
-            pae1.AgentID = new UUID("ec2a8d18-2378-4fe0-8b68-2a31b57c481e");
-            pae1.Flags = AccessList.Access;
-            pae1.Expires = 0;
+            LandAccessEntry pae1 = new LandAccessEntry
+            {
+                AgentID = new UUID("ec2a8d18-2378-4fe0-8b68-2a31b57c481e"),
+                Flags = AccessList.Access,
+                Expires = 0
+            };
             this.landWithParcelAccessList.ParcelAccessList.Add(pae1);
         }
 

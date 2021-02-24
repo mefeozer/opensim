@@ -281,11 +281,15 @@ namespace OpenSim.Data.Tests
             // Letting estate store generate rows to database for us
             EstateSettings originalSettings = db.LoadEstateSettings(REGION_ID, true);
 
-            EstateBan estateBan1 = new EstateBan();
-            estateBan1.BannedUserID = DataTestUtil.UUID_MIN;
+            EstateBan estateBan1 = new EstateBan
+            {
+                BannedUserID = DataTestUtil.UUID_MIN
+            };
 
-            EstateBan estateBan2 = new EstateBan();
-            estateBan2.BannedUserID = DataTestUtil.UUID_MAX;
+            EstateBan estateBan2 = new EstateBan
+            {
+                BannedUserID = DataTestUtil.UUID_MAX
+            };
 
             originalSettings.EstateBans = new EstateBan[] { estateBan1, estateBan2 };
 

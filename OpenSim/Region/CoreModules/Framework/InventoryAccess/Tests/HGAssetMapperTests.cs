@@ -45,10 +45,12 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess.Tests
         public void TestPostAssetRewrite()
         {
             TestHelpers.InMethod();
-//            TestHelpers.EnableLogging();
+            //            TestHelpers.EnableLogging();
 
-            XEngine xengine = new OpenSim.Region.ScriptEngine.XEngine.XEngine();
-            xengine.DebugLevel = 1;
+            XEngine xengine = new OpenSim.Region.ScriptEngine.XEngine.XEngine
+            {
+                DebugLevel = 1
+            };
 
             IniConfigSource configSource = new IniConfigSource();
 
@@ -119,11 +121,13 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess.Tests
 
         private void RezScript(Scene scene, UUID soId, string script, string itemName, UUID userId)
         {
-            InventoryItemBase itemTemplate = new InventoryItemBase();
-            //            itemTemplate.ID = itemId;
-            itemTemplate.Name = itemName;
-            itemTemplate.Folder = soId;
-            itemTemplate.InvType = (int)InventoryType.LSL;
+            InventoryItemBase itemTemplate = new InventoryItemBase
+            {
+                //            itemTemplate.ID = itemId;
+                Name = itemName,
+                Folder = soId,
+                InvType = (int)InventoryType.LSL
+            };
 
             // XXX: Ultimately it would be better to be able to directly manipulate the script engine to rez a script
             // immediately for tests rather than chunter through it's threaded mechanisms.

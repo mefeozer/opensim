@@ -145,14 +145,20 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
         {
             int3 t = t0;
             int n = tris.Count;
-            HullTriangle ta = new HullTriangle(v, t[1], t[2], tris);
-            ta.n = new int3(t0.n[0], n + 1, n + 2);
+            HullTriangle ta = new HullTriangle(v, t[1], t[2], tris)
+            {
+                n = new int3(t0.n[0], n + 1, n + 2)
+            };
             tris[t0.n[0]].setneib(t[1], t[2], n + 0);
-            HullTriangle tb = new HullTriangle(v, t[2], t[0], tris);
-            tb.n = new int3(t0.n[1], n + 2, n + 0);
+            HullTriangle tb = new HullTriangle(v, t[2], t[0], tris)
+            {
+                n = new int3(t0.n[1], n + 2, n + 0)
+            };
             tris[t0.n[1]].setneib(t[2], t[0], n + 1);
-            HullTriangle tc = new HullTriangle(v, t[0], t[1], tris);
-            tc.n = new int3(t0.n[2], n + 0, n + 1);
+            HullTriangle tc = new HullTriangle(v, t[0], t[1], tris)
+            {
+                n = new int3(t0.n[2], n + 0, n + 1)
+            };
             tris[t0.n[2]].setneib(t[0], t[1], n + 2);
             checkit(ta, tris);
             checkit(tb, tris);
@@ -431,15 +437,19 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             float dist = (float)Math.Abs(distu - distv);
             if (upoint != null)
             {
-                Plane plane = new Plane();
-                plane.normal = float3.normalize(float3.cross(vdir, cp));
+                Plane plane = new Plane
+                {
+                    normal = float3.normalize(float3.cross(vdir, cp))
+                };
                 plane.dist = -float3.dot(plane.normal, vstart);
                 upoint = PlaneLineIntersection(plane, ustart, ustart + udir);
             }
             if (vpoint != null)
             {
-                Plane plane = new Plane();
-                plane.normal = float3.normalize(float3.cross(udir, cp));
+                Plane plane = new Plane
+                {
+                    normal = float3.normalize(float3.cross(udir, cp))
+                };
                 plane.dist = -float3.dot(plane.normal, ustart);
                 vpoint = PlaneLineIntersection(plane, vstart, vstart + vdir);
             }
@@ -1013,8 +1023,10 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public static ConvexH ConvexHDup(ConvexH src)
         {
-            ConvexH dst = new ConvexH(src.vertices.Count, src.edges.Count, src.facets.Count);
-            dst.vertices = new List<float3>(src.vertices.Count);
+            ConvexH dst = new ConvexH(src.vertices.Count, src.edges.Count, src.facets.Count)
+            {
+                vertices = new List<float3>(src.vertices.Count)
+            };
             foreach (float3 f in src.vertices)
                 dst.vertices.Add(new float3(f));
             dst.edges = new List<ConvexH.HalfEdge>(src.edges.Count);
@@ -1237,14 +1249,22 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 return 0;
 
             float3 center = (verts[p[0]] + verts[p[1]] + verts[p[2]] + verts[p[3]]) / 4.0f; // a valid interior point
-            HullTriangle t0 = new HullTriangle(p[2], p[3], p[1], tris);
-            t0.n = new int3(2, 3, 1);
-            HullTriangle t1 = new HullTriangle(p[3], p[2], p[0], tris);
-            t1.n = new int3(3, 2, 0);
-            HullTriangle t2 = new HullTriangle(p[0], p[1], p[3], tris);
-            t2.n = new int3(0, 1, 3);
-            HullTriangle t3 = new HullTriangle(p[1], p[0], p[2], tris);
-            t3.n = new int3(1, 0, 2);
+            HullTriangle t0 = new HullTriangle(p[2], p[3], p[1], tris)
+            {
+                n = new int3(2, 3, 1)
+            };
+            HullTriangle t1 = new HullTriangle(p[3], p[2], p[0], tris)
+            {
+                n = new int3(3, 2, 0)
+            };
+            HullTriangle t2 = new HullTriangle(p[0], p[1], p[3], tris)
+            {
+                n = new int3(0, 1, 3)
+            };
+            HullTriangle t3 = new HullTriangle(p[1], p[0], p[2], tris)
+            {
+                n = new int3(1, 0, 2)
+            };
             isextreme[p[0]] = isextreme[p[1]] = isextreme[p[2]] = isextreme[p[3]] = 1;
             checkit(t0, tris);
             checkit(t1, tris);
@@ -1587,11 +1607,12 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
             float dy = bmax[1] - bmin[1];
             float dz = bmax[2] - bmin[2];
 
-            float3 center = new float3();
-
-            center.x = dx * 0.5f + bmin[0];
-            center.y = dy * 0.5f + bmin[1];
-            center.z = dz * 0.5f + bmin[2];
+            float3 center = new float3
+            {
+                x = dx * 0.5f + bmin[0],
+                y = dy * 0.5f + bmin[1],
+                z = dz * 0.5f + bmin[2]
+            };
 
             if (dx < EPSILON || dy < EPSILON || dz < EPSILON || svertices.Count < 3)
             {

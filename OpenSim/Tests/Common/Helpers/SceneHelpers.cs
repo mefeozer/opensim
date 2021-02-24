@@ -142,19 +142,23 @@ namespace OpenSim.Tests.Common
             // We must set up a console otherwise setup of some modules may fail
             MainConsole.Instance = new MockConsole();
 
-            RegionInfo regInfo = new RegionInfo(x, y, new IPEndPoint(IPAddress.Loopback, 9000), "127.0.0.1");
-            regInfo.RegionName = name;
-            regInfo.RegionID = id;
-            regInfo.RegionSizeX = sizeX;
-            regInfo.RegionSizeY = sizeY;
-            regInfo.ServerURI = "http://127.0.0.1:9000/";
+            RegionInfo regInfo = new RegionInfo(x, y, new IPEndPoint(IPAddress.Loopback, 9000), "127.0.0.1")
+            {
+                RegionName = name,
+                RegionID = id,
+                RegionSizeX = sizeX,
+                RegionSizeY = sizeY,
+                ServerURI = "http://127.0.0.1:9000/"
+            };
 
 
             TestScene testScene = new TestScene(
                 regInfo, m_acm, SimDataService, m_estateDataService, configSource, null);
 
-            testScene.RegionInfo.EstateSettings = new EstateSettings();
-            testScene.RegionInfo.EstateSettings.EstateOwner = UUID.Random();
+            testScene.RegionInfo.EstateSettings = new EstateSettings
+            {
+                EstateOwner = UUID.Random()
+            };
 
             INonSharedRegionModule godsModule = new GodsModule();
             godsModule.Initialise(new IniConfigSource());
@@ -457,18 +461,20 @@ namespace OpenSim.Tests.Common
 
         private static AgentCircuitData GenerateCommonAgentData()
         {
-            AgentCircuitData acd = new AgentCircuitData();
+            AgentCircuitData acd = new AgentCircuitData
+            {
 
-            // XXX: Sessions must be unique, otherwise one presence can overwrite another in NullPresenceData.
-            acd.SessionID = UUID.Random();
-            acd.SecureSessionID = UUID.Random();
+                // XXX: Sessions must be unique, otherwise one presence can overwrite another in NullPresenceData.
+                SessionID = UUID.Random(),
+                SecureSessionID = UUID.Random(),
 
-            acd.circuitcode = 123;
-            acd.BaseFolder = UUID.Zero;
-            acd.InventoryFolder = UUID.Zero;
-            acd.startpos = Vector3.Zero;
-            acd.CapsPath = "http://wibble.com";
-            acd.Appearance = new AvatarAppearance();
+                circuitcode = 123,
+                BaseFolder = UUID.Zero,
+                InventoryFolder = UUID.Zero,
+                startpos = Vector3.Zero,
+                CapsPath = "http://wibble.com",
+                Appearance = new AvatarAppearance()
+            };
 
             return acd;
         }

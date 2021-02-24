@@ -51,10 +51,12 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId);
             scene.AddNewSceneObject(so, true);
 
-            InventoryItemBase itemTemplate = new InventoryItemBase();
-            itemTemplate.Name = itemName;
-            itemTemplate.Folder = so.UUID;
-            itemTemplate.InvType = (int)InventoryType.LSL;
+            InventoryItemBase itemTemplate = new InventoryItemBase
+            {
+                Name = itemName,
+                Folder = so.UUID,
+                InvType = (int)InventoryType.LSL
+            };
 
             SceneObjectPart partWhereScriptAdded = scene.RezNewScript(userId, itemTemplate);
 

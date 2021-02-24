@@ -699,8 +699,10 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private StringBuilder AddScenePartItemsReport(StringBuilder sb, IEntityInventory inv)
         {
-            ConsoleDisplayTable cdt = new ConsoleDisplayTable();
-            cdt.Indent = 2;
+            ConsoleDisplayTable cdt = new ConsoleDisplayTable
+            {
+                Indent = 2
+            };
 
             cdt.AddColumn("Name", 50);
             cdt.AddColumn("Type", 12);

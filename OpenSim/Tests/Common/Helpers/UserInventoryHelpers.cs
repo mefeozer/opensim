@@ -121,17 +121,19 @@ namespace OpenSim.Tests.Common
         {
             scene.AssetService.Store(asset);
 
-            InventoryItemBase item = new InventoryItemBase();
-            item.Name = itemName;
-            item.AssetID = asset.FullID;
-            item.ID = itemId;
-            item.Owner = userId;
-            item.AssetType = asset.Type;
-            item.InvType = (int)itemType;
-            item.BasePermissions = (uint)OpenMetaverse.PermissionMask.All |
-                (uint)(Framework.PermissionMask.FoldedMask | Framework.PermissionMask.FoldedCopy | Framework.PermissionMask.FoldedModify | Framework.PermissionMask.FoldedTransfer);
-            item.CurrentPermissions = (uint)OpenMetaverse.PermissionMask.All |
-                (uint)(Framework.PermissionMask.FoldedMask | Framework.PermissionMask.FoldedCopy | Framework.PermissionMask.FoldedModify | Framework.PermissionMask.FoldedTransfer);
+            InventoryItemBase item = new InventoryItemBase
+            {
+                Name = itemName,
+                AssetID = asset.FullID,
+                ID = itemId,
+                Owner = userId,
+                AssetType = asset.Type,
+                InvType = (int)itemType,
+                BasePermissions = (uint)OpenMetaverse.PermissionMask.All |
+                (uint)(Framework.PermissionMask.FoldedMask | Framework.PermissionMask.FoldedCopy | Framework.PermissionMask.FoldedModify | Framework.PermissionMask.FoldedTransfer),
+                CurrentPermissions = (uint)OpenMetaverse.PermissionMask.All |
+                (uint)(Framework.PermissionMask.FoldedMask | Framework.PermissionMask.FoldedCopy | Framework.PermissionMask.FoldedModify | Framework.PermissionMask.FoldedTransfer)
+            };
 
             InventoryFolderBase folder = InventoryArchiveUtils.FindFoldersByPath(scene.InventoryService, userId, path)[0];
 

@@ -51,9 +51,11 @@ namespace OpenSim.Tests.Clients.AssetsClient
 
         public static void Main(string[] args)
         {
-            ConsoleAppender consoleAppender = new ConsoleAppender();
-            consoleAppender.Layout =
-                new PatternLayout("[%thread] - %message%newline");
+            ConsoleAppender consoleAppender = new ConsoleAppender
+            {
+                Layout =
+                new PatternLayout("[%thread] - %message%newline")
+            };
             log4net.Config.BasicConfigurator.Configure(consoleAppender);
 
             string serverURI = "http://127.0.0.1:8003";
@@ -76,8 +78,10 @@ namespace OpenSim.Tests.Clients.AssetsClient
             ThreadPool.GetMinThreads(out max1, out max2);
             m_log.InfoFormat("[ASSET CLIENT]: Post set min threads = {1} - {2}", serverURI, max1, max2);
 
-            AssetServicesConnector m_Connector = new AssetServicesConnector(serverURI);
-            m_Connector.MaxAssetRequestConcurrency = 30;
+            AssetServicesConnector m_Connector = new AssetServicesConnector(serverURI)
+            {
+                MaxAssetRequestConcurrency = 30
+            };
 
             for (int i = 0; i < NREQS; i++)
             {

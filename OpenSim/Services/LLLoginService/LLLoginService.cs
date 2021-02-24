@@ -929,10 +929,12 @@ namespace OpenSim.Services.LLLoginService
                     if (string.IsNullOrEmpty(hostName))
                         SetHostAndPort(m_GatekeeperURL);
 
-                    gatekeeper = new GridRegion(destination);
-                    gatekeeper.ExternalHostName = hostName;
-                    gatekeeper.HttpPort = (uint)port;
-                    gatekeeper.ServerURI = m_GatekeeperURL;
+                    gatekeeper = new GridRegion(destination)
+                    {
+                        ExternalHostName = hostName,
+                        HttpPort = (uint)port,
+                        ServerURI = m_GatekeeperURL
+                    };
                 }
                 circuitCode = (uint)Util.RandomClass.Next(); ;
                 aCircuit = MakeAgent(destination, account, avatar, session, secureSession, circuitCode, position,
@@ -970,9 +972,10 @@ namespace OpenSim.Services.LLLoginService
             AvatarAppearance avatar, UUID session, UUID secureSession, uint circuit, Vector3 position,
             string ipaddress, string viewer, string channel, string mac, string id0)
         {
-            AgentCircuitData aCircuit = new AgentCircuitData();
-
-            aCircuit.AgentID = account.PrincipalID;
+            AgentCircuitData aCircuit = new AgentCircuitData
+            {
+                AgentID = account.PrincipalID
+            };
             if (avatar != null)
                 aCircuit.Appearance = new AvatarAppearance(avatar);
             else
@@ -1142,20 +1145,22 @@ namespace OpenSim.Services.LLLoginService
                 return false;
 
 
-            GridInstantMessage msg = new GridInstantMessage();
-            msg.imSessionID = UUID.Zero.Guid;
-            msg.fromAgentID = Constants.servicesGodAgentID.Guid;
-            msg.toAgentID = agentID.Guid;
-            msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
-            msg.fromAgentName = "GRID";
-            msg.message = string.Format("New login detected");
-            msg.dialog = 250; // God kick
-            msg.fromGroup = false;
-            msg.offline = (byte)0;
-            msg.ParentEstateID = 0;
-            msg.Position = Vector3.Zero;
-            msg.RegionID = scopeID.Guid;
-            msg.binaryBucket = new byte[1] {0};
+            GridInstantMessage msg = new GridInstantMessage
+            {
+                imSessionID = UUID.Zero.Guid,
+                fromAgentID = Constants.servicesGodAgentID.Guid,
+                toAgentID = agentID.Guid,
+                timestamp = (uint)Util.UnixTimeSinceEpoch(),
+                fromAgentName = "GRID",
+                message = string.Format("New login detected"),
+                dialog = 250, // God kick
+                fromGroup = false,
+                offline = (byte)0,
+                ParentEstateID = 0,
+                Position = Vector3.Zero,
+                RegionID = scopeID.Guid,
+                binaryBucket = new byte[1] { 0 }
+            };
             InstantMessageServiceConnector.SendInstantMessage(regURL,msg, m_messageKey);
 
             m_GridUserService.LoggedOut(agentID.ToString(),

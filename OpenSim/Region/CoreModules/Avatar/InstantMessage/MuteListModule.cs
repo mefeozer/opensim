@@ -214,13 +214,15 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 }
             }
 
-            MuteData mute = new MuteData();
-            mute.AgentID = agentID;
-            mute.MuteID = muteID;
-            mute.MuteName = muteName;
-            mute.MuteType = muteType;
-            mute.MuteFlags = (int)muteFlags;
-            mute.Stamp = Util.UnixTimeSinceEpoch();
+            MuteData mute = new MuteData
+            {
+                AgentID = agentID,
+                MuteID = muteID,
+                MuteName = muteName,
+                MuteType = muteType,
+                MuteFlags = (int)muteFlags,
+                Stamp = Util.UnixTimeSinceEpoch()
+            };
 
             m_service.UpdateMute(mute);
         }

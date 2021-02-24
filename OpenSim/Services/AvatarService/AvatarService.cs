@@ -64,8 +64,10 @@ namespace OpenSim.Services.AvatarService
         public AvatarData GetAvatar(UUID principalID)
         {
             AvatarBaseData[] av = m_Database.Get("PrincipalID", principalID.ToString());
-            AvatarData ret = new AvatarData();
-            ret.Data = new Dictionary<string,string>();
+            AvatarData ret = new AvatarData
+            {
+                Data = new Dictionary<string, string>()
+            };
 
             if (av.Length == 0)
             {
@@ -94,10 +96,12 @@ namespace OpenSim.Services.AvatarService
 //            m_log.DebugFormat("[AVATAR SERVICE]: SetAvatar for {0}, attachs={1}", principalID, count);
             m_Database.Delete("PrincipalID", principalID.ToString());
 
-            AvatarBaseData av = new AvatarBaseData();
-            av.Data = new Dictionary<string,string>();
+            AvatarBaseData av = new AvatarBaseData
+            {
+                Data = new Dictionary<string, string>(),
 
-            av.PrincipalID = principalID;
+                PrincipalID = principalID
+            };
             av.Data["Name"] = "AvatarType";
             av.Data["Value"] = avatar.AvatarType.ToString();
 
@@ -152,9 +156,11 @@ namespace OpenSim.Services.AvatarService
 
         public bool SetItems(UUID principalID, string[] names, string[] values)
         {
-            AvatarBaseData av = new AvatarBaseData();
-            av.Data = new Dictionary<string,string>();
-            av.PrincipalID = principalID;
+            AvatarBaseData av = new AvatarBaseData
+            {
+                Data = new Dictionary<string, string>(),
+                PrincipalID = principalID
+            };
 
             if (names.Length != values.Length)
                 return false;

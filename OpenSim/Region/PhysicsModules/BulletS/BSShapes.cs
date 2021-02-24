@@ -406,15 +406,17 @@ public class BSShapeNative : BSShape
     {
         BulletShape newShape;
 
-        ShapeData nativeShapeData = new ShapeData();
-        nativeShapeData.Type = shapeType;
-        nativeShapeData.ID = prim.LocalID;
-        nativeShapeData.Scale = prim.Scale;
-        nativeShapeData.Size = prim.Scale;
-        nativeShapeData.MeshKey = (ulong)shapeKey;
-        nativeShapeData.HullKey = (ulong)shapeKey;
+            ShapeData nativeShapeData = new ShapeData
+            {
+                Type = shapeType,
+                ID = prim.LocalID,
+                Scale = prim.Scale,
+                Size = prim.Scale,
+                MeshKey = (ulong)shapeKey,
+                HullKey = (ulong)shapeKey
+            };
 
-        if (shapeType == BSPhysicsShapeType.SHAPE_CAPSULE)
+            if (shapeType == BSPhysicsShapeType.SHAPE_CAPSULE)
         {
             newShape = physicsScene.PE.BuildCapsuleShape(physicsScene.World, 1f, 1f, prim.Scale);
             physicsScene.DetailLog("{0},BSShapeNative,capsule,scale={1}", prim.LocalID, prim.Scale);
@@ -784,19 +786,21 @@ public class BSShapeHull : BSShape
 
             if (meshShape.physShapeInfo.HasPhysicalShape)
             {
-                HACDParams parms = new HACDParams();
-                parms.maxVerticesPerHull = BSParam.BHullMaxVerticesPerHull;
-                parms.minClusters = BSParam.BHullMinClusters;
-                parms.compacityWeight = BSParam.BHullCompacityWeight;
-                parms.volumeWeight = BSParam.BHullVolumeWeight;
-                parms.concavity = BSParam.BHullConcavity;
-                parms.addExtraDistPoints = BSParam.NumericBool(BSParam.BHullAddExtraDistPoints);
-                parms.addNeighboursDistPoints = BSParam.NumericBool(BSParam.BHullAddNeighboursDistPoints);
-                parms.addFacesPoints = BSParam.NumericBool(BSParam.BHullAddFacesPoints);
-                parms.shouldAdjustCollisionMargin = BSParam.NumericBool(BSParam.BHullShouldAdjustCollisionMargin);
-                parms.whichHACD = 0;    // Use the HACD routine that comes with Bullet
+                    HACDParams parms = new HACDParams
+                    {
+                        maxVerticesPerHull = BSParam.BHullMaxVerticesPerHull,
+                        minClusters = BSParam.BHullMinClusters,
+                        compacityWeight = BSParam.BHullCompacityWeight,
+                        volumeWeight = BSParam.BHullVolumeWeight,
+                        concavity = BSParam.BHullConcavity,
+                        addExtraDistPoints = BSParam.NumericBool(BSParam.BHullAddExtraDistPoints),
+                        addNeighboursDistPoints = BSParam.NumericBool(BSParam.BHullAddNeighboursDistPoints),
+                        addFacesPoints = BSParam.NumericBool(BSParam.BHullAddFacesPoints),
+                        shouldAdjustCollisionMargin = BSParam.NumericBool(BSParam.BHullShouldAdjustCollisionMargin),
+                        whichHACD = 0    // Use the HACD routine that comes with Bullet
+                    };
 
-                physicsScene.DetailLog("{0},BSShapeHull.CreatePhysicalHull,hullFromMesh,beforeCall", prim.LocalID, newShape.HasPhysicalShape);
+                    physicsScene.DetailLog("{0},BSShapeHull.CreatePhysicalHull,hullFromMesh,beforeCall", prim.LocalID, newShape.HasPhysicalShape);
                 newShape = physicsScene.PE.BuildHullShapeFromMesh(physicsScene.World, meshShape.physShapeInfo, parms);
                 physicsScene.DetailLog("{0},BSShapeHull.CreatePhysicalHull,hullFromMesh,shape={1}", prim.LocalID, newShape);
 
@@ -849,15 +853,17 @@ public class BSShapeHull : BSShape
 
             // setup and do convex hull conversion
             m_hulls = new List<ConvexResult>();
-            DecompDesc dcomp = new DecompDesc();
-            dcomp.mIndices = convIndices;
-            dcomp.mVertices = convVertices;
-            dcomp.mDepth = maxDepthSplit;
-            dcomp.mCpercent = BSParam.CSHullConcavityThresholdPercent;
-            dcomp.mPpercent = BSParam.CSHullVolumeConservationThresholdPercent;
-            dcomp.mMaxVertices = (uint)BSParam.CSHullMaxVertices;
-            dcomp.mSkinWidth = BSParam.CSHullMaxSkinWidth;
-            ConvexBuilder convexBuilder = new ConvexBuilder(HullReturn);
+                DecompDesc dcomp = new DecompDesc
+                {
+                    mIndices = convIndices,
+                    mVertices = convVertices,
+                    mDepth = maxDepthSplit,
+                    mCpercent = BSParam.CSHullConcavityThresholdPercent,
+                    mPpercent = BSParam.CSHullVolumeConservationThresholdPercent,
+                    mMaxVertices = (uint)BSParam.CSHullMaxVertices,
+                    mSkinWidth = BSParam.CSHullMaxSkinWidth
+                };
+                ConvexBuilder convexBuilder = new ConvexBuilder(HullReturn);
             // create the hull into the _hulls variable
             convexBuilder.process(dcomp);
 

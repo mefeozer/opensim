@@ -88,15 +88,17 @@ namespace OpenSim.Server.Handlers.Login
                 throw new Exception(string.Format("No LocalServiceModule for LoginService in config file"));
 
             m_Proxy = serverConfig.GetBoolean("HasProxy", false);
-            m_DosProtectionOptions = new BasicDosProtectorOptions();
-            // Dos Protection Options
-            m_DosProtectionOptions.AllowXForwardedFor = serverConfig.GetBoolean("DOSAllowXForwardedForHeader", false);
-            m_DosProtectionOptions.RequestTimeSpan =
-                TimeSpan.FromMilliseconds(serverConfig.GetInt("DOSRequestTimeFrameMS", 10000));
-            m_DosProtectionOptions.MaxRequestsInTimeframe = serverConfig.GetInt("DOSMaxRequestsInTimeFrame", 5);
-            m_DosProtectionOptions.ForgetTimeSpan =
-                TimeSpan.FromMilliseconds(serverConfig.GetInt("DOSForgiveClientAfterMS", 120000));
-            m_DosProtectionOptions.ReportingName = "LOGINDOSPROTECTION";
+            m_DosProtectionOptions = new BasicDosProtectorOptions
+            {
+                // Dos Protection Options
+                AllowXForwardedFor = serverConfig.GetBoolean("DOSAllowXForwardedForHeader", false),
+                RequestTimeSpan =
+                TimeSpan.FromMilliseconds(serverConfig.GetInt("DOSRequestTimeFrameMS", 10000)),
+                MaxRequestsInTimeframe = serverConfig.GetInt("DOSMaxRequestsInTimeFrame", 5),
+                ForgetTimeSpan =
+                TimeSpan.FromMilliseconds(serverConfig.GetInt("DOSForgiveClientAfterMS", 120000)),
+                ReportingName = "LOGINDOSPROTECTION"
+            };
 
 
             return loginService;

@@ -142,8 +142,10 @@ namespace OpenSim.Tests.Common
         /// </summary>
         public static AssetBase CreateAsset(UUID assetUuid, AssetType assetType, string text, UUID creatorID)
         {
-            AssetNotecard anc = new AssetNotecard();
-            anc.BodyText = text;
+            AssetNotecard anc = new AssetNotecard
+            {
+                BodyText = text
+            };
             anc.Encode();
 
             return CreateAsset(assetUuid, assetType, anc.AssetData, creatorID);
@@ -154,8 +156,10 @@ namespace OpenSim.Tests.Common
         /// </summary>
         public static AssetBase CreateAsset(UUID assetUuid, AssetType assetType, byte[] data, UUID creatorID)
         {
-            AssetBase asset = new AssetBase(assetUuid, assetUuid.ToString(), (sbyte)assetType, creatorID.ToString());
-            asset.Data = data;
+            AssetBase asset = new AssetBase(assetUuid, assetUuid.ToString(), (sbyte)assetType, creatorID.ToString())
+            {
+                Data = data
+            };
             return asset;
         }
 

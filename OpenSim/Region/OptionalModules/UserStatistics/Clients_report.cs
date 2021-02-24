@@ -109,10 +109,12 @@ namespace OpenSim.Region.UserStatistics
                 {
                     while (sdr.Read())
                     {
-                        ClientVersionData udata = new ClientVersionData();
-                        udata.version = sdr["client_version"].ToString();
-                        udata.count = Convert.ToInt32(sdr["cnt"]);
-                        udata.fps = Convert.ToSingle(sdr["simfps"]);
+                        ClientVersionData udata = new ClientVersionData
+                        {
+                            version = sdr["client_version"].ToString(),
+                            count = Convert.ToInt32(sdr["cnt"]),
+                            fps = Convert.ToSingle(sdr["simfps"])
+                        };
                         clidata.Add(udata);
                         totalclients += udata.count;
 
@@ -133,11 +135,13 @@ namespace OpenSim.Region.UserStatistics
                     {
                         while (sdr.Read())
                         {
-                            ClientVersionData udata = new ClientVersionData();
-                            udata.version = sdr["client_version"].ToString();
-                            udata.count = Convert.ToInt32(sdr["cnt"]);
-                            udata.fps = Convert.ToSingle(sdr["simfps"]);
-                            udata.region_id = UUID.Parse(sdr["region_id"].ToString());
+                            ClientVersionData udata = new ClientVersionData
+                            {
+                                version = sdr["client_version"].ToString(),
+                                count = Convert.ToInt32(sdr["cnt"]),
+                                fps = Convert.ToSingle(sdr["simfps"]),
+                                region_id = UUID.Parse(sdr["region_id"].ToString())
+                            };
                             cliRegData.Add(udata);
                         }
                     }

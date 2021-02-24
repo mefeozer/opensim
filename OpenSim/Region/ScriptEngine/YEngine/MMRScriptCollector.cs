@@ -2336,19 +2336,23 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public ScriptMyLocal DeclareLocal(Type type, string name)
         {
-            ScriptMyLocal loc = new ScriptMyLocal();
-            loc.name = name;
-            loc.type = type;
-            loc.number = wrapped.localNumber++;
+            ScriptMyLocal loc = new ScriptMyLocal
+            {
+                name = name,
+                type = type,
+                number = wrapped.localNumber++
+            };
             declaredLocals.Add(loc);
             return loc;
         }
 
         public ScriptMyLabel DefineLabel(string name)
         {
-            ScriptMyLabel lbl = new ScriptMyLabel();
-            lbl.name = name;
-            lbl.number = wrapped.labelNumber++;
+            ScriptMyLabel lbl = new ScriptMyLabel
+            {
+                name = name,
+                number = wrapped.labelNumber++
+            };
             definedLabels.Add(lbl);
             return lbl;
         }
@@ -2811,9 +2815,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         {
                             if(IsLocalNeededAfterThis(ldloc, ldloc.myLocal))
                             {
-                                GraphNodeEmitNull dup = new GraphNodeEmitNull(this, stloc.errorAt, OpCodes.Dup);
-                                dup.nextLin = stloc;
-                                dup.prevLin = stloc.prevLin;
+                                GraphNodeEmitNull dup = new GraphNodeEmitNull(this, stloc.errorAt, OpCodes.Dup)
+                                {
+                                    nextLin = stloc,
+                                    prevLin = stloc.prevLin
+                                };
                                 stloc.nextLin = ldloc.nextLin;
                                 stloc.prevLin = dup;
                                 dup.prevLin.nextLin = dup;
@@ -2848,9 +2854,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         {
                             throw new Exception("expecting stloc");
                         }
-                        GraphNodeEmitNull pop = new GraphNodeEmitNull(this, ((GraphNodeEmit)gn).errorAt, OpCodes.Pop);
-                        pop.nextLin = gn.nextLin;
-                        pop.prevLin = gn.prevLin;
+                        GraphNodeEmitNull pop = new GraphNodeEmitNull(this, ((GraphNodeEmit)gn).errorAt, OpCodes.Pop)
+                        {
+                            nextLin = gn.nextLin,
+                            prevLin = gn.prevLin
+                        };
                         gn.nextLin.prevLin = pop;
                         gn.prevLin.nextLin = pop;
                         gn = pop;

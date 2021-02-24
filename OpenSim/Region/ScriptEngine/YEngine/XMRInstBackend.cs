@@ -562,27 +562,29 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             for(int i = 0; i < len; i++)
             {
-                DetectParams dp = new DetectParams();
+                DetectParams dp = new DetectParams
+                {
+                    Key = new UUID(ListStr(objs[j++])),
+                    OffsetPos = (LSL_Vector)objs[j++],
+                    LinkNum = ListInt(objs[j++]),
+                    Group = new UUID(ListStr(objs[j++])),
+                    Name = ListStr(objs[j++]),
+                    Owner = new UUID(ListStr(objs[j++])),
+                    Position = (LSL_Vector)objs[j++],
+                    Rotation = (LSL_Rotation)objs[j++],
+                    Type = ListInt(objs[j++]),
+                    Velocity = (LSL_Vector)objs[j++]
+                };
 
-                dp.Key = new UUID(ListStr(objs[j++]));
-                dp.OffsetPos = (LSL_Vector)objs[j++];
-                dp.LinkNum = ListInt(objs[j++]);
-                dp.Group = new UUID(ListStr(objs[j++]));
-                dp.Name = ListStr(objs[j++]);
-                dp.Owner = new UUID(ListStr(objs[j++]));
-                dp.Position = (LSL_Vector)objs[j++];
-                dp.Rotation = (LSL_Rotation)objs[j++];
-                dp.Type = ListInt(objs[j++]);
-                dp.Velocity = (LSL_Vector)objs[j++];
-
-                SurfaceTouchEventArgs stea = new SurfaceTouchEventArgs();
-
-                stea.STCoord = LSLVec2OMVec((LSL_Vector)objs[j++]);
-                stea.Normal = LSLVec2OMVec((LSL_Vector)objs[j++]);
-                stea.Binormal = LSLVec2OMVec((LSL_Vector)objs[j++]);
-                stea.Position = LSLVec2OMVec((LSL_Vector)objs[j++]);
-                stea.UVCoord = LSLVec2OMVec((LSL_Vector)objs[j++]);
-                stea.FaceIndex = ListInt(objs[j++]);
+                SurfaceTouchEventArgs stea = new SurfaceTouchEventArgs
+                {
+                    STCoord = LSLVec2OMVec((LSL_Vector)objs[j++]),
+                    Normal = LSLVec2OMVec((LSL_Vector)objs[j++]),
+                    Binormal = LSLVec2OMVec((LSL_Vector)objs[j++]),
+                    Position = LSLVec2OMVec((LSL_Vector)objs[j++]),
+                    UVCoord = LSLVec2OMVec((LSL_Vector)objs[j++]),
+                    FaceIndex = ListInt(objs[j++])
+                };
 
                 dp.SurfaceTouchArgs = stea;
 

@@ -382,8 +382,10 @@ namespace OpenSim.Region.CoreModules.World.Land
 
         public ILandObject Copy()
         {
-            ILandObject newLand = new LandObject(LandData, m_scene);
-            newLand.LandBitmap = (bool[,]) LandBitmap.Clone();
+            ILandObject newLand = new LandObject(LandData, m_scene)
+            {
+                LandBitmap = (bool[,])LandBitmap.Clone()
+            };
             return newLand;
         }
 
@@ -988,10 +990,12 @@ namespace OpenSim.Region.CoreModules.World.Land
             }
             if (list.Count == 0)
             {
-                LandAccessEntry e = new LandAccessEntry();
-                e.AgentID = UUID.Zero;
-                e.Flags = 0;
-                e.Expires = 0;
+                LandAccessEntry e = new LandAccessEntry
+                {
+                    AgentID = UUID.Zero,
+                    Flags = 0,
+                    Expires = 0
+                };
 
                 list.Add(e);
             }
@@ -1058,10 +1062,12 @@ namespace OpenSim.Region.CoreModules.World.Land
 
             foreach (LandAccessEntry entry in entries)
             {
-                LandAccessEntry temp = new LandAccessEntry();
-                temp.AgentID = entry.AgentID;
-                temp.Expires = entry.Expires;
-                temp.Flags = (AccessList)flags;
+                LandAccessEntry temp = new LandAccessEntry
+                {
+                    AgentID = entry.AgentID,
+                    Expires = entry.Expires,
+                    Flags = (AccessList)flags
+                };
 
                 parcelAccessList.Add(temp);
             }

@@ -244,8 +244,10 @@ namespace OpenSim.Data.PGSQL
 
             while (result.Read())
             {
-                RegionData ret = new RegionData();
-                ret.Data = new Dictionary<string, object>();
+                RegionData ret = new RegionData
+                {
+                    Data = new Dictionary<string, object>()
+                };
 
                 UUID regionID;
                 UUID.TryParse(result["uuid"].ToString(), out regionID);

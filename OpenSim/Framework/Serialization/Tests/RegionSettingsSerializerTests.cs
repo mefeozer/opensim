@@ -85,38 +85,40 @@ namespace OpenSim.Framework.Serialization.Tests
         [SetUp]
         public void Setup()
         {
-            m_rs = new RegionSettings();
-            m_rs.AgentLimit = 17;
-            m_rs.AllowDamage = true;
-            m_rs.AllowLandJoinDivide = true;
-            m_rs.AllowLandResell = true;
-            m_rs.BlockFly = true;
-            m_rs.BlockShowInSearch = true;
-            m_rs.BlockTerraform = true;
-            m_rs.DisableCollisions = true;
-            m_rs.DisablePhysics = true;
-            m_rs.DisableScripts = true;
-            m_rs.Elevation1NW = 15.9;
-            m_rs.Elevation1NE = 45.3;
-            m_rs.Elevation1SE = 49;
-            m_rs.Elevation1SW = 1.9;
-            m_rs.Elevation2NW = 4.5;
-            m_rs.Elevation2NE = 19.2;
-            m_rs.Elevation2SE = 9.2;
-            m_rs.Elevation2SW = 2.1;
-            m_rs.FixedSun = true;
-            m_rs.SunPosition = 12.0;
-            m_rs.ObjectBonus = 1.4;
-            m_rs.RestrictPushing = true;
-            m_rs.TerrainLowerLimit = 0.4;
-            m_rs.TerrainRaiseLimit = 17.9;
-            m_rs.TerrainTexture1 = UUID.Parse("00000000-0000-0000-0000-000000000020");
-            m_rs.TerrainTexture2 = UUID.Parse("00000000-0000-0000-0000-000000000040");
-            m_rs.TerrainTexture3 = UUID.Parse("00000000-0000-0000-0000-000000000060");
-            m_rs.TerrainTexture4 = UUID.Parse("00000000-0000-0000-0000-000000000080");
-            m_rs.UseEstateSun = true;
-            m_rs.WaterHeight = 23;
-            m_rs.TelehubObject = UUID.Parse("00000000-0000-0000-0000-111111111111");
+            m_rs = new RegionSettings
+            {
+                AgentLimit = 17,
+                AllowDamage = true,
+                AllowLandJoinDivide = true,
+                AllowLandResell = true,
+                BlockFly = true,
+                BlockShowInSearch = true,
+                BlockTerraform = true,
+                DisableCollisions = true,
+                DisablePhysics = true,
+                DisableScripts = true,
+                Elevation1NW = 15.9,
+                Elevation1NE = 45.3,
+                Elevation1SE = 49,
+                Elevation1SW = 1.9,
+                Elevation2NW = 4.5,
+                Elevation2NE = 19.2,
+                Elevation2SE = 9.2,
+                Elevation2SW = 2.1,
+                FixedSun = true,
+                SunPosition = 12.0,
+                ObjectBonus = 1.4,
+                RestrictPushing = true,
+                TerrainLowerLimit = 0.4,
+                TerrainRaiseLimit = 17.9,
+                TerrainTexture1 = UUID.Parse("00000000-0000-0000-0000-000000000020"),
+                TerrainTexture2 = UUID.Parse("00000000-0000-0000-0000-000000000040"),
+                TerrainTexture3 = UUID.Parse("00000000-0000-0000-0000-000000000060"),
+                TerrainTexture4 = UUID.Parse("00000000-0000-0000-0000-000000000080"),
+                UseEstateSun = true,
+                WaterHeight = 23,
+                TelehubObject = UUID.Parse("00000000-0000-0000-0000-111111111111")
+            };
             m_rs.AddSpawnPoint(SpawnPoint.Parse("1,-2,0.33"));
         }
 

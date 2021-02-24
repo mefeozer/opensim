@@ -162,10 +162,12 @@ namespace OpenSim.Region.CoreModules.Framework.Library
             m_MockScene.RegisterModuleInterface<IInventoryService>(invService);
             m_MockScene.RegisterModuleInterface<IAssetService>(m_Scene.AssetService);
 
-            UserAccount uinfo = new UserAccount(lib.Owner);
-            uinfo.FirstName = "OpenSim";
-            uinfo.LastName = "Library";
-            uinfo.ServiceURLs = new Dictionary<string, object>();
+            UserAccount uinfo = new UserAccount(lib.Owner)
+            {
+                FirstName = "OpenSim",
+                LastName = "Library",
+                ServiceURLs = new Dictionary<string, object>()
+            };
 
             foreach (string iarFileName in Directory.GetFiles(pathToLibraries, "*.iar"))
             {

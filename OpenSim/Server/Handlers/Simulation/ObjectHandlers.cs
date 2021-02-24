@@ -114,11 +114,13 @@ namespace OpenSim.Server.Handlers.Simulation
             if (args.ContainsKey("new_position") && args["new_position"] != null)
                 Vector3.TryParse(args["new_position"], out newPosition);
 
-            GridRegion destination = new GridRegion();
-            destination.RegionID = uuid;
-            destination.RegionLocX = x;
-            destination.RegionLocY = y;
-            destination.RegionName = regionname;
+            GridRegion destination = new GridRegion
+            {
+                RegionID = uuid,
+                RegionLocX = x,
+                RegionLocY = y,
+                RegionName = regionname
+            };
 
             string sogXmlStr = "", extraStr = "", stateXmlStr = "";
             if (args.ContainsKey("sog") && args["sog"] != null)

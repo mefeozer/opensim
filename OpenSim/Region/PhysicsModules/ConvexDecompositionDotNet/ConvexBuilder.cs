@@ -367,9 +367,10 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
                 if (ret2 == HullError.QE_OK)
                 {
-                    ConvexResult r = new ConvexResult(result.OutputVertices, result.Indices);
-
-                    r.mHullVolume = Concavity.computeMeshVolume(result.OutputVertices, result.Indices); // the volume of the hull.
+                    ConvexResult r = new ConvexResult(result.OutputVertices, result.Indices)
+                    {
+                        mHullVolume = Concavity.computeMeshVolume(result.OutputVertices, result.Indices) // the volume of the hull.
+                    };
 
                     // compute the best fit OBB
                     //computeBestFitOBB(result.mNumOutputVertices, result.mOutputVertices, sizeof(float) * 3, r.mOBBSides, r.mOBBTransform);

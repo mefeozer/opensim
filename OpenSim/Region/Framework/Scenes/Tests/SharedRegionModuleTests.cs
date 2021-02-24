@@ -69,18 +69,21 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             configSource.Configs["GridService"].Set("ConnectionString", "!static");
 
             RegionGridServicesConnector gridService = new RegionGridServicesConnector();
-//
-            OpenSim sim = new OpenSim(configSource);
-
-            sim.SuppressExit = true;
-            sim.EnableInitialPluginLoad = false;
-            sim.LoadEstateDataService = false;
+            //
+            OpenSim sim = new OpenSim(configSource)
+            {
+                SuppressExit = true,
+                EnableInitialPluginLoad = false,
+                LoadEstateDataService = false
+            };
             sim.NetServersInfo.HttpListenerPort = 0;
 
             IRegistryCore reg = sim.ApplicationRegistry;
 
-            RegionInfo ri = new RegionInfo();
-            ri.RegionID = regionId;
+            RegionInfo ri = new RegionInfo
+            {
+                RegionID = regionId
+            };
             ri.EstateSettings.EstateOwner = estateOwnerId;
             ri.InternalEndPoint = new IPEndPoint(0, 0);
 

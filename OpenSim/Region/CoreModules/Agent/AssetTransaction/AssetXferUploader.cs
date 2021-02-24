@@ -475,17 +475,19 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
 
             m_Scene.AssetService.Store(m_asset);
 
-            InventoryItemBase item = new InventoryItemBase();
-            item.Owner = ourClient.AgentId;
-            item.CreatorId = ourClient.AgentId.ToString();
-            item.ID = UUID.Random();
-            item.AssetID = m_asset.FullID;
-            item.Description = m_description;
-            item.Name = m_name;
-            item.AssetType = type;
-            item.InvType = invType;
-            item.Folder = InventFolder;
-            item.BasePermissions = (uint)(PermissionMask.All | PermissionMask.Export);
+            InventoryItemBase item = new InventoryItemBase
+            {
+                Owner = ourClient.AgentId,
+                CreatorId = ourClient.AgentId.ToString(),
+                ID = UUID.Random(),
+                AssetID = m_asset.FullID,
+                Description = m_description,
+                Name = m_name,
+                AssetType = type,
+                InvType = invType,
+                Folder = InventFolder,
+                BasePermissions = (uint)(PermissionMask.All | PermissionMask.Export)
+            };
             item.CurrentPermissions = item.BasePermissions;
             item.GroupPermissions=0;
             item.EveryOnePermissions=0;

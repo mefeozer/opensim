@@ -2082,11 +2082,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     }
                 }
 
-                 // Other array reference.
-                OTOpndArrayElem it = new OTOpndArrayElem();
-                it.array = array;
-                it.index = index;
-                it.byref = byref;
+                // Other array reference.
+                OTOpndArrayElem it = new OTOpndArrayElem
+                {
+                    array = array,
+                    index = index,
+                    byref = byref
+                };
                 return it;
             }
 
@@ -2112,9 +2114,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 if(!byref)
                     return this;
-                OTOpndArrayElem it = new OTOpndArrayElem();
-                it.array = array;
-                it.index = index;
+                OTOpndArrayElem it = new OTOpndArrayElem
+                {
+                    array = array,
+                    index = index
+                };
                 return it;
             }
 
@@ -2208,10 +2212,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                 // nothing special, make as is
-                OTOpndBinOp it = new OTOpndBinOp();
-                it.left = left;
-                it.opCode = opCode;
-                it.rite = rite;
+                OTOpndBinOp it = new OTOpndBinOp
+                {
+                    left = left,
+                    opCode = opCode,
+                    rite = rite
+                };
                 return it;
             }
 
@@ -2504,10 +2510,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                 // otherwise process it as a call
-                OTOpndCall call = new OTOpndCall();
-                call.method = method;
-                call.args = args;
-                if(method.ReturnType == typeof(void))
+                OTOpndCall call = new OTOpndCall
+                {
+                    method = method,
+                    args = args
+                };
+                if (method.ReturnType == typeof(void))
                 {
                     OTStmtVoid.AddLast(decompile, call);
                 }
@@ -2887,9 +2895,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                 // some other field, output code to access it
                 // sometimes the object comes as by reference (value types), so we might need to deref it first
-                OTOpndField it = new OTOpndField();
-                it.obj = obj.GetNonByRefOpnd();
-                it.field = field;
+                OTOpndField it = new OTOpndField
+                {
+                    obj = obj.GetNonByRefOpnd(),
+                    field = field
+                };
                 return it;
             }
 
@@ -3033,13 +3043,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     return false;
                 int listsize = ((OTOpndInt)storeval.index).value;
 
-                 // Good chance of having list initializer, malloc an object to hold it.
-                OTOpndListIni it = new OTOpndListIni();
-                it.values = new OTOpnd[listsize];
+                // Good chance of having list initializer, malloc an object to hold it.
+                OTOpndListIni it = new OTOpndListIni
+                {
+                    values = new OTOpnd[listsize]
+                };
 
-                 // There should be exactly listsize statements following that of the form:
-                 //    dup$<n>[<i>] = bla
-                 // If so, save the bla values in the values[] array.
+                // There should be exactly listsize statements following that of the form:
+                //    dup$<n>[<i>] = bla
+                // If so, save the bla values in the values[] array.
                 LinkedListNode<OTStmt> vallink = link;
                 for(int i = 0; i < listsize; i++)
                 {
@@ -3362,16 +3374,20 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     OTOpndNewarr arg0 = (OTOpndNewarr)args[0];
                     if(arg0.type == typeof(object) && arg0.index is OTOpndInt && ((OTOpndInt)arg0.index).value == 0)
                     {
-                        OTOpndListIni listini = new OTOpndListIni();
-                        listini.values = new OTOpnd[0];
+                        OTOpndListIni listini = new OTOpndListIni
+                        {
+                            values = new OTOpnd[0]
+                        };
                         return listini;
                     }
                 }
 
                 // something else, output as is
-                OTOpndNewobj it = new OTOpndNewobj();
-                it.ctor = ctor;
-                it.args = args;
+                OTOpndNewobj it = new OTOpndNewobj
+                {
+                    ctor = ctor,
+                    args = args
+                };
                 return it;
             }
 
@@ -3772,9 +3788,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                 // nothing special, save opcode and value
-                OTOpndUnOp it = new OTOpndUnOp();
-                it.opCode = opCode;
-                it.value = value;
+                OTOpndUnOp it = new OTOpndUnOp
+                {
+                    opCode = opCode,
+                    value = value
+                };
                 return it;
             }
 
@@ -4538,8 +4556,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     return new OTStmtRet(null);
 
                 // other jumps are really jumps
-                OTStmtJump it = new OTStmtJump();
-                it.label = label;
+                OTStmtJump it = new OTStmtJump
+                {
+                    label = label
+                };
                 return it;
             }
 
@@ -4610,9 +4630,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             public static void AddLast(OTDecompile decompile, OTLabel label)
             {
-                OTStmtLabel it = new OTStmtLabel();
-                it.label = label;
-                it.decompile = decompile;
+                OTStmtLabel it = new OTStmtLabel
+                {
+                    label = label,
+                    decompile = decompile
+                };
                 decompile.AddLastStmt(it);
             }
 
@@ -5160,8 +5182,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 if(!value.HasSideEffects)
                     return null;
-                OTStmtVoid it = new OTStmtVoid();
-                it.value = value;
+                OTStmtVoid it = new OTStmtVoid
+                {
+                    value = value
+                };
                 return it;
             }
 
@@ -5381,11 +5405,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     return false;
 
                 // good chance we have a do loop
-                OTStmtDo it = new OTStmtDo();
+                OTStmtDo it = new OTStmtDo
+                {
 
-                // scan ahead looking for the terminating cond/jump loop
-                // also gather up the statements for the do body block
-                it.dobody = new OTStmtBlock();
+                    // scan ahead looking for the terminating cond/jump loop
+                    // also gather up the statements for the do body block
+                    dobody = new OTStmtBlock()
+                };
                 LinkedListNode<OTStmt> nextlink;
                 for(nextlink = link.Next; nextlink != null; nextlink = nextlink.Next)
                 {
@@ -5512,8 +5538,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     return false;
 
                 // good chance we have a for loop
-                OTStmtFor it = new OTStmtFor();
-                it.iswhile = iswhile;
+                OTStmtFor it = new OTStmtFor
+                {
+                    iswhile = iswhile
+                };
 
                 // all labels end with this suffix
                 string suffix = looplabel.name.Substring(loopname.Length);
@@ -5718,11 +5746,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         return false;
 
                     // replace the jump ifdone_<suffix> with the <then body>
-                    OTStmtIf it = new OTStmtIf();
-                    it.thenstmt = thenbody;
+                    OTStmtIf it = new OTStmtIf
+                    {
+                        thenstmt = thenbody,
 
-                    // replace the test value with the opposite
-                    it.testvalu = OTOpndUnOp.Make(MyOp.Brfalse, condstmt.valu);
+                        // replace the test value with the opposite
+                        testvalu = OTOpndUnOp.Make(MyOp.Brfalse, condstmt.valu)
+                    };
                     condstmt.valu = null;
 
                     // strip out the true body statements from the main code including the ifdone_<suffix> label

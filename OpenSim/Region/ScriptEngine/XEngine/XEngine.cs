@@ -1309,10 +1309,12 @@ namespace OpenSim.Region.ScriptEngine.XEngine
                             AppDomain sandbox;
                             if (m_AppDomainLoading || attachDomains)
                             {
-                                AppDomainSetup appSetup = new AppDomainSetup();
-                                appSetup.PrivateBinPath = Path.Combine(
+                                AppDomainSetup appSetup = new AppDomainSetup
+                                {
+                                    PrivateBinPath = Path.Combine(
                                     m_ScriptEnginesPath,
-                                    m_Scene.RegionInfo.RegionID.ToString());
+                                    m_Scene.RegionInfo.RegionID.ToString())
+                                };
 
                                 Evidence baseEvidence = AppDomain.CurrentDomain.Evidence;
                                 Evidence evidence = new Evidence(baseEvidence);
@@ -1362,8 +1364,10 @@ namespace OpenSim.Region.ScriptEngine.XEngine
                     bool coopTerminationForThisScript;
 
                     // Set up assembly name to point to the appropriate scriptEngines directory
-                    AssemblyName assemblyName = new AssemblyName(Path.GetFileNameWithoutExtension(assemblyPath));
-                    assemblyName.CodeBase = Path.GetDirectoryName(assemblyPath);
+                    AssemblyName assemblyName = new AssemblyName(Path.GetFileNameWithoutExtension(assemblyPath))
+                    {
+                        CodeBase = Path.GetDirectoryName(assemblyPath)
+                    };
 
                     if (m_coopTermination)
                     {
@@ -1687,12 +1691,15 @@ namespace OpenSim.Region.ScriptEngine.XEngine
         {
             m_MaxScriptQueue = maxScriptQueue;
 
-            STPStartInfo startInfo = new STPStartInfo();
-            startInfo.ThreadPoolName = "XEngine";
-            startInfo.IdleTimeout = idleTimeout * 1000; // convert to seconds as stated in .ini
-            startInfo.MaxWorkerThreads = maxThreads;
-            startInfo.MinWorkerThreads = minThreads;
-            startInfo.ThreadPriority = threadPriority;;
+            STPStartInfo startInfo = new STPStartInfo
+            {
+                ThreadPoolName = "XEngine",
+                IdleTimeout = idleTimeout * 1000, // convert to seconds as stated in .ini
+                MaxWorkerThreads = maxThreads,
+                MinWorkerThreads = minThreads,
+                ThreadPriority = threadPriority
+            };
+            ;
             startInfo.MaxStackSize = stackSize;
             startInfo.StartSuspended = true;
 
@@ -2521,9 +2528,11 @@ namespace OpenSim.Region.ScriptEngine.XEngine
                             sd.time += time;
                         else
                         {
-                            sd = new ScriptTopStatsData();
-                            sd.localID = si.RootLocalID;
-                            sd.time = time;
+                            sd = new ScriptTopStatsData
+                            {
+                                localID = si.RootLocalID,
+                                time = time
+                            };
                             topScripts[si.RootLocalID] = sd;
                         }
                     }

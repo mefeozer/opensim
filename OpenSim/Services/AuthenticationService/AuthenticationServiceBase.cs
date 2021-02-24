@@ -116,9 +116,11 @@ namespace OpenSim.Services.AuthenticationService
             AuthenticationData auth = m_Database.Get(principalID);
             if (auth == null)
             {
-                auth = new AuthenticationData();
-                auth.PrincipalID = principalID;
-                auth.Data = new System.Collections.Generic.Dictionary<string, object>();
+                auth = new AuthenticationData
+                {
+                    PrincipalID = principalID,
+                    Data = new System.Collections.Generic.Dictionary<string, object>()
+                };
                 auth.Data["accountType"] = "UserAccount";
                 auth.Data["webLoginKey"] = UUID.Zero.ToString();
             }
@@ -160,9 +162,11 @@ namespace OpenSim.Services.AuthenticationService
 
         public virtual bool SetAuthInfo(AuthInfo info)
         {
-            AuthenticationData auth = new AuthenticationData();
-            auth.PrincipalID = info.PrincipalID;
-            auth.Data = new System.Collections.Generic.Dictionary<string, object>();
+            AuthenticationData auth = new AuthenticationData
+            {
+                PrincipalID = info.PrincipalID,
+                Data = new System.Collections.Generic.Dictionary<string, object>()
+            };
             auth.Data["accountType"] = info.AccountType;
             auth.Data["webLoginKey"] = info.WebLoginKey;
             auth.Data["passwordHash"] = info.PasswordHash;

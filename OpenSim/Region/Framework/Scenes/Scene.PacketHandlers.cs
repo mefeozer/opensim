@@ -52,15 +52,16 @@ namespace OpenSim.Region.Framework.Scenes
         public void SimChat(byte[] message, ChatTypeEnum type, int channel, Vector3 fromPos, string fromName,
                                UUID fromID, UUID targetID, bool fromAgent, bool broadcast)
         {
-            OSChatMessage args = new OSChatMessage();
-
-            args.Message = Utils.BytesToString(message);
-            args.Channel = channel;
-            args.Type = type;
-            args.Position = fromPos;
-            args.SenderUUID = fromID;
-            args.Scene = this;
-            args.Destination = targetID;
+            OSChatMessage args = new OSChatMessage
+            {
+                Message = Utils.BytesToString(message),
+                Channel = channel,
+                Type = type,
+                Position = fromPos,
+                SenderUUID = fromID,
+                Scene = this,
+                Destination = targetID
+            };
 
             if (fromAgent)
             {
@@ -481,13 +482,15 @@ namespace OpenSim.Region.Framework.Scenes
             ViewerEffectPacket.EffectBlock[] effectBlockArray = new ViewerEffectPacket.EffectBlock[args.Count];
             for (int i = 0; i < args.Count; i++)
             {
-                ViewerEffectPacket.EffectBlock effect = new ViewerEffectPacket.EffectBlock();
-                effect.AgentID = args[i].AgentID;
-                effect.Color = args[i].Color;
-                effect.Duration = args[i].Duration;
-                effect.ID = args[i].ID;
-                effect.Type = args[i].Type;
-                effect.TypeData = args[i].TypeData;
+                ViewerEffectPacket.EffectBlock effect = new ViewerEffectPacket.EffectBlock
+                {
+                    AgentID = args[i].AgentID,
+                    Color = args[i].Color,
+                    Duration = args[i].Duration,
+                    ID = args[i].ID,
+                    Type = args[i].Type,
+                    TypeData = args[i].TypeData
+                };
                 effectBlockArray[i] = effect;
 
                 if ((EffectType)effect.Type != EffectType.LookAt && (EffectType)effect.Type != EffectType.Beam)
@@ -569,12 +572,14 @@ namespace OpenSim.Region.Framework.Scenes
                 }
             }
 
-            DescendentsRequestData req = new DescendentsRequestData();
-            req.RemoteClient = remoteClient;
-            req.FolderID = folderID;
-            //req.OwnerID = ownerID;
-            req.FetchFolders = fetchFolders;
-            req.FetchItems = fetchItems;
+            DescendentsRequestData req = new DescendentsRequestData
+            {
+                RemoteClient = remoteClient,
+                FolderID = folderID,
+                //req.OwnerID = ownerID;
+                FetchFolders = fetchFolders,
+                FetchItems = fetchItems
+            };
             //req.SortOrder = sortOrder;
 
             m_descendentsRequestQueue.Enqueue(req);

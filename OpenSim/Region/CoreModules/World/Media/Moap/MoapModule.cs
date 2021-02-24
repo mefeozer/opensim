@@ -327,10 +327,12 @@ namespace OpenSim.Region.CoreModules.World.Media.Moap
                 currentML = new MediaEntry[nsides];
             }
 
-            ObjectMediaResponse resp = new ObjectMediaResponse();
-            resp.PrimID = primId;
+            ObjectMediaResponse resp = new ObjectMediaResponse
+            {
+                PrimID = primId,
 
-            resp.FaceMedia = currentML;
+                FaceMedia = currentML
+            };
             if (string.IsNullOrEmpty(part.MediaUrl))
                 resp.Version = "x-mv:0000000000/00000000-0000-0000-0000-000000000000";
             else

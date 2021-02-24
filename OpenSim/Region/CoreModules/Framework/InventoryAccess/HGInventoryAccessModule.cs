@@ -249,11 +249,13 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
 
             // We need to construct this here to satisfy the calling convention.
             // Better this in two places than five formal params in all others.
-            InventoryItemBase item = new InventoryItemBase();
-            item.Owner = remoteClient.AgentId;
-            item.AssetType = (int)AssetType.Unknown;
-            item.AssetID = newAssetID;
-            item.Name = string.Empty;
+            InventoryItemBase item = new InventoryItemBase
+            {
+                Owner = remoteClient.AgentId,
+                AssetType = (int)AssetType.Unknown,
+                AssetID = newAssetID,
+                Name = string.Empty
+            };
 
             PostInventoryAsset(item, 0);
 
@@ -281,11 +283,13 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
         {
             if (!assetID.Equals(UUID.Zero))
             {
-                InventoryItemBase item = new InventoryItemBase();
-                item.Owner = agentID;
-                item.AssetType = (int)AssetType.Unknown;
-                item.AssetID = assetID;
-                item.Name = string.Empty;
+                InventoryItemBase item = new InventoryItemBase
+                {
+                    Owner = agentID,
+                    AssetType = (int)AssetType.Unknown,
+                    AssetID = assetID,
+                    Name = string.Empty
+                };
 
                 PostInventoryAsset(item, 0);
             }

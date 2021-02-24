@@ -2826,10 +2826,12 @@ namespace OpenSim.Region.Framework.Scenes
 
         private void SendLandCollisionEvent(scriptEvents ev, ScriptCollidingNotification notify)
         {
-            ColliderArgs LandCollidingMessage = new ColliderArgs();
-            LandCollidingMessage.Colliders = new List<DetectedObject>()
+            ColliderArgs LandCollidingMessage = new ColliderArgs
+            {
+                Colliders = new List<DetectedObject>()
             {
                 CreateDetObjectForGround()
+            }
             };
 
             if ((ScriptEvents & ev) != 0)

@@ -332,9 +332,11 @@ namespace pCampBot
 
         public void Connect()
         {
-            Thread connectThread = new Thread(ConnectInternal);
-            connectThread.Name = Name;
-            connectThread.IsBackground = true;
+            Thread connectThread = new Thread(ConnectInternal)
+            {
+                Name = Name,
+                IsBackground = true
+            };
 
             connectThread.Start();
         }

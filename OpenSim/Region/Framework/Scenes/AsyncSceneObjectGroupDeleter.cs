@@ -73,12 +73,14 @@ namespace OpenSim.Region.Framework.Scenes
                 List<SceneObjectGroup> objectGroups, IClientAPI remoteClient,
                 bool permissionToDelete)
         {
-            DeleteToInventoryHolder dtis = new DeleteToInventoryHolder();
-            dtis.action = action;
-            dtis.folderID = folderID;
-            dtis.objectGroups = objectGroups;
-            dtis.remoteClient = remoteClient;
-            dtis.permissionToDelete = permissionToDelete;
+            DeleteToInventoryHolder dtis = new DeleteToInventoryHolder
+            {
+                action = action,
+                folderID = folderID,
+                objectGroups = objectGroups,
+                remoteClient = remoteClient,
+                permissionToDelete = permissionToDelete
+            };
 
             m_inventoryDeletes.Enqueue(dtis);
 

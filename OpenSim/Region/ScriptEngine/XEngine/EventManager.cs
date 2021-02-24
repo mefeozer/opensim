@@ -118,8 +118,10 @@ namespace OpenSim.Region.ScriptEngine.XEngine
         {
             // Add to queue for all scripts in ObjectID object
             DetectParams[] det = new DetectParams[1];
-            det[0] = new DetectParams();
-            det[0].Key = remoteClient.AgentId;
+            det[0] = new DetectParams
+            {
+                Key = remoteClient.AgentId
+            };
             det[0].Populate(myScriptEngine.World);
 
             if (originalID == 0)
@@ -151,8 +153,10 @@ namespace OpenSim.Region.ScriptEngine.XEngine
         {
             // Add to queue for all scripts in ObjectID object
             DetectParams[] det = new DetectParams[1];
-            det[0] = new DetectParams();
-            det[0].Key = remoteClient.AgentId;
+            det[0] = new DetectParams
+            {
+                Key = remoteClient.AgentId
+            };
             det[0].Populate(myScriptEngine.World);
             det[0].OffsetPos = offsetPos;
 
@@ -184,8 +188,10 @@ namespace OpenSim.Region.ScriptEngine.XEngine
         {
             // Add to queue for all scripts in ObjectID object
             DetectParams[] det = new DetectParams[1];
-            det[0] = new DetectParams();
-            det[0].Key = remoteClient.AgentId;
+            det[0] = new DetectParams
+            {
+                Key = remoteClient.AgentId
+            };
             det[0].Populate(myScriptEngine.World);
 
             if (originalID == 0)
@@ -224,8 +230,10 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             }
             if (parameter is UUID)
             {
-                DetectParams det = new DetectParams();
-                det.Key = (UUID)parameter;
+                DetectParams det = new DetectParams
+                {
+                    Key = (UUID)parameter
+                };
                 myScriptEngine.PostObjectEvent(localID, new EventParams(
                     "changed", new object[] { new LSL_Types.LSLInteger(change) },
                     new DetectParams[] { det }));
@@ -252,8 +260,10 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
             foreach (DetectedObject detobj in col.Colliders)
             {
-                DetectParams d = new DetectParams();
-                d.Key =detobj.keyUUID;
+                DetectParams d = new DetectParams
+                {
+                    Key = detobj.keyUUID
+                };
                 d.Populate(myScriptEngine.World, detobj);
                 det.Add(d);
             }

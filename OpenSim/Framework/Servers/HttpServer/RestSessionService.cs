@@ -65,10 +65,12 @@ namespace OpenSim.Framework.Servers.HttpServer
     {
         public static TResponse BeginPostObject(string verb, string requestUrl, TRequest obj, string sid, string aid)
         {
-            RestSessionObject<TRequest> sobj = new RestSessionObject<TRequest>();
-            sobj.SessionID = sid;
-            sobj.AvatarID = aid;
-            sobj.Body = obj;
+            RestSessionObject<TRequest> sobj = new RestSessionObject<TRequest>
+            {
+                SessionID = sid,
+                AvatarID = aid,
+                Body = obj
+            };
 
             Type type = typeof(RestSessionObject<TRequest>);
 
@@ -79,8 +81,10 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             using (MemoryStream buffer = new MemoryStream())
             {
-                XmlWriterSettings settings = new XmlWriterSettings();
-                settings.Encoding = Encoding.UTF8;
+                XmlWriterSettings settings = new XmlWriterSettings
+                {
+                    Encoding = Encoding.UTF8
+                };
 
                 using (XmlWriter writer = XmlWriter.Create(buffer, settings))
                 {
@@ -120,10 +124,12 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         public void BeginPostObject(string verb, string requestUrl, TRequest obj, string sid, string aid)
         {
-            RestSessionObject<TRequest> sobj = new RestSessionObject<TRequest>();
-            sobj.SessionID = sid;
-            sobj.AvatarID = aid;
-            sobj.Body = obj;
+            RestSessionObject<TRequest> sobj = new RestSessionObject<TRequest>
+            {
+                SessionID = sid,
+                AvatarID = aid,
+                Body = obj
+            };
 
             Type type = typeof(RestSessionObject<TRequest>);
 
@@ -134,8 +140,10 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             using (MemoryStream buffer = new MemoryStream())
             {
-                XmlWriterSettings settings = new XmlWriterSettings();
-                settings.Encoding = Encoding.UTF8;
+                XmlWriterSettings settings = new XmlWriterSettings
+                {
+                    Encoding = Encoding.UTF8
+                };
 
                 using (XmlWriter writer = XmlWriter.Create(buffer, settings))
                 {

@@ -1170,13 +1170,15 @@ namespace OpenSim.Framework
         {
             RegionInfo regionInfo;
             IPEndPoint neighbourInternalEndPoint = new IPEndPoint(Util.GetHostFromDNS(externalHostName), (int)simPort);
-            regionInfo = new RegionInfo(regX, regY, neighbourInternalEndPoint, externalHostName);
-            regionInfo.RemotingPort = remotingPort;
-            regionInfo.RemotingAddress = externalHostName;
-            regionInfo.HttpPort = httpPort;
-            regionInfo.RegionID = regionID;
-            regionInfo.RegionName = regionName;
-            regionInfo.ServerURI = serverURI;
+            regionInfo = new RegionInfo(regX, regY, neighbourInternalEndPoint, externalHostName)
+            {
+                RemotingPort = remotingPort,
+                RemotingAddress = externalHostName,
+                HttpPort = httpPort,
+                RegionID = regionID,
+                RegionName = regionName,
+                ServerURI = serverURI
+            };
             return regionInfo;
         }
 

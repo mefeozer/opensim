@@ -34,9 +34,11 @@ namespace OpenSim.Tests.Common
     {
         public static void LogToConsole()
         {
-            ConsoleAppender consoleAppender = new ConsoleAppender();
-            consoleAppender.Layout =
-                new PatternLayout("%date [%thread] %-5level %logger [%property{NDC}] - %message%newline");
+            ConsoleAppender consoleAppender = new ConsoleAppender
+            {
+                Layout =
+                new PatternLayout("%date [%thread] %-5level %logger [%property{NDC}] - %message%newline")
+            };
             log4net.Config.BasicConfigurator.Configure(consoleAppender);
         }
     }

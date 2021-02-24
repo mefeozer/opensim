@@ -659,8 +659,10 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
                 {
                     // Still not as flexible as I would like this to be,
                     // but good enough for now
-                    RemoteXInventoryServicesConnector rxisc = new RemoteXInventoryServicesConnector(url);
-                    rxisc.Scene = m_Scenes[0];
+                    RemoteXInventoryServicesConnector rxisc = new RemoteXInventoryServicesConnector(url)
+                    {
+                        Scene = m_Scenes[0]
+                    };
                     connector = rxisc;
                 }
                 if (connector != null)

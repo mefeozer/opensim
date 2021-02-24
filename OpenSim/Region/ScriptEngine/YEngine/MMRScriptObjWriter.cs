@@ -172,11 +172,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public ScriptMyLocal DeclareLocal(Type type, string name)
         {
-            ScriptMyLocal myLocal = new ScriptMyLocal();
-            myLocal.type = type;
-            myLocal.name = name;
-            myLocal.number = localNumber++;
-            myLocal.isReferenced = true;  // so ScriptCollector won't optimize references away
+            ScriptMyLocal myLocal = new ScriptMyLocal
+            {
+                type = type,
+                name = name,
+                number = localNumber++,
+                isReferenced = true  // so ScriptCollector won't optimize references away
+            };
             return DeclareLocal(myLocal);
         }
         public ScriptMyLocal DeclareLocal(ScriptMyLocal myLocal)
@@ -193,9 +195,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public ScriptMyLabel DefineLabel(string name)
         {
-            ScriptMyLabel myLabel = new ScriptMyLabel();
-            myLabel.name = name;
-            myLabel.number = labelNumber++;
+            ScriptMyLabel myLabel = new ScriptMyLabel
+            {
+                name = name,
+                number = labelNumber++
+            };
             return DefineLabel(myLabel);
         }
         public ScriptMyLabel DefineLabel(ScriptMyLabel myLabel)
@@ -848,10 +852,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private static void SaveSrcLoc(Dictionary<int, ScriptSrcLoc> srcLocs, int offset, string srcFile, int srcLine, int srcPosn)
         {
-            ScriptSrcLoc srcLoc = new ScriptSrcLoc();
-            srcLoc.file = srcFile;
-            srcLoc.line = srcLine;
-            srcLoc.posn = srcPosn;
+            ScriptSrcLoc srcLoc = new ScriptSrcLoc
+            {
+                file = srcFile,
+                line = srcLine,
+                posn = srcPosn
+            };
             srcLocs[offset] = srcLoc;
         }
 

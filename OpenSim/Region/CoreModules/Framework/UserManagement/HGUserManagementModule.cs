@@ -143,10 +143,12 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
 
                         if (!userID.Equals(UUID.Zero))
                         {
-                            UserData ud = new UserData();
-                            ud.Id = userID;
-                            ud.FirstName = words[0];
-                            ud.LastName = "@" + words[1];
+                            UserData ud = new UserData
+                            {
+                                Id = userID,
+                                FirstName = words[0],
+                                LastName = "@" + words[1]
+                            };
                             users.Add(ud);
                             AddUser(userID, names[0], names[1], uriStr);
                             m_log.DebugFormat("[USER MANAGEMENT MODULE]: User {0}@{1} found", words[0], words[1]);

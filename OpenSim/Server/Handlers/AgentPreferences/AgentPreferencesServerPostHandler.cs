@@ -122,14 +122,16 @@ namespace OpenSim.Server.Handlers.AgentPreferences
             if (!UUID.TryParse(request["PrincipalID"].ToString(), out userID))
                 return FailureResult();
 
-            AgentPrefs data = new AgentPrefs(userID);
-            data.AccessPrefs = request["AccessPrefs"].ToString();
-            data.HoverHeight = float.Parse(request["HoverHeight"].ToString());
-            data.Language = request["Language"].ToString();
-            data.LanguageIsPublic = bool.Parse(request["LanguageIsPublic"].ToString());
-            data.PermEveryone = int.Parse(request["PermEveryone"].ToString());
-            data.PermGroup = int.Parse(request["PermGroup"].ToString());
-            data.PermNextOwner = int.Parse(request["PermNextOwner"].ToString());
+            AgentPrefs data = new AgentPrefs(userID)
+            {
+                AccessPrefs = request["AccessPrefs"].ToString(),
+                HoverHeight = float.Parse(request["HoverHeight"].ToString()),
+                Language = request["Language"].ToString(),
+                LanguageIsPublic = bool.Parse(request["LanguageIsPublic"].ToString()),
+                PermEveryone = int.Parse(request["PermEveryone"].ToString()),
+                PermGroup = int.Parse(request["PermGroup"].ToString()),
+                PermNextOwner = int.Parse(request["PermNextOwner"].ToString())
+            };
 
             return m_AgentPreferencesService.StoreAgentPreferences(data) ? SuccessResult() : FailureResult();
         }

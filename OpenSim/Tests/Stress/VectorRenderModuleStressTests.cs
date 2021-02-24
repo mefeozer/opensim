@@ -49,8 +49,10 @@ namespace OpenSim.Tests.Stress
         {
             Scene = new SceneHelpers().SetupScene();
 
-            Dtm = new DynamicTextureModule();
-            Dtm.ReuseTextures = reuseTextures;
+            Dtm = new DynamicTextureModule
+            {
+                ReuseTextures = reuseTextures
+            };
 
             Vrm = new VectorRenderModule();
 

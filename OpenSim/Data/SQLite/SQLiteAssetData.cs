@@ -266,30 +266,32 @@ namespace OpenSim.Data.SQLite
                 (string)row["Name"],
                 Convert.ToSByte(row["Type"]),
                 (string)row["CreatorID"]
-            );
-
-            asset.Description = (string) row["Description"];
-            asset.Local = Convert.ToBoolean(row["Local"]);
-            asset.Temporary = Convert.ToBoolean(row["Temporary"]);
-            asset.Flags = (AssetFlags)Convert.ToInt32(row["asset_flags"]);
-            asset.Data = (byte[])row["Data"];
+            )
+            {
+                Description = (string)row["Description"],
+                Local = Convert.ToBoolean(row["Local"]),
+                Temporary = Convert.ToBoolean(row["Temporary"]),
+                Flags = (AssetFlags)Convert.ToInt32(row["asset_flags"]),
+                Data = (byte[])row["Data"]
+            };
             return asset;
         }
 
         private static AssetMetadata buildAssetMetadata(IDataReader row)
         {
-            AssetMetadata metadata = new AssetMetadata();
+            AssetMetadata metadata = new AssetMetadata
+            {
+                FullID = new UUID((string)row["UUID"]),
+                Name = (string)row["Name"],
+                Description = (string)row["Description"],
+                Type = Convert.ToSByte(row["Type"]),
+                Temporary = Convert.ToBoolean(row["Temporary"]), // Not sure if this is correct.
+                Flags = (AssetFlags)Convert.ToInt32(row["asset_flags"]),
+                CreatorID = row["CreatorID"].ToString(),
 
-            metadata.FullID = new UUID((string) row["UUID"]);
-            metadata.Name = (string) row["Name"];
-            metadata.Description = (string) row["Description"];
-            metadata.Type = Convert.ToSByte(row["Type"]);
-            metadata.Temporary = Convert.ToBoolean(row["Temporary"]); // Not sure if this is correct.
-            metadata.Flags = (AssetFlags)Convert.ToInt32(row["asset_flags"]);
-            metadata.CreatorID = row["CreatorID"].ToString();
-
-            // Current SHA1s are not stored/computed.
-            metadata.SHA1 = new byte[] {};
+                // Current SHA1s are not stored/computed.
+                SHA1 = new byte[] { }
+            };
 
             return metadata;
         }

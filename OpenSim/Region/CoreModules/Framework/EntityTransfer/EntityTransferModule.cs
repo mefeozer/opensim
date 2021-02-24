@@ -580,10 +580,12 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 uint regX, regY;
                 Util.RegionHandleToRegionLoc(regionHandle, out regX, out regY);
 
-                MapBlockData block = new MapBlockData();
-                block.X = (ushort)regX;
-                block.Y = (ushort)regY;
-                block.Access = (byte)SimAccess.Down; // == not there
+                MapBlockData block = new MapBlockData
+                {
+                    X = (ushort)regX,
+                    Y = (ushort)regY,
+                    Access = (byte)SimAccess.Down // == not there
+                };
 
                 List<MapBlockData> blocks = new List<MapBlockData>();
                 blocks.Add(block);
@@ -800,8 +802,10 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
             agentCircuit.startpos = position;
             agentCircuit.child = true;
 
-            agentCircuit.Appearance = new AvatarAppearance();
-            agentCircuit.Appearance.AvatarHeight = sp.Appearance.AvatarHeight;
+            agentCircuit.Appearance = new AvatarAppearance
+            {
+                AvatarHeight = sp.Appearance.AvatarHeight
+            };
 
             if (currentAgentCircuit != null)
             {
@@ -1313,8 +1317,10 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
         protected virtual bool CreateAgent(ScenePresence sp, GridRegion reg, GridRegion finalDestination, AgentCircuitData agentCircuit, uint teleportFlags, EntityTransferContext ctx, out string reason, out bool logout)
         {
-            GridRegion source = new GridRegion(Scene.RegionInfo);
-            source.RawServerURI = m_thisGridInfo.GateKeeperURL;
+            GridRegion source = new GridRegion(Scene.RegionInfo)
+            {
+                RawServerURI = m_thisGridInfo.GateKeeperURL
+            };
 
             logout = false;
             bool success = Scene.SimulationService.CreateAgent(source, finalDestination, agentCircuit, teleportFlags, ctx, out reason);
@@ -1744,8 +1750,10 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
             agentCircuit.startpos = pos;
             agentCircuit.child = true;
 
-            agentCircuit.Appearance = new AvatarAppearance();
-            agentCircuit.Appearance.AvatarHeight = agent.Appearance.AvatarHeight;
+            agentCircuit.Appearance = new AvatarAppearance
+            {
+                AvatarHeight = agent.Appearance.AvatarHeight
+            };
 
             if (currentAgentCircuit != null)
             {
@@ -2013,8 +2021,10 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
             agent.startpos = sp.AbsolutePosition + CalculateOffset(sp, region);
             agent.startfar = sp.DrawDistance;
             agent.child = true;
-            agent.Appearance = new AvatarAppearance();
-            agent.Appearance.AvatarHeight = sp.Appearance.AvatarHeight;
+            agent.Appearance = new AvatarAppearance
+            {
+                AvatarHeight = sp.Appearance.AvatarHeight
+            };
 
             agent.CapsPath = CapsUtil.GetRandomCapsObjectPath();
 
@@ -2176,8 +2186,10 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 agent.InventoryFolder = UUID.Zero;
                 agent.startpos = sp.AbsolutePosition + CalculateOffset(sp, neighbour);
                 agent.child = true;
-                agent.Appearance = new AvatarAppearance();
-                agent.Appearance.AvatarHeight = sp.Appearance.AvatarHeight;
+                agent.Appearance = new AvatarAppearance
+                {
+                    AvatarHeight = sp.Appearance.AvatarHeight
+                };
                 agent.startfar = sp.DrawDistance;
                 if (currentAgentCircuit != null)
                 {
@@ -2223,18 +2235,20 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
             if (neighbours.Count > 0 || toclose.Count > 0)
             {
-                AgentPosition agentpos = new AgentPosition();
-                agentpos.AgentID = new UUID(sp.UUID.Guid);
-                agentpos.SessionID = spClient.SessionId;
-                agentpos.Size = sp.Appearance.AvatarSize;
-                agentpos.Center = sp.CameraPosition;
-                agentpos.Far = sp.DrawDistance;
-                agentpos.Position = sp.AbsolutePosition;
-                agentpos.Velocity = sp.Velocity;
-                agentpos.RegionHandle = currentRegionHandler;
-                //agentpos.GodLevel = sp.GodLevel;
-                agentpos.GodData = sp.GodController.State();
-                agentpos.Throttles = spClient.GetThrottlesPacked(1);
+                AgentPosition agentpos = new AgentPosition
+                {
+                    AgentID = new UUID(sp.UUID.Guid),
+                    SessionID = spClient.SessionId,
+                    Size = sp.Appearance.AvatarSize,
+                    Center = sp.CameraPosition,
+                    Far = sp.DrawDistance,
+                    Position = sp.AbsolutePosition,
+                    Velocity = sp.Velocity,
+                    RegionHandle = currentRegionHandler,
+                    //agentpos.GodLevel = sp.GodLevel;
+                    GodData = sp.GodController.State(),
+                    Throttles = spClient.GetThrottlesPacked(1)
+                };
                 //            agentpos.ChildrenCapSeeds = seeds;
 
                 Util.FireAndForget(delegate
@@ -2334,8 +2348,10 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 agent.InventoryFolder = UUID.Zero;
                 agent.startpos = sp.AbsolutePosition + CalculateOffset(sp, neighbour);
                 agent.child = true;
-                agent.Appearance = new AvatarAppearance();
-                agent.Appearance.AvatarHeight = sp.Appearance.AvatarHeight;
+                agent.Appearance = new AvatarAppearance
+                {
+                    AvatarHeight = sp.Appearance.AvatarHeight
+                };
                 agent.startfar = sp.DrawDistance;
                 if (currentAgentCircuit != null)
                 {

@@ -194,22 +194,23 @@ namespace OpenSim.Framework
 
         public void FromLightShare(RegionLightShareData ls)
         {
-            WaterData water = new WaterData();
-
-            water.waterFogColor = ls.waterColor / 256f;
-            water.waterFogDensity = (float)Math.Pow(2.0f, ls.waterFogDensityExponent);
-            //water.waterFogDensity = ls.waterFogDensityExponent;
-            water.underWaterFogMod = ls.underwaterFogModifier;
-            water.normScale = ls.reflectionWaveletScale;
-            water.fresnelScale = ls.fresnelScale;
-            water.fresnelOffset = ls.fresnelOffset;
-            water.scaleAbove = ls.refractScaleAbove;
-            water.scaleBelow = ls.refractScaleBelow;
-            water.blurMultiplier = ls.blurMultiplier;
-            water.wave1Dir = ls.littleWaveDirection;
-            water.wave2Dir = ls.bigWaveDirection;
-            water.normalMap = ls.normalMapTexture;
-            water.Name = "LightshareWater";
+            WaterData water = new WaterData
+            {
+                waterFogColor = ls.waterColor / 256f,
+                waterFogDensity = (float)Math.Pow(2.0f, ls.waterFogDensityExponent),
+                //water.waterFogDensity = ls.waterFogDensityExponent;
+                underWaterFogMod = ls.underwaterFogModifier,
+                normScale = ls.reflectionWaveletScale,
+                fresnelScale = ls.fresnelScale,
+                fresnelOffset = ls.fresnelOffset,
+                scaleAbove = ls.refractScaleAbove,
+                scaleBelow = ls.refractScaleBelow,
+                blurMultiplier = ls.blurMultiplier,
+                wave1Dir = ls.littleWaveDirection,
+                wave2Dir = ls.bigWaveDirection,
+                normalMap = ls.normalMapTexture,
+                Name = "LightshareWater"
+            };
 
             SkyData sky = new SkyData();
             convertFromAngles(sky, 2.0f * (float)Math.PI * ls.sunMoonPosition, 2.0f * (float)Math.PI * ls.eastAngle);
@@ -237,8 +238,10 @@ namespace OpenSim.Framework
             sky.star_brightness = ls.starBrightness * 250f;
             sky.Name = "LightshareSky";
 
-            Cycle = new DayCycle();
-            Cycle.Name = "Lightshare";
+            Cycle = new DayCycle
+            {
+                Name = "Lightshare"
+            };
             Cycle.waterframes.Add(water.Name, water);
             DayCycle.TrackEntry track = new DayCycle.TrackEntry(-1, water.Name);
             Cycle.waterTrack.Add(track);

@@ -334,9 +334,11 @@ namespace OpenSim.Region.CoreModules.Agent.TextureSender
             {
                 string assetID = "j2k" + AssetId.ToString();
 
-                AssetBase layerDecodeAsset = new AssetBase(assetID, assetID, (sbyte)AssetType.Notecard, m_CreatorID.ToString());
-                layerDecodeAsset.Local = true;
-                layerDecodeAsset.Temporary = true;
+                AssetBase layerDecodeAsset = new AssetBase(assetID, assetID, (sbyte)AssetType.Notecard, m_CreatorID.ToString())
+                {
+                    Local = true,
+                    Temporary = true
+                };
 
                 #region Serialize Layer Data
 
@@ -405,9 +407,11 @@ namespace OpenSim.Region.CoreModules.Agent.TextureSender
                                 return false;
                             }
 
-                            Layers[i] = new OpenJPEG.J2KLayerInfo();
-                            Layers[i].Start = element1;
-                            Layers[i].End = element2;
+                            Layers[i] = new OpenJPEG.J2KLayerInfo
+                            {
+                                Start = element1,
+                                End = element2
+                            };
                         }
                         else
                         {

@@ -82,13 +82,15 @@ namespace OpenSim.Groups
 
         public GroupNoticeData ToGroupNoticeData()
         {
-            GroupNoticeData n = new GroupNoticeData();
-            n.FromName = this.FromName;
-            n.AssetType = this.AttachmentType;
-            n.HasAttachment = this.HasAttachment;
-            n.NoticeID = this.NoticeID;
-            n.Subject = this.Subject;
-            n.Timestamp = this.Timestamp;
+            GroupNoticeData n = new GroupNoticeData
+            {
+                FromName = this.FromName,
+                AssetType = this.AttachmentType,
+                HasAttachment = this.HasAttachment,
+                NoticeID = this.NoticeID,
+                Subject = this.Subject,
+                Timestamp = this.Timestamp
+            };
 
             return n;
         }
@@ -437,12 +439,13 @@ namespace OpenSim.Groups
             if (dict == null)
                 return null;
 
-            GroupInviteInfo invite = new GroupInviteInfo();
-
-            invite.InviteID = new UUID(dict["InviteID"].ToString());
-            invite.GroupID = new UUID(dict["GroupID"].ToString());
-            invite.RoleID = new UUID(dict["RoleID"].ToString());
-            invite.AgentID = Sanitize(dict["AgentID"].ToString());
+            GroupInviteInfo invite = new GroupInviteInfo
+            {
+                InviteID = new UUID(dict["InviteID"].ToString()),
+                GroupID = new UUID(dict["GroupID"].ToString()),
+                RoleID = new UUID(dict["RoleID"].ToString()),
+                AgentID = Sanitize(dict["AgentID"].ToString())
+            };
 
             return invite;
         }
@@ -496,11 +499,12 @@ namespace OpenSim.Groups
 
         public static GroupNoticeInfo GroupNoticeInfo(Dictionary<string, object> dict)
         {
-            GroupNoticeInfo notice = new GroupNoticeInfo();
-
-            notice.noticeData = GroupNoticeData(dict);
-            notice.GroupID = new UUID(dict["GroupID"].ToString());
-            notice.Message = Sanitize(dict["Message"].ToString());
+            GroupNoticeInfo notice = new GroupNoticeInfo
+            {
+                noticeData = GroupNoticeData(dict),
+                GroupID = new UUID(dict["GroupID"].ToString()),
+                Message = Sanitize(dict["Message"].ToString())
+            };
 
             return notice;
         }

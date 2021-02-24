@@ -140,8 +140,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 hash["position"] = position.ToString();
                 hash["lookAt"] = lookAt.ToString();
             }
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -160,8 +162,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             Hashtable hash = new Hashtable();
             hash["result"] = success.ToString();
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -180,8 +184,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             Hashtable hash = new Hashtable();
             hash["result"] = success.ToString();
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -200,8 +206,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             Hashtable hash = new Hashtable();
             hash["result"] = success.ToString();
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -222,8 +230,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             Hashtable hash = new Hashtable();
             hash["result"] = "true";
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -267,8 +277,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             }
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -307,8 +319,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 //    hash["result"] = "No Friends Online";
             }
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -340,8 +354,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 }
             }
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
         }
 
@@ -368,8 +384,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
                     hash["result"] = "No Service URLs";
             }
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -416,8 +434,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 }
             }
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
 
         }
@@ -451,8 +471,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
                     hash["result"] = "User unknown";
             }
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
         }
 
@@ -477,8 +499,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 hash["UUID"] = uuid.ToString();
             }
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
         }
     }

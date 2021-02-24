@@ -68,32 +68,36 @@ namespace OpenSim.Framework.Tests
             bool ChangedGrid1 = false;
             Vector3 Center1 = Vector3.Zero;
 
-            AgentPosition position1 = new AgentPosition();
-            position1.AgentID = AgentId1;
-            position1.SessionID = SessionId1;
-            position1.CircuitCode = CircuitCode1;
-            position1.Size = Size1;
-            position1.Position = Position1;
-            position1.LeftAxis = LeftAxis1;
-            position1.UpAxis = UpAxis1;
-            position1.AtAxis = AtAxis1;
-            position1.RegionHandle = RegionHandle1;
-            position1.Throttles = Throttles1;
-            position1.Velocity = Velocity1;
-            position1.Far = Far1;
-            position1.ChangedGrid = ChangedGrid1;
-            position1.Center = Center1;
+            AgentPosition position1 = new AgentPosition
+            {
+                AgentID = AgentId1,
+                SessionID = SessionId1,
+                CircuitCode = CircuitCode1,
+                Size = Size1,
+                Position = Position1,
+                LeftAxis = LeftAxis1,
+                UpAxis = UpAxis1,
+                AtAxis = AtAxis1,
+                RegionHandle = RegionHandle1,
+                Throttles = Throttles1,
+                Velocity = Velocity1,
+                Far = Far1,
+                ChangedGrid = ChangedGrid1,
+                Center = Center1
+            };
 
-            ChildAgentDataUpdate cadu = new ChildAgentDataUpdate();
-            cadu.AgentID = AgentId1.Guid;
-            cadu.ActiveGroupID = UUID.Zero.Guid;
-            cadu.throttles = Throttles1;
-            cadu.drawdistance = Far1;
-            cadu.Position = Position1;
-            cadu.Velocity = Velocity1;
-            cadu.regionHandle = RegionHandle1;
-            cadu.cameraPosition = Center1;
-            cadu.AVHeight = Size1.Z;
+            ChildAgentDataUpdate cadu = new ChildAgentDataUpdate
+            {
+                AgentID = AgentId1.Guid,
+                ActiveGroupID = UUID.Zero.Guid,
+                throttles = Throttles1,
+                drawdistance = Far1,
+                Position = Position1,
+                Velocity = Velocity1,
+                regionHandle = RegionHandle1,
+                cameraPosition = Center1,
+                AVHeight = Size1.Z
+            };
 
             AgentPosition position2 = new AgentPosition();
             position2.CopyFrom(cadu, position1.SessionID);
@@ -174,8 +178,10 @@ namespace OpenSim.Framework.Tests
         [Test]
         public void AssetMetaDataNonNullContentTypeTest01()
         {
-            AssetMetadata assetMetadata = new AssetMetadata();
-            assetMetadata.ContentType = "image/jp2";
+            AssetMetadata assetMetadata = new AssetMetadata
+            {
+                ContentType = "image/jp2"
+            };
             Assert.That(assetMetadata.Type == (sbyte)AssetType.Texture, "Content type should be AssetType.Texture");
             Assert.That(assetMetadata.ContentType == "image/jp2", "Text of content type should be image/jp2");
             UUID rndID = UUID.Random();
@@ -265,10 +271,12 @@ namespace OpenSim.Framework.Tests
             Assert.IsNotNull(abase.Metadata, "string,string,sbyte,string constructor of AssetBase with unknown type should have created a MetaData element but didn't.");
             Assert.That(abase.Metadata.Type == -1, "Unknown Type passed to string,string,sbyte,string constructor and was a known type when it came out again");
 
-            AssetMetadata metts = new AssetMetadata();
-            metts.FullID = itemID;
-            metts.ID = string.Empty;
-            metts.Name = "test item";
+            AssetMetadata metts = new AssetMetadata
+            {
+                FullID = itemID,
+                ID = string.Empty,
+                Name = "test item"
+            };
             abase.Metadata = metts;
 
             Assert.That(abase.ToString() == itemID.ToString(), "ToString is overriden to be fullID.ToString()");

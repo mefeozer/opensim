@@ -61,11 +61,13 @@ namespace OpenSim.Server.Handlers.Authentication
 
         public void StoreAssociation(AssociationRelyingPartyType distinguishingFactor, Association assoc)
         {
-            AssociationItem item = new AssociationItem();
-            item.DistinguishingFactor = distinguishingFactor;
-            item.Handle = assoc.Handle;
-            item.Expires = assoc.Expires.ToLocalTime();
-            item.PrivateData = assoc.SerializePrivateData();
+            AssociationItem item = new AssociationItem
+            {
+                DistinguishingFactor = distinguishingFactor,
+                Handle = assoc.Handle,
+                Expires = assoc.Expires.ToLocalTime(),
+                PrivateData = assoc.SerializePrivateData()
+            };
 
             lock (m_syncRoot)
             {

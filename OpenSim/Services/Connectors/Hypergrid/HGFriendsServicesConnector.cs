@@ -115,9 +115,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
 
         public bool NewFriendship(UUID PrincipalID, string Friend)
         {
-            FriendInfo finfo = new FriendInfo();
-            finfo.PrincipalID = PrincipalID;
-            finfo.Friend = Friend;
+            FriendInfo finfo = new FriendInfo
+            {
+                PrincipalID = PrincipalID,
+                Friend = Friend
+            };
 
             Dictionary<string, object> sendData = finfo.ToKeyValuePairs();
 
@@ -162,9 +164,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
 
         public bool DeleteFriendship(UUID PrincipalID, UUID Friend, string secret)
         {
-            FriendInfo finfo = new FriendInfo();
-            finfo.PrincipalID = PrincipalID;
-            finfo.Friend = Friend.ToString();
+            FriendInfo finfo = new FriendInfo
+            {
+                PrincipalID = PrincipalID,
+                Friend = Friend.ToString()
+            };
 
             Dictionary<string, object> sendData = finfo.ToKeyValuePairs();
 
@@ -209,9 +213,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
 
         public bool ValidateFriendshipOffered(UUID fromID, UUID toID)
         {
-            FriendInfo finfo = new FriendInfo();
-            finfo.PrincipalID = fromID;
-            finfo.Friend = toID.ToString();
+            FriendInfo finfo = new FriendInfo
+            {
+                PrincipalID = fromID,
+                Friend = toID.ToString()
+            };
 
             Dictionary<string, object> sendData = finfo.ToKeyValuePairs();
 

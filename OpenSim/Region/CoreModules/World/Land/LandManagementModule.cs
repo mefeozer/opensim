@@ -632,12 +632,14 @@ namespace OpenSim.Region.CoreModules.World.Land
                     return;
                 }
             }
-            
-            LandAccessEntry entry = new LandAccessEntry();
-            entry.AgentID = targetID;
-            entry.Flags = AccessList.Access;
-            entry.Expires = now + expires;
-            if(currenttime > 0)
+
+            LandAccessEntry entry = new LandAccessEntry
+            {
+                AgentID = targetID,
+                Flags = AccessList.Access,
+                Expires = now + expires
+            };
+            if (currenttime > 0)
                 entry.Expires += currenttime;
             IMoneyModule mm = m_scene.RequestModuleInterface<IMoneyModule>();
             if(cost != 0 && mm != null)
@@ -2048,31 +2050,33 @@ namespace OpenSim.Region.CoreModules.World.Land
 
             try
             {
-                LandUpdateArgs land_update = new LandUpdateArgs();
-                land_update.AuthBuyerID = properties.AuthBuyerID;
-                land_update.Category = properties.Category;
-                land_update.Desc = properties.Desc;
-                land_update.GroupID = properties.GroupID;
-                land_update.LandingType = (byte) properties.Landing;
-                land_update.MediaAutoScale = (byte) Convert.ToInt32(properties.MediaAutoScale);
-                land_update.MediaID = properties.MediaID;
-                land_update.MediaURL = properties.MediaURL;
-                land_update.MusicURL = properties.MusicURL;
-                land_update.Name = properties.Name;
-                land_update.ParcelFlags = (uint) properties.ParcelFlags;
-                land_update.PassHours = properties.PassHours;
-                land_update.PassPrice = (int) properties.PassPrice;
-                land_update.SalePrice = (int) properties.SalePrice;
-                land_update.SnapshotID = properties.SnapshotID;
-                land_update.UserLocation = properties.UserLocation;
-                land_update.UserLookAt = properties.UserLookAt;
-                land_update.MediaDescription = properties.MediaDesc;
-                land_update.MediaType = properties.MediaType;
-                land_update.MediaWidth = properties.MediaWidth;
-                land_update.MediaHeight = properties.MediaHeight;
-                land_update.MediaLoop = properties.MediaLoop;
-                land_update.ObscureMusic = properties.ObscureMusic;
-                land_update.ObscureMedia = properties.ObscureMedia;
+                LandUpdateArgs land_update = new LandUpdateArgs
+                {
+                    AuthBuyerID = properties.AuthBuyerID,
+                    Category = properties.Category,
+                    Desc = properties.Desc,
+                    GroupID = properties.GroupID,
+                    LandingType = (byte)properties.Landing,
+                    MediaAutoScale = (byte)Convert.ToInt32(properties.MediaAutoScale),
+                    MediaID = properties.MediaID,
+                    MediaURL = properties.MediaURL,
+                    MusicURL = properties.MusicURL,
+                    Name = properties.Name,
+                    ParcelFlags = (uint)properties.ParcelFlags,
+                    PassHours = properties.PassHours,
+                    PassPrice = (int)properties.PassPrice,
+                    SalePrice = (int)properties.SalePrice,
+                    SnapshotID = properties.SnapshotID,
+                    UserLocation = properties.UserLocation,
+                    UserLookAt = properties.UserLookAt,
+                    MediaDescription = properties.MediaDesc,
+                    MediaType = properties.MediaType,
+                    MediaWidth = properties.MediaWidth,
+                    MediaHeight = properties.MediaHeight,
+                    MediaLoop = properties.MediaLoop,
+                    ObscureMusic = properties.ObscureMusic,
+                    ObscureMedia = properties.ObscureMedia
+                };
 
                 if (args.ContainsKey("see_avs"))
                 {
@@ -2280,10 +2284,12 @@ namespace OpenSim.Region.CoreModules.World.Land
                 //                  data.LandData.Name, data.RegionHandle);
 
                 // HACK for now
-                RegionInfo r = new RegionInfo();
-                r.RegionName = info.RegionName;
-                r.RegionLocX = (uint)info.RegionLocX;
-                r.RegionLocY = (uint)info.RegionLocY;
+                RegionInfo r = new RegionInfo
+                {
+                    RegionName = info.RegionName,
+                    RegionLocX = (uint)info.RegionLocX,
+                    RegionLocY = (uint)info.RegionLocY
+                };
                 r.RegionSettings.Maturity = (int)Util.ConvertAccessLevelToMaturity(data.RegionAccess);
                 remoteClient.SendParcelInfo(r, data.LandData, parcelID, data.X, data.Y);
             }
@@ -2545,10 +2551,12 @@ namespace OpenSim.Region.CoreModules.World.Land
 
             if ((flags & 1) != 0) // Ban TODO: Remove magic number
             {
-                LandAccessEntry entry = new LandAccessEntry();
-                entry.AgentID = targetAvatar.UUID;
-                entry.Flags = AccessList.Ban;
-                entry.Expires = 0; // Perm
+                LandAccessEntry entry = new LandAccessEntry
+                {
+                    AgentID = targetAvatar.UUID,
+                    Flags = AccessList.Ban,
+                    Expires = 0 // Perm
+                };
 
                 land.LandData.ParcelAccessList.Add(entry);
             }

@@ -430,9 +430,11 @@ namespace OpenSim.Services.GridService
                 OpenSim.Framework.RegionFlags rflags = (OpenSim.Framework.RegionFlags)Convert.ToInt32(regions[0].Data["flags"]);
                 if ((rflags & OpenSim.Framework.RegionFlags.Hyperlink) != 0)
                 {
-                    regInfo = new GridRegion();
-                    regInfo.RegionID = regions[0].RegionID;
-                    regInfo.ScopeID = m_ScopeID;
+                    regInfo = new GridRegion
+                    {
+                        RegionID = regions[0].RegionID,
+                        ScopeID = m_ScopeID
+                    };
                 }
             }
 

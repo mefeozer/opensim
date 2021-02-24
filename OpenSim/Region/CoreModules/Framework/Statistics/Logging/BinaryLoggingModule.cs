@@ -112,14 +112,18 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
 
         private void LogSimStats(SimStats stats)
         {
-            SimStatsPacket pack = new SimStatsPacket();
-            pack.Region = new SimStatsPacket.RegionBlock();
-            pack.Region.RegionX = stats.RegionX;
-            pack.Region.RegionY = stats.RegionY;
-            pack.Region.RegionFlags = stats.RegionFlags;
-            pack.Region.ObjectCapacity = stats.ObjectCapacity;
-            //pack.Region = //stats.RegionBlock;
-            pack.Stat = stats.StatsBlock;
+            SimStatsPacket pack = new SimStatsPacket
+            {
+                Region = new SimStatsPacket.RegionBlock
+                {
+                    RegionX = stats.RegionX,
+                    RegionY = stats.RegionY,
+                    RegionFlags = stats.RegionFlags,
+                    ObjectCapacity = stats.ObjectCapacity
+                },
+                //pack.Region = //stats.RegionBlock;
+                Stat = stats.StatsBlock
+            };
             pack.Header.Reliable = false;
 
             // note that we are inside the reporter lock when called
@@ -139,10 +143,12 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
                         {
                             m_statLog.Log.Close();
                         }
-                        m_statLog = new StatLogger();
-                        m_statLog.StartTime = now;
-                        m_statLog.Path = (m_statsDir.Length > 0 ? m_statsDir + System.IO.Path.DirectorySeparatorChar.ToString() : "")
-                                + string.Format("stats-{0}.log", now.ToString("yyyyMMddHHmmss"));
+                        m_statLog = new StatLogger
+                        {
+                            StartTime = now,
+                            Path = (m_statsDir.Length > 0 ? m_statsDir + System.IO.Path.DirectorySeparatorChar.ToString() : "")
+                                + string.Format("stats-{0}.log", now.ToString("yyyyMMddHHmmss"))
+                        };
                         m_statLog.Log = new BinaryWriter(File.Open(m_statLog.Path, FileMode.Append, FileAccess.Write));
                     }
 

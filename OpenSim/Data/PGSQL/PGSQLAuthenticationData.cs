@@ -63,8 +63,10 @@ namespace OpenSim.Data.PGSQL
 
         public AuthenticationData Get(UUID principalID)
         {
-            AuthenticationData ret = new AuthenticationData();
-            ret.Data = new Dictionary<string, object>();
+            AuthenticationData ret = new AuthenticationData
+            {
+                Data = new Dictionary<string, object>()
+            };
 
             string sql = string.Format("select * from {0} where uuid = :principalID", m_Realm);
 

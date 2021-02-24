@@ -517,15 +517,17 @@ namespace OpenSim.Tests.Common
 
             if (handlerChatFromClient != null)
             {
-                OSChatMessage args = new OSChatMessage();
-                args.Channel = channel;
-                args.From = Name;
-                args.Message = message;
-                args.Type = type;
+                OSChatMessage args = new OSChatMessage
+                {
+                    Channel = channel,
+                    From = Name,
+                    Message = message,
+                    Type = type,
 
-                args.Scene = Scene;
-                args.Sender = this;
-                args.SenderUUID = AgentId;
+                    Scene = Scene,
+                    Sender = this,
+                    SenderUUID = AgentId
+                };
 
                 handlerChatFromClient(this, args);
             }
@@ -676,14 +678,16 @@ namespace OpenSim.Tests.Common
 
         public virtual AgentCircuitData RequestClientInfo()
         {
-            AgentCircuitData agentData = new AgentCircuitData();
-            agentData.AgentID = AgentId;
-            agentData.SessionID = SessionId;
-            agentData.SecureSessionID = UUID.Zero;
-            agentData.circuitcode = m_circuitCode;
-            agentData.child = false;
-            agentData.firstname = m_firstName;
-            agentData.lastname = m_lastName;
+            AgentCircuitData agentData = new AgentCircuitData
+            {
+                AgentID = AgentId,
+                SessionID = SessionId,
+                SecureSessionID = UUID.Zero,
+                circuitcode = m_circuitCode,
+                child = false,
+                firstname = m_firstName,
+                lastname = m_lastName
+            };
 
             ICapabilitiesModule capsModule = m_scene.RequestModuleInterface<ICapabilitiesModule>();
             if (capsModule != null)

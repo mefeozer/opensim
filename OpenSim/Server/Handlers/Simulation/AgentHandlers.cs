@@ -107,11 +107,13 @@ namespace OpenSim.Server.Handlers.Simulation
             AgentDestinationData data = CreateAgentDestinationData();
             UnpackData(args, data, remoteAddress);
 
-            GridRegion destination = new GridRegion();
-            destination.RegionID = data.uuid;
-            destination.RegionLocX = data.x;
-            destination.RegionLocY = data.y;
-            destination.RegionName = data.name;
+            GridRegion destination = new GridRegion
+            {
+                RegionID = data.uuid,
+                RegionLocX = data.x,
+                RegionLocY = data.y,
+                RegionName = data.name
+            };
 
             GridRegion gatekeeper = ExtractGatekeeper(data);
 
@@ -131,11 +133,13 @@ namespace OpenSim.Server.Handlers.Simulation
 
             if (args.TryGetValue("source_uuid", out tmpOSD))
             {
-                source = new GridRegion();
-                source.RegionID = UUID.Parse(tmpOSD.AsString());
-                source.RegionLocX = int.Parse(args["source_x"].AsString());
-                source.RegionLocY = int.Parse(args["source_y"].AsString());
-                source.RegionName = args["source_name"].AsString();
+                source = new GridRegion
+                {
+                    RegionID = UUID.Parse(tmpOSD.AsString()),
+                    RegionLocX = int.Parse(args["source_x"].AsString()),
+                    RegionLocY = int.Parse(args["source_y"].AsString()),
+                    RegionName = args["source_name"].AsString()
+                };
 
                 if (args.TryGetValue("source_server_uri", out tmpOSD))
                     source.RawServerURI = tmpOSD.AsString();
@@ -422,8 +426,10 @@ namespace OpenSim.Server.Handlers.Simulation
                     features.Add(new UUID(o.AsString()));
             }
 
-            GridRegion destination = new GridRegion();
-            destination.RegionID = regionID;
+            GridRegion destination = new GridRegion
+            {
+                RegionID = regionID
+            };
 
             string reason;
             // We're sending the version numbers down to the local connector to do the varregion check.
@@ -473,8 +479,10 @@ namespace OpenSim.Server.Handlers.Simulation
                 m_SimulationService.ReleaseAgent(regionID, agentID, "");
             else
             {
-                GridRegion destination = new GridRegion();
-                destination.RegionID = regionID;
+                GridRegion destination = new GridRegion
+                {
+                    RegionID = regionID
+                };
                 Util.FireAndForget(
                     o => m_SimulationService.CloseAgent(destination, agentID, auth_token), null, "AgentHandler.DoAgentDelete");
             }
@@ -495,11 +503,13 @@ namespace OpenSim.Server.Handlers.Simulation
             AgentDestinationData data = CreateAgentDestinationData();
             UnpackData(args, data);
 
-            GridRegion destination = new GridRegion();
-            destination.RegionID = data.uuid;
-            destination.RegionLocX = data.x;
-            destination.RegionLocY = data.y;
-            destination.RegionName = data.name;
+            GridRegion destination = new GridRegion
+            {
+                RegionID = data.uuid,
+                RegionLocX = data.x,
+                RegionLocY = data.y,
+                RegionName = data.name
+            };
 
             GridRegion gatekeeper = ExtractGatekeeper(data);
 
@@ -520,11 +530,13 @@ namespace OpenSim.Server.Handlers.Simulation
 
             if (args.TryGetValue("source_uuid", out tmpOSD))
             {
-                source = new GridRegion();
-                source.RegionID = UUID.Parse(tmpOSD.AsString());
-                source.RegionLocX = int.Parse(args["source_x"].AsString());
-                source.RegionLocY = int.Parse(args["source_y"].AsString());
-                source.RegionName = args["source_name"].AsString();
+                source = new GridRegion
+                {
+                    RegionID = UUID.Parse(tmpOSD.AsString()),
+                    RegionLocX = int.Parse(args["source_x"].AsString()),
+                    RegionLocY = int.Parse(args["source_y"].AsString()),
+                    RegionName = args["source_name"].AsString()
+                };
 
                 if (args.TryGetValue("source_server_uri", out tmpOSD))
                     source.RawServerURI = tmpOSD.AsString();
@@ -610,11 +622,13 @@ namespace OpenSim.Server.Handlers.Simulation
             if (args.TryGetValue("context", out tmpOSD) && tmpOSD is OSDMap)
                 ctx.Unpack((OSDMap)tmpOSD);
 
-            GridRegion destination = new GridRegion();
-            destination.RegionID = uuid;
-            destination.RegionLocX = x;
-            destination.RegionLocY = y;
-            destination.RegionName = regionname;
+            GridRegion destination = new GridRegion
+            {
+                RegionID = uuid,
+                RegionLocX = x,
+                RegionLocY = y,
+                RegionName = regionname
+            };
 
             string messageType;
             if (args["message_type"] != null)

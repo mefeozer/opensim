@@ -138,11 +138,13 @@ namespace OpenSim.Tests.Performance
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, "AddObjectAndScriptPart_", objectIdTail);
             m_scene.AddNewSceneObject(so, true);
 
-            InventoryItemBase itemTemplate = new InventoryItemBase();
-//            itemTemplate.ID = itemId;
-            itemTemplate.Name = itemName;
-            itemTemplate.Folder = so.UUID;
-            itemTemplate.InvType = (int)InventoryType.LSL;
+            InventoryItemBase itemTemplate = new InventoryItemBase
+            {
+                //            itemTemplate.ID = itemId;
+                Name = itemName,
+                Folder = so.UUID,
+                InvType = (int)InventoryType.LSL
+            };
 
             m_scene.RezNewScript(userId, itemTemplate);
         }

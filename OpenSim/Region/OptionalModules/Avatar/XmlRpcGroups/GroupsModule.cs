@@ -440,20 +440,22 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                         // and the sessionid is the role
                         m_groupData.AddAgentToGroup(remoteAgentID, inviteInfo.AgentID, inviteInfo.GroupID, inviteInfo.RoleID);
 
-                        GridInstantMessage msg = new GridInstantMessage();
-                        msg.imSessionID = UUID.Zero.Guid;
-                        msg.fromAgentID = UUID.Zero.Guid;
-                        msg.toAgentID = inviteInfo.AgentID.Guid;
-                        msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
-                        msg.fromAgentName = "Groups";
-                        msg.message = string.Format("You have been added to the group.");
-                        msg.dialog = (byte)OpenMetaverse.InstantMessageDialog.MessageBox;
-                        msg.fromGroup = false;
-                        msg.offline = (byte)0;
-                        msg.ParentEstateID = 0;
-                        msg.Position = Vector3.Zero;
-                        msg.RegionID = UUID.Zero.Guid;
-                        msg.binaryBucket = new byte[0];
+                        GridInstantMessage msg = new GridInstantMessage
+                        {
+                            imSessionID = UUID.Zero.Guid,
+                            fromAgentID = UUID.Zero.Guid,
+                            toAgentID = inviteInfo.AgentID.Guid,
+                            timestamp = (uint)Util.UnixTimeSinceEpoch(),
+                            fromAgentName = "Groups",
+                            message = string.Format("You have been added to the group."),
+                            dialog = (byte)OpenMetaverse.InstantMessageDialog.MessageBox,
+                            fromGroup = false,
+                            offline = (byte)0,
+                            ParentEstateID = 0,
+                            Position = Vector3.Zero,
+                            RegionID = UUID.Zero.Guid,
+                            binaryBucket = new byte[0]
+                        };
 
                         OutgoingInstantMessage(msg, inviteInfo.AgentID);
 
@@ -840,8 +842,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             List<GroupTitlesData> titles = new List<GroupTitlesData>();
             foreach (GroupRolesData role in agentRoles)
             {
-                GroupTitlesData title = new GroupTitlesData();
-                title.Name = role.Name;
+                GroupTitlesData title = new GroupTitlesData
+                {
+                    Name = role.Name
+                };
                 if (agentMembership != null)
                 {
                     title.Selected = agentMembership.ActiveRole == role.RoleID;
@@ -1371,23 +1375,25 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
             // Message to ejector
 
-            msg = new GridInstantMessage();
-            msg.imSessionID = UUID.Zero.Guid;
-            msg.fromAgentID = agentID.Guid;
-            msg.toAgentID = agentID.Guid;
-            msg.timestamp = 0;
-            msg.fromAgentName = agentName;
+            msg = new GridInstantMessage
+            {
+                imSessionID = UUID.Zero.Guid,
+                fromAgentID = agentID.Guid,
+                toAgentID = agentID.Guid,
+                timestamp = 0,
+                fromAgentName = agentName,
 
-            msg.message = string.Format("{2} has been ejected from '{1}' by {0}.", agentName, groupInfo.GroupName, ejecteeName);
+                message = string.Format("{2} has been ejected from '{1}' by {0}.", agentName, groupInfo.GroupName, ejecteeName),
 
-//            msg.dialog = (byte)210; //interop
-            msg.dialog = (byte)OpenMetaverse.InstantMessageDialog.MessageFromAgent;
-            msg.fromGroup = false;
-            msg.offline = (byte)0;
-            msg.ParentEstateID = 0;
-            msg.Position = Vector3.Zero;
-            msg.RegionID = regionInfo.RegionID.Guid;
-            msg.binaryBucket = new byte[0];
+                //            msg.dialog = (byte)210; //interop
+                dialog = (byte)OpenMetaverse.InstantMessageDialog.MessageFromAgent,
+                fromGroup = false,
+                offline = (byte)0,
+                ParentEstateID = 0,
+                Position = Vector3.Zero,
+                RegionID = regionInfo.RegionID.Guid,
+                binaryBucket = new byte[0]
+            };
             OutgoingInstantMessage(msg, agentID);
         }
 
@@ -1449,24 +1455,25 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 {
                     Guid inviteUUID = InviteID.Guid;
 
-                    GridInstantMessage msg = new GridInstantMessage();
+                    GridInstantMessage msg = new GridInstantMessage
+                    {
+                        imSessionID = inviteUUID,
 
-                    msg.imSessionID = inviteUUID;
-
-                    // msg.fromAgentID = agentID.Guid;
-                    msg.fromAgentID = groupID.Guid;
-                    msg.toAgentID = invitedAgentID.Guid;
-                    //msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
-                    msg.timestamp = 0;
-                    msg.fromAgentName = agentName;
-                    msg.message = string.Format("{0} has invited you to join a group. There is no cost to join this group.", agentName);
-                    msg.dialog = (byte)OpenMetaverse.InstantMessageDialog.GroupInvitation;
-                    msg.fromGroup = true;
-                    msg.offline = (byte)0;
-                    msg.ParentEstateID = 0;
-                    msg.Position = Vector3.Zero;
-                    msg.RegionID = regionInfo.RegionID.Guid;
-                    msg.binaryBucket = new byte[20];
+                        // msg.fromAgentID = agentID.Guid;
+                        fromAgentID = groupID.Guid,
+                        toAgentID = invitedAgentID.Guid,
+                        //msg.timestamp = (uint)Util.UnixTimeSinceEpoch();
+                        timestamp = 0,
+                        fromAgentName = agentName,
+                        message = string.Format("{0} has invited you to join a group. There is no cost to join this group.", agentName),
+                        dialog = (byte)OpenMetaverse.InstantMessageDialog.GroupInvitation,
+                        fromGroup = true,
+                        offline = (byte)0,
+                        ParentEstateID = 0,
+                        Position = Vector3.Zero,
+                        RegionID = regionInfo.RegionID.Guid,
+                        binaryBucket = new byte[20]
+                    };
 
                     OutgoingInstantMessage(msg, invitedAgentID);
                 }

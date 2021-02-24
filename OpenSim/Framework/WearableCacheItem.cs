@@ -67,9 +67,11 @@ namespace OpenSim.Framework
 
                     if (dataCache != null && item.ContainsKey("assetdata"))
                     {
-                        AssetBase asset = new AssetBase(item["textureid"].AsUUID(),"BakedTexture",(sbyte)AssetType.Texture,UUID.Zero.ToString());
-                        asset.Temporary = true;
-                        asset.Data = item["assetdata"].AsBinary();
+                        AssetBase asset = new AssetBase(item["textureid"].AsUUID(), "BakedTexture", (sbyte)AssetType.Texture, UUID.Zero.ToString())
+                        {
+                            Temporary = true,
+                            Data = item["assetdata"].AsBinary()
+                        };
                         dataCache.Cache(asset);
                     }
                 }
@@ -86,9 +88,11 @@ namespace OpenSim.Framework
                 {
                     string assetCreator = item["assetcreator"].AsString();
                     string assetName = item["assetname"].AsString();
-                    AssetBase asset = new AssetBase(item["textureid"].AsUUID(), assetName, (sbyte)AssetType.Texture, assetCreator);
-                    asset.Temporary = true;
-                    asset.Data = item["assetdata"].AsBinary();
+                    AssetBase asset = new AssetBase(item["textureid"].AsUUID(), assetName, (sbyte)AssetType.Texture, assetCreator)
+                    {
+                        Temporary = true,
+                        Data = item["assetdata"].AsBinary()
+                    };
                     dataCache.Cache(asset);
                 }
             }

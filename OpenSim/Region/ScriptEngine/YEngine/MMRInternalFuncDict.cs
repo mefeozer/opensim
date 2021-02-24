@@ -65,12 +65,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         TokenName name = new TokenName(null, param.Name);
                         argDecl.AddArg(type, name);
                     }
-                    TokenDeclVar declFunc = new TokenDeclVar(null, null, null);
-                    declFunc.name = new TokenName(null, key);
-                    declFunc.retType = TokenType.FromSysType(null, ifaceMethod.ReturnType);
-                    declFunc.argDecl = argDecl;
+                    TokenDeclVar declFunc = new TokenDeclVar(null, null, null)
+                    {
+                        name = new TokenName(null, key),
+                        retType = TokenType.FromSysType(null, ifaceMethod.ReturnType),
+                        argDecl = argDecl
+                    };
 
-                     // Add the TokenDeclVar struct to the dictionary.
+                    // Add the TokenDeclVar struct to the dictionary.
                     this.AddEntry(declFunc);
                 }
                 catch(Exception except)

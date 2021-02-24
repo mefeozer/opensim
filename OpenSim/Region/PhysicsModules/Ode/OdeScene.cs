@@ -1709,11 +1709,12 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 = new OdeCharacter(
                     avName, this, position, velocity, size, avPIDD, avPIDP,
                     avCapRadius, avStandupTensor, avDensity,
-                    avMovementDivisorWalk, avMovementDivisorRun);
-
-            newAv.Flying = isFlying;
-            newAv.MinimumGroundFlightOffset = minimumGroundFlightOffset;
-            newAv.m_avatarplanted = avplanted;
+                    avMovementDivisorWalk, avMovementDivisorRun)
+                {
+                    Flying = isFlying,
+                    MinimumGroundFlightOffset = minimumGroundFlightOffset,
+                    m_avatarplanted = avplanted
+                };
 
             return newAv;
         }
@@ -2054,17 +2055,19 @@ namespace OpenSim.Region.PhysicsModule.ODE
             string objectNameInScene, PhysicsJointType jointType, Vector3 position,
             Quaternion rotation, string parms, List<string> bodyNames, string trackedBodyName, Quaternion localRotation)
         {
-            OdePhysicsJoint joint = new OdePhysicsJoint();
-            joint.ObjectNameInScene = objectNameInScene;
-            joint.Type = jointType;
-            joint.Position = position;
-            joint.Rotation = rotation;
-            joint.RawParams = parms;
-            joint.BodyNames = new List<string>(bodyNames);
-            joint.TrackedBodyName = trackedBodyName;
-            joint.LocalRotation = localRotation;
-            joint.jointID = IntPtr.Zero;
-            joint.ErrorMessageCount = 0;
+            OdePhysicsJoint joint = new OdePhysicsJoint
+            {
+                ObjectNameInScene = objectNameInScene,
+                Type = jointType,
+                Position = position,
+                Rotation = rotation,
+                RawParams = parms,
+                BodyNames = new List<string>(bodyNames),
+                TrackedBodyName = trackedBodyName,
+                LocalRotation = localRotation,
+                jointID = IntPtr.Zero,
+                ErrorMessageCount = 0
+            };
 
             lock (externalJointRequestsLock)
             {

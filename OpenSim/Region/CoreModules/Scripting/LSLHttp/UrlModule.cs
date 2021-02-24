@@ -683,8 +683,10 @@ namespace OpenSim.Region.CoreModules.Scripting.LSLHttp
 
         private OSHttpResponse errorResponse(OSHttpRequest request, int error)
         {
-            OSHttpResponse resp = new OSHttpResponse(request);
-            resp.StatusCode = error;
+            OSHttpResponse resp = new OSHttpResponse(request)
+            {
+                StatusCode = error
+            };
             return resp;
         }
 

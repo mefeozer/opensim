@@ -98,17 +98,19 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             ScenePresence originalSp = SceneHelpers.AddScenePresence(sceneA, tc, acd);
             originalSp.AbsolutePosition = new Vector3(128, 32, 10);
 
-//            originalSp.Flying = true;
+            //            originalSp.Flying = true;
 
-//            Console.WriteLine("First pos {0}", originalSp.AbsolutePosition);
+            //            Console.WriteLine("First pos {0}", originalSp.AbsolutePosition);
 
-//            eqmA.ClearEvents();
+            //            eqmA.ClearEvents();
 
-            AgentUpdateArgs moveArgs = new AgentUpdateArgs();
-            //moveArgs.BodyRotation = Quaternion.CreateFromEulers(Vector3.Zero);
-            moveArgs.BodyRotation = Quaternion.CreateFromEulers(new Vector3(0, 0, (float)-(Math.PI / 2)));
-            moveArgs.ControlFlags = (uint)AgentManager.ControlFlags.AGENT_CONTROL_AT_POS;
-            moveArgs.SessionID = acd.SessionID;
+            AgentUpdateArgs moveArgs = new AgentUpdateArgs
+            {
+                //moveArgs.BodyRotation = Quaternion.CreateFromEulers(Vector3.Zero);
+                BodyRotation = Quaternion.CreateFromEulers(new Vector3(0, 0, (float)-(Math.PI / 2))),
+                ControlFlags = (uint)AgentManager.ControlFlags.AGENT_CONTROL_AT_POS,
+                SessionID = acd.SessionID
+            };
 
             originalSp.HandleAgentUpdate(originalSp.ControllingClient, moveArgs);
 
@@ -200,11 +202,13 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             ScenePresence originalSp = SceneHelpers.AddScenePresence(sceneA, tc, acd);
             originalSp.AbsolutePosition = new Vector3(128, 32, 10);
 
-            AgentUpdateArgs moveArgs = new AgentUpdateArgs();
-            //moveArgs.BodyRotation = Quaternion.CreateFromEulers(Vector3.Zero);
-            moveArgs.BodyRotation = Quaternion.CreateFromEulers(new Vector3(0, 0, (float)-(Math.PI / 2)));
-            moveArgs.ControlFlags = (uint)AgentManager.ControlFlags.AGENT_CONTROL_AT_POS;
-            moveArgs.SessionID = acd.SessionID;
+            AgentUpdateArgs moveArgs = new AgentUpdateArgs
+            {
+                //moveArgs.BodyRotation = Quaternion.CreateFromEulers(Vector3.Zero);
+                BodyRotation = Quaternion.CreateFromEulers(new Vector3(0, 0, (float)-(Math.PI / 2))),
+                ControlFlags = (uint)AgentManager.ControlFlags.AGENT_CONTROL_AT_POS,
+                SessionID = acd.SessionID
+            };
 
             originalSp.HandleAgentUpdate(originalSp.ControllingClient, moveArgs);
 

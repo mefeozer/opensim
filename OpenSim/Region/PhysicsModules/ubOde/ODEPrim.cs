@@ -475,8 +475,10 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     return _parent.GetInertiaData();
                 else
                 {
-                    inertia = new PhysicsInertiaData();
-                    inertia.TotalMass = -1;
+                    inertia = new PhysicsInertiaData
+                    {
+                        TotalMass = -1
+                    };
                     return inertia;
                 }
             }
@@ -496,12 +498,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 if(Math.Abs(m_fakeInertiaOverride.InertiaRotation.W) < 0.999)
                 {
                     SafeNativeMethods.Matrix3 inertiarotmat = new SafeNativeMethods.Matrix3();
-                    SafeNativeMethods.Quaternion inertiarot = new SafeNativeMethods.Quaternion();
-
-                    inertiarot.X = m_fakeInertiaOverride.InertiaRotation.X;
-                    inertiarot.Y = m_fakeInertiaOverride.InertiaRotation.Y;
-                    inertiarot.Z = m_fakeInertiaOverride.InertiaRotation.Z;
-                    inertiarot.W = m_fakeInertiaOverride.InertiaRotation.W;
+                    SafeNativeMethods.Quaternion inertiarot = new SafeNativeMethods.Quaternion
+                    {
+                        X = m_fakeInertiaOverride.InertiaRotation.X,
+                        Y = m_fakeInertiaOverride.InertiaRotation.Y,
+                        Z = m_fakeInertiaOverride.InertiaRotation.Z,
+                        W = m_fakeInertiaOverride.InertiaRotation.W
+                    };
                     SafeNativeMethods.RfromQ(out inertiarotmat, ref inertiarot);
                     SafeNativeMethods.MassRotate(ref objdmass, ref inertiarotmat);
                 }
@@ -909,33 +912,41 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         public override void VehicleFloatParam(int param, float value)
         {
-            strVehicleFloatParam fp = new strVehicleFloatParam();
-            fp.param = param;
-            fp.value = value;
+            strVehicleFloatParam fp = new strVehicleFloatParam
+            {
+                param = param,
+                value = value
+            };
             AddChange(changes.VehicleFloatParam, fp);
         }
 
         public override void VehicleVectorParam(int param, Vector3 value)
         {
-            strVehicleVectorParam fp = new strVehicleVectorParam();
-            fp.param = param;
-            fp.value = value;
+            strVehicleVectorParam fp = new strVehicleVectorParam
+            {
+                param = param,
+                value = value
+            };
             AddChange(changes.VehicleVectorParam, fp);
         }
 
         public override void VehicleRotationParam(int param, Quaternion value)
         {
-            strVehicleQuatParam fp = new strVehicleQuatParam();
-            fp.param = param;
-            fp.value = value;
+            strVehicleQuatParam fp = new strVehicleQuatParam
+            {
+                param = param,
+                value = value
+            };
             AddChange(changes.VehicleRotationParam, fp);
         }
 
         public override void VehicleFlags(int param, bool value)
         {
-            strVehicleBoolParam bp = new strVehicleBoolParam();
-            bp.param = param;
-            bp.value = value;
+            strVehicleBoolParam bp = new strVehicleBoolParam
+            {
+                param = param,
+                value = value
+            };
             AddChange(changes.VehicleFlags, bp);
         }
 
@@ -2029,12 +2040,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 if(Math.Abs(m_InertiaOverride.InertiaRotation.W) < 0.999)
                 {
                     SafeNativeMethods.Matrix3 inertiarotmat = new SafeNativeMethods.Matrix3();
-                    SafeNativeMethods.Quaternion inertiarot = new SafeNativeMethods.Quaternion();
-
-                    inertiarot.X = m_InertiaOverride.InertiaRotation.X;
-                    inertiarot.Y = m_InertiaOverride.InertiaRotation.Y;
-                    inertiarot.Z = m_InertiaOverride.InertiaRotation.Z;
-                    inertiarot.W = m_InertiaOverride.InertiaRotation.W;
+                    SafeNativeMethods.Quaternion inertiarot = new SafeNativeMethods.Quaternion
+                    {
+                        X = m_InertiaOverride.InertiaRotation.X,
+                        Y = m_InertiaOverride.InertiaRotation.Y,
+                        Z = m_InertiaOverride.InertiaRotation.Z,
+                        W = m_InertiaOverride.InertiaRotation.W
+                    };
                     SafeNativeMethods.RfromQ(out inertiarotmat, ref inertiarot);
                     SafeNativeMethods.MassRotate(ref objdmass, ref inertiarotmat);
                 }
@@ -3003,11 +3015,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 {
                     if (newOri != _orientation)
                     {
-                        SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-                        myrot.X = newOri.X;
-                        myrot.Y = newOri.Y;
-                        myrot.Z = newOri.Z;
-                        myrot.W = newOri.W;
+                        SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+                        {
+                            X = newOri.X,
+                            Y = newOri.Y,
+                            Z = newOri.Z,
+                            W = newOri.W
+                        };
                         SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
                         _orientation = newOri;
                         
@@ -3031,11 +3045,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 {
                     if (newOri != _orientation)
                     {
-                        SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-                        myrot.X = newOri.X;
-                        myrot.Y = newOri.Y;
-                        myrot.Z = newOri.Z;
-                        myrot.W = newOri.W;
+                        SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+                        {
+                            X = newOri.X,
+                            Y = newOri.Y,
+                            Z = newOri.Z,
+                            W = newOri.W
+                        };
                         SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
                         _orientation = newOri;
                     }
@@ -3061,11 +3077,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 {
                     if (newOri != _orientation)
                     {
-                        SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-                        myrot.X = newOri.X;
-                        myrot.Y = newOri.Y;
-                        myrot.Z = newOri.Z;
-                        myrot.W = newOri.W;
+                        SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+                        {
+                            X = newOri.X,
+                            Y = newOri.Y,
+                            Z = newOri.Z,
+                            W = newOri.W
+                        };
                         SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
                         _orientation = newOri;
                         if (Body != IntPtr.Zero && m_angularlocks != 0)
@@ -3093,11 +3111,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 {
                     if (newOri != _orientation)
                     {
-                        SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-                        myrot.X = newOri.X;
-                        myrot.Y = newOri.Y;
-                        myrot.Z = newOri.Z;
-                        myrot.W = newOri.W;
+                        SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+                        {
+                            X = newOri.X,
+                            Y = newOri.Y,
+                            Z = newOri.Z,
+                            W = newOri.W
+                        };
                         SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
                         _orientation = newOri;
                     }
@@ -3189,11 +3209,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if (prim_geom != IntPtr.Zero)
             {
                 SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
-                SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-                myrot.X = _orientation.X;
-                myrot.Y = _orientation.Y;
-                myrot.Z = _orientation.Z;
-                myrot.W = _orientation.W;
+                SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+                {
+                    X = _orientation.X,
+                    Y = _orientation.Y,
+                    Z = _orientation.Z,
+                    W = _orientation.W
+                };
                 SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
             }
 
@@ -3265,11 +3287,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if (prim_geom != IntPtr.Zero)
             {
                 SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
-                SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion();
-                myrot.X = _orientation.X;
-                myrot.Y = _orientation.Y;
-                myrot.Z = _orientation.Z;
-                myrot.W = _orientation.W;
+                SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
+                {
+                    X = _orientation.X,
+                    Y = _orientation.Y,
+                    Z = _orientation.Z,
+                    W = _orientation.W
+                };
                 SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
             }
 

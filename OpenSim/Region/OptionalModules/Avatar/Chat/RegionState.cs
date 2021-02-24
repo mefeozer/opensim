@@ -435,14 +435,16 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         {
             if (enabled)
             {
-                OSChatMessage osm = new OSChatMessage();
-                osm.From = "IRC Agent";
-                osm.Message = msg;
-                osm.Type = ChatTypeEnum.Region;
-                osm.Position = CenterOfRegion;
-                osm.Sender = null;
-                osm.SenderUUID = OpenMetaverse.UUID.Zero; // Hmph! Still?
-                osm.Channel = 0;
+                OSChatMessage osm = new OSChatMessage
+                {
+                    From = "IRC Agent",
+                    Message = msg,
+                    Type = ChatTypeEnum.Region,
+                    Position = CenterOfRegion,
+                    Sender = null,
+                    SenderUUID = OpenMetaverse.UUID.Zero, // Hmph! Still?
+                    Channel = 0
+                };
                 OSChat(this, osm);
             }
         }

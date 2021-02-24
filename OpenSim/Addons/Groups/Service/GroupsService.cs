@@ -113,8 +113,10 @@ namespace OpenSim.Groups
             : this(config, string.Empty)
         {
             // Once a day
-            m_CleanupTimer = new Timer(24 * 60 * 60 * 1000);
-            m_CleanupTimer.AutoReset = true;
+            m_CleanupTimer = new Timer(24 * 60 * 60 * 1000)
+            {
+                AutoReset = true
+            };
             m_CleanupTimer.Elapsed += new ElapsedEventHandler(m_CleanupTimer_Elapsed);
             m_CleanupTimer.Enabled = true;
             m_CleanupTimer.Start();
@@ -141,9 +143,11 @@ namespace OpenSim.Groups
             }
 
             // Create the group
-            GroupData data = new GroupData();
-            data.GroupID = UUID.Random();
-            data.Data = new Dictionary<string, string>();
+            GroupData data = new GroupData
+            {
+                GroupID = UUID.Random(),
+                Data = new Dictionary<string, string>()
+            };
             data.Data["Name"] = name;
             data.Data["Charter"] = charter;
             data.Data["InsigniaID"] = insigniaID.ToString();
@@ -461,12 +465,14 @@ namespace OpenSim.Groups
             if (invite != null)
                 m_Database.DeleteInvite(invite.InviteID);
 
-            invite = new InvitationData();
-            invite.InviteID = inviteID;
-            invite.PrincipalID = agentID;
-            invite.GroupID = groupID;
-            invite.RoleID = roleID;
-            invite.Data = new Dictionary<string, string>();
+            invite = new InvitationData
+            {
+                InviteID = inviteID,
+                PrincipalID = agentID,
+                GroupID = groupID,
+                RoleID = roleID,
+                Data = new Dictionary<string, string>()
+            };
 
             return m_Database.StoreInvitation(invite);
         }
@@ -478,11 +484,13 @@ namespace OpenSim.Groups
             if (data == null)
                 return null;
 
-            GroupInviteInfo inviteInfo = new GroupInviteInfo();
-            inviteInfo.AgentID = data.PrincipalID;
-            inviteInfo.GroupID = data.GroupID;
-            inviteInfo.InviteID = data.InviteID;
-            inviteInfo.RoleID = data.RoleID;
+            GroupInviteInfo inviteInfo = new GroupInviteInfo
+            {
+                AgentID = data.PrincipalID,
+                GroupID = data.GroupID,
+                InviteID = data.InviteID,
+                RoleID = data.RoleID
+            };
 
             return inviteInfo;
         }
@@ -595,11 +603,13 @@ namespace OpenSim.Groups
                 if (rdata == null) // hippos
                     continue;
 
-                GroupRolesData r = new GroupRolesData();
-                r.Name = rdata.Data["Name"];
-                r.Powers = ulong.Parse(rdata.Data["Powers"]);
-                r.RoleID = rdata.RoleID;
-                r.Title = rdata.Data["Title"];
+                GroupRolesData r = new GroupRolesData
+                {
+                    Name = rdata.Data["Name"],
+                    Powers = ulong.Parse(rdata.Data["Powers"]),
+                    RoleID = rdata.RoleID,
+                    Title = rdata.Data["Title"]
+                };
 
                 roles.Add(r);
             }
@@ -610,9 +620,11 @@ namespace OpenSim.Groups
         public ExtendedGroupMembershipData SetAgentActiveGroup(string RequestingAgentID, string AgentID, UUID GroupID)
         {
             // TODO: check perms
-            PrincipalData principal = new PrincipalData();
-            principal.PrincipalID = AgentID;
-            principal.ActiveGroupID = GroupID;
+            PrincipalData principal = new PrincipalData
+            {
+                PrincipalID = AgentID,
+                ActiveGroupID = GroupID
+            };
             m_Database.StorePrincipal(principal);
 
             return GetAgentGroupMembership(RequestingAgentID, AgentID, GroupID);
@@ -652,18 +664,20 @@ namespace OpenSim.Groups
             UUID activeRoleID = new UUID(membership.Data["SelectedRoleID"]);
             RoleData role = m_Database.RetrieveRole(group.GroupID, activeRoleID);
 
-            ExtendedGroupMembershipData data = new ExtendedGroupMembershipData();
-            data.AcceptNotices = membership.Data["AcceptNotices"] == "1" ? true : false;
-            data.AccessToken = membership.Data["AccessToken"];
-            data.Active = true;
-            data.ActiveRole = activeRoleID;
-            data.AllowPublish = group.Data["AllowPublish"] == "1" ? true : false;
-            data.Charter = group.Data["Charter"];
-            data.Contribution = int.Parse(membership.Data["Contribution"]);
-            data.FounderID = new UUID(group.Data["FounderID"]);
-            data.GroupID = new UUID(group.GroupID);
-            data.GroupName = group.Data["Name"];
-            data.GroupPicture = new UUID(group.Data["InsigniaID"]);
+            ExtendedGroupMembershipData data = new ExtendedGroupMembershipData
+            {
+                AcceptNotices = membership.Data["AcceptNotices"] == "1" ? true : false,
+                AccessToken = membership.Data["AccessToken"],
+                Active = true,
+                ActiveRole = activeRoleID,
+                AllowPublish = group.Data["AllowPublish"] == "1" ? true : false,
+                Charter = group.Data["Charter"],
+                Contribution = int.Parse(membership.Data["Contribution"]),
+                FounderID = new UUID(group.Data["FounderID"]),
+                GroupID = new UUID(group.GroupID),
+                GroupName = group.Data["Name"],
+                GroupPicture = new UUID(group.Data["InsigniaID"])
+            };
             if (role != null)
             {
                 data.GroupPowers = ulong.Parse(role.Data["Powers"]);
@@ -820,10 +834,12 @@ namespace OpenSim.Groups
                 return;
 
             // Add the membership
-            data = new MembershipData();
-            data.PrincipalID = AgentID;
-            data.GroupID = GroupID;
-            data.Data = new Dictionary<string, string>();
+            data = new MembershipData
+            {
+                PrincipalID = AgentID,
+                GroupID = GroupID,
+                Data = new Dictionary<string, string>()
+            };
             data.Data["SelectedRoleID"] = RoleID.ToString();
             data.Data["Contribution"] = "0";
             data.Data["ListInProfile"] = "1";
@@ -840,9 +856,11 @@ namespace OpenSim.Groups
                 _AddAgentToGroupRole(RequestingAgentID, AgentID, GroupID, RoleID);
 
             // Make this the active group
-            PrincipalData pdata = new PrincipalData();
-            pdata.PrincipalID = AgentID;
-            pdata.ActiveGroupID = GroupID;
+            PrincipalData pdata = new PrincipalData
+            {
+                PrincipalID = AgentID,
+                ActiveGroupID = GroupID
+            };
             m_Database.StorePrincipal(pdata);
 
         }
@@ -888,10 +906,12 @@ namespace OpenSim.Groups
             if (data != null)
                 return;
 
-            data = new RoleMembershipData();
-            data.GroupID = GroupID;
-            data.PrincipalID = AgentID;
-            data.RoleID = RoleID;
+            data = new RoleMembershipData
+            {
+                GroupID = GroupID,
+                PrincipalID = AgentID,
+                RoleID = RoleID
+            };
             m_Database.StoreRoleMember(data);
 
             // Make it the SelectedRoleID
@@ -918,13 +938,15 @@ namespace OpenSim.Groups
 
             foreach (RoleData d in data)
             {
-                GroupRolesData r = new GroupRolesData();
-                r.Description = d.Data["Description"];
-                r.Members = m_Database.RoleMemberCount(groupID, d.RoleID);
-                r.Name = d.Data["Name"];
-                r.Powers = ulong.Parse(d.Data["Powers"]);
-                r.RoleID = d.RoleID;
-                r.Title = d.Data["Title"];
+                GroupRolesData r = new GroupRolesData
+                {
+                    Description = d.Data["Description"],
+                    Members = m_Database.RoleMemberCount(groupID, d.RoleID),
+                    Name = d.Data["Name"],
+                    Powers = ulong.Parse(d.Data["Powers"]),
+                    RoleID = d.RoleID,
+                    Title = d.Data["Title"]
+                };
 
                 roles.Add(r);
             }
@@ -961,9 +983,11 @@ namespace OpenSim.Groups
                         continue;
                 }
 
-                ExtendedGroupRoleMembersData r = new ExtendedGroupRoleMembersData();
-                r.MemberID = d.PrincipalID;
-                r.RoleID = d.RoleID;
+                ExtendedGroupRoleMembersData r = new ExtendedGroupRoleMembersData
+                {
+                    MemberID = d.PrincipalID,
+                    RoleID = d.RoleID
+                };
 
                 rmembers.Add(r);
             }
@@ -974,10 +998,12 @@ namespace OpenSim.Groups
         protected bool _AddNotice(UUID groupID, UUID noticeID, string fromName, string subject, string message,
             bool hasAttachment, byte attType, string attName, UUID attItemID, string attOwnerID)
         {
-            NoticeData data = new NoticeData();
-            data.GroupID = groupID;
-            data.NoticeID = noticeID;
-            data.Data = new Dictionary<string, string>();
+            NoticeData data = new NoticeData
+            {
+                GroupID = groupID,
+                NoticeID = noticeID,
+                Data = new Dictionary<string, string>()
+            };
             data.Data["FromName"] = fromName;
             data.Data["Subject"] = subject;
             data.Data["Message"] = message;
@@ -1002,43 +1028,49 @@ namespace OpenSim.Groups
             if (data == null)
                 return null;
 
-            ExtendedGroupRecord rec = new ExtendedGroupRecord();
-            rec.AllowPublish = data.Data["AllowPublish"] == "1" ? true : false;
-            rec.Charter = data.Data["Charter"];
-            rec.FounderID = new UUID(data.Data["FounderID"]);
-            rec.GroupID = data.GroupID;
-            rec.GroupName = data.Data["Name"];
-            rec.GroupPicture = new UUID(data.Data["InsigniaID"]);
-            rec.MaturePublish = data.Data["MaturePublish"] == "1" ? true : false;
-            rec.MembershipFee = int.Parse(data.Data["MembershipFee"]);
-            rec.OpenEnrollment = data.Data["OpenEnrollment"] == "1" ? true : false;
-            rec.OwnerRoleID = new UUID(data.Data["OwnerRoleID"]);
-            rec.ShowInList = data.Data["ShowInList"] == "1" ? true : false;
-            rec.ServiceLocation = data.Data["Location"];
-            rec.MemberCount = m_Database.MemberCount(data.GroupID);
-            rec.RoleCount = m_Database.RoleCount(data.GroupID);
+            ExtendedGroupRecord rec = new ExtendedGroupRecord
+            {
+                AllowPublish = data.Data["AllowPublish"] == "1" ? true : false,
+                Charter = data.Data["Charter"],
+                FounderID = new UUID(data.Data["FounderID"]),
+                GroupID = data.GroupID,
+                GroupName = data.Data["Name"],
+                GroupPicture = new UUID(data.Data["InsigniaID"]),
+                MaturePublish = data.Data["MaturePublish"] == "1" ? true : false,
+                MembershipFee = int.Parse(data.Data["MembershipFee"]),
+                OpenEnrollment = data.Data["OpenEnrollment"] == "1" ? true : false,
+                OwnerRoleID = new UUID(data.Data["OwnerRoleID"]),
+                ShowInList = data.Data["ShowInList"] == "1" ? true : false,
+                ServiceLocation = data.Data["Location"],
+                MemberCount = m_Database.MemberCount(data.GroupID),
+                RoleCount = m_Database.RoleCount(data.GroupID)
+            };
 
             return rec;
         }
 
         GroupNoticeInfo _NoticeDataToInfo(NoticeData data)
         {
-            GroupNoticeInfo notice = new GroupNoticeInfo();
-            notice.GroupID = data.GroupID;
-            notice.Message = data.Data["Message"];
-            notice.noticeData = _NoticeDataToData(data);
+            GroupNoticeInfo notice = new GroupNoticeInfo
+            {
+                GroupID = data.GroupID,
+                Message = data.Data["Message"],
+                noticeData = _NoticeDataToData(data)
+            };
 
             return notice;
         }
 
         ExtendedGroupNoticeData _NoticeDataToData(NoticeData data)
         {
-            ExtendedGroupNoticeData notice = new ExtendedGroupNoticeData();
-            notice.FromName = data.Data["FromName"];
-            notice.NoticeID = data.NoticeID;
-            notice.Subject = data.Data["Subject"];
-            notice.Timestamp = uint.Parse((string)data.Data["TMStamp"]);
-            notice.HasAttachment = data.Data["HasAttachment"] == "1" ? true : false;
+            ExtendedGroupNoticeData notice = new ExtendedGroupNoticeData
+            {
+                FromName = data.Data["FromName"],
+                NoticeID = data.NoticeID,
+                Subject = data.Data["Subject"],
+                Timestamp = uint.Parse((string)data.Data["TMStamp"]),
+                HasAttachment = data.Data["HasAttachment"] == "1" ? true : false
+            };
             if (notice.HasAttachment)
             {
                 notice.AttachmentName = data.Data["AttachmentName"];

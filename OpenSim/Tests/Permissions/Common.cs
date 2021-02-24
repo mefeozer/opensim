@@ -274,23 +274,25 @@ namespace OpenSim.Tests.Permissions
 
         public InventoryItemBase CloneInventoryItem(InventoryItemBase item)
         {
-            InventoryItemBase clone = new InventoryItemBase(item.ID);
-            clone.Name = item.Name;
-            clone.Description = item.Description;
-            clone.AssetID = item.AssetID;
-            clone.AssetType = item.AssetType;
-            clone.BasePermissions = item.BasePermissions;
-            clone.CreatorId = item.CreatorId;
-            clone.CurrentPermissions = item.CurrentPermissions;
-            clone.EveryOnePermissions = item.EveryOnePermissions;
-            clone.Flags = item.Flags;
-            clone.Folder = item.Folder;
-            clone.GroupID = item.GroupID;
-            clone.GroupOwned = item.GroupOwned;
-            clone.GroupPermissions = item.GroupPermissions;
-            clone.InvType = item.InvType;
-            clone.NextPermissions = item.NextPermissions;
-            clone.Owner = item.Owner;
+            InventoryItemBase clone = new InventoryItemBase(item.ID)
+            {
+                Name = item.Name,
+                Description = item.Description,
+                AssetID = item.AssetID,
+                AssetType = item.AssetType,
+                BasePermissions = item.BasePermissions,
+                CreatorId = item.CreatorId,
+                CurrentPermissions = item.CurrentPermissions,
+                EveryOnePermissions = item.EveryOnePermissions,
+                Flags = item.Flags,
+                Folder = item.Folder,
+                GroupID = item.GroupID,
+                GroupOwned = item.GroupOwned,
+                GroupPermissions = item.GroupPermissions,
+                InvType = item.InvType,
+                NextPermissions = item.NextPermissions,
+                Owner = item.Owner
+            };
 
             return clone;
         }

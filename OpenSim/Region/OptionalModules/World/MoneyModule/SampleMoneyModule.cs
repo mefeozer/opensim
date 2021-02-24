@@ -507,8 +507,10 @@ namespace OpenSim.Region.OptionalModules.World.MoneyModule
             //quoteResponse.Add("success", false);
             //quoteResponse.Add("errorMessage", "There is currency");
             //quoteResponse.Add("errorURI", "http://opensimulator.org");
-            XmlRpcResponse returnval = new XmlRpcResponse();
-            returnval.Value = quoteResponse;
+            XmlRpcResponse returnval = new XmlRpcResponse
+            {
+                Value = quoteResponse
+            };
             return returnval;
         }
 

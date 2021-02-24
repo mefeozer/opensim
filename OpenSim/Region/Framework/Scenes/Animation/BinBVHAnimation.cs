@@ -162,21 +162,27 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             m_jointCount = 0;
 
             Joints = new binBVHJoint[1];
-            Joints[0] = new binBVHJoint();
-            Joints[0].Name = "mPelvis";
-            Joints[0].Priority = 7;
-            Joints[0].positionkeys = new binBVHJointKey[1];
-            Joints[0].rotationkeys = new binBVHJointKey[1];
+            Joints[0] = new binBVHJoint
+            {
+                Name = "mPelvis",
+                Priority = 7,
+                positionkeys = new binBVHJointKey[1],
+                rotationkeys = new binBVHJointKey[1]
+            };
             Random rnd = new Random();
 
-            Joints[0].rotationkeys[0] = new binBVHJointKey();
-            Joints[0].rotationkeys[0].time = 0f;
+            Joints[0].rotationkeys[0] = new binBVHJointKey
+            {
+                time = 0f
+            };
             Joints[0].rotationkeys[0].key_element.X = (float)rnd.NextDouble() * 2 - 1;
             Joints[0].rotationkeys[0].key_element.Y = (float)rnd.NextDouble() * 2 - 1;
             Joints[0].rotationkeys[0].key_element.Z = (float)rnd.NextDouble() * 2 - 1;
 
-            Joints[0].positionkeys[0] = new binBVHJointKey();
-            Joints[0].positionkeys[0].time = 0f;
+            Joints[0].positionkeys[0] = new binBVHJointKey
+            {
+                time = 0f
+            };
             Joints[0].positionkeys[0].key_element.X = (float)rnd.NextDouble() * 2 - 1;
             Joints[0].positionkeys[0].key_element.Y = (float)rnd.NextDouble() * 2 - 1;
             Joints[0].positionkeys[0].key_element.Z = (float)rnd.NextDouble() * 2 - 1;
@@ -298,19 +304,21 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             binBVHJointKey[] positions;
             binBVHJointKey[] rotations;
 
-            binBVHJoint pJoint = new binBVHJoint();
+            binBVHJoint pJoint = new binBVHJoint
+            {
 
-            /*
-                109
-                84
-                111
-                114
-                114
-                111
-                0 <--- Null terminator
-            */
+                /*
+                    109
+                    84
+                    111
+                    114
+                    114
+                    111
+                    0 <--- Null terminator
+                */
 
-            pJoint.Name = ReadBytesUntilNull(data, ref i); // Joint name
+                Name = ReadBytesUntilNull(data, ref i) // Joint name
+            };
 
             /*
                  2 <- Priority Revisited
@@ -408,8 +416,11 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             binBVHJointKey[] m_keys = new binBVHJointKey[keycount];
             for (int j = 0; j < keycount; j++)
             {
-                binBVHJointKey pJKey = new binBVHJointKey();
-                pJKey.time = Utils.BytesUInt16ToFloat(data, i, InPoint, OutPoint); i += 2;
+                binBVHJointKey pJKey = new binBVHJointKey
+                {
+                    time = Utils.BytesUInt16ToFloat(data, i, InPoint, OutPoint)
+                };
+                i += 2;
                 x = Utils.BytesUInt16ToFloat(data, i, min, max); i += 2;
                 y = Utils.BytesUInt16ToFloat(data, i, min, max); i += 2;
                 z = Utils.BytesUInt16ToFloat(data, i, min, max); i += 2;

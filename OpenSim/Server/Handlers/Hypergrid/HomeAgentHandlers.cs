@@ -90,11 +90,13 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (d is ExtendedAgentDestinationData)
             {
                 ExtendedAgentDestinationData data = (ExtendedAgentDestinationData)d;
-                GridRegion gatekeeper = new GridRegion();
-                gatekeeper.ServerURI = data.gatekeeperServerURI;
-                gatekeeper.ExternalHostName = data.host;
-                gatekeeper.HttpPort = (uint)data.port;
-                gatekeeper.InternalEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 0);
+                GridRegion gatekeeper = new GridRegion
+                {
+                    ServerURI = data.gatekeeperServerURI,
+                    ExternalHostName = data.host,
+                    HttpPort = (uint)data.port,
+                    InternalEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 0)
+                };
 
                 return gatekeeper;
             }

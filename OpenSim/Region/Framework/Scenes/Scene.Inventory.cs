@@ -687,18 +687,20 @@ namespace OpenSim.Region.Framework.Scenes
             }
 
             // Insert a copy of the item into the recipient
-            InventoryItemBase itemCopy = new InventoryItemBase();
-            itemCopy.Owner = recipient;
-            itemCopy.CreatorId = item.CreatorId;
-            itemCopy.CreatorData = item.CreatorData;
-            itemCopy.ID = UUID.Random();
-            itemCopy.AssetID = item.AssetID;
-            itemCopy.Description = item.Description;
-            itemCopy.Name = item.Name;
-            itemCopy.AssetType = item.AssetType;
-            itemCopy.InvType = item.InvType;
-            itemCopy.Folder = recipientFolderId;
-            itemCopy.Flags = item.Flags;
+            InventoryItemBase itemCopy = new InventoryItemBase
+            {
+                Owner = recipient,
+                CreatorId = item.CreatorId,
+                CreatorData = item.CreatorData,
+                ID = UUID.Random(),
+                AssetID = item.AssetID,
+                Description = item.Description,
+                Name = item.Name,
+                AssetType = item.AssetType,
+                InvType = item.InvType,
+                Folder = recipientFolderId,
+                Flags = item.Flags
+            };
 
             if (Permissions.PropagatePermissions() && recipient != senderId)
             {
@@ -1109,9 +1111,11 @@ namespace OpenSim.Region.Framework.Scenes
         /// </summary>
         public AssetBase CreateAsset(string name, string description, sbyte assetType, byte[] data, UUID creatorID)
         {
-            AssetBase asset = new AssetBase(UUID.Random(), name, assetType, creatorID.ToString());
-            asset.Description = description;
-            asset.Data = data == null ? new byte[1] : data;
+            AssetBase asset = new AssetBase(UUID.Random(), name, assetType, creatorID.ToString())
+            {
+                Description = description,
+                Data = data == null ? new byte[1] : data
+            };
 
             return asset;
         }
@@ -1176,24 +1180,26 @@ namespace OpenSim.Region.Framework.Scenes
             uint baseMask, uint currentMask, uint everyoneMask, uint nextOwnerMask, uint groupMask, int creationDate,
             bool assetUpload)
         {
-            InventoryItemBase item = new InventoryItemBase();
-            item.Owner = remoteClient.AgentId;
-            item.CreatorId = creatorID;
-            item.CreatorData = creatorData;
-            item.ID = UUID.Random();
-            item.AssetID = assetID;
-            item.Name = name;
-            item.Description = description;
-            item.Flags = flags;
-            item.AssetType = assetType;
-            item.InvType = invType;
-            item.Folder = folderID;
-            item.CurrentPermissions = currentMask;
-            item.NextPermissions = nextOwnerMask;
-            item.EveryOnePermissions = everyoneMask;
-            item.GroupPermissions = groupMask;
-            item.BasePermissions = baseMask;
-            item.CreationDate = creationDate;
+            InventoryItemBase item = new InventoryItemBase
+            {
+                Owner = remoteClient.AgentId,
+                CreatorId = creatorID,
+                CreatorData = creatorData,
+                ID = UUID.Random(),
+                AssetID = assetID,
+                Name = name,
+                Description = description,
+                Flags = flags,
+                AssetType = assetType,
+                InvType = invType,
+                Folder = folderID,
+                CurrentPermissions = currentMask,
+                NextPermissions = nextOwnerMask,
+                EveryOnePermissions = everyoneMask,
+                GroupPermissions = groupMask,
+                BasePermissions = baseMask,
+                CreationDate = creationDate
+            };
 
             // special AnimationSet case
             if (item.InvType == (int)CustomInventoryType.AnimationSet)
@@ -1400,18 +1406,19 @@ namespace OpenSim.Region.Framework.Scenes
                 return null;
             }
 
-            InventoryItemBase agentItem = new InventoryItemBase();
-
-            agentItem.ID = UUID.Random();
-            agentItem.CreatorId = taskItem.CreatorID.ToString();
-            agentItem.CreatorData = taskItem.CreatorData;
-            agentItem.Owner = destAgent;
-            agentItem.AssetID = taskItem.AssetID;
-            agentItem.Description = taskItem.Description;
-            agentItem.Name = taskItem.Name;
-            agentItem.AssetType = taskItem.Type;
-            agentItem.InvType = taskItem.InvType;
-            agentItem.Flags = taskItem.Flags;
+            InventoryItemBase agentItem = new InventoryItemBase
+            {
+                ID = UUID.Random(),
+                CreatorId = taskItem.CreatorID.ToString(),
+                CreatorData = taskItem.CreatorData,
+                Owner = destAgent,
+                AssetID = taskItem.AssetID,
+                Description = taskItem.Description,
+                Name = taskItem.Name,
+                AssetType = taskItem.Type,
+                InvType = taskItem.InvType,
+                Flags = taskItem.Flags
+            };
 
             // The code below isn't OK. It doesn't account for flags being changed
             // in the object inventory, so it will break when you do it. That
@@ -1619,23 +1626,24 @@ namespace OpenSim.Region.Framework.Scenes
             if(!Permissions.CanDoObjectInvToObjectInv(srcTaskItem, part, destPart))
                 return;
 
-            TaskInventoryItem destTaskItem = new TaskInventoryItem();
+            TaskInventoryItem destTaskItem = new TaskInventoryItem
+            {
+                ItemID = UUID.Random(),
+                CreatorID = srcTaskItem.CreatorID,
+                CreatorData = srcTaskItem.CreatorData,
+                AssetID = srcTaskItem.AssetID,
+                GroupID = destPart.GroupID,
+                OwnerID = destPart.OwnerID,
+                ParentID = destPart.UUID,
+                ParentPartID = destPart.UUID,
 
-            destTaskItem.ItemID = UUID.Random();
-            destTaskItem.CreatorID = srcTaskItem.CreatorID;
-            destTaskItem.CreatorData = srcTaskItem.CreatorData;
-            destTaskItem.AssetID = srcTaskItem.AssetID;
-            destTaskItem.GroupID = destPart.GroupID;
-            destTaskItem.OwnerID = destPart.OwnerID;
-            destTaskItem.ParentID = destPart.UUID;
-            destTaskItem.ParentPartID = destPart.UUID;
-
-            destTaskItem.BasePermissions = srcTaskItem.BasePermissions;
-            destTaskItem.EveryonePermissions = srcTaskItem.EveryonePermissions;
-            destTaskItem.GroupPermissions = srcTaskItem.GroupPermissions;
-            destTaskItem.CurrentPermissions = srcTaskItem.CurrentPermissions;
-            destTaskItem.NextPermissions = srcTaskItem.NextPermissions;
-            destTaskItem.Flags = srcTaskItem.Flags;
+                BasePermissions = srcTaskItem.BasePermissions,
+                EveryonePermissions = srcTaskItem.EveryonePermissions,
+                GroupPermissions = srcTaskItem.GroupPermissions,
+                CurrentPermissions = srcTaskItem.CurrentPermissions,
+                NextPermissions = srcTaskItem.NextPermissions,
+                Flags = srcTaskItem.Flags
+            };
 
             if (destPart.OwnerID != part.OwnerID)
             {
@@ -2194,23 +2202,24 @@ namespace OpenSim.Region.Framework.Scenes
                 return;
             }
 
-            TaskInventoryItem destTaskItem = new TaskInventoryItem();
+            TaskInventoryItem destTaskItem = new TaskInventoryItem
+            {
+                ItemID = UUID.Random(),
+                CreatorID = srcTaskItem.CreatorID,
+                CreatorData = srcTaskItem.CreatorData,
+                AssetID = srcTaskItem.AssetID,
+                GroupID = destPart.GroupID,
+                OwnerID = destPart.OwnerID,
+                ParentID = destPart.UUID,
+                ParentPartID = destPart.UUID,
 
-            destTaskItem.ItemID = UUID.Random();
-            destTaskItem.CreatorID = srcTaskItem.CreatorID;
-            destTaskItem.CreatorData = srcTaskItem.CreatorData;
-            destTaskItem.AssetID = srcTaskItem.AssetID;
-            destTaskItem.GroupID = destPart.GroupID;
-            destTaskItem.OwnerID = destPart.OwnerID;
-            destTaskItem.ParentID = destPart.UUID;
-            destTaskItem.ParentPartID = destPart.UUID;
-
-            destTaskItem.BasePermissions = srcTaskItem.BasePermissions;
-            destTaskItem.EveryonePermissions = srcTaskItem.EveryonePermissions;
-            destTaskItem.GroupPermissions = srcTaskItem.GroupPermissions;
-            destTaskItem.CurrentPermissions = srcTaskItem.CurrentPermissions;
-            destTaskItem.NextPermissions = srcTaskItem.NextPermissions;
-            destTaskItem.Flags = srcTaskItem.Flags;
+                BasePermissions = srcTaskItem.BasePermissions,
+                EveryonePermissions = srcTaskItem.EveryonePermissions,
+                GroupPermissions = srcTaskItem.GroupPermissions,
+                CurrentPermissions = srcTaskItem.CurrentPermissions,
+                NextPermissions = srcTaskItem.NextPermissions,
+                Flags = srcTaskItem.Flags
+            };
 
             if (destPart.OwnerID != srcPart.OwnerID)
             {
@@ -2430,16 +2439,18 @@ namespace OpenSim.Region.Framework.Scenes
                     remoteClient.AgentId);
                 AssetService.Store(asset);
 
-                InventoryItemBase item = new InventoryItemBase();
-                item.CreatorId = grp.RootPart.CreatorID.ToString();
-                item.CreatorData = grp.RootPart.CreatorData;
-                item.Owner = remoteClient.AgentId;
-                item.ID = UUID.Random();
-                item.AssetID = asset.FullID;
-                item.Description = asset.Description;
-                item.Name = asset.Name;
-                item.AssetType = asset.Type;
-                item.InvType = (int)InventoryType.Object;
+                InventoryItemBase item = new InventoryItemBase
+                {
+                    CreatorId = grp.RootPart.CreatorID.ToString(),
+                    CreatorData = grp.RootPart.CreatorData,
+                    Owner = remoteClient.AgentId,
+                    ID = UUID.Random(),
+                    AssetID = asset.FullID,
+                    Description = asset.Description,
+                    Name = asset.Name,
+                    AssetType = asset.Type,
+                    InvType = (int)InventoryType.Object
+                };
 
                 InventoryFolderBase folder = InventoryService.GetFolderForType(remoteClient.AgentId, FolderType.Object);
                 if (folder != null)

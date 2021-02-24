@@ -90,8 +90,10 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
         /// </summary>
         public DynamicTextureModule()
         {
-            m_reuseableDynamicTextures = new Cache(CacheMedium.Memory, CacheStrategy.Conservative);
-            m_reuseableDynamicTextures.DefaultTTL = new TimeSpan(24, 0, 0);
+            m_reuseableDynamicTextures = new Cache(CacheMedium.Memory, CacheStrategy.Conservative)
+            {
+                DefaultTTL = new TimeSpan(24, 0, 0)
+            };
         }
 
         #region IDynamicTextureManager Members
@@ -187,17 +189,19 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
         {
             if (RenderPlugins.ContainsKey(contentType))
             {
-                DynamicTextureUpdater updater = new DynamicTextureUpdater();
-                updater.SimUUID = simID;
-                updater.PrimID = primID;
-                updater.ContentType = contentType;
-                updater.Url = url;
-                updater.UpdaterID = UUID.Random();
-                updater.Params = extraParams;
-                updater.BlendWithOldTexture = SetBlending;
-                updater.FrontAlpha = AlphaValue;
-                updater.Face = face;
-                updater.Disp = disp;
+                DynamicTextureUpdater updater = new DynamicTextureUpdater
+                {
+                    SimUUID = simID,
+                    PrimID = primID,
+                    ContentType = contentType,
+                    Url = url,
+                    UpdaterID = UUID.Random(),
+                    Params = extraParams,
+                    BlendWithOldTexture = SetBlending,
+                    FrontAlpha = AlphaValue,
+                    Face = face,
+                    Disp = disp
+                };
 
                 lock (Updaters)
                 {
@@ -249,18 +253,20 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
             if (ReuseTextures)
                 disp = disp & ~DISP_EXPIRE;
 
-            DynamicTextureUpdater updater = new DynamicTextureUpdater();
-            updater.SimUUID = simID;
-            updater.PrimID = primID;
-            updater.ContentType = contentType;
-            updater.BodyData = data;
-            updater.UpdaterID = UUID.Random();
-            updater.Params = extraParams;
-            updater.BlendWithOldTexture = SetBlending;
-            updater.FrontAlpha = AlphaValue;
-            updater.Face = face;
-            updater.Url = "Local image";
-            updater.Disp = disp;
+            DynamicTextureUpdater updater = new DynamicTextureUpdater
+            {
+                SimUUID = simID,
+                PrimID = primID,
+                ContentType = contentType,
+                BodyData = data,
+                UpdaterID = UUID.Random(),
+                Params = extraParams,
+                BlendWithOldTexture = SetBlending,
+                FrontAlpha = AlphaValue,
+                Face = face,
+                Url = "Local image",
+                Disp = disp
+            };
 
             object objReusableTextureUUID = null;
 
@@ -342,8 +348,10 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
 
                 if (ReuseTextures)
                 {
-                    m_reuseableDynamicTextures = new Cache(CacheMedium.Memory, CacheStrategy.Conservative);
-                    m_reuseableDynamicTextures.DefaultTTL = new TimeSpan(24, 0, 0);
+                    m_reuseableDynamicTextures = new Cache(CacheMedium.Memory, CacheStrategy.Conservative)
+                    {
+                        DefaultTTL = new TimeSpan(24, 0, 0)
+                    };
                 }
             }
         }
@@ -523,9 +531,11 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                 AssetBase asset
                     = new AssetBase(
                         UUID.Random(), "DynamicImage" + Util.RandomClass.Next(1, 10000), (sbyte)AssetType.Texture,
-                        scene.RegionInfo.RegionID.ToString());
-                asset.Data = assetData;
-                asset.Description = string.Format("URL image : {0}", Url);
+                        scene.RegionInfo.RegionID.ToString())
+                    {
+                        Data = assetData,
+                        Description = string.Format("URL image : {0}", Url)
+                    };
                 if (asset.Description.Length > 128)
                     asset.Description = asset.Description.Substring(0, 128);
                 asset.Local = true;     // dynamic images aren't saved in the assets server

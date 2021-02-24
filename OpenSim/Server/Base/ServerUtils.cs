@@ -547,8 +547,10 @@ namespace OpenSim.Server.Base
             try
             {
                 XmlReaderSettings xset = new XmlReaderSettings() { IgnoreWhitespace = true, IgnoreComments = true, ConformanceLevel = ConformanceLevel.Fragment, CloseInput = true };
-                XmlParserContext xpc = new XmlParserContext(null, null, null, XmlSpace.None);
-                xpc.Encoding = Util.UTF8NoBomEncoding;
+                XmlParserContext xpc = new XmlParserContext(null, null, null, XmlSpace.None)
+                {
+                    Encoding = Util.UTF8NoBomEncoding
+                };
                 using (XmlReader xr = XmlReader.Create(new StringReader(data), xset, xpc))
                 {
                      if(!xr.ReadToFollowing("ServerResponse"))
@@ -570,8 +572,10 @@ namespace OpenSim.Server.Base
             try
             {
                 XmlReaderSettings xset = new XmlReaderSettings() { IgnoreWhitespace = true, IgnoreComments = true, ConformanceLevel = ConformanceLevel.Fragment, CloseInput = true };
-                XmlParserContext xpc = new XmlParserContext(null, null, null, XmlSpace.None);
-                xpc.Encoding = Util.UTF8NoBomEncoding;
+                XmlParserContext xpc = new XmlParserContext(null, null, null, XmlSpace.None)
+                {
+                    Encoding = Util.UTF8NoBomEncoding
+                };
                 using (XmlReader xr = XmlReader.Create(src, xset, xpc))
                 {
                     if (!xr.ReadToFollowing("ServerResponse"))

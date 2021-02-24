@@ -375,20 +375,22 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     }
 
                     // Create a New GridInstantMessageObject the the data
-                    GridInstantMessage gim = new GridInstantMessage();
-                    gim.fromAgentID = fromAgentID.Guid;
-                    gim.fromAgentName = fromAgentName;
-                    gim.fromGroup = fromGroup;
-                    gim.imSessionID = imSessionID.Guid;
-                    gim.RegionID = RegionID.Guid;
-                    gim.timestamp = timestamp;
-                    gim.toAgentID = toAgentID.Guid;
-                    gim.message = message;
-                    gim.dialog = dialog;
-                    gim.offline = offline;
-                    gim.ParentEstateID = ParentEstateID;
-                    gim.Position = Position;
-                    gim.binaryBucket = binaryBucket;
+                    GridInstantMessage gim = new GridInstantMessage
+                    {
+                        fromAgentID = fromAgentID.Guid,
+                        fromAgentName = fromAgentName,
+                        fromGroup = fromGroup,
+                        imSessionID = imSessionID.Guid,
+                        RegionID = RegionID.Guid,
+                        timestamp = timestamp,
+                        toAgentID = toAgentID.Guid,
+                        message = message,
+                        dialog = dialog,
+                        offline = offline,
+                        ParentEstateID = ParentEstateID,
+                        Position = Position,
+                        binaryBucket = binaryBucket
+                    };
 
                     // Trigger the Instant message in the scene.
                     foreach (Scene scene in m_Scenes)
@@ -450,9 +452,11 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
         {
             lock (pendingInstantMessages) {
                 if (numInstantMessageThreads >= 4) {
-                    GIM gim = new GIM();
-                    gim.im = im;
-                    gim.result = result;
+                    GIM gim = new GIM
+                    {
+                        im = im,
+                        result = result
+                    };
                     pendingInstantMessages.Enqueue(gim);
                 } else {
                     ++ numInstantMessageThreads;
@@ -512,8 +516,10 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             {
                 if (m_UserRegionMap.ContainsKey(toAgentID))
                 {
-                    upd = new PresenceInfo();
-                    upd.RegionID = m_UserRegionMap[toAgentID];
+                    upd = new PresenceInfo
+                    {
+                        RegionID = m_UserRegionMap[toAgentID]
+                    };
 
                     // We need to compare the current regionhandle with the previous region handle
                     // or the recursive loop will never end because it will never try to lookup the agent again

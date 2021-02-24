@@ -494,8 +494,10 @@ namespace OpenSim.Data.SQLite
                 DataRow[] rawsettings = regionsettings.Select(searchExp);
                 if (rawsettings.Length == 0)
                 {
-                    RegionSettings rs = new RegionSettings();
-                    rs.RegionUUID = regionUUID;
+                    RegionSettings rs = new RegionSettings
+                    {
+                        RegionUUID = regionUUID
+                    };
                     rs.OnSave += StoreRegionSettings;
 
                     StoreRegionSettings(rs);
@@ -523,10 +525,12 @@ namespace OpenSim.Data.SQLite
 
             foreach (DataRow spRow in spForRegion)
             {
-                SpawnPoint sp = new SpawnPoint();
-                sp.Pitch = (float)spRow["Pitch"];
-                sp.Yaw = (float)spRow["Yaw"];
-                sp.Distance = (float)spRow["Distance"];
+                SpawnPoint sp = new SpawnPoint
+                {
+                    Pitch = (float)spRow["Pitch"],
+                    Yaw = (float)spRow["Yaw"],
+                    Distance = (float)spRow["Distance"]
+                };
 
                 rs.AddSpawnPoint(sp);
             }
@@ -1602,86 +1606,88 @@ namespace OpenSim.Data.SQLite
             // interesting has to be done to actually get these values
             // back out.  Not enough time to figure it out yet.
 
-            SceneObjectPart prim = new SceneObjectPart();
-            prim.UUID = new UUID((string)row["UUID"]);
-            // explicit conversion of integers is required, which sort
-            // of sucks.  No idea if there is a shortcut here or not.
-            prim.CreationDate = Convert.ToInt32(row["CreationDate"]);
-            prim.Name = row["Name"] == DBNull.Value ? string.Empty : (string)row["Name"];
-            // various text fields
-            prim.Text = (string)row["Text"];
-            prim.Color = Color.FromArgb(Convert.ToInt32(row["ColorA"]),
+            SceneObjectPart prim = new SceneObjectPart
+            {
+                UUID = new UUID((string)row["UUID"]),
+                // explicit conversion of integers is required, which sort
+                // of sucks.  No idea if there is a shortcut here or not.
+                CreationDate = Convert.ToInt32(row["CreationDate"]),
+                Name = row["Name"] == DBNull.Value ? string.Empty : (string)row["Name"],
+                // various text fields
+                Text = (string)row["Text"],
+                Color = Color.FromArgb(Convert.ToInt32(row["ColorA"]),
                                         Convert.ToInt32(row["ColorR"]),
                                         Convert.ToInt32(row["ColorG"]),
-                                        Convert.ToInt32(row["ColorB"]));
-            prim.Description = (string)row["Description"];
-            prim.SitName = (string)row["SitName"];
-            prim.TouchName = (string)row["TouchName"];
-            // permissions
-            prim.Flags = (PrimFlags)Convert.ToUInt32(row["ObjectFlags"]);
-            prim.CreatorIdentification = (string)row["CreatorID"];
-            prim.OwnerID = new UUID((string)row["OwnerID"]);
-            prim.GroupID = new UUID((string)row["GroupID"]);
-            prim.LastOwnerID = new UUID((string)row["LastOwnerID"]);
-            prim.RezzerID = row["RezzerID"] == DBNull.Value ? UUID.Zero : new UUID((string)row["RezzerID"]);
-            prim.OwnerMask = Convert.ToUInt32(row["OwnerMask"]);
-            prim.NextOwnerMask = Convert.ToUInt32(row["NextOwnerMask"]);
-            prim.GroupMask = Convert.ToUInt32(row["GroupMask"]);
-            prim.EveryoneMask = Convert.ToUInt32(row["EveryoneMask"]);
-            prim.BaseMask = Convert.ToUInt32(row["BaseMask"]);
-            // vectors
-            prim.OffsetPosition = new Vector3(
+                                        Convert.ToInt32(row["ColorB"])),
+                Description = (string)row["Description"],
+                SitName = (string)row["SitName"],
+                TouchName = (string)row["TouchName"],
+                // permissions
+                Flags = (PrimFlags)Convert.ToUInt32(row["ObjectFlags"]),
+                CreatorIdentification = (string)row["CreatorID"],
+                OwnerID = new UUID((string)row["OwnerID"]),
+                GroupID = new UUID((string)row["GroupID"]),
+                LastOwnerID = new UUID((string)row["LastOwnerID"]),
+                RezzerID = row["RezzerID"] == DBNull.Value ? UUID.Zero : new UUID((string)row["RezzerID"]),
+                OwnerMask = Convert.ToUInt32(row["OwnerMask"]),
+                NextOwnerMask = Convert.ToUInt32(row["NextOwnerMask"]),
+                GroupMask = Convert.ToUInt32(row["GroupMask"]),
+                EveryoneMask = Convert.ToUInt32(row["EveryoneMask"]),
+                BaseMask = Convert.ToUInt32(row["BaseMask"]),
+                // vectors
+                OffsetPosition = new Vector3(
                 Convert.ToSingle(row["PositionX"]),
                 Convert.ToSingle(row["PositionY"]),
                 Convert.ToSingle(row["PositionZ"])
-                );
-            prim.GroupPosition = new Vector3(
+                ),
+                GroupPosition = new Vector3(
                 Convert.ToSingle(row["GroupPositionX"]),
                 Convert.ToSingle(row["GroupPositionY"]),
                 Convert.ToSingle(row["GroupPositionZ"])
-                );
-            prim.Velocity = new Vector3(
+                ),
+                Velocity = new Vector3(
                 Convert.ToSingle(row["VelocityX"]),
                 Convert.ToSingle(row["VelocityY"]),
                 Convert.ToSingle(row["VelocityZ"])
-                );
-            prim.AngularVelocity = new Vector3(
+                ),
+                AngularVelocity = new Vector3(
                 Convert.ToSingle(row["AngularVelocityX"]),
                 Convert.ToSingle(row["AngularVelocityY"]),
                 Convert.ToSingle(row["AngularVelocityZ"])
-                );
-            prim.Acceleration = new Vector3(
+                ),
+                Acceleration = new Vector3(
                 Convert.ToSingle(row["AccelerationX"]),
                 Convert.ToSingle(row["AccelerationY"]),
                 Convert.ToSingle(row["AccelerationZ"])
-                );
-            // quaternions
-            prim.RotationOffset = new Quaternion(
+                ),
+                // quaternions
+                RotationOffset = new Quaternion(
                 Convert.ToSingle(row["RotationX"]),
                 Convert.ToSingle(row["RotationY"]),
                 Convert.ToSingle(row["RotationZ"]),
                 Convert.ToSingle(row["RotationW"])
-                );
+                ),
 
-            prim.SitTargetPositionLL = new Vector3(
+                SitTargetPositionLL = new Vector3(
                                                    Convert.ToSingle(row["SitTargetOffsetX"]),
                                                    Convert.ToSingle(row["SitTargetOffsetY"]),
-                                                   Convert.ToSingle(row["SitTargetOffsetZ"]));
-            prim.SitTargetOrientationLL = new Quaternion(
+                                                   Convert.ToSingle(row["SitTargetOffsetZ"])),
+                SitTargetOrientationLL = new Quaternion(
                                                          Convert.ToSingle(row["SitTargetOrientX"]),
                                                          Convert.ToSingle(row["SitTargetOrientY"]),
                                                          Convert.ToSingle(row["SitTargetOrientZ"]),
-                                                         Convert.ToSingle(row["SitTargetOrientW"]));
+                                                         Convert.ToSingle(row["SitTargetOrientW"])),
 
-            prim.StandOffset = new Vector3(
+                StandOffset = new Vector3(
                             Convert.ToSingle(row["standtargetx"]),
                             Convert.ToSingle(row["standtargety"]),
                             Convert.ToSingle(row["standtargetz"])
-                            );
+                            ),
 
-            prim.SitActiveRange = Convert.ToSingle(row["sitactrange"]);
+                SitActiveRange = Convert.ToSingle(row["sitactrange"]),
 
-            prim.ClickAction = Convert.ToByte(row["ClickAction"]);
+                ClickAction = Convert.ToByte(row["ClickAction"])
+            };
             prim.PayPrice[0] = Convert.ToInt32(row["PayPrice"]);
             prim.PayPrice[1] = Convert.ToInt32(row["PayButton1"]);
             prim.PayPrice[2] = Convert.ToInt32(row["PayButton2"]);
@@ -1807,30 +1813,31 @@ namespace OpenSim.Data.SQLite
         /// <returns></returns>
         private static TaskInventoryItem buildItem(DataRow row)
         {
-            TaskInventoryItem taskItem = new TaskInventoryItem();
+            TaskInventoryItem taskItem = new TaskInventoryItem
+            {
+                ItemID = new UUID((string)row["itemID"]),
+                ParentPartID = new UUID((string)row["primID"]),
+                AssetID = new UUID((string)row["assetID"]),
+                ParentID = new UUID((string)row["parentFolderID"]),
 
-            taskItem.ItemID = new UUID((string)row["itemID"]);
-            taskItem.ParentPartID = new UUID((string)row["primID"]);
-            taskItem.AssetID = new UUID((string)row["assetID"]);
-            taskItem.ParentID = new UUID((string)row["parentFolderID"]);
+                InvType = Convert.ToInt32(row["invType"]),
+                Type = Convert.ToInt32(row["assetType"]),
 
-            taskItem.InvType = Convert.ToInt32(row["invType"]);
-            taskItem.Type = Convert.ToInt32(row["assetType"]);
+                Name = (string)row["name"],
+                Description = (string)row["description"],
+                CreationDate = Convert.ToUInt32(row["creationDate"]),
+                CreatorIdentification = (string)row["creatorID"],
+                OwnerID = new UUID((string)row["ownerID"]),
+                LastOwnerID = new UUID((string)row["lastOwnerID"]),
+                GroupID = new UUID((string)row["groupID"]),
 
-            taskItem.Name = (string)row["name"];
-            taskItem.Description = (string)row["description"];
-            taskItem.CreationDate = Convert.ToUInt32(row["creationDate"]);
-            taskItem.CreatorIdentification = (string)row["creatorID"];
-            taskItem.OwnerID = new UUID((string)row["ownerID"]);
-            taskItem.LastOwnerID = new UUID((string)row["lastOwnerID"]);
-            taskItem.GroupID = new UUID((string)row["groupID"]);
-
-            taskItem.NextPermissions = Convert.ToUInt32(row["nextPermissions"]);
-            taskItem.CurrentPermissions = Convert.ToUInt32(row["currentPermissions"]);
-            taskItem.BasePermissions = Convert.ToUInt32(row["basePermissions"]);
-            taskItem.EveryonePermissions = Convert.ToUInt32(row["everyonePermissions"]);
-            taskItem.GroupPermissions = Convert.ToUInt32(row["groupPermissions"]);
-            taskItem.Flags = Convert.ToUInt32(row["flags"]);
+                NextPermissions = Convert.ToUInt32(row["nextPermissions"]),
+                CurrentPermissions = Convert.ToUInt32(row["currentPermissions"]),
+                BasePermissions = Convert.ToUInt32(row["basePermissions"]),
+                EveryonePermissions = Convert.ToUInt32(row["everyonePermissions"]),
+                GroupPermissions = Convert.ToUInt32(row["groupPermissions"]),
+                Flags = Convert.ToUInt32(row["flags"])
+            };
 
             return taskItem;
         }
@@ -1842,48 +1849,49 @@ namespace OpenSim.Data.SQLite
         /// <returns></returns>
         private LandData buildLandData(DataRow row)
         {
-            LandData newData = new LandData();
+            LandData newData = new LandData
+            {
+                GlobalID = new UUID((string)row["UUID"]),
+                LocalID = Convert.ToInt32(row["LocalLandID"]),
 
-            newData.GlobalID = new UUID((string)row["UUID"]);
-            newData.LocalID = Convert.ToInt32(row["LocalLandID"]);
+                // Bitmap is a byte[512]
+                Bitmap = (byte[])row["Bitmap"],
 
-            // Bitmap is a byte[512]
-            newData.Bitmap = (byte[])row["Bitmap"];
-
-            newData.Name = (string)row["Name"];
-            newData.Description = (string)row["Desc"];
-            newData.OwnerID = (UUID)(string)row["OwnerUUID"];
-            newData.IsGroupOwned = Convert.ToBoolean(row["IsGroupOwned"]);
-            newData.Area = Convert.ToInt32(row["Area"]);
-            newData.AuctionID = Convert.ToUInt32(row["AuctionID"]); //Unemplemented
-            newData.Category = (ParcelCategory)Convert.ToInt32(row["Category"]);
-            //Enum OpenMetaverse.Parcel.ParcelCategory
-            newData.ClaimDate = Convert.ToInt32(row["ClaimDate"]);
-            newData.ClaimPrice = Convert.ToInt32(row["ClaimPrice"]);
-            newData.GroupID = new UUID((string)row["GroupUUID"]);
-            newData.SalePrice = Convert.ToInt32(row["SalePrice"]);
-            newData.Status = (ParcelStatus)Convert.ToInt32(row["LandStatus"]);
-            //Enum. OpenMetaverse.Parcel.ParcelStatus
-            newData.Flags = Convert.ToUInt32(row["LandFlags"]);
-            newData.LandingType = (byte)row["LandingType"];
-            newData.MediaAutoScale = (byte)row["MediaAutoScale"];
-            newData.MediaID = new UUID((string)row["MediaTextureUUID"]);
-            newData.MediaURL = (string)row["MediaURL"];
-            newData.MusicURL = (string)row["MusicURL"];
-            newData.PassHours = Convert.ToSingle(row["PassHours"]);
-            newData.PassPrice = Convert.ToInt32(row["PassPrice"]);
-            newData.SnapshotID = (UUID)(string)row["SnapshotUUID"];
-            newData.Dwell = Convert.ToInt32(row["Dwell"]);
-            newData.MediaType = (string)row["MediaType"];
-            newData.MediaDescription = (string)row["MediaDescription"];
-            newData.MediaWidth = Convert.ToInt32(((string)row["MediaSize"]).Split(',')[0]);
-            newData.MediaHeight = Convert.ToInt32(((string)row["MediaSize"]).Split(',')[1]);
-            newData.MediaLoop = Convert.ToBoolean(row["MediaLoop"]);
-            newData.ObscureMedia = Convert.ToBoolean(row["ObscureMedia"]);
-            newData.ObscureMusic = Convert.ToBoolean(row["ObscureMusic"]);
-            newData.SeeAVs = Convert.ToBoolean(row["SeeAVs"]);
-            newData.AnyAVSounds = Convert.ToBoolean(row["AnyAVSounds"]);
-            newData.GroupAVSounds = Convert.ToBoolean(row["GroupAVSounds"]);
+                Name = (string)row["Name"],
+                Description = (string)row["Desc"],
+                OwnerID = (UUID)(string)row["OwnerUUID"],
+                IsGroupOwned = Convert.ToBoolean(row["IsGroupOwned"]),
+                Area = Convert.ToInt32(row["Area"]),
+                AuctionID = Convert.ToUInt32(row["AuctionID"]), //Unemplemented
+                Category = (ParcelCategory)Convert.ToInt32(row["Category"]),
+                //Enum OpenMetaverse.Parcel.ParcelCategory
+                ClaimDate = Convert.ToInt32(row["ClaimDate"]),
+                ClaimPrice = Convert.ToInt32(row["ClaimPrice"]),
+                GroupID = new UUID((string)row["GroupUUID"]),
+                SalePrice = Convert.ToInt32(row["SalePrice"]),
+                Status = (ParcelStatus)Convert.ToInt32(row["LandStatus"]),
+                //Enum. OpenMetaverse.Parcel.ParcelStatus
+                Flags = Convert.ToUInt32(row["LandFlags"]),
+                LandingType = (byte)row["LandingType"],
+                MediaAutoScale = (byte)row["MediaAutoScale"],
+                MediaID = new UUID((string)row["MediaTextureUUID"]),
+                MediaURL = (string)row["MediaURL"],
+                MusicURL = (string)row["MusicURL"],
+                PassHours = Convert.ToSingle(row["PassHours"]),
+                PassPrice = Convert.ToInt32(row["PassPrice"]),
+                SnapshotID = (UUID)(string)row["SnapshotUUID"],
+                Dwell = Convert.ToInt32(row["Dwell"]),
+                MediaType = (string)row["MediaType"],
+                MediaDescription = (string)row["MediaDescription"],
+                MediaWidth = Convert.ToInt32(((string)row["MediaSize"]).Split(',')[0]),
+                MediaHeight = Convert.ToInt32(((string)row["MediaSize"]).Split(',')[1]),
+                MediaLoop = Convert.ToBoolean(row["MediaLoop"]),
+                ObscureMedia = Convert.ToBoolean(row["ObscureMedia"]),
+                ObscureMusic = Convert.ToBoolean(row["ObscureMusic"]),
+                SeeAVs = Convert.ToBoolean(row["SeeAVs"]),
+                AnyAVSounds = Convert.ToBoolean(row["AnyAVSounds"]),
+                GroupAVSounds = Convert.ToBoolean(row["GroupAVSounds"])
+            };
 
             try
             {
@@ -1943,53 +1951,54 @@ namespace OpenSim.Data.SQLite
 
         private RegionSettings buildRegionSettings(DataRow row)
         {
-            RegionSettings newSettings = new RegionSettings();
-
-            newSettings.RegionUUID = new UUID((string)row["regionUUID"]);
-            newSettings.BlockTerraform = Convert.ToBoolean(row["block_terraform"]);
-            newSettings.AllowDamage = Convert.ToBoolean(row["allow_damage"]);
-            newSettings.BlockFly = Convert.ToBoolean(row["block_fly"]);
-            newSettings.RestrictPushing = Convert.ToBoolean(row["restrict_pushing"]);
-            newSettings.AllowLandResell = Convert.ToBoolean(row["allow_land_resell"]);
-            newSettings.AllowLandJoinDivide = Convert.ToBoolean(row["allow_land_join_divide"]);
-            newSettings.BlockShowInSearch = Convert.ToBoolean(row["block_show_in_search"]);
-            newSettings.AgentLimit = Convert.ToInt32(row["agent_limit"]);
-            newSettings.ObjectBonus = Convert.ToDouble(row["object_bonus"]);
-            newSettings.Maturity = Convert.ToInt32(row["maturity"]);
-            newSettings.DisableScripts = Convert.ToBoolean(row["disable_scripts"]);
-            newSettings.DisableCollisions = Convert.ToBoolean(row["disable_collisions"]);
-            newSettings.DisablePhysics = Convert.ToBoolean(row["disable_physics"]);
-            newSettings.TerrainTexture1 = new UUID((string)row["terrain_texture_1"]);
-            newSettings.TerrainTexture2 = new UUID((string)row["terrain_texture_2"]);
-            newSettings.TerrainTexture3 = new UUID((string)row["terrain_texture_3"]);
-            newSettings.TerrainTexture4 = new UUID((string)row["terrain_texture_4"]);
-            newSettings.Elevation1NW = Convert.ToDouble(row["elevation_1_nw"]);
-            newSettings.Elevation2NW = Convert.ToDouble(row["elevation_2_nw"]);
-            newSettings.Elevation1NE = Convert.ToDouble(row["elevation_1_ne"]);
-            newSettings.Elevation2NE = Convert.ToDouble(row["elevation_2_ne"]);
-            newSettings.Elevation1SE = Convert.ToDouble(row["elevation_1_se"]);
-            newSettings.Elevation2SE = Convert.ToDouble(row["elevation_2_se"]);
-            newSettings.Elevation1SW = Convert.ToDouble(row["elevation_1_sw"]);
-            newSettings.Elevation2SW = Convert.ToDouble(row["elevation_2_sw"]);
-            newSettings.WaterHeight = Convert.ToDouble(row["water_height"]);
-            newSettings.TerrainRaiseLimit = Convert.ToDouble(row["terrain_raise_limit"]);
-            newSettings.TerrainLowerLimit = Convert.ToDouble(row["terrain_lower_limit"]);
-            newSettings.UseEstateSun = Convert.ToBoolean(row["use_estate_sun"]);
-            newSettings.Sandbox = Convert.ToBoolean(row["sandbox"]);
-            newSettings.SunVector = new Vector3(
+            RegionSettings newSettings = new RegionSettings
+            {
+                RegionUUID = new UUID((string)row["regionUUID"]),
+                BlockTerraform = Convert.ToBoolean(row["block_terraform"]),
+                AllowDamage = Convert.ToBoolean(row["allow_damage"]),
+                BlockFly = Convert.ToBoolean(row["block_fly"]),
+                RestrictPushing = Convert.ToBoolean(row["restrict_pushing"]),
+                AllowLandResell = Convert.ToBoolean(row["allow_land_resell"]),
+                AllowLandJoinDivide = Convert.ToBoolean(row["allow_land_join_divide"]),
+                BlockShowInSearch = Convert.ToBoolean(row["block_show_in_search"]),
+                AgentLimit = Convert.ToInt32(row["agent_limit"]),
+                ObjectBonus = Convert.ToDouble(row["object_bonus"]),
+                Maturity = Convert.ToInt32(row["maturity"]),
+                DisableScripts = Convert.ToBoolean(row["disable_scripts"]),
+                DisableCollisions = Convert.ToBoolean(row["disable_collisions"]),
+                DisablePhysics = Convert.ToBoolean(row["disable_physics"]),
+                TerrainTexture1 = new UUID((string)row["terrain_texture_1"]),
+                TerrainTexture2 = new UUID((string)row["terrain_texture_2"]),
+                TerrainTexture3 = new UUID((string)row["terrain_texture_3"]),
+                TerrainTexture4 = new UUID((string)row["terrain_texture_4"]),
+                Elevation1NW = Convert.ToDouble(row["elevation_1_nw"]),
+                Elevation2NW = Convert.ToDouble(row["elevation_2_nw"]),
+                Elevation1NE = Convert.ToDouble(row["elevation_1_ne"]),
+                Elevation2NE = Convert.ToDouble(row["elevation_2_ne"]),
+                Elevation1SE = Convert.ToDouble(row["elevation_1_se"]),
+                Elevation2SE = Convert.ToDouble(row["elevation_2_se"]),
+                Elevation1SW = Convert.ToDouble(row["elevation_1_sw"]),
+                Elevation2SW = Convert.ToDouble(row["elevation_2_sw"]),
+                WaterHeight = Convert.ToDouble(row["water_height"]),
+                TerrainRaiseLimit = Convert.ToDouble(row["terrain_raise_limit"]),
+                TerrainLowerLimit = Convert.ToDouble(row["terrain_lower_limit"]),
+                UseEstateSun = Convert.ToBoolean(row["use_estate_sun"]),
+                Sandbox = Convert.ToBoolean(row["sandbox"]),
+                SunVector = new Vector3(
                                      Convert.ToSingle(row["sunvectorx"]),
                                      Convert.ToSingle(row["sunvectory"]),
                                      Convert.ToSingle(row["sunvectorz"])
-                                     );
-            newSettings.FixedSun = Convert.ToBoolean(row["fixed_sun"]);
-            newSettings.SunPosition = Convert.ToDouble(row["sun_position"]);
-            newSettings.Covenant = new UUID((string)row["covenant"]);
-            newSettings.CovenantChangedDateTime = Convert.ToInt32(row["covenant_datetime"]);
-            newSettings.TerrainImageID = new UUID((string)row["map_tile_ID"]);
-            newSettings.TelehubObject = new UUID((string)row["TelehubObject"]);
-            newSettings.ParcelImageID = new UUID((string)row["parcel_tile_ID"]);
-            newSettings.GodBlockSearch = Convert.ToBoolean(row["block_search"]);
-            newSettings.Casino = Convert.ToBoolean(row["casino"]);
+                                     ),
+                FixedSun = Convert.ToBoolean(row["fixed_sun"]),
+                SunPosition = Convert.ToDouble(row["sun_position"]),
+                Covenant = new UUID((string)row["covenant"]),
+                CovenantChangedDateTime = Convert.ToInt32(row["covenant_datetime"]),
+                TerrainImageID = new UUID((string)row["map_tile_ID"]),
+                TelehubObject = new UUID((string)row["TelehubObject"]),
+                ParcelImageID = new UUID((string)row["parcel_tile_ID"]),
+                GodBlockSearch = Convert.ToBoolean(row["block_search"]),
+                Casino = Convert.ToBoolean(row["casino"])
+            };
             if (!(row["cacheID"] is System.DBNull))
                 newSettings.CacheID = new UUID((string)row["cacheID"]);
 
@@ -2003,10 +2012,12 @@ namespace OpenSim.Data.SQLite
         /// <returns></returns>
         private static LandAccessEntry buildLandAccessData(DataRow row)
         {
-            LandAccessEntry entry = new LandAccessEntry();
-            entry.AgentID = new UUID((string)row["AccessUUID"]);
-            entry.Flags = (AccessList)row["Flags"];
-            entry.Expires = 0;
+            LandAccessEntry entry = new LandAccessEntry
+            {
+                AgentID = new UUID((string)row["AccessUUID"]),
+                Flags = (AccessList)row["Flags"],
+                Expires = 0
+            };
             return entry;
         }
 
@@ -2356,35 +2367,37 @@ namespace OpenSim.Data.SQLite
         /// <returns></returns>
         private PrimitiveBaseShape buildShape(DataRow row)
         {
-            PrimitiveBaseShape s = new PrimitiveBaseShape();
-            s.Scale = new Vector3(
+            PrimitiveBaseShape s = new PrimitiveBaseShape
+            {
+                Scale = new Vector3(
                 Convert.ToSingle(row["ScaleX"]),
                 Convert.ToSingle(row["ScaleY"]),
                 Convert.ToSingle(row["ScaleZ"])
-                );
-            // paths
-            s.PCode = Convert.ToByte(row["PCode"]);
-            s.PathBegin = Convert.ToUInt16(row["PathBegin"]);
-            s.PathEnd = Convert.ToUInt16(row["PathEnd"]);
-            s.PathScaleX = Convert.ToByte(row["PathScaleX"]);
-            s.PathScaleY = Convert.ToByte(row["PathScaleY"]);
-            s.PathShearX = Convert.ToByte(row["PathShearX"]);
-            s.PathShearY = Convert.ToByte(row["PathShearY"]);
-            s.PathSkew = Convert.ToSByte(row["PathSkew"]);
-            s.PathCurve = Convert.ToByte(row["PathCurve"]);
-            s.PathRadiusOffset = Convert.ToSByte(row["PathRadiusOffset"]);
-            s.PathRevolutions = Convert.ToByte(row["PathRevolutions"]);
-            s.PathTaperX = Convert.ToSByte(row["PathTaperX"]);
-            s.PathTaperY = Convert.ToSByte(row["PathTaperY"]);
-            s.PathTwist = Convert.ToSByte(row["PathTwist"]);
-            s.PathTwistBegin = Convert.ToSByte(row["PathTwistBegin"]);
-            // profile
-            s.ProfileBegin = Convert.ToUInt16(row["ProfileBegin"]);
-            s.ProfileEnd = Convert.ToUInt16(row["ProfileEnd"]);
-            s.ProfileCurve = Convert.ToByte(row["ProfileCurve"]);
-            s.ProfileHollow = Convert.ToUInt16(row["ProfileHollow"]);
-            s.State = Convert.ToByte(row["State"]);
-            s.LastAttachPoint = Convert.ToByte(row["LastAttachPoint"]);
+                ),
+                // paths
+                PCode = Convert.ToByte(row["PCode"]),
+                PathBegin = Convert.ToUInt16(row["PathBegin"]),
+                PathEnd = Convert.ToUInt16(row["PathEnd"]),
+                PathScaleX = Convert.ToByte(row["PathScaleX"]),
+                PathScaleY = Convert.ToByte(row["PathScaleY"]),
+                PathShearX = Convert.ToByte(row["PathShearX"]),
+                PathShearY = Convert.ToByte(row["PathShearY"]),
+                PathSkew = Convert.ToSByte(row["PathSkew"]),
+                PathCurve = Convert.ToByte(row["PathCurve"]),
+                PathRadiusOffset = Convert.ToSByte(row["PathRadiusOffset"]),
+                PathRevolutions = Convert.ToByte(row["PathRevolutions"]),
+                PathTaperX = Convert.ToSByte(row["PathTaperX"]),
+                PathTaperY = Convert.ToSByte(row["PathTaperY"]),
+                PathTwist = Convert.ToSByte(row["PathTwist"]),
+                PathTwistBegin = Convert.ToSByte(row["PathTwistBegin"]),
+                // profile
+                ProfileBegin = Convert.ToUInt16(row["ProfileBegin"]),
+                ProfileEnd = Convert.ToUInt16(row["ProfileEnd"]),
+                ProfileCurve = Convert.ToByte(row["ProfileCurve"]),
+                ProfileHollow = Convert.ToUInt16(row["ProfileHollow"]),
+                State = Convert.ToByte(row["State"]),
+                LastAttachPoint = Convert.ToByte(row["LastAttachPoint"])
+            };
 
             byte[] textureEntry = (byte[])row["Texture"];
             s.TextureEntry = textureEntry;
@@ -2681,11 +2694,13 @@ namespace OpenSim.Data.SQLite
         ///<returns>a built sqlite parameter</returns>
         private static SqliteParameter createSqliteParameter(string name, Type type)
         {
-            SqliteParameter param = new SqliteParameter();
-            param.ParameterName = ":" + name;
-            param.DbType = dbtypeFromType(type);
-            param.SourceColumn = name;
-            param.SourceVersion = DataRowVersion.Current;
+            SqliteParameter param = new SqliteParameter
+            {
+                ParameterName = ":" + name,
+                DbType = dbtypeFromType(type),
+                SourceColumn = name,
+                SourceVersion = DataRowVersion.Current
+            };
             return param;
         }
 

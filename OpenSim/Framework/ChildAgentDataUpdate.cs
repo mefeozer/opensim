@@ -232,8 +232,10 @@ namespace OpenSim.Framework
             SessionID = sid;
 
             // next: ???
-            Size = new Vector3();
-            Size.Z = cAgent.AVHeight;
+            Size = new Vector3
+            {
+                Z = cAgent.AVHeight
+            };
 
             Center = cAgent.cameraPosition;
             Far = cAgent.drawdistance;

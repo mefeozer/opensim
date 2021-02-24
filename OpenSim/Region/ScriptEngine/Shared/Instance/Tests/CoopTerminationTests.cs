@@ -70,9 +70,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance.Tests
             m_stoppedEvent = new AutoResetEvent(false);
 
             //AppDomain.CurrentDomain.SetData("APPBASE", Environment.CurrentDirectory + "/bin");
-//            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
-            m_xEngine = new OpenSim.Region.ScriptEngine.XEngine.XEngine();
-            m_xEngine.DebugLevel = 1;
+            //            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
+            m_xEngine = new OpenSim.Region.ScriptEngine.XEngine.XEngine
+            {
+                DebugLevel = 1
+            };
 
             IniConfigSource configSource = new IniConfigSource();
 
@@ -422,11 +424,13 @@ default
                 = SceneHelpers.CreateSceneObject(1, userId, string.Format("Object for {0}", itemName), 0x100);
             m_scene.AddNewSceneObject(so, true);
 
-            InventoryItemBase itemTemplate = new InventoryItemBase();
-//            itemTemplate.ID = itemId;
-            itemTemplate.Name = itemName;
-            itemTemplate.Folder = so.UUID;
-            itemTemplate.InvType = (int)InventoryType.LSL;
+            InventoryItemBase itemTemplate = new InventoryItemBase
+            {
+                //            itemTemplate.ID = itemId;
+                Name = itemName,
+                Folder = so.UUID,
+                InvType = (int)InventoryType.LSL
+            };
 
             m_scene.EventManager.OnChatFromWorld += OnChatFromWorld;
 

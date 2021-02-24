@@ -128,8 +128,10 @@ namespace OpenSim.Server.Handlers.Login
                     LoginResponse reply = null;
                     reply = m_LocalService.Login(first, last, passwd, startLocation, scopeID, clientVersion, channel, mac, id0, remoteClient);
 
-                    XmlRpcResponse response = new XmlRpcResponse();
-                    response.Value = reply.ToHashtable();
+                    XmlRpcResponse response = new XmlRpcResponse
+                    {
+                        Value = reply.ToHashtable()
+                    };
                     return response;
 
                 }
@@ -170,8 +172,10 @@ namespace OpenSim.Server.Handlers.Login
 
                     Hashtable reply = m_LocalService.SetLevel(first, last, passwd, level, remoteClient);
 
-                    XmlRpcResponse response = new XmlRpcResponse();
-                    response.Value = reply;
+                    XmlRpcResponse response = new XmlRpcResponse
+                    {
+                        Value = reply
+                    };
 
                     return response;
 
@@ -280,8 +284,10 @@ namespace OpenSim.Server.Handlers.Login
             hash["message"] = "Incomplete login credentials. Check your username and password.";
             hash["login"] = "false";
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
 
             return response;
         }

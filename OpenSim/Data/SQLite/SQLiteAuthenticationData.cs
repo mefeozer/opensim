@@ -79,8 +79,10 @@ namespace OpenSim.Data.SQLite
 
         public AuthenticationData Get(UUID principalID)
         {
-            AuthenticationData ret = new AuthenticationData();
-            ret.Data = new Dictionary<string, object>();
+            AuthenticationData ret = new AuthenticationData
+            {
+                Data = new Dictionary<string, object>()
+            };
             IDataReader result;
 
             using (SqliteCommand cmd = new SqliteCommand("select * from `" + m_Realm + "` where UUID = :PrincipalID"))

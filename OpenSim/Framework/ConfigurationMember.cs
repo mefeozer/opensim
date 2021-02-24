@@ -130,13 +130,15 @@ namespace OpenSim.Framework
                                            string configuration_question, string configuration_default,
                                            bool use_default_no_prompt)
         {
-            ConfigurationOption configOption = new ConfigurationOption();
-            configOption.configurationKey = configuration_key;
-            configOption.configurationQuestion = configuration_question;
-            configOption.configurationDefault = configuration_default;
-            configOption.configurationType = configuration_type;
-            configOption.configurationUseDefaultNoPrompt = use_default_no_prompt;
-            configOption.shouldIBeAsked = null; //Assumes true, I can ask whenever
+            ConfigurationOption configOption = new ConfigurationOption
+            {
+                configurationKey = configuration_key,
+                configurationQuestion = configuration_question,
+                configurationDefault = configuration_default,
+                configurationType = configuration_type,
+                configurationUseDefaultNoPrompt = use_default_no_prompt,
+                shouldIBeAsked = null //Assumes true, I can ask whenever
+            };
             checkAndAddConfigOption(configOption);
         }
 
@@ -146,13 +148,15 @@ namespace OpenSim.Framework
                                            bool use_default_no_prompt,
                                            ConfigurationOption.ConfigurationOptionShouldBeAsked shouldIBeAskedDelegate)
         {
-            ConfigurationOption configOption = new ConfigurationOption();
-            configOption.configurationKey = configuration_key;
-            configOption.configurationQuestion = configuration_question;
-            configOption.configurationDefault = configuration_default;
-            configOption.configurationType = configuration_type;
-            configOption.configurationUseDefaultNoPrompt = use_default_no_prompt;
-            configOption.shouldIBeAsked = shouldIBeAskedDelegate;
+            ConfigurationOption configOption = new ConfigurationOption
+            {
+                configurationKey = configuration_key,
+                configurationQuestion = configuration_question,
+                configurationDefault = configuration_default,
+                configurationType = configuration_type,
+                configurationUseDefaultNoPrompt = use_default_no_prompt,
+                shouldIBeAsked = shouldIBeAskedDelegate
+            };
             checkAndAddConfigOption(configOption);
         }
 

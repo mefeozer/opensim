@@ -810,17 +810,19 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                                                 UUID uuid = new UUID();
                                                 UUID.TryParse(det.InnerText, out uuid);
 
-                                                DetectParams d = new DetectParams();
-                                                d.Key = uuid;
-                                                d.OffsetPos = v;
-                                                d.LinkNum = d_linkNum;
-                                                d.Group = d_group;
-                                                d.Name = d_name;
-                                                d.Owner = d_owner;
-                                                d.Position = d_position;
-                                                d.Rotation = d_rotation;
-                                                d.Type = d_type;
-                                                d.Velocity = d_velocity;
+                                                DetectParams d = new DetectParams
+                                                {
+                                                    Key = uuid,
+                                                    OffsetPos = v,
+                                                    LinkNum = d_linkNum,
+                                                    Group = d_group,
+                                                    Name = d_name,
+                                                    Owner = d_owner,
+                                                    Position = d_position,
+                                                    Rotation = d_rotation,
+                                                    Type = d_type,
+                                                    Velocity = d_velocity
+                                                };
 
                                                 detected.Add(d);
                                             }

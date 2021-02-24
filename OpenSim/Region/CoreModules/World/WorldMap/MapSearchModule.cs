@@ -135,9 +135,11 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                 {
                     foreach (GridRegion info in regionInfos)
                     {
-                        data = new MapBlockData();
-                        data.Agents = 0;
-                        data.Access = info.Access;
+                        data = new MapBlockData
+                        {
+                            Agents = 0,
+                            Access = info.Access
+                        };
                         MapBlockData block = new MapBlockData();
                         MapBlockFromGridRegion(block, info, flags);
 

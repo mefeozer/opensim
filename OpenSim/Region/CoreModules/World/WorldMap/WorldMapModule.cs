@@ -307,10 +307,12 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
         {
             // not sure about this.... 2048 or master 5000 and hack above?
 
-            OSDMapLayer mapLayer = new OSDMapLayer();
-            mapLayer.Right = 30000;
-            mapLayer.Top = 30000;
-            mapLayer.ImageID = new UUID("00000000-0000-1111-9999-000000000006");
+            OSDMapLayer mapLayer = new OSDMapLayer
+            {
+                Right = 30000,
+                Top = 30000,
+                ImageID = new UUID("00000000-0000-1111-9999-000000000006")
+            };
 
             return mapLayer;
         }
@@ -669,13 +671,15 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                             for (int i = 0; i < itemarray.Count; i++)
                             {
                                 OSDMap mapitem = (OSDMap)itemarray[i];
-                                mapItemReply mi = new mapItemReply();
-                                mi.x = (uint)mapitem["X"].AsInteger();
-                                mi.y = (uint)mapitem["Y"].AsInteger();
-                                mi.id = mapitem["ID"].AsUUID();
-                                mi.Extra = mapitem["Extra"].AsInteger();
-                                mi.Extra2 = mapitem["Extra2"].AsInteger();
-                                mi.name = mapitem["Name"].AsString();
+                                mapItemReply mi = new mapItemReply
+                                {
+                                    x = (uint)mapitem["X"].AsInteger(),
+                                    y = (uint)mapitem["Y"].AsInteger(),
+                                    id = mapitem["ID"].AsUUID(),
+                                    Extra = mapitem["Extra"].AsInteger(),
+                                    Extra2 = mapitem["Extra2"].AsInteger(),
+                                    name = mapitem["Name"].AsString()
+                                };
                                 returnitems.Add(mi);
                             }
                             av.ControllingClient.SendMapItemReply(returnitems.ToArray(), st.itemtype, st.flags & 0xffff);
@@ -725,13 +729,15 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
             if(!m_threadsRunning)
                 return;
 
-            MapRequestState st = new MapRequestState();
-            st.agentID = id;
-            st.flags = flags;
-            st.EstateID = EstateID;
-            st.godlike = godlike;
-            st.itemtype = itemtype;
-            st.regionhandle = regionhandle;
+            MapRequestState st = new MapRequestState
+            {
+                agentID = id,
+                flags = flags,
+                EstateID = EstateID,
+                godlike = godlike,
+                itemtype = itemtype,
+                regionhandle = regionhandle
+            };
             m_mapItemsRequests.Enqueue(st);
         }
 
@@ -896,13 +902,15 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                                 return;
 
                             OSDMap mapitem = (OSDMap)itemarray[i];
-                            mapItemReply mi = new mapItemReply();
-                            mi.x = (uint)mapitem["X"].AsInteger();
-                            mi.y = (uint)mapitem["Y"].AsInteger();
-                            mi.id = mapitem["ID"].AsUUID();
-                            mi.Extra = mapitem["Extra"].AsInteger();
-                            mi.Extra2 = mapitem["Extra2"].AsInteger();
-                            mi.name = mapitem["Name"].AsString();
+                            mapItemReply mi = new mapItemReply
+                            {
+                                x = (uint)mapitem["X"].AsInteger(),
+                                y = (uint)mapitem["Y"].AsInteger(),
+                                id = mapitem["ID"].AsUUID(),
+                                Extra = mapitem["Extra"].AsInteger(),
+                                Extra2 = mapitem["Extra2"].AsInteger(),
+                                name = mapitem["Name"].AsString()
+                            };
                             returnitems.Add(mi);
                         }
                         av.ControllingClient.SendMapItemReply(returnitems.ToArray(), itfs, flags);
@@ -1085,11 +1093,13 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
             {
                 if((flag & 0x10000) != 0 && minX == maxX && minY == maxY)
                 {
-                    MapBlockData block = new MapBlockData();
-                    block.X = (ushort)minX;
-                    block.Y = (ushort)minY;
-                    block.MapImageId = UUID.Zero;
-                    block.Access = (byte)SimAccess.NonExistent;
+                    MapBlockData block = new MapBlockData
+                    {
+                        X = (ushort)minX,
+                        Y = (ushort)minY,
+                        MapImageId = UUID.Zero,
+                        Access = (byte)SimAccess.NonExistent
+                    };
                     mapBlocks.Add(block);
                     remoteClient.SendMapBlock(mapBlocks, flag & 0xffff);
                 }
@@ -1623,12 +1633,14 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                             terrainImageID,
                             "terrainImage_" + m_scene.RegionInfo.RegionID.ToString(),
                             (sbyte)AssetType.Texture,
-                            m_scene.RegionInfo.RegionID.ToString());
-                        asset.Data = data;
-                        asset.Description = m_regionName;
-                        asset.Local = m_localV1MapAssets;
-                        asset.Temporary = false;
-                        asset.Flags = AssetFlags.Maptile;
+                            m_scene.RegionInfo.RegionID.ToString())
+                        {
+                            Data = data,
+                            Description = m_regionName,
+                            Local = m_localV1MapAssets,
+                            Temporary = false,
+                            Flags = AssetFlags.Maptile
+                        };
 
                         // Store the new one
                         m_log.DebugFormat("[WORLD MAP]: Storing map image {0} for {1}", asset.ID, m_regionName);
@@ -1655,12 +1667,14 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                     parcelImageID,
                     "parcelImage_" + m_scene.RegionInfo.RegionID.ToString(),
                     (sbyte)AssetType.Texture,
-                    m_scene.RegionInfo.RegionID.ToString());
-                parcels.Data = overlay;
-                parcels.Description = m_regionName;
-                parcels.Temporary = false;
-                parcels.Local = m_localV1MapAssets;
-                parcels.Flags = AssetFlags.Maptile;
+                    m_scene.RegionInfo.RegionID.ToString())
+                {
+                    Data = overlay,
+                    Description = m_regionName,
+                    Temporary = false,
+                    Local = m_localV1MapAssets,
+                    Flags = AssetFlags.Maptile
+                };
 
                 m_scene.AssetService.Store(parcels);
 

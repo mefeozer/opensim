@@ -177,12 +177,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public static bool IsAssignableFrom(TokenType dstType, TokenType srcType)
         {
-             // Do a 'dry run' of the casting operation, discarding any emits and not printing any errors.
-             // But if the casting tries to print error(s), return false.
-             // Otherwise assume the cast is allowed and return true.
-            SCGIAF scg = new SCGIAF();
-            scg.ok = true;
-            scg._ilGen = migiaf;
+            // Do a 'dry run' of the casting operation, discarding any emits and not printing any errors.
+            // But if the casting tries to print error(s), return false.
+            // Otherwise assume the cast is allowed and return true.
+            SCGIAF scg = new SCGIAF
+            {
+                ok = true,
+                _ilGen = migiaf
+            };
             CastTopOfStack(scg, null, srcType, dstType, false);
             return scg.ok;
         }

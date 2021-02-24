@@ -68,11 +68,13 @@ namespace OpenSim.Framework
         // Do NOT "Optimize" away!
         public AssetBase()
         {
-            m_metadata = new AssetMetadata();
-            m_metadata.FullID = UUID.Zero;
-            m_metadata.ID = UUID.Zero.ToString();
-            m_metadata.Type = (sbyte)AssetType.Unknown;
-            m_metadata.CreatorID = string.Empty;
+            m_metadata = new AssetMetadata
+            {
+                FullID = UUID.Zero,
+                ID = UUID.Zero.ToString(),
+                Type = (sbyte)AssetType.Unknown,
+                CreatorID = string.Empty
+            };
         }
 
         public AssetBase(UUID assetID, string name, sbyte assetType, string creatorID)
@@ -86,11 +88,13 @@ namespace OpenSim.Framework
             }
             */
 
-            m_metadata = new AssetMetadata();
-            m_metadata.FullID = assetID;
-            m_metadata.Name = name;
-            m_metadata.Type = assetType;
-            m_metadata.CreatorID = creatorID;
+            m_metadata = new AssetMetadata
+            {
+                FullID = assetID,
+                Name = name,
+                Type = assetType,
+                CreatorID = creatorID
+            };
         }
 
         public AssetBase(string assetID, string name, sbyte assetType, string creatorID)
@@ -104,11 +108,13 @@ namespace OpenSim.Framework
             }
             */
 
-            m_metadata = new AssetMetadata();
-            m_metadata.ID = assetID;
-            m_metadata.Name = name;
-            m_metadata.Type = assetType;
-            m_metadata.CreatorID = creatorID;
+            m_metadata = new AssetMetadata
+            {
+                ID = assetID,
+                Name = name,
+                Type = assetType,
+                CreatorID = creatorID
+            };
         }
 
         public bool ContainsReferences

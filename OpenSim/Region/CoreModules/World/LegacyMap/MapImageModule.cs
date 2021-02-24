@@ -546,11 +546,13 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
                                         //bool breakYN = false; // If we run into an error drawing, break out of the
                                         // loop so we don't lag to death on error handling
-                                        DrawStruct ds = new DrawStruct();
-                                        ds.brush = new SolidBrush(mapdotspot);
-                                        //ds.rect = new Rectangle(mapdrawstartX, (255 - mapdrawstartY), mapdrawendX - mapdrawstartX, mapdrawendY - mapdrawstartY);
+                                        DrawStruct ds = new DrawStruct
+                                        {
+                                            brush = new SolidBrush(mapdotspot),
+                                            //ds.rect = new Rectangle(mapdrawstartX, (255 - mapdrawstartY), mapdrawendX - mapdrawstartX, mapdrawendY - mapdrawstartY);
 
-                                        ds.trns = new face[FaceA.Length];
+                                            trns = new face[FaceA.Length]
+                                        };
 
                                         for (int i = 0; i < FaceA.Length; i++)
                                         {
@@ -561,8 +563,10 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                                             working[3] = project(hm, FaceC[i], axPos);
                                             working[4] = project(hm, FaceA[i], axPos);
 
-                                            face workingface = new face();
-                                            workingface.pts = working;
+                                            face workingface = new face
+                                            {
+                                                pts = working
+                                            };
 
                                             ds.trns[i] = workingface;
                                         }
@@ -634,15 +638,17 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
         private Point project(ITerrainChannel hm, Vector3 point3d, Vector3 originpos)
         {
-            Point returnpt = new Point();
-            //originpos = point3d;
-            //int d = (int)(256f / 1.5f);
+            Point returnpt = new Point
+            {
+                //originpos = point3d;
+                //int d = (int)(256f / 1.5f);
 
-            //Vector3 topos = new Vector3(0, 0, 0);
-            // float z = -point3d.z - topos.z;
+                //Vector3 topos = new Vector3(0, 0, 0);
+                // float z = -point3d.z - topos.z;
 
-            returnpt.X = (int)point3d.X;//(int)((topos.x - point3d.x) / z * d);
-            returnpt.Y = (int)(hm.Width - 1 - point3d.Y);//(int)(255 - (((topos.y - point3d.y) / z * d)));
+                X = (int)point3d.X,//(int)((topos.x - point3d.x) / z * d);
+                Y = (int)(hm.Width - 1 - point3d.Y)//(int)(255 - (((topos.y - point3d.y) / z * d)));
+            };
 
             return returnpt;
         }

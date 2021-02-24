@@ -265,9 +265,11 @@ namespace OpenSim.Framework
                             {
                                 if (d.TryGetValue("key_name", out OSD dname))
                                 {
-                                    TrackEntry t = new TrackEntry();
-                                    t.time = dtime;
-                                    t.frameName = dname;
+                                    TrackEntry t = new TrackEntry
+                                    {
+                                        time = dtime,
+                                        frameName = dname
+                                    };
                                     skyTrack0.Add(t);
                                 }
                             }
@@ -290,9 +292,11 @@ namespace OpenSim.Framework
                                 {
                                     if (d.TryGetValue("key_name", out OSD dname))
                                     {
-                                        TrackEntry t = new TrackEntry();
-                                        t.time = dtime;
-                                        t.frameName = dname;
+                                        TrackEntry t = new TrackEntry
+                                        {
+                                            time = dtime,
+                                            frameName = dname
+                                        };
                                         skyTracks[dt].Add(t);
                                     }
                                 }

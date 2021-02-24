@@ -172,8 +172,10 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest.Tests
                 si.AddValue("contentType", null);
                 si.AddValue("cookieCollection", new CookieCollection());
 
-                TestHttpWebResponse thwr = new TestHttpWebResponse(si, sc);
-                thwr.Response = rawResponse;
+                TestHttpWebResponse thwr = new TestHttpWebResponse(si, sc)
+                {
+                    Response = rawResponse
+                };
 
                 throw new WebException("no message", null, WebExceptionStatus.ProtocolError, thwr);
             };
@@ -181,8 +183,10 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest.Tests
             twrc.NextRequest = twr;
 
             WebRequest.RegisterPrefix("test", twrc);
-            HttpRequestClass hr = new HttpRequestClass();
-            hr.Url = "test://something";
+            HttpRequestClass hr = new HttpRequestClass
+            {
+                Url = "test://something"
+            };
             hr.SendRequest();
 
             Assert.That(hr.Status, Is.EqualTo((int)HttpStatusCode.NotFound));

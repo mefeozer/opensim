@@ -761,60 +761,63 @@ namespace OpenSim.Framework
         /// <returns></returns>
         public LandData Copy()
         {
-            LandData landData = new LandData();
-
-            landData._AABBMax = _AABBMax;
-            landData._AABBMin = _AABBMin;
-            landData._area = _area;
-            landData._auctionID = _auctionID;
-            landData._authBuyerID = _authBuyerID;
-            landData._category = _category;
-            landData._claimDate = _claimDate;
-            landData._claimPrice = _claimPrice;
-            landData._globalID = _globalID;
-            landData.m_fakeID = m_fakeID;
-            landData._groupID = _groupID;
-            landData._isGroupOwned = _isGroupOwned;
-            landData._localID = _localID;
-            landData._landingType = _landingType;
-            landData._mediaAutoScale = _mediaAutoScale;
-            landData._mediaID = _mediaID;
-            landData._mediaURL = _mediaURL;
-            landData._musicURL = _musicURL;
-            landData._ownerID = _ownerID;
-            landData._bitmap = (byte[])_bitmap.Clone();
-            landData._description = _description;
-            landData._flags = _flags;
-            landData._name = _name;
-            landData._status = _status;
-            landData._passHours = _passHours;
-            landData._passPrice = _passPrice;
-            landData._salePrice = _salePrice;
-            landData._snapshotID = _snapshotID;
-            landData._userLocation = _userLocation;
-            landData._userLookAt = _userLookAt;
-            landData._otherCleanTime = _otherCleanTime;
-            landData._mediaType = _mediaType;
-            landData._mediaDescription = _mediaDescription;
-            landData._mediaWidth = _mediaWidth;
-            landData._mediaHeight = _mediaHeight;
-            landData._mediaLoop = _mediaLoop;
-            landData._obscureMusic = _obscureMusic;
-            landData._obscureMedia = _obscureMedia;
-            landData._simwideArea = _simwideArea;
-            landData._simwidePrims = _simwidePrims;
-            landData.m_dwell = m_dwell;
-            landData.SeeAVs = SeeAVs;
-            landData.AnyAVSounds = AnyAVSounds;
-            landData.GroupAVSounds = GroupAVSounds;
+            LandData landData = new LandData
+            {
+                _AABBMax = _AABBMax,
+                _AABBMin = _AABBMin,
+                _area = _area,
+                _auctionID = _auctionID,
+                _authBuyerID = _authBuyerID,
+                _category = _category,
+                _claimDate = _claimDate,
+                _claimPrice = _claimPrice,
+                _globalID = _globalID,
+                m_fakeID = m_fakeID,
+                _groupID = _groupID,
+                _isGroupOwned = _isGroupOwned,
+                _localID = _localID,
+                _landingType = _landingType,
+                _mediaAutoScale = _mediaAutoScale,
+                _mediaID = _mediaID,
+                _mediaURL = _mediaURL,
+                _musicURL = _musicURL,
+                _ownerID = _ownerID,
+                _bitmap = (byte[])_bitmap.Clone(),
+                _description = _description,
+                _flags = _flags,
+                _name = _name,
+                _status = _status,
+                _passHours = _passHours,
+                _passPrice = _passPrice,
+                _salePrice = _salePrice,
+                _snapshotID = _snapshotID,
+                _userLocation = _userLocation,
+                _userLookAt = _userLookAt,
+                _otherCleanTime = _otherCleanTime,
+                _mediaType = _mediaType,
+                _mediaDescription = _mediaDescription,
+                _mediaWidth = _mediaWidth,
+                _mediaHeight = _mediaHeight,
+                _mediaLoop = _mediaLoop,
+                _obscureMusic = _obscureMusic,
+                _obscureMedia = _obscureMedia,
+                _simwideArea = _simwideArea,
+                _simwidePrims = _simwidePrims,
+                m_dwell = m_dwell,
+                SeeAVs = SeeAVs,
+                AnyAVSounds = AnyAVSounds,
+                GroupAVSounds = GroupAVSounds
+            };
 
             landData._parcelAccessList.Clear();
             foreach (LandAccessEntry entry in _parcelAccessList)
             {
-                LandAccessEntry newEntry = new LandAccessEntry();
-                newEntry.AgentID = entry.AgentID;
-                newEntry.Flags = entry.Flags;
-                newEntry.Expires = entry.Expires;
+                LandAccessEntry newEntry = new LandAccessEntry
+                {
+                    AgentID = entry.AgentID,
+                    Flags = entry.Flags,
+                    Expires = entry.Expires
+                };
 
                 landData._parcelAccessList.Add(newEntry);
             }

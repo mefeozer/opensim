@@ -1579,10 +1579,12 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                         }
 
                         // First log file or time has expired, start writing to a new log file
-                        PacketLog = new PacketLogger();
-                        PacketLog.StartTime = now;
-                        PacketLog.Path = (binStatsDir.Length > 0 ? binStatsDir + System.IO.Path.DirectorySeparatorChar.ToString() : "")
-                                + string.Format("packets-{0}.log", now.ToString("yyyyMMddHHmmss"));
+                        PacketLog = new PacketLogger
+                        {
+                            StartTime = now,
+                            Path = (binStatsDir.Length > 0 ? binStatsDir + System.IO.Path.DirectorySeparatorChar.ToString() : "")
+                                + string.Format("packets-{0}.log", now.ToString("yyyyMMddHHmmss"))
+                        };
                         PacketLog.Log = new BinaryWriter(File.Open(PacketLog.Path, FileMode.Append, FileAccess.Write));
                     }
 
@@ -1720,8 +1722,10 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             PacketAckPacket ack = new PacketAckPacket();
             ack.Header.Reliable = false;
             ack.Packets = new PacketAckPacket.PacketsBlock[1];
-            ack.Packets[0] = new PacketAckPacket.PacketsBlock();
-            ack.Packets[0].ID = sequenceNumber;
+            ack.Packets[0] = new PacketAckPacket.PacketsBlock
+            {
+                ID = sequenceNumber
+            };
 
             SendAckImmediate(remoteEndpoint, ack);
         }

@@ -54,20 +54,26 @@ namespace OpenSim.Tests.Common
             UseCircuitCodePacket uccp = new UseCircuitCodePacket();
 
             UseCircuitCodePacket.CircuitCodeBlock uccpCcBlock
-                = new UseCircuitCodePacket.CircuitCodeBlock();
-            uccpCcBlock.Code = circuitCode;
-            uccpCcBlock.ID = agentId;
-            uccpCcBlock.SessionID = sessionId;
+                = new UseCircuitCodePacket.CircuitCodeBlock
+                {
+                    Code = circuitCode,
+                    ID = agentId,
+                    SessionID = sessionId
+                };
             uccp.CircuitCode = uccpCcBlock;
 
             byte[] uccpBytes = uccp.ToBytes();
-            UDPPacketBuffer upb = new UDPPacketBuffer(testEp, uccpBytes.Length);
-            upb.DataLength = uccpBytes.Length;  // God knows why this isn't set by the constructor.
+            UDPPacketBuffer upb = new UDPPacketBuffer(testEp, uccpBytes.Length)
+            {
+                DataLength = uccpBytes.Length  // God knows why this isn't set by the constructor.
+            };
             Buffer.BlockCopy(uccpBytes, 0, upb.Data, 0, uccpBytes.Length);
 
-            AgentCircuitData acd = new AgentCircuitData();
-            acd.AgentID = agentId;
-            acd.SessionID = sessionId;
+            AgentCircuitData acd = new AgentCircuitData
+            {
+                AgentID = agentId,
+                SessionID = sessionId
+            };
 
             scene.AuthenticateHandler.AddNewCircuit(circuitCode, acd);
 

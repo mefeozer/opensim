@@ -90,10 +90,12 @@ namespace OpenSim.Framework
             if (parts.Length != 3)
                 throw new ArgumentException("Invalid string: " + str);
 
-            SpawnPoint sp = new SpawnPoint();
-            sp.Yaw = float.Parse(parts[0]);
-            sp.Pitch = float.Parse(parts[1]);
-            sp.Distance = float.Parse(parts[2]);
+            SpawnPoint sp = new SpawnPoint
+            {
+                Yaw = float.Parse(parts[0]),
+                Pitch = float.Parse(parts[1]),
+                Distance = float.Parse(parts[2])
+            };
             return sp;
         }
     }

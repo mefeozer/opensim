@@ -55,9 +55,11 @@ namespace OpenSim.Region.Framework.Scenes
 
         public KeyframeTimer(Scene scene)
         {
-            m_timer = new Timer();
-            m_timer.Interval = TickDuration;
-            m_timer.AutoReset = true;
+            m_timer = new Timer
+            {
+                Interval = TickDuration,
+                AutoReset = true
+            };
             m_timer.Elapsed += OnTimer;
         }
 
@@ -397,10 +399,11 @@ namespace OpenSim.Region.Framework.Scenes
         {
             StopTimer();
 
-            KeyframeMotion newmotion = new KeyframeMotion(null, m_mode, m_data);
-
-            newmotion.m_group = newgrp;
-            newmotion.m_scene = newgrp.Scene;
+            KeyframeMotion newmotion = new KeyframeMotion(null, m_mode, m_data)
+            {
+                m_group = newgrp,
+                m_scene = newgrp.Scene
+            };
 
             if (m_keyframes != null)
             {

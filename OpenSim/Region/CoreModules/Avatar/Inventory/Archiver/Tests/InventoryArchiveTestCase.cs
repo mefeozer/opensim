@@ -119,14 +119,16 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             scene.AssetService.Store(asset1);
 
             // Create scene object item
-            InventoryItemBase item1 = new InventoryItemBase();
-            item1.Name = m_item1Name;
-            item1.ID = UUID.Parse("00000000-0000-0000-0000-000000000020");
-            item1.AssetID = asset1.FullID;
-            item1.GroupID = UUID.Random();
-            item1.CreatorId = m_uaLL1.PrincipalID.ToString();
-            item1.Owner = m_uaLL1.PrincipalID;
-            item1.Folder = scene.InventoryService.GetRootFolder(m_uaLL1.PrincipalID).ID;
+            InventoryItemBase item1 = new InventoryItemBase
+            {
+                Name = m_item1Name,
+                ID = UUID.Parse("00000000-0000-0000-0000-000000000020"),
+                AssetID = asset1.FullID,
+                GroupID = UUID.Random(),
+                CreatorId = m_uaLL1.PrincipalID.ToString(),
+                Owner = m_uaLL1.PrincipalID,
+                Folder = scene.InventoryService.GetRootFolder(m_uaLL1.PrincipalID).ID
+            };
             scene.AddInventoryItem(item1);
 
             // Create coalesced objects asset
@@ -142,14 +144,16 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             scene.AssetService.Store(coaAsset);
 
             // Create coalesced objects inventory item
-            InventoryItemBase coaItem = new InventoryItemBase();
-            coaItem.Name = m_coaItemName;
-            coaItem.ID = UUID.Parse("00000000-0000-0000-0000-000000000180");
-            coaItem.AssetID = coaAsset.FullID;
-            coaItem.GroupID = UUID.Random();
-            coaItem.CreatorId = m_uaLL1.PrincipalID.ToString();
-            coaItem.Owner = m_uaLL1.PrincipalID;
-            coaItem.Folder = scene.InventoryService.GetRootFolder(m_uaLL1.PrincipalID).ID;
+            InventoryItemBase coaItem = new InventoryItemBase
+            {
+                Name = m_coaItemName,
+                ID = UUID.Parse("00000000-0000-0000-0000-000000000180"),
+                AssetID = coaAsset.FullID,
+                GroupID = UUID.Random(),
+                CreatorId = m_uaLL1.PrincipalID.ToString(),
+                Owner = m_uaLL1.PrincipalID,
+                Folder = scene.InventoryService.GetRootFolder(m_uaLL1.PrincipalID).ID
+            };
             scene.AddInventoryItem(coaItem);
 
             archiverModule.ArchiveInventory(

@@ -216,8 +216,10 @@ namespace OSHttpServer
         {
             // this method was mainly created for testing.
             // dont use it that much...
-            var request = new HttpRequest(Context);
-            request.Method = m_method;
+            var request = new HttpRequest(Context)
+            {
+                Method = m_method
+            };
             if (AcceptTypes != null)
             {
                 request.AcceptTypes = new string[AcceptTypes.Length];

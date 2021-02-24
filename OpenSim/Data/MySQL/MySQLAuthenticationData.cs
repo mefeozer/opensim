@@ -63,8 +63,10 @@ namespace OpenSim.Data.MySQL
 
         public AuthenticationData Get(UUID principalID)
         {
-            AuthenticationData ret = new AuthenticationData();
-            ret.Data = new Dictionary<string, object>();
+            AuthenticationData ret = new AuthenticationData
+            {
+                Data = new Dictionary<string, object>()
+            };
 
             using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
             {

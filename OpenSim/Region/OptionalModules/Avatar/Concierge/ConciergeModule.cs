@@ -518,15 +518,17 @@ namespace OpenSim.Region.OptionalModules.Avatar.Concierge
 
         protected void AnnounceToAgentsRegion(IScene scene, string msg)
         {
-            OSChatMessage c = new OSChatMessage();
-            c.Message = msg;
-            c.Type = ChatTypeEnum.Say;
-            c.Channel = 0;
-            c.Position = PosOfGod;
-            c.From = m_whoami;
-            c.Sender = null;
-            c.SenderUUID = UUID.Zero;
-            c.Scene = scene;
+            OSChatMessage c = new OSChatMessage
+            {
+                Message = msg,
+                Type = ChatTypeEnum.Say,
+                Channel = 0,
+                Position = PosOfGod,
+                From = m_whoami,
+                Sender = null,
+                SenderUUID = UUID.Zero,
+                Scene = scene
+            };
 
             if (scene is Scene)
                 (scene as Scene).EventManager.TriggerOnChatBroadcast(this, c);
@@ -534,15 +536,17 @@ namespace OpenSim.Region.OptionalModules.Avatar.Concierge
 
         protected void AnnounceToAgent(ScenePresence agent, string msg)
         {
-            OSChatMessage c = new OSChatMessage();
-            c.Message = msg;
-            c.Type = ChatTypeEnum.Say;
-            c.Channel = 0;
-            c.Position = PosOfGod;
-            c.From = m_whoami;
-            c.Sender = null;
-            c.SenderUUID = UUID.Zero;
-            c.Scene = agent.Scene;
+            OSChatMessage c = new OSChatMessage
+            {
+                Message = msg,
+                Type = ChatTypeEnum.Say,
+                Channel = 0,
+                Position = PosOfGod,
+                From = m_whoami,
+                Sender = null,
+                SenderUUID = UUID.Zero,
+                Scene = agent.Scene
+            };
 
             agent.ControllingClient.SendChatMessage(
                 msg, (byte) ChatTypeEnum.Say, PosOfGod, m_whoami, UUID.Zero, UUID.Zero,

@@ -139,12 +139,13 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public float raySect(float3 p, float3 dir, ref float3 sect)
         {
-            float4 plane = new float4();
-
-            plane.x = mNormal.x;
-            plane.y = mNormal.y;
-            plane.z = mNormal.z;
-            plane.w = mPlaneD;
+            float4 plane = new float4
+            {
+                x = mNormal.x,
+                y = mNormal.y,
+                z = mNormal.z,
+                w = mPlaneD
+            };
 
             float3 dest = p + dir * 100000f;
 
@@ -155,12 +156,13 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
         public float planeDistance(float3 p)
         {
-            float4 plane = new float4();
-
-            plane.x = mNormal.x;
-            plane.y = mNormal.y;
-            plane.z = mNormal.z;
-            plane.w = mPlaneD;
+            float4 plane = new float4
+            {
+                x = mNormal.x,
+                y = mNormal.y,
+                z = mNormal.z,
+                w = mPlaneD
+            };
 
             return DistToPt(p, plane);
         }
@@ -258,10 +260,12 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
         {
             float dp1 = DistToPt(p1, plane);
 
-            float3 dir = new float3();
-            dir.x = p2[0] - p1[0];
-            dir.y = p2[1] - p1[1];
-            dir.z = p2[2] - p1[2];
+            float3 dir = new float3
+            {
+                x = p2[0] - p1[0],
+                y = p2[1] - p1[1],
+                z = p2[2] - p1[2]
+            };
 
             float dot1 = dir[0] * plane[0] + dir[1] * plane[1] + dir[2] * plane[2];
             float dot2 = dp1 - plane[3];

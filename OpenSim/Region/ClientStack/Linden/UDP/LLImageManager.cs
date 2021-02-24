@@ -175,22 +175,24 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     }
                     else
                     {
-//                        m_log.DebugFormat(
-//                            "[LL IMAGE MANAGER]: Received request for {0}, start packet {1} from {2}",
-//                            newRequest.RequestedAssetID, newRequest.PacketNumber, m_client.Name);
+                        //                        m_log.DebugFormat(
+                        //                            "[LL IMAGE MANAGER]: Received request for {0}, start packet {1} from {2}",
+                        //                            newRequest.RequestedAssetID, newRequest.PacketNumber, m_client.Name);
 
                         //m_log.DebugFormat("[TEX]: (NEW) ID={0}: D={1}, S={2}, P={3}",
                         //    newRequest.RequestedAssetID, newRequest.DiscardLevel, newRequest.PacketNumber, newRequest.Priority);
 
-                        imgrequest = new J2KImage(this);
-                        imgrequest.J2KDecoder = m_j2kDecodeModule;
-                        imgrequest.AssetService = m_assetCache;
-                        imgrequest.AgentID = Client.AgentId;
-                        imgrequest.InventoryAccessModule = Client.Scene.RequestModuleInterface<IInventoryAccessModule>();
-                        imgrequest.DiscardLevel = newRequest.DiscardLevel;
-                        imgrequest.StartPacket = Math.Max(1, newRequest.PacketNumber);
-                        imgrequest.Priority = newRequest.Priority;
-                        imgrequest.TextureID = newRequest.RequestedAssetID;
+                        imgrequest = new J2KImage(this)
+                        {
+                            J2KDecoder = m_j2kDecodeModule,
+                            AssetService = m_assetCache,
+                            AgentID = Client.AgentId,
+                            InventoryAccessModule = Client.Scene.RequestModuleInterface<IInventoryAccessModule>(),
+                            DiscardLevel = newRequest.DiscardLevel,
+                            StartPacket = Math.Max(1, newRequest.PacketNumber),
+                            Priority = newRequest.Priority,
+                            TextureID = newRequest.RequestedAssetID
+                        };
                         imgrequest.Priority = newRequest.Priority;
 
                         //Add this download to the priority queue

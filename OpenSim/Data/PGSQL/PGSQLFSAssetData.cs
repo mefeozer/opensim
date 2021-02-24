@@ -278,9 +278,10 @@ namespace OpenSim.Data.PGSQL
                             }
     
                             AssetBase asset = new AssetBase();
-                            AssetMetadata meta = new AssetMetadata();
-
-                            meta.ID = reader["id"].ToString();
+                            AssetMetadata meta = new AssetMetadata
+                            {
+                                ID = reader["id"].ToString()
+                            };
                             meta.FullID = new UUID(meta.ID);
 
                             meta.Name = string.Empty;

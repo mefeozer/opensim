@@ -131,10 +131,12 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
             m_log.InfoFormat("[XMLRPC GRID ROUTER]: New receiver Obj: {0} Ch: {1} ID: {2} URI: {3}",
                                 objectID.ToString(), channel.ToString(), itemID.ToString(), uri);
 
-            XmlRpcInfo info = new XmlRpcInfo();
-            info.channel = channel;
-            info.uri = uri;
-            info.item = itemID;
+            XmlRpcInfo info = new XmlRpcInfo
+            {
+                channel = channel,
+                uri = uri,
+                item = itemID
+            };
 
             bool success = SynchronousRestObjectRequester.MakeRequest<XmlRpcInfo, bool>(
                     "POST", m_ServerURI+"/RegisterChannel/", info);
@@ -179,11 +181,12 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
                 return false;
             }
 
-            XmlRpcInfo info = new XmlRpcInfo();
-
-            info.channel = m_Channels[itemID];
-            info.item = itemID;
-            info.uri = "http://0.0.0.0:00";
+            XmlRpcInfo info = new XmlRpcInfo
+            {
+                channel = m_Channels[itemID],
+                item = itemID,
+                uri = "http://0.0.0.0:00"
+            };
 
             if (info != null)
             {

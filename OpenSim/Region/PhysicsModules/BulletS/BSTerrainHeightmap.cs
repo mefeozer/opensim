@@ -48,12 +48,14 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         {
             initialMap[ii] = BSTerrainManager.HEIGHT_INITIALIZATION;
         }
-        m_mapInfo = new BulletHMapInfo(id, initialMap, regionSize.X, regionSize.Y);
-        m_mapInfo.minCoords = minTerrainCoords;
-        m_mapInfo.maxCoords = maxTerrainCoords;
-        m_mapInfo.terrainRegionBase = TerrainBase;
-        // Don't have to free any previous since we just got here.
-        BuildHeightmapTerrain();
+            m_mapInfo = new BulletHMapInfo(id, initialMap, regionSize.X, regionSize.Y)
+            {
+                minCoords = minTerrainCoords,
+                maxCoords = maxTerrainCoords,
+                terrainRegionBase = TerrainBase
+            };
+            // Don't have to free any previous since we just got here.
+            BuildHeightmapTerrain();
     }
 
     // This minCoords and maxCoords passed in give the size of the terrain (min and max Z
@@ -62,15 +64,17 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                                     Vector3 minCoords, Vector3 maxCoords)
         : base(physicsScene, regionBase, id)
     {
-        m_mapInfo = new BulletHMapInfo(id, initialMap, maxCoords.X - minCoords.X, maxCoords.Y - minCoords.Y);
-        m_mapInfo.minCoords = minCoords;
-        m_mapInfo.maxCoords = maxCoords;
-        m_mapInfo.minZ = minCoords.Z;
-        m_mapInfo.maxZ = maxCoords.Z;
-        m_mapInfo.terrainRegionBase = TerrainBase;
+            m_mapInfo = new BulletHMapInfo(id, initialMap, maxCoords.X - minCoords.X, maxCoords.Y - minCoords.Y)
+            {
+                minCoords = minCoords,
+                maxCoords = maxCoords,
+                minZ = minCoords.Z,
+                maxZ = maxCoords.Z,
+                terrainRegionBase = TerrainBase
+            };
 
-        // Don't have to free any previous since we just got here.
-        BuildHeightmapTerrain();
+            // Don't have to free any previous since we just got here.
+            BuildHeightmapTerrain();
     }
 
     public override void Dispose()

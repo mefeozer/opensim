@@ -80,8 +80,10 @@ namespace OpenSim.Server.Handlers.Land
                 hash["Dwell"] = landData.Dwell.ToString();
             }
 
-            XmlRpcResponse response = new XmlRpcResponse();
-            response.Value = hash;
+            XmlRpcResponse response = new XmlRpcResponse
+            {
+                Value = hash
+            };
             return response;
         }
     }

@@ -215,10 +215,12 @@ namespace OpenSim.Services.Connectors
 
         public InventoryCollection GetFolderContent(UUID principalID, UUID folderID)
         {
-            InventoryCollection inventory = new InventoryCollection();
-            inventory.Folders = new List<InventoryFolderBase>();
-            inventory.Items = new List<InventoryItemBase>();
-            inventory.OwnerID = principalID;
+            InventoryCollection inventory = new InventoryCollection
+            {
+                Folders = new List<InventoryFolderBase>(),
+                Items = new List<InventoryItemBase>(),
+                OwnerID = principalID
+            };
 
             try
             {

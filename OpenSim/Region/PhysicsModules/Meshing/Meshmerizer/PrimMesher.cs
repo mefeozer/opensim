@@ -189,18 +189,18 @@ namespace PrimMesher
         {
             // From http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/
 
-            Coord c2 = new Coord(0.0f, 0.0f, 0.0f);
-
-            c2.X = q.W * q.W * v.X +
+            Coord c2 = new Coord(0.0f, 0.0f, 0.0f)
+            {
+                X = q.W * q.W * v.X +
                 2f * q.Y * q.W * v.Z -
                 2f * q.Z * q.W * v.Y +
                      q.X * q.X * v.X +
                 2f * q.Y * q.X * v.Y +
                 2f * q.Z * q.X * v.Z -
                      q.Z * q.Z * v.X -
-                     q.Y * q.Y * v.X;
+                     q.Y * q.Y * v.X,
 
-            c2.Y =
+                Y =
                 2f * q.X * q.Y * v.X +
                      q.Y * q.Y * v.Y +
                 2f * q.Z * q.Y * v.Z +
@@ -208,9 +208,9 @@ namespace PrimMesher
                      q.Z * q.Z * v.Y +
                      q.W * q.W * v.Y -
                 2f * q.X * q.W * v.Z -
-                     q.X * q.X * v.Y;
+                     q.X * q.X * v.Y,
 
-            c2.Z =
+                Z =
                 2f * q.X * q.Z * v.X +
                 2f * q.Y * q.Z * v.Y +
                      q.Z * q.Z * v.Z -
@@ -218,7 +218,8 @@ namespace PrimMesher
                      q.Y * q.Y * v.Z +
                 2f * q.W * q.X * v.Y -
                      q.X * q.X * v.Z +
-                     q.W * q.W * v.Z;
+                     q.W * q.W * v.Z
+            };
 
             return c2;
         }
@@ -815,10 +816,12 @@ namespace PrimMesher
                 }
                 else if (!simpleFace && createFaces && angle.angle > 0.0001f)
                 {
-                    Face newFace = new Face();
-                    newFace.v1 = 0;
-                    newFace.v2 = index;
-                    newFace.v3 = index + 1;
+                    Face newFace = new Face
+                    {
+                        v1 = 0,
+                        v2 = index,
+                        v3 = index + 1
+                    };
 
                     this.faces.Add(newFace);
                 }
@@ -1297,9 +1300,10 @@ namespace PrimMesher
 
                 while (!done)
                 {
-                    PathNode newNode = new PathNode();
-
-                    newNode.xScale = 1.0f;
+                    PathNode newNode = new PathNode
+                    {
+                        xScale = 1.0f
+                    };
                     if (this.taperX == 0.0f)
                         newNode.xScale = 1.0f;
                     else if (this.taperX > 0.0f)
@@ -1744,23 +1748,25 @@ namespace PrimMesher
             float thisV = 0.0f;
             float lastV = 0.0f;
 
-            Path path = new Path();
-            path.twistBegin = twistBegin;
-            path.twistEnd = twistEnd;
-            path.topShearX = topShearX;
-            path.topShearY = topShearY;
-            path.pathCutBegin = pathCutBegin;
-            path.pathCutEnd = pathCutEnd;
-            path.dimpleBegin = dimpleBegin;
-            path.dimpleEnd = dimpleEnd;
-            path.skew = skew;
-            path.holeSizeX = holeSizeX;
-            path.holeSizeY = holeSizeY;
-            path.taperX = taperX;
-            path.taperY = taperY;
-            path.radius = radius;
-            path.revolutions = revolutions;
-            path.stepsPerRevolution = stepsPerRevolution;
+            Path path = new Path
+            {
+                twistBegin = twistBegin,
+                twistEnd = twistEnd,
+                topShearX = topShearX,
+                topShearY = topShearY,
+                pathCutBegin = pathCutBegin,
+                pathCutEnd = pathCutEnd,
+                dimpleBegin = dimpleBegin,
+                dimpleEnd = dimpleEnd,
+                skew = skew,
+                holeSizeX = holeSizeX,
+                holeSizeY = holeSizeY,
+                taperX = taperX,
+                taperY = taperY,
+                radius = radius,
+                revolutions = revolutions,
+                stepsPerRevolution = stepsPerRevolution
+            };
 
             path.Create(pathType, steps);
 
@@ -2120,33 +2126,35 @@ namespace PrimMesher
         /// <returns></returns>
         public PrimMesh Copy()
         {
-            PrimMesh copy = new PrimMesh(this.sides, this.profileStart, this.profileEnd, this.hollow, this.hollowSides);
-            copy.twistBegin = this.twistBegin;
-            copy.twistEnd = this.twistEnd;
-            copy.topShearX = this.topShearX;
-            copy.topShearY = this.topShearY;
-            copy.pathCutBegin = this.pathCutBegin;
-            copy.pathCutEnd = this.pathCutEnd;
-            copy.dimpleBegin = this.dimpleBegin;
-            copy.dimpleEnd = this.dimpleEnd;
-            copy.skew = this.skew;
-            copy.holeSizeX = this.holeSizeX;
-            copy.holeSizeY = this.holeSizeY;
-            copy.taperX = this.taperX;
-            copy.taperY = this.taperY;
-            copy.radius = this.radius;
-            copy.revolutions = this.revolutions;
-            copy.stepsPerRevolution = this.stepsPerRevolution;
-            copy.calcVertexNormals = this.calcVertexNormals;
-            copy.normalsProcessed = this.normalsProcessed;
-            copy.viewerMode = this.viewerMode;
-            copy.numPrimFaces = this.numPrimFaces;
-            copy.errorMessage = this.errorMessage;
+            PrimMesh copy = new PrimMesh(this.sides, this.profileStart, this.profileEnd, this.hollow, this.hollowSides)
+            {
+                twistBegin = this.twistBegin,
+                twistEnd = this.twistEnd,
+                topShearX = this.topShearX,
+                topShearY = this.topShearY,
+                pathCutBegin = this.pathCutBegin,
+                pathCutEnd = this.pathCutEnd,
+                dimpleBegin = this.dimpleBegin,
+                dimpleEnd = this.dimpleEnd,
+                skew = this.skew,
+                holeSizeX = this.holeSizeX,
+                holeSizeY = this.holeSizeY,
+                taperX = this.taperX,
+                taperY = this.taperY,
+                radius = this.radius,
+                revolutions = this.revolutions,
+                stepsPerRevolution = this.stepsPerRevolution,
+                calcVertexNormals = this.calcVertexNormals,
+                normalsProcessed = this.normalsProcessed,
+                viewerMode = this.viewerMode,
+                numPrimFaces = this.numPrimFaces,
+                errorMessage = this.errorMessage,
 
-            copy.coords = new List<Coord>(this.coords);
-            copy.faces = new List<Face>(this.faces);
-            copy.viewerFaces = new List<ViewerFace>(this.viewerFaces);
-            copy.normals = new List<Coord>(this.normals);
+                coords = new List<Coord>(this.coords),
+                faces = new List<Face>(this.faces),
+                viewerFaces = new List<ViewerFace>(this.viewerFaces),
+                normals = new List<Coord>(this.normals)
+            };
 
             return copy;
         }

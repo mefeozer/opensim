@@ -292,21 +292,24 @@ namespace OpenSim.Data.PGSQL
             using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                NpgsqlParameter idParameter = new NpgsqlParameter("EstateID", DbType.Int32);
-                idParameter.Value = es.EstateID;
+                NpgsqlParameter idParameter = new NpgsqlParameter("EstateID", DbType.Int32)
+                {
+                    Value = es.EstateID
+                };
                 cmd.Parameters.Add(idParameter);
                 conn.Open();
                 using (NpgsqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        EstateBan eb = new EstateBan();
-
-                        eb.BannedUserID = new UUID((Guid)reader["bannedUUID"]); //uuid;
-                        eb.BanningUserID = new UUID((Guid)reader["banningUUID"]); //uuid;
-                        eb.BanTime = Convert.ToInt32(reader["banTime"]);
-                        eb.BannedHostAddress = "0.0.0.0";
-                        eb.BannedHostIPMask = "0.0.0.0";
+                        EstateBan eb = new EstateBan
+                        {
+                            BannedUserID = new UUID((Guid)reader["bannedUUID"]), //uuid;
+                            BanningUserID = new UUID((Guid)reader["banningUUID"]), //uuid;
+                            BanTime = Convert.ToInt32(reader["banTime"]),
+                            BannedHostAddress = "0.0.0.0",
+                            BannedHostIPMask = "0.0.0.0"
+                        };
                         es.AddBan(eb);
                     }
                 }

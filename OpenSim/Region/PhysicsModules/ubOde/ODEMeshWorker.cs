@@ -147,11 +147,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         public void ChangeActorPhysRep(PhysicsActor actor, PrimitiveBaseShape pbs,
                                         Vector3 size, byte shapetype)
         {
-            ODEPhysRepData repData = new ODEPhysRepData();
-            repData.actor = actor;
-            repData.pbs = pbs;
-            repData.size = size;
-            repData.shapetype = shapetype;
+            ODEPhysRepData repData = new ODEPhysRepData
+            {
+                actor = actor,
+                pbs = pbs,
+                size = size,
+                shapetype = shapetype
+            };
 
             CheckMesh(repData);
             CalcVolumeData(repData);
@@ -162,11 +164,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         public ODEPhysRepData NewActorPhysRep(PhysicsActor actor, PrimitiveBaseShape pbs,
                                         Vector3 size, byte shapetype)
         {
-            ODEPhysRepData repData = new ODEPhysRepData();
-            repData.actor = actor;
-            repData.pbs = pbs;
-            repData.size = size;
-            repData.shapetype = shapetype;
+            ODEPhysRepData repData = new ODEPhysRepData
+            {
+                actor = actor,
+                pbs = pbs,
+                size = size,
+                shapetype = shapetype
+            };
 
             CheckMesh(repData);
             CalcVolumeData(repData);

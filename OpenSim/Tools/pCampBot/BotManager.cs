@@ -372,9 +372,10 @@ namespace pCampBot
                 BotConnectingState = BotManagerBotConnectingState.Connecting;
             }
 
-            Thread connectBotThread = new Thread(o => ConnectBotsInternal(botcount));
-
-            connectBotThread.Name = "Bots connection thread";
+            Thread connectBotThread = new Thread(o => ConnectBotsInternal(botcount))
+            {
+                Name = "Bots connection thread"
+            };
             connectBotThread.Start();
         }
 
@@ -490,8 +491,10 @@ namespace pCampBot
                 null,
                 firstName, lastName, string.Join(",", behaviours.ConvertAll<string>(b => b.Name).ToArray()));
 
-            Bot pb = new Bot(bm, behaviours, firstName, lastName, password, startLocation, loginUri);
-            pb.wear = wearSetting;
+            Bot pb = new Bot(bm, behaviours, firstName, lastName, password, startLocation, loginUri)
+            {
+                wear = wearSetting
+            };
             pb.Client.Settings.SEND_AGENT_UPDATES = InitBotSendAgentUpdates;
             pb.RequestObjectTextures = InitBotRequestObjectTextures;
 
@@ -695,9 +698,10 @@ namespace pCampBot
             lock (BotConnectingStateChangeObject)
                 BotConnectingState = BotManagerBotConnectingState.Disconnecting;
 
-            Thread disconnectBotThread = new Thread(o => DisconnectBotsInternal(connectedBots, botsToDisconnectCount));
-
-            disconnectBotThread.Name = "Bots disconnection thread";
+            Thread disconnectBotThread = new Thread(o => DisconnectBotsInternal(connectedBots, botsToDisconnectCount))
+            {
+                Name = "Bots disconnection thread"
+            };
             disconnectBotThread.Start();
         }
 

@@ -116,11 +116,13 @@ namespace OpenSim.Region.ScriptEngine.XEngine.Tests
             string scriptItemSceneAName = "script1";
 
             // CREATE SCRIPT TODO
-            InventoryItemBase scriptItemSceneA = new InventoryItemBase();
-            //            itemTemplate.ID = itemId;
-            scriptItemSceneA.Name = scriptItemSceneAName;
-            scriptItemSceneA.Folder = soSceneA.UUID;
-            scriptItemSceneA.InvType = (int)InventoryType.LSL;
+            InventoryItemBase scriptItemSceneA = new InventoryItemBase
+            {
+                //            itemTemplate.ID = itemId;
+                Name = scriptItemSceneAName,
+                Folder = soSceneA.UUID,
+                InvType = (int)InventoryType.LSL
+            };
 
             AutoResetEvent chatEvent = new AutoResetEvent(false);
             OSChatMessage messageReceived = null;
@@ -156,8 +158,10 @@ default
             {
                 // XXX: Should not be doing this so directly.  Should call some variant of EventManager.touch() instead.
                 DetectParams[] det = new DetectParams[1];
-                det[0] = new DetectParams();
-                det[0].Key = userId;
+                det[0] = new DetectParams
+                {
+                    Key = userId
+                };
                 det[0].Populate(sceneA);
 
                 EventParams ep = new EventParams("touch_start", new object[] { new LSL_Types.LSLInteger(1) }, det);
@@ -190,8 +194,10 @@ default
 
                 // XXX: Should not be doing this so directly.  Should call some variant of EventManager.touch() instead.
                 DetectParams[] det = new DetectParams[1];
-                det[0] = new DetectParams();
-                det[0].Key = userId;
+                det[0] = new DetectParams
+                {
+                    Key = userId
+                };
                 det[0].Populate(sceneB);
 
                 EventParams ep = new EventParams("touch_start", new object[] { new LSL_Types.LSLInteger(1) }, det);
