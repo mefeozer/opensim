@@ -37,9 +37,5 @@ namespace OpenSim.Framework.Capabilities
         public int Top = 0;
         public int Bottom = 0;
         public UUID ImageID = UUID.Zero;
-
-        public OSDMapLayer()
-        {
-        }
     }
 }

@@ -214,7 +214,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             RestSessionObject<TRequest> deserial = default(RestSessionObject<TRequest>);
             bool fail = false;
 
-            using (XmlTextReader xmlReader = new XmlTextReader(request))
+            using (XmlReader xmlReader = new XmlReader(request))
             {
                 try
                 {
@@ -273,7 +273,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             TRequest deserial = default(TRequest);
             bool fail = false;
 
-            using (XmlTextReader xmlReader = new XmlTextReader(request))
+            using (XmlReader xmlReader = new XmlReader(request))
             {
                 try
                 {

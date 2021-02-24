@@ -44,10 +44,6 @@ namespace OpenSim.Framework
         public ushort SizeX;
         public ushort SizeY;
 
-        public MapBlockData()
-        {
-        }
-
         public OSDMap ToOSD()
         {
             OSDMap map = new OSDMap();

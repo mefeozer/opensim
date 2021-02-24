@@ -56,7 +56,7 @@ namespace OpenSim.Framework.Capabilities
             //streamReader.Close();
 
             // OpenMetaverse.StructuredData.OSDMap hash = (OpenMetaverse.StructuredData.OSDMap)
-            //    OpenMetaverse.StructuredData.LLSDParser.DeserializeXml(new XmlTextReader(request));
+            //    OpenMetaverse.StructuredData.LLSDParser.DeserializeXml(new XmlReader(request));
 
             Hashtable hash = (Hashtable) LLSD.LLSDDeserialize(request);
             if(hash == null)

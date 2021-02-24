@@ -87,10 +87,6 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest
         private readonly ConcurrentDictionary<UUID, ThrottleData> m_OwnerRequestsThrottle = new ConcurrentDictionary<UUID, ThrottleData>();
 
 
-        public HttpRequestModule()
-        {
-        }
-
         #region INonSharedRegionModule Members
 
         public void Initialise(IConfigSource config)

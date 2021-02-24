@@ -37,9 +37,6 @@ namespace OpenSim.Server.Handlers
 {
     public class UserProfilesHandlers
     {
-        public UserProfilesHandlers ()
-        {
-        }
     }
 
     public class JsonRpcProfileHandlers

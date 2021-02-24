@@ -1181,7 +1181,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Voice.VivoxVoice
                     // Send request and retrieve the response
                     using (HttpWebResponse rsp = (HttpWebResponse)req.GetResponse())
                     using (Stream s = rsp.GetResponseStream())
-                    using (XmlTextReader rdr = new XmlTextReader(s))
+                    using (XmlReader rdr = new XmlReader(s))
                             doc.Load(rdr);
                 }
                 catch (Exception e)

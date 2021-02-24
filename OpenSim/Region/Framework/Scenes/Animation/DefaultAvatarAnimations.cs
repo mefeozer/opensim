@@ -54,7 +54,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         {
 //            Dictionary<string, UUID> animations = new Dictionary<string, UUID>();
 
-            using (XmlTextReader reader = new XmlTextReader(path))
+            using (XmlReader reader = new XmlReader(path))
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(reader);

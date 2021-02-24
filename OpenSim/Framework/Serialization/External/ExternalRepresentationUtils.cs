@@ -220,7 +220,7 @@ namespace OpenSim.Framework.Serialization.External
             xmlData = SanitizeXml(xmlData);
             using (StringWriter sw = new StringWriter())
             using (XmlTextWriter writer = new XmlTextWriter(sw))
-            using (XmlTextReader wrappedReader = new XmlTextReader(xmlData, XmlNodeType.Element, null))
+            using (XmlReader wrappedReader = new XmlReader(xmlData, XmlNodeType.Element, null))
             using (XmlReader reader = XmlReader.Create(wrappedReader, new XmlReaderSettings() { IgnoreWhitespace = true, ConformanceLevel = ConformanceLevel.Fragment}))
             {
                 TransformXml(reader, writer, sceneName, homeURL, userService, scopeID);

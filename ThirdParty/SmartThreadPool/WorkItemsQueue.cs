@@ -420,10 +420,6 @@ namespace Amib.Threading.Internal
 
             #region Construction
 
-            public WaiterEntry()
-            {
-            }
-
             #endregion
 
             #region Public methods

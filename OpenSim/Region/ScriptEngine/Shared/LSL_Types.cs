@@ -1199,10 +1199,6 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             class HomogeneousComparer : IComparer
             {
-                public HomogeneousComparer()
-                {
-                }
-
                 public int Compare(object lhs, object rhs)
                 {
                     return compare(lhs, rhs, 1);

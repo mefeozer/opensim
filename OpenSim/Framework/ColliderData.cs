@@ -33,7 +33,6 @@ namespace OpenSim.Framework
 {
     public class DetectedObject
     {
-        public DetectedObject() { }
         public UUID groupUUID = UUID.Zero;
         public UUID ownerUUID = UUID.Zero;
         public UUID keyUUID = UUID.Zero;
@@ -47,7 +46,6 @@ namespace OpenSim.Framework
 
     public class ColliderArgs : EventArgs
     {
-        public ColliderArgs() { }
         public List<DetectedObject> Colliders = new List<DetectedObject>();
 
     }

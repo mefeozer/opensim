@@ -91,9 +91,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver
         }
 
 
-        public InventoryArchiverModule() {}
-
-//        public InventoryArchiverModule(bool disablePresenceChecks)
+        //        public InventoryArchiverModule(bool disablePresenceChecks)
 //        {
 //            DisablePresenceChecks = disablePresenceChecks;
         //        }

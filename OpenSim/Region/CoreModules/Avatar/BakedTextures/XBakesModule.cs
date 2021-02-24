@@ -120,7 +120,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
                 {
                     using(MemoryStream s = rc.Request(m_Auth))
                     {
-                        using(XmlTextReader sr = new XmlTextReader(s))
+                        using(XmlReader sr = new XmlReader(s))
                         {
                             sr.ReadStartElement("BakedAppearance");
                             while (sr.LocalName == "BakedTexture")

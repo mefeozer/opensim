@@ -34,11 +34,6 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
     {
         private readonly List<IntPtr> worldlock = new List<IntPtr>();
 
-        public CollisionLocker()
-        {
-
-        }
-
         public void dlock(IntPtr world)
         {
             lock (worldlock)

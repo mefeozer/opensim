@@ -100,10 +100,6 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
         protected bool m_exportPrintRegionName = false; // prints the region name exported map
         protected bool m_localV1MapAssets = false; // keep V1 map assets only on  local cache
 
-        public WorldMapModule()
-        {
-        }
-
         ~WorldMapModule()
         {
             Dispose(false);

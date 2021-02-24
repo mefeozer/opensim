@@ -50,7 +50,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
             if (fileName.StartsWith("http:") || File.Exists(fileName))
             {
-                using(XmlTextReader reader = new XmlTextReader(fileName))
+                using(XmlReader reader = new XmlReader(fileName))
                 {
                     reader.WhitespaceHandling = WhitespaceHandling.None;
 
@@ -233,7 +233,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
         /// <param name="fileName"></param>
         public static void LoadPrimsFromXml2(Scene scene, string fileName)
         {
-            LoadPrimsFromXml2(scene, new XmlTextReader(fileName), false);
+            LoadPrimsFromXml2(scene, new XmlReader(fileName), false);
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
         /// <param name="startScripts"></param>
         public static void LoadPrimsFromXml2(Scene scene, TextReader reader, bool startScripts)
         {
-            LoadPrimsFromXml2(scene, new XmlTextReader(reader), startScripts);
+            LoadPrimsFromXml2(scene, new XmlReader(reader), startScripts);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
         /// <param name="scene"></param>
         /// <param name="reader"></param>
         /// <param name="startScripts"></param>
-        protected static void LoadPrimsFromXml2(Scene scene, XmlTextReader reader, bool startScripts)
+        protected static void LoadPrimsFromXml2(Scene scene, XmlReader reader, bool startScripts)
         {
             XmlDocument doc = new XmlDocument();
             reader.WhitespaceHandling = WhitespaceHandling.None;

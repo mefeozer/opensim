@@ -41,10 +41,6 @@ namespace OpenSim.Region.PhysicsModule.POS
         private Quaternion _orientation;
         private bool iscolliding;
 
-        public POSPrim()
-        {
-        }
-
         public override int PhysicsActorType
         {
             get { return (int) ActorTypes.Prim; }

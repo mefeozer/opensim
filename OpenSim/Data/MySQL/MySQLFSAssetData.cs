@@ -54,10 +54,6 @@ namespace OpenSim.Data.MySQL
             get { return GetType().Assembly; }
         }
 
-        public MySQLFSAssetData()
-        {
-        }
-
         #region IPlugin Members
 
         public string Version { get { return "1.0.0.0"; } }

@@ -1563,7 +1563,7 @@ namespace OpenSim.Framework
                 {
                     using (StringReader sr = new StringReader(rawXml))
                     {
-                        using (XmlTextReader xtr = new XmlTextReader(sr))
+                        using (XmlReader xtr = new XmlReader(sr))
                         {
                             xtr.MoveToContent();
 

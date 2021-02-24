@@ -55,10 +55,6 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
         /// <summary>Lookup table to speed up terrain exports</summary>
         HeightmapLookupValue[] LookupHeightTable;
 
-        public LLRAW()
-        {
-        }
-
         private void BuildLookupHeightTable()
         {
             LookupHeightTable = new HeightmapLookupValue[256 * 256];

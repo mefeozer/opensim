@@ -30,8 +30,5 @@ namespace OpenSim.Framework.Capabilities
     [LLSDType("MAP")]
     public class LLSDEmpty
     {
-        public LLSDEmpty()
-        {
-        }
     }
 }

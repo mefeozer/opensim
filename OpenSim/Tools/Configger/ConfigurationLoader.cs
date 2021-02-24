@@ -52,10 +52,6 @@ namespace OpenSim.Tools.Configger
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ConfigurationLoader()
-        {
-        }
-
         /// <summary>
         /// Loads the region configuration
         /// </summary>

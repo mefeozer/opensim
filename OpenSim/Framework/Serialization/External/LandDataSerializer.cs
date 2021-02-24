@@ -184,7 +184,7 @@ namespace OpenSim.Framework.Serialization.External
         {
             LandData landData = new LandData();
 
-            using (XmlTextReader reader = new XmlTextReader(new StringReader(serializedLandData)))
+            using (XmlReader reader = new XmlReader(new StringReader(serializedLandData)))
             {
                 reader.ReadStartElement("LandData");
 

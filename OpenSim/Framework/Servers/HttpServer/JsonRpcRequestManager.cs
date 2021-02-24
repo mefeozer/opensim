@@ -40,10 +40,6 @@ namespace OpenSim.Framework.Servers.HttpServer
     {
         static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public JsonRpcRequestManager()
-        {
-        }
-
         /// <summary>
         /// Sends json-rpc request with a serializable type.
         /// </summary>

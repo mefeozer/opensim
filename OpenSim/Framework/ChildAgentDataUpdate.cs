@@ -51,10 +51,6 @@ namespace OpenSim.Framework
         public ulong regionHandle;
         public byte[] throttles;
         public Vector3 Velocity;
-
-        public ChildAgentDataUpdate()
-        {
-        }
     }
 
     public interface IAgentData

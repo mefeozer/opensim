@@ -58,12 +58,7 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest.Tests
 
         public Func<IAsyncResult, WebResponse> OnEndGetResponse { get; set; }
 
-        public TestWebRequest() : base()
-        {
-//            Console.WriteLine("created");
-        }
-
-//        public TestWebRequest(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        //        public TestWebRequest(SerializationInfo serializationInfo, StreamingContext streamingContext)
 //            : base(serializationInfo, streamingContext)
 //        {
 //            Console.WriteLine("created");

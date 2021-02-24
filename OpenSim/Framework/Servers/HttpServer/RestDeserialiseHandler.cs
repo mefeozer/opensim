@@ -52,7 +52,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                            IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
             TRequest deserial;
-            using (XmlTextReader xmlReader = new XmlTextReader(request))
+            using (XmlReader xmlReader = new XmlReader(request))
             {
                 XmlSerializer deserializer = new XmlSerializer(typeof (TRequest));
                 deserial = (TRequest) deserializer.Deserialize(xmlReader);

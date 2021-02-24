@@ -52,10 +52,6 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         private static readonly string LogHeader = "[ENTITY TRANSFER MODULE]";
         private static readonly string OutfitTPError = "destination region does not support the Outfit you are wearing. Please retry with a simpler one";
 
-        public EntityTransferModule()
-        {
-        }
-
         ~EntityTransferModule()
         {
             Dispose(false);
@@ -141,10 +137,6 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         {
             private ExpiringCacheOS<UUID, Dictionary<ulong, double>> m_bannedRegions =
                     new ExpiringCacheOS<UUID, Dictionary<ulong, double>>(15000);
-
-            public BannedRegionCache()
-            {
-            }
 
             ~BannedRegionCache()
             {
@@ -2526,9 +2518,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         private class NotFoundLocationCache
         {
             private readonly Dictionary<ulong, DateTime> m_notFoundLocations = new Dictionary<ulong, DateTime>();
-            public NotFoundLocationCache()
-            {
-            }
+
             // just use normal regions handlers and sizes
             public void Add(double pX, double pY)
             {

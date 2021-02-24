@@ -177,10 +177,6 @@ namespace OpenSim.Framework
 
         public Dictionary<string, object> ServiceURLs;
 
-        public AgentCircuitData()
-        {
-        }
-
         /// <summary>
         /// Pack AgentCircuitData into an OSDMap for transmission over LLSD XML or LLSD json
         /// </summary>

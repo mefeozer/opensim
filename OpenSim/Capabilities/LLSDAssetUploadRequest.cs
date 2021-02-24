@@ -52,8 +52,5 @@ namespace OpenSim.Framework.Capabilities
         public string inventory_type = string.Empty;
         public string name = string.Empty;
         public LLSDAssetResource asset_resources = new LLSDAssetResource();
-        public LLSDAssetUploadRequest()
-        {
-        }
     }
 }

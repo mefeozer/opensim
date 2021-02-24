@@ -719,7 +719,7 @@ namespace OpenSim.Region.CoreModules.World.Serialiser.Tests
 
             string xml = SceneObjectSerializer.ToOriginalXmlFormat(so);
 
-            XmlTextReader xtr = new XmlTextReader(new StringReader(xml));
+            XmlReader xtr = new XmlReader(new StringReader(xml));
             xtr.ReadStartElement("SceneObjectGroup");
             xtr.ReadStartElement("RootPart");
             xtr.ReadStartElement("SceneObjectPart");
@@ -832,7 +832,7 @@ namespace OpenSim.Region.CoreModules.World.Serialiser.Tests
             options["old-guids"] = true;
             string xml2 = m_serialiserModule.SerializeGroupToXml2(so, options);
 
-            XmlTextReader xtr = new XmlTextReader(new StringReader(xml2));
+            XmlReader xtr = new XmlReader(new StringReader(xml2));
             xtr.ReadStartElement("SceneObjectGroup");
             xtr.ReadStartElement("SceneObjectPart");
 

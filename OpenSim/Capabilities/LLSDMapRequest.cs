@@ -31,9 +31,5 @@ namespace OpenSim.Framework.Capabilities
     public class LLSDMapRequest
     {
         public int Flags = 0;
-
-        public LLSDMapRequest()
-        {
-        }
     }
 }

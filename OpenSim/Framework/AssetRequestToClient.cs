@@ -52,9 +52,5 @@ namespace OpenSim.Framework
         //public bool AssetInCache;
         //public int TimeRequested;
         public int DiscardLevel = -1;
-
-        public AssetRequestToClient()
-        {
-        }
     }
 }

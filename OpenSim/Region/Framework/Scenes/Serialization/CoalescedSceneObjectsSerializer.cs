@@ -127,7 +127,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             try
             {
                 // Quickly check if this is a coalesced object, without fully parsing the XML
-                using (XmlTextReader reader = new XmlTextReader(new StringReader(xml)))
+                using (XmlReader reader = new XmlReader(new StringReader(xml)))
                 {
                     reader.MoveToContent(); // skip possible xml declaration
 
@@ -196,7 +196,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 // Quickly check if this is a coalesced object, without fully parsing the XML
                 MemoryStream ms = new MemoryStream(data, 0, len, false);
                 StreamReader sr = new StreamReader(ms, Encoding.UTF8);
-                using (XmlTextReader reader = new XmlTextReader(sr))
+                using (XmlReader reader = new XmlReader(sr))
                 {
                     reader.MoveToContent(); // skip possible xml declaration
 

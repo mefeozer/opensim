@@ -76,10 +76,6 @@ namespace OpenSim.Region.CoreModules.Agent.TextureSender
 
         public string Name { get { return "J2KDecoderModule"; } }
 
-        public J2KDecoderModule()
-        {
-        }
-
         public void Initialise(IConfigSource source)
         {
             IConfig startupConfig = source.Configs["Startup"];

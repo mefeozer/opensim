@@ -347,9 +347,6 @@ public abstract class BSShape
 // ============================================================================================================
 public class BSShapeNull : BSShape
 {
-    public BSShapeNull() : base()
-    {
-    }
     public static BSShape GetReference() { return new BSShapeNull();  }
     public override BSShape GetReference(BSScene pPhysicsScene, BSPhysObject pPrim) { return new BSShapeNull();  }
     public override void Dereference(BSScene physicsScene) { /* The magic of garbage collection will make this go away */ }
@@ -1328,10 +1325,6 @@ public class BSShapeAvatar : BSShape
     private static string LogHeader = "[BULLETSIM SHAPE AVATAR]";
 #pragma warning restore 414
 
-    public BSShapeAvatar()
-        : base()
-    {
-    }
     public static BSShape GetReference(BSPhysObject prim)
     {
         return new BSShapeNull();

@@ -109,13 +109,6 @@ namespace OpenSim.Region.Framework.Scenes
         }
 
         /// <summary>
-        /// Creates a new Entity (should not occur on it's own)
-        /// </summary>
-        public EntityBase()
-        {
-        }
-
-        /// <summary>
         /// Performs any updates that need to be done at each frame, as opposed to immediately.
         /// These included scheduled updates and updates that occur due to physics processing.
         /// </summary>

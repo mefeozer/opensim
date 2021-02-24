@@ -61,13 +61,6 @@ namespace OpenSim.Framework
         }
 
         /// <summary>
-        /// Default constructor
-        /// </summary>
-        public ClientManager()
-        {
-        }
-
-        /// <summary>
         /// Add a client reference to the collection if it does not already
         /// exist
         /// </summary>

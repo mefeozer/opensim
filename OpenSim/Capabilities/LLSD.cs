@@ -81,7 +81,7 @@ namespace OpenSim.Framework.Capabilities
         /// <returns></returns>
         public static object LLSDDeserialize(Stream st)
         {
-            using (XmlTextReader reader = new XmlTextReader(st))
+            using (XmlReader reader = new XmlReader(st))
             {
                 reader.Read();
                 SkipWS(reader);
@@ -226,7 +226,7 @@ namespace OpenSim.Framework.Capabilities
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static object LLSDParseOne(XmlTextReader reader)
+        public static object LLSDParseOne(XmlReader reader)
         {
             SkipWS(reader);
             if (reader.NodeType != XmlNodeType.Element)
@@ -369,7 +369,7 @@ namespace OpenSim.Framework.Capabilities
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static Hashtable LLSDParseMap(XmlTextReader reader)
+        public static Hashtable LLSDParseMap(XmlReader reader)
         {
             Hashtable ret = new Hashtable();
 
@@ -414,7 +414,7 @@ namespace OpenSim.Framework.Capabilities
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static ArrayList LLSDParseArray(XmlTextReader reader)
+        public static ArrayList LLSDParseArray(XmlReader reader)
         {
             ArrayList ret = new ArrayList();
 
@@ -669,7 +669,7 @@ namespace OpenSim.Framework.Capabilities
         ///
         /// </summary>
         /// <param name="reader"></param>
-        private static void SkipWS(XmlTextReader reader)
+        private static void SkipWS(XmlReader reader)
         {
             while (
                 reader.NodeType == XmlNodeType.Comment ||

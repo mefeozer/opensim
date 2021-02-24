@@ -2528,7 +2528,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             try
             {
-                using (XmlTextReader wrappedReader = new XmlTextReader(xmlData, XmlNodeType.Element, null))
+                using (XmlReader wrappedReader = new XmlReader(xmlData, XmlNodeType.Element, null))
                 {
                     using (XmlReader reader = XmlReader.Create(wrappedReader, new XmlReaderSettings() { IgnoreWhitespace = true, ConformanceLevel = ConformanceLevel.Fragment}))
                     {

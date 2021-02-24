@@ -44,10 +44,6 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
         private ExpiringCacheOS<string, UserAccount> m_NameCache = new ExpiringCacheOS<string, UserAccount>(300000);
         private readonly object accessLock = new object();
 
-        public UserAccountCache()
-        {
-        }
-
         ~UserAccountCache()
         {
             Dispose(false);

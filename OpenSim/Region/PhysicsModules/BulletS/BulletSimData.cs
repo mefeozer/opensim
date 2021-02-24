@@ -147,9 +147,6 @@ public class BulletShape
 // An allocated Bullet btConstraint
 public class BulletConstraint
 {
-    public BulletConstraint()
-    {
-    }
     public virtual void Clear() { }
     public virtual bool HasPhysicalConstraint { get { return false; } }
 

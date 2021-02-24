@@ -31,9 +31,5 @@ namespace OpenSim.Framework
     {
         public bool Authorised;
         public Login LoginInfo;
-
-        public AuthenticateResponse()
-        {
-        }
     }
 }

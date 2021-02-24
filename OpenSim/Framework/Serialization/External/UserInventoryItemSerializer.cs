@@ -196,7 +196,7 @@ namespace OpenSim.Framework.Serialization.External
         {
             InventoryItemBase item = new InventoryItemBase();
 
-            using (XmlTextReader reader = new XmlTextReader(new StringReader(serialization)))
+            using (XmlReader reader = new XmlReader(new StringReader(serialization)))
             {
                 reader.ReadStartElement("InventoryItem");
 

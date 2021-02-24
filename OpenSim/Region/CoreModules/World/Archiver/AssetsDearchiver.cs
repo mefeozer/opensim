@@ -91,7 +91,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             m_metadata = new Dictionary<string, AssetMetadata>();
 
             StringReader sr = new StringReader(xml);
-            XmlTextReader reader = new XmlTextReader(sr);
+            XmlReader reader = new XmlReader(sr);
 
             reader.ReadStartElement("assets");
             reader.Read();

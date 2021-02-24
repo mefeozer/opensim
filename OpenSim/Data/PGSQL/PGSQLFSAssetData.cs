@@ -46,10 +46,6 @@ namespace OpenSim.Data.PGSQL
         private PGSQLManager m_database;
         private string m_connectionString;
 
-        public PGSQLFSAssetData()
-        {
-        }
-
         public void Initialise(string connect, string realm, int UpdateAccessTime)
         {
             DaysBetweenAccessTimeUpdates = UpdateAccessTime;

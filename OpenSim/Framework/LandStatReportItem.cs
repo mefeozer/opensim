@@ -45,11 +45,5 @@ namespace OpenSim.Framework
         public int Urls;
         public uint Time;
         public string Parcel;
-
-        public LandStatReportItem()
-        {
-
-        }
-
     }
 }

@@ -117,9 +117,6 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public XMRInstQueue m_SleepQueue = new XMRInstQueue();
         private string m_LockedDict = "nobody";
         private ThreadPriority m_workersPrio;
-        public Yengine()
-        {
-        }
 
         public string Name
         {

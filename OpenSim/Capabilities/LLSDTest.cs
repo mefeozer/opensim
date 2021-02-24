@@ -32,9 +32,5 @@ namespace OpenSim.Framework.Capabilities
     {
         public int Test1 = 20;
         public int Test2 = 10;
-
-        public LLSDTest()
-        {
-        }
     }
 }

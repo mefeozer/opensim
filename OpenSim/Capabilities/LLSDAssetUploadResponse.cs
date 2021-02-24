@@ -65,9 +65,6 @@ namespace OpenSim.Framework.Capabilities
         public int upload_price = 0;
         public LLSDAssetUploadResponseData data = null;
         public LLSDAssetUploadError error = null;
-        public LLSDAssetUploadResponse()
-        {
-        }
     }
 
 

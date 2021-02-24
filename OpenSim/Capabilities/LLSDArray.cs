@@ -33,9 +33,5 @@ namespace OpenSim.Framework.Capabilities
     public class OSDArray
     {
         public ArrayList Array = new ArrayList();
-
-        public OSDArray()
-        {
-        }
     }
 }

@@ -61,10 +61,6 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
 
         private string m_fontName = "Arial";
 
-        public VectorRenderModule()
-        {
-        }
-
         #region IDynamicTextureRender Members
 
         public string GetContentType()

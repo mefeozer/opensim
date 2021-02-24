@@ -57,7 +57,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
         public static SceneObjectGroup FromOriginalXmlFormat(string xmlData)
         {
             string fixedData = ExternalRepresentationUtils.SanitizeXml(xmlData);
-            using (XmlTextReader wrappedReader = new XmlTextReader(fixedData, XmlNodeType.Element, null))
+            using (XmlReader wrappedReader = new XmlReader(fixedData, XmlNodeType.Element, null))
             {
                 using (XmlReader reader = XmlReader.Create(wrappedReader, new XmlReaderSettings() { IgnoreWhitespace = true, ConformanceLevel = ConformanceLevel.Fragment }))
                 {
@@ -292,7 +292,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 SceneObjectGroup sceneObject;
                 using(StringReader sr = new StringReader(parts[0].OuterXml))
                 {
-                    using(XmlTextReader reader = new XmlTextReader(sr))
+                    using(XmlReader reader = new XmlReader(sr))
                         sceneObject = new SceneObjectGroup(SceneObjectPart.FromXml(reader));
                 }
 
@@ -302,7 +302,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 {
                     using(StringReader sr = new StringReader(parts[i].OuterXml))
                     {
-                        using(XmlTextReader reader = new XmlTextReader(sr))
+                        using(XmlReader reader = new XmlReader(sr))
                         {
                             part = SceneObjectPart.FromXml(reader);
                         }

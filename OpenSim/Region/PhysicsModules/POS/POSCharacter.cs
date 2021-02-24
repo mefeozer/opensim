@@ -42,10 +42,6 @@ namespace OpenSim.Region.PhysicsModule.POS
         private bool flying;
         private bool isColliding;
 
-        public POSCharacter()
-        {
-        }
-
         public override int PhysicsActorType
         {
             get { return (int) ActorTypes.Agent; }
