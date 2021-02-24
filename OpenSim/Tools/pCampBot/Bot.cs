@@ -82,7 +82,7 @@ namespace pCampBot
         /// <summary>
         /// Bot manager.
         /// </summary>
-        public BotManager Manager { get; private set; }
+        public BotManager Manager { get; }
 
         /// <summary>
         /// Behaviours implemented by this bot.
@@ -136,12 +136,12 @@ namespace pCampBot
             }
         }
 
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Name { get; private set; }
-        public string Password { get; private set; }
-        public string LoginUri { get; private set; }
-        public string StartLocation { get; private set; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public string Name { get; }
+        public string Password { get; }
+        public string LoginUri { get; }
+        public string StartLocation { get; }
 
         public string saveDir;
         public string wear;
@@ -159,7 +159,7 @@ namespace pCampBot
         /// <summary>
         /// Random number generator.
         /// </summary>
-        public Random Random { get; private set; }
+        public Random Random { get; }
 
         /// <summary>
         /// New instance of a SecondLife client

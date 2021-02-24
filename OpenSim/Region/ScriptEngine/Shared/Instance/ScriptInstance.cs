@@ -91,7 +91,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
         public int DebugLevel { get; set; }
 
         public WaitHandle CoopWaitHandle { get; private set; }
-        public Stopwatch ExecutionTimer { get; private set; }
+        public Stopwatch ExecutionTimer { get; }
 
         public Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>> LineMap { get; set; }
 
@@ -164,17 +164,17 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
         public bool StayStopped { get; set; }
 
-        public IScriptEngine Engine { get; private set; }
+        public IScriptEngine Engine { get; }
 
         public UUID AppDomain { get; set; }
 
-        public SceneObjectPart Part { get; private set; }
+        public SceneObjectPart Part { get; }
 
-        public string PrimName { get; private set; }
+        public string PrimName { get; }
 
-        public string ScriptName { get; private set; }
+        public string ScriptName { get; }
 
-        public UUID ItemID { get; private set; }
+        public UUID ItemID { get; }
 
         public UUID ObjectID { get { return Part.UUID; } }
 
@@ -184,9 +184,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
         public uint RootLocalID { get { return Part.ParentGroup.LocalId; } }
 
-        public UUID AssetID { get; private set; }
+        public UUID AssetID { get; }
 
-        public Queue EventQueue { get; private set; }
+        public Queue EventQueue { get; }
 
         public long EventsQueued
         {
@@ -201,11 +201,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance
 
         public int StartParam { get; set; }
 
-        public TaskInventoryItem ScriptTask { get; private set; }
+        public TaskInventoryItem ScriptTask { get; }
 
         public DateTime TimeStarted { get; private set; }
 
-        public MetricsCollectorTime ExecutionTime { get; private set; }
+        public MetricsCollectorTime ExecutionTime { get; }
 
         private static readonly int MeasurementWindow = 30 * 1000;   // show the *recent* time used by the script, to find currently active scripts
 

@@ -57,9 +57,9 @@ namespace OpenSim.Tests.Common
         /// <summary>
         /// We need a scene manager so that test clients can retrieve a scene when performing teleport tests.
         /// </summary>
-        public SceneManager SceneManager { get; private set; }
+        public SceneManager SceneManager { get; }
 
-        public ISimulationDataService SimDataService { get; private set; }
+        public ISimulationDataService SimDataService { get; }
 
         private readonly AgentCircuitManager m_acm = new AgentCircuitManager();
         private readonly IEstateDataService m_estateDataService = null;

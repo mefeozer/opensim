@@ -41,9 +41,9 @@ namespace OpenSim.Framework.Monitoring
 
         private readonly object JobLock = new object();
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public string LoggingName { get; private set; }
+        public string LoggingName { get; }
 
         /// <summary>
         /// Is this engine running?
@@ -262,7 +262,7 @@ namespace OpenSim.Framework.Monitoring
             /// <remarks>
             /// This appears on console and debug output.
             /// </remarks>
-            public string Name { get; private set; }
+            public string Name { get; }
 
             /// <summary>
             /// Common ID for this job.
@@ -271,7 +271,7 @@ namespace OpenSim.Framework.Monitoring
             /// This allows all jobs with a certain common ID (e.g. a client UUID) to be removed en-masse if required.
             /// Can be null if this is not required.
             /// </remarks>
-            public string CommonId { get; private set; }
+            public string CommonId { get; }
 
             /// <summary>
             /// Action to perform when this job is processed.

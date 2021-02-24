@@ -38,7 +38,7 @@ namespace OpenSim.Framework.Monitoring
         /// <summary>
         /// Category of this stat (e.g. cache, scene, etc).
         /// </summary>
-        public string Category { get; private set; }
+        public string Category { get; }
 
         /// <summary>
         /// Containing name for this stat.
@@ -48,7 +48,7 @@ namespace OpenSim.Framework.Monitoring
         /// <value>
         /// The container.
         /// </value>
-        public string Container { get; private set; }
+        public string Container { get; }
 
         /// <summary>
         /// Action used to check whether alert should go off.
@@ -56,7 +56,7 @@ namespace OpenSim.Framework.Monitoring
         /// <remarks>
         /// Should return true if check passes.  False otherwise.
         /// </remarks>
-        public Func<Check, bool> CheckFunc { get; private set; }
+        public Func<Check, bool> CheckFunc { get; }
 
         /// <summary>
         /// Message from the last failure, if any.  If there is no message or no failure then will be null.
@@ -66,10 +66,10 @@ namespace OpenSim.Framework.Monitoring
         /// </remarks>
         public string LastFailureMessage { get; set; }
 
-        public StatVerbosity Verbosity { get; private set; }
-        public string ShortName { get; private set; }
-        public string Name { get; private set; }
-        public string Description { get; private set; }
+        public StatVerbosity Verbosity { get; }
+        public string ShortName { get; }
+        public string Name { get; }
+        public string Description { get; }
 
         public Check(
             string shortName,

@@ -613,9 +613,9 @@ namespace OpenSim.Region.CoreModules.Framework
 
         private class CapTableRow
         {
-            public string Name { get; set; }
-            public int RequestsReceived { get; set; }
-            public int RequestsHandled { get; set; }
+            public string Name { get; }
+            public int RequestsReceived { get; }
+            public int RequestsHandled { get; }
 
             public CapTableRow(string name, int requestsReceived, int requestsHandled)
             {

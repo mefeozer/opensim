@@ -481,7 +481,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             set { m_disableFacelights = value; }
         }
 
-        public List<uint> SelectedObjects {get; private set;}
+        public List<uint> SelectedObjects {get; }
 
         public bool SendLogoutPacketWhenClosing { set { m_SendLogoutPacketWhenClosing = value; } }
 

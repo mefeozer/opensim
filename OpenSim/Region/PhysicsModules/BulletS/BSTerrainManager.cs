@@ -44,10 +44,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         Mesh        = 1
     }
 
-    protected BSScene m_physicsScene { get; private set; }
+    protected BSScene m_physicsScene { get; }
     // Base of the region in world coordinates. Coordinates inside the region are relative to this.
-    public Vector3 TerrainBase { get; private set; }
-    public uint ID { get; private set; }
+    public Vector3 TerrainBase { get; }
+    public uint ID { get; }
 
     public BSTerrainPhys(BSScene physicsScene, Vector3 regionBase, uint id)
     {
@@ -80,7 +80,7 @@ public sealed class BSTerrainManager : IDisposable
     public Vector3 DefaultRegionSize = new Vector3(Constants.RegionSize, Constants.RegionSize, Constants.RegionHeight);
 
     // The scene that I am part of
-    private BSScene m_physicsScene { get; set; }
+    private BSScene m_physicsScene { get; }
 
     // The ground plane created to keep thing from falling to infinity.
     private BulletBody m_groundPlane;

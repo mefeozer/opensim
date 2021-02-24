@@ -259,7 +259,7 @@ namespace OpenSim.Region.Framework.Scenes
         ///
         /// </summary>
         /// <returns></returns>
-        public virtual RegionInfo RegionInfo { get; private set; }
+        public virtual RegionInfo RegionInfo { get; }
 
         #region admin stuff
 

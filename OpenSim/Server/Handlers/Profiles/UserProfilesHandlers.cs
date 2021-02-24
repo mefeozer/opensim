@@ -47,7 +47,7 @@ namespace OpenSim.Server.Handlers
 
         public IUserProfilesService Service
         {
-            get; private set;
+            get;
         }
 
         public JsonRpcProfileHandlers(IUserProfilesService service)

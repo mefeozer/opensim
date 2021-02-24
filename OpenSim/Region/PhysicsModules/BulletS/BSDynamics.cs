@@ -43,7 +43,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 #pragma warning restore 414
 
         // the prim this dynamic controller belongs to
-        private BSPrimLinkable ControllingPrim { get; set; }
+        private BSPrimLinkable ControllingPrim { get; }
 
         private bool m_haveRegisteredForSceneEvents;
 

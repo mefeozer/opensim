@@ -49,9 +49,9 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         private readonly string m_path;
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public string Description { get; private set; }
+        public string Description { get; }
 
         protected BaseRequestHandler(string httpMethod, string path) : this(httpMethod, path, null, null) {}
 

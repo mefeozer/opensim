@@ -40,7 +40,7 @@ namespace OpenSim.Framework
     {
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
         private readonly List<IPNetwork> m_blacklistNetworks;
         private readonly List<IPEndPoint> m_blacklistEndPoints;

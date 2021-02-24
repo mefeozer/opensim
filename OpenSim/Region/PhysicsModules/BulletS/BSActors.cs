@@ -116,10 +116,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 /// </summary>
 public abstract class BSActor
 {
-    protected BSScene m_physicsScene { get; private set; }
-    protected BSPhysObject m_controllingPrim { get; private set; }
+    protected BSScene m_physicsScene { get; }
+    protected BSPhysObject m_controllingPrim { get; }
     public virtual bool Enabled { get; set; }
-    public string ActorName { get; private set; }
+    public string ActorName { get; }
 
     public BSActor(BSScene physicsScene, BSPhysObject pObj, string actorName)
     {

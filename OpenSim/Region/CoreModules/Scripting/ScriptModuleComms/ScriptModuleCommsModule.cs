@@ -51,10 +51,10 @@ namespace OpenSim.Region.CoreModules.Scripting.ScriptModuleComms
 #region ScriptInvocation
         protected class ScriptInvocationData
         {
-            public Delegate ScriptInvocationDelegate { get; private set; }
-            public string FunctionName { get; private set; }
-            public Type[] TypeSignature { get; private set; }
-            public Type ReturnType { get; private set; }
+            public Delegate ScriptInvocationDelegate { get; }
+            public string FunctionName { get; }
+            public Type[] TypeSignature { get; }
+            public Type ReturnType { get; }
 
             public ScriptInvocationData(string fname, Delegate fn, Type[] callsig, Type returnsig)
             {

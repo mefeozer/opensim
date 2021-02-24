@@ -176,13 +176,13 @@ namespace OpenSim.Region.Framework.Scenes
         /// <summary>
         /// Statistical information for this scene.
         /// </summary>
-        public SimStatsReporter StatsReporter { get; private set; }
+        public SimStatsReporter StatsReporter { get; }
 
         /// <summary>
         /// Controls whether physics can be applied to prims.  Even if false, prims still have entries in a
         /// PhysicsScene in order to perform collision detection
         /// </summary>
-        public bool PhysicalPrims { get; private set; }
+        public bool PhysicalPrims { get; }
 
         /// <summary>
         /// Controls whether prims can be collided with.
@@ -190,7 +190,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <remarks>
         /// If this is set to false then prims cannot be subject to physics either.
         /// </summary>
-        public bool CollidablePrims { get; private set; }
+        public bool CollidablePrims { get; }
 
         /// <summary>
         /// Minimum value of the size of a non-physical prim in each axis
@@ -343,13 +343,13 @@ namespace OpenSim.Region.Framework.Scenes
         /// <summary>
         /// Frame time
         /// </remarks>
-        public float FrameTime { get; private set; }
-        public int FrameTimeWarnPercent { get; private set; }
-        public int FrameTimeCritPercent { get; private set; }
+        public float FrameTime { get; }
+        public int FrameTimeWarnPercent { get; }
+        public int FrameTimeCritPercent { get; }
 
         // Normalize the frame related stats to nominal 55fps for viewer and scripts option
         // see SimStatsReporter.cs
-        public bool Normalized55FPS { get; private set; }
+        public bool Normalized55FPS { get; }
 
         private readonly int m_update_physics = 1;
         private readonly int m_update_entitymovement = 1;
@@ -801,13 +801,11 @@ namespace OpenSim.Region.Framework.Scenes
         public string SpawnPointRouting
         {
             get;
-            private set;
         }
         // allow landmarks to pass
         public bool TelehubAllowLandmarks
         {
             get;
-            private set;
         }
 
         public GridInfo SceneGridInfo;

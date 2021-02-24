@@ -49,7 +49,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public virtual void GenerateTestOutput(float timeStep) { }
 
     // A name passed at motor creation for easily identifyable debugging messages.
-    public string UseName { get; private set; }
+    public string UseName { get; }
 
     // Used only for outputting debug information. Might not be set so check for null.
     public BSScene PhysicsScene { get; set; }

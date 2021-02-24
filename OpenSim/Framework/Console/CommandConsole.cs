@@ -720,7 +720,7 @@ namespace OpenSim.Framework.Console
         public event OnOutputDelegate OnOutput;
         public static event OnCntrCCelegate OnCntrC;
 
-        public ICommands Commands { get; private set; }
+        public ICommands Commands { get; }
 
         public CommandConsole(string defaultPrompt) : base(defaultPrompt)
         {

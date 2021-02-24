@@ -49,14 +49,14 @@ namespace OpenSim.Tests.Common
         private readonly Scene m_scene;
 
         // Properties so that we can get at received data for test purposes
-        public List<uint> ReceivedKills { get; private set; }
-        public List<UUID> ReceivedOfflineNotifications { get; private set; }
-        public List<UUID> ReceivedOnlineNotifications { get; private set; }
-        public List<UUID> ReceivedFriendshipTerminations { get; private set; }
+        public List<uint> ReceivedKills { get; }
+        public List<UUID> ReceivedOfflineNotifications { get; }
+        public List<UUID> ReceivedOnlineNotifications { get; }
+        public List<UUID> ReceivedFriendshipTerminations { get; }
 
-        public List<ImageDataPacket> SentImageDataPackets { get; private set; }
-        public List<ImagePacketPacket> SentImagePacketPackets { get; private set; }
-        public List<ImageNotInDatabasePacket> SentImageNotInDatabasePackets { get; private set; }
+        public List<ImageDataPacket> SentImageDataPackets { get; }
+        public List<ImagePacketPacket> SentImagePacketPackets { get; }
+        public List<ImageNotInDatabasePacket> SentImageNotInDatabasePackets { get; }
 
         // Test client specific events - for use by tests to implement some IClientAPI behaviour.
         public event Action<RegionInfo, Vector3, Vector3> OnReceivedMoveAgentIntoRegion;

@@ -44,7 +44,7 @@ namespace OpenSim.Framework.Monitoring
         /// <summary>
         /// Category of this stat (e.g. cache, scene, etc).
         /// </summary>
-        public string Category { get; private set; }
+        public string Category { get; }
 
         /// <summary>
         /// Containing name for this stat.
@@ -54,22 +54,22 @@ namespace OpenSim.Framework.Monitoring
         /// <value>
         /// The container.
         /// </value>
-        public string Container { get; private set; }
+        public string Container { get; }
 
-        public StatType StatType { get; private set; }
+        public StatType StatType { get; }
 
-        public MeasuresOfInterest MeasuresOfInterest { get; private set; }
+        public MeasuresOfInterest MeasuresOfInterest { get; }
 
         /// <summary>
         /// Action used to update this stat when the value is requested if it's a pull type.
         /// </summary>
-        public Action<Stat> PullAction { get; private set; }
+        public Action<Stat> PullAction { get; }
 
-        public StatVerbosity Verbosity { get; private set; }
-        public string ShortName { get; private set; }
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public virtual string UnitName { get; private set; }
+        public StatVerbosity Verbosity { get; }
+        public string ShortName { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public virtual string UnitName { get; }
 
         public virtual double Value
         {

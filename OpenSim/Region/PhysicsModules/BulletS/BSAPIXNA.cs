@@ -137,7 +137,7 @@ private sealed class BulletConstraintXNA : BulletConstraint
     internal Dictionary<uint, GhostObject> specialCollisionObjects;
 
     private static int m_collisionsThisFrame;
-    private BSScene PhysicsScene { get; set; }
+    private BSScene PhysicsScene { get; }
 
     public override string BulletEngineName { get { return "BulletXNA"; } }
     public override string BulletEngineVersion { get; protected set; }

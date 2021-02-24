@@ -229,9 +229,9 @@ namespace OpenSim.Region.Framework.Scenes
         /// The dictionary of UUIDs gathered so far.  If Complete == true then this is all the reachable UUIDs.
         /// </summary>
         /// <value>The gathered uuids.</value>
-        public IDictionary<UUID, sbyte> GatheredUuids { get; private set; }
-        public HashSet<UUID> FailedUUIDs { get; private set; }
-        public HashSet<UUID> UncertainAssetsUUIDs { get; private set; }
+        public IDictionary<UUID, sbyte> GatheredUuids { get; }
+        public HashSet<UUID> FailedUUIDs { get; }
+        public HashSet<UUID> UncertainAssetsUUIDs { get; }
         public int possibleNotAssetCount { get; set; }
         public int ErrorCount { get; private set; }
         public int AssetGetCount;

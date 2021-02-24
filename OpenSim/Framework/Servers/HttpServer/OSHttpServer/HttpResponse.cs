@@ -21,11 +21,11 @@ namespace OSHttpServer
         private string m_contentType;
         private Encoding m_encoding = Encoding.UTF8;
         private int m_keepAlive = 60;
-        public uint requestID { get; private set; }
+        public uint requestID { get; }
         public byte[] RawBuffer { get; set; }
         public int RawBufferStart { get; set; }
         public int RawBufferLen { get; set; }
-        public double RequestTS { get; private set; }
+        public double RequestTS { get; }
 
         internal byte[] m_headerBytes = null;
 

@@ -43,7 +43,7 @@ namespace OpenSim.Data.MySQL
         #region Properites
         string ConnectionString
         {
-            get; set;
+            get;
         }
 
         protected virtual Assembly Assembly

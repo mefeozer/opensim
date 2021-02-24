@@ -2932,7 +2932,7 @@ namespace OpenSim.Framework
         /// </summary>
         private class ThreadInfo
         {
-            public long ThreadFuncNum { get; set; }
+            public long ThreadFuncNum { get; }
             public string StackTrace { get; set; }
             private readonly string context;
             public bool LogThread { get; set; }

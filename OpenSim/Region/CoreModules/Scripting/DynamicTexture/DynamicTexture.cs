@@ -33,12 +33,12 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
 {
     public class DynamicTexture : IDynamicTexture
     {
-        public string InputCommands { get; private set; }
-        public Uri InputUri { get; private set; }
-        public string InputParams { get; private set; }
-        public byte[] Data { get; private set; }
-        public Size Size { get; private set; }
-        public bool IsReuseable { get; private set; }
+        public string InputCommands { get; }
+        public Uri InputUri { get; }
+        public string InputParams { get; }
+        public byte[] Data { get; }
+        public Size Size { get; }
+        public bool IsReuseable { get; }
 
         public DynamicTexture(string inputCommands, string inputParams, byte[] data, Size size, bool isReuseable)
         {

@@ -65,7 +65,7 @@ namespace OpenSim.Region.ClientStack.Linden
         /// <remarks>
         /// Defaults to true.  Can currently not be changed once a region has been added to the module.
         /// </remarks>
-        public bool ProcessQueuedRequestsAsync { get; private set; }
+        public bool ProcessQueuedRequestsAsync { get; }
 
         /// <summary>
         /// Number of inventory requests processed by this module.

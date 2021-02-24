@@ -36,7 +36,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     private static string LogHeader = "[BULLETSIM SHAPE COLLECTION]";
 #pragma warning restore 414
 
-    private BSScene m_physicsScene { get; set; }
+    private BSScene m_physicsScene { get; }
 
     private readonly object m_collectionActivityLock = new object();
 

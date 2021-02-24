@@ -32,9 +32,9 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Monitors
 {
     class GenericMonitor : IMonitor
     {
-        public Scene Scene { get; private set; }
-        public string Name { get; private set; }
-        public string FriendlyName { get; private set; }
+        public Scene Scene { get; }
+        public string Name { get; }
+        public string FriendlyName { get; }
 
         private readonly Func<GenericMonitor, double> m_getValueAction;
         private readonly Func<GenericMonitor, string> m_getFriendlyValueAction;

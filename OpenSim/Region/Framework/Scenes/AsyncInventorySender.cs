@@ -36,9 +36,9 @@ namespace OpenSim.Region.Framework.Scenes
 {
     class FetchHolder
     {
-        public IClientAPI Client { get; private set; }
-        public UUID[] Items { get; private set; }
-        public UUID[] Owners { get; private set; }
+        public IClientAPI Client { get; }
+        public UUID[] Items { get; }
+        public UUID[] Owners { get; }
 
         public FetchHolder(IClientAPI client, UUID[] items, UUID[] owners)
         {

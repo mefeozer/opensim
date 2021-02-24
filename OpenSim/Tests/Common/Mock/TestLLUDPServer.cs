@@ -39,7 +39,7 @@ namespace OpenSim.Tests.Common
     /// </summary>
     public class TestLLUDPServer : LLUDPServer
     {
-        public List<Packet> PacketsSent { get; private set; }
+        public List<Packet> PacketsSent { get; }
 
         public TestLLUDPServer(IPAddress listenIP, ref uint port, int proxyPortOffsetParm, IConfigSource configSource, AgentCircuitManager circuitManager)
             : base(listenIP, ref port, proxyPortOffsetParm, configSource, circuitManager)

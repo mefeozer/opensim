@@ -57,7 +57,7 @@ namespace OpenSim.Framework.Monitoring
             /// <remarks>
             /// Not terribly good since this quickly wraps around.
             /// </remarks>
-            public int FirstTick { get; private set; }
+            public int FirstTick { get; }
 
             /// <summary>
             /// Last time this heartbeat update was invoked

@@ -52,7 +52,7 @@ namespace OpenSim.Framework.Monitoring
     {
         private static readonly ILog m_log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static JobEngine JobEngine { get; private set; }
+        public static JobEngine JobEngine { get; }
 
         static WorkManager()
         {

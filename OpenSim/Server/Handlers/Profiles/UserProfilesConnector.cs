@@ -41,18 +41,18 @@ namespace OpenSim.Server.Handlers.Profiles
         // Our Local Module
         public IUserProfilesService ServiceModule
         {
-            get; private set;
+            get;
         }
 
         // The HTTP server.
         public IHttpServer Server
         {
-            get; private set;
+            get;
         }
 
         public bool Enabled
         {
-            get; private set;
+            get;
         }
 
         public UserProfilesConnector(IConfigSource config, IHttpServer server, string configName) :

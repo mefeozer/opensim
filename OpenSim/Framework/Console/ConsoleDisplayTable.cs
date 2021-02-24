@@ -46,12 +46,12 @@ namespace OpenSim.Framework.Console
         /// <summary>
         /// Table columns.
         /// </summary>
-        public List<ConsoleDisplayTableColumn> Columns { get; private set; }
+        public List<ConsoleDisplayTableColumn> Columns { get; }
 
         /// <summary>
         /// Table rows
         /// </summary>
-        public List<ConsoleDisplayTableRow> Rows { get; private set; }
+        public List<ConsoleDisplayTableRow> Rows { get; }
 
         /// <summary>
         /// Number of spaces to indent the whole table.
@@ -138,7 +138,7 @@ namespace OpenSim.Framework.Console
 
     public struct ConsoleDisplayTableRow
     {
-        public List<object> Cells { get; private set; }
+        public List<object> Cells { get; }
 
         public ConsoleDisplayTableRow(List<object> cells) : this()
         {

@@ -51,7 +51,7 @@ namespace OpenSim.Framework.Console
         /// <summary>
         /// Table rows
         /// </summary>
-        public List<KeyValuePair<string, string>> Rows { get; private set; }
+        public List<KeyValuePair<string, string>> Rows { get; }
 
         /// <summary>
         /// Number of spaces to indent the list.

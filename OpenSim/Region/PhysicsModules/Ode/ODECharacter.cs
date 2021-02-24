@@ -157,7 +157,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         private readonly CollisionEventUpdate CollisionEventsThisFrame = new CollisionEventUpdate();
 
         // unique UUID of this character object
-        internal UUID m_uuid { get; private set; }
+        internal UUID m_uuid { get; }
         internal bool bad = false;
 
         /// <summary>

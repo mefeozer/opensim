@@ -85,7 +85,7 @@ namespace OpenSim.Tests.Stress
 
         class Drawer
         {
-            public int Number { get; private set; }
+            public int Number { get; }
             public int Pass { get; private set; }
             public bool Ready { get; set; }
 

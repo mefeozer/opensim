@@ -74,13 +74,11 @@ namespace OpenSim.Server.Base
         public AddinRegistry Registry
         {
             get;
-            private set;
         }
 
         public IConfigSource Config
         {
             get;
-            private set;
         }
 
         public PluginLoader(IConfigSource config, string registryPath)

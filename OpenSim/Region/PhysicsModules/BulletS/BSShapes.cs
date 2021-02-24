@@ -115,7 +115,7 @@ public abstract class BSShape
     public int referenceCount { get; set; }
     public DateTime lastReferenced { get; set; }
     public BulletShape physShapeInfo { get; set; }
-    public ShapeInfoInfo shapeInfo { get; private set; }
+    public ShapeInfoInfo shapeInfo { get; }
 
     public BSShape()
     {

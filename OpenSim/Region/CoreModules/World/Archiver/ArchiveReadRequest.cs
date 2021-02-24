@@ -58,13 +58,13 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// </summary>
         private class DearchiveContext
         {
-            public Scene Scene { get; set; }
+            public Scene Scene { get; }
 
-            public List<string> SerialisedSceneObjects { get; set; }
+            public List<string> SerialisedSceneObjects { get; }
 
-            public List<string> SerialisedParcels { get; set; }
+            public List<string> SerialisedParcels { get; }
 
-            public List<SceneObjectGroup> SceneObjects { get; set; }
+            public List<SceneObjectGroup> SceneObjects { get; }
 
             public DearchiveContext(Scene scene)
             {

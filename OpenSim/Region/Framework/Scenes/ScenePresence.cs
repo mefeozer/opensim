@@ -283,7 +283,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <value>
         /// Server Side Animation Override
         /// </value>
-        public MovementAnimationOverrides Overrides { get; private set; }
+        public MovementAnimationOverrides Overrides { get; }
         public string sitAnimation = "SIT";
         /// <summary>
         /// Attachments recorded on this avatar.
@@ -294,7 +294,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// </remarks>
         private readonly List<SceneObjectGroup> m_attachments = new List<SceneObjectGroup>();
 
-        public object AttachmentsSyncLock { get; private set; }
+        public object AttachmentsSyncLock { get; }
 
         private readonly Dictionary<UUID, ScriptControllers> scriptedcontrols = new Dictionary<UUID, ScriptControllers>();
         private ScriptControlled IgnoredControls = ScriptControlled.CONTROL_ZERO;
@@ -575,7 +575,7 @@ namespace OpenSim.Region.Framework.Scenes
             get { return m_invulnerable; }
         }
 
-        public GodController GodController { get; private set; }
+        public GodController GodController { get; }
 
         private ulong m_rootRegionHandle;
         private Vector3 m_rootRegionPosition = new Vector3();
@@ -623,8 +623,8 @@ namespace OpenSim.Region.Framework.Scenes
         }
         #endregion
 
-        public string Firstname { get; private set; }
-        public string Lastname { get; private set; }
+        public string Firstname { get; }
+        public string Lastname { get; }
 
         public bool m_haveGroupInformation;
         public bool m_gotCrossUpdate;

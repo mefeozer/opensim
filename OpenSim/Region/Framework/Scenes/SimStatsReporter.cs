@@ -157,12 +157,12 @@ namespace OpenSim.Region.Framework.Scenes
         /// <summary>
         /// Number of frames that have taken longer to process than Scene.MIN_FRAME_TIME
         /// </summary>
-        public Stat SlowFramesStat { get; private set; }
+        public Stat SlowFramesStat { get; }
 
         /// <summary>
         /// The threshold at which we log a slow frame.
         /// </summary>
-        public int SlowFramesStatReportThreshold { get; private set; }
+        public int SlowFramesStatReportThreshold { get; }
 
         /// <summary>
         /// Extra sim statistics that are used by monitors but not sent to the client.

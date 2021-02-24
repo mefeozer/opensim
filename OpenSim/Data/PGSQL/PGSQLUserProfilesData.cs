@@ -46,7 +46,6 @@ namespace OpenSim.Data.PGSQL
         string ConnectionString
         {
             get;
-            set;
         }
 
         protected virtual Assembly Assembly

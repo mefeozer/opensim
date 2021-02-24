@@ -114,7 +114,7 @@ namespace OSHttpServer
         /// <summary>
         /// Gets reason to why client disconnected.
         /// </summary>
-        public SocketError Error { get; private set; }
+        public SocketError Error { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DisconnectedEventArgs"/> class.
@@ -134,7 +134,7 @@ namespace OSHttpServer
         /// <summary>
         /// Gets received request.
         /// </summary>
-        public IHttpRequest Request { get; private set; }
+        public IHttpRequest Request { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestEventArgs"/> class.

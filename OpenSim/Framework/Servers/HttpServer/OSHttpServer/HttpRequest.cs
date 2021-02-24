@@ -39,7 +39,7 @@ namespace OSHttpServer
             m_context = pContext;
         }
 
-        public uint ID { get; private set; }
+        public uint ID { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="HttpRequest"/> is secure.

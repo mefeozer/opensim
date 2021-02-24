@@ -98,17 +98,17 @@ namespace pCampBot
         /// <summary>
         /// Random number generator.
         /// </summary>
-        public Random Rng { get; private set; }
+        public Random Rng { get; }
 
         /// <summary>
         /// Track the assets we have and have not received so we don't endlessly repeat requests.
         /// </summary>
-        public Dictionary<UUID, bool> AssetsReceived { get; private set; }
+        public Dictionary<UUID, bool> AssetsReceived { get; }
 
         /// <summary>
         /// The regions that we know about.
         /// </summary>
-        public Dictionary<ulong, GridRegion> RegionsKnown { get; private set; }
+        public Dictionary<ulong, GridRegion> RegionsKnown { get; }
 
         /// <summary>
         /// First name for bots

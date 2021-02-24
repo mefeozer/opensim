@@ -86,10 +86,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public BSPrimLinkable LinksetRoot { get; protected set; }
 
-    protected BSScene m_physicsScene { get; private set; }
+    protected BSScene m_physicsScene { get; }
 
     static int m_nextLinksetID = 1;
-    public int LinksetID { get; private set; }
+    public int LinksetID { get; }
 
     // The children under the root in this linkset.
     // protected HashSet<BSPrimLinkable> m_children;

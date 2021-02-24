@@ -67,7 +67,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// <summary>
         /// Client served by this image manager
         /// </summary>
-        public IClientAPI Client { get; private set; }
+        public IClientAPI Client { get; }
 
         public AssetBase MissingImage { get { return m_missingImage; } }
 

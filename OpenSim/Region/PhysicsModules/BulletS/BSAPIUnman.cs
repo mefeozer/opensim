@@ -132,7 +132,7 @@ private GCHandle m_updateArrayPinnedHandle;
 // Need to store the handle in a persistant variable so it won't be freed.
 private BSAPICPP.DebugLogCallback m_DebugLogCallbackHandle;
 
-private BSScene PhysicsScene { get; set; }
+private BSScene PhysicsScene { get; }
 
 public override string BulletEngineName { get { return "BulletUnmanaged"; } }
 public override string BulletEngineVersion { get; protected set; }
