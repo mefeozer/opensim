@@ -41,19 +41,19 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
     /// </summary>
     public class AgentAssetTransactions
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Fields
-        private readonly bool m_dumpAssetsToFile;
-        private readonly Scene m_Scene;
+        private readonly bool _dumpAssetsToFile;
+        private readonly Scene _Scene;
         private readonly Dictionary<UUID, AssetXferUploader> XferUploaders = new Dictionary<UUID, AssetXferUploader>();
 
         // Methods
         public AgentAssetTransactions(UUID agentID, Scene scene,
                 bool dumpAssetsToFile)
         {
-            m_Scene = scene;
-            m_dumpAssetsToFile = dumpAssetsToFile;
+            _Scene = scene;
+            _dumpAssetsToFile = dumpAssetsToFile;
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
             {
                 if (!XferUploaders.ContainsKey(transactionID))
                 {
-                    uploader = new AssetXferUploader(this, m_Scene, transactionID, m_dumpAssetsToFile);
+                    uploader = new AssetXferUploader(this, _Scene, transactionID, _dumpAssetsToFile);
 
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[AGENT ASSETS TRANSACTIONS]: Adding asset xfer uploader {0} since it didn't previously exist", transactionID);
 
                     XferUploaders.Add(transactionID, uploader);
@@ -97,7 +97,7 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
             {
                 foreach (AssetXferUploader uploader in XferUploaders.Values)
                 {
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[AGENT ASSETS TRANSACTIONS]: In HandleXfer, inspect xfer upload with xfer id {0}",
 //                        uploader.XferID);
 
@@ -111,7 +111,7 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
 
             if (foundUploader != null)
             {
-//                m_log.DebugFormat(
+//                _log.DebugFormat(
 //                    "[AGENT ASSETS TRANSACTIONS]: Found xfer uploader for xfer id {0}, packet id {1}, data length {2}",
 //                    xferID, packetID, data.Length);
 
@@ -120,14 +120,14 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
             else
             {
                 // Check if the xfer is a terrain xfer
-                IEstateModule estateModule = m_Scene.RequestModuleInterface<IEstateModule>();
+                IEstateModule estateModule = _Scene.RequestModuleInterface<IEstateModule>();
                 if (estateModule != null)
                 {
                     if (estateModule.IsTerrainXfer(xferID))
                         return;
                 }
 
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[AGENT ASSET TRANSACTIONS]: Could not find uploader for xfer id {0}, packet id {1}, data length {2}",
                     xferID, packetID, data.Length);
             }
@@ -140,11 +140,11 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
                 bool removed = XferUploaders.Remove(transactionID);
 
                 if (!removed)
-                    m_log.WarnFormat(
+                    _log.WarnFormat(
                         "[AGENT ASSET TRANSACTIONS]: Received request to remove xfer uploader with transaction ID {0} but none found",
                         transactionID);
 //                else
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[AGENT ASSET TRANSACTIONS]: Removed xfer uploader with transaction ID {0}", transactionID);
 
                 return removed;
@@ -177,7 +177,7 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
                 item.Type == (int)AssetType.Clothing ||
                 item.Type == (int)CustomAssetType.AnimationSet)
             {
-                AssetBase oldAsset = m_Scene.AssetService.Get(item.AssetID.ToString());
+                AssetBase oldAsset = _Scene.AssetService.Get(item.AssetID.ToString());
                 if (oldAsset != null)
                     uploader.SetOldData(oldAsset.Data);
             }
@@ -196,7 +196,7 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
                 item.AssetType == (int)AssetType.Clothing ||
                 item.AssetType == (int)CustomAssetType.AnimationSet)
             {
-                AssetBase oldAsset = m_Scene.AssetService.Get(item.AssetID.ToString());
+                AssetBase oldAsset = _Scene.AssetService.Get(item.AssetID.ToString());
                 if (oldAsset != null)
                     uploader.SetOldData(oldAsset.Data);
             }

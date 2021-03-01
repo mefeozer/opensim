@@ -47,25 +47,25 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             string sourceHash = null;
             TextWriter saveSource = null;
 
-            string objFileName = GetScriptFileName (m_ScriptObjCodeKey + ".yobj");
-            string tmpFileName = GetScriptFileName (m_ScriptObjCodeKey + ".ytmp");
+            string objFileName = GetScriptFileName (_ScriptObjCodeKey + ".yobj");
+            string tmpFileName = GetScriptFileName (_ScriptObjCodeKey + ".ytmp");
 
              // If we already have an object file, don't bother compiling.
-            if (!m_ForceRecomp && File.Exists(objFileName))
+            if (!_ForceRecomp && File.Exists(objFileName))
             {
                 objFileStream = File.OpenRead (objFileName);
             }
             else
             {
                  // If source file empty, try to read from asset server.
-                if (EmptySource (m_SourceCode))
-                    m_SourceCode = FetchSource (m_CameFrom);
+                if (EmptySource (_SourceCode))
+                    _SourceCode = FetchSource (_CameFrom);
 
                  // Maybe write script source to a file for debugging.
-                if (m_Engine.m_ScriptDebugSaveSource)
+                if (_Engine._ScriptDebugSaveSource)
                 {
-                    string lslFileName = GetScriptFileName (m_ScriptObjCodeKey + ".lsl");           
-//                    m_log.Debug ("[YEngine]: MMRScriptCompileSaveSource: saving to " + lslFileName);
+                    string lslFileName = GetScriptFileName (_ScriptObjCodeKey + ".lsl");           
+//                    _log.Debug ("[YEngine]: MMRScriptCompileSaveSource: saving to " + lslFileName);
                     saveSource = File.CreateText (lslFileName);
                 }
 
@@ -73,7 +73,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 TokenBegin tokenBegin;
                 try
                 {
-                    tokenBegin = TokenBegin.Construct(m_CameFrom, saveSource, ErrorHandler, m_SourceCode, out sourceHash);
+                    tokenBegin = TokenBegin.Construct(_CameFrom, saveSource, ErrorHandler, _SourceCode, out sourceHash);
                 }
                 finally
                 {
@@ -82,7 +82,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 if (tokenBegin == null)
                 {
-                    m_log.Debug ("[YEngine]: parsing errors on " + m_ScriptObjCodeKey + " (" + m_CameFrom + ")");
+                    _log.Debug ("[YEngine]: parsing errors on " + _ScriptObjCodeKey + " (" + _CameFrom + ")");
                     return null;
                 }
 
@@ -93,7 +93,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     TokenScript tokenScript = ScriptReduce.Reduce(tokenBegin);
                     if (tokenScript == null)
                     {
-                        m_log.Warn ("[YEngine]: reduction errors on " + m_ScriptObjCodeKey + " (" + m_CameFrom + ")");
+                        _log.Warn ("[YEngine]: reduction errors on " + _ScriptObjCodeKey + " (" + _CameFrom + ")");
                         PrintCompilerErrors();
                         return null;
                     }
@@ -104,7 +104,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         bool ok = ScriptCodeGen.CodeGen(tokenScript, objFileWriter, sourceHash);
                         if (!ok)
                         {
-                            m_log.Warn ("[YEngine]: compile error on " + m_ScriptObjCodeKey + " (" + m_CameFrom + ")");
+                            _log.Warn ("[YEngine]: compile error on " + _ScriptObjCodeKey + " (" + _CameFrom + ")");
                             PrintCompilerErrors ();
                             return null;
                         }
@@ -127,10 +127,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                  // Since we just wrote the .xmrobj file, maybe save disassembly.
-                if (m_Engine.m_ScriptDebugSaveIL)
+                if (_Engine._ScriptDebugSaveIL)
                 {
-                    string asmFileName = GetScriptILFileName(m_ScriptObjCodeKey + ".yasm");
-//                    m_log.Debug ("[YEngine]: MMRScriptCompileSaveILGen: saving to " + asmFileName);
+                    string asmFileName = GetScriptILFileName(_ScriptObjCodeKey + ".yasm");
+//                    _log.Debug ("[YEngine]: MMRScriptCompileSaveILGen: saving to " + asmFileName);
                     asmFileWriter = File.CreateText (asmFileName);
                 }
             }
@@ -158,10 +158,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private void PrintCompilerErrors ()
         {
-            m_log.Info ("[YEngine]: - " + m_Part.GetWorldPosition () + " " + m_DescName);
-            foreach (string error in m_CompilerErrors)
+            _log.Info ("[YEngine]: - " + _Part.GetWorldPosition () + " " + _DescName);
+            foreach (string error in _CompilerErrors)
             {
-                m_log.Info ("[YEngine]: - " + error);
+                _log.Info ("[YEngine]: - " + error);
             }
         }
 

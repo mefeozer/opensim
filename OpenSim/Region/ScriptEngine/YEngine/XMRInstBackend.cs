@@ -53,13 +53,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public void InitXMRLSLApi(XMRInstance i)
         {
-            acm = m_AsyncCommands;
+            acm = _AsyncCommands;
             inst = i;
         }
 
         protected override void ScriptSleep(int ms)
         {
-            ms = (int)(ms * m_ScriptDelayFactor);
+            ms = (int)(ms * _ScriptDelayFactor);
             if (ms < 10)
                 return;
 
@@ -78,12 +78,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public void SetLSLTimer(double time)
         {
-            m_timer = time;
+            _timer = time;
         }
 
         public double getLSLTimer()
         {
-            return m_timer;
+            return _timer;
         }
 
         /**
@@ -102,12 +102,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                     UUID avuuid;
                     if (owner) {
-                        avuuid = inst.m_Part.OwnerID;
+                        avuuid = inst._Part.OwnerID;
                     } else {
-                        if ((m_item.PermsMask & ScriptBaseClass.PERMISSION_TRIGGER_ANIMATION) == 0) {
+                        if ((_item.PermsMask & ScriptBaseClass.PERMISSION_TRIGGER_ANIMATION) == 0) {
                             return -1;
                         }
-                        avuuid = m_item.PermsGranter;
+                        avuuid = _item.PermsGranter;
                     }
                     if (avuuid == UUID.Zero) {
                         return -2;
@@ -123,7 +123,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     //     targetID = UUID of prim to sit on
                     //       offset = offset of sitting position
 
-                    presence.HandleAgentRequestSit (null, UUID.Zero, m_host.UUID, OpenMetaverse.Vector3.Zero);
+                    presence.HandleAgentRequestSit (null, UUID.Zero, _host.UUID, OpenMetaverse.Vector3.Zero);
                     return 0;
                 }
         */
@@ -150,16 +150,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     if (presence.IsGod) throw new ApplicationException ("agent is a god");
 
                     // prim must be owned by land owner or prim must be attached to agent
-                    if (m_host.ParentGroup.AttachmentPoint == 0) {
-                        if (m_host.OwnerID != World.LandChannel.GetLandObject (presence.AbsolutePosition).LandData.OwnerID) {
+                    if (_host.ParentGroup.AttachmentPoint == 0) {
+                        if (_host.OwnerID != World.LandChannel.GetLandObject (presence.AbsolutePosition).LandData.OwnerID) {
                             throw new ApplicationException ("prim not owned by land's owner");
                         }
                     } else {
-                        if (m_host.OwnerID != presence.UUID) throw new ApplicationException ("prim not attached to agent");
+                        if (_host.OwnerID != presence.UUID) throw new ApplicationException ("prim not attached to agent");
                     }
 
                     // find landmark in inventory or by UUID
-                    UUID assetID = ScriptUtils.GetAssetIdFromKeyOrItemName (m_host, landmark);
+                    UUID assetID = ScriptUtils.GetAssetIdFromKeyOrItemName (_host, landmark);
                     if (assetID == UUID.Zero) throw new ApplicationException ("no such landmark");
 
                     // read it in and make sure it is a landmark
@@ -191,7 +191,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         /* engines should not have own API
                 public string xmrSetParcelMusicURLGroup (string newurl)
                 {
-                    string groupname = m_ScriptEngine.Config.GetString ("SetParcelMusicURLGroup", "");
+                    string groupname = _ScriptEngine.Config.GetString ("SetParcelMusicURLGroup", "");
                     if (groupname == "") throw new ApplicationException ("no SetParcelMusicURLGroup config param set");
 
                     IGroupsModule igm = World.RequestModuleInterface<IGroupsModule> ();
@@ -200,11 +200,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     GroupRecord grouprec = igm.GetGroupRecord (groupname);
                     if (grouprec == null) throw new ApplicationException ("no such group " + groupname);
 
-                    GroupMembershipData gmd = igm.GetMembershipData (grouprec.GroupID, m_host.OwnerID);
+                    GroupMembershipData gmd = igm.GetMembershipData (grouprec.GroupID, _host.OwnerID);
                     if (gmd == null) throw new ApplicationException ("not a member of group " + groupname);
 
-                    ILandObject land = World.LandChannel.GetLandObject (m_host.AbsolutePosition);
-                    if (land == null) throw new ApplicationException ("no land at " + m_host.AbsolutePosition.ToString ());
+                    ILandObject land = World.LandChannel.GetLandObject (_host.AbsolutePosition);
+                    if (land == null) throw new ApplicationException ("no land at " + _host.AbsolutePosition.ToString ());
                     string oldurl = land.GetMusicUrl ();
                     if (oldurl == null) oldurl = "";
                     if ((newurl != null) && (newurl != "")) land.SetMusicUrl (newurl);
@@ -227,8 +227,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(eventCode == ScriptEventCode.state_entry && stateCode == 0)
                 return;
 
-            if (m_XMRLSLApi != null)
-                m_XMRLSLApi.llResetTime();
+            if (_XMRLSLApi != null)
+                _XMRLSLApi.llResetTime();
 
             // do clear the events queue on reset
             ClearQueue();
@@ -243,8 +243,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public DetectParams GetDetectParams(int number)
         {
             DetectParams dp = null;
-            if(number >= 0 && m_DetectParams != null && number < m_DetectParams.Length)
-                dp = m_DetectParams[number];
+            if(number >= 0 && _DetectParams != null && number < _DetectParams.Length)
+                dp = _DetectParams[number];
 
             return dp;
         }
@@ -257,7 +257,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public void Die()
         {
             // llDie doesn't work in attachments!
-            if(m_Part.ParentGroup.IsAttachment || m_DetachQuantum > 0)
+            if(_Part.ParentGroup.IsAttachment || _DetachQuantum > 0)
                 return;
 
             throw new ScriptDieException();
@@ -268,13 +268,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void Sleep(int ms)
         {
-            lock(m_QueueLock)
+            lock(_QueueLock)
             {
                  // Say how long to sleep.
-                m_SleepUntil = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
+                _SleepUntil = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
                 // Don't wake on any events.
-                m_SleepEventMask1 = 0;
-                m_SleepEventMask2 = 0;
+                _SleepEventMask1 = 0;
+                _SleepEventMask2 = 0;
             }
 
              // The compiler follows all calls to llSleep() with a call to CheckRun().
@@ -367,11 +367,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                  // Find first event that matches either the return or background masks.
                 findevent:
-                Monitor.Enter(m_QueueLock);
-                for(lln = m_EventQueue.First; lln != null; lln = lln.Next)
+                Monitor.Enter(_QueueLock);
+                for(lln = _EventQueue.First; lln != null; lln = lln.Next)
                 {
                     evt = lln.Value;
-                    m_eventCodeMap.TryGetValue(evt.EventName, out evc);
+                    _eventCodeMap.TryGetValue(evt.EventName, out evc);
                     evc1 = (int)evc;
                     evc2 = evc1 - 32;
                     if((uint)evc1 < (uint)32 && ((mask1 >> evc1) & 1) != 0 ||
@@ -380,10 +380,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
 
                  // Nothing found, sleep while one comes in.
-                m_SleepUntil = sleepUntil;
-                m_SleepEventMask1 = mask1;
-                m_SleepEventMask2 = mask2;
-                Monitor.Exit(m_QueueLock);
+                _SleepUntil = sleepUntil;
+                _SleepEventMask1 = mask1;
+                _SleepEventMask2 = mask2;
+                Monitor.Exit(_QueueLock);
                 suspendOnCheckRunTemp = true;
                 callNo = 0;
                 __call0:
@@ -392,12 +392,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                  // Found one, remove it from queue.
                 remfromq:
-                m_EventQueue.Remove(lln);
-                if((uint)evc1 < (uint)m_EventCounts.Length)
-                    m_EventCounts[evc1]--;
+                _EventQueue.Remove(lln);
+                if((uint)evc1 < (uint)_EventCounts.Length)
+                    _EventCounts[evc1]--;
 
-                Monitor.Exit(m_QueueLock);
-                m_InstEHEvent++;
+                Monitor.Exit(_QueueLock);
+                _InstEHEvent++;
 
                  // See if returnable or background event.
                 if((uint)evc1 < (uint)32 && ((returnMask1 >> evc1) & 1) != 0 ||
@@ -419,7 +419,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                             ob = (LSL_String)(string)ob;
                         plist[++i] = ob;
                     }
-                    m_DetectParams = evt.DetectParams;
+                    _DetectParams = evt.DetectParams;
                     return new LSL_List(plist);
                 }
 
@@ -427,15 +427,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                  // then check event queue again.
                 callNo = 1;
                 __call1:
-                ScriptEventHandler seh = m_ObjCode.scriptEventHandlerTable[stateCode, evc1];
+                ScriptEventHandler seh = _ObjCode.scriptEventHandlerTable[stateCode, evc1];
                 if(seh == null)
                     goto checktmo;
 
-                DetectParams[] saveDetParams = this.m_DetectParams;
+                DetectParams[] saveDetParams = this._DetectParams;
                 object[] saveEHArgs = this.ehArgs;
                 ScriptEventCode saveEventCode = this.eventCode;
 
-                m_DetectParams = evt.DetectParams;
+                _DetectParams = evt.DetectParams;
                 ehArgs = evt.Params;
                 eventCode = evc;
 
@@ -445,7 +445,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 finally
                 {
-                    m_DetectParams = saveDetParams;
+                    _DetectParams = saveDetParams;
                     ehArgs = saveEHArgs;
                     eventCode = saveEventCode;
                 }
@@ -498,7 +498,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             object[] args = new object[nargs];
             Array.Copy(data, 1, args, 0, nargs);
 
-            PostEvent(new EventParams(evc.ToString(), args, m_DetectParams));
+            PostEvent(new EventParams(evc.ToString(), args, _DetectParams));
         }
 
         /**
@@ -509,7 +509,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public override LSL_List xmrEventSaveDets()
         {
-            object[] obs = DetPrmsToObjArr(m_DetectParams);
+            object[] obs = DetPrmsToObjArr(_DetectParams);
             return new LSL_List(obs);
         }
 
@@ -548,7 +548,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public override void xmrEventLoadDets(LSL_List dpList)
         {
-            m_DetectParams = ObjArrToDetPrms(dpList.Data);
+            _DetectParams = ObjArrToDetPrms(dpList.Data);
         }
 
         private static DetectParams[] ObjArrToDetPrms(object[] objs)
@@ -604,22 +604,22 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
              // Cancel any llListen()s etc.
              // But llSetTimerEvent() should persist.
-            object[] timers = m_XMRLSLApi.acm.TimerPlugin.GetSerializationData(m_ItemID);
-            AsyncCommandManager.RemoveScript(m_Engine, m_LocalID, m_ItemID);
-            m_XMRLSLApi.acm.TimerPlugin.CreateFromData(m_LocalID, m_ItemID, UUID.Zero, timers);
+            object[] timers = _XMRLSLApi.acm.TimerPlugin.GetSerializationData(_ItemID);
+            AsyncCommandManager.RemoveScript(_Engine, _LocalID, _ItemID);
+            _XMRLSLApi.acm.TimerPlugin.CreateFromData(_LocalID, _ItemID, UUID.Zero, timers);
 
             // Tell whoever cares which event handlers the new state has.
-            m_Part.RemoveScriptTargets(m_ItemID);
-            m_Part.SetScriptEvents(m_ItemID, GetStateEventFlags(stateCode));
+            _Part.RemoveScriptTargets(_ItemID);
+            _Part.SetScriptEvents(_ItemID, GetStateEventFlags(stateCode));
 
             // keep link messages
             //ClearQueueExceptLinkMessages();
             // or Clear out all old events from the queue.
-            lock(m_QueueLock)
+            lock(_QueueLock)
             {
-                m_EventQueue.Clear();
-                for(int i = m_EventCounts.Length; --i >= 0;)
-                    m_EventCounts[i] = 0;
+                _EventQueue.Clear();
+                for(int i = _EventCounts.Length; --i >= 0;)
+                    _EventCounts[i] = 0;
             }
         }
     }

@@ -41,31 +41,31 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "DialogModule")]
     public class DialogModule : IDialogModule, INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Scene m_scene;
+        protected Scene _scene;
 
         public void Initialise(IConfigSource source) { }
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
-            m_scene.RegisterModuleInterface<IDialogModule>(this);
+            _scene = scene;
+            _scene.RegisterModuleInterface<IDialogModule>(this);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (scene != m_scene)
+            if (scene != _scene)
                 return;
 
-            m_scene.AddCommand(
+            _scene.AddCommand(
                 "Users", this, "alert", "alert <message>",
                 "Send an alert to everyone",
                 HandleAlertConsoleCommand);
 
-            m_scene.AddCommand(
+            _scene.AddCommand(
                 "Users", this, "alert-user",
                 "alert-user <first> <last> <message>",
                 "Send an alert to a user",
@@ -74,14 +74,14 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
 
         public void RemoveRegion(Scene scene)
         {
-            if (scene != m_scene)
+            if (scene != _scene)
                 return;
 
-            m_scene.UnregisterModuleInterface<IDialogModule>(this);
+            _scene.UnregisterModuleInterface<IDialogModule>(this);
         }
 
         public void Close() { }
-        public string Name { get { return "Dialog Module"; } }
+        public string Name => "Dialog Module";
 
         public void SendAlertToUser(IClientAPI client, string message)
         {
@@ -101,7 +101,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
 
         public void SendAlertToUser(UUID agentID, string message, bool modal)
         {
-            ScenePresence sp = m_scene.GetScenePresence(agentID);
+            ScenePresence sp = _scene.GetScenePresence(agentID);
 
             if (sp != null)
                 sp.ControllingClient.SendAgentAlertMessage(message, modal);
@@ -110,7 +110,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
         public void SendAlertToUser(string firstName, string lastName,
                 string message, bool modal)
         {
-            ScenePresence presence = m_scene.GetScenePresence(firstName,
+            ScenePresence presence = _scene.GetScenePresence(firstName,
                     lastName);
             if (presence != null)
             {
@@ -121,7 +121,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
 
         public void SendGeneralAlert(string message)
         {
-            m_scene.ForEachRootClient(delegate(IClientAPI client)
+            _scene.ForEachRootClient(delegate(IClientAPI client)
             {
                 client.SendAlertMessage(message);
             });
@@ -131,7 +131,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
         {
             ownerFirstName = string.Empty;
             ownerLastName = string.Empty;
-            string username = m_scene.UserManagementModule.GetUserName(ownerID);
+            string username = _scene.UserManagementModule.GetUserName(ownerID);
             if (!string.IsNullOrEmpty(username) && !username.StartsWith("UnknownUMM2", StringComparison.InvariantCulture))
             {
                 string[] parts = username.Split(' ');
@@ -141,7 +141,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
             }
             else
             {
-                IGroupsModule groups = m_scene.RequestModuleInterface<IGroupsModule>();
+                IGroupsModule groups = _scene.RequestModuleInterface<IGroupsModule>();
                 if (groups != null)
                 {
                     GroupRecord grprec = groups.GetGroupRecord(ownerID);
@@ -161,7 +161,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
                 int ch, string[] buttonlabels)
         {
 
-            ScenePresence sp = m_scene.GetScenePresence(avatarID);
+            ScenePresence sp = _scene.GetScenePresence(avatarID);
             if (sp != null)
             {
                 string ownerFirstName;
@@ -178,7 +178,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
                 UUID objectID, UUID ownerID, bool groupOwned, string message,
                 string url)
         {
-            ScenePresence sp = m_scene.GetScenePresence(avatarID);
+            ScenePresence sp = _scene.GetScenePresence(avatarID);
             if (sp != null)
             {
                 sp.ControllingClient.SendLoadURL(objectName, objectID,
@@ -189,7 +189,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
         public void SendTextBoxToUser(UUID avatarid, string message,
                 int chatChannel, string name, UUID objectid, UUID ownerID)
         {
-            ScenePresence sp = m_scene.GetScenePresence(avatarid);
+            ScenePresence sp = _scene.GetScenePresence(avatarid);
             if (sp != null)
             {
                 string ownerFirstName;
@@ -205,7 +205,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
         public void SendNotificationToUsersInRegion(UUID fromAvatarID,
                 string fromAvatarName, string message)
         {
-            m_scene.ForEachRootClient(delegate(IClientAPI client)
+            _scene.ForEachRootClient(delegate(IClientAPI client)
             {
                 client.SendAgentAlertMessage(
                         message, false);
@@ -220,8 +220,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
         public void HandleAlertConsoleCommand(string module,
                 string[] cmdparams)
         {
-            if (m_scene.ConsoleScene() != null &&
-                    m_scene.ConsoleScene() != m_scene)
+            if (_scene.ConsoleScene() != null &&
+                    _scene.ConsoleScene() != _scene)
             {
                 return;
             }
@@ -231,8 +231,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
             if (cmdparams[0].ToLower().Equals("alert"))
             {
                 message = CombineParams(cmdparams, 1);
-                m_log.InfoFormat("[DIALOG]: Sending general alert in region {0} with message {1}",
-                        m_scene.RegionInfo.RegionName, message);
+                _log.InfoFormat("[DIALOG]: Sending general alert in region {0} with message {1}",
+                        _scene.RegionInfo.RegionName, message);
                 SendGeneralAlert(message);
             }
             else if (cmdparams.Length > 3)
@@ -240,8 +240,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Dialog
                 string firstName = cmdparams[1];
                 string lastName = cmdparams[2];
                 message = CombineParams(cmdparams, 3);
-                m_log.InfoFormat("[DIALOG]: Sending alert in region {0} to {1} {2} with message {3}",
-                        m_scene.RegionInfo.RegionName, firstName, lastName,
+                _log.InfoFormat("[DIALOG]: Sending alert in region {0} to {1} {2} with message {3}",
+                        _scene.RegionInfo.RegionName, firstName, lastName,
                         message);
                 SendAlertToUser(firstName, lastName, message, false);
             }

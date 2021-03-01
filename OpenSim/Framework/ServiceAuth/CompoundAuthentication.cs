@@ -33,41 +33,41 @@ namespace OpenSim.Framework.ServiceAuth
 {
     public class CompoundAuthentication : IServiceAuth
     {
-        public string Name { get { return "Compound"; } }
+        public string Name => "Compound";
 
-        private readonly List<IServiceAuth> m_authentications = new List<IServiceAuth>();
+        private readonly List<IServiceAuth> _authentications = new List<IServiceAuth>();
 
-        public int Count { get { return m_authentications.Count; } }
+        public int Count => _authentications.Count;
 
         public List<IServiceAuth> GetAuthentors()
         {
-            return new List<IServiceAuth>(m_authentications);
+            return new List<IServiceAuth>(_authentications);
         }
 
         public void AddAuthenticator(IServiceAuth auth)
         {
-            m_authentications.Add(auth);
+            _authentications.Add(auth);
         }
 
         public void RemoveAuthenticator(IServiceAuth auth)
         {
-            m_authentications.Remove(auth);
+            _authentications.Remove(auth);
         }
 
         public void AddAuthorization(NameValueCollection headers)
         {
-            foreach (IServiceAuth auth in m_authentications)
+            foreach (IServiceAuth auth in _authentications)
                 auth.AddAuthorization(headers);
         }
 
         public bool Authenticate(string data)
         {
-            return m_authentications.TrueForAll(a => a.Authenticate(data));
+            return _authentications.TrueForAll(a => a.Authenticate(data));
         }
 
         public bool Authenticate(NameValueCollection requestHeaders, AddHeaderDelegate d, out HttpStatusCode statusCode)
         {
-            foreach (IServiceAuth auth in m_authentications)
+            foreach (IServiceAuth auth in _authentications)
             {
                 if (!auth.Authenticate(requestHeaders, d, out statusCode))
                     return false;

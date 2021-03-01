@@ -67,9 +67,9 @@ namespace OpenSim.Tests.Common
 
         public void RegionLoaded (Scene scene) {}
 
-        public string Name { get { return "TestEventQueueGetModule"; } }
+        public string Name => "TestEventQueueGetModule";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         private void AddEvent(UUID avatarID, string name, params object[] args)
         {

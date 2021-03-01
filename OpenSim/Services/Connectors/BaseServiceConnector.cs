@@ -7,7 +7,7 @@ namespace OpenSim.Services.Connectors
 {
     public class BaseServiceConnector
     {
-        protected IServiceAuth m_Auth;
+        protected IServiceAuth _Auth;
 
         public BaseServiceConnector() { }
 
@@ -23,7 +23,7 @@ namespace OpenSim.Services.Connectors
             switch (authType)
             {
                 case "BasicHttpAuthentication":
-                    m_Auth = new BasicHttpAuthentication(config, section);
+                    _Auth = new BasicHttpAuthentication(config, section);
                     break;
             }
 

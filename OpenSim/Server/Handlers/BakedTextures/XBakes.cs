@@ -38,9 +38,9 @@ namespace OpenSim.Server.Handlers.BakedTextures
 {
     public class XBakes : ServiceBase, IBakedTextureService
     {
-        private static readonly ILog m_log = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected string m_FSBase;
+        protected string _FSBase;
 
         public XBakes(IConfigSource config) : base(config)
         {
@@ -55,20 +55,20 @@ namespace OpenSim.Server.Handlers.BakedTextures
                 throw new Exception("No BakedTextureService configuration");
             }
 
-            m_FSBase = assetConfig.GetString("BaseDirectory", string.Empty);
-            if (string.IsNullOrEmpty(m_FSBase))
+            _FSBase = assetConfig.GetString("BaseDirectory", string.Empty);
+            if (string.IsNullOrEmpty(_FSBase))
             {
-                m_log.ErrorFormat("[BAKES]: BaseDirectory not specified");
+                _log.ErrorFormat("[BAKES]: BaseDirectory not specified");
                 throw new Exception("Configuration error");
             }
 
-            m_log.Info("[BAKES]: XBakes service enabled");
+            _log.Info("[BAKES]: XBakes service enabled");
         }
 
         public byte[] Get(string id)
         {
             string file = HashToFile(id);
-            string diskFile = Path.Combine(m_FSBase, file);
+            string diskFile = Path.Combine(_FSBase, file);
 
             try
             {
@@ -84,7 +84,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
         public void Store(string id, byte[] data, int dataLength)
         {
             string file = HashToFile(id);
-            string diskFile = Path.Combine(m_FSBase, file);
+            string diskFile = Path.Combine(_FSBase, file);
 
             Directory.CreateDirectory(Path.GetDirectoryName(diskFile));
 
@@ -102,7 +102,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
             }
 
             string file = HashToFile(args[2]);
-            string diskFile = Path.Combine(m_FSBase, file);
+            string diskFile = Path.Combine(_FSBase, file);
 
             if (File.Exists(diskFile))
             {

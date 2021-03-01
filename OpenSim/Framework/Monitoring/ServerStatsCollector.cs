@@ -40,7 +40,7 @@ namespace OpenSim.Framework.Monitoring
 {
     public class ServerStatsCollector
     {
-        private readonly ILog m_log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly string LogHeader = "[SERVER STATS]";
 
         public bool Enabled = false;
@@ -168,7 +168,7 @@ namespace OpenSim.Framework.Monitoring
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("{0} Exception creating 'Process': {1}", LogHeader, e);
+                _log.ErrorFormat("{0} Exception creating 'Process': {1}", LogHeader, e);
             }
 
             MakeStat("BuiltinThreadpoolWorkerThreadsAvailable", null, "threads", ContainerThreadpool,
@@ -218,9 +218,9 @@ namespace OpenSim.Framework.Monitoring
                     string nicInterfaceType = nic.NetworkInterfaceType.ToString();
                     if (!okInterfaceTypes.Contains(nicInterfaceType))
                     {
-                        m_log.DebugFormat("{0} Not including stats for network interface '{1}' of type '{2}'.",
+                        _log.DebugFormat("{0} Not including stats for network interface '{1}' of type '{2}'.",
                                                 LogHeader, nic.Name, nicInterfaceType);
-                        m_log.DebugFormat("{0}     To include, add to comma separated list in [Monitoring]NetworkInterfaceTypes={1}",
+                        _log.DebugFormat("{0}     To include, add to comma separated list in [Monitoring]NetworkInterfaceTypes={1}",
                                                 LogHeader, NetworkInterfaceTypes);
                         continue;
                     }
@@ -243,7 +243,7 @@ namespace OpenSim.Framework.Monitoring
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("{0} Exception creating 'Network Interface': {1}", LogHeader, e);
+                _log.ErrorFormat("{0} Exception creating 'Network Interface': {1}", LogHeader, e);
             }
 
             MakeStat("ProcessMemory", null, "MB", ContainerMemory,
@@ -317,7 +317,7 @@ namespace OpenSim.Framework.Monitoring
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat("{0} Exception on NextValue fetching {1}: {2}", LogHeader, stat.Name, e);
+                        _log.ErrorFormat("{0} Exception on NextValue fetching {1}: {2}", LogHeader, stat.Name, e);
                     }
 
                     perfControl.lastFetch = Util.EnvironmentTickCount();
@@ -349,7 +349,7 @@ namespace OpenSim.Framework.Monitoring
             catch
             {
                 // There are times interfaces go away so we just won't update the stat for this
-                m_log.ErrorFormat("{0} Exception fetching stat on interface '{1}'", LogHeader, stat.Description);
+                _log.ErrorFormat("{0} Exception fetching stat on interface '{1}'", LogHeader, stat.Description);
             }
         }
     }

@@ -36,7 +36,7 @@ namespace OpenSim.Framework.Servers.HttpServer
     public class RestDeserialiseHandler<TRequest, TResponse> : BaseOutputStreamHandler, IStreamHandler
         where TRequest : new()
     {
-        private readonly RestDeserialiseMethod<TRequest, TResponse> m_method;
+        private readonly RestDeserialiseMethod<TRequest, TResponse> _method;
 
         public RestDeserialiseHandler(string httpMethod, string path, RestDeserialiseMethod<TRequest, TResponse> method)
             : this(httpMethod, path, method, null, null) {}
@@ -45,7 +45,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             string httpMethod, string path, RestDeserialiseMethod<TRequest, TResponse> method, string name, string description)
             : base(httpMethod, path, name, description)
         {
-            m_method = method;
+            _method = method;
         }
 
         protected override void ProcessRequest(string path, Stream request, Stream responseStream,
@@ -58,7 +58,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 deserial = (TRequest) deserializer.Deserialize(xmlReader);
             }
 
-            TResponse response = m_method(deserial);
+            TResponse response = _method(deserial);
 
             using (XmlWriter xmlWriter = XmlTextWriter.Create(responseStream))
             {

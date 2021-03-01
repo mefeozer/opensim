@@ -43,19 +43,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
     public class RemoteAgentPreferencesServicesConnector : AgentPreferencesServicesConnector,
             ISharedRegionModule, IAgentPreferencesService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RemoteAgentPreferencesServicesConnector"; }
-        }
+        public string Name => "RemoteAgentPreferencesServicesConnector";
 
         public new void Initialise(IConfigSource source)
         {
@@ -68,15 +62,15 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
                     IConfig userConfig = source.Configs["AgentPreferencesService"];
                     if (userConfig == null)
                     {
-                        m_log.Error("[AGENT PREFERENCES CONNECTOR]: AgentPreferencesService missing from OpenSim.ini");
+                        _log.Error("[AGENT PREFERENCES CONNECTOR]: AgentPreferencesService missing from OpenSim.ini");
                         return;
                     }
 
-                    m_Enabled = true;
+                    _Enabled = true;
 
                     base.Initialise(source);
 
-                    m_log.Info("[AGENT PREFERENCES CONNECTOR]: Remote agent preferences enabled");
+                    _log.Info("[AGENT PREFERENCES CONNECTOR]: Remote agent preferences enabled");
                 }
             }
         }
@@ -93,7 +87,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IAgentPreferencesService>(this);

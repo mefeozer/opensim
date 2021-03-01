@@ -40,7 +40,7 @@ namespace OpenSim.Data.PGSQL
     /// </summary>
     public class PGSQLManager
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Connection string for ADO.net

@@ -44,21 +44,21 @@ namespace OpenSim.Region.Framework.Scenes
     /// </summary>
     public class TerrainChannel : ITerrainChannel
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string LogHeader = "[TERRAIN CHANNEL]";
 
-        protected TerrainData m_terrainData;
+        protected TerrainData _terrainData;
 
-        public int Width { get { return m_terrainData.SizeX; } }  // X dimension
+        public int Width => _terrainData.SizeX; // X dimension
         // Unfortunately, for historical reasons, in this module 'Width' is X and 'Height' is Y
-        public int Height { get { return m_terrainData.SizeY; } } // Y dimension
-        public int Altitude { get { return m_terrainData.SizeZ; } } // Y dimension
+        public int Height => _terrainData.SizeY; // Y dimension
+        public int Altitude => _terrainData.SizeZ; // Y dimension
 
 
         // Default, not-often-used builder
         public TerrainChannel()
         {
-            m_terrainData = new TerrainData((int)Constants.RegionSize, (int)Constants.RegionSize, (int)Constants.RegionHeight);
+            _terrainData = new TerrainData((int)Constants.RegionSize, (int)Constants.RegionSize, (int)Constants.RegionHeight);
             FlatLand();
             // PinHeadIsland();
         }
@@ -66,14 +66,14 @@ namespace OpenSim.Region.Framework.Scenes
         // Create terrain of given size
         public TerrainChannel(int pX, int pY)
         {
-            m_terrainData = new TerrainData(pX, pY, (int)Constants.RegionHeight);
+            _terrainData = new TerrainData(pX, pY, (int)Constants.RegionHeight);
         }
 
         // Create terrain of specified size and initialize with specified terrain.
         // TODO: join this with the terrain initializers.
         public TerrainChannel(string type, int pX, int pY, int pZ)
         {
-            m_terrainData = new TerrainData(pX, pY, pZ);
+            _terrainData = new TerrainData(pX, pY, pZ);
             if (type.Equals("flat"))
                 FlatLand();
             else
@@ -87,19 +87,19 @@ namespace OpenSim.Region.Framework.Scenes
             int hmSizeX = pM.GetLength(0);
             int hmSizeY = pM.GetLength(1);
 
-            m_terrainData = new TerrainData(pSizeX, pSizeY, pAltitude);
+            _terrainData = new TerrainData(pSizeX, pSizeY, pAltitude);
 
             for (int xx = 0; xx < pSizeX; xx++)
                 for (int yy = 0; yy < pSizeY; yy++)
                     if (xx > hmSizeX || yy > hmSizeY)
-                        m_terrainData[xx, yy] = TerrainData.DefaultTerrainHeight;
+                        _terrainData[xx, yy] = TerrainData.DefaultTerrainHeight;
                     else
-                        m_terrainData[xx, yy] = (float)pM[xx, yy];
+                        _terrainData[xx, yy] = (float)pM[xx, yy];
         }
 
         public TerrainChannel(TerrainData pTerrData)
         {
-            m_terrainData = pTerrData;
+            _terrainData = pTerrData;
         }
 
         #region ITerrainChannel Members
@@ -113,13 +113,13 @@ namespace OpenSim.Region.Framework.Scenes
         // ITerrainChannel.GetTerrainData()
         public TerrainData GetTerrainData()
         {
-            return m_terrainData;
+            return _terrainData;
         }
 
         // This one dimensional version is ordered so height = map[y*sizeX+x];
         public float[] GetFloatsSerialised()
         {
-            return m_terrainData.GetFloatsSerialized();
+            return _terrainData.GetFloatsSerialized();
         }
 
         // ITerrainChannel.GetDoubles()
@@ -132,7 +132,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 for (int jj = 0; jj < Height; jj++)
                 {
-                    heights[ii, jj] = (double)m_terrainData[ii, jj];
+                    heights[ii, jj] = (double)_terrainData[ii, jj];
                     idx++;
                 }
             }
@@ -146,14 +146,14 @@ namespace OpenSim.Region.Framework.Scenes
             get {
                 if (x < 0 || x >= Width || y < 0 || y >= Height)
                     return 0;
-                return m_terrainData[x, y];
+                return _terrainData[x, y];
             }
             set
             {
                 if (double.IsNaN(value) || double.IsInfinity(value))
                     return;
 
-                m_terrainData[x, y] = (float)value;
+                _terrainData[x, y] = (float)value;
             }
         }
 
@@ -162,13 +162,13 @@ namespace OpenSim.Region.Framework.Scenes
         {
             if (x < 0 || x >= Width || y < 0 || y >= Height)
                 return 0;
-            return m_terrainData[(int)x, (int)y];
+            return _terrainData[(int)x, (int)y];
         }
 
         // ITerrainChannel.Tainted()
         public bool Tainted(int x, int y)
         {
-            return m_terrainData.IsTaintedAt(x, y);
+            return _terrainData.IsTaintedAt(x, y);
         }
 
         // ITerrainChannel.SaveToXmlString()
@@ -202,10 +202,10 @@ namespace OpenSim.Region.Framework.Scenes
         // ITerrainChannel.Merge
         public void Merge(ITerrainChannel newTerrain, Vector3 displacement, float radianRotation, Vector2 rotationDisplacement)
         {
-            m_log.DebugFormat("{0} Merge. inSize=<{1},{2}>, disp={3}, rot={4}, rotDisp={5}, outSize=<{6},{7}>", LogHeader,
+            _log.DebugFormat("{0} Merge. inSize=<{1},{2}>, disp={3}, rot={4}, rotDisp={5}, outSize=<{6},{7}>", LogHeader,
                                         newTerrain.Width, newTerrain.Height,
                                         displacement, radianRotation, rotationDisplacement,
-                                        m_terrainData.SizeX, m_terrainData.SizeY);
+                                        _terrainData.SizeX, _terrainData.SizeY);
             for (int xx = 0; xx < newTerrain.Width; xx++)
             {
                 for (int yy = 0; yy < newTerrain.Height; yy++)
@@ -218,9 +218,9 @@ namespace OpenSim.Region.Framework.Scenes
                         // If no rotation, place the new height in the specified location
                         dispX += xx;
                         dispY += yy;
-                        if (dispX >= 0 && dispX < m_terrainData.SizeX && dispY >= 0 && dispY < m_terrainData.SizeY)
+                        if (dispX >= 0 && dispX < _terrainData.SizeX && dispY >= 0 && dispY < _terrainData.SizeY)
                         {
-                            m_terrainData[dispX, dispY] = newHeight;
+                            _terrainData[dispX, dispY] = newHeight;
                         }
                     }
                     else
@@ -236,27 +236,27 @@ namespace OpenSim.Region.Framework.Scenes
                             + ((float)xx - rotationDisplacement.X) * Math.Sin(radianRotation)
                             + ((float)yy - rotationDisplacement.Y) * Math.Cos(radianRotation) );
 
-                        if (dispX >= 0 && dispX < m_terrainData.SizeX && dispY >= 0 && dispY < m_terrainData.SizeY)
+                        if (dispX >= 0 && dispX < _terrainData.SizeX && dispY >= 0 && dispY < _terrainData.SizeY)
                         {
-                            float oldHeight = m_terrainData[dispX, dispY];
+                            float oldHeight = _terrainData[dispX, dispY];
                             // Smooth the heights around this location if the old height is far from this one
                             for (int sxx = dispX - 2; sxx < dispX + 2; sxx++)
                             {
                                 for (int syy = dispY - 2; syy < dispY + 2; syy++)
                                 {
-                                    if (sxx >= 0 && sxx < m_terrainData.SizeX && syy >= 0 && syy < m_terrainData.SizeY)
+                                    if (sxx >= 0 && sxx < _terrainData.SizeX && syy >= 0 && syy < _terrainData.SizeY)
                                     {
                                         if (sxx == dispX && syy == dispY)
                                         {
                                             // Set height for the exact rotated point
-                                            m_terrainData[dispX, dispY] = newHeight;
+                                            _terrainData[dispX, dispY] = newHeight;
                                         }
                                         else
                                         {
-                                            if (Math.Abs(m_terrainData[sxx, syy] - newHeight) > 1f)
+                                            if (Math.Abs(_terrainData[sxx, syy] - newHeight) > 1f)
                                             {
                                                 // If the adjacent height is far off, force it to this height
-                                                m_terrainData[sxx, syy] = newHeight;
+                                                _terrainData[sxx, syy] = newHeight;
                                             }
                                         }
                                     }
@@ -264,9 +264,9 @@ namespace OpenSim.Region.Framework.Scenes
                             }
                         }
 
-                        if (dispX >= 0 && dispX < m_terrainData.SizeX && dispY >= 0 && dispY < m_terrainData.SizeY)
+                        if (dispX >= 0 && dispX < _terrainData.SizeX && dispY >= 0 && dispY < _terrainData.SizeY)
                         {
-                            m_terrainData[dispX, dispY] = (float)newTerrain[xx, yy];
+                            _terrainData[dispX, dispY] = (float)newTerrain[xx, yy];
                         }
                     }
                 }
@@ -290,9 +290,9 @@ namespace OpenSim.Region.Framework.Scenes
         /// <param name="boundingSize">&lt;x, y&gt;</param>
         public void MergeWithBounding(ITerrainChannel newTerrain, Vector3 displacement, float rotationDegrees, Vector2 boundingOrigin, Vector2 boundingSize)
         {
-            m_log.DebugFormat("{0} MergeWithBounding: inSize=<{1},{2}>, rot={3}, boundingOrigin={4}, boundingSize={5}, disp={6}, outSize=<{7},{8}>",
+            _log.DebugFormat("{0} MergeWithBounding: inSize=<{1},{2}>, rot={3}, boundingOrigin={4}, boundingSize={5}, disp={6}, outSize=<{7},{8}>",
                                 LogHeader, newTerrain.Width, newTerrain.Height, rotationDegrees, boundingOrigin.ToString(),
-                                boundingSize.ToString(), displacement, m_terrainData.SizeX, m_terrainData.SizeY);
+                                boundingSize.ToString(), displacement, _terrainData.SizeX, _terrainData.SizeY);
 
             // get the size of the incoming terrain
             int baseX = newTerrain.Width;
@@ -359,7 +359,7 @@ namespace OpenSim.Region.Framework.Scenes
                         }
                         catch (Exception)   //just in case we've still not taken care of every way the arrays might go out of bounds! ;)
                         {
-                            m_log.DebugFormat("{0} MergeWithBounding - Rotate: Out of Bounds sx={1} sy={2} dx={3} dy={4}", sx, sy, x, y);
+                            _log.DebugFormat("{0} MergeWithBounding - Rotate: Out of Bounds sx={1} sy={2} dx={3} dy={4}", sx, sy, x, y);
                         }
                     }
                 }
@@ -368,8 +368,8 @@ namespace OpenSim.Region.Framework.Scenes
             // We could also incorporate the next steps, bounding-rectangle and displacement in the loop above, but it's simpler to visualise if done separately
             // and will also make it much easier when later I want the option for maybe a circular or oval bounding shape too ;).
 
-            int newX = m_terrainData.SizeX;
-            int newY = m_terrainData.SizeY;
+            int newX = _terrainData.SizeX;
+            int newY = _terrainData.SizeY;
             // displacement is relative to <0,0> in the destination region and defines where the origin of the data selected by the bounding-rectangle is placed
             int dispX = (int)Math.Floor(displacement.X);
             int dispY = (int)Math.Floor(displacement.Y);
@@ -389,7 +389,7 @@ namespace OpenSim.Region.Framework.Scenes
             if (endY > tmpY) endY = tmpY;
             if (endY < 0) endY = 0;
 
-            //m_log.DebugFormat("{0} MergeWithBounding: inSize=<{1},{2}>, disp=<{3},{4}> rot={5}, offset=<{6},{7}>, boundingStart=<{8},{9}>, boundingEnd=<{10},{11}>, cosR={12}, sinR={13}, outSize=<{14},{15}>", LogHeader,
+            //_log.DebugFormat("{0} MergeWithBounding: inSize=<{1},{2}>, disp=<{3},{4}> rot={5}, offset=<{6},{7}>, boundingStart=<{8},{9}>, boundingEnd=<{10},{11}>, cosR={12}, sinR={13}, outSize=<{14},{15}>", LogHeader,
             //                            baseX, baseY, dispX, dispY, radianRotation, offsetX, offsetY, startX, startY, endX, endY, cosR, sinR, newX, newY);
 
             int dx, dy;
@@ -404,11 +404,11 @@ namespace OpenSim.Region.Framework.Scenes
                         try
                         {
                             float newHeight = (float)terrain_tmp[x, y]; //use 'alpha' mask
-                            if (newHeight != -65535f) m_terrainData[dx, dy] = newHeight + displacement.Z;
+                            if (newHeight != -65535f) _terrainData[dx, dy] = newHeight + displacement.Z;
                         }
                         catch (Exception)   //just in case we've still not taken care of every way the arrays might go out of bounds! ;)
                         {
-                            m_log.DebugFormat("{0} MergeWithBounding - Bound & Displace: Out of Bounds sx={1} sy={2} dx={3} dy={4}", x, y, dx, dy);
+                            _log.DebugFormat("{0} MergeWithBounding - Bound & Displace: Out of Bounds sx={1} sy={2} dx={3} dy={4}", x, y, dx, dy);
                         }
                     }
                 }
@@ -421,7 +421,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             TerrainChannel copy = new TerrainChannel
             {
-                m_terrainData = m_terrainData.Clone()
+                _terrainData = _terrainData.Clone()
             };
             return copy;
         }
@@ -481,7 +481,7 @@ namespace OpenSim.Region.Framework.Scenes
             byte[] dataArray = (byte[])serializer.Deserialize(xmlReader);
             int index = 0;
 
-            m_terrainData = new TerrainData(Height, Width, (int)Constants.RegionHeight);
+            _terrainData = new TerrainData(Height, Width, (int)Constants.RegionHeight);
 
             for (int y = 0; y < Height; y++)
             {
@@ -517,8 +517,8 @@ namespace OpenSim.Region.Framework.Scenes
         // New terrain serialization format that includes the width and length.
         private void ToXml2(XmlWriter xmlWriter)
         {
-            TerrainChannelXMLPackage package = new TerrainChannelXMLPackage(Width, Height, Altitude, m_terrainData.CompressionFactor,
-                                            m_terrainData.GetCompressedMap());
+            TerrainChannelXMLPackage package = new TerrainChannelXMLPackage(Width, Height, Altitude, _terrainData.CompressionFactor,
+                                            _terrainData.GetCompressedMap());
             XmlSerializer serializer = new XmlSerializer(typeof(TerrainChannelXMLPackage));
             serializer.Serialize(xmlWriter, package);
         }
@@ -528,14 +528,14 @@ namespace OpenSim.Region.Framework.Scenes
         {
             XmlSerializer serializer = new XmlSerializer(typeof(TerrainChannelXMLPackage));
             TerrainChannelXMLPackage package = (TerrainChannelXMLPackage)serializer.Deserialize(xmlReader);
-            m_terrainData = new TerrainData(package.Map, package.CompressionFactor, package.SizeX, package.SizeY, package.SizeZ);
+            _terrainData = new TerrainData(package.Map, package.CompressionFactor, package.SizeX, package.SizeY, package.SizeZ);
         }
 
         // Fill the heightmap with the center bump terrain
         private void PinHeadIsland()
         {
-            float cx = m_terrainData.SizeX * 0.5f;
-            float cy = m_terrainData.SizeY * 0.5f;
+            float cx = _terrainData.SizeX * 0.5f;
+            float cy = _terrainData.SizeY * 0.5f;
             float h, b;
             for (int x = 0; x < Width; x++)
             {
@@ -545,14 +545,14 @@ namespace OpenSim.Region.Framework.Scenes
                     b = 10 * TerrainUtil.SphericalFactor(x - cx, y - cy, 100);
                     if (h < b)
                         h = b;
-                    m_terrainData[x, y] = h;
+                    _terrainData[x, y] = h;
                 }
             }
         }
 
         private void FlatLand()
         {
-            m_terrainData.ClearLand();
+            _terrainData.ClearLand();
         }
     }
 }

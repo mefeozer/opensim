@@ -37,7 +37,7 @@ namespace OpenSim.Services.FreeswitchService
 {
     public class FreeswitchService : FreeswitchServiceBase, IFreeswitchService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public FreeswitchService(IConfigSource config) : base(config)
         {
@@ -46,13 +46,13 @@ namespace OpenSim.Services.FreeswitchService
 
         public Hashtable HandleDialplanRequest(Hashtable request)
         {
-            m_log.DebugFormat("[FreeSwitchVoice]: HandleDialplanRequest called with {0}",request.ToString());
+            _log.DebugFormat("[FreeSwitchVoice]: HandleDialplanRequest called with {0}",request.ToString());
 
             Hashtable response = new Hashtable();
 
 //            foreach (DictionaryEntry item in request)
 //            {
-////               m_log.InfoFormat("[FreeSwitchDirectory]: requestBody item {0} {1}",item.Key, item.Value);
+////               _log.InfoFormat("[FreeSwitchDirectory]: requestBody item {0} {1}",item.Key, item.Value);
 //            }
 
             string requestcontext = (string) request["Hunt-Context"];
@@ -60,9 +60,9 @@ namespace OpenSim.Services.FreeswitchService
             response["keepalive"] = false;
             response["int_response_code"] = 200;
 
-            if (!string.IsNullOrEmpty(m_freeSwitchContext) && m_freeSwitchContext != requestcontext)
+            if (!string.IsNullOrEmpty(_freeSwitchContext) && _freeSwitchContext != requestcontext)
             {
-                m_log.Debug("[FreeSwitchDirectory]: returning empty as it's for another context");
+                _log.Debug("[FreeSwitchDirectory]: returning empty as it's for another context");
                 response["str_response_string"] = "";
             }
             else
@@ -80,14 +80,14 @@ namespace OpenSim.Services.FreeswitchService
                                    </condition>
                            </extension>*/
 
-                           @"<extension name=""opensim_conferences"">
+                           @"<extension name=""opensi_conferences"">
                                    <condition field=""destination_number"" expression=""^confctl-(.*)$"">
                                            <action application=""answer""/>
                                            <action application=""conference"" data=""$1-{1}@{0}""/>
                                    </condition>
                            </extension>
 
-                           <extension name=""opensim_conf"">
+                           <extension name=""opensi_conf"">
                                    <condition field=""destination_number"" expression=""^conf-(.*)$"">
                                            <action application=""answer""/>
                                            <action application=""conference"" data=""$1-{1}@{0}""/>
@@ -102,7 +102,7 @@ namespace OpenSim.Services.FreeswitchService
 
                      </context>
                    </section>
-                   </document>", m_freeSwitchContext, m_freeSwitchRealm);
+                   </document>", _freeSwitchContext, _freeSwitchRealm);
             }
 
             return response;
@@ -112,7 +112,7 @@ namespace OpenSim.Services.FreeswitchService
         {
             Hashtable response = new Hashtable();
             string domain = (string) request["domain"];
-            if (domain != m_freeSwitchRealm)
+            if (domain != _freeSwitchRealm)
             {
                 response["content_type"] = "text/xml";
                 response["keepalive"] = false;
@@ -121,7 +121,7 @@ namespace OpenSim.Services.FreeswitchService
             }
             else
             {
-//                 m_log.DebugFormat("[FreeSwitchDirectory]: HandleDirectoryRequest called with {0}",request.ToString());
+//                 _log.DebugFormat("[FreeSwitchDirectory]: HandleDirectoryRequest called with {0}",request.ToString());
 
                  // information in the request we might be interested in
 
@@ -143,7 +143,7 @@ namespace OpenSim.Services.FreeswitchService
                  //ip=9.167.220.137    // this is the correct IP rather than sip_contact_host above when through a vpn or NAT setup
 
 //                 foreach (DictionaryEntry item in request)
-//                    m_log.DebugFormat("[FreeSwitchDirectory]: requestBody item {0} {1}", item.Key, item.Value);
+//                    _log.DebugFormat("[FreeSwitchDirectory]: requestBody item {0} {1}", item.Key, item.Value);
 
                  string eventCallingFunction = (string) request["Event-Calling-Function"];
                  if (eventCallingFunction == null)
@@ -162,15 +162,15 @@ namespace OpenSim.Services.FreeswitchService
 
                      if (sipAuthMethod == "REGISTER")
                      {
-                         response = HandleRegister(m_freeSwitchContext, m_freeSwitchRealm, request);
+                         response = HandleRegister(_freeSwitchContext, _freeSwitchRealm, request);
                      }
                      else if (sipAuthMethod == "INVITE")
                      {
-                          response = HandleInvite(m_freeSwitchContext, m_freeSwitchRealm, request);
+                          response = HandleInvite(_freeSwitchContext, _freeSwitchRealm, request);
                      }
                      else
                      {
-                         m_log.ErrorFormat("[FreeSwitchVoice]: HandleDirectoryRequest unknown sip_auth_method {0}",sipAuthMethod);
+                         _log.ErrorFormat("[FreeSwitchVoice]: HandleDirectoryRequest unknown sip_auth_method {0}",sipAuthMethod);
                          response["int_response_code"] = 404;
                          response["content_type"] = "text/xml";
                          response["str_response_string"] = "";
@@ -178,19 +178,19 @@ namespace OpenSim.Services.FreeswitchService
                  }
                  else if (eventCallingFunction == "switch_xml_locate_user")
                  {
-                     response = HandleLocateUser(m_freeSwitchRealm, request);
+                     response = HandleLocateUser(_freeSwitchRealm, request);
                  }
                  else if (eventCallingFunction == "user_data_function") // gets called when an avatar to avatar call is made
                  {
-                      response = HandleLocateUser(m_freeSwitchRealm, request);
+                      response = HandleLocateUser(_freeSwitchRealm, request);
                  }
                  else if (eventCallingFunction == "user_outgoing_channel")
                  {
-                     response = HandleRegister(m_freeSwitchContext, m_freeSwitchRealm, request);
+                     response = HandleRegister(_freeSwitchContext, _freeSwitchRealm, request);
                  }
                  else if (eventCallingFunction == "config_sofia") // happens once on freeswitch startup
                  {
-                     response = HandleConfigSofia(m_freeSwitchContext, m_freeSwitchRealm, request);
+                     response = HandleConfigSofia(_freeSwitchContext, _freeSwitchRealm, request);
                  }
                  else if (eventCallingFunction == "switch_load_network_lists")
                  {
@@ -202,7 +202,7 @@ namespace OpenSim.Services.FreeswitchService
                  }
                  else
                  {
-                     m_log.ErrorFormat("[FreeSwitchVoice]: HandleDirectoryRequest unknown Event-Calling-Function {0}",eventCallingFunction);
+                     _log.ErrorFormat("[FreeSwitchVoice]: HandleDirectoryRequest unknown Event-Calling-Function {0}",eventCallingFunction);
                      response["int_response_code"] = 404;
                      response["keepalive"] = false;
                      response["content_type"] = "text/xml";
@@ -214,7 +214,7 @@ namespace OpenSim.Services.FreeswitchService
 
         private Hashtable HandleRegister(string Context, string Realm, Hashtable request)
         {
-            m_log.Info("[FreeSwitchDirectory]: HandleRegister called");
+            _log.Info("[FreeSwitchDirectory]: HandleRegister called");
 
             // TODO the password we return needs to match that sent in the request, this is hard coded for now
             string password = "1234";
@@ -251,7 +251,7 @@ namespace OpenSim.Services.FreeswitchService
 
         private Hashtable HandleInvite(string Context, string Realm, Hashtable request)
         {
-            m_log.Info("[FreeSwitchDirectory]: HandleInvite called");
+            _log.Info("[FreeSwitchDirectory]: HandleInvite called");
 
             // TODO the password we return needs to match that sent in the request, this is hard coded for now
             string password = "1234";
@@ -298,7 +298,7 @@ namespace OpenSim.Services.FreeswitchService
 
         private Hashtable HandleLocateUser(string Realm, Hashtable request)
         {
-            m_log.Info("[FreeSwitchDirectory]: HandleLocateUser called");
+            _log.Info("[FreeSwitchDirectory]: HandleLocateUser called");
 
             // TODO the password we return needs to match that sent in the request, this is hard coded for now
             string domain = (string) request["domain"];
@@ -332,7 +332,7 @@ namespace OpenSim.Services.FreeswitchService
 
         private Hashtable HandleConfigSofia(string Context, string Realm, Hashtable request)
         {
-            m_log.Info("[FreeSwitchDirectory]: HandleConfigSofia called.");
+            _log.Info("[FreeSwitchDirectory]: HandleConfigSofia called.");
 
             // TODO the password we return needs to match that sent in the request, this is hard coded for now
             string domain = (string) request["domain"];
@@ -357,7 +357,7 @@ namespace OpenSim.Services.FreeswitchService
                                             "<param name=\"username\" value=\"$${{default_provider_username}}\"/>\r\n"+
                                             "<param name=\"password\" value=\"$${{default_provider_password}}\"/>\r\n"+
                                             "<param name=\"from-user\" value=\"$${{default_provider_username}}\"/>\r\n"+
-                                            "<param name=\"from-domain\" value=\"$${{default_provider_from_domain}}\"/>\r\n"+
+                                            "<param name=\"from-domain\" value=\"$${{default_provider_fro_domain}}\"/>\r\n"+
                                             "<param name=\"expire-seconds\" value=\"600\"/>\r\n"+
                                             "<param name=\"register\" value=\"$${{default_provider_register}}\"/>\r\n"+
                                             "<param name=\"retry-seconds\" value=\"30\"/>\r\n"+
@@ -387,15 +387,15 @@ namespace OpenSim.Services.FreeswitchService
         {
             OSDMap map = new OSDMap(9);
 
-            map.Add("Realm", m_freeSwitchRealm);
-            map.Add("SIPProxy", m_freeSwitchSIPProxy);
-            map.Add("AttemptUseSTUN", m_freeSwitchAttemptUseSTUN);
-            map.Add("EchoServer", m_freeSwitchEchoServer);
-            map.Add("EchoPort", m_freeSwitchEchoPort);
-            map.Add("DefaultWellKnownIP", m_freeSwitchDefaultWellKnownIP);
-            map.Add("DefaultTimeout", m_freeSwitchDefaultTimeout);
-            map.Add("Context", m_freeSwitchContext);
-            map.Add("APIPrefix", m_freeSwitchAPIPrefix);
+            map.Add("Realm", _freeSwitchRealm);
+            map.Add("SIPProxy", _freeSwitchSIPProxy);
+            map.Add("AttemptUseSTUN", _freeSwitchAttemptUseSTUN);
+            map.Add("EchoServer", _freeSwitchEchoServer);
+            map.Add("EchoPort", _freeSwitchEchoPort);
+            map.Add("DefaultWellKnownIP", _freeSwitchDefaultWellKnownIP);
+            map.Add("DefaultTimeout", _freeSwitchDefaultTimeout);
+            map.Add("Context", _freeSwitchContext);
+            map.Add("APIPrefix", _freeSwitchAPIPrefix);
 
             return OSDParser.SerializeJsonString(map);
         }

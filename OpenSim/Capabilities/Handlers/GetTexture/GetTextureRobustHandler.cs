@@ -44,22 +44,22 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class GetTextureRobustHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IAssetService m_assetService;
+        private readonly IAssetService _assetService;
 
         public const string DefaultFormat = "x-j2c";
 
         // TODO: Change this to a config option
-        private readonly string m_RedirectURL = null;
+        private readonly string _RedirectURL = null;
 
         public GetTextureRobustHandler(string path, IAssetService assService, string name, string description, string redirectURL)
             : base("GET", path, name, description)
         {
-            m_assetService = assService;
-            m_RedirectURL = redirectURL;
-            if (m_RedirectURL != null && !m_RedirectURL.EndsWith("/"))
-                m_RedirectURL += "/";
+            _assetService = assService;
+            _RedirectURL = redirectURL;
+            if (_RedirectURL != null && !_RedirectURL.EndsWith("/"))
+                _RedirectURL += "/";
         }
 
         protected override byte[] ProcessRequest(string path, Stream request, IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
@@ -69,11 +69,11 @@ namespace OpenSim.Capabilities.Handlers
             string textureStr = query.GetOne("texture_id");
             string format = query.GetOne("format");
 
-            //m_log.DebugFormat("[GETTEXTURE]: called {0}", textureStr);
+            //_log.DebugFormat("[GETTEXTURE]: called {0}", textureStr);
 
-            if (m_assetService == null)
+            if (_assetService == null)
             {
-                m_log.Error("[GETTEXTURE]: Cannot fetch texture " + textureStr + " without an asset service");
+                _log.Error("[GETTEXTURE]: Cannot fetch texture " + textureStr + " without an asset service");
                 httpResponse.StatusCode = (int)System.Net.HttpStatusCode.NotFound;
                 return null;
             }
@@ -81,7 +81,7 @@ namespace OpenSim.Capabilities.Handlers
             UUID textureID;
             if (!string.IsNullOrEmpty(textureStr) && UUID.TryParse(textureStr, out textureID))
             {
-//                m_log.DebugFormat("[GETTEXTURE]: Received request for texture id {0}", textureID);
+//                _log.DebugFormat("[GETTEXTURE]: Received request for texture id {0}", textureID);
 
                 string[] formats;
                 if (!string.IsNullOrEmpty(format))
@@ -106,10 +106,10 @@ namespace OpenSim.Capabilities.Handlers
             }
             else
             {
-                m_log.Warn("[GETTEXTURE]: Failed to parse a texture_id from GetTexture request: " + httpRequest.Url);
+                _log.Warn("[GETTEXTURE]: Failed to parse a texture_id from GetTexture request: " + httpRequest.Url);
             }
 
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[GETTEXTURE]: For texture {0} sending back response {1}, data length {2}",
 //                textureID, httpResponse.StatusCode, httpResponse.ContentLength);
 
@@ -126,18 +126,18 @@ namespace OpenSim.Capabilities.Handlers
         /// <returns>False for "caller try another codec"; true otherwise</returns>
         private bool FetchTexture(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, UUID textureID, string format)
         {
-            // m_log.DebugFormat("[GETTEXTURE]: {0} with requested format {1}", textureID, format);
-            if(!string.IsNullOrEmpty(m_RedirectURL))
+            // _log.DebugFormat("[GETTEXTURE]: {0} with requested format {1}", textureID, format);
+            if(!string.IsNullOrEmpty(_RedirectURL))
             {
-                string textureUrl = m_RedirectURL + "?texture_id=" + textureID.ToString();
-                m_log.Debug("[GETTEXTURE]: Redirecting texture request to " + textureUrl);
+                string textureUrl = _RedirectURL + "?texture_id=" + textureID.ToString();
+                _log.Debug("[GETTEXTURE]: Redirecting texture request to " + textureUrl);
                 httpResponse.StatusCode = (int)HttpStatusCode.Moved;
                 httpResponse.AddHeader("Location:", textureUrl);
                 return true;
             }
 
             // Fetch,  Misses or invalid return a 404
-            AssetBase texture = m_assetService.Get(textureID.ToString());
+            AssetBase texture = _assetService.Get(textureID.ToString());
             if (texture != null)
             {
                 if (texture.Type != (sbyte)AssetType.Texture)
@@ -167,7 +167,7 @@ namespace OpenSim.Capabilities.Handlers
             }
 
             // not found
-            // m_log.Warn("[GETTEXTURE]: Texture " + textureID + " not found");
+            // _log.Warn("[GETTEXTURE]: Texture " + textureID + " not found");
             httpResponse.StatusCode = (int)System.Net.HttpStatusCode.NotFound;
             return true;
         }
@@ -186,7 +186,7 @@ namespace OpenSim.Capabilities.Handlers
                     // sending back the last byte instead of an error status
                     if (start >= texture.Data.Length)
                     {
-//                        m_log.DebugFormat(
+//                        _log.DebugFormat(
 //                            "[GETTEXTURE]: Client requested range for texture {0} starting at {1} but texture has end of {2}",
 //                            texture.ID, start, texture.Data.Length);
 
@@ -218,7 +218,7 @@ namespace OpenSim.Capabilities.Handlers
                         start = Utils.Clamp(start, 0, end);
                         int len = end - start + 1;
 
-//                        m_log.Debug("Serving " + start + " to " + end + " of " + texture.Data.Length + " bytes for texture " + texture.ID);
+//                        _log.Debug("Serving " + start + " to " + end + " of " + texture.Data.Length + " bytes for texture " + texture.ID);
 
                         // Always return PartialContent, even if the range covered the entire data length
                         // We were accidentally sending back 404 before in this situation
@@ -242,7 +242,7 @@ namespace OpenSim.Capabilities.Handlers
                 }
                 else
                 {
-                    m_log.Warn("[GETTEXTURE]: Malformed Range header: " + range);
+                    _log.Warn("[GETTEXTURE]: Malformed Range header: " + range);
                     response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
                 }
             }
@@ -261,11 +261,11 @@ namespace OpenSim.Capabilities.Handlers
             }
 
             //            if (response.StatusCode < 200 || response.StatusCode > 299)
-            //                m_log.WarnFormat(
+            //                _log.WarnFormat(
             //                    "[GETTEXTURE]: For texture {0} requested range {1} responded {2} with content length {3} (actual {4})",
             //                    texture.FullID, range, response.StatusCode, response.ContentLength, texture.Data.Length);
             //            else
-            //                m_log.DebugFormat(
+            //                _log.DebugFormat(
             //                    "[GETTEXTURE]: For texture {0} requested range {1} responded {2} with content length {3} (actual {4})",
             //                    texture.FullID, range, response.StatusCode, response.ContentLength, texture.Data.Length);
         }
@@ -316,7 +316,7 @@ namespace OpenSim.Capabilities.Handlers
 
         private byte[] ConvertTextureData(AssetBase texture, string format)
         {
-            m_log.DebugFormat("[GETTEXTURE]: Converting texture {0} to {1}", texture.ID, format);
+            _log.DebugFormat("[GETTEXTURE]: Converting texture {0} to {1}", texture.ID, format);
             byte[] data = new byte[0];
 
             MemoryStream imgstream = new MemoryStream();
@@ -346,13 +346,13 @@ namespace OpenSim.Capabilities.Handlers
                             data = imgstream.ToArray();
                         }
                         else
-                            m_log.WarnFormat("[GETTEXTURE]: No such codec {0}", format);
+                            _log.WarnFormat("[GETTEXTURE]: No such codec {0}", format);
                     }
                 }
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[GETTEXTURE]: Unable to convert texture {0} to {1}: {2}", texture.ID, format, e.Message);
+                _log.WarnFormat("[GETTEXTURE]: Unable to convert texture {0} to {1}: {2}", texture.ID, format, e.Message);
             }
             finally
             {

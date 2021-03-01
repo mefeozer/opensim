@@ -36,10 +36,10 @@ namespace OpenSim.Tests
     [TestFixture]
     public class ConfigurationLoaderTests : OpenSimTestCase
     {
-        private const string m_testSubdirectory = "test";
-        private string m_basePath;
-        private string m_workingDirectory;
-        private IConfigSource m_config;
+        private const string _testSubdirectory = "test";
+        private string _basePath;
+        private string _workingDirectory;
+        private IConfigSource _config;
 
         /// <summary>
         /// Set up a test directory.
@@ -49,10 +49,10 @@ namespace OpenSim.Tests
         {
             base.SetUp();
 
-            m_basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            string path = Path.Combine(m_basePath, m_testSubdirectory);
+            _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string path = Path.Combine(_basePath, _testSubdirectory);
             Directory.CreateDirectory(path);
-            m_workingDirectory = Directory.GetCurrentDirectory();
+            _workingDirectory = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(path);
         }
 
@@ -62,8 +62,8 @@ namespace OpenSim.Tests
         [TearDown]
         public void TearDown()
         {
-            Directory.SetCurrentDirectory(m_workingDirectory);
-            Directory.Delete(m_basePath, true);
+            Directory.SetCurrentDirectory(_workingDirectory);
+            Directory.Delete(_basePath, true);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace OpenSim.Tests
         public void IncludeTests()
         {
             const string mainIniFile = "OpenSimDefaults.ini";
-            m_config = new IniConfigSource();
+            _config = new IniConfigSource();
 
             // Create ini files in a directory structure
             IniConfigSource ini;
@@ -84,9 +84,9 @@ namespace OpenSim.Tests
             config.Set("Include-absolute", "absolute/one/config/setting.ini");
             config.Set("Include-absolute1", "absolute/two/config/setting1.ini");
             config.Set("Include-absolute2", "absolute/two/config/setting2.ini");
-            config.Set("Include-relative", "../" + m_testSubdirectory + "/relative/one/config/setting.ini");
-            config.Set("Include-relative1", "../" + m_testSubdirectory + "/relative/two/config/setting1.ini");
-            config.Set("Include-relative2", "../" + m_testSubdirectory + "/relative/two/config/setting2.ini");
+            config.Set("Include-relative", "../" + _testSubdirectory + "/relative/one/config/setting.ini");
+            config.Set("Include-relative1", "../" + _testSubdirectory + "/relative/two/config/setting1.ini");
+            config.Set("Include-relative2", "../" + _testSubdirectory + "/relative/two/config/setting2.ini");
             CreateIni(mainIniFile, ini);
 
             ini = new IniConfigSource();
@@ -131,7 +131,7 @@ namespace OpenSim.Tests
             source.Source.Configs.Remove(config);
 
             // Finally, we are able to check the result
-            Assert.AreEqual(m_config.ToString(), source.Source.ToString(),
+            Assert.AreEqual(_config.ToString(), source.Source.ToString(),
                 "Configuration with includes does not contain all settings.");
         }
 
@@ -143,7 +143,7 @@ namespace OpenSim.Tests
                 Directory.CreateDirectory(path);
             }
             source.Save(filepath);
-            m_config.Merge(source);
+            _config.Merge(source);
         }
     }
 }

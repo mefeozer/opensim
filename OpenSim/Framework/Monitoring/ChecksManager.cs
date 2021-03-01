@@ -37,7 +37,7 @@ namespace OpenSim.Framework.Monitoring
     /// </summary>
     public static class ChecksManager
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Subcommand used to list other stats.
         public const string ListSubCommand = "list";
@@ -221,7 +221,7 @@ namespace OpenSim.Framework.Monitoring
                         foreach (Check check in container.Values)
                         {
                             if (!check.CheckIt())
-                                m_log.WarnFormat(
+                                _log.WarnFormat(
                                     "[CHECKS MANAGER]: Check {0}.{1}.{2} failed with message {3}", check.Category, check.Container, check.ShortName, check.LastFailureMessage);
                         }
                     }

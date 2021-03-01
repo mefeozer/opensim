@@ -50,15 +50,15 @@ namespace OpenSim.Data.Tests
         where TConn : DbConnection, new()
         where TService : class, new()
     {
-        protected string m_connStr;
-        private TService m_service;
-        private string m_file;
+        protected string _connStr;
+        private TService _service;
+        private string _file;
 
         // TODO: Is this in the right place here?
         // Later:  apparently it's not, but does it matter here?
-//        protected static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        protected static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected ILog m_log;  // doesn't matter here that it's not static, init to correct type in instance .ctor
+        protected ILog _log;  // doesn't matter here that it's not static, init to correct type in instance .ctor
 
         public BasicDataServiceTest()
             : this("")
@@ -67,14 +67,14 @@ namespace OpenSim.Data.Tests
 
         public BasicDataServiceTest(string conn)
         {
-            m_connStr = !string.IsNullOrEmpty(conn) ? conn : DefaultTestConns.Get(typeof(TConn));
+            _connStr = !string.IsNullOrEmpty(conn) ? conn : DefaultTestConns.Get(typeof(TConn));
 
-            m_log = LogManager.GetLogger(this.GetType());
+            _log = LogManager.GetLogger(this.GetType());
             OpenSim.Tests.Common.TestLogging.LogToConsole();    // TODO: Is that right?
         }
 
         /// <summary>
-        /// To be overridden in derived classes. Do whatever init with the m_service, like setting the conn string to it.
+        /// To be overridden in derived classes. Do whatever init with the _service, like setting the conn string to it.
         /// You'd probably want to to cast the 'service' to a more specific type and store it in a member var.
         /// This framework takes care of disposing it, if it's disposable.
         /// </summary>
@@ -97,24 +97,24 @@ namespace OpenSim.Data.Tests
                     Util.LoadArchSpecificWindowsDll("sqlite3.dll");
 
                 // for SQLite, if no explicit conn string is specified, use a temp file
-                if (string.IsNullOrEmpty(m_connStr))
+                if (string.IsNullOrEmpty(_connStr))
                 {
-                    m_file = Path.GetTempFileName() + ".db";
-                    m_connStr = "URI=file:" + m_file + ",version=3";
+                    _file = Path.GetTempFileName() + ".db";
+                    _connStr = "URI=file:" + _file + ",version=3";
                 }
             }
 
-            if (string.IsNullOrEmpty(m_connStr))
+            if (string.IsNullOrEmpty(_connStr))
             {
                 string msg = string.Format("Connection string for {0} is not defined, ignoring tests", typeof(TConn).Name);
-                m_log.Warn(msg);
+                _log.Warn(msg);
                 Assert.Ignore(msg);
             }
 
             // Try the connection, ignore tests if Open() fails
             using (TConn conn = new TConn())
             {
-                conn.ConnectionString = m_connStr;
+                conn.ConnectionString = _connStr;
                 try
                 {
                     conn.Open();
@@ -123,7 +123,7 @@ namespace OpenSim.Data.Tests
                 catch
                 {
                     string msg = string.Format("{0} is unable to connect to the database, ignoring tests", typeof(TConn).Name);
-                    m_log.Warn(msg);
+                    _log.Warn(msg);
                     Assert.Ignore(msg);
                 }
             }
@@ -134,12 +134,12 @@ namespace OpenSim.Data.Tests
             // tests.
             try
             {
-                m_service = new TService();
-                InitService(m_service);
+                _service = new TService();
+                InitService(_service);
             }
             catch (Exception e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
                 Assert.Ignore();
             }
         }
@@ -147,22 +147,22 @@ namespace OpenSim.Data.Tests
         [TestFixtureTearDown]
         public void Cleanup()
         {
-            if (m_service != null)
+            if (_service != null)
             {
-                if (m_service is IDisposable)
-                    ((IDisposable)m_service).Dispose();
-                m_service = null;
+                if (_service is IDisposable)
+                    ((IDisposable)_service).Dispose();
+                _service = null;
             }
 
-            if (!string.IsNullOrEmpty(m_file) && File.Exists(m_file))
-                File.Delete(m_file);
+            if (!string.IsNullOrEmpty(_file) && File.Exists(_file))
+                File.Delete(_file);
         }
 
         protected virtual DbConnection Connect()
         {
             DbConnection cnn = new TConn
             {
-                ConnectionString = m_connStr
+                ConnectionString = _connStr
             };
             cnn.Open();
             return cnn;

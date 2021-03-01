@@ -84,7 +84,7 @@ namespace OpenSim.Region.Framework.Interfaces
         /// Stop and remove all http requests for the given script.
         /// </summary>
         /// <param name='id'></param>
-        void StopHttpRequest(uint m_localID, UUID m_itemID);
+        void StopHttpRequest(uint _localID, UUID _itemID);
         IServiceRequest GetNextCompletedRequest();
         void RemoveCompletedRequest(UUID id);
         bool CheckThrottle(uint localID, UUID onerID);

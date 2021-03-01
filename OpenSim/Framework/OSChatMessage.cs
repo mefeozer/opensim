@@ -41,21 +41,21 @@ namespace OpenSim.Framework
     /// </summary>
     public class OSChatMessage : EventArgs, IEventArgs
     {
-        protected int m_channel;
-        protected string m_from;
-        protected string m_message;
-        protected Vector3 m_position;
+        protected int _channel;
+        protected string _from;
+        protected string _message;
+        protected Vector3 _position;
 
-        protected IScene m_scene;
-        protected IClientAPI m_sender;
-        protected object m_senderObject;
-        protected ChatTypeEnum m_type;
-        protected UUID m_fromID;
-        protected UUID m_destination = UUID.Zero;
+        protected IScene _scene;
+        protected IClientAPI _sender;
+        protected object _senderObject;
+        protected ChatTypeEnum _type;
+        protected UUID _fromID;
+        protected UUID _destination = UUID.Zero;
 
         public OSChatMessage()
         {
-            m_position = new Vector3();
+            _position = new Vector3();
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace OpenSim.Framework
         /// </summary>
         public string Message
         {
-            get { return m_message; }
-            set { m_message = value; }
+            get => _message;
+            set => _message = value;
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace OpenSim.Framework
         /// </summary>
         public ChatTypeEnum Type
         {
-            get { return m_type; }
-            set { m_type = value; }
+            get => _type;
+            set => _type = value;
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace OpenSim.Framework
         /// </summary>
         public int Channel
         {
-            get { return m_channel; }
-            set { m_channel = value; }
+            get => _channel;
+            set => _channel = value;
         }
 
         /// <summary>
@@ -90,8 +90,8 @@ namespace OpenSim.Framework
         /// </summary>
         public Vector3 Position
         {
-            get { return m_position; }
-            set { m_position = value; }
+            get => _position;
+            set => _position = value;
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace OpenSim.Framework
         /// </summary>
         public string From
         {
-            get { return m_from; }
-            set { m_from = value; }
+            get => _from;
+            set => _from = value;
         }
 
         #region IEventArgs Members
@@ -113,8 +113,8 @@ namespace OpenSim.Framework
         /// </summary>
         public IClientAPI Sender
         {
-            get { return m_sender; }
-            set { m_sender = value; }
+            get => _sender;
+            set => _sender = value;
         }
 
         /// <summary>
@@ -122,20 +122,20 @@ namespace OpenSim.Framework
         /// </summary>
         public object SenderObject
         {
-            get { return m_senderObject; }
-            set { m_senderObject = value; }
+            get => _senderObject;
+            set => _senderObject = value;
         }
 
         public UUID SenderUUID
         {
-            get { return m_fromID; }
-            set { m_fromID = value; }
+            get => _fromID;
+            set => _fromID = value;
         }
 
         public UUID Destination
         {
-            get { return m_destination; }
-            set { m_destination = value; }
+            get => _destination;
+            set => _destination = value;
         }
 
         /// <summary>
@@ -143,13 +143,13 @@ namespace OpenSim.Framework
         /// </summary>
         public IScene Scene
         {
-            get { return m_scene; }
-            set { m_scene = value; }
+            get => _scene;
+            set => _scene = value;
         }
 
         public override string ToString()
         {
-            return m_message;
+            return _message;
         }
 
         #endregion

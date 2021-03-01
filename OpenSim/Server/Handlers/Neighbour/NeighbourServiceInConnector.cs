@@ -38,27 +38,27 @@ namespace OpenSim.Server.Handlers.Neighbour
 {
     public class NeighbourServiceInConnector : ServiceConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly INeighbourService m_NeighbourService;
-        private readonly IAuthenticationService m_AuthenticationService = null;
+        private readonly INeighbourService _NeighbourService;
+        private readonly IAuthenticationService _AuthenticationService = null;
 
         public NeighbourServiceInConnector(IConfigSource source, IHttpServer server, INeighbourService nService, IScene scene) :
                 base(source, server, string.Empty)
         {
 
-            m_NeighbourService = nService;
-            if (m_NeighbourService == null)
+            _NeighbourService = nService;
+            if (_NeighbourService == null)
             {
-                m_log.Error("[NEIGHBOUR IN CONNECTOR]: neighbour service was not provided");
+                _log.Error("[NEIGHBOUR IN CONNECTOR]: neighbour service was not provided");
                 return;
             }
 
             //bool authentication = neighbourConfig.GetBoolean("RequireAuthentication", false);
             //if (authentication)
-            //    m_AuthenticationService = scene.RequestModuleInterface<IAuthenticationService>();
+            //    _AuthenticationService = scene.RequestModuleInterface<IAuthenticationService>();
 
-            server.AddSimpleStreamHandler(new NeighbourSimpleHandler(m_NeighbourService, m_AuthenticationService));
+            server.AddSimpleStreamHandler(new NeighbourSimpleHandler(_NeighbourService, _AuthenticationService));
         }
     }
 }

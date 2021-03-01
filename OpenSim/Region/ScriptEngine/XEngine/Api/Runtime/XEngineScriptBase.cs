@@ -37,16 +37,16 @@ namespace OpenSim.Region.ScriptEngine.XEngine.ScriptBase
         /// Used for script sleeps when we are using co-operative script termination.
         /// </summary>
         /// <remarks>null if co-operative script termination is not active</remarks>
-        readonly WaitHandle m_coopSleepHandle;
+        readonly WaitHandle _coopSleepHandle;
 
         public XEngineScriptBase(WaitHandle coopSleepHandle) : base()
         {
-            m_coopSleepHandle = coopSleepHandle;
+            _coopSleepHandle = coopSleepHandle;
         }
 
-        public void opensim_reserved_CheckForCoopTermination()
+        public void opensi_reserved_CheckForCoopTermination()
         {
-            if (m_coopSleepHandle != null && m_coopSleepHandle.WaitOne(0))
+            if (_coopSleepHandle != null && _coopSleepHandle.WaitOne(0))
                 throw new ScriptCoopStopException();
         }
     }

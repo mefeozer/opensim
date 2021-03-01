@@ -92,7 +92,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
     public abstract class PhysicsScene
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// A unique identifying string for this instance of the physics engine.
@@ -113,10 +113,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         // Anything else could cause problems.
         public event physicsCrash OnPhysicsCrash;
 
-        public static PhysicsScene Null
-        {
-            get { return new NullPhysicsScene(); }
-        }
+        public static PhysicsScene Null => new NullPhysicsScene();
 
         public RequestAssetDelegate RequestAssetMethod { get; set; }
 
@@ -218,15 +215,9 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
             return AddPrimShape(primName, pbs, position, size, rotation, isPhysical, localid);
         }
 
-        public virtual float TimeDilation
-        {
-            get { return 1.0f; }
-        }
+        public virtual float TimeDilation => 1.0f;
 
-        public virtual bool SupportsNINJAJoints
-        {
-            get { return false; }
-        }
+        public virtual bool SupportsNINJAJoints => false;
 
         public virtual PhysicsJoint RequestJointCreation(string objectNameInScene, PhysicsJointType jointType, Vector3 position,
                                             Quaternion rotation, string parms, List<string> bodyNames, string trackedBodyName, Quaternion localRotation)
@@ -401,6 +392,6 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         }
 
         public virtual void GetResults() { }
-        public virtual bool IsThreaded { get {return false;} }
+        public virtual bool IsThreaded => false;
     }
 }

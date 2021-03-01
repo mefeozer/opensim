@@ -34,34 +34,34 @@ namespace OpenSim.Region.Framework.Scenes
 {
     public class MovementAnimationOverrides
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly object MAOLock = new object();
-        private Dictionary<string, UUID> m_overrides = new Dictionary<string, UUID>();
+        private Dictionary<string, UUID> _overrides = new Dictionary<string, UUID>();
         public void SetOverride(string state, UUID animID)
         {
             if (animID == UUID.Zero)
             {
                 if (state == "ALL")
-                    m_overrides.Clear();
+                    _overrides.Clear();
                 else
-                    m_overrides.Remove(state);
+                    _overrides.Remove(state);
                 return;
             }
 
-            m_log.DebugFormat("Setting override for {0} to {1}", state, animID);
+            _log.DebugFormat("Setting override for {0} to {1}", state, animID);
 
             lock (MAOLock)
-                m_overrides[state] = animID;
+                _overrides[state] = animID;
         }
 
         public UUID GetOverriddenAnimation(string state)
         {
             lock (MAOLock)
             {
-                if (m_overrides.ContainsKey(state))
-                    return m_overrides[state];
+                if (_overrides.ContainsKey(state))
+                    return _overrides[state];
             }
 
             return UUID.Zero;
@@ -71,7 +71,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             lock (MAOLock)
             {
-                return new Dictionary<string, UUID>(m_overrides);
+                return new Dictionary<string, UUID>(_overrides);
             }
         }
 
@@ -79,8 +79,8 @@ namespace OpenSim.Region.Framework.Scenes
         {
             lock (MAOLock)
             {
-                m_overrides.Clear();
-                m_overrides = new Dictionary<string, UUID>(src);
+                _overrides.Clear();
+                _overrides = new Dictionary<string, UUID>(src);
             }
         }
     }

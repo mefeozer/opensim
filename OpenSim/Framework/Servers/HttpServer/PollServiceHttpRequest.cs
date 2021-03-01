@@ -38,7 +38,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 {
     public class PollServiceHttpRequest
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public readonly PollServiceEventArgs PollServiceArgs;
         public readonly IHttpRequest Request;
@@ -87,7 +87,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             try
             {
-                //m_log.Info("[BASE HTTP SERVER]: Doing HTTP Grunt work with response");
+                //_log.Info("[BASE HTTP SERVER]: Doing HTTP Grunt work with response");
                 if(responsedata["int_response_code"] != null)
                     responsecode = (int)responsedata["int_response_code"];
 
@@ -206,10 +206,10 @@ namespace OpenSim.Framework.Servers.HttpServer
                 {
                     // only mute connection reset by peer so we are not totally blind for now
                     if(((System.Net.Sockets.SocketException)ex).SocketErrorCode != System.Net.Sockets.SocketError.ConnectionReset)
-                         m_log.Warn("[POLL SERVICE WORKER THREAD]: Error ", ex);
+                         _log.Warn("[POLL SERVICE WORKER THREAD]: Error ", ex);
                 }
                 else
-                    m_log.Warn("[POLL SERVICE WORKER THREAD]: Error ", ex);
+                    _log.Warn("[POLL SERVICE WORKER THREAD]: Error ", ex);
             }
 
             PollServiceArgs.RequestsHandled++;

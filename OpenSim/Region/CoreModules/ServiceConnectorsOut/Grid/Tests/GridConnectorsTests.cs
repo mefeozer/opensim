@@ -40,7 +40,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid.Tests
     [TestFixture]
     public class GridConnectorsTests : OpenSimTestCase
     {
-        RegionGridServicesConnector m_LocalConnector;
+        RegionGridServicesConnector _LocalConnector;
 
         [SetUp]
         public override void SetUp()
@@ -58,7 +58,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid.Tests
             config.Configs["GridService"].Set("Region_Test_Region_3", "FallbackRegion");
             config.Configs["GridService"].Set("Region_Other_Region_4", "FallbackRegion");
 
-            m_LocalConnector = new RegionGridServicesConnector(config);
+            _LocalConnector = new RegionGridServicesConnector(config);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid.Tests
             };
             Scene s = new Scene(new RegionInfo());
             s.RegionInfo.RegionID = r1.RegionID;
-            m_LocalConnector.AddRegion(s);
+            _LocalConnector.AddRegion(s);
 
             GridRegion r2 = new GridRegion
             {
@@ -97,7 +97,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid.Tests
             };
             s = new Scene(new RegionInfo());
             s.RegionInfo.RegionID = r2.RegionID;
-            m_LocalConnector.AddRegion(s);
+            _LocalConnector.AddRegion(s);
 
             GridRegion r3 = new GridRegion
             {
@@ -111,7 +111,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid.Tests
             };
             s = new Scene(new RegionInfo());
             s.RegionInfo.RegionID = r3.RegionID;
-            m_LocalConnector.AddRegion(s);
+            _LocalConnector.AddRegion(s);
 
             GridRegion r4 = new GridRegion
             {
@@ -125,77 +125,77 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Grid.Tests
             };
             s = new Scene(new RegionInfo());
             s.RegionInfo.RegionID = r4.RegionID;
-            m_LocalConnector.AddRegion(s);
+            _LocalConnector.AddRegion(s);
 
-            m_LocalConnector.RegisterRegion(UUID.Zero, r1);
+            _LocalConnector.RegisterRegion(UUID.Zero, r1);
 
-            GridRegion result = m_LocalConnector.GetRegionByName(UUID.Zero, "Test");
+            GridRegion result = _LocalConnector.GetRegionByName(UUID.Zero, "Test");
             Assert.IsNull(result, "Retrieved GetRegionByName \"Test\" is not null");
 
-            result = m_LocalConnector.GetRegionByName(UUID.Zero, "Test Region 1");
+            result = _LocalConnector.GetRegionByName(UUID.Zero, "Test Region 1");
             Assert.IsNotNull(result, "Retrieved GetRegionByName is null");
             Assert.That(result.RegionName, Is.EqualTo("Test Region 1"), "Retrieved region's name does not match");
 
-            m_LocalConnector.RegisterRegion(UUID.Zero, r2);
-            m_LocalConnector.RegisterRegion(UUID.Zero, r3);
-            m_LocalConnector.RegisterRegion(UUID.Zero, r4);
+            _LocalConnector.RegisterRegion(UUID.Zero, r2);
+            _LocalConnector.RegisterRegion(UUID.Zero, r3);
+            _LocalConnector.RegisterRegion(UUID.Zero, r4);
 
-            result = m_LocalConnector.GetRegionByUUID(UUID.Zero, new UUID(1));
+            result = _LocalConnector.GetRegionByUUID(UUID.Zero, new UUID(1));
             Assert.IsNotNull(result, "Retrieved GetRegionByUUID is null");
             Assert.That(result.RegionID, Is.EqualTo(new UUID(1)), "Retrieved region's UUID does not match");
 
-            result = m_LocalConnector.GetRegionByPosition(UUID.Zero, (int)Util.RegionToWorldLoc(1000), (int)Util.RegionToWorldLoc(1000));
+            result = _LocalConnector.GetRegionByPosition(UUID.Zero, (int)Util.RegionToWorldLoc(1000), (int)Util.RegionToWorldLoc(1000));
             Assert.IsNotNull(result, "Retrieved GetRegionByPosition is null");
             Assert.That(result.RegionLocX, Is.EqualTo(1000 * (int)Constants.RegionSize), "Retrieved region's position does not match");
 
-            List<GridRegion> results = m_LocalConnector.GetNeighbours(UUID.Zero, new UUID(1));
+            List<GridRegion> results = _LocalConnector.GetNeighbours(UUID.Zero, new UUID(1));
             Assert.IsNotNull(results, "Retrieved neighbours list is null");
             Assert.That(results.Count, Is.EqualTo(1), "Retrieved neighbour collection is greater than expected");
             Assert.That(results[0].RegionID, Is.EqualTo(new UUID(2)), "Retrieved region's UUID does not match");
 
-            results = m_LocalConnector.GetRegionsByName(UUID.Zero, "Test", 10);
+            results = _LocalConnector.GetRegionsByName(UUID.Zero, "Test", 10);
             Assert.IsNotNull(results, "Retrieved GetRegionsByName collection is null");
             Assert.That(results.Count, Is.EqualTo(3), "Retrieved neighbour collection is less than expected");
 
-            results = m_LocalConnector.GetRegionRange(UUID.Zero, 900 * (int)Constants.RegionSize, 1002 * (int)Constants.RegionSize,
+            results = _LocalConnector.GetRegionRange(UUID.Zero, 900 * (int)Constants.RegionSize, 1002 * (int)Constants.RegionSize,
                 900 * (int)Constants.RegionSize, 1100 * (int)Constants.RegionSize);
             Assert.IsNotNull(results, "Retrieved GetRegionRange collection is null");
             Assert.That(results.Count, Is.EqualTo(2), "Retrieved neighbour collection is not the number expected");
 
-            results = m_LocalConnector.GetDefaultRegions(UUID.Zero);
+            results = _LocalConnector.GetDefaultRegions(UUID.Zero);
             Assert.IsNotNull(results, "Retrieved GetDefaultRegions collection is null");
             Assert.That(results.Count, Is.EqualTo(1), "Retrieved default regions collection has not the expected size");
             Assert.That(results[0].RegionID, Is.EqualTo(new UUID(1)), "Retrieved default region's UUID does not match");
 
-            results = m_LocalConnector.GetFallbackRegions(UUID.Zero, r1.RegionLocX, r1.RegionLocY);
+            results = _LocalConnector.GetFallbackRegions(UUID.Zero, r1.RegionLocX, r1.RegionLocY);
             Assert.IsNotNull(results, "Retrieved GetFallbackRegions collection for region 1 is null");
             Assert.That(results.Count, Is.EqualTo(3), "Retrieved fallback regions collection for region 1 has not the expected size");
             Assert.That(results[0].RegionID, Is.EqualTo(new UUID(2)), "Retrieved fallback regions for default region are not in the expected order 2-4-3");
             Assert.That(results[1].RegionID, Is.EqualTo(new UUID(4)), "Retrieved fallback regions for default region are not in the expected order 2-4-3");
             Assert.That(results[2].RegionID, Is.EqualTo(new UUID(3)), "Retrieved fallback regions for default region are not in the expected order 2-4-3");
 
-            results = m_LocalConnector.GetFallbackRegions(UUID.Zero, r2.RegionLocX, r2.RegionLocY);
+            results = _LocalConnector.GetFallbackRegions(UUID.Zero, r2.RegionLocX, r2.RegionLocY);
             Assert.IsNotNull(results, "Retrieved GetFallbackRegions collection for region 2 is null");
             Assert.That(results.Count, Is.EqualTo(3), "Retrieved fallback regions collection for region 2 has not the expected size");
             Assert.That(results[0].RegionID, Is.EqualTo(new UUID(2)), "Retrieved fallback regions are not in the expected order 2-4-3");
             Assert.That(results[1].RegionID, Is.EqualTo(new UUID(4)), "Retrieved fallback regions are not in the expected order 2-4-3");
             Assert.That(results[2].RegionID, Is.EqualTo(new UUID(3)), "Retrieved fallback regions are not in the expected order 2-4-3");
 
-            results = m_LocalConnector.GetFallbackRegions(UUID.Zero, r3.RegionLocX, r3.RegionLocY);
+            results = _LocalConnector.GetFallbackRegions(UUID.Zero, r3.RegionLocX, r3.RegionLocY);
             Assert.IsNotNull(results, "Retrieved GetFallbackRegions collection for region 3 is null");
             Assert.That(results.Count, Is.EqualTo(3), "Retrieved fallback regions collection for region 3 has not the expected size");
             Assert.That(results[0].RegionID, Is.EqualTo(new UUID(3)), "Retrieved fallback regions are not in the expected order 3-4-2");
             Assert.That(results[1].RegionID, Is.EqualTo(new UUID(4)), "Retrieved fallback regions are not in the expected order 3-4-2");
             Assert.That(results[2].RegionID, Is.EqualTo(new UUID(2)), "Retrieved fallback regions are not in the expected order 3-4-2");
 
-            results = m_LocalConnector.GetFallbackRegions(UUID.Zero, r4.RegionLocX, r4.RegionLocY);
+            results = _LocalConnector.GetFallbackRegions(UUID.Zero, r4.RegionLocX, r4.RegionLocY);
             Assert.IsNotNull(results, "Retrieved GetFallbackRegions collection for region 4 is null");
             Assert.That(results.Count, Is.EqualTo(3), "Retrieved fallback regions collection for region 4 has not the expected size");
             Assert.That(results[0].RegionID, Is.EqualTo(new UUID(4)), "Retrieved fallback regions are not in the expected order 4-3-2");
             Assert.That(results[1].RegionID, Is.EqualTo(new UUID(3)), "Retrieved fallback regions are not in the expected order 4-3-2");
             Assert.That(results[2].RegionID, Is.EqualTo(new UUID(2)), "Retrieved fallback regions are not in the expected order 4-3-2");
 
-            results = m_LocalConnector.GetHyperlinks(UUID.Zero);
+            results = _LocalConnector.GetHyperlinks(UUID.Zero);
             Assert.IsNotNull(results, "Retrieved GetHyperlinks list is null");
             Assert.That(results.Count, Is.EqualTo(0), "Retrieved linked regions collection is not the number expected");
         }

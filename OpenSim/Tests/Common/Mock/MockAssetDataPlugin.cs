@@ -39,8 +39,8 @@ namespace OpenSim.Tests.Common
     /// </summary>
     public class MockAssetDataPlugin : BaseAssetRepository, IAssetDataPlugin
     {
-        public string Version { get { return "0"; } }
-        public string Name { get { return "MockAssetDataPlugin"; } }
+        public string Version => "0";
+        public string Name => "MockAssetDataPlugin";
 
         public void Initialise() {}
         public void Initialise(string connect) {}

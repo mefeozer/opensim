@@ -45,24 +45,15 @@ namespace OpenSim.Region.PhysicsModule.POS
         private float[] _heightMap;
         private const float gravity = -9.8f;
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
         //protected internal string sceneIdentifier;
 
         #region INonSharedRegionModule
-        public string Name
-        {
-            get { return "POS"; }
-        }
+        public string Name => "POS";
 
-        public string Version
-        {
-            get { return "1.0"; }
-        }
+        public string Version => "1.0";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -72,7 +63,7 @@ namespace OpenSim.Region.PhysicsModule.POS
             {
                 string physics = config.GetString("physics", string.Empty);
                 if (physics == Name)
-                    m_Enabled = true;
+                    _Enabled = true;
             }
 
         }
@@ -83,7 +74,7 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             EngineType = Name;
@@ -99,13 +90,13 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
         #endregion

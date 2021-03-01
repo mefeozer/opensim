@@ -81,13 +81,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public int localNumber = 0;
 
         private readonly string _methName;
-        public string methName
-        {
-            get
-            {
-                return _methName;
-            }
-        }
+        public string methName => _methName;
 
         public Type retType;
         public Type[] argTypes;

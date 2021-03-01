@@ -12,22 +12,22 @@ namespace OSHttpServer
         public event EventHandler<BandWitdhEventArgs> BandWitdhEvent;
 
         private const string DefaultContentType = "text/html;charset=UTF-8";
-        private readonly IHttpClientContext m_context;
-        private readonly ResponseCookies m_cookies = new ResponseCookies();
-        private readonly NameValueCollection m_headers = new NameValueCollection();
-        private string m_httpVersion;
-        private Stream m_body;
-        private long m_contentLength;
-        private string m_contentType;
-        private Encoding m_encoding = Encoding.UTF8;
-        private int m_keepAlive = 60;
+        private readonly IHttpClientContext _context;
+        private readonly ResponseCookies _cookies = new ResponseCookies();
+        private readonly NameValueCollection _headers = new NameValueCollection();
+        private string _httpVersion;
+        private Stream _body;
+        private long _contentLength;
+        private string _contentType;
+        private Encoding _encoding = Encoding.UTF8;
+        private int _keepAlive = 60;
         public uint requestID { get; }
         public byte[] RawBuffer { get; set; }
         public int RawBufferStart { get; set; }
         public int RawBufferLen { get; set; }
         public double RequestTS { get; }
 
-        internal byte[] m_headerBytes = null;
+        internal byte[] _headerBytes = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IHttpResponse"/> class.
@@ -37,13 +37,13 @@ namespace OSHttpServer
         /// <exception cref="ArgumentException"><see cref="IHttpRequest.HttpVersion"/> cannot be empty.</exception>
         public HttpResponse(IHttpRequest request)
         {
-            m_httpVersion = request.HttpVersion;
-            if (string.IsNullOrEmpty(m_httpVersion))
-                m_httpVersion = "HTTP/1.1";
+            _httpVersion = request.HttpVersion;
+            if (string.IsNullOrEmpty(_httpVersion))
+                _httpVersion = "HTTP/1.1";
 
             Status = HttpStatusCode.OK;
-            m_context = request.Context;
-            m_Connetion = request.Connection;
+            _context = request.Context;
+            _Connetion = request.Connection;
             requestID = request.ID;
             RequestTS = request.ArrivalTS;
             RawBufferStart = -1;
@@ -59,22 +59,22 @@ namespace OSHttpServer
         internal HttpResponse(IHttpClientContext context, string httpVersion, ConnectionType connectionType)
         {
             Status = HttpStatusCode.OK;
-            m_context = context;
-            m_httpVersion = httpVersion;
-            m_Connetion = connectionType;
+            _context = context;
+            _httpVersion = httpVersion;
+            _Connetion = connectionType;
         }
-        private ConnectionType m_Connetion;
+        private ConnectionType _Connetion;
         public ConnectionType Connection
         {
-            get { return m_Connetion; }
-            set { m_Connetion = value; }
+            get => _Connetion;
+            set => _Connetion = value;
         }
 
-        private int m_priority = 0;
+        private int _priority = 0;
         public int Priority
         {
-            get { return m_priority;}
-            set { m_priority = value > 0 && m_priority < 3? value : 0;}
+            get => _priority;
+            set => _priority = value > 0 && _priority < 3? value : 0;
         }
 
         #region IHttpResponse Members
@@ -88,9 +88,9 @@ namespace OSHttpServer
         {
             get
             { 
-                if(m_body == null)
-                    m_body = new MemoryStream();
-                return m_body;
+                if(_body == null)
+                    _body = new MemoryStream();
+                return _body;
             }
         }
 
@@ -111,8 +111,8 @@ namespace OSHttpServer
         /// </summary>
         public string ProtocolVersion
         {
-            get { return m_httpVersion; }
-            set { m_httpVersion = value; }
+            get => _httpVersion;
+            set => _httpVersion = value;
         }
 
         /// <summary>
@@ -121,8 +121,8 @@ namespace OSHttpServer
         /// <remarks>Default is UTF8</remarks>
         public Encoding Encoding
         {
-            get { return m_encoding; }
-            set { m_encoding = value; }
+            get => _encoding;
+            set => _encoding = value;
         }
 
 
@@ -132,15 +132,15 @@ namespace OSHttpServer
         /// <remarks>Only used if Connection property is set to <see cref="ConnectionType.KeepAlive"/>.</remarks>
         public int KeepAlive
         {
-            get { return m_keepAlive; }
+            get => _keepAlive;
             set
             {
                 if (value > 400)
-                    m_keepAlive = 400;
+                    _keepAlive = 400;
                 else if (value <= 0)
-                    m_keepAlive = 0;
+                    _keepAlive = 0;
                 else
-                    m_keepAlive = value;
+                    _keepAlive = value;
             }
         }
 
@@ -160,8 +160,8 @@ namespace OSHttpServer
         /// </summary>
         public long ContentLength
         {
-            get { return m_contentLength; }
-            set { m_contentLength = value; }
+            get => _contentLength;
+            set => _contentLength = value;
         }
 
         /// <summary>
@@ -170,8 +170,8 @@ namespace OSHttpServer
         /// <remarks>Default type is "text/html"</remarks>
         public string ContentType
         {
-            get { return m_contentType; }
-            set { m_contentType = value; }
+            get => _contentType;
+            set => _contentType = value;
         }
 
         /// <summary>
@@ -188,10 +188,7 @@ namespace OSHttpServer
         /// <summary>
         /// Cookies that should be created/changed.
         /// </summary>
-        public ResponseCookies Cookies
-        {
-            get { return m_cookies; }
-        }
+        public ResponseCookies Cookies => _cookies;
 
         /// <summary>
         /// Add another header to the document.
@@ -214,7 +211,7 @@ namespace OSHttpServer
                     throw new ArgumentException("Invalid new line sequence, should be \\r\\n (crlf).");
             }
 
-            m_headers[name] = value;
+            _headers[name] = value;
         }
 
         public byte[] GetHeaders()
@@ -222,18 +219,18 @@ namespace OSHttpServer
             HeadersSent = true;
 
             var sb = new StringBuilder();
-            if(string.IsNullOrWhiteSpace(m_httpVersion))
+            if(string.IsNullOrWhiteSpace(_httpVersion))
                 sb.AppendFormat("HTTP/1.1 {0} {1}\r\n", (int)Status,
                                 string.IsNullOrEmpty(Reason) ? Status.ToString() : Reason);
             else
-                sb.AppendFormat("{0} {1} {2}\r\n", m_httpVersion, (int)Status,
+                sb.AppendFormat("{0} {1} {2}\r\n", _httpVersion, (int)Status,
                                 string.IsNullOrEmpty(Reason) ? Status.ToString() : Reason);
 
-            if (m_headers["Date"] == null)
+            if (_headers["Date"] == null)
                 sb.AppendFormat("Date: {0}\r\n", DateTime.Now.ToString("r"));
-            if (m_headers["Content-Length"] == null)
+            if (_headers["Content-Length"] == null)
             {
-                long len = m_contentLength;
+                long len = _contentLength;
                 if (len == 0)
                 {
                     len = Body.Length;
@@ -242,9 +239,9 @@ namespace OSHttpServer
                 }
                 sb.AppendFormat("Content-Length: {0}\r\n", len);
             }
-            if (m_headers["Content-Type"] == null)
-                sb.AppendFormat("Content-Type: {0}\r\n", m_contentType ?? DefaultContentType);
-            if (m_headers["Server"] == null)
+            if (_headers["Content-Type"] == null)
+                sb.AppendFormat("Content-Type: {0}\r\n", _contentType ?? DefaultContentType);
+            if (_headers["Server"] == null)
                 sb.Append("Server: OSWebServer\r\n");
 
             if(Status != HttpStatusCode.OK)
@@ -254,10 +251,10 @@ namespace OSHttpServer
             }
             else
             {
-                int keepaliveS = m_context.TimeoutKeepAlive / 1000;
-                if (Connection == ConnectionType.KeepAlive && keepaliveS > 0 && m_context.MaxRequests > 0)
+                int keepaliveS = _context.TimeoutKeepAlive / 1000;
+                if (Connection == ConnectionType.KeepAlive && keepaliveS > 0 && _context.MaxRequests > 0)
                 {
-                    sb.AppendFormat("Keep-Alive:timeout={0}, max={1}\r\n", keepaliveS, m_context.MaxRequests);
+                    sb.AppendFormat("Keep-Alive:timeout={0}, max={1}\r\n", keepaliveS, _context.MaxRequests);
                     sb.Append("Connection: Keep-Alive\r\n");
                 }
                 else
@@ -267,15 +264,15 @@ namespace OSHttpServer
                 }
             }
 
-            if (m_headers["Connection"] != null)
-                m_headers["Connection"] = null;
-            if (m_headers["Keep-Alive"] != null)
-                m_headers["Keep-Alive"] = null;
+            if (_headers["Connection"] != null)
+                _headers["Connection"] = null;
+            if (_headers["Keep-Alive"] != null)
+                _headers["Keep-Alive"] = null;
 
-            for (int i = 0; i < m_headers.Count; ++i)
+            for (int i = 0; i < _headers.Count; ++i)
             {
-                string headerName = m_headers.AllKeys[i];
-                string[] values = m_headers.GetValues(i);
+                string headerName = _headers.AllKeys[i];
+                string[] values = _headers.GetValues(i);
                 if (values == null) continue;
                 foreach (string value in values)
                     sb.AppendFormat("{0}: {1}\r\n", headerName, value);
@@ -286,28 +283,28 @@ namespace OSHttpServer
 
             sb.Append(Environment.NewLine);
 
-            m_headers.Clear();
+            _headers.Clear();
 
             return Encoding.GetBytes(sb.ToString());
         }
 
         public void Send()
         {
-            if(m_context.IsClosing)
+            if(_context.IsClosing)
                 return;
 
             if (Sent)
                 throw new InvalidOperationException("Everything have already been sent.");
 
-            if (m_context.MaxRequests == 0 || m_keepAlive == 0)
+            if (_context.MaxRequests == 0 || _keepAlive == 0)
             {
                 Connection = ConnectionType.Close;
-                m_context.TimeoutKeepAlive = 0;
+                _context.TimeoutKeepAlive = 0;
             }
             else
             {
-                if (m_keepAlive > 0)
-                    m_context.TimeoutKeepAlive = m_keepAlive * 1000;
+                if (_keepAlive > 0)
+                    _context.TimeoutKeepAlive = _keepAlive * 1000;
             }
 
             if (RawBuffer != null)
@@ -325,48 +322,48 @@ namespace OSHttpServer
                     RawBufferLen = RawBuffer.Length - RawBufferStart;
             }
 
-            m_headerBytes = GetHeaders();
+            _headerBytes = GetHeaders();
             /*
             if (RawBuffer != null)
             {
-                int tlen = m_headerBytes.Length + RawBufferLen;
+                int tlen = _headerBytes.Length + RawBufferLen;
                 if(RawBufferLen > 0 && tlen < 16384)
                 {
                     byte[] tmp = new byte[tlen];
-                    Buffer.BlockCopy(m_headerBytes, 0, tmp, 0, m_headerBytes.Length);
-                    Buffer.BlockCopy(RawBuffer, RawBufferStart, tmp, m_headerBytes.Length, RawBufferLen);
-                    m_headerBytes = null;
+                    Buffer.BlockCopy(_headerBytes, 0, tmp, 0, _headerBytes.Length);
+                    Buffer.BlockCopy(RawBuffer, RawBufferStart, tmp, _headerBytes.Length, RawBufferLen);
+                    _headerBytes = null;
                     RawBuffer = tmp;
                     RawBufferStart = 0;
                     RawBufferLen = tlen;
                 }
             }
             */
-            m_context.StartSendResponse(this);
+            _context.StartSendResponse(this);
         }
 
         public async Task SendNextAsync(int bytesLimit)
         {
-            if (m_headerBytes != null)
+            if (_headerBytes != null)
             {
-                if(!await m_context.SendAsync(m_headerBytes, 0, m_headerBytes.Length).ConfigureAwait(false))
+                if(!await _context.SendAsync(_headerBytes, 0, _headerBytes.Length).ConfigureAwait(false))
                 {
-                    if (m_context.CanSend())
+                    if (_context.CanSend())
                     {
-                        m_context.ContinueSendResponse(true);
+                        _context.ContinueSendResponse(true);
                         return;
                     }
-                    if (m_body != null)
-                        m_body.Dispose();
+                    if (_body != null)
+                        _body.Dispose();
                     RawBuffer = null;
                     Sent = true;
                     return;
                 }
-                bytesLimit -= m_headerBytes.Length;
-                m_headerBytes = null;
+                bytesLimit -= _headerBytes.Length;
+                _headerBytes = null;
                 if(bytesLimit <= 0)
                 {
-                    m_context.ContinueSendResponse(true);
+                    _context.ContinueSendResponse(true);
                     return;
                 }
             }
@@ -381,7 +378,7 @@ namespace OSHttpServer
                     bool sendRes;
                     if(RawBufferLen > bytesLimit)
                     {
-                        sendRes = await m_context.SendAsync(RawBuffer, RawBufferStart, bytesLimit).ConfigureAwait(false);
+                        sendRes = await _context.SendAsync(RawBuffer, RawBufferStart, bytesLimit).ConfigureAwait(false);
                         if (sendRes)
                         {
                             RawBufferLen -= bytesLimit;
@@ -390,21 +387,21 @@ namespace OSHttpServer
                     }
                     else
                     {
-                        sendRes = await m_context.SendAsync(RawBuffer, RawBufferStart, RawBufferLen).ConfigureAwait(false);
+                        sendRes = await _context.SendAsync(RawBuffer, RawBufferStart, RawBufferLen).ConfigureAwait(false);
                         if(sendRes)
                             RawBufferLen = 0;
                     }
 
                     if (!sendRes)
                     {
-                        if (m_context.CanSend())
+                        if (_context.CanSend())
                         {
-                            m_context.ContinueSendResponse(true);
+                            _context.ContinueSendResponse(true);
                             return;
                         }
 
                         RawBuffer = null;
-                        if(m_body != null)
+                        if(_body != null)
                             Body.Dispose();
                         Sent = true;
                         return;
@@ -414,26 +411,26 @@ namespace OSHttpServer
                     RawBuffer = null;
                 else
                 {
-                    m_context.ContinueSendResponse(true);
+                    _context.ContinueSendResponse(true);
                     return;
                 }
             }
 
-            if (m_body != null && m_body.Length != 0)
+            if (_body != null && _body.Length != 0)
             {
-                MemoryStream mb = m_body as MemoryStream;
+                MemoryStream mb = _body as MemoryStream;
                 RawBuffer = mb.GetBuffer();
                 RawBufferStart = 0; // must be a internal buffer, or starting at 0
                 RawBufferLen = (int)mb.Length;
                 mb.Dispose();
-                m_body = null;
+                _body = null;
 
                 if(RawBufferLen > 0)
                 {
                     bool sendRes;
                     if (RawBufferLen > bytesLimit)
                     {
-                        sendRes = await m_context.SendAsync(RawBuffer, RawBufferStart, bytesLimit).ConfigureAwait(false);
+                        sendRes = await _context.SendAsync(RawBuffer, RawBufferStart, bytesLimit).ConfigureAwait(false);
                         if (sendRes)
                         {
                             RawBufferLen -= bytesLimit;
@@ -442,16 +439,16 @@ namespace OSHttpServer
                     }
                     else
                     {
-                        sendRes = await m_context.SendAsync(RawBuffer, RawBufferStart, RawBufferLen).ConfigureAwait(false);
+                        sendRes = await _context.SendAsync(RawBuffer, RawBufferStart, RawBufferLen).ConfigureAwait(false);
                         if (sendRes)
                             RawBufferLen = 0;
                     }
 
                     if (!sendRes)
                     {
-                        if (m_context.CanSend())
+                        if (_context.CanSend())
                         {
-                            m_context.ContinueSendResponse(true);
+                            _context.ContinueSendResponse(true);
                             return;
                         }
                         RawBuffer = null;
@@ -461,15 +458,15 @@ namespace OSHttpServer
                 }
                 if (RawBufferLen > 0)
                 {
-                    m_context.ContinueSendResponse(false);
+                    _context.ContinueSendResponse(false);
                     return;
                 }
             }
 
-            if (m_body != null)
-                m_body.Dispose();
+            if (_body != null)
+                _body.Dispose();
             Sent = true;
-            m_context.EndSendResponse(requestID, Connection);
+            _context.EndSendResponse(requestID, Connection);
         }
 
         private int CheckBandwidth(int request, int bytesLimit)

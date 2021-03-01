@@ -36,14 +36,14 @@ namespace OpenSim.Server.Handlers.Authorization
 {
     public class AuthorizationServerPostHandler : BaseStreamHandler
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAuthorizationService m_AuthorizationService;
+        private readonly IAuthorizationService _AuthorizationService;
 
         public AuthorizationServerPostHandler(IAuthorizationService service) :
                 base("POST", "/authorization")
         {
-            m_AuthorizationService = service;
+            _AuthorizationService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream request,
@@ -53,7 +53,7 @@ namespace OpenSim.Server.Handlers.Authorization
             AuthorizationRequest Authorization = (AuthorizationRequest) xs.Deserialize(request);
 
             string message = string.Empty;
-            bool authorized = m_AuthorizationService.IsAuthorizedForRegion(Authorization.ID, Authorization.FirstName, Authorization.SurName, Authorization.RegionID, out message);
+            bool authorized = _AuthorizationService.IsAuthorizedForRegion(Authorization.ID, Authorization.FirstName, Authorization.SurName, Authorization.RegionID, out message);
 
             AuthorizationResponse result = new AuthorizationResponse(authorized, Authorization.ID + " has been authorized");
 

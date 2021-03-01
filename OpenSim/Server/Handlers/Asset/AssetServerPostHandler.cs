@@ -39,20 +39,20 @@ namespace OpenSim.Server.Handlers.Asset
 {
     public class AssetServerPostHandler : BaseStreamHandler
     {
-        // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAssetService m_AssetService;
+        private readonly IAssetService _AssetService;
 
         public AssetServerPostHandler(IAssetService service) :
                 base("POST", "/assets")
         {
-            m_AssetService = service;
+            _AssetService = service;
         }
 
         public AssetServerPostHandler(IAssetService service, IServiceAuth auth) :
             base("POST", "/assets", auth)
         {
-            m_AssetService = service;
+            _AssetService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream request,
@@ -75,14 +75,14 @@ namespace OpenSim.Server.Handlers.Asset
             if (p.Length > 0)
             {
                 string id = p[0];
-                bool result = m_AssetService.UpdateContent(id, asset.Data);
+                bool result = _AssetService.UpdateContent(id, asset.Data);
 
                 xs = new XmlSerializer(typeof(bool));
                 return ServerUtils.SerializeResult(xs, result);
             }
             else
             {
-                string id = m_AssetService.Store(asset);
+                string id = _AssetService.Store(asset);
 
                 xs = new XmlSerializer(typeof(string));
                 return ServerUtils.SerializeResult(xs, id);

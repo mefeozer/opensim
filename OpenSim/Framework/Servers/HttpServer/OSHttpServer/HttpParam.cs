@@ -12,16 +12,16 @@ namespace OSHttpServer
         /// <summary> Representation of a non-initialized HttpParam </summary>
         public static readonly HttpParam Empty = new HttpParam(HttpInput.Empty, HttpInput.Empty);
 
-        private IHttpInput m_form;
-        private IHttpInput m_query;
+        private IHttpInput _form;
+        private IHttpInput _query;
 
         private List<HttpInputItem> _items = new List<HttpInputItem>();
 
         /// <summary>Initialises the class to hold a value either from a post request or a querystring request</summary>		
         public HttpParam(IHttpInput form, IHttpInput query)
         {
-            m_form = form;
-            m_query = query;
+            _form = form;
+            _query = query;
         }
 
         #region IHttpInput Members
@@ -46,7 +46,7 @@ namespace OSHttpServer
         /// <returns>true if found; otherwise false.</returns>
         public bool Contains(string name)
         {
-            return m_form.Contains(name) || m_query.Contains(name);
+            return _form.Contains(name) || _query.Contains(name);
         }
 
         /// <summary>
@@ -58,10 +58,10 @@ namespace OSHttpServer
         {
             get
             {
-                if (m_form[name] != HttpInputItem.Empty)
-                    return m_form[name];
+                if (_form[name] != HttpInputItem.Empty)
+                    return _form[name];
                 else
-                    return m_query[name];
+                    return _query[name];
             }
         }
 
@@ -69,12 +69,12 @@ namespace OSHttpServer
 
         internal void SetQueryString(HttpInput query)
         {
-            m_query = query;
+            _query = query;
         }
 
         internal void SetForm(HttpInput form)
         {
-            m_form = form;
+            _form = form;
         }
 
         ///<summary>
@@ -87,8 +87,8 @@ namespace OSHttpServer
         ///<filterpriority>1</filterpriority>
         IEnumerator<HttpInputItem> IEnumerable<HttpInputItem>.GetEnumerator()
         {
-            List<HttpInputItem> items = new List<HttpInputItem>(m_query);
-            items.AddRange(m_form);
+            List<HttpInputItem> items = new List<HttpInputItem>(_query);
+            items.AddRange(_form);
             return items.GetEnumerator();
         }
 
@@ -104,8 +104,8 @@ namespace OSHttpServer
         ///<filterpriority>2</filterpriority>
         public IEnumerator GetEnumerator()
         {
-            List<HttpInputItem> items = new List<HttpInputItem>(m_query);
-            items.AddRange(m_form);
+            List<HttpInputItem> items = new List<HttpInputItem>(_query);
+            items.AddRange(_form);
             return items.GetEnumerator();
         }
 

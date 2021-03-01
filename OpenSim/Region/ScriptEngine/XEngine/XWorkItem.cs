@@ -34,10 +34,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
     {
         private readonly IWorkItemResult wr;
 
-        public IWorkItemResult WorkItem
-        {
-            get { return wr; }
-        }
+        public IWorkItemResult WorkItem => wr;
 
         public XWorkItem(IWorkItemResult w)
         {

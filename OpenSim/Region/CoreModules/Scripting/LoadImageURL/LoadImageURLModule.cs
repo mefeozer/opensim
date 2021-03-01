@@ -44,21 +44,21 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LoadImageURLModule")]
     public class LoadImageURLModule : ISharedRegionModule, IDynamicTextureRender
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_name = "LoadImageURL";
-        private Scene m_scene;
-        private IDynamicTextureManager m_textureManager;
+        private readonly string _name = "LoadImageURL";
+        private Scene _scene;
+        private IDynamicTextureManager _textureManager;
 
-        private OutboundUrlFilter m_outboundUrlFilter;
-        private string m_proxyurl = "";
-        private string m_proxyexcepts = "";
+        private OutboundUrlFilter _outboundUrlFilter;
+        private string _proxyurl = "";
+        private string _proxyexcepts = "";
 
         #region IDynamicTextureRender Members
 
         public string GetName()
         {
-            return m_name;
+            return _name;
         }
 
         public string GetContentType()
@@ -110,9 +110,9 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
 
         public void Initialise(IConfigSource config)
         {
-            m_outboundUrlFilter = new OutboundUrlFilter("Script dynamic texture image module", config);
-            m_proxyurl = config.Configs["Startup"].GetString("HttpProxy");
-            m_proxyexcepts = config.Configs["Startup"].GetString("HttpProxyExceptions");
+            _outboundUrlFilter = new OutboundUrlFilter("Script dynamic texture image module", config);
+            _proxyurl = config.Configs["Startup"].GetString("HttpProxy");
+            _proxyexcepts = config.Configs["Startup"].GetString("HttpProxyExceptions");
         }
 
         public void PostInitialise()
@@ -121,8 +121,8 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
 
         public void AddRegion(Scene scene)
         {
-            if (m_scene == null)
-                m_scene = scene;
+            if (_scene == null)
+                _scene = scene;
 
         }
 
@@ -132,12 +132,12 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
 
         public void RegionLoaded(Scene scene)
         {
-            if (m_textureManager == null && m_scene == scene)
+            if (_textureManager == null && _scene == scene)
             {
-                m_textureManager = m_scene.RequestModuleInterface<IDynamicTextureManager>();
-                if (m_textureManager != null)
+                _textureManager = _scene.RequestModuleInterface<IDynamicTextureManager>();
+                if (_textureManager != null)
                 {
-                    m_textureManager.RegisterRender(GetContentType(), this);
+                    _textureManager.RegisterRender(GetContentType(), this);
                 }
             }
         }
@@ -146,36 +146,30 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
         {
         }
 
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name => _name;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
         private bool MakeHttpRequest(string url, UUID requestID)
         {
-            if (!m_outboundUrlFilter.CheckAllowed(new Uri(url)))
+            if (!_outboundUrlFilter.CheckAllowed(new Uri(url)))
                 return false;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.AllowAutoRedirect = false;
 
-            if (!string.IsNullOrEmpty(m_proxyurl))
+            if (!string.IsNullOrEmpty(_proxyurl))
             {
-                if (!string.IsNullOrEmpty(m_proxyexcepts))
+                if (!string.IsNullOrEmpty(_proxyexcepts))
                 {
-                    string[] elist = m_proxyexcepts.Split(';');
-                    request.Proxy = new WebProxy(m_proxyurl, true, elist);
+                    string[] elist = _proxyexcepts.Split(';');
+                    request.Proxy = new WebProxy(_proxyurl, true, elist);
                 }
                 else
                 {
-                    request.Proxy = new WebProxy(m_proxyurl, true);
+                    request.Proxy = new WebProxy(_proxyurl, true);
                 }
             }
 
@@ -191,9 +185,9 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
 
         private void HttpRequestReturn(IAsyncResult result)
         {
-            if (m_textureManager == null)
+            if (_textureManager == null)
             {
-                m_log.WarnFormat("[LOADIMAGEURLMODULE]: No texture manager. Can't function.");
+                _log.WarnFormat("[LOADIMAGEURLMODULE]: No texture manager. Can't function.");
                 return;
             }
 
@@ -259,12 +253,12 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
                         }
                         catch (Exception)
                         {
-                            m_log.Error("[LOADIMAGEURLMODULE]: OpenJpeg Conversion Failed.  Empty byte data returned!");
+                            _log.Error("[LOADIMAGEURLMODULE]: OpenJpeg Conversion Failed.  Empty byte data returned!");
                         }
                     }
                     else
                     {
-                        m_log.WarnFormat("[LOADIMAGEURLMODULE] No data returned");
+                        _log.WarnFormat("[LOADIMAGEURLMODULE] No data returned");
                     }
                 }
             }
@@ -273,7 +267,7 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[LOADIMAGEURLMODULE]: unexpected exception {0}", e.Message);
+                _log.ErrorFormat("[LOADIMAGEURLMODULE]: unexpected exception {0}", e.Message);
             }
             finally
             {
@@ -293,10 +287,10 @@ namespace OpenSim.Region.CoreModules.Scripting.LoadImageURL
                     }
                     else
                     {
-                        m_log.DebugFormat("[LOADIMAGEURLMODULE]: Returning {0} bytes of image data for request {1}",
+                        _log.DebugFormat("[LOADIMAGEURLMODULE]: Returning {0} bytes of image data for request {1}",
                                           imageJ2000.Length, state.RequestID);
 
-                        m_textureManager.ReturnData(
+                        _textureManager.ReturnData(
                             state.RequestID,
                             new OpenSim.Region.CoreModules.Scripting.DynamicTexture.DynamicTexture(
                             request.RequestUri, null, imageJ2000, newSize, false));

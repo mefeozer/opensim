@@ -43,10 +43,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
     {
         #region ITerrainLoader Members
 
-        public string FileExtension
-        {
-            get { return ".gsd"; }
-        }
+        public string FileExtension => ".gsd";
 
         /// <summary>
         /// Loads a file from a specified filename on the disk,
@@ -125,7 +122,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
                 colours.Save(stream,ImageFormat.Png);
         }
 
-        public virtual void SaveFile(ITerrainChannel m_channel, string filename,
+        public virtual void SaveFile(ITerrainChannel _channel, string filename,
                                      int offsetX, int offsetY,
                                      int fileWidth, int fileHeight,
                                      int regionSizeX, int regionSizeY)
@@ -160,7 +157,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
                     newBitmap = new Bitmap(fileWidth * regionSizeX, fileHeight * regionSizeY);
                 }
 
-                thisBitmap = CreateGrayscaleBitmapFromMap(m_channel);
+                thisBitmap = CreateGrayscaleBitmapFromMap(_channel);
                 //            Console.WriteLine("offsetX=" + offsetX + " offsetY=" + offsetY);
                 for (int x = 0; x < regionSizeX; x++)
                     for (int y = 0; y < regionSizeY; y++)

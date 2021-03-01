@@ -32,17 +32,17 @@ namespace OpenSim.Framework
 {
     public class TextureRequestArgs : EventArgs
     {
-        private sbyte m_discardLevel;
-        private uint m_packetNumber;
-        private float m_priority;
-        private int m_requestType;
-        private uint m_requestsequence;
-        protected UUID m_requestedAssetID;
+        private sbyte _discardLevel;
+        private uint _packetNumber;
+        private float _priority;
+        private int _requestType;
+        private uint _requestsequence;
+        protected UUID _requestedAssetID;
 
         public float Priority
         {
-            get { return m_priority; }
-            set { m_priority = value; }
+            get => _priority;
+            set => _priority = value;
         }
 
         /// <summary>
@@ -50,14 +50,14 @@ namespace OpenSim.Framework
         /// </summary>
         public uint PacketNumber
         {
-            get { return m_packetNumber; }
-            set { m_packetNumber = value; }
+            get => _packetNumber;
+            set => _packetNumber = value;
         }
 
         public uint requestSequence
         {
-            get { return m_requestsequence; }
-            set { m_requestsequence = value; }
+            get => _requestsequence;
+            set => _requestsequence = value;
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace OpenSim.Framework
         /// </summary>
         public sbyte DiscardLevel
         {
-            get { return m_discardLevel; }
-            set { m_discardLevel = value; }
+            get => _discardLevel;
+            set => _discardLevel = value;
         }
 
         /// <summary>
@@ -74,21 +74,21 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID RequestedAssetID
         {
-            get { return m_requestedAssetID; }
-            set { m_requestedAssetID = value; }
+            get => _requestedAssetID;
+            set => _requestedAssetID = value;
         }
 
         public int RequestType
         {
-            get { return m_requestType; }
-            set { m_requestType = value; }
+            get => _requestType;
+            set => _requestType = value;
         }
 
         public override string ToString()
         {
             return string.Format("DiscardLevel: {0}, Priority: {1}, PacketNumber: {2}, AssetId:{3}, RequestType:{4}",
-                                 m_discardLevel,
-                                 m_priority, m_packetNumber, m_requestedAssetID, m_requestType);
+                                 _discardLevel,
+                                 _priority, _packetNumber, _requestedAssetID, _requestType);
         }
     }
 }

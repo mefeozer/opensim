@@ -44,10 +44,7 @@ namespace OSHttpServer
         /// <summary>
         /// Gets the count of cookies in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return _items.Count; }
-        }
+        public int Count => _items.Count;
 
 
         /// <summary>

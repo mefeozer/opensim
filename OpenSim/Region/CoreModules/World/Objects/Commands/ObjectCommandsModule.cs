@@ -49,58 +49,58 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "ObjectCommandsModule")]
     public class ObjectCommandsModule : INonSharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
-        private ICommandConsole m_console;
+        private Scene _scene;
+        private ICommandConsole _console;
 
-        public string Name { get { return "Object Commands Module"; } }
+        public string Name => "Object Commands Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[OBJECT COMMANDS MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[OBJECT COMMANDS MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[OBJECT COMMANDS MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[OBJECT COMMANDS MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[OBJECT COMMANDS MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[OBJECT COMMANDS MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[OBJECT COMMANDS MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[OBJECT COMMANDS MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
 
-            m_scene = scene;
-            m_console = MainConsole.Instance;
+            _scene = scene;
+            _console = MainConsole.Instance;
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects", false, "delete object owner",
                 "delete object owner <UUID>",
                 "Delete scene objects by owner",
                 "Command will ask for confirmation before proceeding.",
                 HandleDeleteObject);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects", false, "delete object creator",
                 "delete object creator <UUID>",
                 "Delete scene objects by creator",
                 "Command will ask for confirmation before proceeding.",
                 HandleDeleteObject);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects", false, "delete object id",
                 "delete object id <UUID-or-localID>",
                 "Delete a scene object by uuid or localID",
                 HandleDeleteObject);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects", false, "delete object name",
                 "delete object name [--regex] <name>",
                 "Delete a scene object by name.",
@@ -108,14 +108,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                   + "If --regex is specified then the name is treatead as a regular expression",
                 HandleDeleteObject);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects", false, "delete object outside",
                 "delete object outside",
                 "Delete all scene objects outside region boundaries",
                 "Command will ask for confirmation before proceeding.",
                 HandleDeleteObject);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "delete object pos",
@@ -124,7 +124,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 ConsoleUtil.CoordHelp,
                 HandleDeleteObject);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "show object id",
@@ -134,7 +134,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                     + "For yet more detailed part information, use the \"show part\" commands.",
                 HandleShowObjectById);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "show object name",
@@ -145,7 +145,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                     + "If --regex is specified then the name is treatead as a regular expression.",
                 HandleShowObjectByName);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "show object owner",
@@ -154,7 +154,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 "The --full option will print out information on all the parts of the object.\n",
                 HandleShowObjectByOwnerID);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "show object pos",
@@ -165,14 +165,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                     + ConsoleUtil.CoordHelp,
                 HandleShowObjectByPos);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "show part id",
                 "show part id <UUID-or-localID>",
                 "Show details of a scene object part with the given UUID or localID", HandleShowPartById);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "show part name",
@@ -181,7 +181,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 "If --regex is specified then the name is treated as a regular expression",
                 HandleShowPartByName);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "show part pos",
@@ -190,7 +190,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 ConsoleUtil.CoordHelp,
                 HandleShowPartByPos);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Objects",
                 false,
                 "dump object id",
@@ -204,12 +204,12 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[OBJECTS COMMANDS MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[OBJECTS COMMANDS MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[OBJECTS COMMANDS MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[OBJECTS COMMANDS MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
         /// <param name='showFull'>If true then output all part details.  If false then output summary.</param>
         private void OutputSogsToConsole(Predicate<SceneObjectGroup> searchPredicate, bool showFull)
         {
-            List<SceneObjectGroup> sceneObjects = m_scene.GetSceneObjectGroups().FindAll(searchPredicate);
+            List<SceneObjectGroup> sceneObjects = _scene.GetSceneObjectGroups().FindAll(searchPredicate);
 
             StringBuilder sb = new StringBuilder();
 
@@ -229,14 +229,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 sb.Append("\n");
             }
 
-            sb.AppendFormat("{0} object(s) found in {1}\n", sceneObjects.Count, m_scene.Name);
+            sb.AppendFormat("{0} object(s) found in {1}\n", sceneObjects.Count, _scene.Name);
 
-            m_console.Output(sb.ToString());
+            _console.Output(sb.ToString());
         }
 
         private void OutputSopsToConsole(Predicate<SceneObjectPart> searchPredicate, bool showFull)
         {
-            List<SceneObjectGroup> sceneObjects = m_scene.GetSceneObjectGroups();
+            List<SceneObjectGroup> sceneObjects = _scene.GetSceneObjectGroups();
             List<SceneObjectPart> parts = new List<SceneObjectPart>();
 
             sceneObjects.ForEach(so => parts.AddRange(Array.FindAll<SceneObjectPart>(so.Parts, searchPredicate)));
@@ -249,14 +249,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 sb.Append("\n");
             }
 
-            sb.AppendFormat("{0} parts found in {1}\n", parts.Count, m_scene.Name);
+            sb.AppendFormat("{0} parts found in {1}\n", parts.Count, _scene.Name);
 
-            m_console.Output(sb.ToString());
+            _console.Output(sb.ToString());
         }
 
         private void HandleShowObjectById(string module, string[] cmdparams)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
             bool showFull = false;
@@ -266,37 +266,37 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (mainParams.Count < 4)
             {
-                m_console.Output("Usage: show object uuid <uuid>");
+                _console.Output("Usage: show object uuid <uuid>");
                 return;
             }
 
             UUID uuid;
             uint localId;
-            if (!ConsoleUtil.TryParseConsoleId(m_console, mainParams[3], out uuid, out localId))
+            if (!ConsoleUtil.TryParseConsoleId(_console, mainParams[3], out uuid, out localId))
                 return;
 
             SceneObjectGroup so;
 
             if (localId != ConsoleUtil.LocalIdNotFound)
-                so = m_scene.GetSceneObjectGroup(localId);
+                so = _scene.GetSceneObjectGroup(localId);
             else
-                so = m_scene.GetSceneObjectGroup(uuid);
+                so = _scene.GetSceneObjectGroup(uuid);
 
             if (so == null)
             {
-//                m_console.OutputFormat("No part found with uuid {0}", objectUuid);
+//                _console.OutputFormat("No part found with uuid {0}", objectUuid);
                 return;
             }
 
             StringBuilder sb = new StringBuilder();
             AddSceneObjectReport(sb, so, showFull);
 
-            m_console.Output(sb.ToString());
+            _console.Output(sb.ToString());
         }
 
         private void HandleShowObjectByName(string module, string[] cmdparams)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
             bool showFull = false;
@@ -309,7 +309,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (mainParams.Count < 4)
             {
-                m_console.Output("Usage: show object name [--full] [--regex] <name>");
+                _console.Output("Usage: show object name [--full] [--regex] <name>");
                 return;
             }
 
@@ -332,7 +332,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private void HandleShowObjectByOwnerID(string module, string[] cmdparams)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
             bool showFull = false;
@@ -342,12 +342,12 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (mainParams.Count < 4)
             {
-                m_console.Output("Usage: show object owner <OwnerID>");
+                _console.Output("Usage: show object owner <OwnerID>");
                 return;
             }
 
             UUID ownerID;
-            if (!ConsoleUtil.TryParseConsoleUuid(m_console, mainParams[3], out ownerID))
+            if (!ConsoleUtil.TryParseConsoleUuid(_console, mainParams[3], out ownerID))
                 return;
 
             Predicate<SceneObjectGroup> searchPredicate
@@ -358,7 +358,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private void HandleShowObjectByPos(string module, string[] cmdparams)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
             bool showFull = false;
@@ -368,7 +368,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (mainParams.Count < 5)
             {
-                m_console.Output("Usage: show object pos [--full] <start-coord> to <end-coord>");
+                _console.Output("Usage: show object pos [--full] <start-coord> to <end-coord>");
                 return;
             }
 
@@ -385,7 +385,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private void HandleShowPartById(string module, string[] cmdparams)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
 //            bool showFull = false;
@@ -396,37 +396,37 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (mainParams.Count < 4)
             {
-                //m_console.OutputFormat("Usage: show part id [--full] <UUID-or-localID>");
-                m_console.Output("Usage: show part id <UUID-or-localID>");
+                //_console.OutputFormat("Usage: show part id [--full] <UUID-or-localID>");
+                _console.Output("Usage: show part id <UUID-or-localID>");
                 return;
             }
 
             UUID objectUuid;
             uint localId;
-            if (!ConsoleUtil.TryParseConsoleId(m_console, mainParams[3], out objectUuid, out localId))
+            if (!ConsoleUtil.TryParseConsoleId(_console, mainParams[3], out objectUuid, out localId))
                 return;
 
             SceneObjectPart sop;
             if (localId == ConsoleUtil.LocalIdNotFound)
-                sop = m_scene.GetSceneObjectPart(objectUuid);
+                sop = _scene.GetSceneObjectPart(objectUuid);
             else
-                sop = m_scene.GetSceneObjectPart(localId);
+                sop = _scene.GetSceneObjectPart(localId);
 
             if (sop == null)
             {
-//                m_console.OutputFormat("No part found with uuid {0}", objectUuid);
+//                _console.OutputFormat("No part found with uuid {0}", objectUuid);
                 return;
             }
 
             StringBuilder sb = new StringBuilder();
             AddScenePartReport(sb, sop, true);
 
-            m_console.Output(sb.ToString());
+            _console.Output(sb.ToString());
         }
 
         private void HandleShowPartByPos(string module, string[] cmdparams)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
 //            bool showFull = false;
@@ -437,8 +437,8 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (mainParams.Count < 5)
             {
-                //m_console.OutputFormat("Usage: show part pos <start-coord> to <end-coord>");
-                m_console.Output("Usage: show part pos [--full] <start-coord> to <end-coord>");
+                //_console.OutputFormat("Usage: show part pos <start-coord> to <end-coord>");
+                _console.Output("Usage: show part pos [--full] <start-coord> to <end-coord>");
                 return;
             }
 
@@ -447,7 +447,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (!ConsoleUtil.TryParseConsoleMinVector(rawConsoleStartVector, out startVector))
             {
-                m_console.Output("Error: Start vector '{0}' does not have a valid format", rawConsoleStartVector);
+                _console.Output("Error: Start vector '{0}' does not have a valid format", rawConsoleStartVector);
                 return;
             }
 
@@ -456,7 +456,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (!ConsoleUtil.TryParseConsoleMaxVector(rawConsoleEndVector, out endVector))
             {
-                m_console.Output("Error: End vector '{0}' does not have a valid format", rawConsoleEndVector);
+                _console.Output("Error: End vector '{0}' does not have a valid format", rawConsoleEndVector);
                 return;
             }
 
@@ -465,7 +465,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private void HandleShowPartByName(string module, string[] cmdparams)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
 //            bool showFull = false;
@@ -478,8 +478,8 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (mainParams.Count < 4)
             {
-                m_console.Output("Usage: show part name [--regex] <name>");
-                //m_console.OutputFormat("Usage: show part name [--full] [--regex] <name>");
+                _console.Output("Usage: show part name [--regex] <name>");
+                //_console.OutputFormat("Usage: show part name [--full] [--regex] <name>");
                 return;
             }
 
@@ -502,29 +502,29 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private void HandleDumpObjectById(string module, string[] cmdparams)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
             if (cmdparams.Length < 4)
             {
-                m_console.Output("Usage: dump object id <UUID-or-localID>");
+                _console.Output("Usage: dump object id <UUID-or-localID>");
                 return;
             }
 
             UUID objectUuid;
             uint localId;
-            if (!ConsoleUtil.TryParseConsoleId(m_console, cmdparams[3], out objectUuid, out localId))
+            if (!ConsoleUtil.TryParseConsoleId(_console, cmdparams[3], out objectUuid, out localId))
                 return;
 
             SceneObjectGroup so;
             if (localId == ConsoleUtil.LocalIdNotFound)
-                so = m_scene.GetSceneObjectGroup(objectUuid);
+                so = _scene.GetSceneObjectGroup(objectUuid);
             else
-                so = m_scene.GetSceneObjectGroup(localId);
+                so = _scene.GetSceneObjectGroup(localId);
 
             if (so == null)
             {
-//                m_console.OutputFormat("No part found with uuid {0}", objectUuid);
+//                _console.OutputFormat("No part found with uuid {0}", objectUuid);
                 return;
             }
 
@@ -533,7 +533,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             string fileName = string.Format("{0}.xml", objectUuid);
 
-            if (!ConsoleUtil.CheckFileDoesNotExist(m_console, fileName))
+            if (!ConsoleUtil.CheckFileDoesNotExist(_console, fileName))
                 return;
 
             using (XmlTextWriter xtw = new XmlTextWriter(fileName, Encoding.UTF8))
@@ -542,7 +542,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 SceneObjectSerializer.ToOriginalXmlFormat(so, xtw, true);
             }
 
-            m_console.Output("Object dumped to file {0}", fileName);
+            _console.Output("Object dumped to file {0}", fileName);
         }
 
         /// <summary>
@@ -714,7 +714,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
             {
                 bool foundScriptInstance, scriptRunning;
                 foundScriptInstance
-                    = SceneObjectPartInventory.TryGetScriptInstanceRunning(m_scene, item, out scriptRunning);
+                    = SceneObjectPartInventory.TryGetScriptInstanceRunning(_scene, item, out scriptRunning);
 
                 cdt.AddRow(
                     item.Name,
@@ -729,7 +729,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private void HandleDeleteObject(string module, string[] cmd)
         {
-            if (!(m_console.ConsoleScene == null || m_console.ConsoleScene == m_scene))
+            if (!(_console.ConsoleScene == null || _console.ConsoleScene == _scene))
                 return;
 
             if (cmd.Length < 3)
@@ -758,14 +758,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
                     deletes = new List<SceneObjectGroup>();
 
-                    m_scene.ForEachSOG(delegate (SceneObjectGroup g)
+                    _scene.ForEachSOG(delegate (SceneObjectGroup g)
                     {
                         if (g.OwnerID == match && !g.IsAttachment)
                             deletes.Add(g);
                     });
 
         //                if (deletes.Count == 0)
-        //                    m_console.OutputFormat("No objects were found with owner {0}", match);
+        //                    _console.OutputFormat("No objects were found with owner {0}", match);
 
                     break;
 
@@ -775,21 +775,21 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
                     deletes = new List<SceneObjectGroup>();
 
-                    m_scene.ForEachSOG(delegate (SceneObjectGroup g)
+                    _scene.ForEachSOG(delegate (SceneObjectGroup g)
                     {
                         if (g.RootPart.CreatorID == match && !g.IsAttachment)
                             deletes.Add(g);
                     });
 
         //                if (deletes.Count == 0)
-        //                    m_console.OutputFormat("No objects were found with creator {0}", match);
+        //                    _console.OutputFormat("No objects were found with creator {0}", match);
 
                     break;
 
                 case "id":
                     UUID uuid;
                     uint localId;
-                    if (!ConsoleUtil.TryParseConsoleId(m_console, o, out uuid, out localId))
+                    if (!ConsoleUtil.TryParseConsoleId(_console, o, out uuid, out localId))
                         return;
 
                     requireConfirmation = false;
@@ -797,9 +797,9 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
                     SceneObjectGroup so;
                     if (localId == ConsoleUtil.LocalIdNotFound)
-                        so = m_scene.GetSceneObjectGroup(uuid);
+                        so = _scene.GetSceneObjectGroup(uuid);
                     else
-                        so = m_scene.GetSceneObjectGroup(localId);
+                        so = _scene.GetSceneObjectGroup(localId);
 
                     if (so!= null)
                     {
@@ -807,7 +807,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                         if(so.IsAttachment)
                         {
                             requireConfirmation = true;
-                            m_console.Output("Warning: object with uuid {0} is a attachment", uuid);
+                            _console.Output("Warning: object with uuid {0} is a attachment", uuid);
                         }
                     }
                     break;
@@ -819,7 +819,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 case "outside":
                     deletes = new List<SceneObjectGroup>();
 
-                    m_scene.ForEachSOG(delegate (SceneObjectGroup g)
+                    _scene.ForEachSOG(delegate (SceneObjectGroup g)
                     {
                         SceneObjectPart rootPart = g.RootPart;
                         bool delete = false;
@@ -831,7 +831,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                         else
                         {
                             ILandObject parcel
-                                = m_scene.LandChannel.GetLandObject(rootPart.GroupPosition.X, rootPart.GroupPosition.Y);
+                                = _scene.LandChannel.GetLandObject(rootPart.GroupPosition.X, rootPart.GroupPosition.Y);
 
                             if (parcel == null || parcel.LandData.Name == "NO LAND")
                                 delete = true;
@@ -842,7 +842,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                     });
 
                     if (deletes.Count == 0)
-                        m_console.Output("No objects were found outside region bounds");
+                        _console.Output("No objects were found outside region bounds");
 
                     break;
 
@@ -851,7 +851,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                     break;
 
                 default:
-                    m_console.Output("Unrecognized mode {0}", mode);
+                    _console.Output("Unrecognized mode {0}", mode);
                     return;
             }
 
@@ -863,24 +863,24 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 string response = MainConsole.Instance.Prompt(
                     string.Format(
                         "Are you sure that you want to delete {0} objects from {1}",
-                        deletes.Count, m_scene.RegionInfo.RegionName),
+                        deletes.Count, _scene.RegionInfo.RegionName),
                     "y/N");
 
                 if (response.ToLower() != "y")
                 {
                     MainConsole.Instance.Output(
-                        "Aborting delete of {0} objects from {1}", deletes.Count, m_scene.RegionInfo.RegionName);
+                        "Aborting delete of {0} objects from {1}", deletes.Count, _scene.RegionInfo.RegionName);
 
                     return;
                 }
             }
 
-            m_console.Output("Deleting {0} objects in {1}", deletes.Count, m_scene.RegionInfo.RegionName);
+            _console.Output("Deleting {0} objects in {1}", deletes.Count, _scene.RegionInfo.RegionName);
 
             foreach (SceneObjectGroup g in deletes)
             {
-                m_console.Output("Deleting object {0} {1}", g.UUID, g.Name);
-                m_scene.DeleteSceneObject(g, false);
+                _console.Output("Deleting object {0} {1}", g.UUID, g.Name);
+                _scene.DeleteSceneObject(g, false);
             }
         }
 
@@ -893,7 +893,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (mainParams.Count < 4)
             {
-                m_console.Output("Usage: delete object name [--regex] <name>");
+                _console.Output("Usage: delete object name [--regex] <name>");
                 return null;
             }
 
@@ -912,10 +912,10 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 searchAction = so => { if (so.Name == name) {if(!so.IsAttachment) sceneObjects.Add(so);}};
             }
 
-            m_scene.ForEachSOG(searchAction);
+            _scene.ForEachSOG(searchAction);
 
             if (sceneObjects.Count == 0)
-                m_console.Output("No objects with name {0} found in {1}", name, m_scene.RegionInfo.RegionName);
+                _console.Output("No objects with name {0} found in {1}", name, _scene.RegionInfo.RegionName);
 
             return sceneObjects;
         }
@@ -931,7 +931,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
         {
             if (cmdparams.Length < 5)
             {
-                m_console.Output("Usage: delete object pos <start-coord> to <end-coord>");
+                _console.Output("Usage: delete object pos <start-coord> to <end-coord>");
                 return null;
             }
 
@@ -940,7 +940,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
             if (!TryParseVectorRange(cmdparams.Skip(3).Take(3), out startVector, out endVector))
                 return null;
 
-            return m_scene.GetSceneObjectGroups().FindAll(
+            return _scene.GetSceneObjectGroups().FindAll(
                 so => !so.IsAttachment && Util.IsInsideBox(so.AbsolutePosition, startVector, endVector));
         }
 
@@ -950,7 +950,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (!ConsoleUtil.TryParseConsoleMinVector(rawConsoleStartVector, out startVector))
             {
-                m_console.Output("Error: Start vector '{0}' does not have a valid format", rawConsoleStartVector);
+                _console.Output("Error: Start vector '{0}' does not have a valid format", rawConsoleStartVector);
                 endVector = Vector3.Zero;
 
                 return false;
@@ -960,7 +960,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
             if (!ConsoleUtil.TryParseConsoleMaxVector(rawConsoleEndVector, out endVector))
             {
-                m_console.Output("Error: End vector '{0}' does not have a valid format", rawConsoleEndVector);
+                _console.Output("Error: End vector '{0}' does not have a valid format", rawConsoleEndVector);
                 return false;
             }
 

@@ -46,58 +46,58 @@ namespace OpenSim.Region.OptionalModules.Avatar.Friends
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "FriendsCommandModule")]
     public class FriendsCommandsModule : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
-        private IFriendsModule m_friendsModule;
-        private IUserManagement m_userManagementModule;
-        private IPresenceService m_presenceService;
+        private Scene _scene;
+        private IFriendsModule _friendsModule;
+        private IUserManagement _userManagementModule;
+        private IPresenceService _presenceService;
 
-//        private IAvatarFactoryModule m_avatarFactory;
+//        private IAvatarFactoryModule _avatarFactory;
 
-        public string Name { get { return "Appearance Information Module"; } }
+        public string Name => "Appearance Information Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[FRIENDS COMMAND MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[FRIENDS COMMAND MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[FRIENDS COMMAND MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[FRIENDS COMMAND MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[FRIENDS COMMAND MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[FRIENDS COMMAND MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[FRIENDS COMMANDO MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[FRIENDS COMMANDO MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[FRIENDS COMMAND MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[FRIENDS COMMAND MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[APPEARANCE INFO MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[APPEARANCE INFO MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
 
-            if (m_scene == null)
-                m_scene = scene;
+            if (_scene == null)
+                _scene = scene;
 
-            m_friendsModule = m_scene.RequestModuleInterface<IFriendsModule>();
-            m_userManagementModule = m_scene.RequestModuleInterface<IUserManagement>();
-            m_presenceService = m_scene.RequestModuleInterface<IPresenceService>();
+            _friendsModule = _scene.RequestModuleInterface<IFriendsModule>();
+            _userManagementModule = _scene.RequestModuleInterface<IUserManagement>();
+            _presenceService = _scene.RequestModuleInterface<IPresenceService>();
 
-            if (m_friendsModule != null && m_userManagementModule != null && m_presenceService != null)
+            if (_friendsModule != null && _userManagementModule != null && _presenceService != null)
             {
-                m_scene.AddCommand(
+                _scene.AddCommand(
                     "Friends", this, "friends show",
                     "friends show [--cache] <first-name> <last-name>",
                     "Show the friends for the given user if they exist.",
@@ -122,10 +122,10 @@ namespace OpenSim.Region.OptionalModules.Avatar.Friends
             string firstName = mainParams[2];
             string lastName = mainParams[3];
 
-            UUID userId = m_userManagementModule.GetUserIdByName(firstName, lastName);
+            UUID userId = _userManagementModule.GetUserIdByName(firstName, lastName);
 
 //            UserAccount ua
-//                = m_Scenes[0].UserAccountService.GetUserAccount(m_Scenes[0].RegionInfo.ScopeID, firstName, lastName);
+//                = _Scenes[0].UserAccountService.GetUserAccount(_Scenes[0].RegionInfo.ScopeID, firstName, lastName);
 
             if (userId == UUID.Zero)
             {
@@ -137,14 +137,14 @@ namespace OpenSim.Region.OptionalModules.Avatar.Friends
 
             if (options.ContainsKey("cache"))
             {
-                if (!m_friendsModule.AreFriendsCached(userId))
+                if (!_friendsModule.AreFriendsCached(userId))
                 {
                     MainConsole.Instance.Output("No friends cached on this simulator for {0} {1}", firstName, lastName);
                     return;
                 }
                 else
                 {
-                    friends = m_friendsModule.GetFriendsFromCache(userId);
+                    friends = _friendsModule.GetFriendsFromCache(userId);
                 }
             }
             else
@@ -152,7 +152,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Friends
                 // FIXME: We're forced to do this right now because IFriendsService has no region connectors.  We can't
                 // just expose FriendsModule.GetFriendsFromService() because it forces an IClientAPI requirement that
                 // can't currently be changed because of HGFriendsModule code that takes the scene from the client.
-                friends = ((FriendsModule)m_friendsModule).FriendsService.GetFriends(userId);
+                friends = ((FriendsModule)_friendsModule).FriendsService.GetFriends(userId);
             }
 
             MainConsole.Instance.Output("Friends for {0} {1} {2}:", firstName, lastName, userId);
@@ -167,18 +167,18 @@ namespace OpenSim.Region.OptionalModules.Avatar.Friends
 //                string friendFirstName, friendLastName;
 //
 //                UserAccount friendUa
-//                    = m_Scenes[0].UserAccountService.GetUserAccount(m_Scenes[0].RegionInfo.ScopeID, friend.PrincipalID);
+//                    = _Scenes[0].UserAccountService.GetUserAccount(_Scenes[0].RegionInfo.ScopeID, friend.PrincipalID);
 
                 UUID friendId;
                 string friendName;
                 string onlineText;
 
                 if (UUID.TryParse(friend.Friend, out friendId))
-                    friendName = m_userManagementModule.GetUserName(friendId);
+                    friendName = _userManagementModule.GetUserName(friendId);
                 else
                     friendName = friend.Friend;
 
-                OpenSim.Services.Interfaces.PresenceInfo[] pi = m_presenceService.GetAgents(new string[] { friend.Friend });
+                OpenSim.Services.Interfaces.PresenceInfo[] pi = _presenceService.GetAgents(new string[] { friend.Friend });
                 if (pi.Length > 0)
                     onlineText = "online";
                 else

@@ -38,25 +38,26 @@ namespace OpenSim.Framework
     /// <typeparam name="TValue">Value type to store</typeparam>
     public sealed class MapAndArray<TKey, TValue>
     {
-        private Dictionary<TKey, TValue> m_dict;
-        private TValue[] m_array;
+        private Dictionary<TKey, TValue> _dict;
+        private TValue[] _array;
 
         /// <summary>Number of values currently stored in the collection</summary>
-        public int Count { get { return m_dict.Count; } }
+        public int Count => _dict.Count;
+
         /// <summary>NOTE: This collection is thread safe. You do not need to
         /// acquire a lock to add, remove, or enumerate entries. This
         /// synchronization object should only be locked for larger
         /// transactions</summary>
-        private readonly object m_syncRoot = new object();
-        public object SyncRoot { get { return m_syncRoot; } }
+        private readonly object _syncRoot = new object();
+        public object SyncRoot => _syncRoot;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public MapAndArray()
         {
-            m_dict = new Dictionary<TKey, TValue>();
-            m_array = null;
+            _dict = new Dictionary<TKey, TValue>();
+            _array = null;
         }
 
         /// <summary>
@@ -65,8 +66,8 @@ namespace OpenSim.Framework
         /// <param name="capacity">Initial capacity of the dictionary</param>
         public MapAndArray(int capacity)
         {
-            m_dict = new Dictionary<TKey, TValue>(capacity);
-            m_array = null;
+            _dict = new Dictionary<TKey, TValue>(capacity);
+            _array = null;
         }
 
         /// <summary>
@@ -79,12 +80,12 @@ namespace OpenSim.Framework
         /// updated</returns>
         public bool AddOrReplace(TKey key, TValue value)
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                bool containedKey = m_dict.ContainsKey(key);
+                bool containedKey = _dict.ContainsKey(key);
 
-                m_dict[key] = value;
-                m_array = null;
+                _dict[key] = value;
+                _array = null;
 
                 return !containedKey;
             }
@@ -99,11 +100,11 @@ namespace OpenSim.Framework
         /// <returns>Index of the inserted item</returns>
         public int Add(TKey key, TValue value)
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                m_dict.Add(key, value);
-                m_array = null;
-                return m_dict.Count;
+                _dict.Add(key, value);
+                _array = null;
+                return _dict.Count;
             }
         }
 
@@ -114,10 +115,10 @@ namespace OpenSim.Framework
         /// <returns>True if the key was found and removed, otherwise false</returns>
         public bool Remove(TKey key)
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                bool removed = m_dict.Remove(key);
-                m_array = null;
+                bool removed = _dict.Remove(key);
+                _array = null;
                 return removed;
             }
         }
@@ -129,8 +130,8 @@ namespace OpenSim.Framework
         /// <returns>True if the key was found, otherwise false</returns>
         public bool ContainsKey(TKey key)
         {
-            lock (m_syncRoot)
-                return m_dict.ContainsKey(key);
+            lock (_syncRoot)
+                return _dict.ContainsKey(key);
         }
 
         /// <summary>
@@ -144,8 +145,8 @@ namespace OpenSim.Framework
         /// otherwise false</returns>
         public bool TryGetValue(TKey key, out TValue value)
         {
-            lock (m_syncRoot)
-                return m_dict.TryGetValue(key, out value);
+            lock (_syncRoot)
+                return _dict.TryGetValue(key, out value);
         }
 
         /// <summary>
@@ -153,10 +154,10 @@ namespace OpenSim.Framework
         /// </summary>
         public void Clear()
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                m_dict = new Dictionary<TKey, TValue>();
-                m_array = null;
+                _dict = new Dictionary<TKey, TValue>();
+                _array = null;
             }
         }
 
@@ -168,16 +169,16 @@ namespace OpenSim.Framework
         /// values</returns>
         public TValue[] GetArray()
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                if (m_array == null)
+                if (_array == null)
                 {
-                    if(m_dict.Count == 0)
+                    if(_dict.Count == 0)
                         return new TValue[0];
-                    m_array = new TValue[m_dict.Count];
-                    m_dict.Values.CopyTo(m_array, 0);
+                    _array = new TValue[_dict.Count];
+                    _dict.Values.CopyTo(_array, 0);
                 }
-                return m_array;
+                return _array;
             }
         }
     }

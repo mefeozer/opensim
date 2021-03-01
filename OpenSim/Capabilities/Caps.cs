@@ -49,73 +49,46 @@ namespace OpenSim.Framework.Capabilities
 
     public class Caps : IDisposable
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_httpListenerHostName;
-        private readonly uint m_httpListenPort;
+        private readonly string _httpListenerHostName;
+        private readonly uint _httpListenPort;
 
         /// <summary>
         /// This is the uuid portion of every CAPS path.  It is used to make capability urls private to the requester.
         /// </summary>
-        private readonly string m_capsObjectPath;
-        public string CapsObjectPath { get { return m_capsObjectPath; } }
+        private readonly string _capsObjectPath;
+        public string CapsObjectPath => _capsObjectPath;
 
-        private readonly CapsHandlers m_capsHandlers;
+        private readonly CapsHandlers _capsHandlers;
 
-        private readonly ConcurrentDictionary<string, PollServiceEventArgs> m_pollServiceHandlers
+        private readonly ConcurrentDictionary<string, PollServiceEventArgs> _pollServiceHandlers
             = new ConcurrentDictionary<string, PollServiceEventArgs>();
 
-        private readonly Dictionary<string, string> m_externalCapsHandlers = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _externalCapsHandlers = new Dictionary<string, string>();
 
-        private readonly IHttpServer m_httpListener;
-        private readonly UUID m_agentID;
-        private readonly string m_regionName;
-        private ManualResetEvent m_capsActive = new ManualResetEvent(false);
+        private readonly IHttpServer _httpListener;
+        private readonly UUID _agentID;
+        private readonly string _regionName;
+        private ManualResetEvent _capsActive = new ManualResetEvent(false);
 
-        public UUID AgentID
-        {
-            get { return m_agentID; }
-        }
+        public UUID AgentID => _agentID;
 
-        public string RegionName
-        {
-            get { return m_regionName; }
-        }
+        public string RegionName => _regionName;
 
-        public string HostName
-        {
-            get { return m_httpListenerHostName; }
-        }
+        public string HostName => _httpListenerHostName;
 
-        public uint Port
-        {
-            get { return m_httpListenPort; }
-        }
+        public uint Port => _httpListenPort;
 
-        public IHttpServer HttpListener
-        {
-            get { return m_httpListener; }
-        }
+        public IHttpServer HttpListener => _httpListener;
 
-        public bool SSLCaps
-        {
-            get { return m_httpListener.UseSSL; }
-        }
+        public bool SSLCaps => _httpListener.UseSSL;
 
-        public string SSLCommonName
-        {
-            get { return m_httpListener.SSLCommonName; }
-        }
+        public string SSLCommonName => _httpListener.SSLCommonName;
 
-        public CapsHandlers CapsHandlers
-        {
-            get { return m_capsHandlers; }
-        }
+        public CapsHandlers CapsHandlers => _capsHandlers;
 
-        public Dictionary<string, string> ExternalCapsHandlers
-        {
-            get { return m_externalCapsHandlers; }
-        }
+        public Dictionary<string, string> ExternalCapsHandlers => _externalCapsHandlers;
 
         [Flags]
         public enum CapsFlags:uint
@@ -133,24 +106,24 @@ namespace OpenSim.Framework.Capabilities
         public Caps(IHttpServer httpServer, string httpListen, uint httpPort, string capsPath,
                     UUID agent, string regionName)
         {
-            m_capsObjectPath = capsPath;
-            m_httpListener = httpServer;
-            m_httpListenerHostName = httpListen;
+            _capsObjectPath = capsPath;
+            _httpListener = httpServer;
+            _httpListenerHostName = httpListen;
 
-            m_httpListenPort = httpPort;
+            _httpListenPort = httpPort;
 
             if (httpServer != null && httpServer.UseSSL)
             {
-                m_httpListenPort = httpServer.SSLPort;
+                _httpListenPort = httpServer.SSLPort;
                 httpListen = httpServer.SSLCommonName;
                 httpPort = httpServer.SSLPort;
             }
 
-            m_agentID = agent;
-            m_capsHandlers = new CapsHandlers(httpServer, httpListen, httpPort);
-            m_regionName = regionName;
+            _agentID = agent;
+            _capsHandlers = new CapsHandlers(httpServer, httpListen, httpPort);
+            _regionName = regionName;
             Flags = CapsFlags.None;
-            m_capsActive.Reset();
+            _capsActive.Reset();
         }
 
         ~Caps()
@@ -167,11 +140,11 @@ namespace OpenSim.Framework.Capabilities
         protected void Dispose(bool disposing)
         {
             Flags = CapsFlags.None;
-            if (m_capsActive != null)
+            if (_capsActive != null)
             {
                 DeregisterHandlers();
-                m_capsActive.Dispose();
-                m_capsActive = null;
+                _capsActive.Dispose();
+                _capsActive = null;
             }
         }
 
@@ -182,35 +155,35 @@ namespace OpenSim.Framework.Capabilities
         /// <param name="handler"></param>
         public void RegisterHandler(string capName, IRequestHandler handler)
         {
-            //m_log.DebugFormat("[CAPS]: Registering handler for \"{0}\": path {1}", capName, handler.Path);
-            m_capsHandlers[capName] = handler;
+            //_log.DebugFormat("[CAPS]: Registering handler for \"{0}\": path {1}", capName, handler.Path);
+            _capsHandlers[capName] = handler;
         }
 
         public void RegisterSimpleHandler(string capName, ISimpleStreamHandler handler, bool addToListener = true)
         {
-            //m_log.DebugFormat("[CAPS]: Registering handler for \"{0}\": path {1}", capName, handler.Path);
-            m_capsHandlers.AddSimpleHandler(capName, handler, addToListener);
+            //_log.DebugFormat("[CAPS]: Registering handler for \"{0}\": path {1}", capName, handler.Path);
+            _capsHandlers.AddSimpleHandler(capName, handler, addToListener);
         }
 
         public void RegisterPollHandler(string capName, PollServiceEventArgs pollServiceHandler)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[CAPS]: Registering handler with name {0}, url {1} for {2}",
-//                capName, pollServiceHandler.Url, m_agentID, m_regionName);
+//                capName, pollServiceHandler.Url, _agentID, _regionName);
 
-            if(!m_pollServiceHandlers.TryAdd(capName, pollServiceHandler))
+            if(!_pollServiceHandlers.TryAdd(capName, pollServiceHandler))
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[CAPS]: Handler with name {0} already registered (ulr {1}, agent {2}, region {3}",
-                    capName, pollServiceHandler.Url, m_agentID, m_regionName);
+                    capName, pollServiceHandler.Url, _agentID, _regionName);
                 return;
             }
 
-            m_httpListener.AddPollServiceHTTPHandler(pollServiceHandler);
+            _httpListener.AddPollServiceHTTPHandler(pollServiceHandler);
 
 //            uint port = (MainServer.Instance == null) ? 0 : MainServer.Instance.Port;
 //            string protocol = "http";
-//            string hostName = m_httpListenerHostName;
+//            string hostName = _httpListenerHostName;
 //
 //            if (MainServer.Instance.UseSSL)
 //            {
@@ -231,7 +204,7 @@ namespace OpenSim.Framework.Capabilities
         /// <param name="url"></param>
         public void RegisterHandler(string capsName, string url)
         {
-            m_externalCapsHandlers.Add(capsName, url);
+            _externalCapsHandlers.Add(capsName, url);
         }
 
         /// <summary>
@@ -239,26 +212,26 @@ namespace OpenSim.Framework.Capabilities
         /// </summary>
         public void DeregisterHandlers()
         {
-            foreach (string capsName in m_capsHandlers.Caps)
+            foreach (string capsName in _capsHandlers.Caps)
             {
-                m_capsHandlers.Remove(capsName);
+                _capsHandlers.Remove(capsName);
             }
 
-            foreach (PollServiceEventArgs handler in m_pollServiceHandlers.Values)
+            foreach (PollServiceEventArgs handler in _pollServiceHandlers.Values)
             {
-                m_httpListener.RemovePollServiceHTTPHandler(handler.Url);
+                _httpListener.RemovePollServiceHTTPHandler(handler.Url);
             }
-            m_pollServiceHandlers.Clear();
+            _pollServiceHandlers.Clear();
         }
 
         public bool TryGetPollHandler(string name, out PollServiceEventArgs pollHandler)
         {
-            return m_pollServiceHandlers.TryGetValue(name, out pollHandler);
+            return _pollServiceHandlers.TryGetValue(name, out pollHandler);
         }
 
         public Dictionary<string, PollServiceEventArgs> GetPollHandlers()
         {
-            return new Dictionary<string, PollServiceEventArgs>(m_pollServiceHandlers);
+            return new Dictionary<string, PollServiceEventArgs>(_pollServiceHandlers);
         }
 
         /// <summary>
@@ -270,14 +243,14 @@ namespace OpenSim.Framework.Capabilities
         {
             Hashtable caps = CapsHandlers.GetCapsDetails(excludeSeed, requestedCaps);
 
-            lock (m_pollServiceHandlers)
+            lock (_pollServiceHandlers)
             {
-                foreach (KeyValuePair <string, PollServiceEventArgs> kvp in m_pollServiceHandlers)
+                foreach (KeyValuePair <string, PollServiceEventArgs> kvp in _pollServiceHandlers)
                 {
                     if (!requestedCaps.Contains(kvp.Key))
                         continue;
 
-                        string hostName = m_httpListenerHostName;
+                        string hostName = _httpListenerHostName;
                         uint port = MainServer.Instance == null ? 0 : MainServer.Instance.Port;
                         string protocol = "http";
 
@@ -306,13 +279,13 @@ namespace OpenSim.Framework.Capabilities
 
         public void Activate()
         {
-            m_capsActive.Set();
+            _capsActive.Set();
         }
 
         public bool WaitForActivation()
         {
             // Wait for 30s. If that elapses, return false and run without caps
-            return m_capsActive.WaitOne(120000);
+            return _capsActive.WaitOne(120000);
         }
     }
 }

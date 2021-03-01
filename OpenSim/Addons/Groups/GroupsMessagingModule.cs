@@ -218,15 +218,9 @@ namespace OpenSim.Groups
             _msgTransferModule = null;
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "Groups Messaging Module V2"; }
-        }
+        public string Name => "Groups Messaging Module V2";
 
         public void PostInitialise()
         {

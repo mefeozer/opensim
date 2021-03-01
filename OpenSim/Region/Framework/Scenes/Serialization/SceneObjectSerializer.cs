@@ -45,9 +45,9 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
     /// right now - hopefully this isn't forever.
     public class SceneObjectSerializer
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static IUserManagement m_UserManagement;
+        private static IUserManagement _UserManagement;
 
         /// <summary>
         /// Deserialize a scene object from the original xml format
@@ -67,7 +67,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                     }
                     catch (Exception e)
                     {
-                        m_log.Error("[SERIALIZER]: Deserialization of xml failed ", e);
+                        _log.Error("[SERIALIZER]: Deserialization of xml failed ", e);
                         Util.LogFailedXML("[SERIALIZER]:", fixedData);
                         return null;
                     }
@@ -97,7 +97,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 }
                 catch (Exception e)
                 {
-                    m_log.Error("[SERIALIZER]: Deserialization of xml data failed ", e);
+                    _log.Error("[SERIALIZER]: Deserialization of xml data failed ", e);
                     return null;
                 }
             }
@@ -110,7 +110,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
         /// <returns>The scene object deserialized.  Null on failure.</returns>
         public static SceneObjectGroup FromOriginalXmlFormat(XmlReader reader)
         {
-            //m_log.DebugFormat("[SOG]: Starting deserialization of SOG");
+            //_log.DebugFormat("[SOG]: Starting deserialization of SOG");
             //int time = System.Environment.TickCount;
 
             int linkNum;
@@ -222,7 +222,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
         public static void ToOriginalXmlFormat(
             SceneObjectGroup sceneObject, XmlTextWriter writer, bool doScriptStates, bool noRootElement)
         {
-//            m_log.DebugFormat("[SERIALIZER]: Starting serialization of {0}", sceneObject.Name);
+//            _log.DebugFormat("[SERIALIZER]: Starting serialization of {0}", sceneObject.Name);
 //            int time = System.Environment.TickCount;
 
             if (!noRootElement)
@@ -262,7 +262,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             if (!noRootElement)
                 writer.WriteEndElement(); // SceneObjectGroup
 
-//            m_log.DebugFormat("[SERIALIZER]: Finished serialization of SOG {0}, {1}ms", sceneObject.Name, System.Environment.TickCount - time);
+//            _log.DebugFormat("[SERIALIZER]: Finished serialization of SOG {0}, {1}ms", sceneObject.Name, System.Environment.TickCount - time);
         }
 
         protected static void ToXmlFormat(SceneObjectPart part, XmlTextWriter writer)
@@ -272,7 +272,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
         public static SceneObjectGroup FromXml2Format(string xmlData)
         {
-            //m_log.DebugFormat("[SOG]: Starting deserialization of SOG");
+            //_log.DebugFormat("[SOG]: Starting deserialization of SOG");
             //int time = System.Environment.TickCount;
 
             try
@@ -284,7 +284,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
                 if (parts.Count == 0)
                 {
-                    m_log.Error("[SERIALIZER]: Deserialization of xml failed: No SceneObjectPart nodes");
+                    _log.Error("[SERIALIZER]: Deserialization of xml failed: No SceneObjectPart nodes");
                     Util.LogFailedXML("[SERIALIZER]:", xmlData);
                     return null;
                 }
@@ -333,7 +333,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             }
             catch (Exception e)
             {
-                m_log.Error("[SERIALIZER]: Deserialization of xml failed ", e);
+                _log.Error("[SERIALIZER]: Deserialization of xml failed ", e);
                 Util.LogFailedXML("[SERIALIZER]:", xmlData);
                 return null;
             }
@@ -379,11 +379,11 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             string xmlData = ExternalRepresentationUtils.SanitizeXml(Utils.BytesToString(data));
             if (CoalescedSceneObjectsSerializer.TryFromXml(xmlData, out coa))
             {
-                // m_log.DebugFormat("[SERIALIZER]: Loaded coalescence {0} has {1} objects", assetId, coa.Count);
+                // _log.DebugFormat("[SERIALIZER]: Loaded coalescence {0} has {1} objects", assetId, coa.Count);
 
                 if (coa.Objects.Count == 0)
                 {
-                    m_log.WarnFormat("[SERIALIZER]: Aborting load of coalesced object from asset {0} as it has zero loaded components", assetId);
+                    _log.WarnFormat("[SERIALIZER]: Aborting load of coalesced object from asset {0} as it has zero loaded components", assetId);
                     return null;
                 }
 
@@ -399,7 +399,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 }
                 else
                 {
-                    m_log.WarnFormat("[SERIALIZER]: Aborting load of object from asset {0} as deserialization failed", assetId);
+                    _log.WarnFormat("[SERIALIZER]: Aborting load of object from asset {0} as deserialization failed", assetId);
                     return null;
                 }
             }
@@ -424,189 +424,189 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
         #region manual serialization
 
-        private static readonly Dictionary<string, Action<SceneObjectPart, XmlReader>> m_SOPXmlProcessors
+        private static readonly Dictionary<string, Action<SceneObjectPart, XmlReader>> _SOPXmlProcessors
             = new Dictionary<string, Action<SceneObjectPart, XmlReader>>();
 
-        private static readonly Dictionary<string, Action<TaskInventoryItem, XmlReader>> m_TaskInventoryXmlProcessors
+        private static readonly Dictionary<string, Action<TaskInventoryItem, XmlReader>> _TaskInventoryXmlProcessors
             = new Dictionary<string, Action<TaskInventoryItem, XmlReader>>();
 
-        private static readonly Dictionary<string, Action<PrimitiveBaseShape, XmlReader>> m_ShapeXmlProcessors
+        private static readonly Dictionary<string, Action<PrimitiveBaseShape, XmlReader>> _ShapeXmlProcessors
             = new Dictionary<string, Action<PrimitiveBaseShape, XmlReader>>();
 
         static SceneObjectSerializer()
         {
             #region SOPXmlProcessors initialization
-            m_SOPXmlProcessors.Add("AllowedDrop", ProcessAllowedDrop);
-            m_SOPXmlProcessors.Add("CreatorID", ProcessCreatorID);
-            m_SOPXmlProcessors.Add("CreatorData", ProcessCreatorData);
-            m_SOPXmlProcessors.Add("FolderID", ProcessFolderID);
-            m_SOPXmlProcessors.Add("InventorySerial", ProcessInventorySerial);
-            m_SOPXmlProcessors.Add("TaskInventory", ProcessTaskInventory);
-            m_SOPXmlProcessors.Add("UUID", ProcessUUID);
-            m_SOPXmlProcessors.Add("LocalId", ProcessLocalId);
-            m_SOPXmlProcessors.Add("Name", ProcessName);
-            m_SOPXmlProcessors.Add("Material", ProcessMaterial);
-            m_SOPXmlProcessors.Add("PassTouches", ProcessPassTouches);
-            m_SOPXmlProcessors.Add("PassCollisions", ProcessPassCollisions);
-            m_SOPXmlProcessors.Add("RegionHandle", ProcessRegionHandle);
-            m_SOPXmlProcessors.Add("ScriptAccessPin", ProcessScriptAccessPin);
-            m_SOPXmlProcessors.Add("GroupPosition", ProcessGroupPosition);
-            m_SOPXmlProcessors.Add("OffsetPosition", ProcessOffsetPosition);
-            m_SOPXmlProcessors.Add("RotationOffset", ProcessRotationOffset);
-            m_SOPXmlProcessors.Add("Velocity", ProcessVelocity);
-            m_SOPXmlProcessors.Add("AngularVelocity", ProcessAngularVelocity);
-            m_SOPXmlProcessors.Add("Acceleration", ProcessAcceleration);
-            m_SOPXmlProcessors.Add("Description", ProcessDescription);
-            m_SOPXmlProcessors.Add("Color", ProcessColor);
-            m_SOPXmlProcessors.Add("Text", ProcessText);
-            m_SOPXmlProcessors.Add("SitName", ProcessSitName);
-            m_SOPXmlProcessors.Add("TouchName", ProcessTouchName);
-            m_SOPXmlProcessors.Add("LinkNum", ProcessLinkNum);
-            m_SOPXmlProcessors.Add("ClickAction", ProcessClickAction);
-            m_SOPXmlProcessors.Add("Shape", ProcessShape);
-            m_SOPXmlProcessors.Add("Scale", ProcessScale);
-            m_SOPXmlProcessors.Add("SitTargetOrientation", ProcessSitTargetOrientation);
-            m_SOPXmlProcessors.Add("SitTargetPosition", ProcessSitTargetPosition);
-            m_SOPXmlProcessors.Add("SitTargetPositionLL", ProcessSitTargetPositionLL);
-            m_SOPXmlProcessors.Add("SitTargetOrientationLL", ProcessSitTargetOrientationLL);
-            m_SOPXmlProcessors.Add("StandTarget", ProcessStandTarget);
-            m_SOPXmlProcessors.Add("ParentID", ProcessParentID);
-            m_SOPXmlProcessors.Add("CreationDate", ProcessCreationDate);
-            m_SOPXmlProcessors.Add("Category", ProcessCategory);
-            m_SOPXmlProcessors.Add("SalePrice", ProcessSalePrice);
-            m_SOPXmlProcessors.Add("ObjectSaleType", ProcessObjectSaleType);
-            m_SOPXmlProcessors.Add("OwnershipCost", ProcessOwnershipCost);
-            m_SOPXmlProcessors.Add("GroupID", ProcessGroupID);
-            m_SOPXmlProcessors.Add("OwnerID", ProcessOwnerID);
-            m_SOPXmlProcessors.Add("LastOwnerID", ProcessLastOwnerID);
-            m_SOPXmlProcessors.Add("RezzerID", ProcessRezzerID);
-            m_SOPXmlProcessors.Add("BaseMask", ProcessBaseMask);
-            m_SOPXmlProcessors.Add("OwnerMask", ProcessOwnerMask);
-            m_SOPXmlProcessors.Add("GroupMask", ProcessGroupMask);
-            m_SOPXmlProcessors.Add("EveryoneMask", ProcessEveryoneMask);
-            m_SOPXmlProcessors.Add("NextOwnerMask", ProcessNextOwnerMask);
-            m_SOPXmlProcessors.Add("Flags", ProcessFlags);
-            m_SOPXmlProcessors.Add("CollisionSound", ProcessCollisionSound);
-            m_SOPXmlProcessors.Add("CollisionSoundVolume", ProcessCollisionSoundVolume);
-            m_SOPXmlProcessors.Add("MediaUrl", ProcessMediaUrl);
-            m_SOPXmlProcessors.Add("AttachedPos", ProcessAttachedPos);
-            m_SOPXmlProcessors.Add("DynAttrs", ProcessDynAttrs);
-            m_SOPXmlProcessors.Add("TextureAnimation", ProcessTextureAnimation);
-            m_SOPXmlProcessors.Add("ParticleSystem", ProcessParticleSystem);
-            m_SOPXmlProcessors.Add("PayPrice0", ProcessPayPrice0);
-            m_SOPXmlProcessors.Add("PayPrice1", ProcessPayPrice1);
-            m_SOPXmlProcessors.Add("PayPrice2", ProcessPayPrice2);
-            m_SOPXmlProcessors.Add("PayPrice3", ProcessPayPrice3);
-            m_SOPXmlProcessors.Add("PayPrice4", ProcessPayPrice4);
+            _SOPXmlProcessors.Add("AllowedDrop", ProcessAllowedDrop);
+            _SOPXmlProcessors.Add("CreatorID", ProcessCreatorID);
+            _SOPXmlProcessors.Add("CreatorData", ProcessCreatorData);
+            _SOPXmlProcessors.Add("FolderID", ProcessFolderID);
+            _SOPXmlProcessors.Add("InventorySerial", ProcessInventorySerial);
+            _SOPXmlProcessors.Add("TaskInventory", ProcessTaskInventory);
+            _SOPXmlProcessors.Add("UUID", ProcessUUID);
+            _SOPXmlProcessors.Add("LocalId", ProcessLocalId);
+            _SOPXmlProcessors.Add("Name", ProcessName);
+            _SOPXmlProcessors.Add("Material", ProcessMaterial);
+            _SOPXmlProcessors.Add("PassTouches", ProcessPassTouches);
+            _SOPXmlProcessors.Add("PassCollisions", ProcessPassCollisions);
+            _SOPXmlProcessors.Add("RegionHandle", ProcessRegionHandle);
+            _SOPXmlProcessors.Add("ScriptAccessPin", ProcessScriptAccessPin);
+            _SOPXmlProcessors.Add("GroupPosition", ProcessGroupPosition);
+            _SOPXmlProcessors.Add("OffsetPosition", ProcessOffsetPosition);
+            _SOPXmlProcessors.Add("RotationOffset", ProcessRotationOffset);
+            _SOPXmlProcessors.Add("Velocity", ProcessVelocity);
+            _SOPXmlProcessors.Add("AngularVelocity", ProcessAngularVelocity);
+            _SOPXmlProcessors.Add("Acceleration", ProcessAcceleration);
+            _SOPXmlProcessors.Add("Description", ProcessDescription);
+            _SOPXmlProcessors.Add("Color", ProcessColor);
+            _SOPXmlProcessors.Add("Text", ProcessText);
+            _SOPXmlProcessors.Add("SitName", ProcessSitName);
+            _SOPXmlProcessors.Add("TouchName", ProcessTouchName);
+            _SOPXmlProcessors.Add("LinkNum", ProcessLinkNum);
+            _SOPXmlProcessors.Add("ClickAction", ProcessClickAction);
+            _SOPXmlProcessors.Add("Shape", ProcessShape);
+            _SOPXmlProcessors.Add("Scale", ProcessScale);
+            _SOPXmlProcessors.Add("SitTargetOrientation", ProcessSitTargetOrientation);
+            _SOPXmlProcessors.Add("SitTargetPosition", ProcessSitTargetPosition);
+            _SOPXmlProcessors.Add("SitTargetPositionLL", ProcessSitTargetPositionLL);
+            _SOPXmlProcessors.Add("SitTargetOrientationLL", ProcessSitTargetOrientationLL);
+            _SOPXmlProcessors.Add("StandTarget", ProcessStandTarget);
+            _SOPXmlProcessors.Add("ParentID", ProcessParentID);
+            _SOPXmlProcessors.Add("CreationDate", ProcessCreationDate);
+            _SOPXmlProcessors.Add("Category", ProcessCategory);
+            _SOPXmlProcessors.Add("SalePrice", ProcessSalePrice);
+            _SOPXmlProcessors.Add("ObjectSaleType", ProcessObjectSaleType);
+            _SOPXmlProcessors.Add("OwnershipCost", ProcessOwnershipCost);
+            _SOPXmlProcessors.Add("GroupID", ProcessGroupID);
+            _SOPXmlProcessors.Add("OwnerID", ProcessOwnerID);
+            _SOPXmlProcessors.Add("LastOwnerID", ProcessLastOwnerID);
+            _SOPXmlProcessors.Add("RezzerID", ProcessRezzerID);
+            _SOPXmlProcessors.Add("BaseMask", ProcessBaseMask);
+            _SOPXmlProcessors.Add("OwnerMask", ProcessOwnerMask);
+            _SOPXmlProcessors.Add("GroupMask", ProcessGroupMask);
+            _SOPXmlProcessors.Add("EveryoneMask", ProcessEveryoneMask);
+            _SOPXmlProcessors.Add("NextOwnerMask", ProcessNextOwnerMask);
+            _SOPXmlProcessors.Add("Flags", ProcessFlags);
+            _SOPXmlProcessors.Add("CollisionSound", ProcessCollisionSound);
+            _SOPXmlProcessors.Add("CollisionSoundVolume", ProcessCollisionSoundVolume);
+            _SOPXmlProcessors.Add("MediaUrl", ProcessMediaUrl);
+            _SOPXmlProcessors.Add("AttachedPos", ProcessAttachedPos);
+            _SOPXmlProcessors.Add("DynAttrs", ProcessDynAttrs);
+            _SOPXmlProcessors.Add("TextureAnimation", ProcessTextureAnimation);
+            _SOPXmlProcessors.Add("ParticleSystem", ProcessParticleSystem);
+            _SOPXmlProcessors.Add("PayPrice0", ProcessPayPrice0);
+            _SOPXmlProcessors.Add("PayPrice1", ProcessPayPrice1);
+            _SOPXmlProcessors.Add("PayPrice2", ProcessPayPrice2);
+            _SOPXmlProcessors.Add("PayPrice3", ProcessPayPrice3);
+            _SOPXmlProcessors.Add("PayPrice4", ProcessPayPrice4);
 
-            m_SOPXmlProcessors.Add("Buoyancy", ProcessBuoyancy);
-            m_SOPXmlProcessors.Add("Force", ProcessForce);
-            m_SOPXmlProcessors.Add("Torque", ProcessTorque);
-            m_SOPXmlProcessors.Add("VolumeDetectActive", ProcessVolumeDetectActive);
+            _SOPXmlProcessors.Add("Buoyancy", ProcessBuoyancy);
+            _SOPXmlProcessors.Add("Force", ProcessForce);
+            _SOPXmlProcessors.Add("Torque", ProcessTorque);
+            _SOPXmlProcessors.Add("VolumeDetectActive", ProcessVolumeDetectActive);
 
-            m_SOPXmlProcessors.Add("Vehicle", ProcessVehicle);
+            _SOPXmlProcessors.Add("Vehicle", ProcessVehicle);
 
-            m_SOPXmlProcessors.Add("PhysicsInertia", ProcessPhysicsInertia);
+            _SOPXmlProcessors.Add("PhysicsInertia", ProcessPhysicsInertia);
 
-            m_SOPXmlProcessors.Add("RotationAxisLocks", ProcessRotationAxisLocks);
-            m_SOPXmlProcessors.Add("PhysicsShapeType", ProcessPhysicsShapeType);
-            m_SOPXmlProcessors.Add("Density", ProcessDensity);
-            m_SOPXmlProcessors.Add("Friction", ProcessFriction);
-            m_SOPXmlProcessors.Add("Bounce", ProcessBounce);
-            m_SOPXmlProcessors.Add("GravityModifier", ProcessGravityModifier);
-            m_SOPXmlProcessors.Add("CameraEyeOffset", ProcessCameraEyeOffset);
-            m_SOPXmlProcessors.Add("CameraAtOffset", ProcessCameraAtOffset);
+            _SOPXmlProcessors.Add("RotationAxisLocks", ProcessRotationAxisLocks);
+            _SOPXmlProcessors.Add("PhysicsShapeType", ProcessPhysicsShapeType);
+            _SOPXmlProcessors.Add("Density", ProcessDensity);
+            _SOPXmlProcessors.Add("Friction", ProcessFriction);
+            _SOPXmlProcessors.Add("Bounce", ProcessBounce);
+            _SOPXmlProcessors.Add("GravityModifier", ProcessGravityModifier);
+            _SOPXmlProcessors.Add("CameraEyeOffset", ProcessCameraEyeOffset);
+            _SOPXmlProcessors.Add("CameraAtOffset", ProcessCameraAtOffset);
 
-            m_SOPXmlProcessors.Add("SoundID", ProcessSoundID);
-            m_SOPXmlProcessors.Add("SoundGain", ProcessSoundGain);
-            m_SOPXmlProcessors.Add("SoundFlags", ProcessSoundFlags);
-            m_SOPXmlProcessors.Add("SoundRadius", ProcessSoundRadius);
-            m_SOPXmlProcessors.Add("SoundQueueing", ProcessSoundQueueing);
+            _SOPXmlProcessors.Add("SoundID", ProcessSoundID);
+            _SOPXmlProcessors.Add("SoundGain", ProcessSoundGain);
+            _SOPXmlProcessors.Add("SoundFlags", ProcessSoundFlags);
+            _SOPXmlProcessors.Add("SoundRadius", ProcessSoundRadius);
+            _SOPXmlProcessors.Add("SoundQueueing", ProcessSoundQueueing);
 
-            m_SOPXmlProcessors.Add("SOPAnims", ProcessSOPAnims);
+            _SOPXmlProcessors.Add("SOPAnims", ProcessSOPAnims);
 
-            m_SOPXmlProcessors.Add("SitActRange", ProcessSitActRange);
+            _SOPXmlProcessors.Add("SitActRange", ProcessSitActRange);
 
             #endregion
 
             #region TaskInventoryXmlProcessors initialization
-            m_TaskInventoryXmlProcessors.Add("AssetID", ProcessTIAssetID);
-            m_TaskInventoryXmlProcessors.Add("BasePermissions", ProcessTIBasePermissions);
-            m_TaskInventoryXmlProcessors.Add("CreationDate", ProcessTICreationDate);
-            m_TaskInventoryXmlProcessors.Add("CreatorID", ProcessTICreatorID);
-            m_TaskInventoryXmlProcessors.Add("CreatorData", ProcessTICreatorData);
-            m_TaskInventoryXmlProcessors.Add("Description", ProcessTIDescription);
-            m_TaskInventoryXmlProcessors.Add("EveryonePermissions", ProcessTIEveryonePermissions);
-            m_TaskInventoryXmlProcessors.Add("Flags", ProcessTIFlags);
-            m_TaskInventoryXmlProcessors.Add("GroupID", ProcessTIGroupID);
-            m_TaskInventoryXmlProcessors.Add("GroupPermissions", ProcessTIGroupPermissions);
-            m_TaskInventoryXmlProcessors.Add("InvType", ProcessTIInvType);
-            m_TaskInventoryXmlProcessors.Add("ItemID", ProcessTIItemID);
-            m_TaskInventoryXmlProcessors.Add("OldItemID", ProcessTIOldItemID);
-            m_TaskInventoryXmlProcessors.Add("LastOwnerID", ProcessTILastOwnerID);
-            m_TaskInventoryXmlProcessors.Add("Name", ProcessTIName);
-            m_TaskInventoryXmlProcessors.Add("NextPermissions", ProcessTINextPermissions);
-            m_TaskInventoryXmlProcessors.Add("OwnerID", ProcessTIOwnerID);
-            m_TaskInventoryXmlProcessors.Add("CurrentPermissions", ProcessTICurrentPermissions);
-            m_TaskInventoryXmlProcessors.Add("ParentID", ProcessTIParentID);
-            m_TaskInventoryXmlProcessors.Add("ParentPartID", ProcessTIParentPartID);
-            m_TaskInventoryXmlProcessors.Add("PermsGranter", ProcessTIPermsGranter);
-            m_TaskInventoryXmlProcessors.Add("PermsMask", ProcessTIPermsMask);
-            m_TaskInventoryXmlProcessors.Add("Type", ProcessTIType);
-            m_TaskInventoryXmlProcessors.Add("OwnerChanged", ProcessTIOwnerChanged);
+            _TaskInventoryXmlProcessors.Add("AssetID", ProcessTIAssetID);
+            _TaskInventoryXmlProcessors.Add("BasePermissions", ProcessTIBasePermissions);
+            _TaskInventoryXmlProcessors.Add("CreationDate", ProcessTICreationDate);
+            _TaskInventoryXmlProcessors.Add("CreatorID", ProcessTICreatorID);
+            _TaskInventoryXmlProcessors.Add("CreatorData", ProcessTICreatorData);
+            _TaskInventoryXmlProcessors.Add("Description", ProcessTIDescription);
+            _TaskInventoryXmlProcessors.Add("EveryonePermissions", ProcessTIEveryonePermissions);
+            _TaskInventoryXmlProcessors.Add("Flags", ProcessTIFlags);
+            _TaskInventoryXmlProcessors.Add("GroupID", ProcessTIGroupID);
+            _TaskInventoryXmlProcessors.Add("GroupPermissions", ProcessTIGroupPermissions);
+            _TaskInventoryXmlProcessors.Add("InvType", ProcessTIInvType);
+            _TaskInventoryXmlProcessors.Add("ItemID", ProcessTIItemID);
+            _TaskInventoryXmlProcessors.Add("OldItemID", ProcessTIOldItemID);
+            _TaskInventoryXmlProcessors.Add("LastOwnerID", ProcessTILastOwnerID);
+            _TaskInventoryXmlProcessors.Add("Name", ProcessTIName);
+            _TaskInventoryXmlProcessors.Add("NextPermissions", ProcessTINextPermissions);
+            _TaskInventoryXmlProcessors.Add("OwnerID", ProcessTIOwnerID);
+            _TaskInventoryXmlProcessors.Add("CurrentPermissions", ProcessTICurrentPermissions);
+            _TaskInventoryXmlProcessors.Add("ParentID", ProcessTIParentID);
+            _TaskInventoryXmlProcessors.Add("ParentPartID", ProcessTIParentPartID);
+            _TaskInventoryXmlProcessors.Add("PermsGranter", ProcessTIPermsGranter);
+            _TaskInventoryXmlProcessors.Add("PermsMask", ProcessTIPermsMask);
+            _TaskInventoryXmlProcessors.Add("Type", ProcessTIType);
+            _TaskInventoryXmlProcessors.Add("OwnerChanged", ProcessTIOwnerChanged);
 
             #endregion
 
             #region ShapeXmlProcessors initialization
-            m_ShapeXmlProcessors.Add("ProfileCurve", ProcessShpProfileCurve);
-            m_ShapeXmlProcessors.Add("TextureEntry", ProcessShpTextureEntry);
-            m_ShapeXmlProcessors.Add("ExtraParams", ProcessShpExtraParams);
-            m_ShapeXmlProcessors.Add("PathBegin", ProcessShpPathBegin);
-            m_ShapeXmlProcessors.Add("PathCurve", ProcessShpPathCurve);
-            m_ShapeXmlProcessors.Add("PathEnd", ProcessShpPathEnd);
-            m_ShapeXmlProcessors.Add("PathRadiusOffset", ProcessShpPathRadiusOffset);
-            m_ShapeXmlProcessors.Add("PathRevolutions", ProcessShpPathRevolutions);
-            m_ShapeXmlProcessors.Add("PathScaleX", ProcessShpPathScaleX);
-            m_ShapeXmlProcessors.Add("PathScaleY", ProcessShpPathScaleY);
-            m_ShapeXmlProcessors.Add("PathShearX", ProcessShpPathShearX);
-            m_ShapeXmlProcessors.Add("PathShearY", ProcessShpPathShearY);
-            m_ShapeXmlProcessors.Add("PathSkew", ProcessShpPathSkew);
-            m_ShapeXmlProcessors.Add("PathTaperX", ProcessShpPathTaperX);
-            m_ShapeXmlProcessors.Add("PathTaperY", ProcessShpPathTaperY);
-            m_ShapeXmlProcessors.Add("PathTwist", ProcessShpPathTwist);
-            m_ShapeXmlProcessors.Add("PathTwistBegin", ProcessShpPathTwistBegin);
-            m_ShapeXmlProcessors.Add("PCode", ProcessShpPCode);
-            m_ShapeXmlProcessors.Add("ProfileBegin", ProcessShpProfileBegin);
-            m_ShapeXmlProcessors.Add("ProfileEnd", ProcessShpProfileEnd);
-            m_ShapeXmlProcessors.Add("ProfileHollow", ProcessShpProfileHollow);
-            m_ShapeXmlProcessors.Add("Scale", ProcessShpScale);
-            m_ShapeXmlProcessors.Add("LastAttachPoint", ProcessShpLastAttach);
-            m_ShapeXmlProcessors.Add("State", ProcessShpState);
-            m_ShapeXmlProcessors.Add("ProfileShape", ProcessShpProfileShape);
-            m_ShapeXmlProcessors.Add("HollowShape", ProcessShpHollowShape);
-            m_ShapeXmlProcessors.Add("SculptTexture", ProcessShpSculptTexture);
-            m_ShapeXmlProcessors.Add("SculptType", ProcessShpSculptType);
+            _ShapeXmlProcessors.Add("ProfileCurve", ProcessShpProfileCurve);
+            _ShapeXmlProcessors.Add("TextureEntry", ProcessShpTextureEntry);
+            _ShapeXmlProcessors.Add("ExtraParams", ProcessShpExtraParams);
+            _ShapeXmlProcessors.Add("PathBegin", ProcessShpPathBegin);
+            _ShapeXmlProcessors.Add("PathCurve", ProcessShpPathCurve);
+            _ShapeXmlProcessors.Add("PathEnd", ProcessShpPathEnd);
+            _ShapeXmlProcessors.Add("PathRadiusOffset", ProcessShpPathRadiusOffset);
+            _ShapeXmlProcessors.Add("PathRevolutions", ProcessShpPathRevolutions);
+            _ShapeXmlProcessors.Add("PathScaleX", ProcessShpPathScaleX);
+            _ShapeXmlProcessors.Add("PathScaleY", ProcessShpPathScaleY);
+            _ShapeXmlProcessors.Add("PathShearX", ProcessShpPathShearX);
+            _ShapeXmlProcessors.Add("PathShearY", ProcessShpPathShearY);
+            _ShapeXmlProcessors.Add("PathSkew", ProcessShpPathSkew);
+            _ShapeXmlProcessors.Add("PathTaperX", ProcessShpPathTaperX);
+            _ShapeXmlProcessors.Add("PathTaperY", ProcessShpPathTaperY);
+            _ShapeXmlProcessors.Add("PathTwist", ProcessShpPathTwist);
+            _ShapeXmlProcessors.Add("PathTwistBegin", ProcessShpPathTwistBegin);
+            _ShapeXmlProcessors.Add("PCode", ProcessShpPCode);
+            _ShapeXmlProcessors.Add("ProfileBegin", ProcessShpProfileBegin);
+            _ShapeXmlProcessors.Add("ProfileEnd", ProcessShpProfileEnd);
+            _ShapeXmlProcessors.Add("ProfileHollow", ProcessShpProfileHollow);
+            _ShapeXmlProcessors.Add("Scale", ProcessShpScale);
+            _ShapeXmlProcessors.Add("LastAttachPoint", ProcessShpLastAttach);
+            _ShapeXmlProcessors.Add("State", ProcessShpState);
+            _ShapeXmlProcessors.Add("ProfileShape", ProcessShpProfileShape);
+            _ShapeXmlProcessors.Add("HollowShape", ProcessShpHollowShape);
+            _ShapeXmlProcessors.Add("SculptTexture", ProcessShpSculptTexture);
+            _ShapeXmlProcessors.Add("SculptType", ProcessShpSculptType);
             // Ignore "SculptData"; this element is deprecated
-            m_ShapeXmlProcessors.Add("FlexiSoftness", ProcessShpFlexiSoftness);
-            m_ShapeXmlProcessors.Add("FlexiTension", ProcessShpFlexiTension);
-            m_ShapeXmlProcessors.Add("FlexiDrag", ProcessShpFlexiDrag);
-            m_ShapeXmlProcessors.Add("FlexiGravity", ProcessShpFlexiGravity);
-            m_ShapeXmlProcessors.Add("FlexiWind", ProcessShpFlexiWind);
-            m_ShapeXmlProcessors.Add("FlexiForceX", ProcessShpFlexiForceX);
-            m_ShapeXmlProcessors.Add("FlexiForceY", ProcessShpFlexiForceY);
-            m_ShapeXmlProcessors.Add("FlexiForceZ", ProcessShpFlexiForceZ);
-            m_ShapeXmlProcessors.Add("LightColorR", ProcessShpLightColorR);
-            m_ShapeXmlProcessors.Add("LightColorG", ProcessShpLightColorG);
-            m_ShapeXmlProcessors.Add("LightColorB", ProcessShpLightColorB);
-            m_ShapeXmlProcessors.Add("LightColorA", ProcessShpLightColorA);
-            m_ShapeXmlProcessors.Add("LightRadius", ProcessShpLightRadius);
-            m_ShapeXmlProcessors.Add("LightCutoff", ProcessShpLightCutoff);
-            m_ShapeXmlProcessors.Add("LightFalloff", ProcessShpLightFalloff);
-            m_ShapeXmlProcessors.Add("LightIntensity", ProcessShpLightIntensity);
-            m_ShapeXmlProcessors.Add("FlexiEntry", ProcessShpFlexiEntry);
-            m_ShapeXmlProcessors.Add("LightEntry", ProcessShpLightEntry);
-            m_ShapeXmlProcessors.Add("SculptEntry", ProcessShpSculptEntry);
-            m_ShapeXmlProcessors.Add("Media", ProcessShpMedia);
+            _ShapeXmlProcessors.Add("FlexiSoftness", ProcessShpFlexiSoftness);
+            _ShapeXmlProcessors.Add("FlexiTension", ProcessShpFlexiTension);
+            _ShapeXmlProcessors.Add("FlexiDrag", ProcessShpFlexiDrag);
+            _ShapeXmlProcessors.Add("FlexiGravity", ProcessShpFlexiGravity);
+            _ShapeXmlProcessors.Add("FlexiWind", ProcessShpFlexiWind);
+            _ShapeXmlProcessors.Add("FlexiForceX", ProcessShpFlexiForceX);
+            _ShapeXmlProcessors.Add("FlexiForceY", ProcessShpFlexiForceY);
+            _ShapeXmlProcessors.Add("FlexiForceZ", ProcessShpFlexiForceZ);
+            _ShapeXmlProcessors.Add("LightColorR", ProcessShpLightColorR);
+            _ShapeXmlProcessors.Add("LightColorG", ProcessShpLightColorG);
+            _ShapeXmlProcessors.Add("LightColorB", ProcessShpLightColorB);
+            _ShapeXmlProcessors.Add("LightColorA", ProcessShpLightColorA);
+            _ShapeXmlProcessors.Add("LightRadius", ProcessShpLightRadius);
+            _ShapeXmlProcessors.Add("LightCutoff", ProcessShpLightCutoff);
+            _ShapeXmlProcessors.Add("LightFalloff", ProcessShpLightFalloff);
+            _ShapeXmlProcessors.Add("LightIntensity", ProcessShpLightIntensity);
+            _ShapeXmlProcessors.Add("FlexiEntry", ProcessShpFlexiEntry);
+            _ShapeXmlProcessors.Add("LightEntry", ProcessShpLightEntry);
+            _ShapeXmlProcessors.Add("SculptEntry", ProcessShpSculptEntry);
+            _ShapeXmlProcessors.Add("Media", ProcessShpMedia);
             #endregion
         }
 
@@ -832,7 +832,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             if (vehicle == null)
             {
                 obj.VehicleParams = null;
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[SceneObjectSerializer]: Parsing Vehicle for object part {0} {1} encountered errors.  Please see earlier log entries.",
                     obj.Name, obj.UUID);
             }
@@ -849,7 +849,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             if (pdata == null)
             {
                 obj.PhysicsInertia = null;
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[SceneObjectSerializer]: Parsing PhysicsInertiaData for object part {0} {1} encountered errors.  Please see earlier log entries.",
                     obj.Name, obj.UUID);
             }
@@ -875,7 +875,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             }
             catch {}
 
-            m_log.DebugFormat(
+            _log.DebugFormat(
                     "[SceneObjectSerializer]: Parsing ProcessSOPAnims for object part {0} {1} encountered errors",
                     obj.Name, obj.UUID);
         }
@@ -887,7 +887,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
             if (errorNodeNames != null)
             {
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[SceneObjectSerializer]: Parsing PrimitiveBaseShape for object part {0} {1} encountered errors in properties {2}.",
                     obj.Name, obj.UUID, string.Join(", ", errorNodeNames.ToArray()));
             }
@@ -1470,7 +1470,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 }
                 catch
                 {
-                    m_log.ErrorFormat("[SERIALIZER] Failed parsing halcyon MOAP information");
+                    _log.ErrorFormat("[SERIALIZER] Failed parsing halcyon MOAP information");
                 }
             }
         }
@@ -1520,9 +1520,9 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 writer.WriteElementString("CreatorData", sop.CreatorData);
             else if (options.ContainsKey("home"))
             {
-                if (m_UserManagement == null)
-                    m_UserManagement = sop.ParentGroup.Scene.RequestModuleInterface<IUserManagement>();
-                string name = m_UserManagement.GetUserName(sop.CreatorID);
+                if (_UserManagement == null)
+                    _UserManagement = sop.ParentGroup.Scene.RequestModuleInterface<IUserManagement>();
+                string name = _UserManagement.GetUserName(sop.CreatorID);
                 writer.WriteElementString("CreatorData", ExternalRepresentationUtils.CalcCreatorData((string)options["home"], name));
             }
 
@@ -1733,9 +1733,9 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                         writer.WriteElementString("CreatorData", item.CreatorData);
                     else if (options.ContainsKey("home"))
                     {
-                        if (m_UserManagement == null)
-                            m_UserManagement = scene.RequestModuleInterface<IUserManagement>();
-                        string name = m_UserManagement.GetUserName(item.CreatorID);
+                        if (_UserManagement == null)
+                            _UserManagement = scene.RequestModuleInterface<IUserManagement>();
+                        string name = _UserManagement.GetUserName(item.CreatorID);
                         writer.WriteElementString("CreatorData", ExternalRepresentationUtils.CalcCreatorData((string)options["home"], name));
                     }
 
@@ -1868,10 +1868,10 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
             bool errors = ExternalRepresentationUtils.ExecuteReadProcessors(
                 obj,
-                m_SOPXmlProcessors,
+                _SOPXmlProcessors,
                 reader,
                 (o, nodeName, e) => {
-                    m_log.Debug(string.Format("[SceneObjectSerializer]: Error while parsing element {0} in object {1} {2} ",
+                    _log.Debug(string.Format("[SceneObjectSerializer]: Error while parsing element {0} in object {1} {2} ",
                         nodeName, ((SceneObjectPart)o).Name, ((SceneObjectPart)o).UUID), e);
                 });
 
@@ -1881,7 +1881,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             reader.ReadEndElement(); // SceneObjectPart
 
             obj.AggregateInnerPerms();
-            // m_log.DebugFormat("[SceneObjectSerializer]: parsed SOP {0} {1}", obj.Name, obj.UUID);
+            // _log.DebugFormat("[SceneObjectSerializer]: parsed SOP {0} {1}", obj.Name, obj.UUID);
             return obj;
         }
 
@@ -1899,7 +1899,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
                 ExternalRepresentationUtils.ExecuteReadProcessors(
                     item,
-                    m_TaskInventoryXmlProcessors,
+                    _TaskInventoryXmlProcessors,
                     reader);
 
                 reader.ReadEndElement(); // TaskInventoryItem
@@ -1937,10 +1937,10 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
             ExternalRepresentationUtils.ExecuteReadProcessors(
                 shape,
-                m_ShapeXmlProcessors,
+                _ShapeXmlProcessors,
                 reader,
                 (o, nodeName, e) => {
-                    m_log.Debug(string.Format("[SceneObjectSerializer]: Error while parsing element {0} in Shape property of object {1} {2} ",
+                    _log.Debug(string.Format("[SceneObjectSerializer]: Error while parsing element {0} in Shape property of object {1} {2} ",
                         nodeName, obj.Name, obj.UUID), e);
 
                     if (internalErrorNodeNames == null)

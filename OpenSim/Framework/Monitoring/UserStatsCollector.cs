@@ -39,16 +39,16 @@ namespace OpenSim.Framework.Monitoring
         private readonly Timer ageStatsTimer = new Timer(24 * 60 * 60 * 1000);
 
         private int successfulLoginsToday;
-        public int SuccessfulLoginsToday { get { return successfulLoginsToday; } }
+        public int SuccessfulLoginsToday => successfulLoginsToday;
 
         private int successfulLoginsYesterday;
-        public int SuccessfulLoginsYesterday { get { return successfulLoginsYesterday; } }
+        public int SuccessfulLoginsYesterday => successfulLoginsYesterday;
 
         private int successfulLogins;
-        public int SuccessfulLogins { get { return successfulLogins; } }
+        public int SuccessfulLogins => successfulLogins;
 
         private int logouts;
-        public int Logouts { get { return logouts; } }
+        public int Logouts => logouts;
 
         public UserStatsCollector()
         {

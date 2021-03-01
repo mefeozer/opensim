@@ -60,7 +60,7 @@ namespace OpenSim.Framework
 
         public int Capacity
         {
-            get { return capacity; }
+            get => capacity;
             set
             {
                 if (value == capacity)
@@ -78,10 +78,7 @@ namespace OpenSim.Framework
             }
         }
 
-        public int Size
-        {
-            get { return size; }
-        }
+        public int Size => size;
 
         public bool Contains(T item)
         {
@@ -236,15 +233,9 @@ namespace OpenSim.Framework
 
         #region ICollection<T> Members
 
-        int ICollection<T>.Count
-        {
-            get { return Size; }
-        }
+        int ICollection<T>.Count => Size;
 
-        bool ICollection<T>.IsReadOnly
-        {
-            get { return false; }
-        }
+        bool ICollection<T>.IsReadOnly => false;
 
         void ICollection<T>.Add(T item)
         {
@@ -273,15 +264,9 @@ namespace OpenSim.Framework
 
         #region ICollection Members
 
-        int ICollection.Count
-        {
-            get { return Size; }
-        }
+        int ICollection.Count => Size;
 
-        bool ICollection.IsSynchronized
-        {
-            get { return false; }
-        }
+        bool ICollection.IsSynchronized => false;
 
         object ICollection.SyncRoot
         {

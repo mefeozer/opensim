@@ -48,9 +48,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "XmlRpcGroupsServicesConnectorModule")]
     public class XmlRpcGroupsServicesConnectorModule : ISharedRegionModule, IGroupsServicesConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_debugEnabled = false;
+        private bool _debugEnabled = false;
 
         public const GroupPowers DefaultEveryonePowers
             = GroupPowers.AllowSetHome
@@ -110,39 +110,33 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 | GroupPowers.StartProposal
                 | GroupPowers.VoteOnProposal;
 
-        private bool m_connectorEnabled = false;
+        private bool _connectorEnabled = false;
 
-        private string m_groupsServerURI = string.Empty;
+        private string _groupsServerURI = string.Empty;
 
-        private bool m_disableKeepAlive = true;
+        private bool _disableKeepAlive = true;
 
-        private string m_groupReadKey  = string.Empty;
-        private string m_groupWriteKey = string.Empty;
+        private string _groupReadKey  = string.Empty;
+        private string _groupWriteKey = string.Empty;
 
-        private IUserAccountService m_accountService = null;
+        private IUserAccountService _accountService = null;
 
-        private ExpiringCache<string, XmlRpcResponse> m_memoryCache;
-        private int m_cacheTimeout = 30;
+        private ExpiringCache<string, XmlRpcResponse> _memoryCache;
+        private int _cacheTimeout = 30;
 
         // Used to track which agents are have dropped from a group chat session
         // Should be reset per agent, on logon
         // TODO: move this to Flotsam XmlRpc Service
         // SessionID, List<AgentID>
-        private readonly Dictionary<UUID, List<UUID>> m_groupsAgentsDroppedFromChatSession = new Dictionary<UUID, List<UUID>>();
-        private readonly Dictionary<UUID, List<UUID>> m_groupsAgentsInvitedToChatSession = new Dictionary<UUID, List<UUID>>();
+        private readonly Dictionary<UUID, List<UUID>> _groupsAgentsDroppedFromChatSession = new Dictionary<UUID, List<UUID>>();
+        private readonly Dictionary<UUID, List<UUID>> _groupsAgentsInvitedToChatSession = new Dictionary<UUID, List<UUID>>();
 
         #region Region Module interfaceBase Members
 
-        public string Name
-        {
-            get { return "XmlRpcGroupsServicesConnector"; }
-        }
+        public string Name => "XmlRpcGroupsServicesConnector";
 
         // this module is not intended to be replaced, but there should only be 1 of them.
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource config)
         {
@@ -160,41 +154,41 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 if (groupsConfig.GetBoolean("Enabled", false) == false
                     || groupsConfig.GetString("ServicesConnectorModule", "XmlRpcGroupsServicesConnector") != Name)
                 {
-                    m_connectorEnabled = false;
+                    _connectorEnabled = false;
                     return;
                 }
 
-                m_log.DebugFormat("[XMLRPC-GROUPS-CONNECTOR]: Initializing {0}", this.Name);
+                _log.DebugFormat("[XMLRPC-GROUPS-CONNECTOR]: Initializing {0}", this.Name);
 
-                m_groupsServerURI = groupsConfig.GetString("GroupsServerURI", string.Empty);
-                if (string.IsNullOrEmpty(m_groupsServerURI))
+                _groupsServerURI = groupsConfig.GetString("GroupsServerURI", string.Empty);
+                if (string.IsNullOrEmpty(_groupsServerURI))
                 {
-                    m_log.ErrorFormat("Please specify a valid URL for GroupsServerURI in OpenSim.ini, [Groups]");
-                    m_connectorEnabled = false;
+                    _log.ErrorFormat("Please specify a valid URL for GroupsServerURI in OpenSim.ini, [Groups]");
+                    _connectorEnabled = false;
                     return;
                 }
 
-                m_disableKeepAlive = groupsConfig.GetBoolean("XmlRpcDisableKeepAlive", true);
+                _disableKeepAlive = groupsConfig.GetBoolean("XmlRpcDisableKeepAlive", true);
 
-                m_groupReadKey = groupsConfig.GetString("XmlRpcServiceReadKey", string.Empty);
-                m_groupWriteKey = groupsConfig.GetString("XmlRpcServiceWriteKey", string.Empty);
+                _groupReadKey = groupsConfig.GetString("XmlRpcServiceReadKey", string.Empty);
+                _groupWriteKey = groupsConfig.GetString("XmlRpcServiceWriteKey", string.Empty);
 
-                m_cacheTimeout = groupsConfig.GetInt("GroupsCacheTimeout", 30);
+                _cacheTimeout = groupsConfig.GetInt("GroupsCacheTimeout", 30);
 
-                if (m_cacheTimeout == 0)
+                if (_cacheTimeout == 0)
                 {
-                    m_log.WarnFormat("[XMLRPC-GROUPS-CONNECTOR]: Groups Cache Disabled.");
+                    _log.WarnFormat("[XMLRPC-GROUPS-CONNECTOR]: Groups Cache Disabled.");
                 }
                 else
                 {
-                    m_log.InfoFormat("[XMLRPC-GROUPS-CONNECTOR]: Groups Cache Timeout set to {0}.", m_cacheTimeout);
+                    _log.InfoFormat("[XMLRPC-GROUPS-CONNECTOR]: Groups Cache Timeout set to {0}.", _cacheTimeout);
                 }
 
-                m_debugEnabled = groupsConfig.GetBoolean("DebugEnabled", false);
+                _debugEnabled = groupsConfig.GetBoolean("DebugEnabled", false);
 
                 // If we got all the config options we need, lets start'er'up
-                m_memoryCache = new ExpiringCache<string, XmlRpcResponse>();
-                m_connectorEnabled = true;
+                _memoryCache = new ExpiringCache<string, XmlRpcResponse>();
+                _connectorEnabled = true;
             }
         }
 
@@ -204,12 +198,12 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
         public void AddRegion(OpenSim.Region.Framework.Scenes.Scene scene)
         {
-            if (m_connectorEnabled)
+            if (_connectorEnabled)
             {
 
-                if (m_accountService == null)
+                if (_accountService == null)
                 {
-                    m_accountService = scene.UserAccountService;
+                    _accountService = scene.UserAccountService;
                 }
 
 
@@ -795,7 +789,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
         public void ResetAgentGroupChatSessions(UUID agentID)
         {
-            foreach (List<UUID> agentList in m_groupsAgentsDroppedFromChatSession.Values)
+            foreach (List<UUID> agentList in _groupsAgentsDroppedFromChatSession.Values)
             {
                 agentList.Remove(agentID);
             }
@@ -804,28 +798,28 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
         public bool hasAgentBeenInvitedToGroupChatSession(UUID agentID, UUID groupID)
         {
             // If we're  tracking this group, and we can find them in the tracking, then they've been invited
-            return m_groupsAgentsInvitedToChatSession.ContainsKey(groupID)
-                && m_groupsAgentsInvitedToChatSession[groupID].Contains(agentID);
+            return _groupsAgentsInvitedToChatSession.ContainsKey(groupID)
+                && _groupsAgentsInvitedToChatSession[groupID].Contains(agentID);
         }
 
         public bool hasAgentDroppedGroupChatSession(UUID agentID, UUID groupID)
         {
             // If we're tracking drops for this group,
             // and we find them, well... then they've dropped
-            return m_groupsAgentsDroppedFromChatSession.ContainsKey(groupID)
-                && m_groupsAgentsDroppedFromChatSession[groupID].Contains(agentID);
+            return _groupsAgentsDroppedFromChatSession.ContainsKey(groupID)
+                && _groupsAgentsDroppedFromChatSession[groupID].Contains(agentID);
         }
 
         public void AgentDroppedFromGroupChatSession(UUID agentID, UUID groupID)
         {
-            if (m_groupsAgentsDroppedFromChatSession.ContainsKey(groupID))
+            if (_groupsAgentsDroppedFromChatSession.ContainsKey(groupID))
             {
-            if (m_groupsAgentsInvitedToChatSession[groupID].Contains(agentID))
-                m_groupsAgentsInvitedToChatSession[groupID].Remove(agentID);
+            if (_groupsAgentsInvitedToChatSession[groupID].Contains(agentID))
+                _groupsAgentsInvitedToChatSession[groupID].Remove(agentID);
 
                 // If not in dropped list, add
-                if (!m_groupsAgentsDroppedFromChatSession[groupID].Contains(agentID))
-                    m_groupsAgentsDroppedFromChatSession[groupID].Add(agentID);
+                if (!_groupsAgentsDroppedFromChatSession[groupID].Contains(agentID))
+                    _groupsAgentsDroppedFromChatSession[groupID].Add(agentID);
             }
         }
 
@@ -835,19 +829,19 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             CreateGroupChatSessionTracking(groupID);
 
             // If nessesary, remove from dropped list
-            if (m_groupsAgentsDroppedFromChatSession[groupID].Contains(agentID))
-                m_groupsAgentsDroppedFromChatSession[groupID].Remove(agentID);
+            if (_groupsAgentsDroppedFromChatSession[groupID].Contains(agentID))
+                _groupsAgentsDroppedFromChatSession[groupID].Remove(agentID);
 
-            if (!m_groupsAgentsInvitedToChatSession[groupID].Contains(agentID))
-                m_groupsAgentsInvitedToChatSession[groupID].Add(agentID);
+            if (!_groupsAgentsInvitedToChatSession[groupID].Contains(agentID))
+                _groupsAgentsInvitedToChatSession[groupID].Add(agentID);
         }
 
         private void CreateGroupChatSessionTracking(UUID groupID)
         {
-            if (!m_groupsAgentsDroppedFromChatSession.ContainsKey(groupID))
+            if (!_groupsAgentsDroppedFromChatSession.ContainsKey(groupID))
             {
-                m_groupsAgentsDroppedFromChatSession.Add(groupID, new List<UUID>());
-                m_groupsAgentsInvitedToChatSession.Add(groupID, new List<UUID>());
+                _groupsAgentsDroppedFromChatSession.Add(groupID, new List<UUID>());
+                _groupsAgentsInvitedToChatSession.Add(groupID, new List<UUID>());
             }
 
         }
@@ -954,12 +948,12 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             string CacheKey = null;
 
             // Only bother with the cache if it isn't disabled.
-            if (m_cacheTimeout > 0)
+            if (_cacheTimeout > 0)
             {
                 if (!function.StartsWith("groups.get"))
                 {
                     // Any and all updates cause the cache to clear
-                    m_memoryCache.Clear();
+                    _memoryCache.Clear();
                 }
                 else
                 {
@@ -973,14 +967,14 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                     }
 
                     CacheKey = sb.ToString();
-                    m_memoryCache.TryGetValue(CacheKey, out resp);
+                    _memoryCache.TryGetValue(CacheKey, out resp);
                 }
             }
 
             if (resp == null)
             {
-                if (m_debugEnabled)
-                    m_log.DebugFormat("[XMLRPC-GROUPS-CONNECTOR]: Cache miss for key {0}", CacheKey);
+                if (_debugEnabled)
+                    _log.DebugFormat("[XMLRPC-GROUPS-CONNECTOR]: Cache miss for key {0}", CacheKey);
 
                 string UserService;
                 UUID SessionID;
@@ -989,52 +983,52 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 param.Add("RequestingAgentID", requestingAgentID.ToString());
                 param.Add("RequestingAgentUserService", UserService);
                 param.Add("RequestingSessionID", SessionID.ToString());
-                param.Add("ReadKey", m_groupReadKey);
-                param.Add("WriteKey", m_groupWriteKey);
+                param.Add("ReadKey", _groupReadKey);
+                param.Add("WriteKey", _groupWriteKey);
 
                 IList parameters = new ArrayList();
                 parameters.Add(param);
 
                 ConfigurableKeepAliveXmlRpcRequest req;
-                req = new ConfigurableKeepAliveXmlRpcRequest(function, parameters, m_disableKeepAlive);
+                req = new ConfigurableKeepAliveXmlRpcRequest(function, parameters, _disableKeepAlive);
 
                 try
                 {
-                    resp = req.Send(m_groupsServerURI);
+                    resp = req.Send(_groupsServerURI);
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat(
+                    _log.ErrorFormat(
                         "[XMLRPC-GROUPS-CONNECTOR]: An error has occured while attempting to access the XmlRpcGroups server method {0} at {1}: {2}",
-                        function, m_groupsServerURI, e.Message);
+                        function, _groupsServerURI, e.Message);
 
-                    if(m_debugEnabled)
+                    if(_debugEnabled)
                     {
-                        m_log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: {0}", e.StackTrace);
+                        _log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: {0}", e.StackTrace);
 
                         foreach (string ResponseLine in req.RequestResponse.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
                         {
-                            m_log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: {0} ", ResponseLine);
+                            _log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: {0} ", ResponseLine);
                         }
 
                         foreach (string key in param.Keys)
                         {
-                            m_log.WarnFormat("[XMLRPC-GROUPS-CONNECTOR]: {0} :: {1}", key, param[key].ToString());
+                            _log.WarnFormat("[XMLRPC-GROUPS-CONNECTOR]: {0} :: {1}", key, param[key].ToString());
                         }
                     }
 
-                    if (m_cacheTimeout > 0 && CacheKey != null)
+                    if (_cacheTimeout > 0 && CacheKey != null)
                     {
-                        m_memoryCache.AddOrUpdate(CacheKey, resp, 10.0);
+                        _memoryCache.AddOrUpdate(CacheKey, resp, 10.0);
                     }
                     Hashtable respData = new Hashtable();
                     respData.Add("error", e.ToString());
                     return respData;
                 }
 
-                if (m_cacheTimeout > 0 && CacheKey != null)
+                if (_cacheTimeout > 0 && CacheKey != null)
                 {
-                    m_memoryCache.AddOrUpdate(CacheKey, resp, 10.0);
+                    _memoryCache.AddOrUpdate(CacheKey, resp, 10.0);
                 }
             }
 
@@ -1049,21 +1043,21 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
                 return respData;
             }
 
-            m_log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: The XmlRpc server returned a {1} instead of a hashtable for {0}", function, resp.Value.GetType().ToString());
+            _log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: The XmlRpc server returned a {1} instead of a hashtable for {0}", function, resp.Value.GetType().ToString());
 
             if (resp.Value is ArrayList)
             {
                 ArrayList al = (ArrayList)resp.Value;
-                m_log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: Contains {0} elements", al.Count);
+                _log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: Contains {0} elements", al.Count);
 
                 foreach (object o in al)
                 {
-                    m_log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: {0} :: {1}", o.GetType().ToString(), o.ToString());
+                    _log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: {0} :: {1}", o.GetType().ToString(), o.ToString());
                 }
             }
             else
             {
-                m_log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: Function returned: {0}", resp.Value.ToString());
+                _log.ErrorFormat("[XMLRPC-GROUPS-CONNECTOR]: Function returned: {0}", resp.Value.ToString());
             }
 
             Hashtable error = new Hashtable();
@@ -1073,7 +1067,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
         private void LogRespDataToConsoleError(UUID requestingAgentID, string function, Hashtable param, Hashtable respData)
         {
-            m_log.ErrorFormat(
+            _log.ErrorFormat(
                 "[XMLRPC-GROUPS-CONNECTOR]: Error when calling {0} for {1} with params {2}.  Response params are {3}",
                 function, requestingAgentID, Util.PrettyFormatToSingleLine(param), Util.PrettyFormatToSingleLine(respData));
         }
@@ -1093,14 +1087,14 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
 
             // Need to rework this based on changes to User Services
             /*
-            UserAccount userAccount = m_accountService.GetUserAccount(UUID.Zero,AgentID);
+            UserAccount userAccount = _accountService.GetUserAccount(UUID.Zero,AgentID);
             if (userAccount == null)
             {
                 // This should be impossible.  If I've been passed a reference to a client
                 // that client should be registered with the UserService.  So something
                 // is horribly wrong somewhere.
 
-                m_log.WarnFormat("[GROUPS]: Could not find a UserServiceURL for {0}", AgentID);
+                _log.WarnFormat("[GROUPS]: Could not find a UserServiceURL for {0}", AgentID);
 
             }
             else if (userProfile is ForeignUserProfileData)
@@ -1114,7 +1108,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.XmlRpcGroups
             else
             {
                 // They're a local user, use this:
-                UserServiceURL = m_commManager.NetworkServersInfo.UserURL;
+                UserServiceURL = _commManager.NetworkServersInfo.UserURL;
                 SessionID = userProfile.CurrentAgent.SessionID;
             }
             */

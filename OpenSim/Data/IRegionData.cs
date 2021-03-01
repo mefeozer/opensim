@@ -54,12 +54,12 @@ namespace OpenSim.Data
         /// <summary>
         /// Return the x-coordinate of this region in region units.
         /// </summary>
-        public int coordX { get { return (int)Util.WorldToRegionLoc((uint)posX); } }
+        public int coordX => (int)Util.WorldToRegionLoc((uint)posX);
 
         /// <summary>
         /// Return the y-coordinate of this region in region units.
         /// </summary>
-        public int coordY { get { return (int)Util.WorldToRegionLoc((uint)posY); } }
+        public int coordY => (int)Util.WorldToRegionLoc((uint)posY);
 
         public Dictionary<string, object> Data;
     }
@@ -90,18 +90,18 @@ namespace OpenSim.Data
 
     public class RegionDataDistanceCompare : IComparer<RegionData>
     {
-        private readonly Vector2 m_origin;
+        private readonly Vector2 _origin;
 
         public RegionDataDistanceCompare(int x, int y)
         {
-            m_origin = new Vector2(x, y);
+            _origin = new Vector2(x, y);
         }
 
         public int Compare(RegionData regionA, RegionData regionB)
         {
             Vector2 vectorA = new Vector2(regionA.posX, regionA.posY);
             Vector2 vectorB = new Vector2(regionB.posX, regionB.posY);
-            return Math.Sign(VectorDistance(m_origin, vectorA) - VectorDistance(m_origin, vectorB));
+            return Math.Sign(VectorDistance(_origin, vectorA) - VectorDistance(_origin, vectorB));
         }
 
         private float VectorDistance(Vector2 x, Vector2 y)

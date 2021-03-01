@@ -34,7 +34,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     [TestFixture]
     public class LSL_TypesTestLSLString : OpenSimTestCase
     {
-        private Dictionary<double, string> m_doubleStringSet;
+        private Dictionary<double, string> _doubleStringSet;
 
         /// <summary>
         /// Sets up dictionaries and arrays used in the tests.
@@ -42,26 +42,26 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
         [TestFixtureSetUp]
         public void SetUpDataSets()
         {
-            m_doubleStringSet = new Dictionary<double, string>();
-            m_doubleStringSet.Add(2, "2.000000");
-            m_doubleStringSet.Add(-2, "-2.000000");
-            m_doubleStringSet.Add(0, "0.000000");
-            m_doubleStringSet.Add(1, "1.000000");
-            m_doubleStringSet.Add(-1, "-1.000000");
-            m_doubleStringSet.Add(999999999, "999999999.000000");
-            m_doubleStringSet.Add(-99999999, "-99999999.000000");
-            m_doubleStringSet.Add(0.5, "0.500000");
-            m_doubleStringSet.Add(0.0005, "0.000500");
-            m_doubleStringSet.Add(0.6805, "0.680500");
-            m_doubleStringSet.Add(-0.5, "-0.500000");
-            m_doubleStringSet.Add(-0.0005, "-0.000500");
-            m_doubleStringSet.Add(-0.6805, "-0.680500");
-            m_doubleStringSet.Add(548.5, "548.500000");
-            m_doubleStringSet.Add(2.0005, "2.000500");
-            m_doubleStringSet.Add(349485435.6805, "349485435.680500");
-            m_doubleStringSet.Add(-548.5, "-548.500000");
-            m_doubleStringSet.Add(-2.0005, "-2.000500");
-            m_doubleStringSet.Add(-349485435.6805, "-349485435.680500");
+            _doubleStringSet = new Dictionary<double, string>();
+            _doubleStringSet.Add(2, "2.000000");
+            _doubleStringSet.Add(-2, "-2.000000");
+            _doubleStringSet.Add(0, "0.000000");
+            _doubleStringSet.Add(1, "1.000000");
+            _doubleStringSet.Add(-1, "-1.000000");
+            _doubleStringSet.Add(999999999, "999999999.000000");
+            _doubleStringSet.Add(-99999999, "-99999999.000000");
+            _doubleStringSet.Add(0.5, "0.500000");
+            _doubleStringSet.Add(0.0005, "0.000500");
+            _doubleStringSet.Add(0.6805, "0.680500");
+            _doubleStringSet.Add(-0.5, "-0.500000");
+            _doubleStringSet.Add(-0.0005, "-0.000500");
+            _doubleStringSet.Add(-0.6805, "-0.680500");
+            _doubleStringSet.Add(548.5, "548.500000");
+            _doubleStringSet.Add(2.0005, "2.000500");
+            _doubleStringSet.Add(349485435.6805, "349485435.680500");
+            _doubleStringSet.Add(-548.5, "-548.500000");
+            _doubleStringSet.Add(-2.0005, "-2.000500");
+            _doubleStringSet.Add(-349485435.6805, "-349485435.680500");
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             LSL_Types.LSLString testString;
 
-            foreach (KeyValuePair<double, string> number in m_doubleStringSet)
+            foreach (KeyValuePair<double, string> number in _doubleStringSet)
             {
                 testString = new LSL_Types.LSLString(new LSL_Types.LSLFloat(number.Key));
-                Assert.AreEqual(number.Value, testString.m_string);
+                Assert.AreEqual(number.Value, testString._string);
             }
         }
 
@@ -91,10 +91,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             LSL_Types.LSLString testString;
 
-            foreach (KeyValuePair<double, string> number in m_doubleStringSet)
+            foreach (KeyValuePair<double, string> number in _doubleStringSet)
             {
                 testString = (LSL_Types.LSLString) new LSL_Types.LSLFloat(number.Key);
-                Assert.AreEqual(number.Value, testString.m_string);
+                Assert.AreEqual(number.Value, testString._string);
             }
         }
 
@@ -128,16 +128,16 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             LSL_Types.LSLString testString;
 
             testString = (LSL_Types.LSLString) (1 == 0);
-            Assert.AreEqual("0", testString.m_string);
+            Assert.AreEqual("0", testString._string);
 
             testString = (LSL_Types.LSLString) (1 == 1);
-            Assert.AreEqual("1", testString.m_string);
+            Assert.AreEqual("1", testString._string);
 
             testString = (LSL_Types.LSLString) false;
-            Assert.AreEqual("0", testString.m_string);
+            Assert.AreEqual("0", testString._string);
 
             testString = (LSL_Types.LSLString) true;
-            Assert.AreEqual("1", testString.m_string);
+            Assert.AreEqual("1", testString._string);
         }
     }
 }

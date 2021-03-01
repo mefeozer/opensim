@@ -37,7 +37,7 @@ namespace OpenSim.Data.MySQL
     public class MySQLAvatarData : MySQLGenericTableHandler<AvatarBaseData>,
             IAvatarData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public MySQLAvatarData(string connectionString, string realm) :
                 base(connectionString, realm, "Avatar")
@@ -48,7 +48,7 @@ namespace OpenSim.Data.MySQL
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = string.Format("delete from {0} where `PrincipalID` = ?PrincipalID and `Name` = ?Name", m_Realm);
+                cmd.CommandText = string.Format("delete from {0} where `PrincipalID` = ?PrincipalID and `Name` = ?Name", _Realm);
                 cmd.Parameters.AddWithValue("?PrincipalID", principalID.ToString());
                 cmd.Parameters.AddWithValue("?Name", name);
 

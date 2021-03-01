@@ -48,7 +48,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
         }
 
-        public AsyncCommandManager m_CmdManager;
+        public AsyncCommandManager _CmdManager;
 
         public int TimersCount
         {
@@ -61,7 +61,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 
         public Timer(AsyncCommandManager CmdManager)
         {
-            m_CmdManager = CmdManager;
+            _CmdManager = CmdManager;
         }
 
         //
@@ -75,19 +75,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         private readonly Dictionary<string,TimerInfo> Timers = new Dictionary<string,TimerInfo>();
         private readonly object TimerListLock = new object();
 
-        public void SetTimerEvent(uint m_localID, UUID m_itemID, double sec)
+        public void SetTimerEvent(uint _localID, UUID _itemID, double sec)
         {
             if (sec == 0) // Disabling timer
             {
-                UnSetTimerEvents(m_localID, m_itemID);
+                UnSetTimerEvents(_localID, _itemID);
                 return;
             }
 
             // Add to timer
             TimerInfo ts = new TimerInfo
             {
-                localID = m_localID,
-                itemID = m_itemID,
+                localID = _localID,
+                itemID = _itemID,
                 interval = Convert.ToInt64(sec * 10000000) // How many 100 nanoseconds (ticks) should we wait
             };
             //       2193386136332921 ticks
@@ -96,7 +96,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             //ts.next = DateTime.Now.ToUniversalTime().AddSeconds(ts.interval);
             ts.next = DateTime.Now.Ticks + ts.interval;
 
-            string key = MakeTimerKey(m_localID, m_itemID);
+            string key = MakeTimerKey(_localID, _itemID);
             lock (TimerListLock)
             {
                 // Adds if timer doesn't exist, otherwise replaces with new timer
@@ -104,15 +104,15 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
         }
 
-        public void UnSetTimerEvents(uint m_localID, UUID m_itemID)
+        public void UnSetTimerEvents(uint _localID, UUID _itemID)
         {
             // Remove from timer
-            string key = MakeTimerKey(m_localID, m_itemID);
+            string key = MakeTimerKey(_localID, _itemID);
             lock (TimerListLock)
             {
                 if (Timers.TryGetValue(key, out TimerInfo ts))
                 {
-                    m_CmdManager.m_ScriptEngine.CancelScriptEvent(ts.itemID, "timer");
+                    _CmdManager._ScriptEngine.CancelScriptEvent(ts.itemID, "timer");
                     Timers.Remove(key);
                 }
             }
@@ -136,9 +136,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                 // Time has passed?
                 if (ts.next < DateTime.Now.Ticks)
                 {
-                    //m_log.Debug("Time has passed: Now: " + DateTime.Now.Ticks + ", Passed: " + ts.next);
+                    //_log.Debug("Time has passed: Now: " + DateTime.Now.Ticks + ", Passed: " + ts.next);
                     // Add it to queue
-                    m_CmdManager.m_ScriptEngine.PostScriptEvent(ts.itemID,
+                    _CmdManager._ScriptEngine.PostScriptEvent(ts.itemID,
                             new EventParams("timer", new object[0],
                             new DetectParams[0]));
                     // set next interval

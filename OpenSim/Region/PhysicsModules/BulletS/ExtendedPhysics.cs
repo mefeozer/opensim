@@ -41,7 +41,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule")]
     public class ExtendedPhysics : INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string LogHeader = "[EXTENDED PHYSICS]";
 
         // =============================================================
@@ -70,7 +70,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         #region INonSharedRegionModule
 
-        public string Name { get { return this.GetType().Name; } }
+        public string Name => this.GetType().Name;
 
         public void Initialise(IConfigSource config)
         {
@@ -88,10 +88,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("{0} Initialization error: {0}", LogHeader, e);
+                _log.ErrorFormat("{0} Initialization error: {0}", LogHeader, e);
             }
 
-            m_log.InfoFormat("{0} module {1} enabled", LogHeader, Enabled ? "is" : "is not");
+            _log.InfoFormat("{0} module {1} enabled", LogHeader, Enabled ? "is" : "is not");
         }
 
         public void Close()
@@ -125,7 +125,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             Comms = BaseScene.RequestModuleInterface<IScriptModuleComms>();
             if (Comms == null)
             {
-                m_log.WarnFormat("{0} ScriptModuleComms interface not defined", LogHeader);
+                _log.WarnFormat("{0} ScriptModuleComms interface not defined", LogHeader);
                 Enabled = false;
 
                 return;
@@ -141,7 +141,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         }
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         #endregion // INonSharedRegionModule
 
@@ -294,19 +294,19 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     }
                     else
                     {
-                        m_log.WarnFormat("{0} physSetLinksetType: root part does not have a physics actor. rootName={1}, hostID={2}",
+                        _log.WarnFormat("{0} physSetLinksetType: root part does not have a physics actor. rootName={1}, hostID={2}",
                                             LogHeader, rootPart.Name, hostID);
                     }
                 }
                 else
                 {
-                    m_log.WarnFormat("{0} physSetLinksetType: root part does not exist. RequestingPartName={1}, hostID={2}",
+                    _log.WarnFormat("{0} physSetLinksetType: root part does not exist. RequestingPartName={1}, hostID={2}",
                                         LogHeader, requestingPart.Name, hostID);
                 }
             }
             else
             {
-                m_log.WarnFormat("{0} physSetLinsetType: cannot find script object in scene. hostID={1}", LogHeader, hostID);
+                _log.WarnFormat("{0} physSetLinsetType: cannot find script object in scene. hostID={1}", LogHeader, hostID);
             }
             return ret;
         }
@@ -325,7 +325,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             }
             else
             {
-                m_log.WarnFormat("{0} physGetLinsetType: cannot find script object in scene. hostID={1}", LogHeader, hostID);
+                _log.WarnFormat("{0} physGetLinsetType: cannot find script object in scene. hostID={1}", LogHeader, hostID);
             }
             return ret;
         }
@@ -520,24 +520,24 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                         }
                         else
                         {
-                            m_log.WarnFormat("{0} GetRootAndChildPhysActors: Root part does not have a physics actor. rootName={1}, hostID={2}",
+                            _log.WarnFormat("{0} GetRootAndChildPhysActors: Root part does not have a physics actor. rootName={1}, hostID={2}",
                                             LogHeader, rootPart.Name, hostID);
                         }
                     }
                     else
                     {
-                        m_log.WarnFormat("{0} GetRootAndChildPhysActors: Root part does not exist. RequestingPartName={1}, hostID={2}",
+                        _log.WarnFormat("{0} GetRootAndChildPhysActors: Root part does not exist. RequestingPartName={1}, hostID={2}",
                                         LogHeader, requestingPart.Name, hostID);
                     }
                 }
                 else
                 {
-                    m_log.WarnFormat("{0} GetRootAndChildPhysActors: Containing group missing or deleted. hostID={1}", LogHeader, hostID);
+                    _log.WarnFormat("{0} GetRootAndChildPhysActors: Containing group missing or deleted. hostID={1}", LogHeader, hostID);
                 }
             }
             else
             {
-                m_log.WarnFormat("{0} GetRootAndChildPhysActors: cannot find script object in scene. hostID={1}", LogHeader, hostID);
+                _log.WarnFormat("{0} GetRootAndChildPhysActors: cannot find script object in scene. hostID={1}", LogHeader, hostID);
             }
 
             return ret;
@@ -566,19 +566,19 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     }
                     else
                     {
-                        m_log.WarnFormat("{0} GetRootAndChildPhysActors: Link part has no physical actor. rootName={1}, hostID={2}, linknum={3}",
+                        _log.WarnFormat("{0} GetRootAndChildPhysActors: Link part has no physical actor. rootName={1}, hostID={2}, linknum={3}",
                                             LogHeader, rootPart.Name, hostID, linkNum);
                     }
                 }
                 else
                 {
-                    m_log.WarnFormat("{0} GetRootAndChildPhysActors: Could not find linknum part. rootName={1}, hostID={2}, linknum={3}",
+                    _log.WarnFormat("{0} GetRootAndChildPhysActors: Could not find linknum part. rootName={1}, hostID={2}, linknum={3}",
                                         LogHeader, rootPart.Name, hostID, linkNum);
                 }
             }
             else
             {
-                m_log.WarnFormat("{0} GetRootAndChildPhysActors: Root part does not have a physics actor. rootName={1}, hostID={2}",
+                _log.WarnFormat("{0} GetRootAndChildPhysActors: Root part does not have a physics actor. rootName={1}, hostID={2}",
                                 LogHeader, rootPart.Name, hostID);
             }
 

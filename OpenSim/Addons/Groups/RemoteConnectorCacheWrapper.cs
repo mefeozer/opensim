@@ -50,8 +50,8 @@ namespace OpenSim.Groups
     {
         private const int GROUPS_CACHE_TIMEOUT = 1 * 60; // 1 minutes
 
-        private readonly ForeignImporter m_ForeignImporter;
-        private readonly HashSet<string> m_ActiveRequests = new HashSet<string>();
+        private readonly ForeignImporter _ForeignImporter;
+        private readonly HashSet<string> _ActiveRequests = new HashSet<string>();
 
         // This all important cache caches objects of different types:
         // group-<GroupID> or group-<Name>          => ExtendedGroupRecord
@@ -65,19 +65,19 @@ namespace OpenSim.Groups
         // rolemembers-<RequestingAgentID>-<GroupID> => List<ExtendedGroupRoleMembersData>
         // notice-<noticeID>                        => GroupNoticeInfo
         // notices-<GroupID>                        => List<ExtendedGroupNoticeData>
-        private readonly ExpiringCacheOS<string, object> m_Cache = new ExpiringCacheOS<string, object>(30000);
+        private readonly ExpiringCacheOS<string, object> _Cache = new ExpiringCacheOS<string, object>(30000);
 
         public RemoteConnectorCacheWrapper(IUserManagement uman)
         {
-            m_ForeignImporter = new ForeignImporter(uman);
+            _ForeignImporter = new ForeignImporter(uman);
         }
 
         public UUID CreateGroup(UUID RequestingAgentID, GroupRecordDelegate d)
         {
-            //m_log.DebugFormat("[Groups.RemoteConnector]: Creating group {0}", name);
+            //_log.DebugFormat("[Groups.RemoteConnector]: Creating group {0}", name);
             //reason = string.Empty;
 
-            //ExtendedGroupRecord group = m_GroupsService.CreateGroup(RequestingAgentID.ToString(), name, charter, showInList, insigniaID,
+            //ExtendedGroupRecord group = _GroupsService.CreateGroup(RequestingAgentID.ToString(), name, charter, showInList, insigniaID,
             //    membershipFee, openEnrollment, allowPublish, maturePublish, founderID, out reason);
             ExtendedGroupRecord group = d();
 
@@ -86,8 +86,8 @@ namespace OpenSim.Groups
 
             if (group.GroupID != UUID.Zero)
             {
-                m_Cache.AddOrUpdate("group-" + group.GroupID.ToString(), group, GROUPS_CACHE_TIMEOUT);
-                m_Cache.Remove("memberships-" + RequestingAgentID.ToString());
+                _Cache.AddOrUpdate("group-" + group.GroupID.ToString(), group, GROUPS_CACHE_TIMEOUT);
+                _Cache.Remove("memberships-" + RequestingAgentID.ToString());
             }
             return group.GroupID;
         }
@@ -95,11 +95,11 @@ namespace OpenSim.Groups
         public bool UpdateGroup(UUID groupID, GroupRecordDelegate d)
         {
             //reason = string.Empty;
-            //ExtendedGroupRecord group = m_GroupsService.UpdateGroup(RequestingAgentID, groupID, charter, showInList, insigniaID, membershipFee, openEnrollment, allowPublish, maturePublish);
+            //ExtendedGroupRecord group = _GroupsService.UpdateGroup(RequestingAgentID, groupID, charter, showInList, insigniaID, membershipFee, openEnrollment, allowPublish, maturePublish);
             ExtendedGroupRecord group = d();
 
             if (group != null && group.GroupID != UUID.Zero)
-                m_Cache.AddOrUpdate("group-" + group.GroupID.ToString(), group, GROUPS_CACHE_TIMEOUT);
+                _Cache.AddOrUpdate("group-" + group.GroupID.ToString(), group, GROUPS_CACHE_TIMEOUT);
 
             return true;
         }
@@ -117,22 +117,22 @@ namespace OpenSim.Groups
             else
                 cacheKey += GroupName;
 
-            //m_log.DebugFormat("[XXX]: GetGroupRecord {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetGroupRecord {0}", cacheKey);
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out group))
+                    if (_Cache.TryGetValue(cacheKey, out group))
                     {
-                        //m_log.DebugFormat("[XXX]: GetGroupRecord {0} cached!", cacheKey);
+                        //_log.DebugFormat("[XXX]: GetGroupRecord {0} cached!", cacheKey);
                         return (ExtendedGroupRecord)group;
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                        m_ActiveRequests.Add(cacheKey);
+                        _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -141,18 +141,18 @@ namespace OpenSim.Groups
                 {
                     try
                     {
-                        //group = m_GroupsService.GetGroupRecord(RequestingAgentID, GroupID, GroupName);
+                        //group = _GroupsService.GetGroupRecord(RequestingAgentID, GroupID, GroupName);
                         group = d();
 
-                        lock (m_Cache)
+                        lock (_Cache)
                         {
-                            m_Cache.AddOrUpdate(cacheKey, group, GROUPS_CACHE_TIMEOUT);
+                            _Cache.AddOrUpdate(cacheKey, group, GROUPS_CACHE_TIMEOUT);
                             return (ExtendedGroupRecord)group;
                         }
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -166,13 +166,13 @@ namespace OpenSim.Groups
             if (membership == null)
                 return false;
 
-            lock (m_Cache)
+            lock (_Cache)
             {
                 // first, remove everything! add a user is a heavy-duty op
-                m_Cache.Clear();
+                _Cache.Clear();
 
-                m_Cache.AddOrUpdate("active-" + AgentID.ToString(), membership, GROUPS_CACHE_TIMEOUT);
-                m_Cache.AddOrUpdate("membership-" + AgentID.ToString() + "-" + GroupID.ToString(), membership, GROUPS_CACHE_TIMEOUT);
+                _Cache.AddOrUpdate("active-" + AgentID.ToString(), membership, GROUPS_CACHE_TIMEOUT);
+                _Cache.AddOrUpdate("membership-" + AgentID.ToString() + "-" + GroupID.ToString(), membership, GROUPS_CACHE_TIMEOUT);
             }
             return true;
         }
@@ -183,27 +183,27 @@ namespace OpenSim.Groups
 
             string AgentIDToString = AgentID.ToString();
             string cacheKey = "active-" + AgentIDToString;
-            m_Cache.Remove(cacheKey);
+            _Cache.Remove(cacheKey);
 
             cacheKey = "memberships-" + AgentIDToString;
-            m_Cache.Remove(cacheKey);
+            _Cache.Remove(cacheKey);
 
             string GroupIDToString = GroupID.ToString();
             cacheKey = "membership-" + AgentIDToString + "-" + GroupIDToString;
-            m_Cache.Remove(cacheKey);
+            _Cache.Remove(cacheKey);
 
             cacheKey = "members-" + RequestingAgentID.ToString() + "-" + GroupIDToString;
-            m_Cache.Remove(cacheKey);
+            _Cache.Remove(cacheKey);
 
             cacheKey = "roles-" + "-" + GroupIDToString + "-" + AgentIDToString;
-            m_Cache.Remove(cacheKey);
+            _Cache.Remove(cacheKey);
         }
 
         public void SetAgentActiveGroup(string AgentID, GroupMembershipDelegate d)
         {
             GroupMembershipData activeGroup = d();
             string cacheKey = "active-" + AgentID.ToString();
-            m_Cache.AddOrUpdate(cacheKey, activeGroup, GROUPS_CACHE_TIMEOUT);
+            _Cache.AddOrUpdate(cacheKey, activeGroup, GROUPS_CACHE_TIMEOUT);
         }
 
         public ExtendedGroupMembershipData GetAgentActiveMembership(string AgentID, GroupMembershipDelegate d)
@@ -212,22 +212,22 @@ namespace OpenSim.Groups
             bool firstCall = false;
             string cacheKey = "active-" + AgentID.ToString();
 
-            //m_log.DebugFormat("[XXX]: GetAgentActiveMembership {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetAgentActiveMembership {0}", cacheKey);
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out membership))
+                    if (_Cache.TryGetValue(cacheKey, out membership))
                     {
-                        //m_log.DebugFormat("[XXX]: GetAgentActiveMembership {0} cached!", cacheKey);
+                        //_log.DebugFormat("[XXX]: GetAgentActiveMembership {0} cached!", cacheKey);
                         return (ExtendedGroupMembershipData)membership;
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -237,12 +237,12 @@ namespace OpenSim.Groups
                     try
                     {
                         membership = d();
-                        m_Cache.AddOrUpdate(cacheKey, membership, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate(cacheKey, membership, GROUPS_CACHE_TIMEOUT);
                         return (ExtendedGroupMembershipData)membership;
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -257,22 +257,22 @@ namespace OpenSim.Groups
             bool firstCall = false;
             string cacheKey = "membership-" + AgentID.ToString() + "-" + GroupID.ToString();
 
-            //m_log.DebugFormat("[XXX]: GetAgentGroupMembership {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetAgentGroupMembership {0}", cacheKey);
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out membership))
+                    if (_Cache.TryGetValue(cacheKey, out membership))
                     {
-                        //m_log.DebugFormat("[XXX]: GetAgentGroupMembership {0}", cacheKey);
+                        //_log.DebugFormat("[XXX]: GetAgentGroupMembership {0}", cacheKey);
                         return (ExtendedGroupMembershipData)membership;
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -282,12 +282,12 @@ namespace OpenSim.Groups
                     try
                     {
                         membership = d();
-                        m_Cache.AddOrUpdate(cacheKey, membership, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate(cacheKey, membership, GROUPS_CACHE_TIMEOUT);
                         return (ExtendedGroupMembershipData)membership;
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -301,22 +301,22 @@ namespace OpenSim.Groups
             bool firstCall = false;
             string cacheKey = "memberships-" + AgentID.ToString();
 
-            //m_log.DebugFormat("[XXX]: GetAgentGroupMemberships {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetAgentGroupMemberships {0}", cacheKey);
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out memberships))
+                    if (_Cache.TryGetValue(cacheKey, out memberships))
                     {
-                        //m_log.DebugFormat("[XXX]: GetAgentGroupMemberships {0} cached!", cacheKey);
+                        //_log.DebugFormat("[XXX]: GetAgentGroupMemberships {0} cached!", cacheKey);
                         return (List<GroupMembershipData>)memberships;
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -326,12 +326,12 @@ namespace OpenSim.Groups
                     try
                     {
                         memberships = d();
-                        m_Cache.AddOrUpdate(cacheKey, memberships, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate(cacheKey, memberships, GROUPS_CACHE_TIMEOUT);
                         return (List<GroupMembershipData>)memberships;
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -346,22 +346,22 @@ namespace OpenSim.Groups
             // we need to key in also on the requester, because different ppl have different view privileges
             string cacheKey = "members-" + RequestingAgentID.ToString() + "-" + GroupID.ToString();
 
-            //m_log.DebugFormat("[XXX]: GetGroupMembers {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetGroupMembers {0}", cacheKey);
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out members))
+                    if (_Cache.TryGetValue(cacheKey, out members))
                     {
                         List<ExtendedGroupMembersData> xx = (List<ExtendedGroupMembersData>)members;
-                        return xx.ConvertAll<GroupMembersData>(new Converter<ExtendedGroupMembersData, GroupMembersData>(m_ForeignImporter.ConvertGroupMembersData));
+                        return xx.ConvertAll<GroupMembersData>(new Converter<ExtendedGroupMembersData, GroupMembersData>(_ForeignImporter.ConvertGroupMembersData));
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -373,16 +373,16 @@ namespace OpenSim.Groups
                         List<ExtendedGroupMembersData> _members = d();
 
                         if (_members != null && _members.Count > 0)
-                            members = _members.ConvertAll<GroupMembersData>(new Converter<ExtendedGroupMembersData, GroupMembersData>(m_ForeignImporter.ConvertGroupMembersData));
+                            members = _members.ConvertAll<GroupMembersData>(new Converter<ExtendedGroupMembersData, GroupMembersData>(_ForeignImporter.ConvertGroupMembersData));
                         else
                             members = new List<GroupMembersData>();
 
-                        m_Cache.AddOrUpdate(cacheKey, _members, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate(cacheKey, _members, GROUPS_CACHE_TIMEOUT);
                         return (List<GroupMembersData>)members;
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -404,10 +404,10 @@ namespace OpenSim.Groups
                     Title = title
                 };
 
-                m_Cache.AddOrUpdate("role-" + roleID.ToString(), role, GROUPS_CACHE_TIMEOUT);
+                _Cache.AddOrUpdate("role-" + roleID.ToString(), role, GROUPS_CACHE_TIMEOUT);
 
                     // also remove this list
-                m_Cache.Remove("roles-" + groupID.ToString());
+                _Cache.Remove("roles-" + groupID.ToString());
                 return true;
             }
 
@@ -419,8 +419,8 @@ namespace OpenSim.Groups
             if (d())
             {
                 object role;
-                lock (m_Cache)
-                    if (m_Cache.TryGetValue("role-" + roleID.ToString(), out role))
+                lock (_Cache)
+                    if (_Cache.TryGetValue("role-" + roleID.ToString(), out role))
                     {
                         GroupRolesData r = (GroupRolesData)role;
                         r.Description = description;
@@ -428,15 +428,15 @@ namespace OpenSim.Groups
                         r.Powers = powers;
                         r.Title = title;
 
-                        m_Cache.AddOrUpdate("role-" + roleID.ToString(), r, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate("role-" + roleID.ToString(), r, GROUPS_CACHE_TIMEOUT);
                     }
                 return true;
             }
             else
             {
-                m_Cache.Remove("role-" + roleID.ToString());
+                _Cache.Remove("role-" + roleID.ToString());
                 // also remove these lists, because they will have an outdated role
-                m_Cache.Remove("roles-" + groupID.ToString());
+                _Cache.Remove("roles-" + groupID.ToString());
 
                 return false;
             }
@@ -446,13 +446,13 @@ namespace OpenSim.Groups
         {
             d();
 
-            lock (m_Cache)
+            lock (_Cache)
             {
-                m_Cache.Remove("role-" + roleID.ToString());
+                _Cache.Remove("role-" + roleID.ToString());
                 // also remove the list, because it will have an removed role
-                m_Cache.Remove("roles-" + groupID.ToString());
-                m_Cache.Remove("roles-" + groupID.ToString() + "-" + RequestingAgentID.ToString());
-                m_Cache.Remove("rolemembers-" + RequestingAgentID.ToString() + "-" + groupID.ToString());
+                _Cache.Remove("roles-" + groupID.ToString());
+                _Cache.Remove("roles-" + groupID.ToString() + "-" + RequestingAgentID.ToString());
+                _Cache.Remove("rolemembers-" + RequestingAgentID.ToString() + "-" + groupID.ToString());
             }
         }
 
@@ -464,15 +464,15 @@ namespace OpenSim.Groups
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out roles))
+                    if (_Cache.TryGetValue(cacheKey, out roles))
                         return (List<GroupRolesData>)roles;
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -484,13 +484,13 @@ namespace OpenSim.Groups
                         roles = d();
                         if (roles != null)
                         {
-                            m_Cache.AddOrUpdate(cacheKey, roles, GROUPS_CACHE_TIMEOUT);
+                            _Cache.AddOrUpdate(cacheKey, roles, GROUPS_CACHE_TIMEOUT);
                             return (List<GroupRolesData>)roles;
                         }
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -505,21 +505,21 @@ namespace OpenSim.Groups
             // we need to key in also on the requester, because different ppl have different view privileges
             string cacheKey = "rolemembers-" + RequestingAgentID.ToString() + "-" + GroupID.ToString();
 
-            //m_log.DebugFormat("[XXX]: GetGroupRoleMembers {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetGroupRoleMembers {0}", cacheKey);
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out rmembers))
+                    if (_Cache.TryGetValue(cacheKey, out rmembers))
                     {
                         List<ExtendedGroupRoleMembersData> xx = (List<ExtendedGroupRoleMembersData>)rmembers;
-                        return xx.ConvertAll<GroupRoleMembersData>(m_ForeignImporter.ConvertGroupRoleMembersData);
+                        return xx.ConvertAll<GroupRoleMembersData>(_ForeignImporter.ConvertGroupRoleMembersData);
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -531,21 +531,21 @@ namespace OpenSim.Groups
                         List<ExtendedGroupRoleMembersData> _rmembers = d();
 
                         if (_rmembers != null && _rmembers.Count > 0)
-                            rmembers = _rmembers.ConvertAll<GroupRoleMembersData>(new Converter<ExtendedGroupRoleMembersData, GroupRoleMembersData>(m_ForeignImporter.ConvertGroupRoleMembersData));
+                            rmembers = _rmembers.ConvertAll<GroupRoleMembersData>(new Converter<ExtendedGroupRoleMembersData, GroupRoleMembersData>(_ForeignImporter.ConvertGroupRoleMembersData));
                         else
                             rmembers = new List<GroupRoleMembersData>();
 
                         // For some strange reason, when I cache the list of GroupRoleMembersData,
                         // it gets emptied out. The TryGet gets an empty list...
-                        //m_Cache.AddOrUpdate(cacheKey, rmembers, GROUPS_CACHE_TIMEOUT);
+                        //_Cache.AddOrUpdate(cacheKey, rmembers, GROUPS_CACHE_TIMEOUT);
                         // Caching the list of ExtendedGroupRoleMembersData doesn't show that issue
                         // I don't get it.
-                        m_Cache.AddOrUpdate(cacheKey, _rmembers, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate(cacheKey, _rmembers, GROUPS_CACHE_TIMEOUT);
                         return (List<GroupRoleMembersData>)rmembers;
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -557,12 +557,12 @@ namespace OpenSim.Groups
         {
             if (d())
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
                     // update the cached role
                     string cacheKey = "role-" + RoleID.ToString();
                     object obj;
-                    if (m_Cache.TryGetValue(cacheKey, out obj))
+                    if (_Cache.TryGetValue(cacheKey, out obj))
                     {
                         GroupRolesData r = (GroupRolesData)obj;
                         r.Members++;
@@ -570,7 +570,7 @@ namespace OpenSim.Groups
 
                     // add this agent to the list of role members
                     cacheKey = "rolemembers-" + RequestingAgentID.ToString() + "-" + GroupID.ToString();
-                    if (m_Cache.TryGetValue(cacheKey, out obj))
+                    if (_Cache.TryGetValue(cacheKey, out obj))
                     {
                         try
                         {
@@ -578,7 +578,7 @@ namespace OpenSim.Groups
                             // In that case, let's just remove the whoe things from the cache
                             UUID id = new UUID(AgentID);
                             List<ExtendedGroupRoleMembersData> xx = (List<ExtendedGroupRoleMembersData>)obj;
-                            List<GroupRoleMembersData> rmlist = xx.ConvertAll<GroupRoleMembersData>(m_ForeignImporter.ConvertGroupRoleMembersData);
+                            List<GroupRoleMembersData> rmlist = xx.ConvertAll<GroupRoleMembersData>(_ForeignImporter.ConvertGroupRoleMembersData);
                             GroupRoleMembersData rm = new GroupRoleMembersData
                             {
                                 MemberID = id,
@@ -588,15 +588,15 @@ namespace OpenSim.Groups
                         }
                         catch
                         {
-                            m_Cache.Remove(cacheKey);
+                            _Cache.Remove(cacheKey);
                         }
                     }
 
                     // Remove the cached info about this agent's roles
                     // because we don't have enough local info about the new role
                     cacheKey = "roles-" + GroupID.ToString() + "-" + AgentID.ToString();
-                    if (m_Cache.Contains(cacheKey))
-                        m_Cache.Remove(cacheKey);
+                    if (_Cache.Contains(cacheKey))
+                        _Cache.Remove(cacheKey);
 
                 }
             }
@@ -606,22 +606,22 @@ namespace OpenSim.Groups
         {
             if (d())
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
                     // update the cached role
                     string cacheKey = "role-" + RoleID.ToString();
                     object obj;
-                    if (m_Cache.TryGetValue(cacheKey, out obj))
+                    if (_Cache.TryGetValue(cacheKey, out obj))
                     {
                         GroupRolesData r = (GroupRolesData)obj;
                         r.Members--;
                     }
 
                     cacheKey = "roles-" + GroupID.ToString() + "-" + AgentID.ToString();
-                     m_Cache.Remove(cacheKey);
+                     _Cache.Remove(cacheKey);
 
                     cacheKey = "rolemembers-" + RequestingAgentID.ToString() + "-" + GroupID.ToString();
-                    m_Cache.Remove(cacheKey);
+                    _Cache.Remove(cacheKey);
                 }
             }
         }
@@ -632,22 +632,22 @@ namespace OpenSim.Groups
             bool firstCall = false;
             string cacheKey = "roles-" + GroupID.ToString() + "-" + AgentID.ToString();
 
-            //m_log.DebugFormat("[XXX]: GetAgentGroupRoles {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetAgentGroupRoles {0}", cacheKey);
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out roles))
+                    if (_Cache.TryGetValue(cacheKey, out roles))
                     {
-                        //m_log.DebugFormat("[XXX]: GetAgentGroupRoles {0} cached!", cacheKey);
+                        //_log.DebugFormat("[XXX]: GetAgentGroupRoles {0} cached!", cacheKey);
                         return (List<GroupRolesData>)roles;
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -657,12 +657,12 @@ namespace OpenSim.Groups
                     try
                     {
                         roles = d();
-                        m_Cache.AddOrUpdate(cacheKey, roles, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate(cacheKey, roles, GROUPS_CACHE_TIMEOUT);
                         return (List<GroupRolesData>)roles;
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -674,14 +674,14 @@ namespace OpenSim.Groups
         {
             d();
 
-            lock (m_Cache)
+            lock (_Cache)
             {
                 // Invalidate cached info, because it has ActiveRoleID and Powers
                 string cacheKey = "membership-" + AgentID.ToString() + "-" + GroupID.ToString();
-                m_Cache.Remove(cacheKey);
+                _Cache.Remove(cacheKey);
 
                 cacheKey = "memberships-" + AgentID.ToString();
-                m_Cache.Remove(cacheKey);
+                _Cache.Remove(cacheKey);
             }
         }
 
@@ -689,18 +689,18 @@ namespace OpenSim.Groups
         {
             d();
 
-            lock (m_Cache)
+            lock (_Cache)
             {
                 string cacheKey = "membership-" + AgentID.ToString() + "-" + GroupID.ToString();
-                if (m_Cache.Contains(cacheKey))
-                    m_Cache.Remove(cacheKey);
+                if (_Cache.Contains(cacheKey))
+                    _Cache.Remove(cacheKey);
 
                 cacheKey = "memberships-" + AgentID.ToString();
-                m_Cache.Remove(cacheKey);
+                _Cache.Remove(cacheKey);
 
                 cacheKey = "active-" + AgentID.ToString();
                 object m = null;
-                if (m_Cache.TryGetValue(cacheKey, out m))
+                if (_Cache.TryGetValue(cacheKey, out m))
                 {
                     GroupMembershipData membership = (GroupMembershipData)m;
                     membership.ListInProfile = ListInProfile;
@@ -713,9 +713,9 @@ namespace OpenSim.Groups
         {
             if (d())
             {
-                m_Cache.AddOrUpdate("notice-" + noticeID.ToString(), notice, GROUPS_CACHE_TIMEOUT);
+                _Cache.AddOrUpdate("notice-" + noticeID.ToString(), notice, GROUPS_CACHE_TIMEOUT);
                 string cacheKey = "notices-" + groupID.ToString();
-                m_Cache.Remove(cacheKey);
+                _Cache.Remove(cacheKey);
 
                 return true;
             }
@@ -729,21 +729,21 @@ namespace OpenSim.Groups
             bool firstCall = false;
             string cacheKey = "notice-" + noticeID.ToString();
 
-            //m_log.DebugFormat("[XXX]: GetAgentGroupRoles {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetAgentGroupRoles {0}", cacheKey);
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out notice))
+                    if (_Cache.TryGetValue(cacheKey, out notice))
                     {
                         return (GroupNoticeInfo)notice;
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -754,12 +754,12 @@ namespace OpenSim.Groups
                     {
                         GroupNoticeInfo _notice = d();
 
-                        m_Cache.AddOrUpdate(cacheKey, _notice, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate(cacheKey, _notice, GROUPS_CACHE_TIMEOUT);
                         return _notice;
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else
@@ -773,22 +773,22 @@ namespace OpenSim.Groups
             bool firstCall = false;
             string cacheKey = "notices-" + GroupID.ToString();
 
-            //m_log.DebugFormat("[XXX]: GetGroupNotices {0}", cacheKey);
+            //_log.DebugFormat("[XXX]: GetGroupNotices {0}", cacheKey);
 
             while (true)
             {
-                lock (m_Cache)
+                lock (_Cache)
                 {
-                    if (m_Cache.TryGetValue(cacheKey, out notices))
+                    if (_Cache.TryGetValue(cacheKey, out notices))
                     {
-                        //m_log.DebugFormat("[XXX]: GetGroupNotices {0} cached!", cacheKey);
+                        //_log.DebugFormat("[XXX]: GetGroupNotices {0} cached!", cacheKey);
                         return (List<ExtendedGroupNoticeData>)notices;
                     }
 
                     // not cached
-                    if (!m_ActiveRequests.Contains(cacheKey))
+                    if (!_ActiveRequests.Contains(cacheKey))
                     {
-                       m_ActiveRequests.Add(cacheKey);
+                       _ActiveRequests.Add(cacheKey);
                         firstCall = true;
                     }
                 }
@@ -799,12 +799,12 @@ namespace OpenSim.Groups
                     {
                         notices = d();
 
-                        m_Cache.AddOrUpdate(cacheKey, notices, GROUPS_CACHE_TIMEOUT);
+                        _Cache.AddOrUpdate(cacheKey, notices, GROUPS_CACHE_TIMEOUT);
                         return (List<ExtendedGroupNoticeData>)notices;
                     }
                     finally
                     {
-                        m_ActiveRequests.Remove(cacheKey);
+                        _ActiveRequests.Remove(cacheKey);
                     }
                 }
                 else

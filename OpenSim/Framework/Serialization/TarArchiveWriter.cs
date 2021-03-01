@@ -36,16 +36,16 @@ namespace OpenSim.Framework.Serialization
     /// </summary>
     public class TarArchiveWriter
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Binary writer for the underlying stream
         /// </summary>
-        protected BinaryWriter m_bw;
+        protected BinaryWriter _bw;
 
         public TarArchiveWriter(Stream s)
         {
-            m_bw = new BinaryWriter(s);
+            _bw = new BinaryWriter(s);
         }
 
         /// <summary>
@@ -102,17 +102,17 @@ namespace OpenSim.Framework.Serialization
         /// <returns></returns>
         public void Close()
         {
-            //m_log.Debug("[TAR ARCHIVE WRITER]: Writing final consecutive 0 blocks");
+            //_log.Debug("[TAR ARCHIVE WRITER]: Writing final consecutive 0 blocks");
 
             // Write two consecutive 0 blocks to end the archive
             byte[] finalZeroPadding = new byte[1024];
 
-            lock (m_bw)
+            lock (_bw)
             {
-                m_bw.Write(finalZeroPadding);
+                _bw.Write(finalZeroPadding);
 
-                m_bw.Flush();
-                m_bw.Close();
+                _bw.Flush();
+                _bw.Close();
             }
         }
 
@@ -144,7 +144,7 @@ namespace OpenSim.Framework.Serialization
         /// <param name="fileType"></param>
         protected void WriteEntry(string filePath, byte[] data, char fileType)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[TAR ARCHIVE WRITER]: Data for {0} is {1} bytes", filePath, (null == data ? "null" : data.Length.ToString()));
 
             byte[] header = new byte[512];
@@ -168,7 +168,7 @@ namespace OpenSim.Framework.Serialization
 
             // file size in bytes (12)
             int fileSize = data.Length;
-            //m_log.DebugFormat("[TAR ARCHIVE WRITER]: File size of {0} is {1}", filePath, fileSize);
+            //_log.DebugFormat("[TAR ARCHIVE WRITER]: File size of {0} is {1}", filePath, fileSize);
 
             byte[] fileSizeBytes = ConvertDecimalToPaddedOctalBytes(fileSize, 11);
 
@@ -193,7 +193,7 @@ namespace OpenSim.Framework.Serialization
                 checksum += b;
             }
 
-            //m_log.DebugFormat("[TAR ARCHIVE WRITER]: Decimal header checksum is {0}", checksum);
+            //_log.DebugFormat("[TAR ARCHIVE WRITER]: Decimal header checksum is {0}", checksum);
 
             byte[] checkSumBytes = ConvertDecimalToPaddedOctalBytes(checksum, 6);
 
@@ -201,24 +201,24 @@ namespace OpenSim.Framework.Serialization
 
             header[154] = 0;
 
-            lock (m_bw)
+            lock (_bw)
             {
                 // Write out header
-                m_bw.Write(header);
+                _bw.Write(header);
 
                 // Write out data
                 // An IOException occurs if we try to write out an empty array in Mono 2.6
                 if (data.Length > 0)
-                    m_bw.Write(data);
+                    _bw.Write(data);
 
                 if (data.Length % 512 != 0)
                 {
                     int paddingRequired = 512 - data.Length % 512;
 
-                    //m_log.DebugFormat("[TAR ARCHIVE WRITER]: Padding data with {0} bytes", paddingRequired);
+                    //_log.DebugFormat("[TAR ARCHIVE WRITER]: Padding data with {0} bytes", paddingRequired);
 
                     byte[] padding = new byte[paddingRequired];
-                    m_bw.Write(padding);
+                    _bw.Write(padding);
                 }
             }
         }

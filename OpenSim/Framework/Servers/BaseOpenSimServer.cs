@@ -48,7 +48,7 @@ namespace OpenSim.Framework.Servers
     /// </summary>
     public abstract class BaseOpenSimServer : ServerBase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Used by tests to suppress Environment.Exit(0) so that post-run operations are possible.
@@ -60,28 +60,25 @@ namespace OpenSim.Framework.Servers
         /// server.
         /// </summary>
 
-        private int m_periodDiagnosticTimerMS = 60 * 60 * 1000;
-        private readonly Timer m_periodicDiagnosticsTimer = new Timer(60 * 60 * 1000);
+        private int _periodDiagnosticTimerMS = 60 * 60 * 1000;
+        private readonly Timer _periodicDiagnosticsTimer = new Timer(60 * 60 * 1000);
 
         /// <summary>
         /// Random uuid for private data
         /// </summary>
-        protected string m_osSecret = string.Empty;
+        protected string _osSecret = string.Empty;
 
-        protected BaseHttpServer m_httpServer;
-        public BaseHttpServer HttpServer
-        {
-            get { return m_httpServer; }
-        }
+        protected BaseHttpServer _httpServer;
+        public BaseHttpServer HttpServer => _httpServer;
 
         public BaseOpenSimServer() : base()
         {
             // Random uuid for private data
-            m_osSecret = UUID.Random().ToString();
+            _osSecret = UUID.Random().ToString();
         }
 
-        private static bool m_NoVerifyCertChain = false;
-        private static bool m_NoVerifyCertHostname = false;
+        private static bool _NoVerifyCertChain = false;
+        private static bool _NoVerifyCertHostname = false;
 
         public static bool ValidateServerCertificate(
             object sender,
@@ -89,10 +86,10 @@ namespace OpenSim.Framework.Servers
             X509Chain chain,
             SslPolicyErrors sslPolicyErrors)
         {
-            if (m_NoVerifyCertChain)
+            if (_NoVerifyCertChain)
                 sslPolicyErrors &= ~SslPolicyErrors.RemoteCertificateChainErrors;
  
-            if (m_NoVerifyCertHostname)
+            if (_NoVerifyCertHostname)
                 sslPolicyErrors &= ~SslPolicyErrors.RemoteCertificateNameMismatch;
 
             if (sslPolicyErrors == SslPolicyErrors.None)
@@ -111,17 +108,17 @@ namespace OpenSim.Framework.Servers
 
             IConfig startupConfig = Config.Configs["Startup"];
 
-            m_NoVerifyCertChain = startupConfig.GetBoolean("NoVerifyCertChain", m_NoVerifyCertChain);
-            m_NoVerifyCertHostname = startupConfig.GetBoolean("NoVerifyCertHostname", m_NoVerifyCertHostname);
+            _NoVerifyCertChain = startupConfig.GetBoolean("NoVerifyCertChain", _NoVerifyCertChain);
+            _NoVerifyCertHostname = startupConfig.GetBoolean("NoVerifyCertHostname", _NoVerifyCertHostname);
             ServicePointManager.ServerCertificateValidationCallback = ValidateServerCertificate;
 
-            int logShowStatsSeconds = startupConfig.GetInt("LogShowStatsSeconds", m_periodDiagnosticTimerMS / 1000);
-            m_periodDiagnosticTimerMS = logShowStatsSeconds * 1000;
-            m_periodicDiagnosticsTimer.Elapsed += new ElapsedEventHandler(LogDiagnostics);
-            if (m_periodDiagnosticTimerMS != 0)
+            int logShowStatsSeconds = startupConfig.GetInt("LogShowStatsSeconds", _periodDiagnosticTimerMS / 1000);
+            _periodDiagnosticTimerMS = logShowStatsSeconds * 1000;
+            _periodicDiagnosticsTimer.Elapsed += new ElapsedEventHandler(LogDiagnostics);
+            if (_periodDiagnosticTimerMS != 0)
             {
-                m_periodicDiagnosticsTimer.Interval = m_periodDiagnosticTimerMS;
-                m_periodicDiagnosticsTimer.Enabled = true;
+                _periodicDiagnosticsTimer.Interval = _periodDiagnosticTimerMS;
+                _periodicDiagnosticsTimer.Enabled = true;
             }
         }
 
@@ -138,7 +135,7 @@ namespace OpenSim.Framework.Servers
 
             RemovePIDFile();
 
-            m_log.Info("[SHUTDOWN]: Shutdown processing on main thread complete.  Exiting...");
+            _log.Info("[SHUTDOWN]: Shutdown processing on main thread complete.  Exiting...");
 
            if (!SuppressExit)
                 Environment.Exit(0);
@@ -165,7 +162,7 @@ namespace OpenSim.Framework.Servers
             sb.Append(Environment.NewLine);
             sb.Append(GetThreadsReport());
 
-            m_log.Debug(sb);
+            _log.Debug(sb);
         }
 
         /// <summary>
@@ -173,19 +170,19 @@ namespace OpenSim.Framework.Servers
         /// </summary>
         public virtual void Startup()
         {
-            m_log.Info("[STARTUP]: Beginning startup processing");
+            _log.Info("[STARTUP]: Beginning startup processing");
 
-            m_log.Info("[STARTUP]: version: " + m_version + Environment.NewLine);
+            _log.Info("[STARTUP]: version: " + _version + Environment.NewLine);
             // clr version potentially is more confusing than helpful, since it doesn't tell us if we're running under Mono/MS .NET and
             // the clr version number doesn't match the project version number under Mono.
-            //m_log.Info("[STARTUP]: Virtual machine runtime version: " + Environment.Version + Environment.NewLine);
-            m_log.InfoFormat(
+            //_log.Info("[STARTUP]: Virtual machine runtime version: " + Environment.Version + Environment.NewLine);
+            _log.InfoFormat(
                 "[STARTUP]: Operating system version: {0}, .NET platform {1}, {2}-bit\n",
                 Environment.OSVersion, Environment.OSVersion.Platform, Environment.Is64BitProcess ? "64" : "32");
 
             // next code can be changed on .net 4.7.x
             if(Util.IsWindows())
-                m_log.InfoFormat("[STARTUP]: Processor Architecture: {0}({1})",
+                _log.InfoFormat("[STARTUP]: Processor Architecture: {0}({1})",
                     System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE", EnvironmentVariableTarget.Machine),
                     BitConverter.IsLittleEndian ?"le":"be");
 
@@ -196,33 +193,31 @@ namespace OpenSim.Framework.Servers
             }
             catch(Exception e)
             {
-                m_log.Fatal("Fatal error: " + e.ToString());
+                _log.Fatal("Fatal error: " + e.ToString());
                 Environment.Exit(1);
             }
 
-            //TimeSpan timeTaken = DateTime.Now - m_startuptime;
+            //TimeSpan timeTaken = DateTime.Now - _startuptime;
 
 //            MainConsole.Instance.OutputFormat(
 //                "PLEASE WAIT FOR LOGINS TO BE ENABLED ON REGIONS ONCE SCRIPTS HAVE STARTED.  Non-script portion of startup took {0}m {1}s.",
 //                timeTaken.Minutes, timeTaken.Seconds);
         }
 
-        public string osSecret
-        {
+        public string osSecret =>
             // Secret uuid for the simulator
-            get { return m_osSecret; }
-        }
+            _osSecret;
 
         public string StatReport(IOSHttpRequest httpRequest)
         {
             // If we catch a request for "callback", wrap the response in the value for jsonp
             if (httpRequest.Query.ContainsKey("callback"))
             {
-                return httpRequest.Query["callback"].ToString() + "(" + StatsManager.SimExtraStats.XReport((DateTime.Now - m_startuptime).ToString() , m_version) + ");";
+                return httpRequest.Query["callback"].ToString() + "(" + StatsManager.SimExtraStats.XReport((DateTime.Now - _startuptime).ToString() , _version) + ");";
             }
             else
             {
-                return StatsManager.SimExtraStats.XReport((DateTime.Now - m_startuptime).ToString() , m_version);
+                return StatsManager.SimExtraStats.XReport((DateTime.Now - _startuptime).ToString() , _version);
             }
         }
     }

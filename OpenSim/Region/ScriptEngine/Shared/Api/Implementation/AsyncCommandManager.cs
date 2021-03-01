@@ -44,7 +44,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
     /// </summary>
     public class AsyncCommandManager
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static Thread cmdHandlerThread;
         private static int cmdHandlerThreadCycleSleepms;
@@ -58,22 +58,22 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         /// </remarks>
         private static readonly object staticLock = new object();
 
-        private static readonly List<IScriptEngine> m_ScriptEngines =
+        private static readonly List<IScriptEngine> _ScriptEngines =
                 new List<IScriptEngine>();
 
-        public IScriptEngine m_ScriptEngine;
+        public IScriptEngine _ScriptEngine;
 
-        private static readonly Dictionary<IScriptEngine, Dataserver> m_Dataserver =
+        private static readonly Dictionary<IScriptEngine, Dataserver> _Dataserver =
                 new Dictionary<IScriptEngine, Dataserver>();
-        private static readonly Dictionary<IScriptEngine, Timer> m_Timer =
+        private static readonly Dictionary<IScriptEngine, Timer> _Timer =
                 new Dictionary<IScriptEngine, Timer>();
-        private static readonly Dictionary<IScriptEngine, Listener> m_Listener =
+        private static readonly Dictionary<IScriptEngine, Listener> _Listener =
                 new Dictionary<IScriptEngine, Listener>();
-        private static readonly Dictionary<IScriptEngine, HttpRequest> m_HttpRequest =
+        private static readonly Dictionary<IScriptEngine, HttpRequest> _HttpRequest =
                 new Dictionary<IScriptEngine, HttpRequest>();
-        private static readonly Dictionary<IScriptEngine, SensorRepeat> m_SensorRepeat =
+        private static readonly Dictionary<IScriptEngine, SensorRepeat> _SensorRepeat =
                 new Dictionary<IScriptEngine, SensorRepeat>();
-        private static readonly Dictionary<IScriptEngine, XmlRequest> m_XmlRequest =
+        private static readonly Dictionary<IScriptEngine, XmlRequest> _XmlRequest =
                 new Dictionary<IScriptEngine, XmlRequest>();
 
         public Dataserver DataserverPlugin
@@ -81,7 +81,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             get
             {
                 lock (staticLock)
-                    return m_Dataserver[m_ScriptEngine];
+                    return _Dataserver[_ScriptEngine];
             }
         }
 
@@ -90,7 +90,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             get
             {
                 lock (staticLock)
-                    return m_Timer[m_ScriptEngine];
+                    return _Timer[_ScriptEngine];
             }
         }
 
@@ -99,7 +99,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             get
             {
                 lock (staticLock)
-                    return m_HttpRequest[m_ScriptEngine];
+                    return _HttpRequest[_ScriptEngine];
             }
         }
 
@@ -108,7 +108,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             get
             {
                 lock (staticLock)
-                    return m_Listener[m_ScriptEngine];
+                    return _Listener[_ScriptEngine];
             }
         }
 
@@ -117,7 +117,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             get
             {
                 lock (staticLock)
-                    return m_SensorRepeat[m_ScriptEngine];
+                    return _SensorRepeat[_ScriptEngine];
             }
         }
 
@@ -126,7 +126,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             get
             {
                 lock (staticLock)
-                    return m_XmlRequest[m_ScriptEngine];
+                    return _XmlRequest[_ScriptEngine];
             }
         }
 
@@ -135,13 +135,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             get
             {
                 lock (staticLock)
-                    return m_ScriptEngines.ToArray();
+                    return _ScriptEngines.ToArray();
             }
         }
 
         public AsyncCommandManager(IScriptEngine _ScriptEngine)
         {
-            m_ScriptEngine = _ScriptEngine;
+            _ScriptEngine = _ScriptEngine;
 
             // If there is more than one scene in the simulator or multiple script engines are used on the same region
             // then more than one thread could arrive at this block of code simultaneously.  However, it cannot be
@@ -149,25 +149,25 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             // race conditions such as the later check of cmdHandlerThread == null.
             lock (staticLock)
             {
-                if (m_ScriptEngines.Count == 0)
+                if (_ScriptEngines.Count == 0)
                     ReadConfig();
 
-                if (!m_ScriptEngines.Contains(m_ScriptEngine))
-                    m_ScriptEngines.Add(m_ScriptEngine);
+                if (!_ScriptEngines.Contains(_ScriptEngine))
+                    _ScriptEngines.Add(_ScriptEngine);
 
                 // Create instances of all plugins
-                if (!m_Dataserver.ContainsKey(m_ScriptEngine))
-                    m_Dataserver[m_ScriptEngine] = new Dataserver(this);
-                if (!m_Timer.ContainsKey(m_ScriptEngine))
-                    m_Timer[m_ScriptEngine] = new Timer(this);
-                if (!m_HttpRequest.ContainsKey(m_ScriptEngine))
-                    m_HttpRequest[m_ScriptEngine] = new HttpRequest(this);
-                if (!m_Listener.ContainsKey(m_ScriptEngine))
-                    m_Listener[m_ScriptEngine] = new Listener(this);
-                if (!m_SensorRepeat.ContainsKey(m_ScriptEngine))
-                    m_SensorRepeat[m_ScriptEngine] = new SensorRepeat(this);
-                if (!m_XmlRequest.ContainsKey(m_ScriptEngine))
-                    m_XmlRequest[m_ScriptEngine] = new XmlRequest(this);
+                if (!_Dataserver.ContainsKey(_ScriptEngine))
+                    _Dataserver[_ScriptEngine] = new Dataserver(this);
+                if (!_Timer.ContainsKey(_ScriptEngine))
+                    _Timer[_ScriptEngine] = new Timer(this);
+                if (!_HttpRequest.ContainsKey(_ScriptEngine))
+                    _HttpRequest[_ScriptEngine] = new HttpRequest(this);
+                if (!_Listener.ContainsKey(_ScriptEngine))
+                    _Listener[_ScriptEngine] = new Listener(this);
+                if (!_SensorRepeat.ContainsKey(_ScriptEngine))
+                    _SensorRepeat[_ScriptEngine] = new SensorRepeat(this);
+                if (!_XmlRequest.ContainsKey(_ScriptEngine))
+                    _XmlRequest[_ScriptEngine] = new XmlRequest(this);
 
                 numInstances++;
                 if (cmdHandlerThread == null)
@@ -180,7 +180,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
         private void ReadConfig()
         {
-//            cmdHandlerThreadCycleSleepms = m_ScriptEngine.Config.GetInt("AsyncLLCommandLoopms", 100);
+//            cmdHandlerThreadCycleSleepms = _ScriptEngine.Config.GetInt("AsyncLLCommandLoopms", 100);
             // TODO: Make this sane again
             cmdHandlerThreadCycleSleepms = 100;
         }
@@ -235,7 +235,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
                 catch (Exception e)
                 {
-                    m_log.Error("[ASYNC COMMAND MANAGER]: Exception in command handler pass: ", e);
+                    _log.Error("[ASYNC COMMAND MANAGER]: Exception in command handler pass: ", e);
                 }
             }
         }
@@ -245,25 +245,25 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             lock (staticLock)
             {
                 // Check HttpRequests
-                try { m_HttpRequest[m_ScriptEngines[0]].CheckHttpRequests(); } catch {}
+                try { _HttpRequest[_ScriptEngines[0]].CheckHttpRequests(); } catch {}
 
                 // Check XMLRPCRequests
-                try { m_XmlRequest[m_ScriptEngines[0]].CheckXMLRPCRequests(); } catch {}
+                try { _XmlRequest[_ScriptEngines[0]].CheckXMLRPCRequests(); } catch {}
 
-                foreach (IScriptEngine s in m_ScriptEngines)
+                foreach (IScriptEngine s in _ScriptEngines)
                 {
                     // Check Listeners
-                    try { m_Listener[s].CheckListeners(); } catch {}
+                    try { _Listener[s].CheckListeners(); } catch {}
                     
 
                     // Check timers
-                    try { m_Timer[s].CheckTimerEvents(); } catch {}
+                    try { _Timer[s].CheckTimerEvents(); } catch {}
 
                     // Check Sensors
-                    try { m_SensorRepeat[s].CheckSenseRepeaterEvents(); } catch {}
+                    try { _SensorRepeat[s].CheckSenseRepeaterEvents(); } catch {}
 
                     // Check dataserver
-                    try { m_Dataserver[s].ExpireRequests(); } catch {}
+                    try { _Dataserver[s].ExpireRequests(); } catch {}
                 }
             }
         }
@@ -276,15 +276,15 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         public static void RemoveScript(IScriptEngine engine, uint localID, UUID itemID)
         {
             // Remove a specific script
-//            m_log.DebugFormat("[ASYNC COMMAND MANAGER]: Removing facilities for script {0}", itemID);
+//            _log.DebugFormat("[ASYNC COMMAND MANAGER]: Removing facilities for script {0}", itemID);
 
             lock (staticLock)
             {
                 // Remove dataserver events
-                m_Dataserver[engine].RemoveEvents(localID, itemID);
+                _Dataserver[engine].RemoveEvents(localID, itemID);
 
                 // Remove from: Timers
-                m_Timer[engine].UnSetTimerEvents(localID, itemID);
+                _Timer[engine].UnSetTimerEvents(localID, itemID);
 
                 if(engine.World != null)
                 {
@@ -305,7 +305,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     }
                 }
                 // Remove Sensors
-                m_SensorRepeat[engine].UnSetSenseRepeaterEvents(localID, itemID);
+                _SensorRepeat[engine].UnSetSenseRepeaterEvents(localID, itemID);
             }
         }
 
@@ -314,7 +314,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             // Remove a specific script
 
             // Remove dataserver events
-            m_Dataserver[engine].RemoveEvents(localID, itemID);
+            _Dataserver[engine].RemoveEvents(localID, itemID);
 
             IWorldComm comms = engine.World.RequestModuleInterface<IWorldComm>();
             if (comms != null)
@@ -327,7 +327,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 xmlrpc.CancelSRDRequests(itemID);
             }
             // Remove Sensors
-            m_SensorRepeat[engine].UnSetSenseRepeaterEvents(localID, itemID);
+            _SensorRepeat[engine].UnSetSenseRepeaterEvents(localID, itemID);
 
         }
 
@@ -340,8 +340,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             lock (staticLock)
             {
-                if (m_SensorRepeat.ContainsKey(engine))
-                    return m_SensorRepeat[engine];
+                if (_SensorRepeat.ContainsKey(engine))
+                    return _SensorRepeat[engine];
                 else
                     return null;
             }
@@ -356,8 +356,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             lock (staticLock)
             {
-                if (m_Dataserver.ContainsKey(engine))
-                    return m_Dataserver[engine];
+                if (_Dataserver.ContainsKey(engine))
+                    return _Dataserver[engine];
                 else
                     return null;
             }
@@ -372,8 +372,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             lock (staticLock)
             {
-                if (m_Timer.ContainsKey(engine))
-                    return m_Timer[engine];
+                if (_Timer.ContainsKey(engine))
+                    return _Timer[engine];
                 else
                     return null;
             }
@@ -388,8 +388,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         {
             lock (staticLock)
             {
-                if (m_Listener.ContainsKey(engine))
-                    return m_Listener[engine];
+                if (_Listener.ContainsKey(engine))
+                    return _Listener[engine];
                 else
                     return null;
             }
@@ -401,7 +401,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
             lock (staticLock)
             {
-                object[] listeners = m_Listener[engine].GetSerializationData(itemID);
+                object[] listeners = _Listener[engine].GetSerializationData(itemID);
                 if (listeners.Length > 0)
                 {
                     data.Add("listener");
@@ -409,7 +409,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     data.AddRange(listeners);
                 }
 
-                object[] timers=m_Timer[engine].GetSerializationData(itemID);
+                object[] timers=_Timer[engine].GetSerializationData(itemID);
                 if (timers.Length > 0)
                 {
                     data.Add("timer");
@@ -417,7 +417,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     data.AddRange(timers);
                 }
 
-                object[] sensors = m_SensorRepeat[engine].GetSerializationData(itemID);
+                object[] sensors = _SensorRepeat[engine].GetSerializationData(itemID);
                 if (sensors.Length > 0)
                 {
                     data.Add("sensor");
@@ -453,15 +453,15 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     switch (type)
                     {
                         case "listener":
-                            m_Listener[engine].CreateFromData(localID, itemID,
+                            _Listener[engine].CreateFromData(localID, itemID,
                                                         hostID, item);
                             break;
                         case "timer":
-                            m_Timer[engine].CreateFromData(localID, itemID,
+                            _Timer[engine].CreateFromData(localID, itemID,
                                                         hostID, item);
                             break;
                         case "sensor":
-                            m_SensorRepeat[engine].CreateFromData(localID,
+                            _SensorRepeat[engine].CreateFromData(localID,
                                                         itemID, hostID, item);
                             break;
                         }

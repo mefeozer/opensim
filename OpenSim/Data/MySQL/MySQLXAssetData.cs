@@ -41,24 +41,21 @@ namespace OpenSim.Data.MySQL
 {
     public class MySQLXAssetData : IXAssetDataPlugin
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         /// <summary>
         /// Number of days that must pass before we update the access time on an asset when it has been fetched.
         /// </summary>
         private const int DaysBetweenAccessTimeUpdates = 30;
 
-        private readonly bool m_enableCompression = false;
-        private string m_connectionString;
+        private readonly bool _enableCompression = false;
+        private string _connectionString;
 
         #region IPlugin Members
 
-        public string Version { get { return "1.0.0.0"; } }
+        public string Version => "1.0.0.0";
 
         /// <summary>
         /// <para>Initialises Asset interface</para>
@@ -73,19 +70,19 @@ namespace OpenSim.Data.MySQL
         /// <param name="connect">connect string</param>
         public void Initialise(string connect)
         {
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: THIS PLUGIN IS STRICTLY EXPERIMENTAL.");
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: DO NOT USE FOR ANY DATA THAT YOU DO NOT MIND LOSING.");
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: DATABASE TABLES CAN CHANGE AT ANY TIME, CAUSING EXISTING DATA TO BE LOST.");
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: THIS PLUGIN IS STRICTLY EXPERIMENTAL.");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: DO NOT USE FOR ANY DATA THAT YOU DO NOT MIND LOSING.");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: DATABASE TABLES CAN CHANGE AT ANY TIME, CAUSING EXISTING DATA TO BE LOST.");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[MYSQL XASSETDATA]: ***********************************************************");
 
-            m_connectionString = connect;
+            _connectionString = connect;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 Migration m = new Migration(dbcon, Assembly, "XAssetStore");
@@ -104,10 +101,7 @@ namespace OpenSim.Data.MySQL
         /// <summary>
         /// The name of this DB provider
         /// </summary>
-        public string Name
-        {
-            get { return "MySQL XAsset storage engine"; }
-        }
+        public string Name => "MySQL XAsset storage engine";
 
         #endregion
 
@@ -121,12 +115,12 @@ namespace OpenSim.Data.MySQL
         /// <remarks>On failure : throw an exception and attempt to reconnect to database</remarks>
         public AssetBase GetAsset(UUID assetID)
         {
-//            m_log.DebugFormat("[MYSQL XASSET DATA]: Looking for asset {0}", assetID);
+//            _log.DebugFormat("[MYSQL XASSET DATA]: Looking for asset {0}", assetID);
 
             AssetBase asset = null;
             int accessTime = 0;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -161,7 +155,7 @@ namespace OpenSim.Data.MySQL
                     }
                     catch (Exception e)
                     {
-                        m_log.Error(string.Format("[MYSQL XASSET DATA]: Failure fetching asset {0}", assetID), e);
+                        _log.Error(string.Format("[MYSQL XASSET DATA]: Failure fetching asset {0}", assetID), e);
                     }
                 }
                 dbcon.Close();
@@ -179,7 +173,7 @@ namespace OpenSim.Data.MySQL
                 catch { }
             }
 
-            if (m_enableCompression && asset.Data != null)
+            if (_enableCompression && asset.Data != null)
             {
                 using(MemoryStream ms = new MemoryStream(asset.Data))
                 using(GZipStream decompressionStream = new GZipStream(ms, CompressionMode.Decompress))
@@ -190,7 +184,7 @@ namespace OpenSim.Data.MySQL
 //                                               int compressedLength = asset.Data.Length;
                         asset.Data = outputStream.ToArray();
                     }
-//                                        m_log.DebugFormat(
+//                                        _log.DebugFormat(
 //                                            "[XASSET DB]: Decompressed {0} {1} to {2} bytes from {3}",
 //                                            asset.ID, asset.Name, asset.Data.Length, compressedLength);
                 }                             
@@ -205,9 +199,9 @@ namespace OpenSim.Data.MySQL
         /// <remarks>On failure : Throw an exception and attempt to reconnect to database</remarks>
         public void StoreAsset(AssetBase asset)
         {
-//            m_log.DebugFormat("[XASSETS DB]: Storing asset {0} {1}", asset.Name, asset.ID);
+//            _log.DebugFormat("[XASSETS DB]: Storing asset {0} {1}", asset.Name, asset.ID);
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -217,7 +211,7 @@ namespace OpenSim.Data.MySQL
                     if (asset.Name.Length > AssetBase.MAX_ASSET_NAME)
                     {
                         assetName = asset.Name.Substring(0, AssetBase.MAX_ASSET_NAME);
-                        m_log.WarnFormat(
+                        _log.WarnFormat(
                             "[XASSET DB]: Name '{0}' for asset {1} truncated from {2} to {3} characters on add",
                             asset.Name, asset.ID, asset.Name.Length, assetName.Length);
                     }
@@ -226,12 +220,12 @@ namespace OpenSim.Data.MySQL
                     if (asset.Description.Length > AssetBase.MAX_ASSET_DESC)
                     {
                         assetDescription = asset.Description.Substring(0, AssetBase.MAX_ASSET_DESC);
-                        m_log.WarnFormat(
+                        _log.WarnFormat(
                             "[XASSET DB]: Description '{0}' for asset {1} truncated from {2} to {3} characters on add",
                             asset.Description, asset.ID, asset.Description.Length, assetDescription.Length);
                     }
 
-                    if (m_enableCompression)
+                    if (_enableCompression)
                     {
                         MemoryStream outputStream = new MemoryStream();
 
@@ -249,7 +243,7 @@ namespace OpenSim.Data.MySQL
                     using (HashAlgorithm hasher = new SHA256CryptoServiceProvider())
                         hash = hasher.ComputeHash(asset.Data);
 
-//                        m_log.DebugFormat(
+//                        _log.DebugFormat(
 //                            "[XASSET DB]: Compressed data size for {0} {1}, hash {2} is {3}",
 //                            asset.ID, asset.Name, hash, compressedData.Length);
 
@@ -279,7 +273,7 @@ namespace OpenSim.Data.MySQL
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat("[ASSET DB]: MySQL failure creating asset metadata {0} with name \"{1}\". Error: {2}",
+                        _log.ErrorFormat("[ASSET DB]: MySQL failure creating asset metadata {0} with name \"{1}\". Error: {2}",
                             asset.FullID, asset.Name, e.Message);
 
                         transaction.Rollback();
@@ -303,7 +297,7 @@ namespace OpenSim.Data.MySQL
                         }
                         catch (Exception e)
                         {
-                            m_log.ErrorFormat("[XASSET DB]: MySQL failure creating asset data {0} with name \"{1}\". Error: {2}",
+                            _log.ErrorFormat("[XASSET DB]: MySQL failure creating asset data {0} with name \"{1}\". Error: {2}",
                                 asset.FullID, asset.Name, e.Message);
 
                             transaction.Rollback();
@@ -334,7 +328,7 @@ namespace OpenSim.Data.MySQL
             if ((now - Utils.UnixTimeToDateTime(accessTime)).TotalDays < DaysBetweenAccessTimeUpdates)
                 return;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 MySqlCommand cmd =
@@ -352,7 +346,7 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (Exception)
                 {
-                    m_log.ErrorFormat(
+                    _log.ErrorFormat(
                         "[XASSET MYSQL DB]: Failure updating access_time for asset {0} with name {1}",
                         assetMetadata.ID, assetMetadata.Name);
                 }
@@ -361,7 +355,7 @@ namespace OpenSim.Data.MySQL
         }
 
         /// <summary>
-        /// We assume we already have the m_dbLock.
+        /// We assume we already have the _dbLock.
         /// </summary>
         /// TODO: need to actually use the transaction.
         /// <param name="dbcon"></param>
@@ -370,7 +364,7 @@ namespace OpenSim.Data.MySQL
         /// <returns></returns>
         private bool ExistsData(MySqlConnection dbcon, MySqlTransaction transaction, byte[] hash)
         {
-//            m_log.DebugFormat("[ASSETS DB]: Checking for asset {0}", uuid);
+//            _log.DebugFormat("[ASSETS DB]: Checking for asset {0}", uuid);
 
             bool exists = false;
 
@@ -384,14 +378,14 @@ namespace OpenSim.Data.MySQL
                     {
                         if (dbReader.Read())
                         {
-//                                    m_log.DebugFormat("[ASSETS DB]: Found asset {0}", uuid);
+//                                    _log.DebugFormat("[ASSETS DB]: Found asset {0}", uuid);
                             exists = true;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat(
+                    _log.ErrorFormat(
                         "[XASSETS DB]: MySql failure in ExistsData fetching hash {0}.  Exception {1}{2}",
                         hash, e.Message, e.StackTrace);
                 }
@@ -415,7 +409,7 @@ namespace OpenSim.Data.MySQL
             string ids = "'" + string.Join("','", uuids) + "'";
             string sql = string.Format("SELECT ID FROM assets WHERE ID IN ({0})", ids);
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 using (MySqlCommand cmd = new MySqlCommand(sql, dbcon))
@@ -450,7 +444,7 @@ namespace OpenSim.Data.MySQL
         {
             List<AssetMetadata> retList = new List<AssetMetadata>(count);
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 using(MySqlCommand cmd = new MySqlCommand("SELECT Name, Description, AccessTime, AssetType, Temporary, ID, AssetFlags, CreatorID FROM XAssetsMeta LIMIT ?start, ?count",dbcon))
@@ -486,7 +480,7 @@ namespace OpenSim.Data.MySQL
                     }
                     catch (Exception e)
                     {
-                        m_log.Error("[XASSETS DB]: MySql failure fetching asset set" + Environment.NewLine + e.ToString());
+                        _log.Error("[XASSETS DB]: MySql failure fetching asset set" + Environment.NewLine + e.ToString());
                     }
                 }
                 dbcon.Close();
@@ -497,9 +491,9 @@ namespace OpenSim.Data.MySQL
 
         public bool Delete(string id)
         {
-//            m_log.DebugFormat("[XASSETS DB]: Deleting asset {0}", id);
+//            _log.DebugFormat("[XASSETS DB]: Deleting asset {0}", id);
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 

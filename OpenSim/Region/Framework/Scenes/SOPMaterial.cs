@@ -58,7 +58,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
         }
 
-        private static readonly MaterialData[] m_materialdata = {
+        private static readonly MaterialData[] _materialdata = {
             new MaterialData(0.8f,0.4f), // Stone
             new MaterialData(0.3f,0.4f), // Metal
             new MaterialData(0.2f,0.7f), // Glass
@@ -69,16 +69,13 @@ namespace OpenSim.Region.Framework.Scenes
             new MaterialData(0.0f,0.0f) // light ??
         };
 
-        public static Material MaxMaterial
-        {
-            get { return (Material)(m_materialdata.Length - 1); }
-        }
+        public static Material MaxMaterial => (Material)(_materialdata.Length - 1);
 
         public static float friction(Material material)
         {
             int indx = (int)material;
-            if (indx < m_materialdata.Length)
-                return m_materialdata[indx].friction;
+            if (indx < _materialdata.Length)
+                return _materialdata[indx].friction;
             else
                 return 0;
         }
@@ -86,8 +83,8 @@ namespace OpenSim.Region.Framework.Scenes
         public static float bounce(Material material)
         {
             int indx = (int)material;
-            if (indx < m_materialdata.Length)
-                return m_materialdata[indx].bounce;
+            if (indx < _materialdata.Length)
+                return _materialdata[indx].bounce;
             else
                 return 0;
         }

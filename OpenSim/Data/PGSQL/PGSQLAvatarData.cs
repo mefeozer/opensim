@@ -38,7 +38,7 @@ namespace OpenSim.Data.PGSQL
     public class PGSQLAvatarData : PGSQLGenericTableHandler<AvatarBaseData>,
             IAvatarData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public PGSQLAvatarData(string connectionString, string realm) :
                 base(connectionString, realm, "Avatar")
@@ -47,13 +47,13 @@ namespace OpenSim.Data.PGSQL
 
         public bool Delete(UUID principalID, string name)
         {
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
 
-                cmd.CommandText = string.Format("DELETE FROM {0} where \"PrincipalID\" = :PrincipalID and \"Name\" = :Name", m_Realm);
-                cmd.Parameters.Add(m_database.CreateParameter("PrincipalID", principalID));
-                cmd.Parameters.Add(m_database.CreateParameter("Name", name));
+                cmd.CommandText = string.Format("DELETE FROM {0} where \"PrincipalID\" = :PrincipalID and \"Name\" = :Name", _Realm);
+                cmd.Parameters.Add(_database.CreateParameter("PrincipalID", principalID));
+                cmd.Parameters.Add(_database.CreateParameter("Name", name));
                 cmd.Connection = conn;
                 conn.Open();
                 if (cmd.ExecuteNonQuery() > 0)

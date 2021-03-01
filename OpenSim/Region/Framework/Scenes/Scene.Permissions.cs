@@ -102,12 +102,12 @@ namespace OpenSim.Region.Framework.Scenes
 
     public class ScenePermissions
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Scene m_scene;
+        private readonly Scene _scene;
         public ScenePermissions(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
         }
 
         #region events
@@ -337,7 +337,7 @@ namespace OpenSim.Region.Framework.Scenes
                         return false;
                 }
             }
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[SCENE PERMISSIONS]: CanTakeObject() fired for object {0}, taker {1}, result {2}",
 //                objectID, AvatarTakingUUID, result);
             return true;
@@ -358,7 +358,7 @@ namespace OpenSim.Region.Framework.Scenes
                         return false;
                 }
             }
-            //m_log.DebugFormat(
+            //_log.DebugFormat(
             //    "[SCENE PERMISSIONS]: CanSellGroupObject() fired for user {0}, group {1}, result {2}",
             //    userID, groupID, result);
             return true;
@@ -421,7 +421,7 @@ namespace OpenSim.Region.Framework.Scenes
                         return false;
                 }
             }
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[SCENE PERMISSIONS]: CanTakeCopyObject() fired for object {0}, user {1}, result {2}",
 //                objectID, userID, result);
             return true;
@@ -437,7 +437,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 if(sog == null || sog.IsDeleted)
                     return false;
-                ScenePresence sp = m_scene.GetScenePresence(agentID);
+                ScenePresence sp = _scene.GetScenePresence(agentID);
                 if(sp == null || sp.IsDeleted)
                     return false;
                 Delegate[] list = handler.GetInvocationList();
@@ -613,7 +613,7 @@ namespace OpenSim.Region.Framework.Scenes
                         return false;
                 }
             }
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[SCENE PERMISSIONS]: CanReturnObjects() fired for user {0} for {1} objects on {2}, result {3}",
 //                user, objects.Count, land.LandData.Name, result);
 
@@ -1311,7 +1311,7 @@ namespace OpenSim.Region.Framework.Scenes
                 Delegate[] list = handler.GetInvocationList();
                 foreach (TeleportHandler h in list)
                 {
-                    if (h(userID, m_scene) == false)
+                    if (h(userID, _scene) == false)
                         return false;
                 }
             }

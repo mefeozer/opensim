@@ -36,7 +36,7 @@ namespace OpenSim.Framework
 
     public class AnimationSet
     {
-        private readonly bool m_parseError = false;
+        private readonly bool _parseError = false;
 
         public const uint createBasePermitions = (uint)PermissionMask.All; // no export ?
         public const uint createNextPermitions = (uint)(PermissionMask.Copy | PermissionMask.Modify);
@@ -87,12 +87,12 @@ namespace OpenSim.Framework
         }
 
         public int AnimationCount { get; private set; }
-        private readonly Dictionary<string, KeyValuePair<string, UUID>> m_animations = new Dictionary<string, KeyValuePair<string, UUID>>();
+        private readonly Dictionary<string, KeyValuePair<string, UUID>> _animations = new Dictionary<string, KeyValuePair<string, UUID>>();
 
         public UUID GetAnimation(string index)
         {
             KeyValuePair<string, UUID> val;
-            if (m_animations.TryGetValue(index, out val))
+            if (_animations.TryGetValue(index, out val))
                 return val.Value;
 
             return UUID.Zero;
@@ -101,7 +101,7 @@ namespace OpenSim.Framework
         public string GetAnimationName(string index)
         {
             KeyValuePair<string, UUID> val;
-            if (m_animations.TryGetValue(index, out val))
+            if (_animations.TryGetValue(index, out val))
                 return val.Key;
 
             return string.Empty;
@@ -111,11 +111,11 @@ namespace OpenSim.Framework
         {
             if (anim == UUID.Zero)
             {
-                m_animations.Remove(index);
+                _animations.Remove(index);
                 return;
             }
 
-            m_animations[index] = new KeyValuePair<string, UUID>(name, anim);
+            _animations[index] = new KeyValuePair<string, UUID>(name, anim);
         }
 
         public AnimationSet(byte[] data)
@@ -131,27 +131,27 @@ namespace OpenSim.Framework
         {
             // If there was an error parsing the input, we give back an
             // empty set rather than the original data.
-            if (m_parseError)
+            if (_parseError)
             {
                 string dummy = "version 1\ncount 0\n";
                 return System.Text.Encoding.ASCII.GetBytes(dummy);
             }
 
-            string assetData = string.Format("version 1\ncount {0}\n", m_animations.Count);
-            foreach (KeyValuePair<string, KeyValuePair<string, UUID>> kvp in m_animations)
+            string assetData = string.Format("version 1\ncount {0}\n", _animations.Count);
+            foreach (KeyValuePair<string, KeyValuePair<string, UUID>> kvp in _animations)
                 assetData += string.Format("{0} {1} {2}\n", kvp.Key, kvp.Value.Value.ToString(), kvp.Value.Key);
             return System.Text.Encoding.ASCII.GetBytes(assetData);
         }
 /*
         public bool Validate(AnimationSetValidator val)
         {
-            if (m_parseError)
+            if (_parseError)
                 return false;
 
             List<string> badAnims = new List<string>();
 
             bool allOk = true;
-            foreach (KeyValuePair<string, KeyValuePair<string, UUID>> kvp in m_animations)
+            foreach (KeyValuePair<string, KeyValuePair<string, UUID>> kvp in _animations)
             {
                 if (!val(kvp.Value.Value))
                 {
@@ -161,19 +161,19 @@ namespace OpenSim.Framework
             }
 
             foreach (string idx in badAnims)
-                m_animations.Remove(idx);
+                _animations.Remove(idx);
 
             return allOk;
         }
 */
         public uint Validate(AnimationSetValidator val)
         {
-            if (m_parseError)
+            if (_parseError)
                 return 0;
 
             uint ret = 0x7fffffff;
             uint t;
-            foreach (KeyValuePair<string, KeyValuePair<string, UUID>> kvp in m_animations)
+            foreach (KeyValuePair<string, KeyValuePair<string, UUID>> kvp in _animations)
             {
                 t = val(kvp.Value.Value);
                 if (t == 0)

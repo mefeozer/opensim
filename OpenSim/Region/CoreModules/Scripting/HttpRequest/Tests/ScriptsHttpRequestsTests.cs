@@ -97,29 +97,15 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest.Tests
 
     class TestAsyncResult : IAsyncResult
     {
-        readonly WaitHandle m_wh = new ManualResetEvent(true);
+        readonly WaitHandle _wh = new ManualResetEvent(true);
 
-        object IAsyncResult.AsyncState
-        {
-            get {
-                throw new System.NotImplementedException ();
-            }
-        }
+        object IAsyncResult.AsyncState => throw new System.NotImplementedException ();
 
-        WaitHandle IAsyncResult.AsyncWaitHandle
-        {
-            get { return m_wh; }
-        }
+        WaitHandle IAsyncResult.AsyncWaitHandle => _wh;
 
-        bool IAsyncResult.CompletedSynchronously
-        {
-            get { return false; }
-        }
+        bool IAsyncResult.CompletedSynchronously => false;
 
-        bool IAsyncResult.IsCompleted
-        {
-            get { return true; }
-        }
+        bool IAsyncResult.IsCompleted => true;
     }
 
     /// <summary>
@@ -156,9 +142,9 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest.Tests
                 SerializationInfo si = new SerializationInfo(typeof(HttpWebResponse), new FormatterConverter());
                 StreamingContext sc = new StreamingContext();
 //                WebHeaderCollection headers = new WebHeaderCollection();
-//                si.AddValue("m_HttpResponseHeaders", headers);
+//                si.AddValue("_HttpResponseHeaders", headers);
                 si.AddValue("uri", new Uri("test://arrg"));
-//                si.AddValue("m_Certificate", null);
+//                si.AddValue("_Certificate", null);
                 si.AddValue("version", HttpVersion.Version11);
                 si.AddValue("statusCode", HttpStatusCode.NotFound);
                 si.AddValue("contentLength", 0);

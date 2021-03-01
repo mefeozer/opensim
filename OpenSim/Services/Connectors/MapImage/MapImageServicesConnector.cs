@@ -40,11 +40,11 @@ namespace OpenSim.Services.Connectors
 {
     public class MapImageServicesConnector : BaseServiceConnector, IMapImageService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
+        private string _ServerURI = string.Empty;
 
         public MapImageServicesConnector()
         {
@@ -52,7 +52,7 @@ namespace OpenSim.Services.Connectors
 
         public MapImageServicesConnector(string serverURI)
         {
-            m_ServerURI = serverURI.TrimEnd('/');
+            _ServerURI = serverURI.TrimEnd('/');
         }
 
         public MapImageServicesConnector(IConfigSource source)
@@ -65,7 +65,7 @@ namespace OpenSim.Services.Connectors
             IConfig config = source.Configs["MapImageService"];
             if (config == null)
             {
-                m_log.Error("[MAP IMAGE CONNECTOR]: MapImageService missing");
+                _log.Error("[MAP IMAGE CONNECTOR]: MapImageService missing");
                 throw new Exception("MapImage connector init error");
             }
 
@@ -74,11 +74,11 @@ namespace OpenSim.Services.Connectors
 
             if (string.IsNullOrEmpty(serviceURI))
             {
-                m_log.Error("[MAP IMAGE CONNECTOR]: No Server URI named in section MapImageService");
+                _log.Error("[MAP IMAGE CONNECTOR]: No Server URI named in section MapImageService");
                 throw new Exception("MapImage connector init error");
             }
-            m_ServerURI = serviceURI;
-            m_ServerURI = serviceURI.TrimEnd('/');
+            _ServerURI = serviceURI;
+            _ServerURI = serviceURI.TrimEnd('/');
             base.Initialise(source, "MapImageService");
         }
 
@@ -91,14 +91,14 @@ namespace OpenSim.Services.Connectors
             sendData["Y"] = y.ToString();
 
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/removemap";
+            string uri = _ServerURI + "/removemap";
 
             try
             {
                 string reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
                         reqString,
-                        m_Auth);
+                        _Auth);
                 if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -109,35 +109,35 @@ namespace OpenSim.Services.Connectors
                     }
                     else if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "failure")
                     {
-                        m_log.DebugFormat("[MAP IMAGE CONNECTOR]: Delete failed: {0}", replyData["Message"].ToString());
+                        _log.DebugFormat("[MAP IMAGE CONNECTOR]: Delete failed: {0}", replyData["Message"].ToString());
                         reason = replyData["Message"].ToString();
                         return false;
                     }
                     else if (!replyData.ContainsKey("Result"))
                     {
-                        m_log.DebugFormat("[MAP IMAGE CONNECTOR]: reply data does not contain result field");
+                        _log.DebugFormat("[MAP IMAGE CONNECTOR]: reply data does not contain result field");
                     }
                     else
                     {
-                        m_log.DebugFormat("[MAP IMAGE CONNECTOR]: unexpected result {0}", replyData["Result"].ToString());
+                        _log.DebugFormat("[MAP IMAGE CONNECTOR]: unexpected result {0}", replyData["Result"].ToString());
                         reason = "Unexpected result " + replyData["Result"].ToString();
                     }
 
                 }
                 else
                 {
-                    m_log.DebugFormat("[MAP IMAGE CONNECTOR]: Map post received null reply");
+                    _log.DebugFormat("[MAP IMAGE CONNECTOR]: Map post received null reply");
                 }
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[MAP IMAGE CONNECTOR]: Exception when contacting map server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[MAP IMAGE CONNECTOR]: Exception when contacting map server at {0}: {1}", uri, e.Message);
             }
             finally
             {
                 // This just dumps a warning for any operation that takes more than 100 ms
                 int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
-                m_log.DebugFormat("[MAP IMAGE CONNECTOR]: map tile deleted in {0}ms", tickdiff);
+                _log.DebugFormat("[MAP IMAGE CONNECTOR]: map tile deleted in {0}ms", tickdiff);
             }
 
             return false;
@@ -153,7 +153,7 @@ namespace OpenSim.Services.Connectors
             sendData["SCOPE"] = scopeID.ToString();
 
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/removemap";
+            string uri = _ServerURI + "/removemap";
 
             try
             {
@@ -170,35 +170,35 @@ namespace OpenSim.Services.Connectors
                     }
                     else if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "failure")
                     {
-                        m_log.DebugFormat("[MAP IMAGE CONNECTOR]: Delete failed: {0}", replyData["Message"].ToString());
+                        _log.DebugFormat("[MAP IMAGE CONNECTOR]: Delete failed: {0}", replyData["Message"].ToString());
                         reason = replyData["Message"].ToString();
                         return false;
                     }
                     else if (!replyData.ContainsKey("Result"))
                     {
-                        m_log.DebugFormat("[MAP IMAGE CONNECTOR]: reply data does not contain result field");
+                        _log.DebugFormat("[MAP IMAGE CONNECTOR]: reply data does not contain result field");
                     }
                     else
                     {
-                        m_log.DebugFormat("[MAP IMAGE CONNECTOR]: unexpected result {0}", replyData["Result"].ToString());
+                        _log.DebugFormat("[MAP IMAGE CONNECTOR]: unexpected result {0}", replyData["Result"].ToString());
                         reason = "Unexpected result " + replyData["Result"].ToString();
                     }
 
                 }
                 else
                 {
-                    m_log.DebugFormat("[MAP IMAGE CONNECTOR]: Map post received null reply");
+                    _log.DebugFormat("[MAP IMAGE CONNECTOR]: Map post received null reply");
                 }
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[MAP IMAGE CONNECTOR]: Exception when contacting map server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[MAP IMAGE CONNECTOR]: Exception when contacting map server at {0}: {1}", uri, e.Message);
             }
             finally
             {
                 // This just dumps a warning for any operation that takes more than 100 ms
                 int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
-                m_log.DebugFormat("[MAP IMAGE CONNECTOR]: map tile deleted in {0}ms", tickdiff);
+                _log.DebugFormat("[MAP IMAGE CONNECTOR]: map tile deleted in {0}ms", tickdiff);
             }
 
             return false;
@@ -216,7 +216,7 @@ namespace OpenSim.Services.Connectors
             sendData["DATA"] = Convert.ToBase64String(jpgData);
 
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/map";
+            string uri = _ServerURI + "/map";
 
             try
             {
@@ -224,7 +224,7 @@ namespace OpenSim.Services.Connectors
                         uri,
                         reqString,
                         30,
-                        m_Auth);
+                        _Auth);
                 if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -236,37 +236,37 @@ namespace OpenSim.Services.Connectors
                     else if (replyData.ContainsKey("Result") && replyData["Result"].ToString().ToLower() == "failure")
                     {
                         reason = string.Format("Map post to {0} failed: {1}", uri, replyData["Message"].ToString());
-                        m_log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
+                        _log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
 
                         return false;
                     }
                     else if (!replyData.ContainsKey("Result"))
                     {
                         reason = string.Format("Reply data from {0} does not contain result field", uri);
-                        m_log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
+                        _log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
                     }
                     else
                     {
                         reason = string.Format("Unexpected result {0} from {1}" + replyData["Result"].ToString(), uri);
-                        m_log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
+                        _log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
                     }
                 }
                 else
                 {
                     reason = string.Format("Map post received null reply from {0}", uri);
-                    m_log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
+                    _log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
                 }
             }
             catch (Exception e)
             {
                 reason = string.Format("Exception when posting to map server at {0}: {1}", uri, e.Message);
-                m_log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
+                _log.WarnFormat("[MAP IMAGE CONNECTOR]: {0}", reason);
             }
             finally
             {
                 // This just dumps a warning for any operation that takes more than 100 ms
                 int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
-                m_log.DebugFormat("[MAP IMAGE CONNECTOR]: map tile upload time {0}ms", tickdiff);
+                _log.DebugFormat("[MAP IMAGE CONNECTOR]: map tile upload time {0}ms", tickdiff);
             }
 
             return false;

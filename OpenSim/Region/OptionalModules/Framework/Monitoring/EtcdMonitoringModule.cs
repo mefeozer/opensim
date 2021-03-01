@@ -47,23 +47,17 @@ namespace OpenSim.Region.OptionalModules.Framework.Monitoring
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "EtcdMonitoringModule")]
     public class EtcdMonitoringModule : INonSharedRegionModule, IEtcdModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Scene m_scene;
-        protected IEtcdClient m_client;
-        protected bool m_enabled = false;
-        protected string m_etcdBasePath = string.Empty;
-        protected bool m_appendRegionID = true;
+        protected Scene _scene;
+        protected IEtcdClient _client;
+        protected bool _enabled = false;
+        protected string _etcdBasePath = string.Empty;
+        protected bool _appendRegionID = true;
 
-        public string Name
-        {
-            get { return "EtcdMonitoringModule"; }
-        }
+        public string Name => "EtcdMonitoringModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -76,11 +70,11 @@ namespace OpenSim.Region.OptionalModules.Framework.Monitoring
             if (string.IsNullOrEmpty(etcdUrls))
                 return;
 
-            m_etcdBasePath = etcdConfig.GetString("BasePath", m_etcdBasePath);
-            m_appendRegionID = etcdConfig.GetBoolean("AppendRegionID", m_appendRegionID);
+            _etcdBasePath = etcdConfig.GetString("BasePath", _etcdBasePath);
+            _appendRegionID = etcdConfig.GetBoolean("AppendRegionID", _appendRegionID);
 
-            if (!m_etcdBasePath.EndsWith("/"))
-                m_etcdBasePath += "/";
+            if (!_etcdBasePath.EndsWith("/"))
+                _etcdBasePath += "/";
 
             try
             {
@@ -89,42 +83,42 @@ namespace OpenSim.Region.OptionalModules.Framework.Monitoring
                 foreach (string endpoint in endpoints)
                     uris.Add(new Uri(endpoint.Trim()));
 
-                m_client = new EtcdClient(uris.ToArray(), new DefaultSerializer(), new DefaultSerializer());
+                _client = new EtcdClient(uris.ToArray(), new DefaultSerializer(), new DefaultSerializer());
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[ETCD]: Error initializing connection: " + e.ToString());
+                _log.DebugFormat("[ETCD]: Error initializing connection: " + e.ToString());
                 return;
             }
 
-            m_log.DebugFormat("[ETCD]: Etcd module configured");
-            m_enabled = true;
+            _log.DebugFormat("[ETCD]: Etcd module configured");
+            _enabled = true;
         }
 
         public void Close()
         {
-            //m_client = null;
-            m_scene = null;
+            //_client = null;
+            _scene = null;
         }
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
 
-            if (m_enabled)
+            if (_enabled)
             {
-                if (m_appendRegionID)
-                    m_etcdBasePath += m_scene.RegionInfo.RegionID.ToString() + "/";
+                if (_appendRegionID)
+                    _etcdBasePath += _scene.RegionInfo.RegionID.ToString() + "/";
 
-                m_log.DebugFormat("[ETCD]: Using base path {0} for all keys", m_etcdBasePath);
+                _log.DebugFormat("[ETCD]: Using base path {0} for all keys", _etcdBasePath);
 
                 try
                 {
-                    m_client.Advanced.CreateDirectory(new CreateDirectoryRequest() {Key = m_etcdBasePath});
+                    _client.Advanced.CreateDirectory(new CreateDirectoryRequest() {Key = _etcdBasePath});
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat("Exception trying to create base path {0}: " + e.ToString(), m_etcdBasePath);
+                    _log.ErrorFormat("Exception trying to create base path {0}: " + e.ToString(), _etcdBasePath);
                 }
 
                 scene.RegisterModuleInterface<IEtcdModule>(this);
@@ -146,14 +140,14 @@ namespace OpenSim.Region.OptionalModules.Framework.Monitoring
 
         public bool Store(string k, string v, int ttl)
         {
-            Response resp = m_client.Advanced.SetKey(new SetKeyRequest() { Key = m_etcdBasePath + k, Value = v, TimeToLive = ttl });
+            Response resp = _client.Advanced.SetKey(new SetKeyRequest() { Key = _etcdBasePath + k, Value = v, TimeToLive = ttl });
 
             if (resp == null)
                 return false;
 
             if (resp.ErrorCode.HasValue)
             {
-                m_log.DebugFormat("[ETCD]: Error {0} ({1}) storing {2} => {3}", resp.Cause, (int)resp.ErrorCode, m_etcdBasePath + k, v);
+                _log.DebugFormat("[ETCD]: Error {0} ({1}) storing {2} => {3}", resp.Cause, (int)resp.ErrorCode, _etcdBasePath + k, v);
 
                 return false;
             }
@@ -163,14 +157,14 @@ namespace OpenSim.Region.OptionalModules.Framework.Monitoring
 
         public string Get(string k)
         {
-            Response resp = m_client.Advanced.GetKey(new GetKeyRequest() { Key = m_etcdBasePath + k });
+            Response resp = _client.Advanced.GetKey(new GetKeyRequest() { Key = _etcdBasePath + k });
 
             if (resp == null)
                 return string.Empty;
 
             if (resp.ErrorCode.HasValue)
             {
-                m_log.DebugFormat("[ETCD]: Error {0} ({1}) getting {2}", resp.Cause, (int)resp.ErrorCode, m_etcdBasePath + k);
+                _log.DebugFormat("[ETCD]: Error {0} ({1}) getting {2}", resp.Cause, (int)resp.ErrorCode, _etcdBasePath + k);
 
                 return string.Empty;
             }
@@ -180,12 +174,12 @@ namespace OpenSim.Region.OptionalModules.Framework.Monitoring
 
         public void Delete(string k)
         {
-            m_client.Advanced.DeleteKey(new DeleteKeyRequest() { Key = m_etcdBasePath + k });
+            _client.Advanced.DeleteKey(new DeleteKeyRequest() { Key = _etcdBasePath + k });
         }
 
         public void Watch(string k, Action<string> callback)
         {
-            m_client.Advanced.WatchKey(new WatchKeyRequest() { Key = m_etcdBasePath + k, Callback = (x) => { callback(x.Node.Value); } });
+            _client.Advanced.WatchKey(new WatchKeyRequest() { Key = _etcdBasePath + k, Callback = (x) => { callback(x.Node.Value); } });
         }
     }
 }

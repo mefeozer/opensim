@@ -126,13 +126,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         /*
          * Generate a unique string (for use in CIL label names, etc)
          */
-        public string Unique
-        {
-            get
-            {
-                return file + "_" + line + "_" + posn;
-            }
-        }
+        public string Unique => file + "_" + line + "_" + posn;
 
         /*
          * Generate source location string (for use in error messages)
@@ -276,40 +270,17 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 curTok = t;
             }
 
-            public override bool CanRead
-            {
-                get
-                {
-                    return true;
-                }
-            }
-            public override bool CanSeek
-            {
-                get
-                {
-                    return false;
-                }
-            }
-            public override bool CanWrite
-            {
-                get
-                {
-                    return false;
-                }
-            }
-            public override long Length
-            {
-                get
-                {
-                    return 0;
-                }
-            }
+            public override bool CanRead => true;
+
+            public override bool CanSeek => false;
+
+            public override bool CanWrite => false;
+
+            public override long Length => 0;
+
             public override long Position
             {
-                get
-                {
-                    return 0;
-                }
+                get => 0;
                 set
                 {
                 }

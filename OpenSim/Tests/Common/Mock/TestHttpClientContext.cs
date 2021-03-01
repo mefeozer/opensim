@@ -35,15 +35,15 @@ namespace OpenSim.Tests.Common
             /// </summary>
             public string ResponseBody
             {
-                get { return Encoding.UTF8.GetString(m_responseStream.ToArray()); }
+                get { return Encoding.UTF8.GetString(_responseStream.ToArray()); }
             }
 
             public Byte[] ResponseBodyBytes
             {
-                get{ return m_responseStream.ToArray(); }
+                get{ return _responseStream.ToArray(); }
             }
 
-            private MemoryStream m_responseStream = new MemoryStream();
+            private MemoryStream _responseStream = new MemoryStream();
 
             public bool IsSecured { get; set; }
 
@@ -81,7 +81,7 @@ namespace OpenSim.Tests.Common
     //                "TestHttpClientContext.Send(byte[], int, int) got offset={0}, size={1}, buffer={2}",
     //                offset, size, Encoding.UTF8.GetString(buffer));
 
-                m_responseStream.Write(buffer, offset, size);
+                _responseStream.Write(buffer, offset, size);
             }
 
             public void Respond(string httpVersion, HttpStatusCode statusCode, string reason, string body, string contentType) {Console.WriteLine("xxxxxx");}

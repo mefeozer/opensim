@@ -41,31 +41,31 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
     {
         public event OnNewIRCUserDelegate OnNewIRCClient;
 
-        private readonly TcpListener m_listener;
-        private readonly Scene m_baseScene;
-        private bool m_running = true;
+        private readonly TcpListener _listener;
+        private readonly Scene _baseScene;
+        private bool _running = true;
 
         public IRCServer(IPAddress listener, int port, Scene baseScene)
         {
-            m_listener = new TcpListener(listener, port);
+            _listener = new TcpListener(listener, port);
 
-            m_listener.Start(50);
+            _listener.Start(50);
 
             WorkManager.StartThread(ListenLoop, "IRCServer");
-            m_baseScene = baseScene;
+            _baseScene = baseScene;
         }
 
         public void Stop()
         {
-            m_running = false;
-            m_listener.Stop();
+            _running = false;
+            _listener.Stop();
         }
 
         private void ListenLoop()
         {
-            while (m_running)
+            while (_running)
             {
-                AcceptClient(m_listener.AcceptTcpClient());
+                AcceptClient(_listener.AcceptTcpClient());
                 Watchdog.UpdateThread();
             }
 
@@ -74,7 +74,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         private void AcceptClient(TcpClient client)
         {
-            IRCClientView cv = new IRCClientView(client, m_baseScene);
+            IRCClientView cv = new IRCClientView(client, _baseScene);
 
             if (OnNewIRCClient != null)
                 OnNewIRCClient(cv);

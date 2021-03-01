@@ -48,14 +48,14 @@ namespace OpenSim.Region.OptionalModules
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "PrimLimitsModule")]
     public class PrimLimitsModule : INonSharedRegionModule
     {
-        protected IDialogModule m_dialogModule;
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private bool m_enabled;
+        protected IDialogModule _dialogModule;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private bool _enabled;
 
-        private Scene m_scene;
-        public string Name { get { return "PrimLimitsModule"; } }
+        private Scene _scene;
+        public string Name => "PrimLimitsModule";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource config)
         {
@@ -67,8 +67,8 @@ namespace OpenSim.Region.OptionalModules
             if(!modules.Contains("PrimLimitsModule"))
                 return;
 
-            m_log.DebugFormat("[PRIM LIMITS]: Initialized module");
-            m_enabled = true;
+            _log.DebugFormat("[PRIM LIMITS]: Initialized module");
+            _enabled = true;
         }
 
         public void Close()
@@ -77,43 +77,43 @@ namespace OpenSim.Region.OptionalModules
 
         public void AddRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            m_scene = scene;
+            _scene = scene;
             scene.Permissions.OnRezObject += CanRezObject;
             scene.Permissions.OnObjectEntry += CanObjectEnter;
             scene.Permissions.OnObjectEnterWithScripts += CanObjectEnterWithScripts;
             scene.Permissions.OnDuplicateObject += CanDuplicateObject;
 
-            m_log.DebugFormat("[PRIM LIMITS]: Region {0} added", scene.RegionInfo.RegionName);
+            _log.DebugFormat("[PRIM LIMITS]: Region {0} added", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            m_scene.Permissions.OnRezObject -= CanRezObject;
-            m_scene.Permissions.OnObjectEntry -= CanObjectEnter;
+            _scene.Permissions.OnRezObject -= CanRezObject;
+            _scene.Permissions.OnObjectEntry -= CanObjectEnter;
             scene.Permissions.OnObjectEnterWithScripts -= CanObjectEnterWithScripts;
-            m_scene.Permissions.OnDuplicateObject -= CanDuplicateObject;
+            _scene.Permissions.OnDuplicateObject -= CanDuplicateObject;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            m_dialogModule = scene.RequestModuleInterface<IDialogModule>();
+            _dialogModule = scene.RequestModuleInterface<IDialogModule>();
         }
 
         private bool CanRezObject(int objectCount, UUID ownerID, Vector3 objectPosition)
         {
-            ILandObject lo = m_scene.LandChannel.GetLandObject(objectPosition.X, objectPosition.Y);
+            ILandObject lo = _scene.LandChannel.GetLandObject(objectPosition.X, objectPosition.Y);
 
             string response = DoCommonChecks(objectCount, ownerID, lo);
 
             if (response != null)
             {
-                m_dialogModule.SendAlertToUser(ownerID, response);
+                _dialogModule.SendAlertToUser(ownerID, response);
                 return false;
             }
             return true;
@@ -123,13 +123,13 @@ namespace OpenSim.Region.OptionalModules
         private bool CanDuplicateObject(SceneObjectGroup sog, ScenePresence sp)
         {
             Vector3 objectPosition = sog.AbsolutePosition;
-            ILandObject lo = m_scene.LandChannel.GetLandObject(objectPosition.X, objectPosition.Y);
+            ILandObject lo = _scene.LandChannel.GetLandObject(objectPosition.X, objectPosition.Y);
 
             string response = DoCommonChecks(sog.PrimCount, sp.UUID, lo);
 
             if (response != null)
             {
-                m_dialogModule.SendAlertToUser(sp.UUID, response);
+                _dialogModule.SendAlertToUser(sp.UUID, response);
                 return false;
             }
             return true;
@@ -139,14 +139,14 @@ namespace OpenSim.Region.OptionalModules
         {
             float newX = newPoint.X;
             float newY = newPoint.Y;
-            if (newX < -1.0f || newX > m_scene.RegionInfo.RegionSizeX + 1.0f ||
-                newY < -1.0f || newY > m_scene.RegionInfo.RegionSizeY + 1.0f )
+            if (newX < -1.0f || newX > _scene.RegionInfo.RegionSizeX + 1.0f ||
+                newY < -1.0f || newY > _scene.RegionInfo.RegionSizeY + 1.0f )
                 return true;
 
             if (sog == null)
                 return false;
 
-            ILandObject newParcel = m_scene.LandChannel.GetLandObject(newX, newY);
+            ILandObject newParcel = _scene.LandChannel.GetLandObject(newX, newY);
 
             if (newParcel == null)
                 return true;
@@ -154,7 +154,7 @@ namespace OpenSim.Region.OptionalModules
             if(!enteringRegion)
             {
                 Vector3 oldPoint = sog.AbsolutePosition;
-                ILandObject oldParcel = m_scene.LandChannel.GetLandObject(oldPoint.X, oldPoint.Y);
+                ILandObject oldParcel = _scene.LandChannel.GetLandObject(oldPoint.X, oldPoint.Y);
                 if(oldParcel != null && oldParcel.Equals(newParcel))
                     return true;
             }
@@ -167,8 +167,8 @@ namespace OpenSim.Region.OptionalModules
 
             if (response != null)
             {
-                if(m_dialogModule != null)
-                    m_dialogModule.SendAlertToUser(sog.OwnerID, response);
+                if(_dialogModule != null)
+                    _dialogModule.SendAlertToUser(sog.OwnerID, response);
                 return false;
             }
             return true;
@@ -205,14 +205,14 @@ namespace OpenSim.Region.OptionalModules
             }
             else
             {
-                int maxPrimsPerUser = m_scene.RegionInfo.MaxPrimsPerUser;
+                int maxPrimsPerUser = _scene.RegionInfo.MaxPrimsPerUser;
                 if (maxPrimsPerUser >= 0)
                 {
                     // per-user prim limit is set
                     if (ownerID != lo.LandData.OwnerID || lo.LandData.IsGroupOwned)
                     {
                         // caller is not the sole Parcel owner
-                        EstateSettings estateSettings = m_scene.RegionInfo.EstateSettings;
+                        EstateSettings estateSettings = _scene.RegionInfo.EstateSettings;
                         if (ownerID != estateSettings.EstateOwner)
                         {
                             // caller is NOT the Estate owner

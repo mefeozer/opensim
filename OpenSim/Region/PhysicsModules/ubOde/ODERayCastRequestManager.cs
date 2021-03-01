@@ -46,12 +46,12 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         /// <summary>
         /// Pending ray requests
         /// </summary>
-        protected OpenSim.Framework.LocklessQueue<ODERayRequest> m_PendingRequests = new OpenSim.Framework.LocklessQueue<ODERayRequest>();
+        protected OpenSim.Framework.LocklessQueue<ODERayRequest> _PendingRequests = new OpenSim.Framework.LocklessQueue<ODERayRequest>();
 
         /// <summary>
         /// Scene that created this object.
         /// </summary>
-        private ODEScene m_scene;
+        private ODEScene _scene;
 
         IntPtr ray; // the ray. we only need one for our lifetime
         IntPtr Sphere;
@@ -66,14 +66,14 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         /// ODE near callback delegate
         /// </summary>
         private readonly SafeNativeMethods.NearCallback nearCallback;
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly List<ContactResult> m_contactResults = new List<ContactResult>();
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly List<ContactResult> _contactResults = new List<ContactResult>();
         private RayFilterFlags CurrentRayFilter;
         private int CurrentMaxCount;
 
         public ODERayCastRequestManager(ODEScene pScene)
         {
-            m_scene = pScene;
+            _scene = pScene;
             nearCallback = near;
             ray = SafeNativeMethods.CreateRay(IntPtr.Zero, 1.0f);
             SafeNativeMethods.GeomSetCategoryBits(ray, 0);
@@ -90,7 +90,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if (req.Count == 0)
                 req.Count = DefaultMaxCount;
 
-            m_PendingRequests.Enqueue(req);
+            _PendingRequests.Enqueue(req);
         }
 
         /// <summary>
@@ -100,13 +100,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         public int ProcessQueuedRequests()
         {
 
-            if (m_PendingRequests.Count <= 0)
+            if (_PendingRequests.Count <= 0)
                 return 0;
 
-            if (m_scene.ContactgeomsArray == IntPtr.Zero || ray == IntPtr.Zero)
+            if (_scene.ContactgeomsArray == IntPtr.Zero || ray == IntPtr.Zero)
                 // oops something got wrong or scene isn't ready still
             {
-                m_PendingRequests.Clear();
+                _PendingRequests.Clear();
                 return 0;
             }
 
@@ -117,19 +117,19 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             int backfacecull;
             CollisionCategories catflags;
 
-            while (m_PendingRequests.Dequeue(out req))
+            while (_PendingRequests.Dequeue(out req))
             {
                 if (req.callbackMethod != null)
                 {
                     IntPtr geom = IntPtr.Zero;
                     if (req.actor != null)
                     {
-                        if (m_scene.haveActor(req.actor))
+                        if (_scene.haveActor(req.actor))
                         {
                             if (req.actor is OdePrim)
-                                geom = ((OdePrim)req.actor).prim_geom;
+                                geom = ((OdePrim)req.actor).pri_geom;
                             else if (req.actor is OdeCharacter)
-                                geom = ((OdePrim)req.actor).prim_geom;
+                                geom = ((OdePrim)req.actor).pri_geom;
                         }
                         if (geom == IntPtr.Zero)
                         {
@@ -268,8 +268,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     break;
             }
 
-            lock (m_contactResults)
-                m_contactResults.Clear();
+            lock (_contactResults)
+                _contactResults.Clear();
 
             return Util.EnvironmentTickCountSubtract(time);
         }
@@ -305,12 +305,12 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             // Collide tests
             if ((CurrentRayFilter & FilterActiveSpace) != 0)
             {
-                SafeNativeMethods.SpaceCollide2(ray, m_scene.ActiveSpace, IntPtr.Zero, nearCallback);
-                SafeNativeMethods.SpaceCollide2(ray, m_scene.CharsSpace, IntPtr.Zero, nearCallback);
+                SafeNativeMethods.SpaceCollide2(ray, _scene.ActiveSpace, IntPtr.Zero, nearCallback);
+                SafeNativeMethods.SpaceCollide2(ray, _scene.CharsSpace, IntPtr.Zero, nearCallback);
             }
-            if ((CurrentRayFilter & FilterStaticSpace) != 0 && m_contactResults.Count < CurrentMaxCount)
-                SafeNativeMethods.SpaceCollide2(ray, m_scene.StaticSpace, IntPtr.Zero, nearCallback);
-            if ((CurrentRayFilter & RayFilterFlags.land) != 0 && m_contactResults.Count < CurrentMaxCount)
+            if ((CurrentRayFilter & FilterStaticSpace) != 0 && _contactResults.Count < CurrentMaxCount)
+                SafeNativeMethods.SpaceCollide2(ray, _scene.StaticSpace, IntPtr.Zero, nearCallback);
+            if ((CurrentRayFilter & RayFilterFlags.land) != 0 && _contactResults.Count < CurrentMaxCount)
             {
                 // current ode land to ray collisions is very bad
                 // so for now limit its range badly
@@ -326,7 +326,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     }
 
                 }
-                SafeNativeMethods.SpaceCollide2(ray, m_scene.GroundSpace, IntPtr.Zero, nearCallback);
+                SafeNativeMethods.SpaceCollide2(ray, _scene.GroundSpace, IntPtr.Zero, nearCallback);
             }
 
             if (req.callbackMethod is RaycastCallback)
@@ -339,9 +339,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 Vector3 snormal = Vector3.Zero;
 
                 // Find closest contact and object.
-                lock (m_contactResults)
+                lock (_contactResults)
                 {
-                    foreach (ContactResult cResult in m_contactResults)
+                    foreach (ContactResult cResult in _contactResults)
                     {
                         if(cResult.Depth < distance)
                         {
@@ -351,7 +351,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                             snormal = cResult.Normal;
                         }
                     }
-                    m_contactResults.Clear();
+                    _contactResults.Clear();
                 }
 
                 if (distance > 0 && distance < float.MaxValue)
@@ -360,11 +360,11 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
             else
             {
-                List<ContactResult> cresult = new List<ContactResult>(m_contactResults.Count);
-                lock (m_PendingRequests)
+                List<ContactResult> cresult = new List<ContactResult>(_contactResults.Count);
+                lock (_PendingRequests)
                 {
-                    cresult.AddRange(m_contactResults);
-                    m_contactResults.Clear();
+                    cresult.AddRange(_contactResults);
+                    _contactResults.Clear();
                 }
                 ((RayCallback)req.callbackMethod)(cresult);
             }
@@ -375,19 +375,19 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             // Collide tests
             if ((CurrentRayFilter & FilterActiveSpace) != 0)
             {
-                SafeNativeMethods.SpaceCollide2(probe, m_scene.ActiveSpace, IntPtr.Zero, nearCallback);
-                SafeNativeMethods.SpaceCollide2(probe, m_scene.CharsSpace, IntPtr.Zero, nearCallback);
+                SafeNativeMethods.SpaceCollide2(probe, _scene.ActiveSpace, IntPtr.Zero, nearCallback);
+                SafeNativeMethods.SpaceCollide2(probe, _scene.CharsSpace, IntPtr.Zero, nearCallback);
             }
-            if ((CurrentRayFilter & FilterStaticSpace) != 0 && m_contactResults.Count < CurrentMaxCount)
-                SafeNativeMethods.SpaceCollide2(probe, m_scene.StaticSpace, IntPtr.Zero, nearCallback);
-            if ((CurrentRayFilter & RayFilterFlags.land) != 0 && m_contactResults.Count < CurrentMaxCount)
-                SafeNativeMethods.SpaceCollide2(probe, m_scene.GroundSpace, IntPtr.Zero, nearCallback);
+            if ((CurrentRayFilter & FilterStaticSpace) != 0 && _contactResults.Count < CurrentMaxCount)
+                SafeNativeMethods.SpaceCollide2(probe, _scene.StaticSpace, IntPtr.Zero, nearCallback);
+            if ((CurrentRayFilter & RayFilterFlags.land) != 0 && _contactResults.Count < CurrentMaxCount)
+                SafeNativeMethods.SpaceCollide2(probe, _scene.GroundSpace, IntPtr.Zero, nearCallback);
 
-            List<ContactResult> cresult = new List<ContactResult>(m_contactResults.Count);
-            lock (m_PendingRequests)
+            List<ContactResult> cresult = new List<ContactResult>(_contactResults.Count);
+            lock (_PendingRequests)
             {
-                cresult.AddRange(m_contactResults);
-                m_contactResults.Clear();
+                cresult.AddRange(_contactResults);
+                _contactResults.Clear();
             }
             if (req.callbackMethod is ProbeBoxCallback)
                 ((ProbeBoxCallback)req.callbackMethod)(cresult);
@@ -402,24 +402,24 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             {
                 if ((CurrentRayFilter & FilterActiveSpace) != 0)
                 {
-                    SafeNativeMethods.SpaceCollide2(Plane, m_scene.ActiveSpace, IntPtr.Zero, nearCallback);
-                    SafeNativeMethods.SpaceCollide2(Plane, m_scene.CharsSpace, IntPtr.Zero, nearCallback);
+                    SafeNativeMethods.SpaceCollide2(Plane, _scene.ActiveSpace, IntPtr.Zero, nearCallback);
+                    SafeNativeMethods.SpaceCollide2(Plane, _scene.CharsSpace, IntPtr.Zero, nearCallback);
                 }
-                if ((CurrentRayFilter & FilterStaticSpace) != 0 && m_contactResults.Count < CurrentMaxCount)
-                    SafeNativeMethods.SpaceCollide2(Plane, m_scene.StaticSpace, IntPtr.Zero, nearCallback);
-                if ((CurrentRayFilter & RayFilterFlags.land) != 0 && m_contactResults.Count < CurrentMaxCount)
-                    SafeNativeMethods.SpaceCollide2(Plane, m_scene.GroundSpace, IntPtr.Zero, nearCallback);
+                if ((CurrentRayFilter & FilterStaticSpace) != 0 && _contactResults.Count < CurrentMaxCount)
+                    SafeNativeMethods.SpaceCollide2(Plane, _scene.StaticSpace, IntPtr.Zero, nearCallback);
+                if ((CurrentRayFilter & RayFilterFlags.land) != 0 && _contactResults.Count < CurrentMaxCount)
+                    SafeNativeMethods.SpaceCollide2(Plane, _scene.GroundSpace, IntPtr.Zero, nearCallback);
             }
             else
             {
                 SafeNativeMethods.SpaceCollide2(Plane, geom, IntPtr.Zero, nearCallback);
             }
 
-            List<ContactResult> cresult = new List<ContactResult>(m_contactResults.Count);
-            lock (m_PendingRequests)
+            List<ContactResult> cresult = new List<ContactResult>(_contactResults.Count);
+            lock (_PendingRequests)
             {
-                cresult.AddRange(m_contactResults);
-                m_contactResults.Clear();
+                cresult.AddRange(_contactResults);
+                _contactResults.Clear();
             }
 
             ((ProbePlaneCallback)req.callbackMethod)(cresult);
@@ -444,9 +444,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 Vector3 snormal = Vector3.Zero;
 
                 // Find closest contact and object.
-                lock (m_contactResults)
+                lock (_contactResults)
                 {
-                    foreach (ContactResult cResult in m_contactResults)
+                    foreach (ContactResult cResult in _contactResults)
                     {
                         if(cResult.Depth < distance )
                         {
@@ -456,7 +456,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                             snormal = cResult.Normal;
                         }
                     }
-                    m_contactResults.Clear();
+                    _contactResults.Clear();
                 }
 
                 if (distance > 0 && distance < float.MaxValue)
@@ -466,11 +466,11 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
             else
             {
-                List<ContactResult> cresult = new List<ContactResult>(m_contactResults.Count);
-                lock (m_PendingRequests)
+                List<ContactResult> cresult = new List<ContactResult>(_contactResults.Count);
+                lock (_PendingRequests)
                 {
-                    cresult.AddRange(m_contactResults);
-                    m_contactResults.Clear();
+                    cresult.AddRange(_contactResults);
+                    _contactResults.Clear();
                 }
                 ((RayCallback)req.callbackMethod)(cresult);
             }
@@ -478,7 +478,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         private bool GetCurContactGeom(int index, ref SafeNativeMethods.ContactGeom newcontactgeom)
         {
-            IntPtr ContactgeomsArray = m_scene.ContactgeomsArray;
+            IntPtr ContactgeomsArray = _scene.ContactgeomsArray;
             if (ContactgeomsArray == IntPtr.Zero || index >= CollisionContactGeomsPerTest)
                 return false;
 
@@ -493,7 +493,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
              if (g2 == IntPtr.Zero || g1 == g2)
                 return;
 
-             if (m_contactResults.Count >= CurrentMaxCount)
+             if (_contactResults.Count >= CurrentMaxCount)
                 return;
 
             if (SafeNativeMethods.GeomIsSpace(g2))
@@ -504,7 +504,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 }
                 catch (Exception e)
                 {
-                    m_log.WarnFormat("[PHYSICS Ray]: Unable to Space collide test an object: {0}", e.Message);
+                    _log.WarnFormat("[PHYSICS Ray]: Unable to Space collide test an object: {0}", e.Message);
                 }
                 return;
             }
@@ -512,11 +512,11 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             int count = 0;
             try
             {
-                count = SafeNativeMethods.CollidePtr(g1, g2, CollisionContactGeomsPerTest, m_scene.ContactgeomsArray, SafeNativeMethods.ContactGeom.unmanagedSizeOf);
+                count = SafeNativeMethods.CollidePtr(g1, g2, CollisionContactGeomsPerTest, _scene.ContactgeomsArray, SafeNativeMethods.ContactGeom.unmanagedSizeOf);
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[PHYSICS Ray]: Unable to collide test an object: {0}", e.Message);
+                _log.WarnFormat("[PHYSICS Ray]: Unable to collide test an object: {0}", e.Message);
                 return;
             }
 
@@ -532,7 +532,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             uint ID = 0;
             PhysicsActor p2 = null;
 
-            m_scene.actor_name_map.TryGetValue(g2, out p2);
+            _scene.actor_name_map.TryGetValue(g2, out p2);
 
             if (p2 == null)
                 return;
@@ -606,10 +606,10 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     collisionresult.Normal.X = curcontact.normal.X;
                     collisionresult.Normal.Y = curcontact.normal.Y;
                     collisionresult.Normal.Z = curcontact.normal.Z;
-                    lock (m_contactResults)
+                    lock (_contactResults)
                     {
-                        m_contactResults.Add(collisionresult);
-                        if (m_contactResults.Count >= CurrentMaxCount)
+                        _contactResults.Add(collisionresult);
+                        if (_contactResults.Count >= CurrentMaxCount)
                             return;
                     }
                 }
@@ -642,8 +642,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                 if (collisionresult.Depth != float.MaxValue)
                 {
-                    lock (m_contactResults)
-                        m_contactResults.Add(collisionresult);
+                    lock (_contactResults)
+                        _contactResults.Add(collisionresult);
                 }
             }
         }
@@ -653,7 +653,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         /// </summary>
         internal void Dispose()
         {
-            m_scene = null;
+            _scene = null;
             if (ray != IntPtr.Zero)
             {
                 SafeNativeMethods.GeomDestroy(ray);

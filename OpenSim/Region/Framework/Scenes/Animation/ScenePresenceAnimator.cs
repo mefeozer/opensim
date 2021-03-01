@@ -40,74 +40,71 @@ namespace OpenSim.Region.Framework.Scenes.Animation
     /// </summary>
     public class ScenePresenceAnimator
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public AnimationSet Animations
-        {
-            get { return m_animations; }
-        }
-        protected AnimationSet m_animations = new AnimationSet();
+        public AnimationSet Animations => _animations;
+        protected AnimationSet _animations = new AnimationSet();
 
         /// <value>
         /// The current movement animation
         /// </value>
         public string CurrentMovementAnimation { get; private set; }
 
-        private int m_animTickFall;
-        private int m_animTickLand;
-        private int m_animTickJump;
+        private int _animTickFall;
+        private int _animTickLand;
+        private int _animTickJump;
 
-        public bool m_jumping = false;
+        public bool _jumping = false;
 
-        //        private int m_landing = 0;
+        //        private int _landing = 0;
 
         /// <summary>
         /// Is the avatar falling?
         /// </summary>
         public bool Falling { get; private set; }
 
-        private float m_lastFallVelocity;
+        private float _lastFallVelocity;
 
         /// <value>
         /// The scene presence that this animator applies to
         /// </value>
-        protected ScenePresence m_scenePresence;
+        protected ScenePresence _scenePresence;
 
         public ScenePresenceAnimator(ScenePresence sp)
         {
-            m_scenePresence = sp;
+            _scenePresence = sp;
             CurrentMovementAnimation = "CROUCH";
         }
 
         public void AddAnimation(UUID animID, UUID objectID)
         {
-            if (m_scenePresence.IsChildAgent)
+            if (_scenePresence.IsChildAgent)
                 return;
 
-            //            m_log.DebugFormat("[SCENE PRESENCE ANIMATOR]: Adding animation {0} for {1}", animID, m_scenePresence.Name);
-            if (m_scenePresence.Scene.DebugAnimations)
-                m_log.DebugFormat(
+            //            _log.DebugFormat("[SCENE PRESENCE ANIMATOR]: Adding animation {0} for {1}", animID, _scenePresence.Name);
+            if (_scenePresence.Scene.DebugAnimations)
+                _log.DebugFormat(
                     "[SCENE PRESENCE ANIMATOR]: Adding animation {0} {1} for {2}",
-                    GetAnimName(animID), animID, m_scenePresence.Name);
+                    GetAnimName(animID), animID, _scenePresence.Name);
 
-            if (m_animations.Add(animID, m_scenePresence.ControllingClient.NextAnimationSequenceNumber, objectID))
+            if (_animations.Add(animID, _scenePresence.ControllingClient.NextAnimationSequenceNumber, objectID))
             {
                 SendAnimPack();
-                m_scenePresence.TriggerScenePresenceUpdated();
+                _scenePresence.TriggerScenePresenceUpdated();
             }
         }
 
         // Called from scripts
         public void AddAnimation(string name, UUID objectID)
         {
-            if (m_scenePresence.IsChildAgent)
+            if (_scenePresence.IsChildAgent)
                 return;
 
             UUID animID = DefaultAvatarAnimations.GetDefaultAnimation(name);
             if (animID == UUID.Zero)
                 return;
 
-            //            m_log.DebugFormat("[SCENE PRESENCE ANIMATOR]: Adding animation {0} {1} for {2}", animID, name, m_scenePresence.Name);
+            //            _log.DebugFormat("[SCENE PRESENCE ANIMATOR]: Adding animation {0} {1} for {2}", animID, name, _scenePresence.Name);
 
             AddAnimation(animID, objectID);
         }
@@ -122,32 +119,32 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// </param>
         public void RemoveAnimation(UUID animID, bool allowNoDefault)
         {
-            if (m_scenePresence.IsChildAgent)
+            if (_scenePresence.IsChildAgent)
                 return;
 
-            if (m_scenePresence.Scene.DebugAnimations)
-                m_log.DebugFormat(
+            if (_scenePresence.Scene.DebugAnimations)
+                _log.DebugFormat(
                     "[SCENE PRESENCE ANIMATOR]: Removing animation {0} {1} for {2}",
-                    GetAnimName(animID), animID, m_scenePresence.Name);
+                    GetAnimName(animID), animID, _scenePresence.Name);
 
-            if (m_animations.Remove(animID, allowNoDefault))
+            if (_animations.Remove(animID, allowNoDefault))
             {
                 SendAnimPack();
-                m_scenePresence.TriggerScenePresenceUpdated();
+                _scenePresence.TriggerScenePresenceUpdated();
             }
         }
 
         public void avnChangeAnim(UUID animID, bool addRemove, bool sendPack)
         {
-            if (m_scenePresence.IsChildAgent)
+            if (_scenePresence.IsChildAgent)
                 return;
 
             if (animID != UUID.Zero)
             {
                 if (addRemove)
-                    m_animations.Add(animID, m_scenePresence.ControllingClient.NextAnimationSequenceNumber, UUID.Zero);
+                    _animations.Add(animID, _scenePresence.ControllingClient.NextAnimationSequenceNumber, UUID.Zero);
                 else
-                    m_animations.Remove(animID, false);
+                    _animations.Remove(animID, false);
             }
             if (sendPack)
                 SendAnimPack();
@@ -156,7 +153,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         // Called from scripts
         public void RemoveAnimation(string name)
         {
-            if (m_scenePresence.IsChildAgent)
+            if (_scenePresence.IsChildAgent)
                 return;
 
             UUID animID = DefaultAvatarAnimations.GetDefaultAnimation(name);
@@ -168,12 +165,12 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
         public void ResetAnimations()
         {
-            if (m_scenePresence.Scene.DebugAnimations)
-                m_log.DebugFormat(
+            if (_scenePresence.Scene.DebugAnimations)
+                _log.DebugFormat(
                     "[SCENE PRESENCE ANIMATOR]: Resetting animations for {0} in {1}",
-                    m_scenePresence.Name, m_scenePresence.Scene.RegionInfo.RegionName);
+                    _scenePresence.Name, _scenePresence.Scene.RegionInfo.RegionName);
 
-            m_animations.Clear();
+            _animations.Clear();
         }
 
 
@@ -191,11 +188,11 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         public bool TrySetMovementAnimation(string anim)
         {
             bool ret = false;
-            if (!m_scenePresence.IsChildAgent)
+            if (!_scenePresence.IsChildAgent)
             {
-//                m_log.DebugFormat(
+//                _log.DebugFormat(
 //                    "[SCENE PRESENCE ANIMATOR]: Setting movement animation {0} for {1}",
-//                    anim, m_scenePresence.Name);
+//                    anim, _scenePresence.Name);
 
                 if (aoSitGndAnim != UUID.Zero)
                 {
@@ -203,7 +200,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                     aoSitGndAnim = UUID.Zero;
                 }
 
-                UUID overridenAnim = m_scenePresence.Overrides.GetOverriddenAnimation(anim);
+                UUID overridenAnim = _scenePresence.Overrides.GetOverriddenAnimation(anim);
                 if (overridenAnim != UUID.Zero)
                 {
                     if (anim == "SITGROUND")
@@ -211,15 +208,15 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                         UUID defsit = DefaultAvatarAnimations.AnimsUUIDbyName["SIT_GROUND_CONSTRAINED"];
                         if (defsit == UUID.Zero)
                             return false;
-                        m_animations.SetDefaultAnimation(defsit, m_scenePresence.ControllingClient.NextAnimationSequenceNumber, m_scenePresence.UUID);
+                        _animations.SetDefaultAnimation(defsit, _scenePresence.ControllingClient.NextAnimationSequenceNumber, _scenePresence.UUID);
                         aoSitGndAnim = overridenAnim;
                         avnChangeAnim(overridenAnim, true, false);
                     }
                     else
                     {
-                        m_animations.SetDefaultAnimation(overridenAnim, m_scenePresence.ControllingClient.NextAnimationSequenceNumber, m_scenePresence.UUID);
+                        _animations.SetDefaultAnimation(overridenAnim, _scenePresence.ControllingClient.NextAnimationSequenceNumber, _scenePresence.UUID);
                     }
-                    m_scenePresence.SendScriptChangedEventToAttachments(Changed.ANIMATION);
+                    _scenePresence.SendScriptChangedEventToAttachments(Changed.ANIMATION);
                     SendAnimPack();
                     ret = true;
                 }
@@ -227,15 +224,15 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 {
                     // translate sit and sitground state animations
                     if (anim == "SIT" || anim == "SITGROUND")
-                        anim = m_scenePresence.sitAnimation;
+                        anim = _scenePresence.sitAnimation;
 
-                    if (m_animations.TrySetDefaultAnimation(anim, m_scenePresence.ControllingClient.NextAnimationSequenceNumber, m_scenePresence.UUID))
+                    if (_animations.TrySetDefaultAnimation(anim, _scenePresence.ControllingClient.NextAnimationSequenceNumber, _scenePresence.UUID))
                     {
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[SCENE PRESENCE ANIMATOR]: Updating movement animation to {0} for {1}",
-//                        anim, m_scenePresence.Name);
+//                        anim, _scenePresence.Name);
 
-                        m_scenePresence.SendScriptChangedEventToAttachments(Changed.ANIMATION);
+                        _scenePresence.SendScriptChangedEventToAttachments(Changed.ANIMATION);
                         SendAnimPack();
                         ret = true;
                     }
@@ -243,9 +240,9 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             }
             else
             {
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[SCENE PRESENCE ANIMATOR]: Tried to set movement animation {0} on child presence {1}",
-                    anim, m_scenePresence.Name);
+                    anim, _scenePresence.Name);
             }
             return ret;
         }
@@ -272,22 +269,22 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             const int JUMP_PERIOD = 800;
             #region Inputs
 
-            if (m_scenePresence.IsInTransit)
+            if (_scenePresence.IsInTransit)
                 return CurrentMovementAnimation;
 
-            if (m_scenePresence.SitGround)
+            if (_scenePresence.SitGround)
             {
                 currentControlState = motionControlStates.sitted;
                 return "SITGROUND";
             }
-            if (m_scenePresence.ParentID != 0 || m_scenePresence.ParentUUID != UUID.Zero)
+            if (_scenePresence.ParentID != 0 || _scenePresence.ParentUUID != UUID.Zero)
             {
                 currentControlState = motionControlStates.sitted;
                 return "SIT";
             }
 
-            AgentManager.ControlFlags controlFlags = (AgentManager.ControlFlags)m_scenePresence.AgentControlFlags;
-            PhysicsActor actor = m_scenePresence.PhysicsActor;
+            AgentManager.ControlFlags controlFlags = (AgentManager.ControlFlags)_scenePresence.AgentControlFlags;
+            PhysicsActor actor = _scenePresence.PhysicsActor;
 
             const AgentManager.ControlFlags ANYXYMASK = AgentManager.ControlFlags.AGENT_CONTROL_AT_POS | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_POS |
                                                         AgentManager.ControlFlags.AGENT_CONTROL_AT_NEG | AgentManager.ControlFlags.AGENT_CONTROL_NUDGE_AT_NEG |
@@ -337,16 +334,16 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
             if (actor.Flying)
             {
-                m_animTickFall = 0;
-                m_animTickJump = 0;
-                m_jumping = false;
+                _animTickFall = 0;
+                _animTickJump = 0;
+                _jumping = false;
                 Falling = false;
 
                 currentControlState = motionControlStates.flying;
 
                 if (heldOnXY)
                 {
-                    return m_scenePresence.Scene.m_useFlySlow ? "FLYSLOW" : "FLY";
+                    return _scenePresence.Scene._useFlySlow ? "FLYSLOW" : "FLY";
                 }
                 else if (heldUp)
                 {
@@ -358,7 +355,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                     {
                         actor.Flying = false;
                         currentControlState = motionControlStates.landing;
-                        m_animTickLand = Environment.TickCount;
+                        _animTickLand = Environment.TickCount;
                         return "LAND";
                     }
                     else
@@ -374,7 +371,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 if (isColliding && currentControlState == motionControlStates.flying)
                 {
                     currentControlState = motionControlStates.landing;
-                    m_animTickLand = Environment.TickCount;
+                    _animTickLand = Environment.TickCount;
                     return "LAND";
                 }
             }
@@ -392,24 +389,24 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 {
                     Falling = true;
                     currentControlState = motionControlStates.falling;
-                    m_lastFallVelocity = fallVelocity;
+                    _lastFallVelocity = fallVelocity;
                     return "FALLDOWN";
                 }
 
                 if (fallVelocity < -2.5f)
                     Falling = true;
 
-                if (m_animTickFall == 0 || fallVelocity >= -0.5f)
+                if (_animTickFall == 0 || fallVelocity >= -0.5f)
                 {
-                    m_animTickFall = Environment.TickCount;
+                    _animTickFall = Environment.TickCount;
                 }
                 else
                 {
-                    int fallElapsed = Environment.TickCount - m_animTickFall;
+                    int fallElapsed = Environment.TickCount - _animTickFall;
                     if (fallElapsed > FALL_DELAY && fallVelocity < -3.0f)
                     {
                         currentControlState = motionControlStates.falling;
-                        m_lastFallVelocity = fallVelocity;
+                        _lastFallVelocity = fallVelocity;
                         // Falling long enough to trigger the animation
                         return "FALLDOWN";
                     }
@@ -422,7 +419,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 return CurrentMovementAnimation;
             }
 
-            m_animTickFall = 0;
+            _animTickFall = 0;
 
             #endregion Falling/Floating/Landing
 
@@ -432,22 +429,22 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             {
                 // Start jumping, prejump
                 currentControlState = motionControlStates.jumping;
-                m_jumping = true;
+                _jumping = true;
                 Falling = false;
-                m_animTickJump = Environment.TickCount;
+                _animTickJump = Environment.TickCount;
                 return "PREJUMP";
             }
 
             if (currentControlState == motionControlStates.jumping)
             {
-                int jumptime = Environment.TickCount - m_animTickJump;
+                int jumptime = Environment.TickCount - _animTickJump;
                 if (jumptime > JUMP_PERIOD * 1.5f && actor.IsColliding)
                 {
                     // end jumping
-                    m_jumping = false;
+                    _jumping = false;
                     Falling = false;
                     actor.Selected = false;      // borrowed for jumping flag
-                    m_animTickLand = Environment.TickCount;
+                    _animTickLand = Environment.TickCount;
                     currentControlState = motionControlStates.landing;
                     return "LAND";
                 }
@@ -459,7 +456,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 else if (jumptime > PREJUMP_DELAY)
                 {
                     // jump up
-                    m_jumping = true;
+                    _jumping = true;
                     return "JUMP";
                 }
                 return CurrentMovementAnimation;
@@ -473,9 +470,9 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             {
                 Falling = false;
                 currentControlState = motionControlStates.landing;
-                m_animTickLand = Environment.TickCount;
+                _animTickLand = Environment.TickCount;
                 // TODO: SOFT_LAND support
-                float fallVsq = m_lastFallVelocity * m_lastFallVelocity;
+                float fallVsq = _lastFallVelocity * _lastFallVelocity;
                 if (fallVsq > 300f) // aprox 20*h
                     return "STANDUP";
                 else if (fallVsq > 160f)
@@ -488,20 +485,20 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             if (currentControlState == motionControlStates.landing)
             {
                 Falling = false;
-                int landElapsed = Environment.TickCount - m_animTickLand;
+                int landElapsed = Environment.TickCount - _animTickLand;
                 int limit = 1000;
                 if (CurrentMovementAnimation == "LAND")
                     limit = 350;
                 // NB if the above is set too long a weird anim reset from some place prevents STAND from being sent to client
 
-                if (m_animTickLand != 0 && landElapsed <= limit)
+                if (_animTickLand != 0 && landElapsed <= limit)
                 {
                     return CurrentMovementAnimation;
                 }
                 else
                 {
                     currentControlState = motionControlStates.onsurface;
-                    m_animTickLand = 0;
+                    _animTickLand = 0;
                     return "STAND";
                 }
             }
@@ -519,9 +516,9 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 }
                 // We need to prevent these animations if the user tries to make their avatar walk or run whilst
                 // specifying AGENT_CONTROL_STOP (pressing down space on viewers).
-                else if (!m_scenePresence.AgentControlStopActive)
+                else if (!_scenePresence.AgentControlStopActive)
                 {
-                    if (m_scenePresence.SetAlwaysRun)
+                    if (_scenePresence.SetAlwaysRun)
                         return "RUN";
                     else
                         return "WALK";
@@ -552,19 +549,19 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// <returns>'true' if the animation was changed</returns>
         public bool UpdateMovementAnimations()
         {
-            //            m_log.DebugFormat("[SCENE PRESENCE ANIMATOR]: Updating movement animations for {0}", m_scenePresence.Name);
+            //            _log.DebugFormat("[SCENE PRESENCE ANIMATOR]: Updating movement animations for {0}", _scenePresence.Name);
 
             bool ret = false;
-            lock (m_animations)
+            lock (_animations)
             {
                 string newMovementAnimation = DetermineMovementAnimation();
                 if (CurrentMovementAnimation != newMovementAnimation)
                 {
                     CurrentMovementAnimation = newMovementAnimation;
 
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[SCENE PRESENCE ANIMATOR]: Determined animation {0} for {1} in UpdateMovementAnimations()",
-//                        CurrentMovementAnimation, m_scenePresence.Name);
+//                        CurrentMovementAnimation, _scenePresence.Name);
 
                     // Only set it if it's actually changed, give a script
                     // a chance to stop a default animation
@@ -576,7 +573,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
         public bool ForceUpdateMovementAnimations()
         {
-            lock (m_animations)
+            lock (_animations)
             {
                 CurrentMovementAnimation = DetermineMovementAnimation();
                 return TrySetMovementAnimation(CurrentMovementAnimation);
@@ -585,7 +582,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
         public bool SetMovementAnimations(string motionState)
         {
-            lock (m_animations)
+            lock (_animations)
             {
                 CurrentMovementAnimation = motionState;
                 return TrySetMovementAnimation(CurrentMovementAnimation);
@@ -597,7 +594,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             UUID[] animIDs;
             int[] sequenceNums;
             UUID[] objectIDs;
-            m_animations.GetArrays(out animIDs, out sequenceNums, out objectIDs);
+            _animations.GetArrays(out animIDs, out sequenceNums, out objectIDs);
             return animIDs;
         }
 
@@ -788,7 +785,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 }
             }
 
-            AssetBase Animasset = new AssetBase(UUID.Random(), "Random Animation", (sbyte)AssetType.Animation, m_scenePresence.UUID.ToString())
+            AssetBase Animasset = new AssetBase(UUID.Random(), "Random Animation", (sbyte)AssetType.Animation, _scenePresence.UUID.ToString())
             {
                 Data = anim.ToBytes(),
                 Temporary = true,
@@ -797,8 +794,8 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             };
             //BinBVHAnimation bbvhanim = new BinBVHAnimation(Animasset.Data);
 
-            m_scenePresence.Scene.AssetService.Store(Animasset);
-            AddAnimation(Animasset.FullID, m_scenePresence.UUID);
+            _scenePresence.Scene.AssetService.Store(Animasset);
+            AddAnimation(Animasset.FullID, _scenePresence.UUID);
             return anim;
         }
 
@@ -810,7 +807,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// <param name="objectIDs"></param>
         public void SendAnimPack(UUID[] animations, int[] seqs, UUID[] objectIDs)
         {
-            m_scenePresence.SendAnimPack(animations, seqs, objectIDs);
+            _scenePresence.SendAnimPack(animations, seqs, objectIDs);
         }
 
         public void GetArrays(out UUID[] animIDs, out int[] sequenceNums, out UUID[] objectIDs)
@@ -819,21 +816,21 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             sequenceNums = null;
             objectIDs = null;
 
-            if (m_animations != null)
-                m_animations.GetArrays(out animIDs, out sequenceNums, out objectIDs);
+            if (_animations != null)
+                _animations.GetArrays(out animIDs, out sequenceNums, out objectIDs);
         }
 
         public void SendAnimPackToClient(IClientAPI client)
         {
-            if (m_scenePresence.IsChildAgent)
+            if (_scenePresence.IsChildAgent)
                 return;
 
             UUID[] animIDs;
             int[] sequenceNums;
             UUID[] objectIDs;
 
-            m_animations.GetArrays(out animIDs, out sequenceNums, out objectIDs);
-            client.SendAnimations(animIDs, sequenceNums, m_scenePresence.ControllingClient.AgentId, objectIDs);
+            _animations.GetArrays(out animIDs, out sequenceNums, out objectIDs);
+            client.SendAnimations(animIDs, sequenceNums, _scenePresence.ControllingClient.AgentId, objectIDs);
         }
 
         /// <summary>
@@ -841,19 +838,19 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// </summary>
         public void SendAnimPack()
         {
-            //m_log.Debug("Sending animation pack to all");
+            //_log.Debug("Sending animation pack to all");
 
-            if (m_scenePresence.IsChildAgent)
+            if (_scenePresence.IsChildAgent)
                 return;
 
             UUID[] animIDs;
             int[] sequenceNums;
             UUID[] objectIDs;
 
-            m_animations.GetArrays(out animIDs, out sequenceNums, out objectIDs);
+            _animations.GetArrays(out animIDs, out sequenceNums, out objectIDs);
 
             //            SendAnimPack(animIDs, sequenceNums, objectIDs);
-            m_scenePresence.SendAnimPack(animIDs, sequenceNums, objectIDs);
+            _scenePresence.SendAnimPack(animIDs, sequenceNums, objectIDs);
         }
 
         public string GetAnimName(UUID animId)
@@ -862,7 +859,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
             if (!DefaultAvatarAnimations.AnimsNamesbyUUID.TryGetValue(animId, out animName))
             {
-                AssetMetadata amd = m_scenePresence.Scene.AssetService.GetMetadata(animId.ToString());
+                AssetMetadata amd = _scenePresence.Scene.AssetService.GetMetadata(animId.ToString());
                 if (amd != null)
                     animName = amd.Name;
                 else

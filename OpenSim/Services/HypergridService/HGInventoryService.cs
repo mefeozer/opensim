@@ -48,26 +48,26 @@ namespace OpenSim.Services.HypergridService
     /// </summary>
     public class HGInventoryService : XInventoryService, IInventoryService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_HomeURL;
-        private readonly IUserAccountService m_UserAccountService;
+        private readonly string _HomeURL;
+        private readonly IUserAccountService _UserAccountService;
 
-        private readonly UserAccountCache m_Cache;
+        private readonly UserAccountCache _Cache;
 
         public HGInventoryService(IConfigSource config, string configName)
             : base(config, configName)
         {
-            m_log.Debug("[HGInventory Service]: Starting");
+            _log.Debug("[HGInventory Service]: Starting");
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
             //
             // Try reading the [InventoryService] section, if it exists
             //
-            IConfig invConfig = config.Configs[m_ConfigName];
+            IConfig invConfig = config.Configs[_ConfigName];
             if (invConfig != null)
             {
                 // realm = authConfig.GetString("Realm", realm);
@@ -76,17 +76,17 @@ namespace OpenSim.Services.HypergridService
                     throw new Exception("Please specify UserAccountsService in HGInventoryService configuration");
 
                 object[] args = new object[] { config };
-                m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userAccountsDll, args);
-                if (m_UserAccountService == null)
+                _UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userAccountsDll, args);
+                if (_UserAccountService == null)
                     throw new Exception(string.Format("Unable to create UserAccountService from {0}", userAccountsDll));
 
-                m_HomeURL = Util.GetConfigVarFromSections<string>(config, "HomeURI",
-                    new string[] { "Startup", "Hypergrid", m_ConfigName }, string.Empty);
+                _HomeURL = Util.GetConfigVarFromSections<string>(config, "HomeURI",
+                    new string[] { "Startup", "Hypergrid", _ConfigName }, string.Empty);
 
-                m_Cache = UserAccountCache.CreateUserAccountCache(m_UserAccountService);
+                _Cache = UserAccountCache.CreateUserAccountCache(_UserAccountService);
             }
 
-            m_log.Debug("[HG INVENTORY SERVICE]: Starting...");
+            _log.Debug("[HG INVENTORY SERVICE]: Starting...");
         }
 
         public override bool CreateUserInventory(UUID principalID)
@@ -104,9 +104,9 @@ namespace OpenSim.Services.HypergridService
 
         public override InventoryFolderBase GetRootFolder(UUID principalID)
         {
-            //m_log.DebugFormat("[HG INVENTORY SERVICE]: GetRootFolder for {0}", principalID);
+            //_log.DebugFormat("[HG INVENTORY SERVICE]: GetRootFolder for {0}", principalID);
             // Warp! Root folder for travelers
-            XInventoryFolder[] folders = m_Database.GetFolders(
+            XInventoryFolder[] folders = _Database.GetFolders(
                     new string[] { "agentID", "folderName"},
                     new string[] { principalID.ToString(), "My Suitcase" });
 
@@ -142,7 +142,7 @@ namespace OpenSim.Services.HypergridService
 
         public override InventoryFolderBase GetFolderForType(UUID principalID, FolderType type)
         {
-            //m_log.DebugFormat("[HG INVENTORY SERVICE]: GetFolderForType for {0} {0}", principalID, type);
+            //_log.DebugFormat("[HG INVENTORY SERVICE]: GetFolderForType for {0} {0}", principalID, type);
             return GetRootFolder(principalID);
         }
 
@@ -175,7 +175,7 @@ namespace OpenSim.Services.HypergridService
         //        if (folder.ParentID == f.ID)
         //        {
         //            XInventoryFolder xFolder = ConvertFromOpenSim(folder);
-        //            return m_Database.StoreFolder(xFolder);
+        //            return _Database.StoreFolder(xFolder);
         //        }
         //    return false;
         //}
@@ -201,7 +201,7 @@ namespace OpenSim.Services.HypergridService
 
         //public override bool MoveFolder(InventoryFolderBase folder)
         //{
-        //    XInventoryFolder[] x = m_Database.GetFolders(
+        //    XInventoryFolder[] x = _Database.GetFolders(
         //            new string[] { "folderID" },
         //            new string[] { folder.ID.ToString() });
 
@@ -217,7 +217,7 @@ namespace OpenSim.Services.HypergridService
         //        if (folder.ParentID == f.ID)
         //        {
         //            x[0].parentFolderID = folder.ParentID;
-        //            return m_Database.StoreFolder(x[0]);
+        //            return _Database.StoreFolder(x[0]);
         //        }
 
         //    return false;
@@ -246,7 +246,7 @@ namespace OpenSim.Services.HypergridService
 
         //    foreach (InventoryFolderBase f in suitDescendents)
         //        if (item.Folder == f.ID)
-        //            return m_Database.StoreItem(ConvertFromOpenSim(item));
+        //            return _Database.StoreItem(ConvertFromOpenSim(item));
 
         //    return false;
         //}
@@ -260,7 +260,7 @@ namespace OpenSim.Services.HypergridService
 
         //    foreach (InventoryFolderBase f in suitDescendents)
         //        if (item.Folder == f.ID)
-        //            return m_Database.StoreItem(ConvertFromOpenSim(item));
+        //            return _Database.StoreItem(ConvertFromOpenSim(item));
 
         //    return false;
         //}
@@ -279,7 +279,7 @@ namespace OpenSim.Services.HypergridService
         //    {
         //        foreach (InventoryFolderBase f in suitDescendents)
         //            if (i.Folder == f.ID)
-        //                m_Database.MoveItem(i.ID.ToString(), i.Folder.ToString());
+        //                _Database.MoveItem(i.ID.ToString(), i.Folder.ToString());
         //    }
 
         //    return true;
@@ -295,11 +295,11 @@ namespace OpenSim.Services.HypergridService
             InventoryItemBase it = base.GetItem(principalID, itemID);
             if (it != null)
             {
-                UserAccount user = m_Cache.GetUser(it.CreatorId);
+                UserAccount user = _Cache.GetUser(it.CreatorId);
 
                 // Adjust the creator data
                 if (user != null && it != null && string.IsNullOrEmpty(it.CreatorData))
-                    it.CreatorData = m_HomeURL + ";" + user.FirstName + " " + user.LastName;
+                    it.CreatorData = _HomeURL + ";" + user.FirstName + " " + user.LastName;
             }
             return it;
         }

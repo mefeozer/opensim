@@ -41,9 +41,9 @@ namespace OpenSim.Services.UserProfilesService
     /// </remarks>
     public class OpenProfileClient
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_serverURI;
+        private readonly string _serverURI;
 
         /// <summary>
         /// Creates a client for accessing a foreign grid's profile server using the OpenProfile protocol.
@@ -51,7 +51,7 @@ namespace OpenSim.Services.UserProfilesService
         /// <param name="serverURI">The grid's profile server URL</param>
         public OpenProfileClient(string serverURI)
         {
-            m_serverURI = serverURI;
+            _serverURI = serverURI;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace OpenSim.Services.UserProfilesService
             Hashtable ReqHash = new Hashtable();
             ReqHash["avatar_id"] = props.UserId.ToString();
 
-            Hashtable profileData = XMLRPCRequester.SendRequest(ReqHash, "avatar_properties_request", m_serverURI);
+            Hashtable profileData = XMLRPCRequester.SendRequest(ReqHash, "avatar_properties_request", _serverURI);
 
             if (profileData == null)
                 return false;

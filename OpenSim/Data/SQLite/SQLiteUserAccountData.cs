@@ -67,12 +67,12 @@ namespace OpenSim.Data.SQLite
                 if (words.Length == 1)
                 {
                     cmd.CommandText = string.Format("select * from {0} where (ScopeID='{1}' or ScopeID='00000000-0000-0000-0000-000000000000') and (FirstName like '{2}%' or LastName like '{2}%')",
-                        m_Realm, scopeID.ToString(), words[0]);
+                        _Realm, scopeID.ToString(), words[0]);
                 }
                 else
                 {
                     cmd.CommandText = string.Format("select * from {0} where (ScopeID='{1}' or ScopeID='00000000-0000-0000-0000-000000000000') and (FirstName like '{2}%' or LastName like '{3}%')",
-                        m_Realm, scopeID.ToString(), words[0], words[1]);
+                        _Realm, scopeID.ToString(), words[0], words[1]);
                 }
 
                 return DoQuery(cmd);

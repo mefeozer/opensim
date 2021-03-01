@@ -43,12 +43,12 @@ namespace OpenSim.Tools.Configger
         /// <summary>
         /// A source of Configuration data
         /// </summary>
-        protected IConfigSource m_config;
+        protected IConfigSource _config;
 
         /// <summary>
         /// Console logger
         /// </summary>
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -89,7 +89,7 @@ namespace OpenSim.Tools.Configger
                     }
                     else
                     {
-                        m_log.ErrorFormat("Master ini file {0} not found", Path.GetFullPath(masterFilePath));
+                        _log.ErrorFormat("Master ini file {0} not found", Path.GetFullPath(masterFilePath));
                         Environment.Exit(1);
                     }
                 }
@@ -111,14 +111,14 @@ namespace OpenSim.Tools.Configger
                 }
             }
 
-            m_config = new IniConfigSource();
+            _config = new IniConfigSource();
 
-            m_log.Info("[CONFIG] Reading configuration settings");
+            _log.Info("[CONFIG] Reading configuration settings");
 
             if (sources.Count == 0)
             {
-                m_log.FatalFormat("[CONFIG] Could not load any configuration");
-                m_log.FatalFormat("[CONFIG] Did you copy the OpenSim.ini.example file to OpenSim.ini?");
+                _log.FatalFormat("[CONFIG] Could not load any configuration");
+                _log.FatalFormat("[CONFIG] Did you copy the OpenSim.ini.example file to OpenSim.ini?");
                 Environment.Exit(1);
             }
 
@@ -131,12 +131,12 @@ namespace OpenSim.Tools.Configger
 
             if (!iniFileExists)
             {
-                m_log.FatalFormat("[CONFIG] Could not load any configuration");
-                m_log.FatalFormat("[CONFIG] Configuration exists, but there was an error loading it!");
+                _log.FatalFormat("[CONFIG] Could not load any configuration");
+                _log.FatalFormat("[CONFIG] Configuration exists, but there was an error loading it!");
                 Environment.Exit(1);
             }
 
-            return m_config;
+            return _config;
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace OpenSim.Tools.Configger
         private void AddIncludes(List<string> sources)
         {
             //loop over config sources
-            foreach (IConfig config in m_config.Configs)
+            foreach (IConfig config in _config.Configs)
             {
                 // Look for Include-* in the key name
                 string[] keys = config.GetKeys();
@@ -210,15 +210,15 @@ namespace OpenSim.Tools.Configger
 
             if (!IsUri(iniPath))
             {
-                m_log.InfoFormat("[CONFIG] Reading configuration file {0}",
+                _log.InfoFormat("[CONFIG] Reading configuration file {0}",
                         Path.GetFullPath(iniPath));
 
-                m_config.Merge(new IniConfigSource(iniPath));
+                _config.Merge(new IniConfigSource(iniPath));
                 success = true;
             }
             else
             {
-                m_log.InfoFormat("[CONFIG] {0} is a http:// URI, fetching ...",
+                _log.InfoFormat("[CONFIG] {0} is a http:// URI, fetching ...",
                         iniPath);
 
                 // The ini file path is a http URI
@@ -228,13 +228,13 @@ namespace OpenSim.Tools.Configger
                 {
                     XmlReader r = XmlReader.Create(iniPath);
                     XmlConfigSource cs = new XmlConfigSource(r);
-                    m_config.Merge(cs);
+                    _config.Merge(cs);
 
                     success = true;
                 }
                 catch (Exception e)
                 {
-                    m_log.FatalFormat("[CONFIG] Exception reading config from URI {0}\n" + e.ToString(), iniPath);
+                    _log.FatalFormat("[CONFIG] Exception reading config from URI {0}\n" + e.ToString(), iniPath);
                     Environment.Exit(1);
                 }
             }

@@ -41,15 +41,15 @@ namespace OpenSim.Framework.Console
         /// <summary>
         /// command delegate used in running
         /// </summary>
-        private readonly ConsoleCommand m_commandDelegate;
+        private readonly ConsoleCommand _commandDelegate;
         /// <summary>
         /// help text displayed
         /// </summary>
-        private readonly string m_helpText;
+        private readonly string _helpText;
         /// <summary>
         /// command in the form of "showme new commands"
         /// </summary>
-        private readonly string[] m_cmdText;
+        private readonly string[] _cmdText;
 
         /// <summary>
         /// Construct a new ConsolePluginCommand
@@ -62,9 +62,9 @@ namespace OpenSim.Framework.Console
         /// <param name="help">the text displayed in "help showme new commands"</param>
         public ConsolePluginCommand(string command, ConsoleCommand dlg, string help)
         {
-            m_cmdText = command.Split(new char[] { ' ' });
-            m_commandDelegate = dlg;
-            m_helpText = help;
+            _cmdText = command.Split(new char[] { ' ' });
+            _commandDelegate = dlg;
+            _helpText = help;
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace OpenSim.Framework.Console
         {
             // QUESTION: have a case insensitive flag?
             cmdWithParams = cmdWithParams.ToLower().Trim();
-            string matchText = string.Join(" ",m_cmdText).ToLower().Trim();
+            string matchText = string.Join(" ",_cmdText).ToLower().Trim();
             if (cmdWithParams.StartsWith(matchText))
             {
                 // QUESTION Instead return cmdText.Length; ?
@@ -95,12 +95,12 @@ namespace OpenSim.Framework.Console
         public void Run(string cmd, string[] cmdParams)
         {
             int skipParams = 0;
-            if (m_cmdText.Length > 1)
+            if (_cmdText.Length > 1)
             {
                 int currentParam = 1;
-                while (currentParam < m_cmdText.Length)
+                while (currentParam < _cmdText.Length)
                 {
-                    if (cmdParams[skipParams].ToLower().Equals(m_cmdText[currentParam].ToLower()))
+                    if (cmdParams[skipParams].ToLower().Equals(_cmdText[currentParam].ToLower()))
                     {
                         skipParams++;
                     }
@@ -116,7 +116,7 @@ namespace OpenSim.Framework.Console
                     sendCmdParams[i] = cmdParams[skipParams++];
                 }
             }
-            m_commandDelegate(sendCmdParams);//.Trim().Split(new char[] { ' ' }));
+            _commandDelegate(sendCmdParams);//.Trim().Split(new char[] { ' ' }));
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace OpenSim.Framework.Console
         /// </summary>
         public void ShowHelp(ConsoleBase console)
         {
-            console.Output(string.Join(" ", m_cmdText) + " - " + m_helpText + "\n");
+            console.Output(string.Join(" ", _cmdText) + " - " + _helpText + "\n");
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace OpenSim.Framework.Console
         public bool IsHelpfull(string cmdWithParams)
         {
             cmdWithParams = cmdWithParams.ToLower();
-            return cmdWithParams.Contains(string.Join(" ", m_cmdText).ToLower()) || m_helpText.ToLower().Contains(cmdWithParams);
+            return cmdWithParams.Contains(string.Join(" ", _cmdText).ToLower()) || _helpText.ToLower().Contains(cmdWithParams);
         }
     }
 }

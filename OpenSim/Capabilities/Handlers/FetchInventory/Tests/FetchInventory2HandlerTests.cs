@@ -37,11 +37,11 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
     [TestFixture]
     public class FetchInventory2HandlerTests : OpenSimTestCase
     {
-        private UUID m_userID = UUID.Random();
-        private Scene m_scene;
-        private UUID m_rootFolderID;
-        private UUID m_notecardsFolder;
-        private UUID m_objectsFolder;
+        private UUID _userID = UUID.Random();
+        private Scene _scene;
+        private UUID _rootFolderID;
+        private UUID _notecardsFolder;
+        private UUID _objectsFolder;
 
         private void Init()
         {
@@ -60,43 +60,43 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             //      Notecard 4
             //      Notecard 5
 
-            m_scene = new SceneHelpers().SetupScene();
+            _scene = new SceneHelpers().SetupScene();
 
-            m_scene.InventoryService.CreateUserInventory(m_userID);
+            _scene.InventoryService.CreateUserInventory(_userID);
 
-            m_rootFolderID = m_scene.InventoryService.GetRootFolder(m_userID).ID;
+            _rootFolderID = _scene.InventoryService.GetRootFolder(_userID).ID;
 
-            InventoryFolderBase of = m_scene.InventoryService.GetFolderForType(m_userID, FolderType.Object);
-            m_objectsFolder = of.ID;
+            InventoryFolderBase of = _scene.InventoryService.GetFolderForType(_userID, FolderType.Object);
+            _objectsFolder = of.ID;
 
             // Add 3 objects
             InventoryItemBase item;
             for (int i = 1; i <= 3; i++)
             {
-                item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-0000000000b" + i), m_userID)
+                item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-0000000000b" + i), _userID)
                 {
                     AssetID = UUID.Random(),
                     AssetType = (int)AssetType.Object,
-                    Folder = m_objectsFolder,
+                    Folder = _objectsFolder,
                     Name = "Object " + i
                 };
-                m_scene.InventoryService.AddItem(item);
+                _scene.InventoryService.AddItem(item);
             }
 
-            InventoryFolderBase ncf = m_scene.InventoryService.GetFolderForType(m_userID, FolderType.Notecard);
-            m_notecardsFolder = ncf.ID;
+            InventoryFolderBase ncf = _scene.InventoryService.GetFolderForType(_userID, FolderType.Notecard);
+            _notecardsFolder = ncf.ID;
 
             // Add 5 notecards
             for (int i = 1; i <= 5; i++)
             {
-                item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-00000000000" + i), m_userID)
+                item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-00000000000" + i), _userID)
                 {
                     AssetID = UUID.Random(),
                     AssetType = (int)AssetType.Notecard,
-                    Folder = m_notecardsFolder,
+                    Folder = _notecardsFolder,
                     Name = "Notecard " + i
                 };
-                m_scene.InventoryService.AddItem(item);
+                _scene.InventoryService.AddItem(item);
             }
 
         }
@@ -108,11 +108,11 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
 
             Init();
 
-            FetchInventory2Handler handler = new FetchInventory2Handler(m_scene.InventoryService, m_userID);
+            FetchInventory2Handler handler = new FetchInventory2Handler(_scene.InventoryService, _userID);
             TestOSHttpRequest req = new TestOSHttpRequest();
             TestOSHttpResponse resp = new TestOSHttpResponse();
 
-            string request = "<llsd><map><key>items</key><array><map><key>item_id</key><uuid>";
+            string request = "<llsd><map><key>items</key><array><map><key>ite_id</key><uuid>";
             request += "10000000-0000-0000-0000-000000000001"; // Notecard 1
             request += "</uuid></map></array></map></llsd>";
 
@@ -120,7 +120,7 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
 
             Assert.That(llsdresponse != null, Is.True, "Incorrect null response");
             Assert.That(!string.IsNullOrEmpty(llsdresponse), Is.True, "Incorrect empty response");
-            Assert.That(llsdresponse.Contains(m_userID.ToString()), Is.True, "Response should contain userID");
+            Assert.That(llsdresponse.Contains(_userID.ToString()), Is.True, "Response should contain userID");
 
             Assert.That(llsdresponse.Contains("10000000-0000-0000-0000-000000000001"), Is.True, "Response does not contain item uuid");
             Assert.That(llsdresponse.Contains("Notecard 1"), Is.True, "Response does not contain item Name");
@@ -134,23 +134,23 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
 
             Init();
 
-            FetchInventory2Handler handler = new FetchInventory2Handler(m_scene.InventoryService, m_userID);
+            FetchInventory2Handler handler = new FetchInventory2Handler(_scene.InventoryService, _userID);
             TestOSHttpRequest req = new TestOSHttpRequest();
             TestOSHttpResponse resp = new TestOSHttpResponse();
 
             string request = "<llsd><map><key>items</key><array>";
-            request += "<map><key>item_id</key><uuid>10000000-0000-0000-0000-000000000001</uuid></map>"; // Notecard 1
-            request += "<map><key>item_id</key><uuid>10000000-0000-0000-0000-000000000002</uuid></map>"; // Notecard 2
-            request += "<map><key>item_id</key><uuid>10000000-0000-0000-0000-000000000003</uuid></map>"; // Notecard 3
-            request += "<map><key>item_id</key><uuid>10000000-0000-0000-0000-000000000004</uuid></map>"; // Notecard 4
-            request += "<map><key>item_id</key><uuid>10000000-0000-0000-0000-000000000005</uuid></map>"; // Notecard 5
+            request += "<map><key>ite_id</key><uuid>10000000-0000-0000-0000-000000000001</uuid></map>"; // Notecard 1
+            request += "<map><key>ite_id</key><uuid>10000000-0000-0000-0000-000000000002</uuid></map>"; // Notecard 2
+            request += "<map><key>ite_id</key><uuid>10000000-0000-0000-0000-000000000003</uuid></map>"; // Notecard 3
+            request += "<map><key>ite_id</key><uuid>10000000-0000-0000-0000-000000000004</uuid></map>"; // Notecard 4
+            request += "<map><key>ite_id</key><uuid>10000000-0000-0000-0000-000000000005</uuid></map>"; // Notecard 5
             request += "</array></map></llsd>";
 
             string llsdresponse = handler.FetchInventoryRequest(request, "/FETCH", string.Empty, req, resp);
 
             Assert.That(llsdresponse != null, Is.True, "Incorrect null response");
             Assert.That(!string.IsNullOrEmpty(llsdresponse), Is.True, "Incorrect empty response");
-            Assert.That(llsdresponse.Contains(m_userID.ToString()), Is.True, "Response should contain userID");
+            Assert.That(llsdresponse.Contains(_userID.ToString()), Is.True, "Response should contain userID");
 
             Console.WriteLine(llsdresponse);
             Assert.That(llsdresponse.Contains("10000000-0000-0000-0000-000000000001"), Is.True, "Response does not contain notecard 1");

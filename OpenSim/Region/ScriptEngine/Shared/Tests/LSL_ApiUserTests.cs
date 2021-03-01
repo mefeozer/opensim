@@ -41,18 +41,18 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     [TestFixture]
     public class LSL_ApiUserTests : OpenSimTestCase
     {
-        private Scene m_scene;
-        private MockScriptEngine m_engine;
+        private Scene _scene;
+        private MockScriptEngine _engine;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
 
-            m_engine = new MockScriptEngine();
+            _engine = new MockScriptEngine();
 
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, m_engine);
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, _engine);
         }
 
         [Test]
@@ -63,13 +63,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             UUID userId = TestHelpers.ParseTail(0x1);
 
-            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(m_scene, userId);
+            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(_scene, userId);
 
-            SceneObjectPart part = SceneHelpers.AddSceneObject(m_scene).RootPart;
-            TaskInventoryItem scriptItem = TaskInventoryHelpers.AddScript(m_scene.AssetService, part);
+            SceneObjectPart part = SceneHelpers.AddSceneObject(_scene).RootPart;
+            TaskInventoryItem scriptItem = TaskInventoryHelpers.AddScript(_scene.AssetService, part);
 
             LSL_Api apiGrp1 = new LSL_Api();
-            apiGrp1.Initialize(m_engine, part, scriptItem);
+            apiGrp1.Initialize(_engine, part, scriptItem);
 
             // Initially long timeout to test cache
             apiGrp1.LlRequestAgentDataCacheTimeoutMs = 20000;
@@ -78,9 +78,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             {
                 apiGrp1.llRequestAgentData(userId.ToString(), ScriptBaseClass.DATA_ONLINE);
 
-                Assert.That(m_engine.PostedEvents.ContainsKey(scriptItem.ItemID));
+                Assert.That(_engine.PostedEvents.ContainsKey(scriptItem.ItemID));
 
-                List<EventParams> events = m_engine.PostedEvents[scriptItem.ItemID];
+                List<EventParams> events = _engine.PostedEvents[scriptItem.ItemID];
                 Assert.That(events.Count, Is.EqualTo(1));
                 EventParams eventParams = events[0];
                 Assert.That(eventParams.EventName, Is.EqualTo("dataserver"));
@@ -88,18 +88,18 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 string data = eventParams.Params[1].ToString();
                 Assert.AreEqual(0, int.Parse(data));
 
-                m_engine.PostedEvents.Clear();
+                _engine.PostedEvents.Clear();
             }
 
             // Online test.  Should get the 'wrong' result because of caching.
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, ua1);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, ua1);
 
             {
                 apiGrp1.llRequestAgentData(userId.ToString(), ScriptBaseClass.DATA_ONLINE);
 
-                Assert.That(m_engine.PostedEvents.ContainsKey(scriptItem.ItemID));
+                Assert.That(_engine.PostedEvents.ContainsKey(scriptItem.ItemID));
 
-                List<EventParams> events = m_engine.PostedEvents[scriptItem.ItemID];
+                List<EventParams> events = _engine.PostedEvents[scriptItem.ItemID];
                 Assert.That(events.Count, Is.EqualTo(1));
                 EventParams eventParams = events[0];
                 Assert.That(eventParams.EventName, Is.EqualTo("dataserver"));
@@ -107,7 +107,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 string data = eventParams.Params[1].ToString();
                 Assert.AreEqual(0, int.Parse(data));
 
-                m_engine.PostedEvents.Clear();
+                _engine.PostedEvents.Clear();
             }
 
             apiGrp1.LlRequestAgentDataCacheTimeoutMs = 20;
@@ -118,9 +118,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             {
                 apiGrp1.llRequestAgentData(userId.ToString(), ScriptBaseClass.DATA_ONLINE);
 
-                Assert.That(m_engine.PostedEvents.ContainsKey(scriptItem.ItemID));
+                Assert.That(_engine.PostedEvents.ContainsKey(scriptItem.ItemID));
 
-                List<EventParams> events = m_engine.PostedEvents[scriptItem.ItemID];
+                List<EventParams> events = _engine.PostedEvents[scriptItem.ItemID];
                 Assert.That(events.Count, Is.EqualTo(1));
                 EventParams eventParams = events[0];
                 Assert.That(eventParams.EventName, Is.EqualTo("dataserver"));
@@ -128,19 +128,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 string data = eventParams.Params[1].ToString();
                 Assert.AreEqual(1, int.Parse(data));
 
-                m_engine.PostedEvents.Clear();
+                _engine.PostedEvents.Clear();
             }
 
-            m_scene.CloseAgent(userId, false);
+            _scene.CloseAgent(userId, false);
 
             Thread.Sleep(apiGrp1.LlRequestAgentDataCacheTimeoutMs + 50);
 
             {
                 apiGrp1.llRequestAgentData(userId.ToString(), ScriptBaseClass.DATA_ONLINE);
 
-                Assert.That(m_engine.PostedEvents.ContainsKey(scriptItem.ItemID));
+                Assert.That(_engine.PostedEvents.ContainsKey(scriptItem.ItemID));
 
-                List<EventParams> events = m_engine.PostedEvents[scriptItem.ItemID];
+                List<EventParams> events = _engine.PostedEvents[scriptItem.ItemID];
                 Assert.That(events.Count, Is.EqualTo(1));
                 EventParams eventParams = events[0];
                 Assert.That(eventParams.EventName, Is.EqualTo("dataserver"));
@@ -148,7 +148,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 string data = eventParams.Params[1].ToString();
                 Assert.AreEqual(0, int.Parse(data));
 
-                m_engine.PostedEvents.Clear();
+                _engine.PostedEvents.Clear();
             }
         }
     }

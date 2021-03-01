@@ -42,21 +42,21 @@ namespace OpenSim.Server.Handlers.Simulation
 {
     public class ObjectSimpleHandler : SimpleStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ISimulationService m_SimulationService;
-        protected bool m_Proxy = false;
+        private readonly ISimulationService _SimulationService;
+        protected bool _Proxy = false;
 
         public ObjectSimpleHandler(ISimulationService service) : base("/object")
         {
-            m_SimulationService = service;
+            _SimulationService = service;
         }
 
         protected override void ProcessRequest(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
             httpResponse.KeepAlive = false;
 
-            if (m_SimulationService == null)
+            if (_SimulationService == null)
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
                 httpResponse.RawBuffer = Utils.falseStrBytes;
@@ -66,7 +66,7 @@ namespace OpenSim.Server.Handlers.Simulation
             /*this things are ignored
             if (!Utils.GetParams(httpRequest.UriPath, out UUID objectID, out UUID regionID, out string action))
             {
-                m_log.InfoFormat("[OBJECT HANDLER]: Invalid parameters for object message {0}", httpRequest.UriPath);
+                _log.InfoFormat("[OBJECT HANDLER]: Invalid parameters for object message {0}", httpRequest.UriPath);
                 httpResponse.StatusCode = (int)HttpStatusCode.NotFound;
                 return;
             }
@@ -128,17 +128,17 @@ namespace OpenSim.Server.Handlers.Simulation
             if (args.ContainsKey("extra") && args["extra"] != null)
                 extraStr = args["extra"].AsString();
 
-            IScene s = m_SimulationService.GetScene(destination.RegionID);
+            IScene s = _SimulationService.GetScene(destination.RegionID);
             ISceneObject sog = null;
             try
             {
-                //m_log.DebugFormat("[OBJECT HANDLER]: received {0}", sogXmlStr);
+                //_log.DebugFormat("[OBJECT HANDLER]: received {0}", sogXmlStr);
                 sog = s.DeserializeObject(sogXmlStr);
                 sog.ExtraFromXmlString(extraStr);
             }
             catch (Exception ex)
             {
-                m_log.InfoFormat("[OBJECT HANDLER]: exception on deserializing scene object {0}", ex.Message);
+                _log.InfoFormat("[OBJECT HANDLER]: exception on deserializing scene object {0}", ex.Message);
                 httpResponse.StatusCode = (int)HttpStatusCode.BadRequest;
                 return;
             }
@@ -159,7 +159,7 @@ namespace OpenSim.Server.Handlers.Simulation
                     }
                     catch (Exception ex)
                     {
-                        m_log.InfoFormat("[OBJECT HANDLER]: exception on setting state for scene object {0}", ex.Message);
+                        _log.InfoFormat("[OBJECT HANDLER]: exception on setting state for scene object {0}", ex.Message);
                         // ignore and continue
                     }
                 }
@@ -173,7 +173,7 @@ namespace OpenSim.Server.Handlers.Simulation
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[OBJECT HANDLER]: Exception in CreateObject: {0}", e.StackTrace);
+                _log.DebugFormat("[OBJECT HANDLER]: Exception in CreateObject: {0}", e.StackTrace);
                 result = false;
             }
 
@@ -184,7 +184,7 @@ namespace OpenSim.Server.Handlers.Simulation
         // subclasses can override this
         protected virtual bool CreateObject(GridRegion destination, Vector3 newPosition, ISceneObject sog)
         {
-            return m_SimulationService.CreateObject(destination, newPosition, sog, false);
+            return _SimulationService.CreateObject(destination, newPosition, sog, false);
         }
     }
 }

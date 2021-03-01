@@ -46,9 +46,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         /**
          * @brief Create an XML element that gives the current state of the script.
-         *   <ScriptState Engine="YEngine" SourceHash=m_ObjCode.sourceHash Asset=m_Item.AssetID>
+         *   <ScriptState Engine="YEngine" SourceHash=_ObjCode.sourceHash Asset=_Item.AssetID>
          *     <Snapshot>globalsandstackdump</Snapshot>
-         *     <Running>m_Running</Running>
+         *     <Running>_Running</Running>
          *     <DetectArray ...
          *     <EventQueue ...
          *     <Permissions ...
@@ -63,20 +63,20 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // Change this to a 5 second timeout. If things do mess up,
             // we don't want to be stuck forever.
             //
-            m_DetachReady.WaitOne(5000, false);
+            _DetachReady.WaitOne(5000, false);
 
             XmlElement scriptStateN = doc.CreateElement("", "ScriptState", "");
-            scriptStateN.SetAttribute("Engine", m_Engine.ScriptEngineName);
-            scriptStateN.SetAttribute("Asset", m_Item.AssetID.ToString());
-            scriptStateN.SetAttribute("SourceHash", m_ObjCode.sourceHash);
+            scriptStateN.SetAttribute("Engine", _Engine.ScriptEngineName);
+            scriptStateN.SetAttribute("Asset", _Item.AssetID.ToString());
+            scriptStateN.SetAttribute("SourceHash", _ObjCode.sourceHash);
 
             // Make sure we aren't executing part of the script so it stays 
             // stable.  Setting suspendOnCheckRun tells CheckRun() to suspend
             // and return out so RunOne() will release the lock asap.
             suspendOnCheckRunHold = true;
-            lock(m_RunLock)
+            lock(_RunLock)
             {
-                m_RunOnePhase = "GetExecutionState enter";
+                _RunOnePhase = "GetExecutionState enter";
                 CheckRunLockInvariants(true);
 
                 // Get copy of script globals and stack in relocateable form.
@@ -91,37 +91,37 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 XmlElement snapshotN = doc.CreateElement("", "Snapshot", "");
                 snapshotN.AppendChild(doc.CreateTextNode(snapshotString));
                 scriptStateN.AppendChild(snapshotN);
-                m_RunOnePhase = "GetExecutionState B";
+                _RunOnePhase = "GetExecutionState B";
                 CheckRunLockInvariants(true);
 
                 // "Running" says whether or not we are accepting new events.
                 XmlElement runningN = doc.CreateElement("", "Running", "");
-                runningN.AppendChild(doc.CreateTextNode(m_Running.ToString()));
+                runningN.AppendChild(doc.CreateTextNode(_Running.ToString()));
                 scriptStateN.AppendChild(runningN);
-                m_RunOnePhase = "GetExecutionState C";
+                _RunOnePhase = "GetExecutionState C";
                 CheckRunLockInvariants(true);
 
                 // "DoGblInit" says whether or not default:state_entry() will init global vars.
                 XmlElement doGblInitN = doc.CreateElement("", "DoGblInit", "");
                 doGblInitN.AppendChild(doc.CreateTextNode(doGblInit.ToString()));
                 scriptStateN.AppendChild(doGblInitN);
-                m_RunOnePhase = "GetExecutionState D";
+                _RunOnePhase = "GetExecutionState D";
                 CheckRunLockInvariants(true);
 
-                if(m_XMRLSLApi != null)
+                if(_XMRLSLApi != null)
                 {
-                    double scriptTime = Util.GetTimeStampMS() - m_XMRLSLApi.getLSLTimer();
+                    double scriptTime = Util.GetTimeStampMS() - _XMRLSLApi.getLSLTimer();
                     XmlElement scriptTimeN = doc.CreateElement("", "scrpTime", "");
                     scriptTimeN.AppendChild(doc.CreateTextNode(scriptTime.ToString()));
                     scriptStateN.AppendChild(scriptTimeN);
                 }
 
-                if (m_minEventDelay != 0.0)
+                if (_minEventDelay != 0.0)
                 {
                     XmlElement minEventDelayN = doc.CreateElement("", "mEvtDly", "");
-                    minEventDelayN.AppendChild(doc.CreateTextNode(m_minEventDelay.ToString()));
+                    minEventDelayN.AppendChild(doc.CreateTextNode(_minEventDelay.ToString()));
                     scriptStateN.AppendChild(minEventDelayN);
-                    m_RunOnePhase = "GetExecutionState D";
+                    _RunOnePhase = "GetExecutionState D";
                     CheckRunLockInvariants(true);
                 }
 
@@ -130,24 +130,24 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 scriptStateN.AppendChild(permissionsN);
 
                 XmlAttribute granterA = doc.CreateAttribute("", "granter", "");
-                granterA.Value = m_Item.PermsGranter.ToString();
+                granterA.Value = _Item.PermsGranter.ToString();
                 permissionsN.Attributes.Append(granterA);
 
                 XmlAttribute maskA = doc.CreateAttribute("", "mask", "");
-                maskA.Value = m_Item.PermsMask.ToString();
+                maskA.Value = _Item.PermsMask.ToString();
                 permissionsN.Attributes.Append(maskA);
-                m_RunOnePhase = "GetExecutionState E";
+                _RunOnePhase = "GetExecutionState E";
                 CheckRunLockInvariants(true);
 
                 // "DetectParams" are returned by llDetected...() script functions
                 // for the currently active event, if any.
-                if(m_DetectParams != null)
+                if(_DetectParams != null)
                 {
                     XmlElement detParArrayN = doc.CreateElement("", "DetectArray", "");
-                    AppendXMLDetectArray(doc, detParArrayN, m_DetectParams);
+                    AppendXMLDetectArray(doc, detParArrayN, _DetectParams);
                     scriptStateN.AppendChild(detParArrayN);
                 }
-                m_RunOnePhase = "GetExecutionState F";
+                _RunOnePhase = "GetExecutionState F";
                 CheckRunLockInvariants(true);
 
                 // Save any events we have in the queue.
@@ -159,9 +159,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 //   ...
                 // </EventQueue>
                 XmlElement queuedEventsN = doc.CreateElement("", "EventQueue", "");
-                lock(m_QueueLock)
+                lock(_QueueLock)
                 {
-                    foreach(EventParams evt in m_EventQueue)
+                    foreach(EventParams evt in _EventQueue)
                     {
                         XmlElement singleEventN = doc.CreateElement("", "Event", "");
                         singleEventN.SetAttribute("Name", evt.EventName);
@@ -171,29 +171,29 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     }
                 }
                 scriptStateN.AppendChild(queuedEventsN);
-                m_RunOnePhase = "GetExecutionState G";
+                _RunOnePhase = "GetExecutionState G";
                 CheckRunLockInvariants(true);
 
                 // "Plugins" indicate enabled timers and listens, etc.
                 object[] pluginData =
-                        AsyncCommandManager.GetSerializationData(m_Engine, m_ItemID);
+                        AsyncCommandManager.GetSerializationData(_Engine, _ItemID);
 
                 XmlNode plugins = doc.CreateElement("", "Plugins", "");
                 AppendXMLObjectArray(doc, plugins, pluginData, "plugin");
                 scriptStateN.AppendChild(plugins);
-                m_RunOnePhase = "GetExecutionState H";
+                _RunOnePhase = "GetExecutionState H";
                 CheckRunLockInvariants(true);
 
                 // Let script run again.
                 suspendOnCheckRunHold = false;
 
-                m_RunOnePhase = "GetExecutionState leave";
+                _RunOnePhase = "GetExecutionState leave";
                 CheckRunLockInvariants(true);
             }
 
             // scriptStateN represents the contents of the .state file so
             // write the .state file while we are here.
-            using(FileStream fs = File.Create(m_StateFileName))
+            using(FileStream fs = File.Create(_StateFileName))
             {
                 using(StreamWriter sw = new StreamWriter(fs))
                     sw.Write(scriptStateN.OuterXml);

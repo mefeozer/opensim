@@ -134,20 +134,20 @@ namespace OpenSim.Data.Null
             return new List<SceneObjectGroup>();
         }
 
-        readonly Dictionary<UUID, TerrainData> m_terrains = new Dictionary<UUID, TerrainData>();
-        readonly Dictionary<UUID, TerrainData> m_bakedterrains = new Dictionary<UUID, TerrainData>();
+        readonly Dictionary<UUID, TerrainData> _terrains = new Dictionary<UUID, TerrainData>();
+        readonly Dictionary<UUID, TerrainData> _bakedterrains = new Dictionary<UUID, TerrainData>();
         public void StoreTerrain(TerrainData ter, UUID regionID)
         {
-            if (m_terrains.ContainsKey(regionID))
-                m_terrains.Remove(regionID);
-            m_terrains.Add(regionID, ter);
+            if (_terrains.ContainsKey(regionID))
+                _terrains.Remove(regionID);
+            _terrains.Add(regionID, ter);
         }
 
         public void StoreBakedTerrain(TerrainData ter, UUID regionID)
         {
-            if (m_bakedterrains.ContainsKey(regionID))
-                m_bakedterrains.Remove(regionID);
-            m_bakedterrains.Add(regionID, ter);
+            if (_bakedterrains.ContainsKey(regionID))
+                _bakedterrains.Remove(regionID);
+            _bakedterrains.Add(regionID, ter);
         }
 
         // Legacy. Just don't do this.
@@ -161,27 +161,27 @@ namespace OpenSim.Data.Null
         // Returns 'null' if region not found
         public double[,] LoadTerrain(UUID regionID)
         {
-            if (m_terrains.ContainsKey(regionID))
+            if (_terrains.ContainsKey(regionID))
             {
-                return m_terrains[regionID].GetDoubles();
+                return _terrains[regionID].GetDoubles();
             }
             return null;
         }
 
         public TerrainData LoadTerrain(UUID regionID, int pSizeX, int pSizeY, int pSizeZ)
         {
-            if (m_terrains.ContainsKey(regionID))
+            if (_terrains.ContainsKey(regionID))
             {
-                return m_terrains[regionID];
+                return _terrains[regionID];
             }
             return null;
         }
 
         public TerrainData LoadBakedTerrain(UUID regionID, int pSizeX, int pSizeY, int pSizeZ)
         {
-            if (m_bakedterrains.ContainsKey(regionID))
+            if (_bakedterrains.ContainsKey(regionID))
             {
-                return m_bakedterrains[regionID];
+                return _bakedterrains[regionID];
             }
             return null;
         }

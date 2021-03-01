@@ -45,14 +45,14 @@ namespace OpenSim.Server.Handlers
 {
     public class EstateDataRobustConnector : ServiceConnector
     {
-        private readonly string m_ConfigName = "EstateService";
+        private readonly string _ConfigName = "EstateService";
 
         public EstateDataRobustConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string service = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -63,7 +63,7 @@ namespace OpenSim.Server.Handlers
             object[] args = new object[] { config };
             IEstateDataService e_service = ServerUtils.LoadPlugin<IEstateDataService>(service, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName); ;
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName); ;
 
             server.AddStreamHandler(new EstateServerGetHandler(e_service, auth));
             server.AddStreamHandler(new EstateServerPostHandler(e_service, auth));
@@ -73,9 +73,9 @@ namespace OpenSim.Server.Handlers
 
     public class EstateServerGetHandler : BaseStreamHandler
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-readonly IEstateDataService m_EstateService;
+readonly IEstateDataService _EstateService;
 
         // Possibilities
         // /estates/estate/?region=uuid&create=[t|f]
@@ -88,7 +88,7 @@ readonly IEstateDataService m_EstateService;
         public EstateServerGetHandler(IEstateDataService service, IServiceAuth auth) :
             base("GET", "/estates", auth)
         {
-            m_EstateService = service;
+            _EstateService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream request,
@@ -139,13 +139,13 @@ readonly IEstateDataService m_EstateService;
                 List<int> estateIDs = null;
                 if (!string.IsNullOrEmpty(name))
                 {
-                    estateIDs = m_EstateService.GetEstates(name);
+                    estateIDs = _EstateService.GetEstates(name);
                 }
                 else if (!string.IsNullOrEmpty(owner))
                 {
                     UUID ownerID = UUID.Zero;
                     if (UUID.TryParse(owner, out ownerID))
-                        estateIDs = m_EstateService.GetEstatesByOwner(ownerID);
+                        estateIDs = _EstateService.GetEstatesByOwner(ownerID);
                 }
 
                 if (estateIDs == null || estateIDs != null && estateIDs.Count == 0)
@@ -162,7 +162,7 @@ readonly IEstateDataService m_EstateService;
             }
             else
             {
-                List<EstateSettings> estates = m_EstateService.LoadEstateSettingsAll();
+                List<EstateSettings> estates = _EstateService.LoadEstateSettingsAll();
                 if (estates == null || estates.Count == 0)
                 {
                     httpResponse.StatusCode = (int)HttpStatusCode.NotFound;
@@ -200,14 +200,14 @@ readonly IEstateDataService m_EstateService;
                     string create = (string)httpRequest.Query["create"];
                     bool createYN = false;
                     bool.TryParse(create, out createYN);
-                    estate = m_EstateService.LoadEstateSettings(regionID, createYN);
+                    estate = _EstateService.LoadEstateSettings(regionID, createYN);
                 }
             }
             else if (!string.IsNullOrEmpty(eid))
             {
                 int id = 0;
                 if (int.TryParse(eid, out id))
-                    estate = m_EstateService.LoadEstateSettings(id);
+                    estate = _EstateService.LoadEstateSettings(id);
             }
 
             if (estate != null)
@@ -234,7 +234,7 @@ readonly IEstateDataService m_EstateService;
                 int id = 0;
                 if (int.TryParse(eid, out id))
                 {
-                    List<UUID> regions = m_EstateService.GetRegions(id);
+                    List<UUID> regions = _EstateService.GetRegions(id);
                     if (regions != null && regions.Count > 0)
                     {
                         data = new Dictionary<string, object>();
@@ -253,9 +253,9 @@ readonly IEstateDataService m_EstateService;
 
     public class EstateServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        readonly IEstateDataService m_EstateService;
+        readonly IEstateDataService _EstateService;
 
         // Possibilities
         // /estates/estate/ (post an estate)
@@ -264,7 +264,7 @@ readonly IEstateDataService m_EstateService;
         public EstateServerPostHandler(IEstateDataService service, IServiceAuth auth) :
             base("POST", "/estates", auth)
         {
-            m_EstateService = service;
+            _EstateService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream request,
@@ -317,8 +317,8 @@ readonly IEstateDataService m_EstateService;
             {
                 // /estates/estate/
                 EstateSettings es = new EstateSettings(requestData);
-                m_EstateService.StoreEstateSettings(es);
-                //m_log.DebugFormat("[EstateServerPostHandler]: Store estate {0}", es.ToString());
+                _EstateService.StoreEstateSettings(es);
+                //_log.DebugFormat("[EstateServerPostHandler]: Store estate {0}", es.ToString());
                 httpResponse.StatusCode = (int)HttpStatusCode.OK;
                 result["Result"] = true;
             }
@@ -329,13 +329,13 @@ readonly IEstateDataService m_EstateService;
                 UUID regionID = UUID.Zero;
                 if (UUID.TryParse(region, out regionID) && int.TryParse(eid, out id))
                 {
-                    m_log.DebugFormat("[EstateServerPostHandler]: Link region {0} to estate {1}", regionID, id);
+                    _log.DebugFormat("[EstateServerPostHandler]: Link region {0} to estate {1}", regionID, id);
                     httpResponse.StatusCode = (int)HttpStatusCode.OK;
-                    result["Result"] = m_EstateService.LinkRegion(regionID, id);
+                    result["Result"] = _EstateService.LinkRegion(regionID, id);
                 }
             }
             else
-                m_log.WarnFormat("[EstateServerPostHandler]: something wrong with POST request {0}", httpRequest.RawUrl);
+                _log.WarnFormat("[EstateServerPostHandler]: something wrong with POST request {0}", httpRequest.RawUrl);
 
             return result;
         }

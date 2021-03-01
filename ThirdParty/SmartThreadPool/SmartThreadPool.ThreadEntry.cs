@@ -44,10 +44,7 @@ namespace Amib.Threading
                 _lastAliveTime = DateTime.MinValue;
             }
 
-            public SmartThreadPool AssociatedSmartThreadPool
-            {
-                get { return _associatedSmartThreadPool; }
-            }
+            public SmartThreadPool AssociatedSmartThreadPool => _associatedSmartThreadPool;
 
             public void IAmAlive()
             {

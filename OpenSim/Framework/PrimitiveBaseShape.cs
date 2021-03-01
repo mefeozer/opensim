@@ -77,11 +77,11 @@ namespace OpenSim.Framework
     [Serializable]
     public class PrimitiveBaseShape
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly byte[] DEFAULT_TEXTURE = new Primitive.TextureEntry(new UUID("89556747-24cb-43ed-920b-47caed15465f")).GetBytes();
 
-        private byte[] m_textureEntry;
+        private byte[] _textureEntry;
 
         private ushort _pathBegin;
         private byte _pathCurve;
@@ -147,13 +147,11 @@ namespace OpenSim.Framework
         [XmlIgnore] private bool _projectionEntry;
         [XmlIgnore] private bool _meshFlagsEntry;
 
-        public bool MeshFlagEntry
-        {
-            get { return _meshFlagsEntry;}
-        }
+        public bool MeshFlagEntry => _meshFlagsEntry;
+
         public byte ProfileCurve
         {
-            get { return (byte)((byte)HollowShape | (byte)ProfileShape); }
+            get => (byte)((byte)HollowShape | (byte)ProfileShape);
 
             set
             {
@@ -162,7 +160,7 @@ namespace OpenSim.Framework
 
                 if (!Enum.IsDefined(typeof(HollowShape), hollowShapeByte))
                 {
-                    m_log.WarnFormat(
+                    _log.WarnFormat(
                         "[SHAPE]: Attempt to set a ProfileCurve with a hollow shape value of {0}, which isn't a valid enum.  Replacing with default shape.",
                         hollowShapeByte);
 
@@ -178,7 +176,7 @@ namespace OpenSim.Framework
 
                 if (!Enum.IsDefined(typeof(ProfileShape), profileShapeByte))
                 {
-                    m_log.WarnFormat(
+                    _log.WarnFormat(
                         "[SHAPE]: Attempt to set a ProfileCurve with a profile shape value of {0}, which isn't a valid enum.  Replacing with square.",
                         profileShapeByte);
 
@@ -201,7 +199,7 @@ namespace OpenSim.Framework
         public PrimitiveBaseShape()
         {
             PCode = (byte)PCodeEnum.Primitive;
-            m_textureEntry = DEFAULT_TEXTURE;
+            _textureEntry = DEFAULT_TEXTURE;
         }
 
         /// <summary>
@@ -210,7 +208,7 @@ namespace OpenSim.Framework
         /// <param name="prim"></param>
         public PrimitiveBaseShape(Primitive prim)
         {
-//            m_log.DebugFormat("[PRIMITIVE BASE SHAPE]: Creating from {0}", prim.ID);
+//            _log.DebugFormat("[PRIMITIVE BASE SHAPE]: Creating from {0}", prim.ID);
 
             PCode = (byte)prim.PrimData.PCode;
 
@@ -236,7 +234,7 @@ namespace OpenSim.Framework
             PathTwist = Primitive.PackPathTwist(prim.PrimData.PathTwist);
             PathTwistBegin = Primitive.PackPathTwist(prim.PrimData.PathTwistBegin);
 
-            m_textureEntry = prim.Textures.GetBytes();
+            _textureEntry = prim.Textures.GetBytes();
 
             if (prim.Sculpt != null)
             {
@@ -256,27 +254,27 @@ namespace OpenSim.Framework
         {
             get
             {
-//                m_log.DebugFormat("[SHAPE]: get m_textureEntry length {0}", m_textureEntry.Length);
-                try { return new Primitive.TextureEntry(m_textureEntry, 0, m_textureEntry.Length); }
+//                _log.DebugFormat("[SHAPE]: get _textureEntry length {0}", _textureEntry.Length);
+                try { return new Primitive.TextureEntry(_textureEntry, 0, _textureEntry.Length); }
                 catch { }
 
-                m_log.Warn("[SHAPE]: Failed to decode texture, length=" + (m_textureEntry != null ? m_textureEntry.Length : 0));
+                _log.Warn("[SHAPE]: Failed to decode texture, length=" + (_textureEntry != null ? _textureEntry.Length : 0));
                 return new Primitive.TextureEntry(UUID.Zero);
             }
 
-            set { m_textureEntry = value.GetBytes(); }
+            set => _textureEntry = value.GetBytes();
         }
 
         public byte[] TextureEntry
         {
-            get { return m_textureEntry; }
+            get => _textureEntry;
 
             set
             {
                 if (value == null)
-                    m_textureEntry = new byte[1];
+                    _textureEntry = new byte[1];
                 else
-                    m_textureEntry = value;
+                    _textureEntry = value;
             }
         }
 
@@ -469,338 +467,189 @@ namespace OpenSim.Framework
 
         public byte[] ExtraParams
         {
-            get
-            {
-                return ExtraParamsToBytes();
-            }
-            set
-            {
-                ReadInExtraParamsBytes(value);
-            }
+            get => ExtraParamsToBytes();
+            set => ReadInExtraParamsBytes(value);
         }
 
         public ushort PathBegin {
-            get {
-                return _pathBegin;
-            }
-            set {
-                _pathBegin = value;
-            }
+            get => _pathBegin;
+            set => _pathBegin = value;
         }
 
         public byte PathCurve {
-            get {
-                return _pathCurve;
-            }
-            set {
-                _pathCurve = value;
-            }
+            get => _pathCurve;
+            set => _pathCurve = value;
         }
 
         public ushort PathEnd {
-            get {
-                return _pathEnd;
-            }
-            set {
-                _pathEnd = value;
-            }
+            get => _pathEnd;
+            set => _pathEnd = value;
         }
 
         public sbyte PathRadiusOffset {
-            get {
-                return _pathRadiusOffset;
-            }
-            set {
-                _pathRadiusOffset = value;
-            }
+            get => _pathRadiusOffset;
+            set => _pathRadiusOffset = value;
         }
 
         public byte PathRevolutions {
-            get {
-                return _pathRevolutions;
-            }
-            set {
-                _pathRevolutions = value;
-            }
+            get => _pathRevolutions;
+            set => _pathRevolutions = value;
         }
 
         public byte PathScaleX {
-            get {
-                return _pathScaleX;
-            }
-            set {
-                _pathScaleX = value;
-            }
+            get => _pathScaleX;
+            set => _pathScaleX = value;
         }
 
         public byte PathScaleY {
-            get {
-                return _pathScaleY;
-            }
-            set {
-                _pathScaleY = value;
-            }
+            get => _pathScaleY;
+            set => _pathScaleY = value;
         }
 
         public byte PathShearX {
-            get {
-                return _pathShearX;
-            }
-            set {
-                _pathShearX = value;
-            }
+            get => _pathShearX;
+            set => _pathShearX = value;
         }
 
         public byte PathShearY {
-            get {
-                return _pathShearY;
-            }
-            set {
-                _pathShearY = value;
-            }
+            get => _pathShearY;
+            set => _pathShearY = value;
         }
 
         public sbyte PathSkew {
-            get {
-                return _pathSkew;
-            }
-            set {
-                _pathSkew = value;
-            }
+            get => _pathSkew;
+            set => _pathSkew = value;
         }
 
         public sbyte PathTaperX {
-            get {
-                return _pathTaperX;
-            }
-            set {
-                _pathTaperX = value;
-            }
+            get => _pathTaperX;
+            set => _pathTaperX = value;
         }
 
         public sbyte PathTaperY {
-            get {
-                return _pathTaperY;
-            }
-            set {
-                _pathTaperY = value;
-            }
+            get => _pathTaperY;
+            set => _pathTaperY = value;
         }
 
         public sbyte PathTwist {
-            get {
-                return _pathTwist;
-            }
-            set {
-                _pathTwist = value;
-            }
+            get => _pathTwist;
+            set => _pathTwist = value;
         }
 
         public sbyte PathTwistBegin {
-            get {
-                return _pathTwistBegin;
-            }
-            set {
-                _pathTwistBegin = value;
-            }
+            get => _pathTwistBegin;
+            set => _pathTwistBegin = value;
         }
 
         public byte PCode {
-            get {
-                return _pCode;
-            }
-            set {
-                _pCode = value;
-            }
+            get => _pCode;
+            set => _pCode = value;
         }
 
         public ushort ProfileBegin {
-            get {
-                return _profileBegin;
-            }
-            set {
-                _profileBegin = value;
-            }
+            get => _profileBegin;
+            set => _profileBegin = value;
         }
 
         public ushort ProfileEnd {
-            get {
-                return _profileEnd;
-            }
-            set {
-                _profileEnd = value;
-            }
+            get => _profileEnd;
+            set => _profileEnd = value;
         }
 
         public ushort ProfileHollow {
-            get {
-                return _profileHollow;
-            }
-            set {
-                _profileHollow = value;
-            }
+            get => _profileHollow;
+            set => _profileHollow = value;
         }
 
         public Vector3 Scale {
-            get {
-                return _scale;
-            }
-            set {
-                _scale = value;
-            }
+            get => _scale;
+            set => _scale = value;
         }
 
         public byte State {
-            get {
-                return _state;
-            }
-            set {
-                _state = value;
-            }
+            get => _state;
+            set => _state = value;
         }
 
         public byte LastAttachPoint {
-            get {
-                return _lastattach;
-            }
-            set {
-                _lastattach = value;
-            }
+            get => _lastattach;
+            set => _lastattach = value;
         }
 
         public ProfileShape ProfileShape {
-            get {
-                return _profileShape;
-            }
-            set {
-                _profileShape = value;
-            }
+            get => _profileShape;
+            set => _profileShape = value;
         }
 
         public HollowShape HollowShape {
-            get {
-                return _hollowShape;
-            }
-            set {
-                _hollowShape = value;
-            }
+            get => _hollowShape;
+            set => _hollowShape = value;
         }
 
         public UUID SculptTexture {
-            get {
-                return _sculptTexture;
-            }
-            set {
-                _sculptTexture = value;
-            }
+            get => _sculptTexture;
+            set => _sculptTexture = value;
         }
 
         public byte SculptType
         {
-            get
-            {
-                return _sculptType;
-            }
-            set
-            {
-                _sculptType = value;
-            }
+            get => _sculptType;
+            set => _sculptType = value;
         }
 
         // This is only used at runtime. For sculpties this holds the texture data, and for meshes
         // the mesh data.
         public byte[] SculptData
         {
-            get
-            {
-                return _sculptData;
-            }
-            set
-            {
-//                m_log.DebugFormat("[PRIMITIVE BASE SHAPE]: Setting SculptData to data with length {0}", value.Length);
+            get => _sculptData;
+            set =>
+                //                _log.DebugFormat("[PRIMITIVE BASE SHAPE]: Setting SculptData to data with length {0}", value.Length);
                 _sculptData = value;
-            }
         }
 
         public int FlexiSoftness
         {
-            get
-            {
-                return _flexiSoftness;
-            }
-            set
-            {
-                _flexiSoftness = value;
-            }
+            get => _flexiSoftness;
+            set => _flexiSoftness = value;
         }
 
         public float FlexiTension {
-            get {
-                return _flexiTension;
-            }
-            set {
-                _flexiTension = value;
-            }
+            get => _flexiTension;
+            set => _flexiTension = value;
         }
 
         public float FlexiDrag {
-            get {
-                return _flexiDrag;
-            }
-            set {
-                _flexiDrag = value;
-            }
+            get => _flexiDrag;
+            set => _flexiDrag = value;
         }
 
         public float FlexiGravity {
-            get {
-                return _flexiGravity;
-            }
-            set {
-                _flexiGravity = value;
-            }
+            get => _flexiGravity;
+            set => _flexiGravity = value;
         }
 
         public float FlexiWind {
-            get {
-                return _flexiWind;
-            }
-            set {
-                _flexiWind = value;
-            }
+            get => _flexiWind;
+            set => _flexiWind = value;
         }
 
         public float FlexiForceX {
-            get {
-                return _flexiForceX;
-            }
-            set {
-                _flexiForceX = value;
-            }
+            get => _flexiForceX;
+            set => _flexiForceX = value;
         }
 
         public float FlexiForceY {
-            get {
-                return _flexiForceY;
-            }
-            set {
-                _flexiForceY = value;
-            }
+            get => _flexiForceY;
+            set => _flexiForceY = value;
         }
 
         public float FlexiForceZ {
-            get {
-                return _flexiForceZ;
-            }
-            set {
-                _flexiForceZ = value;
-            }
+            get => _flexiForceZ;
+            set => _flexiForceZ = value;
         }
 
         public float LightColorR {
-            get {
-                return _lightColorR;
-            }
+            get => _lightColorR;
             set {
                 if (value < 0)
                     _lightColorR = 0;
@@ -812,9 +661,7 @@ namespace OpenSim.Framework
         }
 
         public float LightColorG {
-            get {
-                return _lightColorG;
-            }
+            get => _lightColorG;
             set {
                 if (value < 0)
                     _lightColorG = 0;
@@ -826,9 +673,7 @@ namespace OpenSim.Framework
         }
 
         public float LightColorB {
-            get {
-                return _lightColorB;
-            }
+            get => _lightColorB;
             set {
                 if (value < 0)
                     _lightColorB = 0;
@@ -840,9 +685,7 @@ namespace OpenSim.Framework
         }
 
         public float LightColorA {
-            get {
-                return _lightColorA;
-            }
+            get => _lightColorA;
             set {
                 if (value < 0)
                     _lightColorA = 0;
@@ -854,111 +697,63 @@ namespace OpenSim.Framework
         }
 
         public float LightRadius {
-            get {
-                return _lightRadius;
-            }
-            set {
-                _lightRadius = value;
-            }
+            get => _lightRadius;
+            set => _lightRadius = value;
         }
 
         public float LightCutoff {
-            get {
-                return _lightCutoff;
-            }
-            set {
-                _lightCutoff = value;
-            }
+            get => _lightCutoff;
+            set => _lightCutoff = value;
         }
 
         public float LightFalloff {
-            get {
-                return _lightFalloff;
-            }
-            set {
-                _lightFalloff = value;
-            }
+            get => _lightFalloff;
+            set => _lightFalloff = value;
         }
 
         public float LightIntensity {
-            get {
-                return _lightIntensity;
-            }
-            set {
-                _lightIntensity = value;
-            }
+            get => _lightIntensity;
+            set => _lightIntensity = value;
         }
 
         public bool FlexiEntry {
-            get {
-                return _flexiEntry;
-            }
-            set {
-                _flexiEntry = value;
-            }
+            get => _flexiEntry;
+            set => _flexiEntry = value;
         }
 
         public bool LightEntry {
-            get {
-                return _lightEntry;
-            }
-            set {
-                _lightEntry = value;
-            }
+            get => _lightEntry;
+            set => _lightEntry = value;
         }
 
         public bool SculptEntry {
-            get {
-                return _sculptEntry;
-            }
-            set {
-                _sculptEntry = value;
-            }
+            get => _sculptEntry;
+            set => _sculptEntry = value;
         }
 
         public bool ProjectionEntry {
-            get {
-                return _projectionEntry;
-            }
-            set {
-                _projectionEntry = value;
-            }
+            get => _projectionEntry;
+            set => _projectionEntry = value;
         }
 
         public UUID ProjectionTextureUUID {
-            get {
-                return _projectionTextureID;
-            }
-            set {
-                _projectionTextureID = value;
-            }
+            get => _projectionTextureID;
+            set => _projectionTextureID = value;
         }
 
         public float ProjectionFOV {
-            get {
-                return _projectionFOV;
-            }
-            set {
-                _projectionFOV = value;
-            }
+            get => _projectionFOV;
+            set => _projectionFOV = value;
         }
 
         public float ProjectionFocus {
-            get {
-                return _projectionFocus;
-            }
-            set {
-                _projectionFocus = value;
-            }
+            get => _projectionFocus;
+            set => _projectionFocus = value;
         }
 
         public float ProjectionAmbiance {
-            get {
-                return _projectionAmb;
-            }
-            set {
-                _projectionAmb = value;
-            }
+            get => _projectionAmb;
+            set => _projectionAmb = value;
         }
 
         public ulong GetMeshKey(Vector3 size, float lod)
@@ -1032,7 +827,7 @@ namespace OpenSim.Framework
 
         public byte[] ExtraParamsToBytes()
         {
-//            m_log.DebugFormat("[EXTRAPARAMS]: Called ExtraParamsToBytes()");
+//            _log.DebugFormat("[EXTRAPARAMS]: Called ExtraParamsToBytes()");
 
             const byte FlexiEP = 0x10;
             const byte LightEP = 0x20;
@@ -1568,7 +1363,7 @@ namespace OpenSim.Framework
                             xtr.MoveToContent();
 
                             string type = xtr.GetAttribute("type");
-                            //m_log.DebugFormat("[MOAP]: Loaded media texture entry with type {0}", type);
+                            //_log.DebugFormat("[MOAP]: Loaded media texture entry with type {0}", type);
 
                             if (type != MEDIA_TEXTURE_TYPE)
                                 return;
@@ -1592,7 +1387,7 @@ namespace OpenSim.Framework
                 }
                 catch
                 {
-                    m_log.Debug("PrimitiveBaseShape] error decoding MOAP xml" );
+                    _log.Debug("PrimitiveBaseShape] error decoding MOAP xml" );
                 }
             }
 

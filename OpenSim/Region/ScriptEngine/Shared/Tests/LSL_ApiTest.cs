@@ -43,7 +43,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     {
         private const double VECTOR_COMPONENT_ACCURACY = 0.0000005d;
         private const double ANGLE_ACCURACY_IN_RADIANS = 1E-6;
-        private LSL_Api m_lslApi;
+        private LSL_Api _lslApi;
 
         [SetUp]
         public void SetUp()
@@ -59,8 +59,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             engine.Initialise(initConfigSource);
             engine.AddRegion(scene);
 
-            m_lslApi = new LSL_Api();
-            m_lslApi.Initialize(engine, part, null);
+            _lslApi = new LSL_Api();
+            _lslApi.Initialize(engine, part, null);
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             rotation1 *= denorm1;
             rotation2 *= denorm2;
 
-            double deducedAngle = FromLslFloat(m_lslApi.llAngleBetween(ToLslQuaternion(rotation2), ToLslQuaternion(rotation1)));
+            double deducedAngle = FromLslFloat(_lslApi.llAngleBetween(ToLslQuaternion(rotation2), ToLslQuaternion(rotation1)));
 
             Assert.That(deducedAngle, Is.EqualTo(ToRadians(originalAngle)).Within(ANGLE_ACCURACY_IN_RADIANS), "TestllAngleBetween check fail");
         }
@@ -236,9 +236,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
         private void CheckllRot2Euler(LSL_Types.Quaternion rot)
         {
             // Call LSL function to convert quaternion rotaion to euler radians.
-            LSL_Types.Vector3 eulerCalc = m_lslApi.llRot2Euler(rot);
+            LSL_Types.Vector3 eulerCalc = _lslApi.llRot2Euler(rot);
             // Now use the euler radians to recalculate a new quaternion rotation
-            LSL_Types.Quaternion newRot = m_lslApi.llEuler2Rot(eulerCalc);
+            LSL_Types.Quaternion newRot = _lslApi.llEuler2Rot(eulerCalc);
             // Multiple original quaternion by conjugate of quaternion calculated with angles.
             LSL_Types.Quaternion check = rot * new LSL_Types.Quaternion(-newRot.x, -newRot.y, -newRot.z, newRot.s);
 
@@ -264,7 +264,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
         public void CheckllVecNorm(LSL_Types.Vector3 vec, LSL_Types.Vector3 vecNormCheck)
         {
             // Call LSL function to normalize the vector.
-            LSL_Types.Vector3 vecNorm = m_lslApi.llVecNorm(vec);
+            LSL_Types.Vector3 vecNorm = _lslApi.llVecNorm(vec);
             // Check each vector component against expected result.
             Assert.AreEqual(vecNorm.x, vecNormCheck.x, VECTOR_COMPONENT_ACCURACY, "TestllVecNorm vector check fail on x component");
             Assert.AreEqual(vecNorm.y, vecNormCheck.y, VECTOR_COMPONENT_ACCURACY, "TestllVecNorm vector check fail on y component");

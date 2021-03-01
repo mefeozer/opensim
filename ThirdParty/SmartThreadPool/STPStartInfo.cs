@@ -49,7 +49,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual int IdleTimeout
         {
-            get { return _idleTimeout; }
+            get => _idleTimeout;
             set
             {
                 ThrowIfReadOnly();
@@ -62,7 +62,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual int MinWorkerThreads
         {
-            get { return _minWorkerThreads; }
+            get => _minWorkerThreads;
             set
             {
                 ThrowIfReadOnly();
@@ -75,7 +75,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual int MaxWorkerThreads
         {
-            get { return _maxWorkerThreads; }
+            get => _maxWorkerThreads;
             set
             {
                 ThrowIfReadOnly();
@@ -89,7 +89,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual ThreadPriority ThreadPriority
         {
-            get { return _threadPriority; }
+            get => _threadPriority;
             set
             {
                 ThrowIfReadOnly();
@@ -102,7 +102,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual string ThreadPoolName
         {
-            get { return _threadPoolName; }
+            get => _threadPoolName;
             set
             {
                 ThrowIfReadOnly();
@@ -116,7 +116,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual string PerformanceCounterInstanceName
         {
-            get { return _performanceCounterInstanceName; }
+            get => _performanceCounterInstanceName;
             set
             {
                 ThrowIfReadOnly();
@@ -132,7 +132,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual bool EnableLocalPerformanceCounters
         {
-            get { return _enableLocalPerformanceCounters; }
+            get => _enableLocalPerformanceCounters;
             set
             {
                 ThrowIfReadOnly();
@@ -145,7 +145,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual bool AreThreadsBackground
         {
-            get { return _areThreadsBackground; }
+            get => _areThreadsBackground;
             set
             {
                 ThrowIfReadOnly();
@@ -169,7 +169,7 @@ namespace Amib.Threading
         /// </summary>
         public ApartmentState ApartmentState
         {
-            get { return _apartmentState; }
+            get => _apartmentState;
             set
             {
                 ThrowIfReadOnly();
@@ -182,7 +182,7 @@ namespace Amib.Threading
         /// </summary>
         public int? MaxStackSize
         {
-            get { return _maxStackSize; }
+            get => _maxStackSize;
             set
             {
                 ThrowIfReadOnly();
@@ -196,7 +196,7 @@ namespace Amib.Threading
 
         public bool SuppressFlow
         {
-            get { return _supressflow; }
+            get => _supressflow;
             set
             {
                 ThrowIfReadOnly();

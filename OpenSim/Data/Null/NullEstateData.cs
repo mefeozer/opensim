@@ -34,32 +34,29 @@ namespace OpenSim.Data.Null
 {
     public class NullEstateStore : IEstateDataStore
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-//        private string m_connectionString;
+//        private string _connectionString;
 
-//        private Dictionary<uint, EstateSettings> m_knownEstates = new Dictionary<uint, EstateSettings>();
-        private EstateSettings m_estate = null;
+//        private Dictionary<uint, EstateSettings> _knownEstates = new Dictionary<uint, EstateSettings>();
+        private EstateSettings _estate = null;
 
         private EstateSettings GetEstate()
         {
-            if (m_estate == null)
+            if (_estate == null)
             {
                 // This fools the initialization caller into thinking an estate was fetched (a check in OpenSimBase).
                 // The estate info is pretty empty so don't try banning anyone.
-                m_estate = new EstateSettings
+                _estate = new EstateSettings
                 {
                     EstateID = 1
                 };
-                m_estate.OnSave += StoreEstateSettings;
+                _estate.OnSave += StoreEstateSettings;
             }
-            return m_estate;
+            return _estate;
         }
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         public NullEstateStore()
         {
@@ -72,13 +69,10 @@ namespace OpenSim.Data.Null
 
         public void Initialise(string connectionString)
         {
-//            m_connectionString = connectionString;
+//            _connectionString = connectionString;
         }
 
-        private string[] FieldList
-        {
-            get { return new string[0]; }
-        }
+        private string[] FieldList => new string[0];
 
         public EstateSettings LoadEstateSettings(UUID regionID, bool create)
         {
@@ -87,7 +81,7 @@ namespace OpenSim.Data.Null
 
         public void StoreEstateSettings(EstateSettings es)
         {
-            m_estate = es;
+            _estate = es;
             return;
         }
 

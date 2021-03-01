@@ -38,20 +38,20 @@ namespace OpenSim.Server.Handlers.Authentication
 {
     public class OpenIdServerConnector : ServiceConnector
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAuthenticationService m_AuthenticationService;
-        private readonly IUserAccountService m_UserAccountService;
-        private readonly string m_ConfigName = "OpenIdService";
+        private readonly IAuthenticationService _AuthenticationService;
+        private readonly IUserAccountService _UserAccountService;
+        private readonly string _ConfigName = "OpenIdService";
 
         public OpenIdServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string authService = serverConfig.GetString("AuthenticationServiceModule",
                     string.Empty);
@@ -62,16 +62,16 @@ namespace OpenSim.Server.Handlers.Authentication
                 throw new Exception("No AuthenticationServiceModule or no UserAccountServiceModule in config file for OpenId authentication");
 
             object[] args = new object[] { config };
-            m_AuthenticationService = ServerUtils.LoadPlugin<IAuthenticationService>(authService, args);
-            m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userService, args);
+            _AuthenticationService = ServerUtils.LoadPlugin<IAuthenticationService>(authService, args);
+            _UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userService, args);
 
             // Handler for OpenID user identity pages
-            server.AddStreamHandler(new OpenIdStreamHandler("GET", "/users", m_UserAccountService, m_AuthenticationService));
+            server.AddStreamHandler(new OpenIdStreamHandler("GET", "/users", _UserAccountService, _AuthenticationService));
             // Handlers for the OpenID endpoint server
-            server.AddStreamHandler(new OpenIdStreamHandler("POST", "/openid/server", m_UserAccountService, m_AuthenticationService));
-            server.AddStreamHandler(new OpenIdStreamHandler("GET", "/openid/server", m_UserAccountService, m_AuthenticationService));
+            server.AddStreamHandler(new OpenIdStreamHandler("POST", "/openid/server", _UserAccountService, _AuthenticationService));
+            server.AddStreamHandler(new OpenIdStreamHandler("GET", "/openid/server", _UserAccountService, _AuthenticationService));
 
-            m_log.Info("[OPENID]: OpenId service enabled");
+            _log.Info("[OPENID]: OpenId service enabled");
         }
     }
 }

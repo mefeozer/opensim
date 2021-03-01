@@ -43,10 +43,10 @@ namespace OpenSim.Region.CoreModules.Agent.Xfer
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "XferModule")]
     public class XferModule : INonSharedRegionModule, IXfer
     {
-        private Scene m_scene;
+        private Scene _scene;
         private readonly Dictionary<string, FileData> NewFiles = new Dictionary<string, FileData>();
         private readonly Dictionary<ulong, XferDownLoad> Transfers = new Dictionary<ulong, XferDownLoad>();
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly object  timeTickLock = new object();
         private int  lastTimeTick = 0;
@@ -78,38 +78,32 @@ namespace OpenSim.Region.CoreModules.Agent.Xfer
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
-            m_scene.RegisterModuleInterface<IXfer>(this);
-            m_scene.EventManager.OnNewClient += NewClient;
-            m_scene.EventManager.OnRegionHeartbeatEnd += OnTimeTick;
+            _scene = scene;
+            _scene.RegisterModuleInterface<IXfer>(this);
+            _scene.EventManager.OnNewClient += NewClient;
+            _scene.EventManager.OnRegionHeartbeatEnd += OnTimeTick;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            m_scene.EventManager.OnNewClient -= NewClient;
-            m_scene.EventManager.OnRegionHeartbeatEnd -= OnTimeTick;
+            _scene.EventManager.OnNewClient -= NewClient;
+            _scene.EventManager.OnRegionHeartbeatEnd -= OnTimeTick;
 
-            m_scene.UnregisterModuleInterface<IXfer>(this);
-            m_scene = null;
+            _scene.UnregisterModuleInterface<IXfer>(this);
+            _scene = null;
         }
 
         public void RegionLoaded(Scene scene)
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Close()
         {
         }
 
-        public string Name
-        {
-            get { return "XferModule"; }
-        }
+        public string Name => "XferModule";
 
         #endregion
 
@@ -290,7 +284,7 @@ namespace OpenSim.Region.CoreModules.Agent.Xfer
                     }
                 }
                 else
-                    m_log.WarnFormat("[Xfer]: {0} not found", fileName);
+                    _log.WarnFormat("[Xfer]: {0} not found", fileName);
             }
         }
 

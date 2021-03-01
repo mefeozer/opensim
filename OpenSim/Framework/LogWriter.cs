@@ -44,15 +44,15 @@ namespace OpenSim.Framework
     {
         public bool Enabled { get; private set; }
 
-        private readonly string m_logDirectory = ".";
-        private readonly int m_logMaxFileTimeMin = 5;    // 5 minutes
+        private readonly string _logDirectory = ".";
+        private readonly int _logMaxFileTimeMin = 5;    // 5 minutes
         public string LogFileHeader { get; set; }
 
-        private StreamWriter m_logFile = null;
-        private readonly TimeSpan m_logFileLife;
-        private DateTime m_logFileEndTime;
-        private readonly object m_logFileWriteLock = new object();
-        private readonly bool m_flushWrite;
+        private StreamWriter _logFile = null;
+        private readonly TimeSpan _logFileLife;
+        private DateTime _logFileEndTime;
+        private readonly object _logFileWriteLock = new object();
+        private readonly bool _flushWrite;
 
         // set externally when debugging. If let 'null', this does not write any error messages.
         public ILog ErrorLogger = null;
@@ -65,7 +65,7 @@ namespace OpenSim.Framework
         public LogWriter()
         {
             Enabled = false;
-            m_logFile = null;
+            _logFile = null;
         }
 
         /// <summary>
@@ -78,18 +78,18 @@ namespace OpenSim.Framework
         /// if one is looking for a crash, this is a good thing to turn on.</param>
         public LogWriter(string dir, string headr, int maxFileTime, bool flushWrite)
         {
-            m_logDirectory = dir == null ? "." : dir;
+            _logDirectory = dir == null ? "." : dir;
 
             LogFileHeader = headr == null ? "log-" : headr;
 
-            m_logMaxFileTimeMin = maxFileTime;
-            if (m_logMaxFileTimeMin < 1)
-                m_logMaxFileTimeMin = 5;
+            _logMaxFileTimeMin = maxFileTime;
+            if (_logMaxFileTimeMin < 1)
+                _logMaxFileTimeMin = 5;
 
-            m_logFileLife = new TimeSpan(0, m_logMaxFileTimeMin, 0);
-            m_logFileEndTime = DateTime.Now + m_logFileLife;
+            _logFileLife = new TimeSpan(0, _logMaxFileTimeMin, 0);
+            _logFileEndTime = DateTime.Now + _logFileLife;
 
-            m_flushWrite = flushWrite;
+            _flushWrite = flushWrite;
 
             Enabled = true;
         }
@@ -106,11 +106,11 @@ namespace OpenSim.Framework
         public void Close()
         {
             Enabled = false;
-            if (m_logFile != null)
+            if (_logFile != null)
             {
-                m_logFile.Close();
-                m_logFile.Dispose();
-                m_logFile = null;
+                _logFile.Close();
+                _logFile.Dispose();
+                _logFile = null;
             }
         }
 
@@ -123,9 +123,9 @@ namespace OpenSim.Framework
         public void Flush()
         {
             if (!Enabled) return;
-            if (m_logFile != null)
+            if (_logFile != null)
             {
-                m_logFile.Flush();
+                _logFile.Flush();
             }
         }
 
@@ -134,26 +134,26 @@ namespace OpenSim.Framework
             if (!Enabled) return;
             try
             {
-                lock (m_logFileWriteLock)
+                lock (_logFileWriteLock)
                 {
                     DateTime now = DateTime.UtcNow;
-                    if (m_logFile == null || now > m_logFileEndTime)
+                    if (_logFile == null || now > _logFileEndTime)
                     {
-                        if (m_logFile != null)
+                        if (_logFile != null)
                         {
-                            m_logFile.Close();
-                            m_logFile.Dispose();
-                            m_logFile = null;
+                            _logFile.Close();
+                            _logFile.Dispose();
+                            _logFile = null;
                         }
 
                         // First log file or time has expired, start writing to a new log file
-                        m_logFileEndTime = now + m_logFileLife;
-                        string path = (m_logDirectory.Length > 0 ? m_logDirectory
+                        _logFileEndTime = now + _logFileLife;
+                        string path = (_logDirectory.Length > 0 ? _logDirectory
                                     + System.IO.Path.DirectorySeparatorChar.ToString() : "")
                                 + string.Format("{0}{1}.log", LogFileHeader, now.ToString("yyyyMMddHHmmss"));
-                        m_logFile = new StreamWriter(File.Open(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite));
+                        _logFile = new StreamWriter(File.Open(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite));
                     }
-                    if (m_logFile != null)
+                    if (_logFile != null)
                     {
                         StringBuilder buff = new StringBuilder(line.Length + 25);
                         buff.Append(now.ToString("yyyyMMddHHmmssfff"));
@@ -161,9 +161,9 @@ namespace OpenSim.Framework
                         buff.Append(",");
                         buff.Append(line);
                         buff.Append(Environment.NewLine);
-                        m_logFile.Write(buff.ToString());
-                        if (m_flushWrite)
-                            m_logFile.Flush();
+                        _logFile.Write(buff.ToString());
+                        if (_flushWrite)
+                            _logFile.Flush();
                     }
                 }
             }

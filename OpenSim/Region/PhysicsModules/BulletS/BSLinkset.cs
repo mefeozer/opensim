@@ -86,45 +86,39 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public BSPrimLinkable LinksetRoot { get; protected set; }
 
-    protected BSScene m_physicsScene { get; }
+    protected BSScene _physicsScene { get; }
 
-    static int m_nextLinksetID = 1;
+    static int _nextLinksetID = 1;
     public int LinksetID { get; }
 
     // The children under the root in this linkset.
-    // protected HashSet<BSPrimLinkable> m_children;
-    protected Dictionary<BSPrimLinkable, BSLinkInfo> m_children;
+    // protected HashSet<BSPrimLinkable> _children;
+    protected Dictionary<BSPrimLinkable, BSLinkInfo> _children;
 
     // We lock the diddling of linkset classes to prevent any badness.
     // This locks the modification of the instances of this class. Changes
     //    to the physical representation is done via the tainting mechenism.
-    protected object m_linksetActivityLock = new object();
+    protected object _linksetActivityLock = new object();
 
     // We keep the prim's mass in the linkset structure since it could be dependent on other prims
     public float LinksetMass { get; protected set; }
 
-    public virtual bool LinksetIsColliding { get { return false; } }
+    public virtual bool LinksetIsColliding => false;
 
-    public OMV.Vector3 CenterOfMass
-    {
-        get { return ComputeLinksetCenterOfMass(); }
-    }
+    public OMV.Vector3 CenterOfMass => ComputeLinksetCenterOfMass();
 
-    public OMV.Vector3 GeometricCenter
-    {
-        get { return ComputeLinksetGeometricCenter(); }
-    }
+    public OMV.Vector3 GeometricCenter => ComputeLinksetGeometricCenter();
 
     protected BSLinkset(BSScene scene, BSPrimLinkable parent)
     {
         // A simple linkset of one (no children)
-        LinksetID = m_nextLinksetID++;
+        LinksetID = _nextLinksetID++;
         // We create LOTS of linksets.
-        if (m_nextLinksetID <= 0)
-            m_nextLinksetID = 1;
-        m_physicsScene = scene;
+        if (_nextLinksetID <= 0)
+            _nextLinksetID = 1;
+        _physicsScene = scene;
         LinksetRoot = parent;
-        m_children = new Dictionary<BSPrimLinkable, BSLinkInfo>();
+        _children = new Dictionary<BSPrimLinkable, BSLinkInfo>();
         LinksetMass = parent.RawMass;
         Rebuilding = false;
         RebuildScheduled = false;
@@ -138,7 +132,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // Called at runtime.
     public BSLinkset AddMeToLinkset(BSPrimLinkable child)
     {
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
             // Don't add the root to its own linkset
             if (!IsRoot(child))
@@ -154,7 +148,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // Called at runtime.
     public BSLinkset RemoveMeFromLinkset(BSPrimLinkable child, bool inTaintTime)
     {
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
             if (IsRoot(child))
             {
@@ -166,7 +160,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         }
 
         // The child is down to a linkset of just itself
-        return BSLinkset.Factory(m_physicsScene, child);
+        return BSLinkset.Factory(_physicsScene, child);
     }
 
     // Return 'true' if the passed object is the root object of this linkset
@@ -175,18 +169,18 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         return requestor.LocalID == LinksetRoot.LocalID;
     }
 
-    public int NumberOfChildren { get { return m_children.Count; } }
+    public int NumberOfChildren => _children.Count;
 
     // Return 'true' if this linkset has any children (more than the root member)
-    public bool HasAnyChildren { get { return m_children.Count > 0; } }
+    public bool HasAnyChildren => _children.Count > 0;
 
     // Return 'true' if this child is in this linkset
     public bool HasChild(BSPrimLinkable child)
     {
         bool ret = false;
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
-            ret = m_children.ContainsKey(child);
+            ret = _children.ContainsKey(child);
         }
         return ret;
     }
@@ -197,10 +191,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public virtual bool ForEachMember(ForEachMemberAction action)
     {
         bool ret = false;
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
             action(LinksetRoot);
-            foreach (BSPrimLinkable po in m_children.Keys)
+            foreach (BSPrimLinkable po in _children.Keys)
             {
                 if (action(po))
                     break;
@@ -213,9 +207,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         bool ret = false;
         BSLinkInfo found = null;
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
-            ret = m_children.TryGetValue(child, out found);
+            ret = _children.TryGetValue(child, out found);
         }
         foundInfo = found;
         return ret;
@@ -226,9 +220,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public virtual bool ForEachLinkInfo(ForEachLinkInfoAction action)
     {
         bool ret = false;
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
-            foreach (BSLinkInfo po in m_children.Values)
+            foreach (BSLinkInfo po in _children.Values)
             {
                 if (action(po))
                     break;
@@ -244,7 +238,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         bool ret = false;
 
         BSLinkInfo linkInfo;
-        if (m_children.TryGetValue(child, out linkInfo))
+        if (_children.TryGetValue(child, out linkInfo))
         {
             ret = linkInfo.ShouldUpdateChildProperties();
         }
@@ -273,7 +267,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         {
             // Not a collision between members of the linkset. Must be a real collision.
             // So the linkset root can know if there is a collision anywhere in the linkset.
-            LinksetRoot.SomeCollisionSimulationStep = m_physicsScene.SimulationStep;
+            LinksetRoot.SomeCollisionSimulationStep = _physicsScene.SimulationStep;
         }
 
         return ret;
@@ -304,7 +298,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // This is turned on when the rebuild is requested and turned off when
     //     the rebuild is complete. Used to limit modifications to the
     //     linkset parameters while the linkset is in an intermediate state.
-    // Protected by a "lock(m_linsetActivityLock)" on the BSLinkset object
+    // Protected by a "lock(_linsetActivityLock)" on the BSLinkset object
     public bool RebuildScheduled { get; protected set; }
 
     // The object is going dynamic (physical). Do any setup necessary
@@ -358,7 +352,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         ForEachMember((member) =>
             {
                 if (member.PhysBody.HasPhysicalBody)
-                    m_physicsScene.PE.SetFriction(member.PhysBody, friction);
+                    _physicsScene.PE.SetFriction(member.PhysBody, friction);
                 return false;   // 'false' says to continue looping
             }
         );
@@ -368,7 +362,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         ForEachMember((member) =>
             {
                 if (member.PhysBody.HasPhysicalBody)
-                    m_physicsScene.PE.SetRestitution(member.PhysBody, restitution);
+                    _physicsScene.PE.SetRestitution(member.PhysBody, restitution);
                 return false;   // 'false' says to continue looping
             }
         );
@@ -378,7 +372,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         ForEachMember((member) =>
             {
                 if (member.PhysBody.HasPhysicalBody)
-                    m_physicsScene.PE.SetGravity(member.PhysBody, gravity);
+                    _physicsScene.PE.SetGravity(member.PhysBody, gravity);
                 return false;   // 'false' says to continue looping
             }
         );
@@ -389,10 +383,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             {
                 if (member.PhysBody.HasPhysicalBody)
                 {
-                    OMV.Vector3 inertia = m_physicsScene.PE.CalculateLocalInertia(member.PhysShape.physShapeInfo, linksetMass);
+                    OMV.Vector3 inertia = _physicsScene.PE.CalculateLocalInertia(member.PhysShape.physShapeInfo, linksetMass);
                     member.Inertia = inertia * inertiaFactor;
-                    m_physicsScene.PE.SetMassProps(member.PhysBody, linksetMass, member.Inertia);
-                    m_physicsScene.PE.UpdateInertiaTensor(member.PhysBody);
+                    _physicsScene.PE.SetMassProps(member.PhysBody, linksetMass, member.Inertia);
+                    _physicsScene.PE.UpdateInertiaTensor(member.PhysBody);
                     DetailLog("{0},BSLinkset.ComputeAndSetLocalInertia,m.mass={1}, inertia={2}", member.LocalID, linksetMass, member.Inertia);
 
                 }
@@ -405,7 +399,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         ForEachMember((member) =>
             {
                 if (member.PhysBody.HasPhysicalBody)
-                    m_physicsScene.PE.SetCollisionFlags(member.PhysBody, collFlags);
+                    _physicsScene.PE.SetCollisionFlags(member.PhysBody, collFlags);
                 return false;   // 'false' says to continue looping
             }
         );
@@ -415,7 +409,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         ForEachMember((member) =>
             {
                 if (member.PhysBody.HasPhysicalBody)
-                    m_physicsScene.PE.AddToCollisionFlags(member.PhysBody, collFlags);
+                    _physicsScene.PE.AddToCollisionFlags(member.PhysBody, collFlags);
                 return false;   // 'false' says to continue looping
             }
         );
@@ -425,7 +419,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         ForEachMember((member) =>
             {
                 if (member.PhysBody.HasPhysicalBody)
-                    m_physicsScene.PE.RemoveFromCollisionFlags(member.PhysBody, collFlags);
+                    _physicsScene.PE.RemoveFromCollisionFlags(member.PhysBody, collFlags);
                 return false;   // 'false' says to continue looping
             }
         );
@@ -436,9 +430,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         float mass = LinksetRoot.RawMass;
         if (HasAnyChildren)
         {
-            lock (m_linksetActivityLock)
+            lock (_linksetActivityLock)
             {
-                foreach (BSPrimLinkable bp in m_children.Keys)
+                foreach (BSPrimLinkable bp in _children.Keys)
                 {
                     mass += bp.RawMass;
                 }
@@ -451,12 +445,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     protected virtual OMV.Vector3 ComputeLinksetCenterOfMass()
     {
         OMV.Vector3 com;
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
             com = LinksetRoot.Position * LinksetRoot.RawMass;
             float totalMass = LinksetRoot.RawMass;
 
-            foreach (BSPrimLinkable bp in m_children.Keys)
+            foreach (BSPrimLinkable bp in _children.Keys)
             {
                 com += bp.Position * bp.RawMass;
                 totalMass += bp.RawMass;
@@ -471,15 +465,15 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     protected virtual OMV.Vector3 ComputeLinksetGeometricCenter()
     {
         OMV.Vector3 com;
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
             com = LinksetRoot.Position;
 
-            foreach (BSPrimLinkable bp in m_children.Keys)
+            foreach (BSPrimLinkable bp in _children.Keys)
             {
                 com += bp.Position;
             }
-            com /= m_children.Count + 1;
+            com /= _children.Count + 1;
         }
 
         return com;
@@ -495,8 +489,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // Invoke the detailed logger and output something if it's enabled.
     protected void DetailLog(string msg, params object[] args)
     {
-        if (m_physicsScene.PhysicsLogging.Enabled)
-            m_physicsScene.DetailLog(msg, args);
+        if (_physicsScene.PhysicsLogging.Enabled)
+            _physicsScene.DetailLog(msg, args);
     }
 }
 }

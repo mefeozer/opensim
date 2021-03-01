@@ -39,7 +39,7 @@ namespace OpenSim.Services.ProfilesService
 {
     public class UserProfilesService: UserProfilesServiceBase, IUserProfilesService
     {
-        static readonly ILog m_log =
+        static readonly ILog _log =
             LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -51,7 +51,7 @@ namespace OpenSim.Services.ProfilesService
             IConfig Config = config.Configs[configName];
             if (Config == null)
             {
-                m_log.Warn("[PROFILES SERVICE]: No configuration found!");
+                _log.Warn("[PROFILES SERVICE]: No configuration found!");
                 return;
             }
             object[] args = null;
@@ -177,14 +177,14 @@ namespace OpenSim.Services.ProfilesService
                     }
                     catch
                     {
-                        m_log.Error ("[PROFILES SERVICE]: UserAccountService Exception: Could not get user account");
+                        _log.Error ("[PROFILES SERVICE]: UserAccountService Exception: Could not get user account");
                         result = "UserAccountService settings error in UserProfileService!";
                         return false;
                     }
                 }
                 else
                 {
-                    m_log.Error ("[PROFILES SERVICE]: UserAccountService: Could not get user account");
+                    _log.Error ("[PROFILES SERVICE]: UserAccountService: Could not get user account");
                     result = "UserAccountService settings error in UserProfileService!";
                     return false;
                 }
@@ -217,14 +217,14 @@ namespace OpenSim.Services.ProfilesService
                     }
                     catch
                     {
-                        m_log.Error ("[PROFILES SERVICE]: UserAccountService Exception: Could not get user account");
+                        _log.Error ("[PROFILES SERVICE]: UserAccountService Exception: Could not get user account");
                         result = "UserAccountService settings error in UserProfileService!";
                         return false;
                     }
                 }
                 else
                 {
-                    m_log.Error ("[PROFILES SERVICE]: UserAccountService: Could not get user account");
+                    _log.Error ("[PROFILES SERVICE]: UserAccountService: Could not get user account");
                     result = "UserAccountService settings error in UserProfileService!";
                     return false;
                 }

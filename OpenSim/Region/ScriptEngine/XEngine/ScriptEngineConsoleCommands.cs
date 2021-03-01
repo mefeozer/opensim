@@ -36,11 +36,11 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 {
     public class ScriptEngineConsoleCommands
     {
-        readonly IScriptEngine m_engine;
+        readonly IScriptEngine _engine;
 
         public ScriptEngineConsoleCommands(IScriptEngine engine)
         {
-            m_engine = engine;
+            _engine = engine;
         }
 
         public void RegisterCommands()
@@ -56,7 +56,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
 
         private bool IsSceneSelected()
         {
-            return MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == m_engine.World;
+            return MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == _engine.World;
         }
 
         private void HandleShowSensors(string module, string[] cmdparams)
@@ -64,7 +64,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             if (!IsSceneSelected())
                 return;
 
-            SensorRepeat sr = AsyncCommandManager.GetSensorRepeatPlugin(m_engine);
+            SensorRepeat sr = AsyncCommandManager.GetSensorRepeatPlugin(_engine);
 
             if (sr == null)
             {
@@ -96,7 +96,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             if (!IsSceneSelected())
                 return;
 
-            Timer timerPlugin = AsyncCommandManager.GetTimerPlugin(m_engine);
+            Timer timerPlugin = AsyncCommandManager.GetTimerPlugin(_engine);
 
             if (timerPlugin == null)
             {

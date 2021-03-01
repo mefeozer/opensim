@@ -38,54 +38,48 @@ namespace OpenSim.Region.CoreModules.World.Land
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "DefaultDwellModule")]
     public class DefaultDwellModule : INonSharedRegionModule, IDwellModule
     {
-        private Scene m_scene;
-        private IConfigSource m_Config;
-        private bool m_Enabled = false;
+        private Scene _scene;
+        private IConfigSource _Config;
+        private bool _Enabled = false;
 
-        public Type ReplaceableInterface
-        {
-            get { return typeof(IDwellModule); }
-        }
+        public Type ReplaceableInterface => typeof(IDwellModule);
 
-        public string Name
-        {
-            get { return "DefaultDwellModule"; }
-        }
+        public string Name => "DefaultDwellModule";
 
         public void Initialise(IConfigSource source)
         {
-            m_Config = source;
+            _Config = source;
 
-            IConfig DwellConfig = m_Config.Configs ["Dwell"];
+            IConfig DwellConfig = _Config.Configs ["Dwell"];
 
             if (DwellConfig == null) {
-                m_Enabled = false;
+                _Enabled = false;
                 return;
             }
-            m_Enabled = DwellConfig.GetString ("DwellModule", "DefaultDwellModule") == "DefaultDwellModule";
+            _Enabled = DwellConfig.GetString ("DwellModule", "DefaultDwellModule") == "DefaultDwellModule";
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_scene = scene;
-            m_scene.RegisterModuleInterface<IDwellModule>(this);
+            _scene = scene;
+            _scene.RegisterModuleInterface<IDwellModule>(this);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
-            m_scene.EventManager.OnNewClient += OnNewClient;
+            _scene.EventManager.OnNewClient += OnNewClient;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
-            m_scene.EventManager.OnNewClient -= OnNewClient;
+            _scene.EventManager.OnNewClient -= OnNewClient;
         }
 
         public void Close()
@@ -99,7 +93,7 @@ namespace OpenSim.Region.CoreModules.World.Land
 
         private void ClientOnParcelDwellRequest(int localID, IClientAPI client)
         {
-            ILandObject parcel = m_scene.LandChannel.GetLandObject(localID);
+            ILandObject parcel = _scene.LandChannel.GetLandObject(localID);
             if (parcel == null)
                 return;
 
@@ -111,7 +105,7 @@ namespace OpenSim.Region.CoreModules.World.Land
 
         public int GetDwell(UUID parcelID)
         {
-            ILandObject parcel = m_scene.LandChannel.GetLandObject(parcelID);
+            ILandObject parcel = _scene.LandChannel.GetLandObject(parcelID);
             if (parcel != null && parcel.LandData != null)
                return (int)parcel.LandData.Dwell;
             return 0;

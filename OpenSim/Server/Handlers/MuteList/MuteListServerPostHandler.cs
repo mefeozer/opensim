@@ -42,14 +42,14 @@ namespace OpenSim.Server.Handlers.GridUser
 {
     public class MuteListServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IMuteListService m_service;
+        private readonly IMuteListService _service;
 
         public MuteListServerPostHandler(IMuteListService service, IServiceAuth auth) :
                 base("POST", "/mutelist", auth)
         {
-            m_service = service;
+            _service = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -60,7 +60,7 @@ namespace OpenSim.Server.Handlers.GridUser
                 body = sr.ReadToEnd();
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
             string method = string.Empty;
 
             try
@@ -82,11 +82,11 @@ namespace OpenSim.Server.Handlers.GridUser
                     case "delete":
                         return deletemute(request);
                 }
-                m_log.DebugFormat("[MUTELIST HANDLER]: unknown method request: {0}", method);
+                _log.DebugFormat("[MUTELIST HANDLER]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[MUTELIST HANDLER]: Exception in method {0}: {1}", method, e);
+                _log.DebugFormat("[MUTELIST HANDLER]: Exception in method {0}: {1}", method, e);
             }
 
             return FailureResult();
@@ -105,14 +105,14 @@ namespace OpenSim.Server.Handlers.GridUser
             if(!uint.TryParse(request["mutecrc"].ToString(), out mutecrc))
                     return FailureResult();
 
-            byte[] data = m_service.MuteListRequest(agentID, mutecrc);
+            byte[] data = _service.MuteListRequest(agentID, mutecrc);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
             result["result"] = Convert.ToBase64String(data);
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[GRID USER HANDLER]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[GRID USER HANDLER]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -160,7 +160,7 @@ namespace OpenSim.Server.Handlers.GridUser
             else
                 mute.Stamp = Util.UnixTimeSinceEpoch();
 
-            return m_service.UpdateMute(mute) ? SuccessResult() : FailureResult();
+            return _service.UpdateMute(mute) ? SuccessResult() : FailureResult();
         }
 
         byte[] deletemute(Dictionary<string, object> request)
@@ -185,7 +185,7 @@ namespace OpenSim.Server.Handlers.GridUser
             else
                muteName = string.Empty;
 
-            return m_service.RemoveMute(agentID, muteID, muteName) ? SuccessResult() : FailureResult();
+            return _service.RemoveMute(agentID, muteID, muteName) ? SuccessResult() : FailureResult();
         }
 
         private byte[] SuccessResult()

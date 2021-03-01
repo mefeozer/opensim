@@ -50,12 +50,12 @@ namespace OpenSim.Services.Interfaces
 
     public class AuthorizationRequest
     {
-        private string m_userID;
-        private string m_firstname;
-        private string m_surname;
-        private string m_email;
-        private string m_regionName;
-        private string m_regionID;
+        private string _userID;
+        private string _firstname;
+        private string _surname;
+        private string _email;
+        private string _regionName;
+        private string _regionID;
 
         public AuthorizationRequest()
         {
@@ -63,62 +63,62 @@ namespace OpenSim.Services.Interfaces
 
         public AuthorizationRequest(string ID, string RegionID)
         {
-            m_userID = ID;
-            m_regionID = RegionID;
+            _userID = ID;
+            _regionID = RegionID;
         }
 
         public AuthorizationRequest(
             string ID, string FirstName, string SurName, string Email, string RegionName, string RegionID)
         {
-            m_userID = ID;
-            m_firstname = FirstName;
-            m_surname = SurName;
-            m_email = Email;
-            m_regionName = RegionName;
-            m_regionID = RegionID;
+            _userID = ID;
+            _firstname = FirstName;
+            _surname = SurName;
+            _email = Email;
+            _regionName = RegionName;
+            _regionID = RegionID;
         }
 
         public string ID
         {
-            get { return m_userID; }
-            set { m_userID = value; }
+            get => _userID;
+            set => _userID = value;
         }
 
         public string FirstName
         {
-            get { return m_firstname; }
-            set { m_firstname = value; }
+            get => _firstname;
+            set => _firstname = value;
         }
 
         public string SurName
         {
-            get { return m_surname; }
-            set { m_surname = value; }
+            get => _surname;
+            set => _surname = value;
         }
 
         public string Email
         {
-            get { return m_email; }
-            set { m_email = value; }
+            get => _email;
+            set => _email = value;
         }
 
         public string RegionName
         {
-            get { return m_regionName; }
-            set { m_regionName = value; }
+            get => _regionName;
+            set => _regionName = value;
         }
 
         public string RegionID
         {
-            get { return m_regionID; }
-            set { m_regionID = value; }
+            get => _regionID;
+            set => _regionID = value;
         }
     }
 
     public class AuthorizationResponse
     {
-        private bool m_isAuthorized;
-        private string m_message;
+        private bool _isAuthorized;
+        private string _message;
 
         public AuthorizationResponse()
         {
@@ -126,20 +126,20 @@ namespace OpenSim.Services.Interfaces
 
         public AuthorizationResponse(bool isAuthorized, string message)
         {
-            m_isAuthorized = isAuthorized;
-            m_message = message;
+            _isAuthorized = isAuthorized;
+            _message = message;
         }
 
         public bool IsAuthorized
         {
-            get { return m_isAuthorized; }
-            set { m_isAuthorized = value; }
+            get => _isAuthorized;
+            set => _isAuthorized = value;
         }
 
         public string Message
         {
-            get { return m_message; }
-            set { m_message = value; }
+            get => _message;
+            set => _message = value;
         }
     }
 }

@@ -40,18 +40,15 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
     /// </summary>
     public class Commander : ICommander
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <value>
         /// Used in runtime class generation
         /// </summary>
-        private readonly string m_generatedApiClassName;
+        private readonly string _generatedApiClassName;
 
-        public string Name
-        {
-            get { return m_name; }
-        }
-        private readonly string m_name;
+        public string Name => _name;
+        private readonly string _name;
 
         public string Help
         {
@@ -59,9 +56,9 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
             {
                 StringBuilder sb = new StringBuilder();
 
-                sb.AppendLine("=== " + m_name + " ===");
+                sb.AppendLine("=== " + _name + " ===");
 
-                foreach (ICommand com in m_commands.Values)
+                foreach (ICommand com in _commands.Values)
                 {
                     sb.AppendLine("* " + Name + " " + com.Name + " - " + com.Help);
                 }
@@ -76,24 +73,21 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
         /// <param name="name"></param>
         public Commander(string name)
         {
-            m_name = name;
-            m_generatedApiClassName = m_name[0].ToString().ToUpper();
+            _name = name;
+            _generatedApiClassName = _name[0].ToString().ToUpper();
 
-            if (m_name.Length > 1)
-                m_generatedApiClassName += m_name.Substring(1);
+            if (_name.Length > 1)
+                _generatedApiClassName += _name.Substring(1);
         }
 
-        public Dictionary<string, ICommand> Commands
-        {
-            get { return m_commands; }
-        }
-        private readonly Dictionary<string, ICommand> m_commands = new Dictionary<string, ICommand>();
+        public Dictionary<string, ICommand> Commands => _commands;
+        private readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>();
 
         #region ICommander Members
 
         public void RegisterCommand(string commandName, ICommand command)
         {
-            m_commands[commandName] = command;
+            _commands[commandName] = command;
         }
 
         /// <summary>
@@ -102,8 +96,8 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
         /// <returns>Returns C# source code to create a binding</returns>
         public string GenerateRuntimeAPI()
         {
-            string classSrc = "\n\tpublic class " + m_generatedApiClassName + " {\n";
-            foreach (ICommand com in m_commands.Values)
+            string classSrc = "\n\tpublic class " + _generatedApiClassName + " {\n";
+            foreach (ICommand com in _commands.Values)
             {
                 classSrc += "\tpublic void " + EscapeRuntimeAPICommand(com.Name) + "( ";
                 foreach (KeyValuePair<string, string> arg in com.Arguments)
@@ -119,7 +113,7 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
                     classSrc += "\t\targs[" + i.ToString() + "] = " + Util.Md5Hash(arg.Key) + "  " + ";\n";
                     i++;
                 }
-                classSrc += "\t\tGetCommander(\"" + m_name + "\").Run(\"" + com.Name + "\", args);\n";
+                classSrc += "\t\tGetCommander(\"" + _name + "\").Run(\"" + com.Name + "\", args);\n";
                 classSrc += "\t}\n";
             }
             classSrc += "}\n";
@@ -136,27 +130,27 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
         /// <param name="args">The function parameters</param>
         public void Run(string function, object[] args)
         {
-            m_commands[function].Run(args);
+            _commands[function].Run(args);
         }
 
         public void ProcessConsoleCommand(string function, string[] args)
         {
-            if (m_commands.ContainsKey(function))
+            if (_commands.ContainsKey(function))
             {
                 if (args.Length > 0 && args[0] == "help")
                 {
-                    m_commands[function].ShowConsoleHelp();
+                    _commands[function].ShowConsoleHelp();
                 }
                 else
                 {
-                    m_commands[function].Run(args);
+                    _commands[function].Run(args);
                 }
             }
             else
             {
                 if (function == "api")
                 {
-                    m_log.Info(GenerateRuntimeAPI());
+                    _log.Info(GenerateRuntimeAPI());
                 }
                 else
                 {

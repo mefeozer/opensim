@@ -39,17 +39,17 @@ namespace OpenSim.Server.Handlers.BakedTextures
 {
     public class XBakesConnector : ServiceConnector
     {
-        private readonly string m_ConfigName = "BakedTextureService";
+        private readonly string _ConfigName = "BakedTextureService";
 
         public XBakesConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string bakesServiceName = serverConfig.GetString("LocalServiceModule", string.Empty);
 
@@ -59,7 +59,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
             object[] args = new object[] { config };
             IBakedTextureService bakesService = ServerUtils.LoadPlugin<IBakedTextureService>(bakesServiceName, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
             server.AddSimpleStreamHandler(new BakesServerHandler(bakesService, auth), true);
         }
@@ -67,17 +67,17 @@ namespace OpenSim.Server.Handlers.BakedTextures
 
     public class BakesServerHandler : SimpleStreamHandler
     {
-        private readonly IBakedTextureService m_BakesService;
+        private readonly IBakedTextureService _BakesService;
 
         public BakesServerHandler(IBakedTextureService service, IServiceAuth auth) :
                 base("/bakes", auth)
         {
-            m_BakesService = service;
+            _BakesService = service;
         }
 
         protected override void ProcessRequest(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
-            if(m_BakesService == null)
+            if(_BakesService == null)
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return;
@@ -105,7 +105,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
             if (p.Length == 0)
                 return;
 
-            httpResponse.RawBuffer = m_BakesService.Get(p[0]);
+            httpResponse.RawBuffer = _BakesService.Get(p[0]);
         }
 
         private void doPost(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
@@ -120,7 +120,7 @@ namespace OpenSim.Server.Handlers.BakedTextures
             int len = (int)ms.Length;
             byte[] data = ms.GetBuffer();
             httpRequest.InputStream.Dispose(); // the buffer stays in data
-            m_BakesService.Store(p[0], data, len);
+            _BakesService.Store(p[0], data, len);
         }
 
         public string[] SplitParams(string path)

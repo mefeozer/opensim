@@ -48,14 +48,14 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "XBakes.Module")]
     public class XBakesModule : INonSharedRegionModule, IBakedTextureModule
     {
-        protected Scene m_Scene;
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        protected Scene _Scene;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private UTF8Encoding enc = new UTF8Encoding();
-        private string m_URL = string.Empty;
-        private static readonly XmlSerializer m_serializer = new XmlSerializer(typeof(AssetBase));
-        private static bool m_enabled = false;
+        private string _URL = string.Empty;
+        private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(AssetBase));
+        private static bool _enabled = false;
 
-        private static IServiceAuth m_Auth;
+        private static IServiceAuth _Auth;
 
         public void Initialise(IConfigSource configSource)
         {
@@ -63,22 +63,22 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
             if (config == null)
                 return;
 
-            m_URL = config.GetString("URL", string.Empty);
-            if (string.IsNullOrEmpty(m_URL))
+            _URL = config.GetString("URL", string.Empty);
+            if (string.IsNullOrEmpty(_URL))
                 return;
 
-            m_enabled = true;
+            _enabled = true;
 
-            m_Auth = ServiceAuth.Create(configSource, "XBakes");
+            _Auth = ServiceAuth.Create(configSource, "XBakes");
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            // m_log.InfoFormat("[XBakes]: Enabled for region {0}", scene.RegionInfo.RegionName);
-            m_Scene = scene;
+            // _log.InfoFormat("[XBakes]: Enabled for region {0}", scene.RegionInfo.RegionName);
+            _Scene = scene;
 
             scene.RegisterModuleInterface<IBakedTextureModule>(this);
         }
@@ -95,22 +95,16 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
         {
         }
 
-        public string Name
-        {
-            get { return "XBakes.Module"; }
-        }
+        public string Name => "XBakes.Module";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public WearableCacheItem[] Get(UUID id)
         {
-            if (string.IsNullOrEmpty(m_URL))
+            if (string.IsNullOrEmpty(_URL))
                 return null;
 
-            using (RestClient rc = new RestClient(m_URL))
+            using (RestClient rc = new RestClient(_URL))
             {
                 List<WearableCacheItem> ret = new List<WearableCacheItem>();
                 rc.AddResourcePath("bakes/" + id.ToString());
@@ -118,7 +112,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
 
                 try
                 {
-                    using(MemoryStream s = rc.Request(m_Auth))
+                    using(MemoryStream s = rc.Request(_Auth))
                     {
                         using(XmlReader sr = new XmlReader(s))
                         {
@@ -133,7 +127,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
                                 sr.ReadStartElement("BakedTexture");
                                 if (sr.Name == "AssetBase")
                                 {
-                                    AssetBase a = (AssetBase)m_serializer.Deserialize(sr);
+                                    AssetBase a = (AssetBase)_serializer.Deserialize(sr);
                                     ret.Add(new WearableCacheItem()
                                     {
                                         CacheId = lCacheId,
@@ -154,7 +148,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
                                 sr.ReadStartElement("BESetA");
                                 if (sr.Name == "AssetBase")
                                 {
-                                    AssetBase a = (AssetBase)m_serializer.Deserialize(sr);
+                                    AssetBase a = (AssetBase)_serializer.Deserialize(sr);
                                     ret.Add(new WearableCacheItem()
                                     {
                                         CacheId = lCacheId,
@@ -165,7 +159,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
                                     sr.ReadEndElement();
                                 }
                             }
-                            m_log.DebugFormat("[XBakes]: read {0} textures for user {1}",ret.Count,id);
+                            _log.DebugFormat("[XBakes]: read {0} textures for user {1}",ret.Count,id);
                         }
                         return ret.ToArray();
                     }
@@ -187,7 +181,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
 
         public async Task Store(UUID agentId, WearableCacheItem[] data)
         {
-            if (string.IsNullOrEmpty(m_URL))
+            if (string.IsNullOrEmpty(_URL))
                 return;
 
             int numberWears = 0;
@@ -211,7 +205,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
                         bakeWriter.WriteAttributeString(string.Empty, "TextureIndex", string.Empty, data[i].TextureIndex.ToString());
                         bakeWriter.WriteAttributeString(string.Empty, "CacheId", string.Empty, data[i].CacheId.ToString());
                         //                        if (data[i].TextureAsset != null)
-                        m_serializer.Serialize(bakeWriter, data[i].TextureAsset);
+                        _serializer.Serialize(bakeWriter, data[i].TextureAsset);
 
                         bakeWriter.WriteEndElement();
                         numberWears++;
@@ -225,7 +219,7 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
                             bakeWriter.WriteStartElement(string.Empty, "BESetA", string.Empty);
                             bakeWriter.WriteAttributeString(string.Empty, "TextureIndex", string.Empty, data[i].TextureIndex.ToString());
                             bakeWriter.WriteAttributeString(string.Empty, "CacheId", string.Empty, data[i].CacheId.ToString());
-                            m_serializer.Serialize(bakeWriter, data[i].TextureAsset);
+                            _serializer.Serialize(bakeWriter, data[i].TextureAsset);
                             bakeWriter.WriteEndElement();
                             numberWears++;
                     }
@@ -239,11 +233,11 @@ namespace OpenSim.Region.CoreModules.Avatar.BakedTextures
             //Util.FireAndForget(
             //  delegate
             //  {
-                    using(RestClient rc = new RestClient(m_URL))
+                    using(RestClient rc = new RestClient(_URL))
                     {
                         rc.AddResourcePath("bakes/" + agentId.ToString());
-                        await rc.AsyncPOSTRequest(uploadData, m_Auth).ConfigureAwait(false);
-                        m_log.DebugFormat("[XBakes]: stored {0} textures for user {1}", numberWears, agentId);
+                        await rc.AsyncPOSTRequest(uploadData, _Auth).ConfigureAwait(false);
+                        _log.DebugFormat("[XBakes]: stored {0} textures for user {1}", numberWears, agentId);
                     }
                     uploadData = null;
             //    }, null, "XBakesModule.Store"

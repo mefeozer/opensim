@@ -43,25 +43,25 @@ namespace OpenSim.Region.CoreModules.Framework
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "GridServiceThrottleModule")]
     public class ServiceThrottleModule : ISharedRegionModule, IServiceThrottleModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(
+        private static readonly ILog _log = LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<Scene> m_scenes = new List<Scene>();
-        private JobEngine m_processorJobEngine;
+        private readonly List<Scene> _scenes = new List<Scene>();
+        private JobEngine _processorJobEngine;
 
         #region ISharedRegionModule
 
         public void Initialise(IConfigSource config)
         {
-            m_processorJobEngine = new JobEngine("ServiceThrottle","ServiceThrottle", 5000, 2);
-            m_processorJobEngine.Start();
+            _processorJobEngine = new JobEngine("ServiceThrottle","ServiceThrottle", 5000, 2);
+            _processorJobEngine.Start();
         }
 
         public void AddRegion(Scene scene)
         {
-            lock (m_scenes)
+            lock (_scenes)
             {
-                m_scenes.Add(scene);
+                _scenes.Add(scene);
                 scene.RegisterModuleInterface<IServiceThrottleModule>(this);
                 scene.EventManager.OnNewClient += OnNewClient;
             }
@@ -73,9 +73,9 @@ namespace OpenSim.Region.CoreModules.Framework
 
         public void RemoveRegion(Scene scene)
         {
-            lock (m_scenes)
+            lock (_scenes)
             {
-                m_scenes.Remove(scene);
+                _scenes.Remove(scene);
                 scene.EventManager.OnNewClient -= OnNewClient;
             }
         }
@@ -86,18 +86,12 @@ namespace OpenSim.Region.CoreModules.Framework
 
         public void Close()
         {
-            m_processorJobEngine.Stop();
+            _processorJobEngine.Stop();
         }
 
-        public string Name
-        {
-            get { return "ServiceThrottleModule"; }
-        }
+        public string Name => "ServiceThrottleModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion ISharedRegionMOdule
 
@@ -110,16 +104,16 @@ namespace OpenSim.Region.CoreModules.Framework
 
         public void OnRegionHandleRequest(IClientAPI client, UUID regionID)
         {
-            //m_log.DebugFormat("[SERVICE THROTTLE]: RegionHandleRequest {0}", regionID);
+            //_log.DebugFormat("[SERVICE THROTTLE]: RegionHandleRequest {0}", regionID);
             Action action = delegate
             {
-                if(!client.IsActive || m_scenes.Count == 0 || m_scenes[0] == null )
+                if(!client.IsActive || _scenes.Count == 0 || _scenes[0] == null )
                 {
                     client = null;
                     return;
                 }
 
-                Scene baseScene = m_scenes[0];
+                Scene baseScene = _scenes[0];
                 if(baseScene.ShuttingDown)
                 {
                     client = null;
@@ -134,7 +128,7 @@ namespace OpenSim.Region.CoreModules.Framework
                 client = null;
             };
 
-            m_processorJobEngine.QueueJob("regionHandle", action, regionID.ToString());
+            _processorJobEngine.QueueJob("regionHandle", action, regionID.ToString());
         }
 
         #endregion Events
@@ -143,7 +137,7 @@ namespace OpenSim.Region.CoreModules.Framework
 
         public void Enqueue(string category, string itemid, Action continuation)
         {
-                m_processorJobEngine.QueueJob(category, continuation, itemid);
+                _processorJobEngine.QueueJob(category, continuation, itemid);
         }
 
         #endregion IServiceThrottleModule

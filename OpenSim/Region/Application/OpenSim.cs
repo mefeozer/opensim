@@ -55,27 +55,27 @@ namespace OpenSim
     /// </summary>
     public class OpenSim : OpenSimBase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected string m_startupCommandsFile;
-        protected string m_shutdownCommandsFile;
-        protected bool m_gui = false;
-        protected string m_consoleType = "local";
-        protected uint m_consolePort = 0;
+        protected string _startupCommandsFile;
+        protected string _shutdownCommandsFile;
+        protected bool _gui = false;
+        protected string _consoleType = "local";
+        protected uint _consolePort = 0;
 
         /// <summary>
         /// Prompt to use for simulator command line.
         /// </summary>
-        private string m_consolePrompt;
+        private string _consolePrompt;
 
         /// <summary>
         /// Regex for parsing out special characters in the prompt.
         /// </summary>
-        private readonly Regex m_consolePromptRegex = new Regex(@"([^\\])\\(\w)", RegexOptions.Compiled);
+        private readonly Regex _consolePromptRegex = new Regex(@"([^\\])\\(\w)", RegexOptions.Compiled);
 
-        private string m_timedScript = "disabled";
-        private int m_timeInterval = 1200;
-        private System.Timers.Timer m_scriptTimer;
+        private string _timedScript = "disabled";
+        private int _timeInterval = 1200;
+        private System.Timers.Timer _scriptTimer;
 
         public OpenSim(IConfigSource configSource) : base(configSource)
         {
@@ -89,19 +89,19 @@ namespace OpenSim
 
             if (startupConfig != null)
             {
-                m_startupCommandsFile = startupConfig.GetString("startup_console_commands_file", "startup_commands.txt");
-                m_shutdownCommandsFile = startupConfig.GetString("shutdown_console_commands_file", "shutdown_commands.txt");
+                _startupCommandsFile = startupConfig.GetString("startup_console_commands_file", "startup_commands.txt");
+                _shutdownCommandsFile = startupConfig.GetString("shutdown_console_commands_file", "shutdown_commands.txt");
 
                 if (string.IsNullOrEmpty(startupConfig.GetString("console", string.Empty)))
-                    m_gui = startupConfig.GetBoolean("gui", false);
+                    _gui = startupConfig.GetBoolean("gui", false);
                 else
-                    m_consoleType = startupConfig.GetString("console", string.Empty);
+                    _consoleType = startupConfig.GetString("console", string.Empty);
 
                 SetConsolePort();
                 SetScriptTimerInterval(startupConfig);
                 SetFireAndForgetMethod(startupConfig);
 
-                m_consolePrompt = startupConfig.GetString("ConsolePrompt", @"Region (\R) ");
+                _consolePrompt = startupConfig.GetString("ConsolePrompt", @"Region (\R) ");
 
                 int dnsTimeout = startupConfig.GetInt("DnsTimeout", 30000);
                 try { ServicePointManager.DnsRefreshTimeout = dnsTimeout; } catch { }
@@ -109,8 +109,8 @@ namespace OpenSim
 
             InitThreadPool(startupConfig);
 
-            m_log.Info("[OPENSIM MAIN]: Using async_call_method " + Util.FireAndForgetMethod);
-            m_log.InfoFormat("[OPENSIM MAIN] Running GC in {0} mode", GCSettings.IsServerGC ? "server" : "workstation");
+            _log.Info("[OPENSIM MAIN]: Using async_call_method " + Util.FireAndForgetMethod);
+            _log.InfoFormat("[OPENSIM MAIN] Running GC in {0} mode", GCSettings.IsServerGC ? "server" : "workstation");
         }
 
         private static void SetFireAndForgetMethod(IConfig startupConfig)
@@ -131,10 +131,10 @@ namespace OpenSim
 
         private void SetScriptTimerInterval(IConfig startupConfig)
         {
-            m_timedScript = startupConfig.GetString("timer_Script", "disabled");
-            if (m_timedScript != "disabled")
+            _timedScript = startupConfig.GetString("timer_Script", "disabled");
+            if (_timedScript != "disabled")
             {
-                m_timeInterval = startupConfig.GetInt("timer_Interval", 1200);
+                _timeInterval = startupConfig.GetInt("timer_Interval", 1200);
             }
         }
 
@@ -142,7 +142,7 @@ namespace OpenSim
         {
             IConfig networkConfig = Config.Configs["Network"];
             if (networkConfig != null)
-                m_consolePort = (uint)networkConfig.GetInt("console_port", 0);
+                _consolePort = (uint)networkConfig.GetInt("console_port", 0);
         }
 
         /// <summary>
@@ -150,38 +150,38 @@ namespace OpenSim
         /// </summary>
         protected override void StartupSpecific()
         {
-            m_log.Info("====================================================================");
-            m_log.Info("========================= STARTING OPENSIM =========================");
-            m_log.Info("====================================================================");
+            _log.Info("====================================================================");
+            _log.Info("========================= STARTING OPENSIM =========================");
+            _log.Info("====================================================================");
 
-            //m_log.InfoFormat("[OPENSIM MAIN]: GC Is Server GC: {0}", GCSettings.IsServerGC.ToString());
+            //_log.InfoFormat("[OPENSIM MAIN]: GC Is Server GC: {0}", GCSettings.IsServerGC.ToString());
             // http://msdn.microsoft.com/en-us/library/bb384202.aspx
             //GCSettings.LatencyMode = GCLatencyMode.Batch;
-            //m_log.InfoFormat("[OPENSIM MAIN]: GC Latency Mode: {0}", GCSettings.LatencyMode.ToString());
+            //_log.InfoFormat("[OPENSIM MAIN]: GC Latency Mode: {0}", GCSettings.LatencyMode.ToString());
 
-            if (m_gui) // Driven by external GUI
+            if (_gui) // Driven by external GUI
             {
-                m_console = new CommandConsole("Region");
+                _console = new CommandConsole("Region");
             }
             else
             {
-                switch (m_consoleType)
+                switch (_consoleType)
                 {
                 case "basic":
-                    m_console = new CommandConsole("Region");
+                    _console = new CommandConsole("Region");
                     break;
                 case "rest":
-                    m_console = new RemoteConsole("Region");
+                    _console = new RemoteConsole("Region");
                     break;
                 default:
-                    m_console = new LocalConsole("Region", Config.Configs["Startup"]);
+                    _console = new LocalConsole("Region", Config.Configs["Startup"]);
                     break;
                 }
             }
 
-            m_console.ReadConfig(Config);
+            _console.ReadConfig(Config);
 
-            MainConsole.Instance = m_console;
+            MainConsole.Instance = _console;
 
             RegisterCommonAppenders(Config.Configs["Startup"]);
             LogEnvironmentInformation();
@@ -201,17 +201,17 @@ namespace OpenSim
                 string urlBase = string.Format("/{0}/", managedStatsURI);
                 StatsManager.StatsPassword = managedStatsPassword;
                 MainServer.Instance.AddHTTPHandler(urlBase, StatsManager.HandleStatsRequest);
-                m_log.InfoFormat("[OPENSIM] Enabling remote managed stats fetch. URL = {0}", urlBase);
+                _log.InfoFormat("[OPENSIM] Enabling remote managed stats fetch. URL = {0}", urlBase);
             }
 
-            MethodInfo mi = m_console.GetType().GetMethod("SetServer", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(BaseHttpServer) }, null);
+            MethodInfo mi = _console.GetType().GetMethod("SetServer", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(BaseHttpServer) }, null);
 
             if (mi != null)
             {
-                if (m_consolePort == 0)
-                    mi.Invoke(m_console, new object[] { m_httpServer });
+                if (_consolePort == 0)
+                    mi.Invoke(_console, new object[] { _httpServer });
                 else
-                    mi.Invoke(m_console, new object[] { MainServer.GetHttpServer(m_consolePort) });
+                    mi.Invoke(_console, new object[] { MainServer.GetHttpServer(_consolePort) });
             }
 
             // Hook up to the watchdog timer
@@ -227,24 +227,24 @@ namespace OpenSim
                 ChangeSelectedRegion("region", new string[] {"change", "region", "root"});
 
             //Run Startup Commands
-            if (string.IsNullOrEmpty(m_startupCommandsFile))
+            if (string.IsNullOrEmpty(_startupCommandsFile))
             {
-                m_log.Info("[STARTUP]: No startup command script specified. Moving on...");
+                _log.Info("[STARTUP]: No startup command script specified. Moving on...");
             }
             else
             {
-                RunCommandScript(m_startupCommandsFile);
+                RunCommandScript(_startupCommandsFile);
             }
 
             // Start timer script (run a script every xx seconds)
-            if (m_timedScript != "disabled")
+            if (_timedScript != "disabled")
             {
-                m_scriptTimer = new System.Timers.Timer()
+                _scriptTimer = new System.Timers.Timer()
                 {
                     Enabled = true,
-                    Interval = m_timeInterval*1000,
+                    Interval = _timeInterval*1000,
                 };
-                m_scriptTimer.Elapsed += RunAutoTimerScript;
+                _scriptTimer.Elapsed += RunAutoTimerScript;
             }
         }
 
@@ -253,44 +253,44 @@ namespace OpenSim
         /// </summary>
         private void RegisterConsoleCommands()
         {
-            MainServer.RegisterHttpConsoleCommands(m_console);
+            MainServer.RegisterHttpConsoleCommands(_console);
 
-            m_console.Commands.AddCommand("Objects", false, "force update",
+            _console.Commands.AddCommand("Objects", false, "force update",
                                           "force update",
                                           "Force the update of all objects on clients",
                                           HandleForceUpdate);
 
-            m_console.Commands.AddCommand("General", false, "change region",
+            _console.Commands.AddCommand("General", false, "change region",
                                           "change region <region name>",
                                           "Change current console region",
                                           ChangeSelectedRegion);
 
-            m_console.Commands.AddCommand("Archiving", false, "save xml",
+            _console.Commands.AddCommand("Archiving", false, "save xml",
                                           "save xml [<file name>]",
                                           "Save a region's data in XML format",
                                           SaveXml);
 
-            m_console.Commands.AddCommand("Archiving", false, "save xml2",
+            _console.Commands.AddCommand("Archiving", false, "save xml2",
                                           "save xml2 [<file name>]",
                                           "Save a region's data in XML2 format",
                                           SaveXml2);
 
-            m_console.Commands.AddCommand("Archiving", false, "load xml",
+            _console.Commands.AddCommand("Archiving", false, "load xml",
                                           "load xml [<file name> [-newUID [<x> <y> <z>]]]",
                                           "Load a region's data from XML format",
                                           LoadXml);
 
-            m_console.Commands.AddCommand("Archiving", false, "load xml2",
+            _console.Commands.AddCommand("Archiving", false, "load xml2",
                                           "load xml2 [<file name>]",
                                           "Load a region's data from XML2 format",
                                           LoadXml2);
 
-            m_console.Commands.AddCommand("Archiving", false, "save prims xml2",
+            _console.Commands.AddCommand("Archiving", false, "save prims xml2",
                                           "save prims xml2 [<prim name> <file name>]",
                                           "Save named prim to XML2",
                                           SavePrimsXml2);
 
-            m_console.Commands.AddCommand("Archiving", false, "load oar",
+            _console.Commands.AddCommand("Archiving", false, "load oar",
                                           "load oar [-m|--merge] [-s|--skip-assets]"
                                              + " [--default-user \"User Name\"]"
                                              + " [--merge-terrain] [--merge-parcels]"
@@ -326,7 +326,7 @@ namespace OpenSim
                                             + "3: Displacement (setting offset coordinates within the destination region)",
                                           LoadOar); ;
 
-            m_console.Commands.AddCommand("Archiving", false, "save oar",
+            _console.Commands.AddCommand("Archiving", false, "save oar",
                                           //"save oar [-v|--version=<N>] [-p|--profile=<url>] [<OAR path>]",
                                           "save oar [-h|--home=<url>] [--noassets] [--publish] [--perm=<permissions>] [--all] [<OAR path>]",
                                           "Save a region's data to an OAR archive.",
@@ -343,76 +343,76 @@ namespace OpenSim
                                           + " If this is not given then the oar is saved to region.oar in the current directory.",
                                           SaveOar);
 
-            m_console.Commands.AddCommand("Objects", false, "edit scale",
+            _console.Commands.AddCommand("Objects", false, "edit scale",
                                           "edit scale <name> <x> <y> <z>",
                                           "Change the scale of a named prim",
                                           HandleEditScale);
 
-            m_console.Commands.AddCommand("Objects", false, "rotate scene",
+            _console.Commands.AddCommand("Objects", false, "rotate scene",
                                           "rotate scene <degrees> [centerX, centerY]",
                                           "Rotates all scene objects around centerX, centerY (default 128, 128) (please back up your region before using)",
                                           HandleRotateScene);
 
-            m_console.Commands.AddCommand("Objects", false, "scale scene",
+            _console.Commands.AddCommand("Objects", false, "scale scene",
                                           "scale scene <factor>",
                                           "Scales the scene objects (please back up your region before using)",
                                           HandleScaleScene);
 
-            m_console.Commands.AddCommand("Objects", false, "translate scene",
+            _console.Commands.AddCommand("Objects", false, "translate scene",
                                           "translate scene xOffset yOffset zOffset",
                                           "translates the scene objects (please back up your region before using)",
                                           HandleTranslateScene);
 
-            m_console.Commands.AddCommand("Users", false, "kick user",
+            _console.Commands.AddCommand("Users", false, "kick user",
                                           "kick user <first> <last> [--force] [message]",
                                           "Kick a user off the simulator",
                                           "The --force option will kick the user without any checks to see whether it's already in the process of closing\n"
                                           + "Only use this option if you are sure the avatar is inactive and a normal kick user operation does not removed them",
                                           KickUserCommand);
 
-            m_console.Commands.AddCommand("Users", false, "show users",
+            _console.Commands.AddCommand("Users", false, "show users",
                                           "show users [full]",
                                           "Show user data for users currently on the region",
                                           "Without the 'full' option, only users actually on the region are shown."
                                             + "  With the 'full' option child agents of users in neighbouring regions are also shown.",
                                           HandleShow);
 
-            m_console.Commands.AddCommand("Comms", false, "show connections",
+            _console.Commands.AddCommand("Comms", false, "show connections",
                                           "show connections",
                                           "Show connection data",
                                           HandleShow);
 
-            m_console.Commands.AddCommand("Comms", false, "show circuits",
+            _console.Commands.AddCommand("Comms", false, "show circuits",
                                           "show circuits",
                                           "Show agent circuit data",
                                           HandleShow);
 
-            m_console.Commands.AddCommand("Comms", false, "show pending-objects",
+            _console.Commands.AddCommand("Comms", false, "show pending-objects",
                                           "show pending-objects",
                                           "Show # of objects on the pending queues of all scene viewers",
                                           HandleShow);
 
-            m_console.Commands.AddCommand("General", false, "show modules",
+            _console.Commands.AddCommand("General", false, "show modules",
                                           "show modules",
                                           "Show module data",
                                           HandleShow);
 
-            m_console.Commands.AddCommand("Regions", false, "show regions",
+            _console.Commands.AddCommand("Regions", false, "show regions",
                                           "show regions",
                                           "Show region data",
                                           HandleShow);
 
-            m_console.Commands.AddCommand("Regions", false, "show ratings",
+            _console.Commands.AddCommand("Regions", false, "show ratings",
                                           "show ratings",
                                           "Show rating data",
                                           HandleShow);
 
-            m_console.Commands.AddCommand("Objects", false, "backup",
+            _console.Commands.AddCommand("Objects", false, "backup",
                                           "backup",
                                           "Persist currently unsaved object changes immediately instead of waiting for the normal persistence call.",
                                           RunCommand);
 
-            m_console.Commands.AddCommand("Regions", false, "create region",
+            _console.Commands.AddCommand("Regions", false, "create region",
                                           "create region [\"region name\"] <region_file.ini>",
                                           "Create a new region.",
                                           "The settings for \"region name\" are read from <region_file.ini>. Paths specified with <region_file.ini> are relative to your Regions directory, unless an absolute path is given."
@@ -421,43 +421,43 @@ namespace OpenSim
                                           + "If <region_file.ini> does not exist, it will be created.",
                                           HandleCreateRegion);
 
-            m_console.Commands.AddCommand("Regions", false, "restart",
+            _console.Commands.AddCommand("Regions", false, "restart",
                                           "restart",
                                           "Restart the currently selected region(s) in this instance",
                                           RunCommand);
 
-            m_console.Commands.AddCommand("General", false, "command-script",
+            _console.Commands.AddCommand("General", false, "command-script",
                                           "command-script <script>",
                                           "Run a command script from file",
                                           RunCommand);
 
-            m_console.Commands.AddCommand("Regions", false, "remove-region",
+            _console.Commands.AddCommand("Regions", false, "remove-region",
                                           "remove-region <name>",
                                           "Remove a region from this simulator",
                                           RunCommand);
 
-            m_console.Commands.AddCommand("Regions", false, "delete-region",
+            _console.Commands.AddCommand("Regions", false, "delete-region",
                                           "delete-region <name>",
                                           "Delete a region from disk",
                                           RunCommand);
 
-            m_console.Commands.AddCommand("Estates", false, "estate create",
+            _console.Commands.AddCommand("Estates", false, "estate create",
                                           "estate create <owner UUID> <estate name>",
                                           "Creates a new estate with the specified name, owned by the specified user."
                                           + " Estate name must be unique.",
                                           CreateEstateCommand);
 
-            m_console.Commands.AddCommand("Estates", false, "estate set owner",
+            _console.Commands.AddCommand("Estates", false, "estate set owner",
                                           "estate set owner <estate-id>[ <UUID> | <Firstname> <Lastname> ]",
                                           "Sets the owner of the specified estate to the specified UUID or user. ",
                                           SetEstateOwnerCommand);
 
-            m_console.Commands.AddCommand("Estates", false, "estate set name",
+            _console.Commands.AddCommand("Estates", false, "estate set name",
                                           "estate set name <estate-id> <new name>",
                                           "Sets the name of the specified estate to the specified value. New name must be unique.",
                                           SetEstateNameCommand);
 
-            m_console.Commands.AddCommand("Estates", false, "estate link region",
+            _console.Commands.AddCommand("Estates", false, "estate link region",
                                           "estate link region <estate ID> <region ID>",
                                           "Attaches the specified region to the specified estate.",
                                           EstateLinkRegionCommand);
@@ -465,15 +465,15 @@ namespace OpenSim
 
         protected override void ShutdownSpecific()
         {
-            if (!string.IsNullOrEmpty(m_shutdownCommandsFile))
+            if (!string.IsNullOrEmpty(_shutdownCommandsFile))
             {
-                RunCommandScript(m_shutdownCommandsFile);
+                RunCommandScript(_shutdownCommandsFile);
             }
 
-            if (m_timedScript != "disabled")
+            if (_timedScript != "disabled")
             {
-                m_scriptTimer.Dispose();
-                m_timedScript = "disabled";
+                _scriptTimer.Dispose();
+                _timedScript = "disabled";
             }
 
             base.ShutdownSpecific();
@@ -486,16 +486,16 @@ namespace OpenSim
         /// <param name="e"></param>
         private void RunAutoTimerScript(object sender, EventArgs e)
         {
-            if (m_timedScript != "disabled")
+            if (_timedScript != "disabled")
             {
-                RunCommandScript(m_timedScript);
+                RunCommandScript(_timedScript);
             }
         }
 
         private void WatchdogTimeoutHandler(Watchdog.ThreadWatchdogInfo twi)
         {
             int now = Environment.TickCount & int.MaxValue;
-            m_log.ErrorFormat(
+            _log.ErrorFormat(
                 "[WATCHDOG]: Timeout detected for thread \"{0}\". ThreadState={1}. Last tick was {2}ms ago.  {3}",
                 twi.Thread.Name,
                 twi.Thread.ThreadState,
@@ -574,7 +574,7 @@ namespace OpenSim
                 string currentLine;
                 while ((currentLine = readFile.ReadLine()) != null)
                 {
-                    m_log.Info("[!]" + currentLine);
+                    _log.Info("[!]" + currentLine);
                 }
             }
         }
@@ -781,7 +781,7 @@ namespace OpenSim
             CreateRegion(regInfo, true, out IScene scene);
 
             if (changed)
-                m_estateDataService.StoreEstateSettings(regInfo.EstateSettings);
+                _estateDataService.StoreEstateSettings(regInfo.EstateSettings);
 
             scene.Start();
         }
@@ -865,22 +865,22 @@ namespace OpenSim
             string regionName = SceneManager.CurrentScene == null ? "root" : SceneManager.CurrentScene.RegionInfo.RegionName;
             MainConsole.Instance.Output(string.Format("Currently selected region is {0}", regionName));
 
-//            m_log.DebugFormat("Original prompt is {0}", m_consolePrompt);
-            string prompt = m_consolePrompt;
+//            _log.DebugFormat("Original prompt is {0}", _consolePrompt);
+            string prompt = _consolePrompt;
 
             // Replace "\R" with the region name
             // Replace "\\" with "\"
-            prompt = m_consolePromptRegex.Replace(prompt, m =>
+            prompt = _consolePromptRegex.Replace(prompt, m =>
             {
-//                m_log.DebugFormat("Matched {0}", m.Groups[2].Value);
+//                _log.DebugFormat("Matched {0}", m.Groups[2].Value);
                 if (m.Groups[2].Value == "R")
                     return m.Groups[1].Value + regionName;
                 else
                     return m.Groups[0].Value;
             });
 
-            m_console.DefaultPrompt = prompt;
-            m_console.ConsoleScene = SceneManager.CurrentScene;
+            _console.DefaultPrompt = prompt;
+            _console.ConsoleScene = SceneManager.CurrentScene;
         }
 
         protected override void HandleRestartRegion(RegionInfo whichRegion)
@@ -888,8 +888,8 @@ namespace OpenSim
             base.HandleRestartRegion(whichRegion);
 
             // Where we are restarting multiple scenes at once, a previous call to RefreshPrompt may have set the
-            // m_console.ConsoleScene to null (indicating all scenes).
-            if (m_console.ConsoleScene != null && whichRegion.RegionName == ((Scene)m_console.ConsoleScene).Name)
+            // _console.ConsoleScene to null (indicating all scenes).
+            if (_console.ConsoleScene != null && whichRegion.RegionName == ((Scene)_console.ConsoleScene).Name)
                 SceneManager.TrySetCurrentScene(whichRegion.RegionName);
 
             RefreshPrompt();

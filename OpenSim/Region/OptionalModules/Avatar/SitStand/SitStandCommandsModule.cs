@@ -44,44 +44,44 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "AnimationsCommandModule")]
     public class SitStandCommandModule : INonSharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
+        private Scene _scene;
 
-        public string Name { get { return "SitStand Command Module"; } }
+        public string Name => "SitStand Command Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[ATTACHMENTS COMMAND MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ATTACHMENTS COMMAND MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
 
-            m_scene = scene;
+            _scene = scene;
 
             scene.AddCommand(
                 "Users", this, "sit user name",
@@ -101,7 +101,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
 
         private void HandleSitUserNameCommand(string module, string[] cmd)
         {
-            if (MainConsole.Instance.ConsoleScene != m_scene && MainConsole.Instance.ConsoleScene != null)
+            if (MainConsole.Instance.ConsoleScene != _scene && MainConsole.Instance.ConsoleScene != null)
                 return;
 
             if (cmd.Length < 5)
@@ -118,7 +118,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
                     continue;
 
                 SceneObjectPart sitPart = null;
-                List<SceneObjectGroup> sceneObjects = m_scene.GetSceneObjectGroups();
+                List<SceneObjectGroup> sceneObjects = _scene.GetSceneObjectGroups();
 
                 foreach (SceneObjectGroup sceneObject in sceneObjects)
                 {
@@ -139,7 +139,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
                 {
                     MainConsole.Instance.Output(
                         "Sitting {0} on {1} {2} in {3}",
-                        sp.Name, sitPart.ParentGroup.Name, sitPart.ParentGroup.UUID, m_scene.Name);
+                        sp.Name, sitPart.ParentGroup.Name, sitPart.ParentGroup.UUID, _scene.Name);
 
                     sp.HandleAgentRequestSit(sp.ControllingClient, sp.UUID, sitPart.UUID, Vector3.Zero);
                     sp.HandleAgentSit(sp.ControllingClient, sp.UUID);
@@ -148,7 +148,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
                 {
                     MainConsole.Instance.Output(
                         "Could not find any unoccupied set seat on which to sit {0} in {1}.  Aborting",
-                        sp.Name, m_scene.Name);
+                        sp.Name, _scene.Name);
 
                     break;
                 }
@@ -157,7 +157,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
 
         private void HandleStandUserNameCommand(string module, string[] cmd)
         {
-            if (MainConsole.Instance.ConsoleScene != m_scene && MainConsole.Instance.ConsoleScene != null)
+            if (MainConsole.Instance.ConsoleScene != _scene && MainConsole.Instance.ConsoleScene != null)
                 return;
 
             if (cmd.Length < 5)
@@ -172,7 +172,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
             {
                 if (sp.SitGround || sp.IsSatOnObject)
                 {
-                    MainConsole.Instance.Output("Standing {0} in {1}", sp.Name, m_scene.Name);
+                    MainConsole.Instance.Output("Standing {0} in {1}", sp.Name, _scene.Name);
                     sp.StandUp();
                 }
             }
@@ -193,7 +193,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
             if (useRegex)
             {
                 Regex nameRegex = new Regex(string.Format("{0} {1}", firstName, lastName));
-                List<ScenePresence> scenePresences = m_scene.GetScenePresences();
+                List<ScenePresence> scenePresences = _scene.GetScenePresences();
 
                 foreach (ScenePresence sp in scenePresences)
                 {
@@ -203,7 +203,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.SitStand
             }
             else
             {
-                ScenePresence sp = m_scene.GetScenePresence(firstName, lastName);
+                ScenePresence sp = _scene.GetScenePresence(firstName, lastName);
 
                 if (sp != null && !sp.IsChildAgent)
                     scenePresencesMatched.Add(sp);

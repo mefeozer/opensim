@@ -41,13 +41,13 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "MuteListModule")]
     public class MuteListModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(
+        private static readonly ILog _log = LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected bool m_Enabled = false;
-        protected List<Scene> m_SceneList = new List<Scene>();
-        protected IMuteListService m_service = null;
-        private IUserManagement m_userManagementModule;
+        protected bool _Enabled = false;
+        protected List<Scene> _SceneList = new List<Scene>();
+        protected IMuteListService _service = null;
+        private IUserManagement _userManagementModule;
 
         public void Initialise(IConfigSource config)
         {
@@ -58,7 +58,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             if (cnf.GetString("MuteListModule", "None") != "MuteListModule")
                 return;
 
-            m_Enabled = true;
+            _Enabled = true;
         }
 
         public void AddRegion(Scene scene)
@@ -67,43 +67,43 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             IXfer xfer = scene.RequestModuleInterface<IXfer>();
             if (xfer == null)
             {
-                m_log.ErrorFormat("[MuteListModule]: Xfer not available in region {0}. Module Disabled", scene.Name);
-                m_Enabled = false;
+                _log.ErrorFormat("[MuteListModule]: Xfer not available in region {0}. Module Disabled", scene.Name);
+                _Enabled = false;
                 return;
             }
 
             IMuteListService srv = scene.RequestModuleInterface<IMuteListService>();
             if(srv == null)
             {
-                m_log.ErrorFormat("[MuteListModule]: MuteListService not available in region {0}. Module Disabled", scene.Name);
-                m_Enabled = false;
+                _log.ErrorFormat("[MuteListModule]: MuteListService not available in region {0}. Module Disabled", scene.Name);
+                _Enabled = false;
                 return;
             }
 
-            lock (m_SceneList)
+            lock (_SceneList)
             {
-                if(m_service == null)
-                    m_service = srv;
-                if(m_userManagementModule == null)
-                     m_userManagementModule = scene.RequestModuleInterface<IUserManagement>();
-                m_SceneList.Add(scene);
+                if(_service == null)
+                    _service = srv;
+                if(_userManagementModule == null)
+                     _userManagementModule = scene.RequestModuleInterface<IUserManagement>();
+                _SceneList.Add(scene);
                 scene.EventManager.OnNewClient += OnNewClient;
             }
         }
 
         public void RemoveRegion(Scene scene)
         {
-            lock (m_SceneList)
+            lock (_SceneList)
             {
-                if(m_SceneList.Contains(scene))
+                if(_SceneList.Contains(scene))
                 {
-                    m_SceneList.Remove(scene);
+                    _SceneList.Remove(scene);
                     scene.EventManager.OnNewClient -= OnNewClient;
                 }
             }
@@ -111,21 +111,15 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_log.Debug("[MuteListModule]: enabled");
+            _log.Debug("[MuteListModule]: enabled");
         }
 
-        public string Name
-        {
-            get { return "MuteListModule"; }
-        }
+        public string Name => "MuteListModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Close()
         {
@@ -133,10 +127,10 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         private bool IsForeign(IClientAPI client)
         {
-            if(m_userManagementModule == null)
+            if(_userManagementModule == null)
                 return false; // we can't check
 
-            return !m_userManagementModule.IsLocalGridUser(client.AgentId);
+            return !_userManagementModule.IsLocalGridUser(client.AgentId);
         }
 
         private void OnNewClient(IClientAPI client)
@@ -148,7 +142,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         private void OnMuteListRequest(IClientAPI client, uint crc)
         {
-            if (!m_Enabled || IsForeign(client))
+            if (!_Enabled || IsForeign(client))
             {
                 if(crc == 0)
                     client.SendEmpytMuteList();
@@ -167,7 +161,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 return;
             }
 
-            byte[] data = m_service.MuteListRequest(client.AgentId, crc);
+            byte[] data = _service.MuteListRequest(client.AgentId, crc);
             if (data == null)
             {
                 if(crc == 0)
@@ -199,7 +193,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         private void OnUpdateMuteListEntry(IClientAPI client, UUID muteID, string muteName, int muteType, uint muteFlags)
         {
-            if (!m_Enabled || IsForeign(client))
+            if (!_Enabled || IsForeign(client))
                 return;
 
             UUID agentID = client.AgentId;
@@ -207,7 +201,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             {
                 if(agentID == muteID)
                     return;
-                if(m_SceneList[0].Permissions.IsAdministrator(muteID))
+                if(_SceneList[0].Permissions.IsAdministrator(muteID))
                 {
                     OnMuteListRequest(client, 0);
                     return;
@@ -224,14 +218,14 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 Stamp = Util.UnixTimeSinceEpoch()
             };
 
-            m_service.UpdateMute(mute);
+            _service.UpdateMute(mute);
         }
 
         private void OnRemoveMuteListEntry(IClientAPI client, UUID muteID, string muteName)
         {
-            if (!m_Enabled || IsForeign(client))
+            if (!_Enabled || IsForeign(client))
                 return;
-            m_service.RemoveMute(client.AgentId, muteID, muteName);
+            _service.RemoveMute(client.AgentId, muteID, muteName);
         }
     }
 }

@@ -42,24 +42,24 @@ namespace OpenSim.Server.Handlers.Hypergrid
 {
     public class HGFriendsServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IUserAgentService m_UserAgentService;
-        private readonly IFriendsSimConnector m_FriendsLocalSimConnector;
-        private readonly IHGFriendsService m_TheService;
+        private readonly IUserAgentService _UserAgentService;
+        private readonly IFriendsSimConnector _FriendsLocalSimConnector;
+        private readonly IHGFriendsService _TheService;
 
         public HGFriendsServerPostHandler(IHGFriendsService service, IUserAgentService uas, IFriendsSimConnector friendsConn) :
                 base("POST", "/hgfriends")
         {
-            m_TheService = service;
-            m_UserAgentService = uas;
-            m_FriendsLocalSimConnector = friendsConn;
+            _TheService = service;
+            _UserAgentService = uas;
+            _FriendsLocalSimConnector = friendsConn;
 
-            m_log.DebugFormat("[HGFRIENDS HANDLER]: HGFriendsServerPostHandler is On ({0})",
-                m_FriendsLocalSimConnector == null ? "robust" : "standalone");
+            _log.DebugFormat("[HGFRIENDS HANDLER]: HGFriendsServerPostHandler is On ({0})",
+                _FriendsLocalSimConnector == null ? "robust" : "standalone");
 
-            if (m_TheService == null)
-                m_log.ErrorFormat("[HGFRIENDS HANDLER]: TheService is null!");
+            if (_TheService == null)
+                _log.ErrorFormat("[HGFRIENDS HANDLER]: TheService is null!");
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -70,7 +70,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 body = sr.ReadToEnd();
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
 
             try
             {
@@ -117,11 +117,11 @@ namespace OpenSim.Server.Handlers.Hypergrid
                         */
                 }
 
-                m_log.DebugFormat("[HGFRIENDS HANDLER]: unknown method {0}", method);
+                _log.DebugFormat("[HGFRIENDS HANDLER]: unknown method {0}", method);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[HGFRIENDS HANDLER]: Exception {0}", e);
+                _log.DebugFormat("[HGFRIENDS HANDLER]: Exception {0}", e);
             }
 
             return FailureResult();
@@ -139,7 +139,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 UUID.TryParse(request["PRINCIPALID"].ToString(), out principalID);
             else
             {
-                m_log.WarnFormat("[HGFRIENDS HANDLER]: no principalID in request to get friend perms");
+                _log.WarnFormat("[HGFRIENDS HANDLER]: no principalID in request to get friend perms");
                 return FailureResult();
             }
 
@@ -148,11 +148,11 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 UUID.TryParse(request["FRIENDID"].ToString(), out friendID);
             else
             {
-                m_log.WarnFormat("[HGFRIENDS HANDLER]: no friendID in request to get friend perms");
+                _log.WarnFormat("[HGFRIENDS HANDLER]: no friendID in request to get friend perms");
                 return FailureResult();
             }
 
-            int perms = m_TheService.GetFriendPerms(principalID, friendID);
+            int perms = _TheService.GetFriendPerms(principalID, friendID);
             if (perms < 0)
                 return FailureResult("Friend not found");
 
@@ -165,7 +165,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             FriendInfo friend = new FriendInfo(request);
 
-            bool success = m_TheService.NewFriendship(friend, verified);
+            bool success = _TheService.NewFriendship(friend, verified);
 
             if (success)
                 return SuccessResult();
@@ -183,7 +183,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (string.IsNullOrEmpty(secret))
                 return BoolResult(false);
 
-            bool success = m_TheService.DeleteFriendship(friend, secret);
+            bool success = _TheService.DeleteFriendship(friend, secret);
 
             return BoolResult(success);
         }
@@ -209,7 +209,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (request.ContainsKey("FromName"))
                 name = request["FromName"].ToString();
 
-            bool success = m_TheService.FriendshipOffered(fromID, name, toID, message);
+            bool success = _TheService.FriendshipOffered(fromID, name, toID, message);
 
             return BoolResult(success);
         }
@@ -221,7 +221,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (!UUID.TryParse(friend.Friend, out friendID))
                 return BoolResult(false);
 
-            bool success = m_TheService.ValidateFriendshipOffered(friend.PrincipalID, friendID);
+            bool success = _TheService.ValidateFriendshipOffered(friend.PrincipalID, friendID);
 
             return BoolResult(success);
         }
@@ -233,7 +233,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 UUID.TryParse(request["userID"].ToString(), out principalID);
             else
             {
-                m_log.WarnFormat("[HGFRIENDS HANDLER]: no userID in request to notify");
+                _log.WarnFormat("[HGFRIENDS HANDLER]: no userID in request to notify");
                 return FailureResult();
             }
 
@@ -242,7 +242,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 bool.TryParse(request["online"].ToString(), out online);
             else
             {
-                m_log.WarnFormat("[HGFRIENDS HANDLER]: no online in request to notify");
+                _log.WarnFormat("[HGFRIENDS HANDLER]: no online in request to notify");
                 return FailureResult();
             }
 
@@ -257,7 +257,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 }
             }
 
-            List<UUID> onlineFriends = m_TheService.StatusNotification(friends, principalID, online);
+            List<UUID> onlineFriends = _TheService.StatusNotification(friends, principalID, online);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
             if (onlineFriends == null || onlineFriends != null && onlineFriends.Count == 0)
@@ -274,7 +274,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -286,7 +286,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
         {
             if (!request.ContainsKey("KEY") || !request.ContainsKey("SESSIONID"))
             {
-                m_log.WarnFormat("[HGFRIENDS HANDLER]: ignoring request without Key or SessionID");
+                _log.WarnFormat("[HGFRIENDS HANDLER]: ignoring request without Key or SessionID");
                 return false;
             }
 
@@ -300,13 +300,13 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (!UUID.TryParse(sessionStr, out sessionID) || string.IsNullOrEmpty(serviceKey))
                 return false;
 
-            if (!m_UserAgentService.VerifyAgent(sessionID, serviceKey))
+            if (!_UserAgentService.VerifyAgent(sessionID, serviceKey))
             {
-                m_log.WarnFormat("[HGFRIENDS HANDLER]: Key {0} for session {1} did not match existing key. Ignoring request", serviceKey, sessionID);
+                _log.WarnFormat("[HGFRIENDS HANDLER]: Key {0} for session {1} did not match existing key. Ignoring request", serviceKey, sessionID);
                 return false;
             }
 
-            m_log.DebugFormat("[HGFRIENDS HANDLER]: Verification ok");
+            _log.DebugFormat("[HGFRIENDS HANDLER]: Verification ok");
             return true;
         }
 

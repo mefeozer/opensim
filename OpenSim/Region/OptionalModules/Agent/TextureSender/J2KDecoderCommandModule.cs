@@ -45,45 +45,45 @@ namespace OpenSim.Region.OptionalModules.Agent.TextureSender
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "J2KDecoderCommandModule")]
     public class J2KDecoderCommandModule : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
+        private Scene _scene;
 
-        public string Name { get { return "Asset Information Module"; } }
+        public string Name => "Asset Information Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[J2K DECODER COMMAND MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[J2K DECODER COMMAND MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[J2K DECODER COMMAND MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[J2K DECODER COMMAND MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[J2K DECODER COMMAND MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[J2K DECODER COMMAND MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[J2K DECODER COMMAND MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[J2K DECODER COMMAND MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[J2K DECODER COMMAND MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[J2K DECODER COMMAND MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[J2K DECODER COMMAND MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[J2K DECODER COMMAND MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
 
-            if (m_scene == null)
-                m_scene = scene;
+            if (_scene == null)
+                _scene = scene;
 
             MainConsole.Instance.Commands.AddCommand(
                 "Assets",
@@ -112,7 +112,7 @@ namespace OpenSim.Region.OptionalModules.Agent.TextureSender
                 return;
             }
 
-            AssetBase asset = m_scene.AssetService.Get(assetId.ToString());
+            AssetBase asset = _scene.AssetService.Get(assetId.ToString());
             if (asset == null)
             {
                 MainConsole.Instance.Output("ERROR: No asset found with ID {0}", assetId);
@@ -125,7 +125,7 @@ namespace OpenSim.Region.OptionalModules.Agent.TextureSender
                 return;
             }
 
-            IJ2KDecoder decoder = m_scene.RequestModuleInterface<IJ2KDecoder>();
+            IJ2KDecoder decoder = _scene.RequestModuleInterface<IJ2KDecoder>();
             if (decoder == null)
             {
                 MainConsole.Instance.Output("ERROR: No IJ2KDecoder module available");

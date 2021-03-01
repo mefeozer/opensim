@@ -42,15 +42,15 @@ namespace OpenSim.Region.CoreModules.World.Estate
 {
     public class EstateConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected EstateModule m_EstateModule;
+        protected EstateModule _EstateModule;
         private readonly string token;
         uint port = 0;
 
         public EstateConnector(EstateModule module, string _token, uint _port)
         {
-            m_EstateModule = module;
+            _EstateModule = module;
             token = _token;
             port = _port;
         }
@@ -89,7 +89,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
             // Handle local regions locally
             //
-            foreach (Scene s in m_EstateModule.Scenes)
+            foreach (Scene s in _EstateModule.Scenes)
             {
                 if (s.RegionInfo.EstateSettings.EstateID == EstateID)
                     s.RegionInfo.RegionSettings.Covenant = CovenantID;
@@ -111,7 +111,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
             // Handle local regions locally
             //
-            foreach (Scene s in m_EstateModule.Scenes)
+            foreach (Scene s in _EstateModule.Scenes)
             {
                 if (s.RegionInfo.EstateSettings.EstateID == EstateID)
                     s.ReloadEstateData();
@@ -138,15 +138,15 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
         private void SendToEstate(uint EstateID, Dictionary<string, object> sendData)
         {
-            List<UUID> regions = m_EstateModule.Scenes[0].GetEstateRegions((int)EstateID);
+            List<UUID> regions = _EstateModule.Scenes[0].GetEstateRegions((int)EstateID);
 
             // Don't send to the same instance twice
             List<string> done = new List<string>();
 
             // Handle local regions locally
-            lock (m_EstateModule.Scenes)
+            lock (_EstateModule.Scenes)
             {
-                foreach (Scene s in m_EstateModule.Scenes)
+                foreach (Scene s in _EstateModule.Scenes)
                 {
                     RegionInfo sreg = s.RegionInfo;
                     if (regions.Contains(sreg.RegionID))
@@ -162,7 +162,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
             if(regions.Count == 0)
                 return;
 
-            Scene baseScene = m_EstateModule.Scenes[0];
+            Scene baseScene = _EstateModule.Scenes[0];
             UUID ScopeID = baseScene.RegionInfo.ScopeID;
             IGridService gridService = baseScene.GridService;
             if(gridService == null)
@@ -186,7 +186,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
         private bool Call(GridRegion region, Dictionary<string, object> sendData)
         {
             string reqString = ServerUtils.BuildQueryString(sendData);
-            // m_log.DebugFormat("[XESTATE CONNECTOR]: queryString = {0}", reqString);
+            // _log.DebugFormat("[XESTATE CONNECTOR]: queryString = {0}", reqString);
             try
             {
                 string url = "";
@@ -210,11 +210,11 @@ namespace OpenSim.Region.CoreModules.World.Estate
                     }
                 }
                 else
-                    m_log.DebugFormat("[XESTATE CONNECTOR]: received empty reply");
+                    _log.DebugFormat("[XESTATE CONNECTOR]: received empty reply");
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[XESTATE CONNECTOR]: Exception when contacting remote sim: {0}", e.Message);
+                _log.DebugFormat("[XESTATE CONNECTOR]: Exception when contacting remote sim: {0}", e.Message);
             }
 
             return false;

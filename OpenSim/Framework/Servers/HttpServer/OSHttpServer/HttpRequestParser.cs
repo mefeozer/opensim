@@ -9,13 +9,13 @@ namespace OSHttpServer.Parser
     /// </summary>
     public class HttpRequestParser : IHttpRequestParser
     {
-        private ILogWriter m_log;
-        private readonly BodyEventArgs m_bodyArgs = new BodyEventArgs();
-        private readonly HeaderEventArgs m_headerArgs = new HeaderEventArgs();
-        private readonly RequestLineEventArgs m_requestLineArgs = new RequestLineEventArgs();
-        private string m_curHeaderName = string.Empty;
-        private string m_curHeaderValue = string.Empty;
-        private int m_bodyBytesLeft;
+        private ILogWriter _log;
+        private readonly BodyEventArgs _bodyArgs = new BodyEventArgs();
+        private readonly HeaderEventArgs _headerArgs = new HeaderEventArgs();
+        private readonly RequestLineEventArgs _requestLineArgs = new RequestLineEventArgs();
+        private string _curHeaderName = string.Empty;
+        private string _curHeaderValue = string.Empty;
+        private int _bodyBytesLeft;
 
         /// <summary>
         /// More body bytes have been received.
@@ -39,7 +39,7 @@ namespace OSHttpServer.Parser
         /// <param name="logWriter">delegate receiving log entries.</param>
         public HttpRequestParser(ILogWriter logWriter)
         {
-            m_log = logWriter ?? NullLogWriter.Instance;
+            _log = logWriter ?? NullLogWriter.Instance;
         }
 
         /// <summary>
@@ -52,17 +52,17 @@ namespace OSHttpServer.Parser
         private int AddToBody(byte[] buffer, int offset, int count)
         {
             // got all bytes we need, or just a few of them?
-            int bytesUsed = count > m_bodyBytesLeft ? m_bodyBytesLeft : count;
-            m_bodyArgs.Buffer = buffer;
-            m_bodyArgs.Offset = offset;
-            m_bodyArgs.Count = bytesUsed;
-            BodyBytesReceived?.Invoke(this, m_bodyArgs);
+            int bytesUsed = count > _bodyBytesLeft ? _bodyBytesLeft : count;
+            _bodyArgs.Buffer = buffer;
+            _bodyArgs.Offset = offset;
+            _bodyArgs.Count = bytesUsed;
+            BodyBytesReceived?.Invoke(this, _bodyArgs);
 
-            m_bodyBytesLeft -= bytesUsed;
-            if (m_bodyBytesLeft == 0)
+            _bodyBytesLeft -= bytesUsed;
+            if (_bodyBytesLeft == 0)
             {
                 // got a complete request.
-                m_log.Write(this, LogPrio.Trace, "Request parsed successfully.");
+                _log.Write(this, LogPrio.Trace, "Request parsed successfully.");
                 OnRequestCompleted();
                 Clear();
             }
@@ -75,9 +75,9 @@ namespace OSHttpServer.Parser
         /// </summary>
         public void Clear()
         {
-            m_bodyBytesLeft = 0;
-            m_curHeaderName = string.Empty;
-            m_curHeaderValue = string.Empty;
+            _bodyBytesLeft = 0;
+            _curHeaderName = string.Empty;
+            _curHeaderValue = string.Empty;
             CurrentState = RequestParserState.FirstLine;
         }
 
@@ -86,8 +86,8 @@ namespace OSHttpServer.Parser
         /// </summary>
         public ILogWriter LogWriter
         {
-            get { return m_log; }
-            set { m_log = value ?? NullLogWriter.Instance; }
+            get => _log;
+            set => _log = value ?? NullLogWriter.Instance;
         }
 
         /// <summary>
@@ -102,13 +102,13 @@ namespace OSHttpServer.Parser
             //todo: In the interest of robustness, servers SHOULD ignore any empty line(s) received where a Request-Line is expected. 
             // In other words, if the server is reading the protocol stream at the beginning of a message and receives a CRLF first, it should ignore the CRLF.
             //
-            m_log.Write(this, LogPrio.Debug, "Got request: " + value);
+            _log.Write(this, LogPrio.Debug, "Got request: " + value);
 
             //Request-Line   = Method SP Request-URI SP HTTP-Version CRLF
             int pos = value.IndexOf(' ');
             if (pos == -1 || pos + 1 >= value.Length)
             {
-                m_log.Write(this, LogPrio.Warning, "Invalid request line, missing Method. Line: " + value);
+                _log.Write(this, LogPrio.Warning, "Invalid request line, missing Method. Line: " + value);
                 throw new BadRequestException("Invalid request line, missing Method. Line: " + value);
             }
 
@@ -117,7 +117,7 @@ namespace OSHttpServer.Parser
             pos = value.IndexOf(' ', oldPos);
             if (pos == -1)
             {
-                m_log.Write(this, LogPrio.Warning, "Invalid request line, missing URI. Line: " + value);
+                _log.Write(this, LogPrio.Warning, "Invalid request line, missing URI. Line: " + value);
                 throw new BadRequestException("Invalid request line, missing URI. Line: " + value);
             }
             string path = value.Substring(oldPos, pos - oldPos);
@@ -128,21 +128,21 @@ namespace OSHttpServer.Parser
 
             if (pos + 1 >= value.Length)
             {
-                m_log.Write(this, LogPrio.Warning, "Invalid request line, missing HTTP-Version. Line: " + value);
+                _log.Write(this, LogPrio.Warning, "Invalid request line, missing HTTP-Version. Line: " + value);
                 throw new BadRequestException("Invalid request line, missing HTTP-Version. Line: " + value);
             }
 
             string version = value.Substring(pos + 1);
             if (version.Length < 4 || string.Compare(version.Substring(0, 4), "HTTP", true) != 0)
             {
-                m_log.Write(this, LogPrio.Warning, "Invalid HTTP version in request line. Line: " + value);
+                _log.Write(this, LogPrio.Warning, "Invalid HTTP version in request line. Line: " + value);
                 throw new BadRequestException("Invalid HTTP version in Request line. Line: " + value);
             }
 
-            m_requestLineArgs.HttpMethod = method;
-            m_requestLineArgs.HttpVersion = version;
-            m_requestLineArgs.UriPath = path;
-            RequestLineReceived(this, m_requestLineArgs);
+            _requestLineArgs.HttpMethod = method;
+            _requestLineArgs.HttpVersion = version;
+            _requestLineArgs.UriPath = path;
+            RequestLineReceived(this, _requestLineArgs);
         }
 
         /// <summary>
@@ -153,15 +153,15 @@ namespace OSHttpServer.Parser
         /// <exception cref="BadRequestException">If content length cannot be parsed.</exception>
         protected void OnHeader(string name, string value)
         {
-            m_headerArgs.Name = name;
-            m_headerArgs.Value = value;
+            _headerArgs.Name = name;
+            _headerArgs.Value = value;
             if (string.Compare(name, "content-length", true) == 0)
             {
-                if (!int.TryParse(value, out m_bodyBytesLeft))
+                if (!int.TryParse(value, out _bodyBytesLeft))
                     throw new BadRequestException("Content length is not a number.");
             }
 
-            HeaderReceived?.Invoke(this, m_headerArgs);
+            HeaderReceived?.Invoke(this, _headerArgs);
         }
 
         private void OnRequestCompleted()
@@ -221,7 +221,7 @@ namespace OSHttpServer.Parser
                     case RequestParserState.FirstLine:
                         if (currentPos == 8191)
                         {
-                            m_log.Write(this, LogPrio.Warning, "HTTP Request is too large.");
+                            _log.Write(this, LogPrio.Warning, "HTTP Request is too large.");
                             throw new BadRequestException("Too large request line.");
                         }
                         if (startPos == -1)
@@ -230,7 +230,7 @@ namespace OSHttpServer.Parser
                                 startPos = currentPos;
                             else if (ch != '\r' || nextCh != '\n')
                             {
-                                m_log.Write(this, LogPrio.Warning, "Request line is not found.");
+                                _log.Write(this, LogPrio.Warning, "Request line is not found.");
                                 throw new BadRequestException("Invalid request line.");
                             }
                         }
@@ -248,10 +248,10 @@ namespace OSHttpServer.Parser
                         if (ch == '\r' || ch == '\n')
                         {
                             currentPos += GetLineBreakSize(buffer, currentPos);
-                            if (m_bodyBytesLeft == 0)
+                            if (_bodyBytesLeft == 0)
                             {
                                 CurrentState = RequestParserState.FirstLine;
-                                m_log.Write(this, LogPrio.Trace, "Request parsed successfully (no content).");
+                                _log.Write(this, LogPrio.Trace, "Request parsed successfully (no content).");
                                 OnRequestCompleted();
                                 Clear();
                                 return currentPos;
@@ -260,7 +260,7 @@ namespace OSHttpServer.Parser
                             CurrentState = RequestParserState.Body;
                             if (currentPos + 1 < endOfBufferPos)
                             {
-                                m_log.Write(this, LogPrio.Trace, "Adding bytes to the body");
+                                _log.Write(this, LogPrio.Trace, "Adding bytes to the body");
                                 return AddToBody(buffer, currentPos, endOfBufferPos - currentPos);
                             }
 
@@ -270,11 +270,11 @@ namespace OSHttpServer.Parser
                         {
                             if (startPos == -1)
                             {
-                                m_log.Write(this, LogPrio.Warning,
+                                _log.Write(this, LogPrio.Warning,
                                            "Expected header name, got colon on line " + currentLine);
                                 throw new BadRequestException("Expected header name, got colon on line " + currentLine);
                             }
-                            m_curHeaderName = Encoding.UTF8.GetString(buffer, startPos, currentPos - startPos);
+                            _curHeaderName = Encoding.UTF8.GetString(buffer, startPos, currentPos - startPos);
                             handledBytes = currentPos + 1;
                             startPos = handledBytes;
                             if (ch == ':')
@@ -284,14 +284,14 @@ namespace OSHttpServer.Parser
                         }
                         else if (!char.IsLetterOrDigit(ch) && ch != '-')
                         {
-                            m_log.Write(this, LogPrio.Warning, "Invalid character in header name on line " + currentLine);
+                            _log.Write(this, LogPrio.Warning, "Invalid character in header name on line " + currentLine);
                             throw new BadRequestException("Invalid character in header name on line " + currentLine);
                         }
                         if (startPos == -1)
                             startPos = currentPos;
                         else if (currentPos - startPos > 200)
                         {
-                            m_log.Write(this, LogPrio.Warning, "Invalid header name on line " + currentLine);
+                            _log.Write(this, LogPrio.Warning, "Invalid header name on line " + currentLine);
                             throw new BadRequestException("Invalid header name on line " + currentLine);
                         }
                         break;
@@ -304,7 +304,7 @@ namespace OSHttpServer.Parser
                         }
                         else if(currentPos - startPos > 256)
                         {
-                            m_log.Write(this, LogPrio.Warning, "missing header aftername ':' " + currentLine);
+                            _log.Write(this, LogPrio.Warning, "missing header aftername ':' " + currentLine);
                             throw new BadRequestException("missing header aftername ':' " + currentLine);
                         }
                         break;
@@ -314,7 +314,7 @@ namespace OSHttpServer.Parser
                         {
                             if (currentPos - startPos > 256)
                             {
-                                m_log.Write(this, LogPrio.Warning, "header value too far" + currentLine);
+                                _log.Write(this, LogPrio.Warning, "header value too far" + currentLine);
                                 throw new BadRequestException("header value too far" + currentLine);
                             }
                         }
@@ -326,7 +326,7 @@ namespace OSHttpServer.Parser
                             {
                                 if (currentPos - startPos > 256)
                                 {
-                                    m_log.Write(this, LogPrio.Warning, "header value too" + currentLine);
+                                    _log.Write(this, LogPrio.Warning, "header value too" + currentLine);
                                     throw new BadRequestException("header value too far" + currentLine);
                                 }
                                 ++currentPos;
@@ -344,12 +344,12 @@ namespace OSHttpServer.Parser
                     {
                         if (ch == '\r' || ch == '\n')
                         {
-                            if (string.IsNullOrEmpty(m_curHeaderName))
+                            if (string.IsNullOrEmpty(_curHeaderName))
                                 throw new BadRequestException("Missing header on line " + currentLine);
  
                             if (currentPos - startPos > 8190)
                             {
-                                m_log.Write(this, LogPrio.Warning, "Too large header value on line " + currentLine);
+                                _log.Write(this, LogPrio.Warning, "Too large header value on line " + currentLine);
                                 throw new BadRequestException("Too large header value on line " + currentLine);
                             }
 
@@ -360,9 +360,9 @@ namespace OSHttpServer.Parser
                                 && (buffer[currentPos + newLineSize] == ' ' || buffer[currentPos + newLineSize] == '\t'))
                             {
                                 if (startPos != -1)
-                                    m_curHeaderValue += Encoding.UTF8.GetString(buffer, startPos, currentPos - startPos);
+                                    _curHeaderValue += Encoding.UTF8.GetString(buffer, startPos, currentPos - startPos);
 
-                                m_log.Write(this, LogPrio.Trace, "Header value is on multiple lines.");
+                                _log.Write(this, LogPrio.Trace, "Header value is on multiple lines.");
                                 CurrentState = RequestParserState.Between;
                                 currentPos += newLineSize - 1;
                                 startPos = currentPos;
@@ -370,14 +370,14 @@ namespace OSHttpServer.Parser
                             }
                             else
                             {
-                                m_curHeaderValue += Encoding.UTF8.GetString(buffer, startPos, currentPos - startPos);
-                                m_log.Write(this, LogPrio.Trace, "Header [" + m_curHeaderName + ": " + m_curHeaderValue + "]");
-                                OnHeader(m_curHeaderName, m_curHeaderValue);
+                                _curHeaderValue += Encoding.UTF8.GetString(buffer, startPos, currentPos - startPos);
+                                _log.Write(this, LogPrio.Trace, "Header [" + _curHeaderName + ": " + _curHeaderValue + "]");
+                                OnHeader(_curHeaderName, _curHeaderValue);
 
                                 startPos = -1;
                                 CurrentState = RequestParserState.HeaderName;
-                                m_curHeaderValue = string.Empty;
-                                m_curHeaderName = string.Empty;
+                                _curHeaderValue = string.Empty;
+                                _curHeaderName = string.Empty;
                                 currentPos += newLineSize - 1;
                                 handledBytes = currentPos;
 
@@ -392,7 +392,7 @@ namespace OSHttpServer.Parser
                                 }
                                 if (!canContinue)
                                 {
-                                    m_log.Write(this, LogPrio.Trace, "Cant continue, no colon.");
+                                    _log.Write(this, LogPrio.Trace, "Cant continue, no colon.");
                                     return currentPos + 1;
                                 }
                             }

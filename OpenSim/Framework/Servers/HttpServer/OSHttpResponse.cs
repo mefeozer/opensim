@@ -47,15 +47,9 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </remarks>
         public virtual string ContentType
         {
-            get
-            {
-                return _httpResponse.ContentType;
-            }
+            get => _httpResponse.ContentType;
 
-            set
-            {
-                _httpResponse.ContentType = value;
-            }
+            set => _httpResponse.ContentType = value;
         }
 
         /// <summary>
@@ -77,15 +71,9 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public long ContentLength
         {
-            get
-            {
-                return _httpResponse.ContentLength;
-            }
+            get => _httpResponse.ContentLength;
 
-            set
-            {
-                _httpResponse.ContentLength = value;
-            }
+            set => _httpResponse.ContentLength = value;
         }
 
         /// <summary>
@@ -93,8 +81,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public long ContentLength64
         {
-            get { return ContentLength; }
-            set { ContentLength = value; }
+            get => ContentLength;
+            set => ContentLength = value;
         }
 
         /// <summary>
@@ -102,23 +90,14 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public Encoding ContentEncoding
         {
-            get
-            {
-                return _httpResponse.Encoding;
-            }
+            get => _httpResponse.Encoding;
 
-            set
-            {
-                _httpResponse.Encoding = value;
-            }
+            set => _httpResponse.Encoding = value;
         }
 
         public bool KeepAlive
         {
-            get
-            {
-                return _httpResponse.Connection == ConnectionType.KeepAlive;
-            }
+            get => _httpResponse.Connection == ConnectionType.KeepAlive;
 
             set
             {
@@ -136,10 +115,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public int KeepAliveTimeout
         {
-            get
-            {
-                return _httpResponse.KeepAlive;
-            }
+            get => _httpResponse.KeepAlive;
 
             set
             {
@@ -163,84 +139,42 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// <remarks>
         /// On its way out...
         /// </remarks>
-        public Stream OutputStream
-        {
-            get
-            {
-                return _httpResponse.Body;
-            }
-        }
+        public Stream OutputStream => _httpResponse.Body;
 
         public string ProtocolVersion
         {
-            get
-            {
-                return _httpResponse.ProtocolVersion;
-            }
+            get => _httpResponse.ProtocolVersion;
 
-            set
-            {
-                _httpResponse.ProtocolVersion = value;
-            }
+            set => _httpResponse.ProtocolVersion = value;
         }
 
         /// <summary>
         /// Return the output stream feeding the body.
         /// </summary>
-        public Stream Body
-        {
-            get
-            {
-                return _httpResponse.Body;
-            }
-        }
+        public Stream Body => _httpResponse.Body;
 
         public byte[] RawBuffer
         {
-            get
-            {
-                return _httpResponse.RawBuffer;
-            }
-            set
-            {
-                _httpResponse.RawBuffer = value;
-            }
+            get => _httpResponse.RawBuffer;
+            set => _httpResponse.RawBuffer = value;
         }
 
         public int RawBufferStart
         {
-            get
-            {
-                return _httpResponse.RawBufferStart;
-            }
-            set
-            {
-                _httpResponse.RawBufferStart = value;
-            }
+            get => _httpResponse.RawBufferStart;
+            set => _httpResponse.RawBufferStart = value;
         }
 
         public int RawBufferLen
         {
-            get
-            {
-                return _httpResponse.RawBufferLen;
-            }
-            set
-            {
-                _httpResponse.RawBufferLen = value;
-            }
+            get => _httpResponse.RawBufferLen;
+            set => _httpResponse.RawBufferLen = value;
         }
 
         public int Priority
         {
-            get
-            {
-                return _httpResponse.Priority;
-            }
-            set
-            {
-                _httpResponse.Priority = value;
-            }
+            get => _httpResponse.Priority;
+            set => _httpResponse.Priority = value;
         }
 
         /// <summary>
@@ -248,15 +182,9 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public bool SendChunked
         {
-            get
-            {
-               return _httpResponse.Chunked;
-            }
+            get => _httpResponse.Chunked;
 
-            set
-            {
-               _httpResponse.Chunked = value;
-            }
+            set => _httpResponse.Chunked = value;
         }
 
         /// <summary>
@@ -264,36 +192,21 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public virtual int StatusCode
         {
-            get
-            {
-                return (int)_httpResponse.Status;
-            }
+            get => (int)_httpResponse.Status;
 
-            set
-            {
-                _httpResponse.Status = (HttpStatusCode)value;
-            }
+            set => _httpResponse.Status = (HttpStatusCode)value;
         }
 
-        public double RequestTS
-        {
-            get {return _httpResponse.RequestTS; }
-        }
+        public double RequestTS => _httpResponse.RequestTS;
 
         /// <summary>
         /// HTTP status description.
         /// </summary>
         public string StatusDescription
         {
-            get
-            {
-                return _httpResponse.Reason;
-            }
+            get => _httpResponse.Reason;
 
-            set
-            {
-                _httpResponse.Reason = value;
-            }
+            set => _httpResponse.Reason = value;
         }
 
         protected IHttpResponse _httpResponse;

@@ -53,7 +53,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <summary>
         /// The subdirectory where each region is stored in the archive.
         /// </summary>
-        protected Dictionary<UUID, string> m_regionDirs;
+        protected Dictionary<UUID, string> _regionDirs;
 
         /// <summary>
         /// The grid coordinates of the regions' bounding box.
@@ -64,7 +64,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         public ArchiveScenesGroup()
         {
             Regions = new SortedDictionary<uint, SortedDictionary<uint, Scene>>();
-            m_regionDirs = new Dictionary<UUID, string>();
+            _regionDirs = new Dictionary<UUID, string>();
             Rect = new Rectangle(0, 0, 0, 0);
         }
 
@@ -114,7 +114,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
             // Calculate the subdirectory in which each region will be stored in the archive
 
-            m_regionDirs.Clear();
+            _regionDirs.Clear();
             ForEachScene(delegate(Scene scene)
             {
                 // We add the region's coordinates to ensure uniqueness even if multiple regions have the same name
@@ -122,7 +122,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                     scene.RegionInfo.RegionLocX - Rect.X + 1,
                     scene.RegionInfo.RegionLocY - Rect.Y + 1,
                     scene.RegionInfo.RegionName.Replace(' ', '_'));
-                m_regionDirs[scene.RegionInfo.RegionID] = path;
+                _regionDirs[scene.RegionInfo.RegionID] = path;
             });
         }
 
@@ -133,7 +133,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <returns></returns>
         public string GetRegionDir(UUID regionID)
         {
-            return m_regionDirs[regionID];
+            return _regionDirs[regionID];
         }
 
         /// <summary>

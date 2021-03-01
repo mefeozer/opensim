@@ -45,13 +45,13 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
     public class HeloServerGetAndHeadHandler : SimpleStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_HandlersType;
+        private readonly string _HandlersType;
 
         public HeloServerGetAndHeadHandler(string handlersType) : base("/helo")
         {
-            m_HandlersType = handlersType;
+            _HandlersType = handlersType;
         }
 
         protected override void ProcessRequest(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
@@ -59,18 +59,18 @@ namespace OpenSim.Server.Handlers.Hypergrid
             if (httpRequest.HttpMethod == "GET")
             {
                 //Obsolete
-                m_log.Debug("[HELO]: hi, GET was called");
+                _log.Debug("[HELO]: hi, GET was called");
             }
             else if (httpRequest.HttpMethod == "HEAD")
             {
-                m_log.Debug("[HELO]: hi, HEAD was called");
+                _log.Debug("[HELO]: hi, HEAD was called");
             }
             else
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
                 return;
             }
-            httpResponse.AddHeader("X-Handlers-Provided", m_HandlersType);
+            httpResponse.AddHeader("X-Handlers-Provided", _HandlersType);
             httpResponse.StatusCode = (int)HttpStatusCode.OK;
         }
     }

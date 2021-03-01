@@ -46,39 +46,39 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public override void SetPhysicalFriction(float friction)
     {
         if (LinksetRoot.PhysBody.HasPhysicalBody)
-            m_physicsScene.PE.SetFriction(LinksetRoot.PhysBody, friction);
+            _physicsScene.PE.SetFriction(LinksetRoot.PhysBody, friction);
     }
     public override void SetPhysicalRestitution(float restitution)
     {
         if (LinksetRoot.PhysBody.HasPhysicalBody)
-            m_physicsScene.PE.SetRestitution(LinksetRoot.PhysBody, restitution);
+            _physicsScene.PE.SetRestitution(LinksetRoot.PhysBody, restitution);
     }
     public override void SetPhysicalGravity(OMV.Vector3 gravity)
     {
         if (LinksetRoot.PhysBody.HasPhysicalBody)
-            m_physicsScene.PE.SetGravity(LinksetRoot.PhysBody, gravity);
+            _physicsScene.PE.SetGravity(LinksetRoot.PhysBody, gravity);
     }
     public override void ComputeAndSetLocalInertia(OMV.Vector3 inertiaFactor, float linksetMass)
     {
-        OMV.Vector3 inertia = m_physicsScene.PE.CalculateLocalInertia(LinksetRoot.PhysShape.physShapeInfo, linksetMass);
+        OMV.Vector3 inertia = _physicsScene.PE.CalculateLocalInertia(LinksetRoot.PhysShape.physShapeInfo, linksetMass);
         LinksetRoot.Inertia = inertia * inertiaFactor;
-        m_physicsScene.PE.SetMassProps(LinksetRoot.PhysBody, linksetMass, LinksetRoot.Inertia);
-        m_physicsScene.PE.UpdateInertiaTensor(LinksetRoot.PhysBody);
+        _physicsScene.PE.SetMassProps(LinksetRoot.PhysBody, linksetMass, LinksetRoot.Inertia);
+        _physicsScene.PE.UpdateInertiaTensor(LinksetRoot.PhysBody);
     }
     public override void SetPhysicalCollisionFlags(CollisionFlags collFlags)
     {
         if (LinksetRoot.PhysBody.HasPhysicalBody)
-            m_physicsScene.PE.SetCollisionFlags(LinksetRoot.PhysBody, collFlags);
+            _physicsScene.PE.SetCollisionFlags(LinksetRoot.PhysBody, collFlags);
     }
     public override void AddToPhysicalCollisionFlags(CollisionFlags collFlags)
     {
         if (LinksetRoot.PhysBody.HasPhysicalBody)
-            m_physicsScene.PE.AddToCollisionFlags(LinksetRoot.PhysBody, collFlags);
+            _physicsScene.PE.AddToCollisionFlags(LinksetRoot.PhysBody, collFlags);
     }
     public override void RemoveFromPhysicalCollisionFlags(CollisionFlags collFlags)
     {
         if (LinksetRoot.PhysBody.HasPhysicalBody)
-            m_physicsScene.PE.RemoveFromCollisionFlags(LinksetRoot.PhysBody, collFlags);
+            _physicsScene.PE.RemoveFromCollisionFlags(LinksetRoot.PhysBody, collFlags);
     }
     // ================================================================
 
@@ -97,7 +97,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         // When rebuilding, it is possible to set properties that would normally require a rebuild.
         //    If already rebuilding, don't request another rebuild.
         //    If a linkset with just a root prim (simple non-linked prim) don't bother rebuilding.
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
             if (!RebuildScheduled && !Rebuilding && HasAnyChildren)
             {
@@ -106,13 +106,13 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         }
     }
 
-    // Must be called with m_linksetActivityLock or race conditions will haunt you.
+    // Must be called with _linksetActivityLock or race conditions will haunt you.
     private void InternalScheduleRebuild(BSPrimLinkable requestor)
     {
         DetailLog("{0},BSLinksetCompound.InternalScheduleRebuild,,rebuilding={1},hasChildren={2}",
                             requestor.LocalID, Rebuilding, HasAnyChildren);
         RebuildScheduled = true;
-        m_physicsScene.PostTaintObject("BSLinksetCompound.ScheduleRebuild", LinksetRoot.LocalID, delegate()
+        _physicsScene.PostTaintObject("BSLinksetCompound.ScheduleRebuild", LinksetRoot.LocalID, delegate()
         {
             if (HasAnyChildren)
             {
@@ -182,7 +182,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         //    but it also means all the child positions get updated.
         //    What would cause an unnecessary rebuild so we make sure the linkset is in a
         //    region before bothering to do a rebuild.
-        if (!IsRoot(updated) && m_physicsScene.TerrainManager.IsWithinKnownTerrain(LinksetRoot.RawPosition))
+        if (!IsRoot(updated) && _physicsScene.TerrainManager.IsWithinKnownTerrain(LinksetRoot.RawPosition))
         {
             // If a child of the linkset is updating only the position or rotation, that can be done
             //    without rebuilding the linkset.
@@ -198,21 +198,21 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 if (!RebuildScheduled   // if rebuilding, let the rebuild do it
                         && !LinksetRoot.IsIncomplete    // if waiting for assets or whatever, don't change
                         && LinksetRoot.PhysShape.HasPhysicalShape   // there must be a physical shape assigned
-                        && m_physicsScene.PE.IsCompound(LinksetRoot.PhysShape.physShapeInfo))
+                        && _physicsScene.PE.IsCompound(LinksetRoot.PhysShape.physShapeInfo))
                 {
                     // It is possible that the linkset is still under construction and the child is not yet
                     //    inserted into the compound shape. A rebuild of the linkset in a pre-step action will
                     //    build the whole thing with the new position or rotation.
                     // The index must be checked because Bullet references the child array but does no validity
                     //    checking of the child index passed.
-                    int numLinksetChildren = m_physicsScene.PE.GetNumberOfCompoundChildren(LinksetRoot.PhysShape.physShapeInfo);
+                    int numLinksetChildren = _physicsScene.PE.GetNumberOfCompoundChildren(LinksetRoot.PhysShape.physShapeInfo);
                     if (updated.LinksetChildIndex < numLinksetChildren)
                     {
-                        BulletShape linksetChildShape = m_physicsScene.PE.GetChildShapeFromCompoundShapeIndex(LinksetRoot.PhysShape.physShapeInfo, updated.LinksetChildIndex);
+                        BulletShape linksetChildShape = _physicsScene.PE.GetChildShapeFromCompoundShapeIndex(LinksetRoot.PhysShape.physShapeInfo, updated.LinksetChildIndex);
                         if (linksetChildShape.HasPhysicalShape)
                         {
                             // Found the child shape within the compound shape
-                            m_physicsScene.PE.UpdateChildTransform(LinksetRoot.PhysShape.physShapeInfo, updated.LinksetChildIndex,
+                            _physicsScene.PE.UpdateChildTransform(LinksetRoot.PhysShape.physShapeInfo, updated.LinksetChildIndex,
                                                                         updated.RawPosition - LinksetRoot.RawPosition,
                                                                         updated.RawOrientation * OMV.Quaternion.Inverse(LinksetRoot.RawOrientation),
                                                                         true /* shouldRecalculateLocalAabb */);
@@ -277,7 +277,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         if (!HasChild(child))
         {
-            m_children.Add(child, new BSLinkInfo(child));
+            _children.Add(child, new BSLinkInfo(child));
 
             DetailLog("{0},BSLinksetCompound.AddChildToLinkset,call,child={1}", LinksetRoot.LocalID, child.LocalID);
 
@@ -293,7 +293,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         child.ClearDisplacement();
 
-        if (m_children.Remove(child))
+        if (_children.Remove(child))
         {
             DetailLog("{0},BSLinksetCompound.RemoveChildFromLinkset,call,rID={1},rBody={2},cID={3},cBody={4}",
                             child.LocalID,
@@ -345,7 +345,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             }
 
             // Get a new compound shape to build the linkset shape in.
-            BSShape linksetShape = BSShapeCompound.GetReference(m_physicsScene);
+            BSShape linksetShape = BSShapeCompound.GetReference(_physicsScene);
 
             // Compute a displacement for each component so it is relative to the center-of-mass.
             // Bullet presumes an object's origin (relative <0,0,0>) is its center-of-mass
@@ -387,7 +387,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 }
 
                 // Get a reference to the shape of the child for adding of that shape to the linkset compound shape
-                BSShape childShape = cPrim.PhysShape.GetReference(m_physicsScene, cPrim);
+                BSShape childShape = cPrim.PhysShape.GetReference(_physicsScene, cPrim);
 
                 // Offset the child shape from the center-of-mass and rotate it to root relative.
                 OMV.Vector3 offsetPos = (cPrim.RawPosition - origRootPosition) * invRootOrientation - centerDisplacementV;
@@ -396,17 +396,17 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 // Add the child shape to the compound shape being built
                 if (childShape.physShapeInfo.HasPhysicalShape)
                 {
-                    m_physicsScene.PE.AddChildShapeToCompoundShape(linksetShape.physShapeInfo, childShape.physShapeInfo, offsetPos, offsetRot);
+                    _physicsScene.PE.AddChildShapeToCompoundShape(linksetShape.physShapeInfo, childShape.physShapeInfo, offsetPos, offsetRot);
                     DetailLog("{0},BSLinksetCompound.RecomputeLinksetCompound,addChild,indx={1},cShape={2},offPos={3},offRot={4}",
                                 LinksetRoot.LocalID, cPrim.LinksetChildIndex, childShape, offsetPos, offsetRot);
 
                     // Since we are borrowing the shape of the child, disable the origional child body
                     if (!IsRoot(cPrim))
                     {
-                        m_physicsScene.PE.AddToCollisionFlags(cPrim.PhysBody, CollisionFlags.CF_NO_CONTACT_RESPONSE);
-                        m_physicsScene.PE.ForceActivationState(cPrim.PhysBody, ActivationState.DISABLE_SIMULATION);
+                        _physicsScene.PE.AddToCollisionFlags(cPrim.PhysBody, CollisionFlags.CF_NO_CONTACT_RESPONSE);
+                        _physicsScene.PE.ForceActivationState(cPrim.PhysBody, ActivationState.DISABLE_SIMULATION);
                         // We don't want collisions from the old linkset children.
-                        m_physicsScene.PE.RemoveFromCollisionFlags(cPrim.PhysBody, CollisionFlags.BS_SUBSCRIBE_COLLISION_EVENTS);
+                        _physicsScene.PE.RemoveFromCollisionFlags(cPrim.PhysBody, CollisionFlags.BS_SUBSCRIBE_COLLISION_EVENTS);
                         cPrim.PhysBody.collisionType = CollisionType.LinksetChild;
                     }
                 }
@@ -423,8 +423,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                     LinksetRoot.LocalID, cPrim.LinksetChildIndex, childShape, offsetPos, offsetRot);
                     // Output an annoying warning. It should only happen once but if it keeps coming out,
                     //    the user knows there is something wrong and will report it.
-                    m_physicsScene.Logger.WarnFormat("{0} Linkset rebuild warning. If this happens more than one or two times, please report in Mantis 7191", LogHeader);
-                    m_physicsScene.Logger.WarnFormat("{0} pName={1}, childIdx={2}, shape={3}",
+                    _physicsScene.Logger.WarnFormat("{0} Linkset rebuild warning. If this happens more than one or two times, please report in Mantis 7191", LogHeader);
+                    _physicsScene.Logger.WarnFormat("{0} pName={1}, childIdx={2}, shape={3}",
                                     LogHeader, LinksetRoot.Name, cPrim.LinksetChildIndex, childShape);
 
                     // This causes the loop to bail on building the rest of this linkset.
@@ -437,14 +437,14 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
             // Replace the root shape with the built compound shape.
             // Object removed and added to world to get collision cache rebuilt for new shape.
-            LinksetRoot.PhysShape.Dereference(m_physicsScene);
+            LinksetRoot.PhysShape.Dereference(_physicsScene);
             LinksetRoot.PhysShape = linksetShape;
-            m_physicsScene.PE.RemoveObjectFromWorld(m_physicsScene.World, LinksetRoot.PhysBody);
-            m_physicsScene.PE.SetCollisionShape(m_physicsScene.World, LinksetRoot.PhysBody, linksetShape.physShapeInfo);
-            m_physicsScene.PE.AddObjectToWorld(m_physicsScene.World, LinksetRoot.PhysBody);
+            _physicsScene.PE.RemoveObjectFromWorld(_physicsScene.World, LinksetRoot.PhysBody);
+            _physicsScene.PE.SetCollisionShape(_physicsScene.World, LinksetRoot.PhysBody, linksetShape.physShapeInfo);
+            _physicsScene.PE.AddObjectToWorld(_physicsScene.World, LinksetRoot.PhysBody);
             DetailLog("{0},BSLinksetCompound.RecomputeLinksetCompound,addBody,body={1},shape={2}",
                                         LinksetRoot.LocalID, LinksetRoot.PhysBody, linksetShape);
-            m_physicsScene.PE.ResetBroadphasePool(m_physicsScene.World);    // DEBUG DEBUG
+            _physicsScene.PE.ResetBroadphasePool(_physicsScene.World);    // DEBUG DEBUG
 
             // With all of the linkset packed into the root prim, it has the mass of everyone.
             LinksetMass = ComputeLinksetMass();
@@ -457,7 +457,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 //     compound shape. This aleviates the need to offset the returned physical position by the
                 //     center-of-mass offset.
                 // TODO: either debug this feature or remove it.
-                m_physicsScene.PE.AddToCollisionFlags(LinksetRoot.PhysBody, CollisionFlags.BS_RETURN_ROOT_COMPOUND_SHAPE);
+                _physicsScene.PE.AddToCollisionFlags(LinksetRoot.PhysBody, CollisionFlags.BS_RETURN_ROOT_COMPOUND_SHAPE);
             }
         }
         finally
@@ -466,7 +466,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         }
 
         // See that the Aabb surrounds the new shape
-        m_physicsScene.PE.RecalculateCompoundShapeLocalAabb(LinksetRoot.PhysShape.physShapeInfo);
+        _physicsScene.PE.RecalculateCompoundShapeLocalAabb(LinksetRoot.PhysShape.physShapeInfo);
     }
 }
 }

@@ -449,28 +449,28 @@ namespace OpenSim.Framework
             return env;
         }
 
-        public readonly object m_cachedbytesLock = new object();
-        public byte[] m_cachedbytes = null;
-        public byte[] m_cachedWLbytes = null;
+        public readonly object _cachedbytesLock = new object();
+        public byte[] _cachedbytes = null;
+        public byte[] _cachedWLbytes = null;
 
         public void InvalidateCaches()
         {
-            lock (m_cachedbytesLock)
+            lock (_cachedbytesLock)
             {
-                m_cachedbytes = null;
-                m_cachedWLbytes = null;
+                _cachedbytes = null;
+                _cachedWLbytes = null;
             }
         }
 
         public byte[] ToCapBytes(UUID regionID, int parcelID)
         {
-            //byte[] ret = m_cachedbytes;
+            //byte[] ret = _cachedbytes;
             //if(ret != null)
             //    return ret;
 
-            lock (m_cachedbytesLock)
+            lock (_cachedbytesLock)
             {
-                byte[] ret = m_cachedbytes;
+                byte[] ret = _cachedbytes;
                 if (ret == null)
                 {
                     OSDMap map = new OSDMap();
@@ -481,7 +481,7 @@ namespace OpenSim.Framework
                     map["parcel_id"] = parcelID;
                     map["success"] = true;
                     ret = OSDParser.SerializeLLSDXmlToBytes(map);
-                    m_cachedbytes = ret;
+                    _cachedbytes = ret;
                 }
 
                 return ret;
@@ -490,18 +490,18 @@ namespace OpenSim.Framework
 
         public byte[] ToCapWLBytes(UUID messageID, UUID regionID)
         {
-            //byte[] ret = m_cachedWLbytes;
+            //byte[] ret = _cachedWLbytes;
             //if (ret != null)
             //    return ret;
 
-            lock (m_cachedbytesLock)
+            lock (_cachedbytesLock)
             {
-                byte[] ret = m_cachedWLbytes;
+                byte[] ret = _cachedWLbytes;
                 if (ret == null)
                 {
                     OSD d = ToWLOSD(messageID, regionID);
                     ret = OSDParser.SerializeLLSDXmlToBytes(d);
-                    m_cachedWLbytes = ret;
+                    _cachedWLbytes = ret;
                 }
                 return ret;
             }

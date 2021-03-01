@@ -49,7 +49,7 @@ namespace OpenSim.Region.Framework.Scenes
     /// </remarks>
     public class UuidGatherer
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly HashSet<UUID> ToSkip = new HashSet<UUID>()
         {
@@ -223,9 +223,9 @@ namespace OpenSim.Region.Framework.Scenes
     /// <summary>
     /// Is gathering complete?
     /// </summary>
-        public bool Complete { get { return m_assetUuidsToInspect.Count <= 0; } }
+        public bool Complete => _assetUuidsToInspect.Count <= 0;
 
-        /// <summary>
+    /// <summary>
         /// The dictionary of UUIDs gathered so far.  If Complete == true then this is all the reachable UUIDs.
         /// </summary>
         /// <value>The gathered uuids.</value>
@@ -248,13 +248,13 @@ namespace OpenSim.Region.Framework.Scenes
                 if (Complete)
                     return null;
                 else
-                    return m_assetUuidsToInspect.Peek();
+                    return _assetUuidsToInspect.Peek();
             }
         }
 
-        protected IAssetService m_assetService;
+        protected IAssetService _assetService;
 
-        protected Queue<UUID> m_assetUuidsToInspect;
+        protected Queue<UUID> _assetUuidsToInspect;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenSim.Region.Framework.Scenes.UuidGatherer"/> class.
@@ -280,11 +280,11 @@ namespace OpenSim.Region.Framework.Scenes
         /// </param>
         public UuidGatherer(IAssetService assetService, IDictionary<UUID, sbyte> collector, HashSet <UUID> failedIDs, HashSet <UUID> uncertainAssetsUUIDs)
         {
-            m_assetService = assetService;
+            _assetService = assetService;
             GatheredUuids = collector;
 
             // FIXME: Not efficient for searching, can improve.
-            m_assetUuidsToInspect = new Queue<UUID>();
+            _assetUuidsToInspect = new Queue<UUID>();
             FailedUUIDs = failedIDs;
             UncertainAssetsUUIDs = uncertainAssetsUUIDs;
             ErrorCount = 0;
@@ -310,10 +310,10 @@ namespace OpenSim.Region.Framework.Scenes
             }
             if (GatheredUuids.ContainsKey(uuid))
                 return false;
-            if (m_assetUuidsToInspect.Contains(uuid))
+            if (_assetUuidsToInspect.Contains(uuid))
                 return false;
 
-            //            m_log.DebugFormat("[UUID GATHERER]: Adding asset {0} for inspection", uuid);
+            //            _log.DebugFormat("[UUID GATHERER]: Adding asset {0} for inspection", uuid);
 
             GatheredUuids[uuid] = type; 
             return true;
@@ -342,12 +342,12 @@ namespace OpenSim.Region.Framework.Scenes
             }
             if(GatheredUuids.ContainsKey(uuid))
                 return false;
-            if (m_assetUuidsToInspect.Contains(uuid))
+            if (_assetUuidsToInspect.Contains(uuid))
                 return false;
 
-//            m_log.DebugFormat("[UUID GATHERER]: Adding asset {0} for inspection", uuid);
+//            _log.DebugFormat("[UUID GATHERER]: Adding asset {0} for inspection", uuid);
 
-            m_assetUuidsToInspect.Enqueue(uuid);
+            _assetUuidsToInspect.Enqueue(uuid);
             return true;
         }
 
@@ -362,7 +362,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <param name="sceneObject">The scene object for which to gather assets</param>
         public void AddForInspection(SceneObjectGroup sceneObject)
         {
-            //            m_log.DebugFormat(
+            //            _log.DebugFormat(
             //                "[UUID GATHERER]: Getting assets for object {0}, {1}", sceneObject.Name, sceneObject.UUID);
             if(sceneObject.IsDeleted)
                 return;
@@ -372,7 +372,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 SceneObjectPart part = parts[i];
 
-                // m_log.DebugFormat(
+                // _log.DebugFormat(
                 // "[UUID GATHERER]: Getting part {0}, {1} for object {2}", part.Name, part.UUID, sceneObject.UUID);
 
                 try
@@ -419,7 +419,7 @@ namespace OpenSim.Region.Framework.Scenes
                         }
                         catch (Exception)
                         {
-                            m_log.WarnFormat(
+                            _log.WarnFormat(
                                 "[UUID GATHERER]: Could not check particle system for part {0} {1} in object {2} {3} since it is corrupt.  Continuing.",
                                 part.Name, part.UUID, sceneObject.Name, sceneObject.UUID);
                         }
@@ -450,7 +450,7 @@ namespace OpenSim.Region.Framework.Scenes
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat("[UUID GATHERER]: Failed to get part - {0}", e);
+                    _log.ErrorFormat("[UUID GATHERER]: Failed to get part - {0}", e);
                 }
             }
             if(sceneObject.TemporaryInstance)
@@ -466,13 +466,13 @@ namespace OpenSim.Region.Framework.Scenes
             if (Complete)
                 return false;
 
-            UUID nextToInspect = m_assetUuidsToInspect.Dequeue();
+            UUID nextToInspect = _assetUuidsToInspect.Dequeue();
 
-//            m_log.DebugFormat("[UUID GATHERER]: Inspecting asset {0}", nextToInspect);
+//            _log.DebugFormat("[UUID GATHERER]: Inspecting asset {0}", nextToInspect);
 
             GetAssetUuids(nextToInspect);
 
-            return m_assetUuidsToInspect.Count > 0;
+            return _assetUuidsToInspect.Count > 0;
         }
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace OpenSim.Region.Framework.Scenes
                     if (--i > 0)
                         sb.Append(',');
                 }
-                m_log.Debug(sb.ToString());
+                _log.Debug(sb.ToString());
             }
 
             return true;
@@ -542,7 +542,7 @@ namespace OpenSim.Region.Framework.Scenes
             catch (Exception e)
             {
                 if(verbose)
-                    m_log.ErrorFormat("[UUID GATHERER]: Failed to get asset {0} : {1}", assetUuid, e.Message);
+                    _log.ErrorFormat("[UUID GATHERER]: Failed to get asset {0} : {1}", assetUuid, e.Message);
                 ErrorCount++;
                 FailedUUIDs.Add(assetUuid);
                 return;
@@ -550,7 +550,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             if(assetBase == null)
             {
-//                m_log.ErrorFormat("[UUID GATHERER]: asset {0} not found", assetUuid);
+//                _log.ErrorFormat("[UUID GATHERER]: asset {0} not found", assetUuid);
                 FailedUUIDs.Add(assetUuid);
                 if(UncertainAssetsUUIDs.Contains(assetUuid))
                     possibleNotAssetCount++;
@@ -568,7 +568,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             if(assetBase.Data == null || assetBase.Data.Length == 0)
             {
-//                m_log.ErrorFormat("[UUID GATHERER]: asset {0}, type {1} has no data", assetUuid, assetType);
+//                _log.ErrorFormat("[UUID GATHERER]: asset {0}, type {1} has no data", assetUuid, assetType);
                 ErrorCount++;
                 FailedUUIDs.Add(assetUuid);
                 return;
@@ -609,7 +609,7 @@ namespace OpenSim.Region.Framework.Scenes
             catch (Exception e)
             {
                 if(verbose)
-                    m_log.ErrorFormat("[UUID GATHERER]: Failed to gather uuids for asset with id {0} type {1}: {2}", assetUuid, assetType, e.Message);
+                    _log.ErrorFormat("[UUID GATHERER]: Failed to gather uuids for asset with id {0} type {1}: {2}", assetUuid, assetType, e.Message);
                 GatheredUuids.Remove(assetUuid);
                 ErrorCount++;
                 FailedUUIDs.Add(assetUuid);
@@ -652,7 +652,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
             catch (Exception)
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[UUID GATHERER]: Failed to gather uuids for asset id {0}, type {1}",
                     assetUuid, assetType);
                 throw;
@@ -702,7 +702,7 @@ namespace OpenSim.Region.Framework.Scenes
 
                 if (osdMaterials != null)
                 {
-                    //m_log.Info("[UUID Gatherer]: found Materials: " + OSDParser.SerializeJsonString(osd));
+                    //_log.Info("[UUID Gatherer]: found Materials: " + OSDParser.SerializeJsonString(osd));
 
                     if (osdMaterials is OSDArray)
                     {
@@ -720,7 +720,7 @@ namespace OpenSim.Region.Framework.Scenes
                                         if (normalMapId != UUID.Zero)
                                         {
                                             GatheredUuids[normalMapId] = (sbyte)AssetType.Texture;
-                                            //m_log.Info("[UUID Gatherer]: found normal map ID: " + normalMapId.ToString());
+                                            //_log.Info("[UUID Gatherer]: found normal map ID: " + normalMapId.ToString());
                                         }
                                     }
                                     if (mat.ContainsKey("SpecMap"))
@@ -729,7 +729,7 @@ namespace OpenSim.Region.Framework.Scenes
                                         if (specularMapId != UUID.Zero)
                                         {
                                             GatheredUuids[specularMapId] = (sbyte)AssetType.Texture;
-                                            //m_log.Info("[UUID Gatherer]: found specular map ID: " + specularMapId.ToString());
+                                            //_log.Info("[UUID Gatherer]: found specular map ID: " + specularMapId.ToString());
                                         }
                                     }
                                 }
@@ -737,7 +737,7 @@ namespace OpenSim.Region.Framework.Scenes
                             }
                             catch (Exception e)
                             {
-                                m_log.Warn("[UUID Gatherer]: exception getting materials: " + e.Message);
+                                _log.Warn("[UUID Gatherer]: exception getting materials: " + e.Message);
                             }
                         }
                     }
@@ -753,7 +753,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns></returns>
         protected virtual AssetBase GetAsset(UUID uuid)
         {
-            return m_assetService.Get(uuid.ToString());
+            return _assetService.Get(uuid.ToString());
         }
 
         /// <summary>
@@ -762,7 +762,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <param name="textAsset"></param>
         private void RecordEmbeddedAssetDataUuids(AssetBase textAsset)
         {
-            // m_log.DebugFormat("[ASSET GATHERER]: Getting assets for uuid references in asset {0}", embeddingAssetId);
+            // _log.DebugFormat("[ASSET GATHERER]: Getting assets for uuid references in asset {0}", embeddingAssetId);
 
             if(textAsset.Data.Length < 36)
                 return;
@@ -1236,9 +1236,9 @@ namespace OpenSim.Region.Framework.Scenes
 
     public class HGUuidGatherer : UuidGatherer
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected string m_assetServerURL;
+        protected string _assetServerURL;
 
         public HGUuidGatherer(IAssetService assetService, string assetServerURL)
             : this(assetService, assetServerURL, new Dictionary<UUID, sbyte>()) {}
@@ -1246,12 +1246,12 @@ namespace OpenSim.Region.Framework.Scenes
         public HGUuidGatherer(IAssetService assetService, string assetServerURL, IDictionary<UUID, sbyte> collector)
             : base(assetService, collector)
         {
-            m_assetServerURL = assetServerURL;
+            _assetServerURL = assetServerURL;
         }
 
         protected override AssetBase GetAsset(UUID uuid)
         {
-            if (string.IsNullOrWhiteSpace(m_assetServerURL))
+            if (string.IsNullOrWhiteSpace(_assetServerURL))
                 return base.GetAsset(uuid);
             else
                 return FetchAsset(uuid);
@@ -1259,11 +1259,11 @@ namespace OpenSim.Region.Framework.Scenes
 
         public AssetBase FetchAsset(UUID assetID)
         {
-            AssetBase asset = m_assetService.Get(assetID.ToString(), m_assetServerURL, true);
+            AssetBase asset = _assetService.Get(assetID.ToString(), _assetServerURL, true);
             if (asset != null)
-                m_log.DebugFormat("[HGUUIDGatherer]: Copied asset {0} from {1} to local asset server", assetID, m_assetServerURL);
+                _log.DebugFormat("[HGUUIDGatherer]: Copied asset {0} from {1} to local asset server", assetID, _assetServerURL);
             else
-                m_log.DebugFormat("[HGUUIDGatherer]: Failed to fetch asset {0} from {1}", assetID, m_assetServerURL);
+                _log.DebugFormat("[HGUUIDGatherer]: Failed to fetch asset {0} from {1}", assetID, _assetServerURL);
 
             return asset;
         }

@@ -35,9 +35,6 @@ namespace OSHttpServer.Exceptions
         /// <summary>
         /// status code to use in the response.
         /// </summary>
-        public HttpStatusCode HttpStatusCode
-        {
-            get { return _code; }
-        }
+        public HttpStatusCode HttpStatusCode => _code;
     }
 }

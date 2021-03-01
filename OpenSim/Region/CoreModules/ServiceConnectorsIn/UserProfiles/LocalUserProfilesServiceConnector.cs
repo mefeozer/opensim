@@ -46,7 +46,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalUserProfilesServicesConnector")]
     public class LocalUserProfilesServicesConnector : ISharedRegionModule
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -62,32 +62,23 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
             get; private set;
         }
 
-        public string Name
-        {
-            get
-            {
-                return "LocalUserProfilesServicesConnector";
-            }
-        }
+        public string Name => "LocalUserProfilesServicesConnector";
 
         public string ConfigName
         {
             get; private set;
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public LocalUserProfilesServicesConnector()
         {
-            //m_log.Debug("[LOCAL USERPROFILES SERVICE CONNECTOR]: LocalUserProfileServicesConnector no params");
+            //_log.Debug("[LOCAL USERPROFILES SERVICE CONNECTOR]: LocalUserProfileServicesConnector no params");
         }
 
         public LocalUserProfilesServicesConnector(IConfigSource source)
         {
-            //m_log.Debug("[LOCAL USERPROFILES SERVICE CONNECTOR]: LocalUserProfileServicesConnector instantiated directly.");
+            //_log.Debug("[LOCAL USERPROFILES SERVICE CONNECTOR]: LocalUserProfileServicesConnector instantiated directly.");
             InitialiseService(source);
         }
 
@@ -101,7 +92,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
             IConfig config = source.Configs[ConfigName];
             if (config == null)
             {
-                //m_log.Error("[LOCAL USERPROFILES SERVICE CONNECTOR]: UserProfilesService missing from OpenSim.ini");
+                //_log.Error("[LOCAL USERPROFILES SERVICE CONNECTOR]: UserProfilesService missing from OpenSim.ini");
                 return;
             }
 
@@ -117,7 +108,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
 
             if (string.IsNullOrEmpty(serviceDll))
             {
-                m_log.Error("[LOCAL USERPROFILES SERVICE CONNECTOR]: No LocalServiceModule named in section UserProfilesService");
+                _log.Error("[LOCAL USERPROFILES SERVICE CONNECTOR]: No LocalServiceModule named in section UserProfilesService");
                 return;
             }
 
@@ -126,7 +117,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
 
             if (ServiceModule == null)
             {
-                m_log.Error("[LOCAL USERPROFILES SERVICE CONNECTOR]: Can't load user profiles service");
+                _log.Error("[LOCAL USERPROFILES SERVICE CONNECTOR]: Can't load user profiles service");
                 return;
             }
 
@@ -176,7 +167,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
                 if (name == Name)
                 {
                     InitialiseService(source);
-                    m_log.Info("[LOCAL USERPROFILES SERVICE CONNECTOR]: Local user profiles connector enabled");
+                    _log.Info("[LOCAL USERPROFILES SERVICE CONNECTOR]: Local user profiles connector enabled");
                 }
             }
         }
@@ -194,7 +185,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Profile
             lock (regions)
             {
                 if (regions.ContainsKey(scene.RegionInfo.RegionID))
-                    m_log.ErrorFormat("[LOCAL USERPROFILES SERVICE CONNECTOR]: simulator seems to have more than one region with the same UUID. Please correct this!");
+                    _log.ErrorFormat("[LOCAL USERPROFILES SERVICE CONNECTOR]: simulator seems to have more than one region with the same UUID. Please correct this!");
                 else
                     regions.Add(scene.RegionInfo.RegionID, scene);
             }

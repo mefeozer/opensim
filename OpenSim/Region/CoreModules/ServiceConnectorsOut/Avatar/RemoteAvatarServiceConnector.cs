@@ -41,21 +41,15 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
     public class RemoteAvatarServicesConnector : AvatarServicesConnector,
             ISharedRegionModule, IAvatarService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RemoteAvatarServicesConnector"; }
-        }
+        public string Name => "RemoteAvatarServicesConnector";
 
         public override void Initialise(IConfigSource source)
         {
@@ -68,34 +62,34 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
                     IConfig userConfig = source.Configs["AvatarService"];
                     if (userConfig == null)
                     {
-                        m_log.Error("[AVATAR CONNECTOR]: AvatarService missing from OpenSim.ini");
+                        _log.Error("[AVATAR CONNECTOR]: AvatarService missing from OpenSim.ini");
                         return;
                     }
 
-                    m_Enabled = true;
+                    _Enabled = true;
 
                     base.Initialise(source);
 
-                    m_log.Info("[AVATAR CONNECTOR]: Remote avatars enabled");
+                    _log.Info("[AVATAR CONNECTOR]: Remote avatars enabled");
                 }
             }
         }
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void Close()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IAvatarService>(this);
@@ -103,13 +97,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
     }

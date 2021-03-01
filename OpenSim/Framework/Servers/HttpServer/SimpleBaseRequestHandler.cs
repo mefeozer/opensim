@@ -37,32 +37,29 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         public int RequestsHandled { get; protected set; }
 
-        protected string m_path;
+        protected string _path;
 
         public string Name { get; }
 
         protected SimpleBaseRequestHandler(string path)
         {
             Name = null;
-            m_path = path;
+            _path = path;
         }
 
         protected SimpleBaseRequestHandler(string path, string name)
         {
             Name = name;
-            m_path = path;
+            _path = path;
         }
 
-        public string Path
-        {
-            get { return m_path; }
-        }
+        public string Path => _path;
 
         public string GetParam(string path)
         {
             if (CheckParam(path))
             {
-                return path.Substring(m_path.Length);
+                return path.Substring(_path.Length);
             }
 
             return string.Empty;

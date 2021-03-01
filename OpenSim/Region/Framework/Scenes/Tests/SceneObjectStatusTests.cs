@@ -38,17 +38,17 @@ namespace OpenSim.Region.Framework.Scenes.Tests
     [TestFixture]
     public class SceneObjectStatusTests : OpenSimTestCase
     {
-        private TestScene m_scene;
-        private readonly UUID m_ownerId = TestHelpers.ParseTail(0x1);
-        private SceneObjectGroup m_so1;
-        private SceneObjectGroup m_so2;
+        private TestScene _scene;
+        private readonly UUID _ownerId = TestHelpers.ParseTail(0x1);
+        private SceneObjectGroup _so1;
+        private SceneObjectGroup _so2;
 
         [SetUp]
         public void Init()
         {
-            m_scene = new SceneHelpers().SetupScene();
-            m_so1 = SceneHelpers.CreateSceneObject(1, m_ownerId, "so1", 0x10);
-            m_so2 = SceneHelpers.CreateSceneObject(1, m_ownerId, "so2", 0x20);
+            _scene = new SceneHelpers().SetupScene();
+            _so1 = SceneHelpers.CreateSceneObject(1, _ownerId, "so1", 0x10);
+            _so2 = SceneHelpers.CreateSceneObject(1, _ownerId, "so2", 0x20);
         }
 
         [Test]
@@ -56,18 +56,18 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
-            m_so1.ScriptSetTemporaryStatus(true);
+            _scene.AddSceneObject(_so1);
+            _so1.ScriptSetTemporaryStatus(true);
 
             // Is this really the correct flag?
-            Assert.That(m_so1.RootPart.Flags, Is.EqualTo(PrimFlags.TemporaryOnRez));
-            Assert.That(m_so1.Backup, Is.False);
+            Assert.That(_so1.RootPart.Flags, Is.EqualTo(PrimFlags.TemporaryOnRez));
+            Assert.That(_so1.Backup, Is.False);
 
             // Test setting back to non-temporary
-            m_so1.ScriptSetTemporaryStatus(false);
+            _so1.ScriptSetTemporaryStatus(false);
 
-            Assert.That(m_so1.RootPart.Flags, Is.EqualTo(PrimFlags.None));
-            Assert.That(m_so1.Backup, Is.True);
+            Assert.That(_so1.RootPart.Flags, Is.EqualTo(PrimFlags.None));
+            Assert.That(_so1.Backup, Is.True);
         }
 
         [Test]
@@ -75,17 +75,17 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
+            _scene.AddSceneObject(_so1);
 
-            SceneObjectPart rootPart = m_so1.RootPart;
+            SceneObjectPart rootPart = _so1.RootPart;
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.None));
 
-            m_so1.ScriptSetPhantomStatus(true);
+            _so1.ScriptSetPhantomStatus(true);
 
 //            Console.WriteLine("so.RootPart.Flags [{0}]", so.RootPart.Flags);
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.Phantom));
 
-            m_so1.ScriptSetPhantomStatus(false);
+            _so1.ScriptSetPhantomStatus(false);
 
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.None));
         }
@@ -95,18 +95,18 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
+            _scene.AddSceneObject(_so1);
 
-            SceneObjectPart rootPart = m_so1.RootPart;
+            SceneObjectPart rootPart = _so1.RootPart;
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.None));
 
-            m_so1.ScriptSetVolumeDetect(true);
+            _so1.ScriptSetVolumeDetect(true);
 
 //            Console.WriteLine("so.RootPart.Flags [{0}]", so.RootPart.Flags);
             // PrimFlags.JointLP2P is incorrect it now means VolumeDetect (as defined by viewers)
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.Phantom | PrimFlags.JointLP2P));
 
-            m_so1.ScriptSetVolumeDetect(false);
+            _so1.ScriptSetVolumeDetect(false);
 
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.None));
         }
@@ -116,16 +116,16 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
+            _scene.AddSceneObject(_so1);
 
-            SceneObjectPart rootPart = m_so1.RootPart;
+            SceneObjectPart rootPart = _so1.RootPart;
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.None));
 
-            m_so1.ScriptSetPhysicsStatus(true);
+            _so1.ScriptSetPhysicsStatus(true);
 
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.Physics));
 
-            m_so1.ScriptSetPhysicsStatus(false);
+            _so1.ScriptSetPhysicsStatus(false);
 
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.None));
         }
@@ -135,18 +135,18 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
+            _scene.AddSceneObject(_so1);
 
-            SceneObjectPart rootPart = m_so1.RootPart;
+            SceneObjectPart rootPart = _so1.RootPart;
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.None));
 
-            m_so1.ScriptSetPhysicsStatus(true);
-            m_so1.ScriptSetVolumeDetect(true);
+            _so1.ScriptSetPhysicsStatus(true);
+            _so1.ScriptSetVolumeDetect(true);
 
             // PrimFlags.JointLP2P is incorrect it now means VolumeDetect (as defined by viewers)
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.Phantom | PrimFlags.Physics | PrimFlags.JointLP2P));
 
-            m_so1.ScriptSetVolumeDetect(false);
+            _so1.ScriptSetVolumeDetect(false);
 
             Assert.That(rootPart.Flags, Is.EqualTo(PrimFlags.Physics));
         }
@@ -156,25 +156,25 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
-            m_scene.AddSceneObject(m_so2);
+            _scene.AddSceneObject(_so1);
+            _scene.AddSceneObject(_so2);
 
-            m_scene.LinkObjects(m_ownerId, m_so1.LocalId, new List<uint>() { m_so2.LocalId });
+            _scene.LinkObjects(_ownerId, _so1.LocalId, new List<uint>() { _so2.LocalId });
 
-            m_so1.ScriptSetPhysicsStatus(true);
+            _so1.ScriptSetPhysicsStatus(true);
 
-            Assert.That(m_so1.RootPart.Flags, Is.EqualTo(PrimFlags.Physics));
-            Assert.That(m_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.Physics));
+            Assert.That(_so1.RootPart.Flags, Is.EqualTo(PrimFlags.Physics));
+            Assert.That(_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.Physics));
 
-            m_so1.ScriptSetPhysicsStatus(false);
+            _so1.ScriptSetPhysicsStatus(false);
 
-            Assert.That(m_so1.RootPart.Flags, Is.EqualTo(PrimFlags.None));
-            Assert.That(m_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.None));
+            Assert.That(_so1.RootPart.Flags, Is.EqualTo(PrimFlags.None));
+            Assert.That(_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.None));
 
-            m_so1.ScriptSetPhysicsStatus(true);
+            _so1.ScriptSetPhysicsStatus(true);
 
-            Assert.That(m_so1.RootPart.Flags, Is.EqualTo(PrimFlags.Physics));
-            Assert.That(m_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.Physics));
+            Assert.That(_so1.RootPart.Flags, Is.EqualTo(PrimFlags.Physics));
+            Assert.That(_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.Physics));
         }
 
         /// <summary>
@@ -185,16 +185,16 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
-            m_scene.AddSceneObject(m_so2);
+            _scene.AddSceneObject(_so1);
+            _scene.AddSceneObject(_so2);
 
-            m_so1.ScriptSetPhysicsStatus(true);
-            m_so2.ScriptSetPhysicsStatus(true);
+            _so1.ScriptSetPhysicsStatus(true);
+            _so2.ScriptSetPhysicsStatus(true);
 
-            m_scene.LinkObjects(m_ownerId, m_so1.LocalId, new List<uint>() { m_so2.LocalId });
+            _scene.LinkObjects(_ownerId, _so1.LocalId, new List<uint>() { _so2.LocalId });
 
-            Assert.That(m_so1.RootPart.Flags, Is.EqualTo(PrimFlags.Physics));
-            Assert.That(m_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.Physics));
+            Assert.That(_so1.RootPart.Flags, Is.EqualTo(PrimFlags.Physics));
+            Assert.That(_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.Physics));
         }
 
         /// <summary>
@@ -205,15 +205,15 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
-            m_scene.AddSceneObject(m_so2);
+            _scene.AddSceneObject(_so1);
+            _scene.AddSceneObject(_so2);
 
-            m_so1.ScriptSetPhysicsStatus(true);
+            _so1.ScriptSetPhysicsStatus(true);
 
-            m_scene.LinkObjects(m_ownerId, m_so1.LocalId, new List<uint>() { m_so2.LocalId });
+            _scene.LinkObjects(_ownerId, _so1.LocalId, new List<uint>() { _so2.LocalId });
 
-            Assert.That(m_so1.RootPart.Flags, Is.EqualTo(PrimFlags.Physics));
-            Assert.That(m_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.Physics));
+            Assert.That(_so1.RootPart.Flags, Is.EqualTo(PrimFlags.Physics));
+            Assert.That(_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.Physics));
         }
 
         /// <summary>
@@ -224,15 +224,15 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             TestHelpers.InMethod();
 
-            m_scene.AddSceneObject(m_so1);
-            m_scene.AddSceneObject(m_so2);
+            _scene.AddSceneObject(_so1);
+            _scene.AddSceneObject(_so2);
 
-            m_so2.ScriptSetPhysicsStatus(true);
+            _so2.ScriptSetPhysicsStatus(true);
 
-            m_scene.LinkObjects(m_ownerId, m_so1.LocalId, new List<uint>() { m_so2.LocalId });
+            _scene.LinkObjects(_ownerId, _so1.LocalId, new List<uint>() { _so2.LocalId });
 
-            Assert.That(m_so1.RootPart.Flags, Is.EqualTo(PrimFlags.None));
-            Assert.That(m_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.None));
+            Assert.That(_so1.RootPart.Flags, Is.EqualTo(PrimFlags.None));
+            Assert.That(_so1.Parts[1].Flags, Is.EqualTo(PrimFlags.None));
         }
     }
 }

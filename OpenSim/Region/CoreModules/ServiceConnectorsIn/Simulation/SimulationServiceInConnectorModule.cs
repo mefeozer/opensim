@@ -42,25 +42,25 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Simulation
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "SimulationServiceInConnectorModule")]
     public class SimulationServiceInConnectorModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static bool m_Enabled = false;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static bool _Enabled = false;
 
-        private IConfigSource m_Config;
-        bool m_Registered = false;
+        private IConfigSource _Config;
+        bool _Registered = false;
 
         #region Region Module interface
 
         public void Initialise(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
 
             IConfig moduleConfig = config.Configs["Modules"];
             if (moduleConfig != null)
             {
-                m_Enabled = moduleConfig.GetBoolean("SimulationServiceInConnector", false);
-                if (m_Enabled)
+                _Enabled = moduleConfig.GetBoolean("SimulationServiceInConnector", false);
+                if (_Enabled)
                 {
-                    m_log.Info("[SIM SERVICE]: SimulationService IN connector enabled");
+                    _log.Info("[SIM SERVICE]: SimulationService IN connector enabled");
 
                 }
             }
@@ -75,19 +75,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Simulation
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "SimulationServiceInConnectorModule"; }
-        }
+        public string Name => "SimulationServiceInConnectorModule";
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
         }
@@ -98,16 +92,16 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Simulation
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (!m_Registered)
+            if (!_Registered)
             {
-                m_Registered = true;
+                _Registered = true;
 
-                m_log.Info("[SIM SERVICE]: Starting...");
+                _log.Info("[SIM SERVICE]: Starting...");
 
-                object[] args = new object[] { m_Config, MainServer.Instance, scene };
+                object[] args = new object[] { _Config, MainServer.Instance, scene };
 
                 ServerUtils.LoadPlugin<IServiceConnector>("OpenSim.Server.Handlers.dll:SimulationServiceInConnector", args);
             }

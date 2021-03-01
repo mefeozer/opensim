@@ -56,20 +56,20 @@ namespace OpenSim.Framework
 
         public virtual UUID ParentID
         {
-            get { return _parentID; }
-            set { _parentID = value; }
+            get => _parentID;
+            set => _parentID = value;
         }
 
         public virtual short Type
         {
-            get { return _type; }
-            set { _type = value; }
+            get => _type;
+            set => _type = value;
         }
 
         public virtual ushort Version
         {
-            get { return _version; }
-            set { _version = value; }
+            get => _version;
+            set => _version = value;
         }
 
         public InventoryFolderBase()

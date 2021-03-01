@@ -43,15 +43,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 {
     /**
      * @brief Which queue it is in as far as running is concerned,
-     *        ie, m_StartQueue, m_YieldQueue, m_SleepQueue, etc.
+     *        ie, _StartQueue, _YieldQueue, _SleepQueue, etc.
      * Allowed transitions:
      *   Starts in CONSTRUCT when constructed
      *   CONSTRUCT->ONSTARTQ              : only by thread that constructed and compiled it
-     *   IDLE->ONSTARTQ,RESETTING         : by any thread but must have m_QueueLock when transitioning
-     *   ONSTARTQ->RUNNING,RESETTING      : only by thread that removed it from m_StartQueue
-     *   ONYIELDQ->RUNNING,RESETTING      : only by thread that removed it from m_YieldQueue
-     *   ONSLEEPQ->REMDFROMSLPQ           : by any thread but must have m_SleepQueue when transitioning
-     *   REMDFROMSLPQ->ONYIELDQ,RESETTING : only by thread that removed it from m_SleepQueue
+     *   IDLE->ONSTARTQ,RESETTING         : by any thread but must have _QueueLock when transitioning
+     *   ONSTARTQ->RUNNING,RESETTING      : only by thread that removed it from _StartQueue
+     *   ONYIELDQ->RUNNING,RESETTING      : only by thread that removed it from _YieldQueue
+     *   ONSLEEPQ->REMDFROMSLPQ           : by any thread but must have _SleepQueue when transitioning
+     *   REMDFROMSLPQ->ONYIELDQ,RESETTING : only by thread that removed it from _SleepQueue
      *   RUNNING->whatever1               : only by thread that transitioned it to RUNNING
      *                                      whatever1 = IDLE,ONSLEEPQ,ONYIELDQ,ONSTARTQ,SUSPENDED,FINISHED
      *   FINSHED->whatever2               : only by thread that transitioned it to FINISHED
@@ -62,14 +62,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
     public enum XMRInstState
     {
         CONSTRUCT,     // it is being constructed
-        IDLE,          // nothing happening (finished last event and m_EventQueue is empty)
-        ONSTARTQ,      // inserted on m_Engine.m_StartQueue
+        IDLE,          // nothing happening (finished last event and _EventQueue is empty)
+        ONSTARTQ,      // inserted on _Engine._StartQueue
         RUNNING,       // currently being executed by RunOne()
-        ONSLEEPQ,      // inserted on m_Engine.m_SleepQueue
-        REMDFROMSLPQ,  // removed from m_SleepQueue but not yet on m_YieldQueue
-        ONYIELDQ,      // inserted on m_Engine.m_YieldQueue
+        ONSLEEPQ,      // inserted on _Engine._SleepQueue
+        REMDFROMSLPQ,  // removed from _SleepQueue but not yet on _YieldQueue
+        ONYIELDQ,      // inserted on _Engine._YieldQueue
         FINISHED,      // just finished handling an event
-        SUSPENDED,     // m_SuspendCount > 0
+        SUSPENDED,     // _SuspendCount > 0
         RESETTING,     // being reset via external call
         DISPOSED       // has been disposed
     }
@@ -85,81 +85,81 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public static readonly DetectParams[] zeroDetectParams = new DetectParams[0];
         public static readonly object[] zeroObjectArray = new object[0];
 
-        public static readonly ILog m_log =
+        public static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public XMRInstance m_NextInst;  // used by XMRInstQueue
-        public XMRInstance m_PrevInst;
+        public XMRInstance _NextInst;  // used by XMRInstQueue
+        public XMRInstance _PrevInst;
 
-        // For a given m_Item.AssetID, do we have the compiled object code and where
+        // For a given _Item.AssetID, do we have the compiled object code and where
         // is it?
-        public static object m_CompileLock = new object();
-        private static readonly Dictionary<string, ScriptObjCode> m_CompiledScriptObjCode = new Dictionary<string, ScriptObjCode>();
+        public static object _CompileLock = new object();
+        private static readonly Dictionary<string, ScriptObjCode> _CompiledScriptObjCode = new Dictionary<string, ScriptObjCode>();
 
-        public XMRInstState m_IState;
+        public XMRInstState _IState;
 
-        public bool m_ForceRecomp = false;
-        public SceneObjectPart m_Part = null;
-        public uint m_LocalID = 0;
-        public TaskInventoryItem m_Item = null;
-        public UUID m_ItemID;
-        public UUID m_PartUUID;
-        private string m_CameFrom;
-        private string m_ScriptObjCodeKey;
+        public bool _ForceRecomp = false;
+        public SceneObjectPart _Part = null;
+        public uint _LocalID = 0;
+        public TaskInventoryItem _Item = null;
+        public UUID _ItemID;
+        public UUID _PartUUID;
+        private string _CameFrom;
+        private string _ScriptObjCodeKey;
 
-        private Yengine m_Engine = null;
-        private string m_ScriptBasePath;
-        private string m_StateFileName;
-        public string m_SourceCode;
-        public bool m_PostOnRez;
-        private DetectParams[] m_DetectParams = null;
-        public int m_StartParam = 0;
-        public StateSource m_StateSource;
-        public string m_DescName;
-        private bool[] m_HaveEventHandlers;
-        public int m_StackSize;
-        public int m_HeapSize;
-        private ArrayList m_CompilerErrors;
-        private DateTime m_LastRanAt = DateTime.MinValue;
-        private string m_RunOnePhase = "hasn't run";
-        private string m_CheckRunPhase = "hasn't checked";
-        public int m_InstEHEvent = 0;  // number of events dequeued (StartEventHandler called)
-        public int m_InstEHSlice = 0;  // number of times handler timesliced (ResumeEx called)
-        public double m_CPUTime = 0;  // accumulated CPU time (milliseconds)
-        public double m_SliceStart = 0;  // when did current exec start
+        private Yengine _Engine = null;
+        private string _ScriptBasePath;
+        private string _StateFileName;
+        public string _SourceCode;
+        public bool _PostOnRez;
+        private DetectParams[] _DetectParams = null;
+        public int _StartParam = 0;
+        public StateSource _StateSource;
+        public string _DescName;
+        private bool[] _HaveEventHandlers;
+        public int _StackSize;
+        public int _HeapSize;
+        private ArrayList _CompilerErrors;
+        private DateTime _LastRanAt = DateTime.MinValue;
+        private string _RunOnePhase = "hasn't run";
+        private string _CheckRunPhase = "hasn't checked";
+        public int _InstEHEvent = 0;  // number of events dequeued (StartEventHandler called)
+        public int _InstEHSlice = 0;  // number of times handler timesliced (ResumeEx called)
+        public double _CPUTime = 0;  // accumulated CPU time (milliseconds)
+        public double _SliceStart = 0;  // when did current exec start
 
-        // If code needs to have both m_QueueLock and m_RunLock,
-        // be sure to lock m_RunLock first then m_QueueLock, as
+        // If code needs to have both _QueueLock and _RunLock,
+        // be sure to lock _RunLock first then _QueueLock, as
         // that is the order used in RunOne().
         // These locks are currently separated to allow the script
         // to call API routines that queue events back to the script.
         // If we just had one lock, then the queuing would deadlock.
 
-        // guards m_DetachQuantum, m_EventQueue, m_EventCounts, m_Running, m_Suspended
-        public object m_QueueLock = new object();
+        // guards _DetachQuantum, _EventQueue, _EventCounts, _Running, _Suspended
+        public object _QueueLock = new object();
 
         // true iff allowed to accept new events
-        public bool m_Running = true;
+        public bool _Running = true;
 
         // queue of events that haven't been acted upon yet
-        public LinkedList<EventParams> m_EventQueue = new LinkedList<EventParams>();
+        public LinkedList<EventParams> _EventQueue = new LinkedList<EventParams>();
 
-        // number of events of each code currently in m_EventQueue.
-        private readonly int[] m_EventCounts = new int[(int)ScriptEventCode.Size];
+        // number of events of each code currently in _EventQueue.
+        private readonly int[] _EventCounts = new int[(int)ScriptEventCode.Size];
 
         // locked whilst running on the microthread stack (or about to run on it or just ran on it)
-        private readonly object m_RunLock = new object();
+        private readonly object _RunLock = new object();
 
         // script won't step while > 0.  bus-atomic updates only.
-        private int m_SuspendCount = 0;
+        private int _SuspendCount = 0;
 
         // don't run any of script until this time
         // or until one of these events are queued
-        public DateTime m_SleepUntil = DateTime.MinValue;
-        public int m_SleepEventMask1 = 0;
-        public int m_SleepEventMask2 = 0;
+        public DateTime _SleepUntil = DateTime.MinValue;
+        public int _SleepEventMask1 = 0;
+        public int _SleepEventMask2 = 0;
 
-        private XMRLSL_Api m_XMRLSLApi;
+        private XMRLSL_Api _XMRLSLApi;
 
         /*
          * Makes sure migration data version is same on both ends.
@@ -167,20 +167,20 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public static byte migrationVersion = 11;
 
         // Incremented each time script gets reset.
-        public int m_ResetCount = 0;
+        public int _ResetCount = 0;
 
         // Scripts start suspended now. This means that event queues will
         // accept events, but will not actually run them until the core
         // tells it it's OK. This is needed to prevent loss of link messages
         // in complex objects, where no event can be allowed to run until
         // all possible link message receivers' queues are established.
-        // Guarded by m_QueueLock.
-        public bool m_Suspended = true;
+        // Guarded by _QueueLock.
+        public bool _Suspended = true;
 
         // We really don't want to save state for a script that hasn't had
         // a chance to run, because it's state will be blank. That would
         // cause attachment state loss.
-        public bool m_HasRun = false;
+        public bool _HasRun = false;
 
         // When llDie is executed within the attach(NULL_KEY) event of
         // a script being detached to inventory, the DeleteSceneObject call
@@ -190,21 +190,21 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         // Also, the attach(NULL_KEY) event needs to run with priority, and
         // it also needs to have a limited quantum.
         // If this is nonzero, we're detaching to inventory.
-        // Guarded by m_QueueLock.
-        private int m_DetachQuantum = 0;
+        // Guarded by _QueueLock.
+        private int _DetachQuantum = 0;
 
         // Finally, we need to wait until the quantum is done, or the script
         // suspends itself. This should be efficient, so we use an event
         // for it instead of spinning busy.
         // It's born ready, but will be reset when the detach is posted.
         // It will then be set again on suspend/completion
-        private readonly ManualResetEvent m_DetachReady = new ManualResetEvent(true);
+        private readonly ManualResetEvent _DetachReady = new ManualResetEvent(true);
 
         // llmineventdelay support
-        double m_minEventDelay = 0.0;
-        double m_nextEventTime = 0.0;
+        double _minEventDelay = 0.0;
+        double _nextEventTime = 0.0;
 
-        private static readonly Dictionary<string, ScriptEventCode> m_eventCodeMap = new Dictionary<string, ScriptEventCode>()
+        private static readonly Dictionary<string, ScriptEventCode> _eventCodeMap = new Dictionary<string, ScriptEventCode>()
         {
             {"attach", ScriptEventCode.attach},
             {"at_rot_target", ScriptEventCode.at_rot_target},

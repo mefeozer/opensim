@@ -41,13 +41,13 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "BinaryLoggingModule")]
     public class BinaryLoggingModule : INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected bool m_collectStats;
-        protected Scene m_scene = null;
+        protected bool _collectStats;
+        protected Scene _scene = null;
 
-        public string Name { get { return "Binary Statistics Logging Module"; } }
-        public Type ReplaceableInterface { get { return null; } }
+        public string Name => "Binary Statistics Logging Module";
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -60,16 +60,16 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
                     {
                         if (statConfig.GetBoolean("collect_region_stats"))
                         {
-                            m_collectStats = true;
+                            _collectStats = true;
                         }
                     }
                     if (statConfig.Contains("region_stats_period_seconds"))
                     {
-                        m_statLogPeriod = TimeSpan.FromSeconds(statConfig.GetInt("region_stats_period_seconds"));
+                        _statLogPeriod = TimeSpan.FromSeconds(statConfig.GetInt("region_stats_period_seconds"));
                     }
                     if (statConfig.Contains("stats_dir"))
                     {
-                        m_statsDir = statConfig.GetString("stats_dir");
+                        _statsDir = statConfig.GetString("stats_dir");
                     }
                 }
             }
@@ -81,7 +81,7 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
         }
 
         public void RemoveRegion(Scene scene)
@@ -90,8 +90,8 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
 
         public void RegionLoaded(Scene scene)
         {
-            if (m_collectStats)
-                m_scene.StatsReporter.OnSendStatsResult += LogSimStats;
+            if (_collectStats)
+                _scene.StatsReporter.OnSendStatsResult += LogSimStats;
         }
 
         public void Close()
@@ -105,10 +105,10 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
             public System.IO.BinaryWriter Log;
         }
 
-        static StatLogger m_statLog = null;
-        static TimeSpan m_statLogPeriod = TimeSpan.FromSeconds(300);
-        static string m_statsDir = string.Empty;
-        static readonly object m_statLockObject = new object();
+        static StatLogger _statLog = null;
+        static TimeSpan _statLogPeriod = TimeSpan.FromSeconds(300);
+        static string _statsDir = string.Empty;
+        static readonly object _statLockObject = new object();
 
         private void LogSimStats(SimStats stats)
         {
@@ -132,38 +132,38 @@ namespace OpenSim.Region.CoreModules.Framework.Statistics.Logging
             // hide some time information into the packet
             pack.Header.Sequence = (uint)now.Ticks;
 
-            lock (m_statLockObject) // m_statLog is shared so make sure there is only executer here
+            lock (_statLockObject) // _statLog is shared so make sure there is only executer here
             {
                 try
                 {
-                    if (m_statLog == null || now > m_statLog.StartTime + m_statLogPeriod)
+                    if (_statLog == null || now > _statLog.StartTime + _statLogPeriod)
                     {
                         // First log file or time has expired, start writing to a new log file
-                        if (m_statLog != null && m_statLog.Log != null)
+                        if (_statLog != null && _statLog.Log != null)
                         {
-                            m_statLog.Log.Close();
+                            _statLog.Log.Close();
                         }
-                        m_statLog = new StatLogger
+                        _statLog = new StatLogger
                         {
                             StartTime = now,
-                            Path = (m_statsDir.Length > 0 ? m_statsDir + System.IO.Path.DirectorySeparatorChar.ToString() : "")
+                            Path = (_statsDir.Length > 0 ? _statsDir + System.IO.Path.DirectorySeparatorChar.ToString() : "")
                                 + string.Format("stats-{0}.log", now.ToString("yyyyMMddHHmmss"))
                         };
-                        m_statLog.Log = new BinaryWriter(File.Open(m_statLog.Path, FileMode.Append, FileAccess.Write));
+                        _statLog.Log = new BinaryWriter(File.Open(_statLog.Path, FileMode.Append, FileAccess.Write));
                     }
 
                     // Write the serialized data to disk
-                    if (m_statLog != null && m_statLog.Log != null)
-                        m_statLog.Log.Write(pack.ToBytes());
+                    if (_statLog != null && _statLog.Log != null)
+                        _statLog.Log.Write(pack.ToBytes());
                 }
                 catch (Exception ex)
                 {
-                    m_log.Error("statistics gathering failed: " + ex.Message, ex);
-                    if (m_statLog != null && m_statLog.Log != null)
+                    _log.Error("statistics gathering failed: " + ex.Message, ex);
+                    if (_statLog != null && _statLog.Log != null)
                     {
-                        m_statLog.Log.Close();
+                        _statLog.Log.Close();
                     }
-                    m_statLog = null;
+                    _statLog = null;
                 }
             }
             return;

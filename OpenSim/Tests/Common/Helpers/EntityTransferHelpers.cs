@@ -36,7 +36,7 @@ namespace OpenSim.Tests.Common
 {
     public static class EntityTransferHelpers
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Set up correct handling of the InformClientOfNeighbour call from the source region that triggers the
@@ -58,7 +58,7 @@ namespace OpenSim.Tests.Common
                 uint x, y;
                 Util.RegionHandleToRegionLoc(neighbourHandle, out x, out y);
 
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[TEST CLIENT]: Processing inform client of neighbour located at {0},{1} at {2}",
                     x, y, neighbourExternalEndPoint);
 
@@ -91,7 +91,7 @@ namespace OpenSim.Tests.Common
                 uint x, y;
                 Util.RegionHandleToRegionLoc(regionHandle, out x, out y);
 
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[TEST CLIENT]: Processing send region teleport for destination at {0},{1} at {2}",
                     x, y, regionExternalEndPoint);
 

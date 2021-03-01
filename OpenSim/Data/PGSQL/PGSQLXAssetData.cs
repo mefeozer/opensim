@@ -41,31 +41,28 @@ namespace OpenSim.Data.PGSQL
 {
     public class PGSQLXAssetData : IXAssetDataPlugin
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         /// <summary>
         /// Number of days that must pass before we update the access time on an asset when it has been fetched.
         /// </summary>
         private const int DaysBetweenAccessTimeUpdates = 30;
 
-        private readonly bool m_enableCompression = false;
-        private PGSQLManager m_database;
-        private string m_connectionString;
-        private readonly object m_dbLock = new object();
+        private readonly bool _enableCompression = false;
+        private PGSQLManager _database;
+        private string _connectionString;
+        private readonly object _dbLock = new object();
 
         /// <summary>
-        /// We can reuse this for all hashing since all methods are single-threaded through m_dbBLock
+        /// We can reuse this for all hashing since all methods are single-threaded through _dbBLock
         /// </summary>
         private readonly HashAlgorithm hasher = new SHA256CryptoServiceProvider();
 
         #region IPlugin Members
 
-        public string Version { get { return "1.0.0.0"; } }
+        public string Version => "1.0.0.0";
 
         /// <summary>
         /// <para>Initialises Asset interface</para>
@@ -80,20 +77,20 @@ namespace OpenSim.Data.PGSQL
         /// <param name="connect">connect string</param>
         public void Initialise(string connect)
         {
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: THIS PLUGIN IS STRICTLY EXPERIMENTAL.");
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: DO NOT USE FOR ANY DATA THAT YOU DO NOT MIND LOSING.");
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: DATABASE TABLES CAN CHANGE AT ANY TIME, CAUSING EXISTING DATA TO BE LOST.");
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
-            m_log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: THIS PLUGIN IS STRICTLY EXPERIMENTAL.");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: DO NOT USE FOR ANY DATA THAT YOU DO NOT MIND LOSING.");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: DATABASE TABLES CAN CHANGE AT ANY TIME, CAUSING EXISTING DATA TO BE LOST.");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
+            _log.ErrorFormat("[PGSQL XASSETDATA]: ***********************************************************");
 
-            m_connectionString = connect;
-            m_database = new PGSQLManager(m_connectionString);
+            _connectionString = connect;
+            _database = new PGSQLManager(_connectionString);
 
-            using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
             {
                 dbcon.Open();
                 Migration m = new Migration(dbcon, Assembly, "XAssetStore");
@@ -111,10 +108,7 @@ namespace OpenSim.Data.PGSQL
         /// <summary>
         /// The name of this DB provider
         /// </summary>
-        public string Name
-        {
-            get { return "PGSQL XAsset storage engine"; }
-        }
+        public string Name => "PGSQL XAsset storage engine";
 
         #endregion
 
@@ -128,12 +122,12 @@ namespace OpenSim.Data.PGSQL
         /// <remarks>On failure : throw an exception and attempt to reconnect to database</remarks>
         public AssetBase GetAsset(UUID assetID)
         {
-//            m_log.DebugFormat("[PGSQL XASSET DATA]: Looking for asset {0}", assetID);
+//            _log.DebugFormat("[PGSQL XASSET DATA]: Looking for asset {0}", assetID);
 
             AssetBase asset = null;
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -143,7 +137,7 @@ namespace OpenSim.Data.PGSQL
                             JOIN XAssetsData ON XAssetsMeta.hash = XAssetsData.Hash WHERE id=:ID",
                         dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("ID", assetID));
+                        cmd.Parameters.Add(_database.CreateParameter("ID", assetID));
 
                         try
                         {
@@ -170,7 +164,7 @@ namespace OpenSim.Data.PGSQL
                                     asset.Temporary = Convert.ToBoolean(dbReader["temporary"]);
                                     asset.Flags = (AssetFlags)Convert.ToInt32(dbReader["asset_flags"]);
 
-                                    if (m_enableCompression)
+                                    if (_enableCompression)
                                     {
                                         using(MemoryStream ms = new MemoryStream(asset.Data))
                                         using(GZipStream decompressionStream = new GZipStream(ms, CompressionMode.Decompress))
@@ -181,7 +175,7 @@ namespace OpenSim.Data.PGSQL
                                                 //                                        int compressedLength = asset.Data.Length;
                                                 asset.Data = outputStream.ToArray();
                                             }
-                                            //                                        m_log.DebugFormat(
+                                            //                                        _log.DebugFormat(
                                             //                                            "[XASSET DB]: Decompressed {0} {1} to {2} bytes from {3}",
                                             //                                            asset.ID, asset.Name, asset.Data.Length, compressedLength);
                                         }
@@ -193,7 +187,7 @@ namespace OpenSim.Data.PGSQL
                         }
                         catch (Exception e)
                         {
-                            m_log.Error(string.Format("[PGSQL XASSET DATA]: Failure fetching asset {0}", assetID), e);
+                            _log.Error(string.Format("[PGSQL XASSET DATA]: Failure fetching asset {0}", assetID), e);
                         }
                     }
                 }
@@ -209,11 +203,11 @@ namespace OpenSim.Data.PGSQL
         /// <remarks>On failure : Throw an exception and attempt to reconnect to database</remarks>
         public void StoreAsset(AssetBase asset)
         {
-//            m_log.DebugFormat("[XASSETS DB]: Storing asset {0} {1}", asset.Name, asset.ID);
+//            _log.DebugFormat("[XASSETS DB]: Storing asset {0} {1}", asset.Name, asset.ID);
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -223,7 +217,7 @@ namespace OpenSim.Data.PGSQL
                         if (asset.Name.Length > 64)
                         {
                             assetName = asset.Name.Substring(0, 64);
-                            m_log.WarnFormat(
+                            _log.WarnFormat(
                                 "[XASSET DB]: Name '{0}' for asset {1} truncated from {2} to {3} characters on add",
                                 asset.Name, asset.ID, asset.Name.Length, assetName.Length);
                         }
@@ -232,12 +226,12 @@ namespace OpenSim.Data.PGSQL
                         if (asset.Description.Length > 64)
                         {
                             assetDescription = asset.Description.Substring(0, 64);
-                            m_log.WarnFormat(
+                            _log.WarnFormat(
                                 "[XASSET DB]: Description '{0}' for asset {1} truncated from {2} to {3} characters on add",
                                 asset.Description, asset.ID, asset.Description.Length, assetDescription.Length);
                         }
 
-                        if (m_enableCompression)
+                        if (_enableCompression)
                         {
                             MemoryStream outputStream = new MemoryStream();
 
@@ -256,7 +250,7 @@ namespace OpenSim.Data.PGSQL
                         UUID asset_id;
                         UUID.TryParse(asset.ID, out asset_id);
 
-//                        m_log.DebugFormat(
+//                        _log.DebugFormat(
 //                            "[XASSET DB]: Compressed data size for {0} {1}, hash {2} is {3}",
 //                            asset.ID, asset.Name, hash, compressedData.Length);
 
@@ -279,24 +273,24 @@ namespace OpenSim.Data.PGSQL
 
                                 // create unix epoch time
                                 int now = (int)Utils.DateTimeToUnixTime(DateTime.UtcNow);
-                                cmd.Parameters.Add(m_database.CreateParameter("ID", asset_id));
-                                cmd.Parameters.Add(m_database.CreateParameter("Hash", hash));
-                                cmd.Parameters.Add(m_database.CreateParameter("Name", assetName));
-                                cmd.Parameters.Add(m_database.CreateParameter("Description", assetDescription));
-                                cmd.Parameters.Add(m_database.CreateParameter("AssetType", asset.Type));
-                                cmd.Parameters.Add(m_database.CreateParameter("Local", asset.Local));
-                                cmd.Parameters.Add(m_database.CreateParameter("Temporary", asset.Temporary));
-                                cmd.Parameters.Add(m_database.CreateParameter("CreateTime", now));
-                                cmd.Parameters.Add(m_database.CreateParameter("AccessTime", now));
-                                cmd.Parameters.Add(m_database.CreateParameter("CreatorID", asset.Metadata.CreatorID));
-                                cmd.Parameters.Add(m_database.CreateParameter("AssetFlags", (int)asset.Flags));
+                                cmd.Parameters.Add(_database.CreateParameter("ID", asset_id));
+                                cmd.Parameters.Add(_database.CreateParameter("Hash", hash));
+                                cmd.Parameters.Add(_database.CreateParameter("Name", assetName));
+                                cmd.Parameters.Add(_database.CreateParameter("Description", assetDescription));
+                                cmd.Parameters.Add(_database.CreateParameter("AssetType", asset.Type));
+                                cmd.Parameters.Add(_database.CreateParameter("Local", asset.Local));
+                                cmd.Parameters.Add(_database.CreateParameter("Temporary", asset.Temporary));
+                                cmd.Parameters.Add(_database.CreateParameter("CreateTime", now));
+                                cmd.Parameters.Add(_database.CreateParameter("AccessTime", now));
+                                cmd.Parameters.Add(_database.CreateParameter("CreatorID", asset.Metadata.CreatorID));
+                                cmd.Parameters.Add(_database.CreateParameter("AssetFlags", (int)asset.Flags));
 
                                 cmd.ExecuteNonQuery();
                             }
                         }
                         catch (Exception e)
                         {
-                            m_log.ErrorFormat("[ASSET DB]: PGSQL failure creating asset metadata {0} with name \"{1}\". Error: {2}",
+                            _log.ErrorFormat("[ASSET DB]: PGSQL failure creating asset metadata {0} with name \"{1}\". Error: {2}",
                                 asset.FullID, asset.Name, e.Message);
 
                             transaction.Rollback();
@@ -313,14 +307,14 @@ namespace OpenSim.Data.PGSQL
                                         @"INSERT INTO XAssetsData(hash, data) VALUES(:Hash, :Data)",
                                         dbcon))
                                 {
-                                    cmd.Parameters.Add(m_database.CreateParameter("Hash", hash));
-                                    cmd.Parameters.Add(m_database.CreateParameter("Data", asset.Data));
+                                    cmd.Parameters.Add(_database.CreateParameter("Hash", hash));
+                                    cmd.Parameters.Add(_database.CreateParameter("Data", asset.Data));
                                     cmd.ExecuteNonQuery();
                                 }
                             }
                             catch (Exception e)
                             {
-                                m_log.ErrorFormat("[XASSET DB]: PGSQL failure creating asset data {0} with name \"{1}\". Error: {2}",
+                                _log.ErrorFormat("[XASSET DB]: PGSQL failure creating asset data {0} with name \"{1}\". Error: {2}",
                                     asset.FullID, asset.Name, e.Message);
 
                                 transaction.Rollback();
@@ -351,9 +345,9 @@ namespace OpenSim.Data.PGSQL
             if ((now - Utils.UnixTimeToDateTime(accessTime)).TotalDays < DaysBetweenAccessTimeUpdates)
                 return;
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
                 {
                     dbcon.Open();
                     NpgsqlCommand cmd =
@@ -367,14 +361,14 @@ namespace OpenSim.Data.PGSQL
                         using (cmd)
                         {
                             // create unix epoch time
-                            cmd.Parameters.Add(m_database.CreateParameter("id", asset_id));
-                            cmd.Parameters.Add(m_database.CreateParameter("access_time", (int)Utils.DateTimeToUnixTime(now)));
+                            cmd.Parameters.Add(_database.CreateParameter("id", asset_id));
+                            cmd.Parameters.Add(_database.CreateParameter("access_time", (int)Utils.DateTimeToUnixTime(now)));
                             cmd.ExecuteNonQuery();
                         }
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat(
+                        _log.ErrorFormat(
                             "[XASSET PGSQL DB]: Failure updating access_time for asset {0} with name {1} : {2}",
                             assetMetadata.ID, assetMetadata.Name, e.Message);
                     }
@@ -383,7 +377,7 @@ namespace OpenSim.Data.PGSQL
         }
 
         /// <summary>
-        /// We assume we already have the m_dbLock.
+        /// We assume we already have the _dbLock.
         /// </summary>
         /// TODO: need to actually use the transaction.
         /// <param name="dbcon"></param>
@@ -392,13 +386,13 @@ namespace OpenSim.Data.PGSQL
         /// <returns></returns>
         private bool ExistsData(NpgsqlConnection dbcon, NpgsqlTransaction transaction, byte[] hash)
         {
-//            m_log.DebugFormat("[ASSETS DB]: Checking for asset {0}", uuid);
+//            _log.DebugFormat("[ASSETS DB]: Checking for asset {0}", uuid);
 
             bool exists = false;
 
             using (NpgsqlCommand cmd = new NpgsqlCommand(@"SELECT hash FROM XAssetsData WHERE hash=:Hash", dbcon))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("Hash", hash));
+                cmd.Parameters.Add(_database.CreateParameter("Hash", hash));
 
                 try
                 {
@@ -406,14 +400,14 @@ namespace OpenSim.Data.PGSQL
                     {
                         if (dbReader.Read())
                         {
-//                                    m_log.DebugFormat("[ASSETS DB]: Found asset {0}", uuid);
+//                                    _log.DebugFormat("[ASSETS DB]: Found asset {0}", uuid);
                             exists = true;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat(
+                    _log.ErrorFormat(
                         "[XASSETS DB]: PGSql failure in ExistsData fetching hash {0}.  Exception {1}{2}",
                         hash, e.Message, e.StackTrace);
                 }
@@ -437,7 +431,7 @@ namespace OpenSim.Data.PGSQL
             string ids = "'" + string.Join("','", uuids) + "'";
             string sql = string.Format(@"SELECT id FROM XAssetsMeta WHERE id IN ({0})", ids);
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
@@ -466,18 +460,18 @@ namespace OpenSim.Data.PGSQL
         /// <returns>true if it exists, false otherwise.</returns>
         public bool ExistsAsset(UUID uuid)
         {
-//            m_log.DebugFormat("[ASSETS DB]: Checking for asset {0}", uuid);
+//            _log.DebugFormat("[ASSETS DB]: Checking for asset {0}", uuid);
 
             bool assetExists = false;
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
                 {
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(@"SELECT id FROM XAssetsMeta WHERE id=:ID", dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("id", uuid));
+                        cmd.Parameters.Add(_database.CreateParameter("id", uuid));
 
                         try
                         {
@@ -485,14 +479,14 @@ namespace OpenSim.Data.PGSQL
                             {
                                 if (dbReader.Read())
                                 {
-//                                    m_log.DebugFormat("[ASSETS DB]: Found asset {0}", uuid);
+//                                    _log.DebugFormat("[ASSETS DB]: Found asset {0}", uuid);
                                     assetExists = true;
                                 }
                             }
                         }
                         catch (Exception e)
                         {
-                            m_log.Error(string.Format("[XASSETS DB]: PGSql failure fetching asset {0}", uuid), e);
+                            _log.Error(string.Format("[XASSETS DB]: PGSql failure fetching asset {0}", uuid), e);
                         }
                     }
                 }
@@ -514,17 +508,17 @@ namespace OpenSim.Data.PGSQL
         {
             List<AssetMetadata> retList = new List<AssetMetadata>(count);
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
                 {
                     dbcon.Open();
                     using(NpgsqlCommand cmd = new NpgsqlCommand(@"SELECT name, description, access_time, ""AssetType"", temporary, id, asset_flags, creatorid
                                             FROM XAssetsMeta
                                             LIMIT :start, :count",dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("start",start));
-                        cmd.Parameters.Add(m_database.CreateParameter("count", count));
+                        cmd.Parameters.Add(_database.CreateParameter("start",start));
+                        cmd.Parameters.Add(_database.CreateParameter("count", count));
 
                         try
                         {
@@ -554,7 +548,7 @@ namespace OpenSim.Data.PGSQL
                         }
                         catch (Exception e)
                         {
-                            m_log.Error("[XASSETS DB]: PGSql failure fetching asset set" + Environment.NewLine + e.ToString());
+                            _log.Error("[XASSETS DB]: PGSql failure fetching asset set" + Environment.NewLine + e.ToString());
                         }
                    }
                 }
@@ -565,17 +559,17 @@ namespace OpenSim.Data.PGSQL
 
         public bool Delete(string id)
         {
-//            m_log.DebugFormat("[XASSETS DB]: Deleting asset {0}", id);
+//            _log.DebugFormat("[XASSETS DB]: Deleting asset {0}", id);
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(@"delete from XAssetsMeta where id=:ID", dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter(id, id));
+                        cmd.Parameters.Add(_database.CreateParameter(id, id));
                         cmd.ExecuteNonQuery();
                     }
 

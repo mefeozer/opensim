@@ -31,14 +31,14 @@ namespace OpenSim.Region.ScriptEngine.Tests
     [TestFixture]
     public class XEnginePersistenceTests : OpenSimTestCase
     {
-        private AutoResetEvent m_chatEvent = new AutoResetEvent(false);
+        private AutoResetEvent _chatEvent = new AutoResetEvent(false);
 
         private void OnChatFromWorld(object sender, OSChatMessage oscm)
         {
             //            Console.WriteLine("Got chat [{0}]", oscm.Message);
 
-            //            m_osChatMessageReceived = oscm;
-            m_chatEvent.Set();
+            //            _osChatMessageReceived = oscm;
+            _chatEvent.Set();
         }
 
         private void AddCommonConfig(IConfigSource config, List<object> modules)
@@ -115,7 +115,7 @@ namespace OpenSim.Region.ScriptEngine.Tests
             TaskInventoryItem rezzedScriptItem = rezzedSo.RootPart.Inventory.GetInventoryItem("scriptItem");
 
             // Wait for chat to signal rezzed script has been started.
-            m_chatEvent.WaitOne(60000);
+            _chatEvent.WaitOne(60000);
 
             // Force save
             xEngine.DoBackup(new Object[] { 0 });

@@ -403,7 +403,7 @@ public class BSPIDVMotor : BSVMotor
 
     public override float Efficiency
     {
-        get { return base.Efficiency; }
+        get => base.Efficiency;
         set
         {
             base.Efficiency = Util.Clamp(value, 0f, 1f);

@@ -40,8 +40,8 @@ namespace OpenSim.Framework
 
         public virtual string Name
         {
-            get { return UTF8Name == null ? string.Empty : UTF8Name.ToString(); }
-            set { UTF8Name = string.IsNullOrEmpty(value) ? null : new osUTF8(value); }
+            get => UTF8Name == null ? string.Empty : UTF8Name.ToString();
+            set => UTF8Name = string.IsNullOrEmpty(value) ? null : new osUTF8(value);
         }
         public osUTF8 UTF8Name;
 
@@ -50,19 +50,19 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID ID
         {
-            get { return m_id; }
-            set { m_id = value; }
+            get => _id;
+            set => _id = value;
         }
-        private UUID m_id;
+        private UUID _id;
 
         /// <summary>
         /// The agent who's inventory this is contained by
         /// </summary>
         public virtual UUID Owner
         {
-            get { return m_owner; }
-            set { m_owner = value; }
+            get => _owner;
+            set => _owner = value;
         }
-        private UUID m_owner;
+        private UUID _owner;
     }
 }

@@ -37,15 +37,15 @@ namespace OpenSim.Server.Handlers.GridUser
 {
     public class GridUserServiceConnector : ServiceConnector
     {
-        private readonly IGridUserService m_GridUserService;
-        private readonly string m_ConfigName = "GridUserService";
+        private readonly IGridUserService _GridUserService;
+        private readonly string _ConfigName = "GridUserService";
 
         public GridUserServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string service = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -54,11 +54,11 @@ namespace OpenSim.Server.Handlers.GridUser
                 throw new Exception("No LocalServiceModule in config file");
 
             object[] args = new object[] { config };
-            m_GridUserService = ServerUtils.LoadPlugin<IGridUserService>(service, args);
+            _GridUserService = ServerUtils.LoadPlugin<IGridUserService>(service, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
-            server.AddStreamHandler(new GridUserServerPostHandler(m_GridUserService, auth));
+            server.AddStreamHandler(new GridUserServerPostHandler(_GridUserService, auth));
         }
     }
 }

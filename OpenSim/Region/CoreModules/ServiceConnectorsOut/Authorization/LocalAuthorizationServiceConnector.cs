@@ -39,29 +39,23 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalAuthorizationServicesConnector")]
     public class LocalAuthorizationServicesConnector : INonSharedRegionModule, IAuthorizationService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAuthorizationService m_AuthorizationService;
-        private Scene m_Scene;
-        private IConfig m_AuthorizationConfig;
+        private IAuthorizationService _AuthorizationService;
+        private Scene _Scene;
+        private IConfig _AuthorizationConfig;
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LocalAuthorizationServicesConnector"; }
-        }
+        public string Name => "LocalAuthorizationServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
-            m_log.Info("[AUTHORIZATION CONNECTOR]: Initialise");
+            _log.Info("[AUTHORIZATION CONNECTOR]: Initialise");
 
             IConfig moduleConfig = source.Configs["Modules"];
             if (moduleConfig != null)
@@ -69,9 +63,9 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
                 string name = moduleConfig.GetString("AuthorizationServices", string.Empty);
                 if (name == Name)
                 {
-                    m_Enabled = true;
-                    m_AuthorizationConfig = source.Configs["AuthorizationService"];
-                    m_log.Info("[AUTHORIZATION CONNECTOR]: Local authorization connector enabled");
+                    _Enabled = true;
+                    _AuthorizationConfig = source.Configs["AuthorizationService"];
+                    _log.Info("[AUTHORIZATION CONNECTOR]: Local authorization connector enabled");
                 }
             }
         }
@@ -86,11 +80,11 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IAuthorizationService>(this);
-            m_Scene = scene;
+            _Scene = scene;
         }
 
         public void RemoveRegion(Scene scene)
@@ -99,12 +93,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_AuthorizationService = new AuthorizationService(m_AuthorizationConfig, m_Scene);
+            _AuthorizationService = new AuthorizationService(_AuthorizationConfig, _Scene);
 
-            m_log.InfoFormat(
+            _log.InfoFormat(
                 "[AUTHORIZATION CONNECTOR]: Enabled local authorization for region {0}",
                 scene.RegionInfo.RegionName);
         }
@@ -113,10 +107,10 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
             string userID, string firstName, string lastName, string regionID, out string message)
         {
             message = "";
-            if (!m_Enabled)
+            if (!_Enabled)
                 return true;
 
-            return m_AuthorizationService.IsAuthorizedForRegion(userID, firstName, lastName, regionID, out message);
+            return _AuthorizationService.IsAuthorizedForRegion(userID, firstName, lastName, regionID, out message);
         }
     }
 }

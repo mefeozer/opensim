@@ -36,7 +36,7 @@ namespace OpenSim.Framework.Serialization
     /// </summary>
     public class TarArchiveReader
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public enum TarEntryType
         {
@@ -54,16 +54,16 @@ namespace OpenSim.Framework.Serialization
         /// <summary>
         /// Binary reader for the underlying stream
         /// </summary>
-        protected BinaryReader m_br;
+        protected BinaryReader _br;
 
         /// <summary>
         /// Used to trim off null chars
         /// </summary>
-        protected static char[] m_nullCharArray = new char[] { '\0' };
+        protected static char[] _nullCharArray = new char[] { '\0' };
         /// <summary>
         /// Used to trim off space chars
         /// </summary>
-        protected static char[] m_spaceCharArray = new char[] { ' ' };
+        protected static char[] _spaceCharArray = new char[] { ' ' };
 
         /// <summary>
         /// Generate a tar reader which reads from the given stream.
@@ -71,7 +71,7 @@ namespace OpenSim.Framework.Serialization
         /// <param name="s"></param>
         public TarArchiveReader(Stream s)
         {
-            m_br = new BinaryReader(s);
+            _br = new BinaryReader(s);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace OpenSim.Framework.Serialization
         /// <returns>A tar header struct.  null if we have reached the end of the archive.</returns>
         protected TarHeader ReadHeader()
         {
-            byte[] header = m_br.ReadBytes(512);
+            byte[] header = _br.ReadBytes(512);
 
             // If there are no more bytes in the stream, return null header
             if (header.Length == 0)
@@ -117,14 +117,14 @@ namespace OpenSim.Framework.Serialization
             {
                 int longNameLength = ConvertOctalBytesToDecimal(header, 124, 11);
                 tarHeader.FilePath = Encoding.ASCII.GetString(ReadData(longNameLength));
-                //m_log.DebugFormat("[TAR ARCHIVE READER]: Got long file name {0}", tarHeader.FilePath);
-                header = m_br.ReadBytes(512);
+                //_log.DebugFormat("[TAR ARCHIVE READER]: Got long file name {0}", tarHeader.FilePath);
+                header = _br.ReadBytes(512);
             }
             else
             {
                 tarHeader.FilePath = Encoding.ASCII.GetString(header, 0, 100);
-                tarHeader.FilePath = tarHeader.FilePath.Trim(m_nullCharArray);
-                //m_log.DebugFormat("[TAR ARCHIVE READER]: Got short file name {0}", tarHeader.FilePath);
+                tarHeader.FilePath = tarHeader.FilePath.Trim(_nullCharArray);
+                //_log.DebugFormat("[TAR ARCHIVE READER]: Got short file name {0}", tarHeader.FilePath);
             }
 
             tarHeader.FileSize = ConvertOctalBytesToDecimal(header, 124, 11);
@@ -170,18 +170,18 @@ namespace OpenSim.Framework.Serialization
         /// <returns></returns>
         protected byte[] ReadData(int fileSize)
         {
-            byte[] data = m_br.ReadBytes(fileSize);
+            byte[] data = _br.ReadBytes(fileSize);
 
-            //m_log.DebugFormat("[TAR ARCHIVE READER]: fileSize {0}", fileSize);
+            //_log.DebugFormat("[TAR ARCHIVE READER]: fileSize {0}", fileSize);
 
             // Read the rest of the empty padding in the 512 byte block
             if (fileSize % 512 != 0)
             {
                 int paddingLeft = 512 - fileSize % 512;
 
-                //m_log.DebugFormat("[TAR ARCHIVE READER]: Reading {0} padding bytes", paddingLeft);
+                //_log.DebugFormat("[TAR ARCHIVE READER]: Reading {0} padding bytes", paddingLeft);
 
-                m_br.ReadBytes(paddingLeft);
+                _br.ReadBytes(paddingLeft);
             }
 
             return data;
@@ -189,7 +189,7 @@ namespace OpenSim.Framework.Serialization
 
         public void Close()
         {
-            m_br.Close();
+            _br.Close();
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace OpenSim.Framework.Serialization
         {
             // Trim leading white space: ancient tars do that instead
             // of leading 0s :-( don't ask. really.
-            string oString = Encoding.ASCII.GetString(bytes, startIndex, count).TrimStart(m_spaceCharArray);
+            string oString = Encoding.ASCII.GetString(bytes, startIndex, count).TrimStart(_spaceCharArray);
 
             int d = 0;
 

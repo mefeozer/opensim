@@ -59,7 +59,7 @@ namespace OpenSim.Framework
     /// </remarks>
     public class RestClient : IDisposable
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // private string realuri;
 
@@ -197,11 +197,11 @@ namespace OpenSim.Framework
             }
             catch (ArgumentException)
             {
-                m_log.Error("[REST]: Query parameter " + name + " is already added.");
+                _log.Error("[REST]: Query parameter " + name + " is already added.");
             }
             catch (Exception e)
             {
-                m_log.Error("[REST]: An exception was raised adding query parameter to dictionary. Exception: {0}",e);
+                _log.Error("[REST]: An exception was raised adding query parameter to dictionary. Exception: {0}",e);
             }
         }
 
@@ -217,11 +217,11 @@ namespace OpenSim.Framework
             }
             catch (ArgumentException)
             {
-                m_log.Error("[REST]: Query parameter " + name + " is already added.");
+                _log.Error("[REST]: Query parameter " + name + " is already added.");
             }
             catch (Exception e)
             {
-                m_log.Error("[REST]: An exception was raised adding query parameter to dictionary. Exception: {0}",e);
+                _log.Error("[REST]: An exception was raised adding query parameter to dictionary. Exception: {0}",e);
             }
         }
 
@@ -230,8 +230,8 @@ namespace OpenSim.Framework
         /// </summary>
         public string RequestMethod
         {
-            get { return _method; }
-            set { _method = value; }
+            get => _method;
+            set => _method = value;
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace OpenSim.Framework
                 }
             }
             // realuri = sb.ToString();
-            //m_log.InfoFormat("[REST CLIENT]: RestURL: {0}", realuri);
+            //_log.InfoFormat("[REST CLIENT]: RestURL: {0}", realuri);
             return new Uri(sb.ToString());
         }
 
@@ -337,7 +337,7 @@ namespace OpenSim.Framework
                         auth.AddAuthorization(_request.Headers);
 
                     if (WebUtil.DebugLevel >= 3)
-                        m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} REST {1} to {2}", reqnum, _request.Method, _request.RequestUri);
+                        _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} REST {1} to {2}", reqnum, _request.Method, _request.RequestUri);
 
                     using (_response = (HttpWebResponse) _request.GetResponse())
                     {
@@ -359,11 +359,11 @@ namespace OpenSim.Framework
                         if (null != errorResponse && HttpStatusCode.NotFound == errorResponse.StatusCode)
                         {
                             // This is often benign. E.g., requesting a missing asset will return 404.
-                            m_log.DebugFormat("[REST CLIENT] Resource not found (404): {0}", _request.Address.ToString());
+                            _log.DebugFormat("[REST CLIENT] Resource not found (404): {0}", _request.Address.ToString());
                         }
                         else
                         {
-                            m_log.Error(string.Format("[REST CLIENT] Error fetching resource from server: {0} ", _request.Address.ToString()), e);
+                            _log.Error(string.Format("[REST CLIENT] Error fetching resource from server: {0} ", _request.Address.ToString()), e);
                         }
                     }
                     return null;
@@ -402,7 +402,7 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[REST]: AsyncPOST {0} failed with exception {1} {2}",
+                _log.WarnFormat("[REST]: AsyncPOST {0} failed with exception {1} {2}",
                                 _request.RequestUri, e.Message, e.StackTrace);
                 return;
             }
@@ -431,13 +431,13 @@ namespace OpenSim.Framework
             }
             catch (WebException e)
             {
-                m_log.WarnFormat("[REST]: AsyncPOST {0} failed with status {1} and message {2}",
+                _log.WarnFormat("[REST]: AsyncPOST {0} failed with status {1} and message {2}",
                                   _request.RequestUri, e.Status, e.Message);
                 return;
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[REST]: AsyncPOST {0} failed with exception {1} {2}",
+                _log.WarnFormat("[REST]: AsyncPOST {0} failed with exception {1} {2}",
                                 _request.RequestUri, e.Message, e.StackTrace);
                 return;
             }
@@ -486,50 +486,47 @@ namespace OpenSim.Framework
 
     internal class SimpleAsyncResult : IAsyncResult
     {
-        private readonly AsyncCallback m_callback;
+        private readonly AsyncCallback _callback;
 
         /// <summary>
         /// Is process completed?
         /// </summary>
         /// <remarks>Should really be boolean, but VolatileRead has no boolean method</remarks>
-        private byte m_completed;
+        private byte _completed;
 
         /// <summary>
         /// Did process complete synchronously?
         /// </summary>
         /// <remarks>I have a hard time imagining a scenario where this is the case, again, same issue about
-        /// booleans and VolatileRead as m_completed
+        /// booleans and VolatileRead as _completed
         /// </remarks>
-        private byte m_completedSynchronously;
+        private byte _completedSynchronously;
 
-        private readonly object m_asyncState;
-        private ManualResetEvent m_waitHandle;
-        private Exception m_exception;
+        private readonly object _asyncState;
+        private ManualResetEvent _waitHandle;
+        private Exception _exception;
 
         internal SimpleAsyncResult(AsyncCallback cb, object state)
         {
-            m_callback = cb;
-            m_asyncState = state;
-            m_completed = 0;
-            m_completedSynchronously = 1;
+            _callback = cb;
+            _asyncState = state;
+            _completed = 0;
+            _completedSynchronously = 1;
         }
 
         #region IAsyncResult Members
 
-        public object AsyncState
-        {
-            get { return m_asyncState; }
-        }
+        public object AsyncState => _asyncState;
 
         public WaitHandle AsyncWaitHandle
         {
             get
             {
-                if (m_waitHandle == null)
+                if (_waitHandle == null)
                 {
                     bool done = IsCompleted;
                     ManualResetEvent mre = new ManualResetEvent(done);
-                    if (Interlocked.CompareExchange(ref m_waitHandle, mre, null) != null)
+                    if (Interlocked.CompareExchange(ref _waitHandle, mre, null) != null)
                     {
                         mre.Close();
                     }
@@ -537,26 +534,20 @@ namespace OpenSim.Framework
                     {
                         if (!done && IsCompleted)
                         {
-                            m_waitHandle.Set();
+                            _waitHandle.Set();
                         }
                     }
                 }
 
-                return m_waitHandle;
+                return _waitHandle;
             }
         }
 
 
-        public bool CompletedSynchronously
-        {
-            get { return Thread.VolatileRead(ref m_completedSynchronously) == 1; }
-        }
+        public bool CompletedSynchronously => Thread.VolatileRead(ref _completedSynchronously) == 1;
 
 
-        public bool IsCompleted
-        {
-            get { return Thread.VolatileRead(ref m_completed) == 1; }
-        }
+        public bool IsCompleted => Thread.VolatileRead(ref _completed) == 1;
 
         #endregion
 
@@ -564,32 +555,32 @@ namespace OpenSim.Framework
 
         internal void SetAsCompleted(bool completedSynchronously)
         {
-            m_completed = 1;
+            _completed = 1;
             if (completedSynchronously)
-                m_completedSynchronously = 1;
+                _completedSynchronously = 1;
             else
-                m_completedSynchronously = 0;
+                _completedSynchronously = 0;
 
             SignalCompletion();
         }
 
         internal void HandleException(Exception e, bool completedSynchronously)
         {
-            m_completed = 1;
+            _completed = 1;
             if (completedSynchronously)
-                m_completedSynchronously = 1;
+                _completedSynchronously = 1;
             else
-                m_completedSynchronously = 0;
-            m_exception = e;
+                _completedSynchronously = 0;
+            _exception = e;
 
             SignalCompletion();
         }
 
         private void SignalCompletion()
         {
-            if (m_waitHandle != null) m_waitHandle.Set();
+            if (_waitHandle != null) _waitHandle.Set();
 
-            if (m_callback != null) m_callback(this);
+            if (_callback != null) _callback(this);
         }
 
         public void EndInvoke()
@@ -600,12 +591,12 @@ namespace OpenSim.Framework
                 // If the operation isn't done, wait for it
                 AsyncWaitHandle.WaitOne();
                 AsyncWaitHandle.Close();
-                m_waitHandle.Close();
-                m_waitHandle = null; // Allow early GC
+                _waitHandle.Close();
+                _waitHandle = null; // Allow early GC
             }
 
             // Operation is done: if an exception occured, throw it
-            if (m_exception != null) throw m_exception;
+            if (_exception != null) throw _exception;
         }
 
         #endregion
@@ -613,7 +604,7 @@ namespace OpenSim.Framework
 
     internal class AsyncResult<T> : SimpleAsyncResult
     {
-        private T m_result = default(T);
+        private T _result = default(T);
 
         public AsyncResult(AsyncCallback asyncCallback, object state) :
             base(asyncCallback, state)
@@ -623,7 +614,7 @@ namespace OpenSim.Framework
         public void SetAsCompleted(T result, bool completedSynchronously)
         {
             // Save the asynchronous operation's result
-            m_result = result;
+            _result = result;
 
             // Tell the base class that the operation completed
             // sucessfully (no exception)
@@ -633,7 +624,7 @@ namespace OpenSim.Framework
         public new T EndInvoke()
         {
             base.EndInvoke();
-            return m_result;
+            return _result;
         }
     }
 

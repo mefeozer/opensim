@@ -38,7 +38,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
     [TestFixture]
     public class LLImageManagerTests : OpenSimTestCase
     {
-        private AssetBase m_testImageAsset;
+        private AssetBase _testImageAsset;
         private Scene scene;
         private LLImageManager llim;
         private TestClient tc;
@@ -56,7 +56,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
             {
                 using (BinaryReader br = new BinaryReader(resource))
                 {
-                    m_testImageAsset
+                    _testImageAsset
                         = new AssetBase(
                             TestHelpers.ParseTail(0x1),
                             "Test Image",
@@ -100,11 +100,11 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
             TestHelpers.InMethod();
 //            XmlConfigurator.Configure();
 
-            scene.AssetService.Store(m_testImageAsset);
+            scene.AssetService.Store(_testImageAsset);
 
             TextureRequestArgs args = new TextureRequestArgs
             {
-                RequestedAssetID = m_testImageAsset.FullID,
+                RequestedAssetID = _testImageAsset.FullID,
                 DiscardLevel = 0,
                 PacketNumber = 1,
                 Priority = 5,
@@ -123,11 +123,11 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
             TestHelpers.InMethod();
 //            XmlConfigurator.Configure();
 
-            scene.AssetService.Store(m_testImageAsset);
+            scene.AssetService.Store(_testImageAsset);
 
             TextureRequestArgs args = new TextureRequestArgs
             {
-                RequestedAssetID = m_testImageAsset.FullID,
+                RequestedAssetID = _testImageAsset.FullID,
                 DiscardLevel = 0,
                 PacketNumber = 1,
                 Priority = 5,
@@ -138,7 +138,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
             // Now create a discard request
             TextureRequestArgs discardArgs = new TextureRequestArgs
             {
-                RequestedAssetID = m_testImageAsset.FullID,
+                RequestedAssetID = _testImageAsset.FullID,
                 DiscardLevel = -1,
                 PacketNumber = 1,
                 Priority = 0,
@@ -159,7 +159,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP.Tests
 
             TextureRequestArgs args = new TextureRequestArgs
             {
-                RequestedAssetID = m_testImageAsset.FullID,
+                RequestedAssetID = _testImageAsset.FullID,
                 DiscardLevel = 0,
                 PacketNumber = 1,
                 Priority = 5,

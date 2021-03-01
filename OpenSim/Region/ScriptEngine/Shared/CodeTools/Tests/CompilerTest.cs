@@ -45,11 +45,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools.Tests
     [TestFixture]
     public class CompilerTest : OpenSimTestCase
     {
-        private string m_testDir;
-        private CSharpCodeProvider m_CSCodeProvider;
-        private CompilerParameters m_compilerParameters;
-        // private CompilerResults m_compilerResults;
-        private ResolveEventHandler m_resolveEventHandler;
+        private string _testDir;
+        private CSharpCodeProvider _CSCodeProvider;
+        private CompilerParameters _compilerParameters;
+        // private CompilerResults _compilerResults;
+        private ResolveEventHandler _resolveEventHandler;
 
         /// <summary>
         /// Creates a temporary directory where build artifacts are stored.
@@ -57,12 +57,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools.Tests
         [TestFixtureSetUp]
         public void Init()
         {
-            m_testDir = Path.Combine(Path.GetTempPath(), "opensim_compilerTest_" + Path.GetRandomFileName());
+            _testDir = Path.Combine(Path.GetTempPath(), "opensi_compilerTest_" + Path.GetRandomFileName());
 
-            if (!Directory.Exists(m_testDir))
+            if (!Directory.Exists(_testDir))
             {
                 // Create the temporary directory for housing build artifacts.
-                Directory.CreateDirectory(m_testDir);
+                Directory.CreateDirectory(_testDir);
             }
         }
 
@@ -72,19 +72,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools.Tests
             base.SetUp();
 
             // Create a CSCodeProvider and CompilerParameters.
-            m_CSCodeProvider = new CSharpCodeProvider();
-            m_compilerParameters = new CompilerParameters();
+            _CSCodeProvider = new CSharpCodeProvider();
+            _compilerParameters = new CompilerParameters();
 
             string rootPath = System.AppDomain.CurrentDomain.BaseDirectory;
 
-            m_resolveEventHandler = new ResolveEventHandler(AssemblyResolver.OnAssemblyResolve);
+            _resolveEventHandler = new ResolveEventHandler(AssemblyResolver.OnAssemblyResolve);
 
-            System.AppDomain.CurrentDomain.AssemblyResolve += m_resolveEventHandler;
+            System.AppDomain.CurrentDomain.AssemblyResolve += _resolveEventHandler;
 
-            m_compilerParameters.ReferencedAssemblies.Add(Path.Combine(rootPath, "OpenSim.Region.ScriptEngine.Shared.dll"));
-            m_compilerParameters.ReferencedAssemblies.Add(Path.Combine(rootPath, "OpenSim.Region.ScriptEngine.Shared.Api.Runtime.dll"));
-            m_compilerParameters.ReferencedAssemblies.Add(Path.Combine(rootPath, "OpenMetaverseTypes.dll"));
-            m_compilerParameters.GenerateExecutable = false;
+            _compilerParameters.ReferencedAssemblies.Add(Path.Combine(rootPath, "OpenSim.Region.ScriptEngine.Shared.dll"));
+            _compilerParameters.ReferencedAssemblies.Add(Path.Combine(rootPath, "OpenSim.Region.ScriptEngine.Shared.Api.Runtime.dll"));
+            _compilerParameters.ReferencedAssemblies.Add(Path.Combine(rootPath, "OpenMetaverseTypes.dll"));
+            _compilerParameters.GenerateExecutable = false;
         }
 
         /// <summary>
@@ -94,19 +94,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools.Tests
         [TearDown]
         public void CleanUp()
         {
-            System.AppDomain.CurrentDomain.AssemblyResolve -= m_resolveEventHandler;
+            System.AppDomain.CurrentDomain.AssemblyResolve -= _resolveEventHandler;
 
-            if (Directory.Exists(m_testDir))
+            if (Directory.Exists(_testDir))
             {
                 // Blow away the temporary directory with artifacts.
-                Directory.Delete(m_testDir, true);
+                Directory.Delete(_testDir, true);
             }
         }
 
         private CompilerResults CompileScript(
             string input, out Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>> positionMap)
         {
-            m_compilerParameters.OutputAssembly = Path.Combine(m_testDir, Path.GetRandomFileName() + ".dll");
+            _compilerParameters.OutputAssembly = Path.Combine(_testDir, Path.GetRandomFileName() + ".dll");
 
             CSCodeGenerator cg = new CSCodeGenerator();
             string output = cg.Convert(input);
@@ -116,7 +116,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools.Tests
 
             positionMap = cg.PositionMap;
 
-            CompilerResults compilerResults = m_CSCodeProvider.CompileAssemblyFromSource(m_compilerParameters, output);
+            CompilerResults compilerResults = _CSCodeProvider.CompileAssemblyFromSource(_compilerParameters, output);
 
             //            foreach (KeyValuePair<int, int> key in positionMap.Keys)
             //            {
@@ -125,7 +125,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools.Tests
             //                System.Console.WriteLine("{0},{1} => {2},{3}", key.Key, key.Value, val.Key, val.Value);
             //            }
             //
-            //            foreach (CompilerError compErr in m_compilerResults.Errors)
+            //            foreach (CompilerError compErr in _compilerResults.Errors)
             //            {
             //                System.Console.WriteLine("Error: {0},{1} => {2}", compErr.Line, compErr.Column, compErr);
             //            }

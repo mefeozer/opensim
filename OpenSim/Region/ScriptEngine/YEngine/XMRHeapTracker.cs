@@ -224,7 +224,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(obj is LSL_Rotation)
                 return HT_ROT;
             if(obj is LSL_String)
-                return ((LSL_String)obj).m_string.Length * HT_CHAR;
+                return ((LSL_String)obj)._string.Length * HT_CHAR;
             if(obj is LSL_Vector)
                 return HT_VEC;
             if(obj is string)

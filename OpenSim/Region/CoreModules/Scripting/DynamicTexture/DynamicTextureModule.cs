@@ -45,7 +45,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "DynamicTextureModule")]
     public class DynamicTextureModule : ISharedRegionModule, IDynamicTextureManager
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int ALL_SIDES = -1;
 
@@ -82,7 +82,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
         /// <remarks>
         /// Key is string.Format("{0}{1}", data
         /// </remarks>
-        private Cache m_reuseableDynamicTextures;
+        private Cache _reuseableDynamicTextures;
 
         /// <summary>
         /// This constructor is only here because of the Unit Tests...
@@ -90,7 +90,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
         /// </summary>
         public DynamicTextureModule()
         {
-            m_reuseableDynamicTextures = new Cache(CacheMedium.Memory, CacheStrategy.Conservative)
+            _reuseableDynamicTextures = new Cache(CacheMedium.Memory, CacheStrategy.Conservative)
             {
                 DefaultTTL = new TimeSpan(24, 0, 0)
             };
@@ -135,7 +135,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                         && texture.IsReuseable
                         && (ReuseLowDataTextures || IsDataSizeReuseable(texture)))
                     {
-                        m_reuseableDynamicTextures.Store(
+                        _reuseableDynamicTextures.Store(
                             GenerateReusableTextureKey(texture.InputCommands, texture.InputParams), newTextureID);
                     }
                     updater.newTextureID = newTextureID;
@@ -163,7 +163,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
 //            Console.WriteLine("{0} {1}", texture.Size.Width, texture.Size.Height);
             int discardLevel2DataThreshold = (int)Math.Ceiling((texture.Size.Width >> 2) * (texture.Size.Height >> 2) * 0.5);
 
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[DYNAMIC TEXTURE MODULE]: Discard level 2 threshold {0}, texture data length {1}",
 //                discardLevel2DataThreshold, texture.Data.Length);
 
@@ -273,7 +273,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
             if (ReuseTextures && !updater.BlendWithOldTexture)
             {
                 string reuseableTextureKey = GenerateReusableTextureKey(data, extraParams);
-                objReusableTextureUUID = m_reuseableDynamicTextures.Get(reuseableTextureKey);
+                objReusableTextureUUID = _reuseableDynamicTextures.Get(reuseableTextureKey);
 
                 if (objReusableTextureUUID != null)
                 {
@@ -281,7 +281,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                     // our cached uuid.
                     if (scene.AssetService.GetMetadata(objReusableTextureUUID.ToString()) == null)
                     {
-                        m_reuseableDynamicTextures.Invalidate(reuseableTextureKey);
+                        _reuseableDynamicTextures.Invalidate(reuseableTextureKey);
                         objReusableTextureUUID = null;
                     }
                 }
@@ -298,7 +298,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                     }
                 }
 
-//                m_log.DebugFormat(
+//                _log.DebugFormat(
 //                    "[DYNAMIC TEXTURE MODULE]: Requesting generation of new dynamic texture for {0} in {1}",
 //                    part.Name, part.ParentGroup.Scene.Name);
 
@@ -306,7 +306,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
             }
             else
             {
-//                m_log.DebugFormat(
+//                _log.DebugFormat(
 //                    "[DYNAMIC TEXTURE MODULE]: Reusing cached texture {0} for {1} in {2}",
 //                    objReusableTextureUUID, part.Name, part.ParentGroup.Scene.Name);
 
@@ -348,7 +348,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
 
                 if (ReuseTextures)
                 {
-                    m_reuseableDynamicTextures = new Cache(CacheMedium.Memory, CacheStrategy.Conservative)
+                    _reuseableDynamicTextures = new Cache(CacheMedium.Memory, CacheStrategy.Conservative)
                     {
                         DefaultTTL = new TimeSpan(24, 0, 0)
                     };
@@ -383,15 +383,9 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
         {
         }
 
-        public string Name
-        {
-            get { return "DynamicTextureModule"; }
-        }
+        public string Name => "DynamicTextureModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -399,7 +393,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
 
         public class DynamicTextureUpdater
         {
-            private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
             public bool BlendWithOldTexture = false;
             public string BodyData;
@@ -546,7 +540,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                 if (cacheLayerDecode != null)
                 {
                     if (!cacheLayerDecode.Decode(asset.FullID, asset.Data))
-                        m_log.WarnFormat(
+                        _log.WarnFormat(
                             "[DYNAMIC TEXTURE MODULE]: Decoding of dynamically generated asset {0} for {1} in {2} failed",
                             asset.ID, part.Name, part.ParentGroup.Scene.Name);
                 }
@@ -592,7 +586,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat(
+                        _log.ErrorFormat(
                         "[DYNAMICTEXTUREMODULE]: OpenJpeg Encode Failed.  Exception {0}{1}",
                             e.Message, e.StackTrace);
                     }
@@ -622,7 +616,7 @@ namespace OpenSim.Region.CoreModules.Scripting.DynamicTexture
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat(
+                        _log.ErrorFormat(
                         "[DYNAMICTEXTUREMODULE]: OpenJpeg Encode Failed.  Exception {0}{1}",
                             e.Message, e.StackTrace);
                     }

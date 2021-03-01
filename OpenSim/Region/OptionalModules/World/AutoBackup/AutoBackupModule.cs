@@ -95,50 +95,41 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "AutoBackupModule")]
     public class AutoBackupModule : ISharedRegionModule
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly AutoBackupModuleState m_defaultState = new AutoBackupModuleState();
-        private readonly Dictionary<IScene, AutoBackupModuleState> m_states =
+        private readonly AutoBackupModuleState _defaultState = new AutoBackupModuleState();
+        private readonly Dictionary<IScene, AutoBackupModuleState> _states =
             new Dictionary<IScene, AutoBackupModuleState>(1);
 
         private delegate T DefaultGetter<T>(string settingName, T defaultValue);
-        private bool m_enabled;
-        private ICommandConsole m_console;
-        private readonly List<Scene> m_Scenes = new List<Scene> ();
-        private Timer m_masterTimer;
-        private bool m_busy;
-        private int m_KeepFilesForDays = -1;
-        private string m_backupDir;
-        private bool m_doneFirst;
-        private double m_baseInterval;
+        private bool _enabled;
+        private ICommandConsole _console;
+        private readonly List<Scene> _Scenes = new List<Scene> ();
+        private Timer _masterTimer;
+        private bool _busy;
+        private int _KeepFilesForDays = -1;
+        private string _backupDir;
+        private bool _doneFirst;
+        private double _baseInterval;
 
-        private IConfigSource m_configSource;
+        private IConfigSource _configSource;
 
         /// <summary>
         /// Required by framework.
         /// </summary>
-        public bool IsSharedModule
-        {
-            get { return true; }
-        }
+        public bool IsSharedModule => true;
 
         #region ISharedRegionModule Members
 
         /// <summary>
         /// Identifies the module to the system.
         /// </summary>
-        public string  Name
-        {
-            get { return "AutoBackupModule"; }
-        }
+        public string  Name => "AutoBackupModule";
 
         /// <summary>
         /// We don't implement an interface, this is a single-use module.
         /// </summary>
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         /// <summary>
         /// Called once in the lifetime of the module at startup.
@@ -147,40 +138,40 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         public void Initialise(IConfigSource source)
         {
             // Determine if we have been enabled at all in OpenSim.ini -- this is part and parcel of being an optional module
-            m_configSource = source;
+            _configSource = source;
             IConfig moduleConfig = source.Configs["AutoBackupModule"];
             if (moduleConfig == null)
             {
-                m_enabled = false;
+                _enabled = false;
                 return;
             }
 
-            m_enabled = moduleConfig.GetBoolean("AutoBackupModuleEnabled", false);
-            if(!m_enabled)
+            _enabled = moduleConfig.GetBoolean("AutoBackupModuleEnabled", false);
+            if(!_enabled)
                 return;
 
             ParseDefaultConfig(moduleConfig);
-            if(!m_enabled)
+            if(!_enabled)
                 return;
 
-            m_log.Debug("[AUTO BACKUP]: Default config:");
-            m_log.Debug(m_defaultState.ToString());
+            _log.Debug("[AUTO BACKUP]: Default config:");
+            _log.Debug(_defaultState.ToString());
 
-            m_log.Info("[AUTO BACKUP]: AutoBackupModule enabled");
-            m_masterTimer = new Timer
+            _log.Info("[AUTO BACKUP]: AutoBackupModule enabled");
+            _masterTimer = new Timer
             {
-                Interval = m_baseInterval
+                Interval = _baseInterval
             };
-            m_masterTimer.Elapsed += HandleElapsed;
-            m_masterTimer.AutoReset = false;
+            _masterTimer.Elapsed += HandleElapsed;
+            _masterTimer.AutoReset = false;
 
-            m_console = MainConsole.Instance;
+            _console = MainConsole.Instance;
 
-            m_console.Commands.AddCommand (
+            _console.Commands.AddCommand (
                         "AutoBackup", true, "dooarbackup",
                         "dooarbackup <regionName> | ALL",
                         "saves the single region <regionName> to a oar or ALL regions in instance to oars, using same settings as AutoBackup. Note it restarts time interval", DoBackup);
-            m_busy = true;            
+            _busy = true;            
         }
 
         /// <summary>
@@ -188,11 +179,11 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         /// </summary>
         public void Close()
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
             // We don't want any timers firing while the sim's coming down; strange things may happen.
-            m_masterTimer.Dispose();
+            _masterTimer.Dispose();
         }
 
         /// <summary>
@@ -201,11 +192,11 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         /// <param name="scene"></param>
         public void AddRegion (Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            lock (m_Scenes)
-                m_Scenes.Add (scene);
+            lock (_Scenes)
+                _Scenes.Add (scene);
         }
 
         /// <summary>
@@ -214,14 +205,14 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         /// <param name="scene">The scene (region) to stop performing AutoBackup on.</param>
         public void RemoveRegion(Scene scene)
         {
-            if (m_enabled)
+            if (_enabled)
                 return;
 
-            lock(m_Scenes)
+            lock(_Scenes)
             {
-                if (m_states.ContainsKey(scene))
-                    m_states.Remove(scene);
-                m_Scenes.Remove(scene);
+                if (_states.ContainsKey(scene))
+                    _states.Remove(scene);
+                _Scenes.Remove(scene);
             }
         }
 
@@ -232,7 +223,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         /// <param name="scene">The scene to (possibly) perform AutoBackup on.</param>
         public void RegionLoaded(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
             // This really ought not to happen, but just in case, let's pretend it didn't...
@@ -242,19 +233,19 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
             AutoBackupModuleState abms = ParseConfig(scene);
             if(abms == null)
             {
-                m_log.Debug("[AUTO BACKUP]: Config for " + scene.RegionInfo.RegionName);
-                m_log.Debug("DEFAULT");
-                abms = new AutoBackupModuleState(m_defaultState);
+                _log.Debug("[AUTO BACKUP]: Config for " + scene.RegionInfo.RegionName);
+                _log.Debug("DEFAULT");
+                abms = new AutoBackupModuleState(_defaultState);
             }
             else
             {
-                m_log.Debug("[AUTO BACKUP]: Config for " + scene.RegionInfo.RegionName);
-                m_log.Debug(abms.ToString());
+                _log.Debug("[AUTO BACKUP]: Config for " + scene.RegionInfo.RegionName);
+                _log.Debug(abms.ToString());
             }
 
-            m_states.Add(scene, abms);
-            m_busy = false;
-            m_masterTimer.Start();
+            _states.Add(scene, abms);
+            _busy = false;
+            _masterTimer.Start();
         }
 
         /// <summary>
@@ -268,7 +259,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
 
         private void DoBackup (string module, string[] args)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
             if (args.Length != 2)
@@ -277,20 +268,20 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                 return;
             }
 
-            if(m_busy)
+            if(_busy)
             {
                 MainConsole.Instance.Output("Already doing a backup, please try later");
                 return;
             }
 
-            m_masterTimer.Stop();
-            m_busy = true;    
+            _masterTimer.Stop();
+            _busy = true;    
 
             bool found = false;
             string name = args [1];
             Scene[] scenes;
-            lock (m_Scenes)
-                scenes = m_Scenes.ToArray();
+            lock (_Scenes)
+                scenes = _Scenes.ToArray();
 
             if(scenes == null)
                 return;
@@ -304,7 +295,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                     {
                         s = scenes[i];
                         DoRegionBackup(s);
-                        if (!m_enabled)
+                        if (!_enabled)
                             return;
                     }
                     return;
@@ -324,9 +315,9 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
             catch { }
             finally
             {
-                if (m_enabled)
-                    m_masterTimer.Start();
-                m_busy = false;
+                if (_enabled)
+                    _masterTimer.Start();
+                _busy = false;
             }               
             if (!found)
                     MainConsole.Instance.Output("No such region {0}. Nothing to backup", name);
@@ -335,7 +326,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         private void ParseDefaultConfig(IConfig config)
         {          
 
-            m_backupDir = ".";
+            _backupDir = ".";
             string backupDir = config.GetString("AutoBackupDir", ".");
             if (backupDir != ".")
             {
@@ -347,27 +338,27 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                 }
                 catch (Exception e)
                 {
-                    m_enabled = false;
-                    m_log.WarnFormat("[AUTO BACKUP]: Error accessing backup folder {0}. Module disabled. {1}",
+                    _enabled = false;
+                    _log.WarnFormat("[AUTO BACKUP]: Error accessing backup folder {0}. Module disabled. {1}",
                             backupDir, e);
                     return;
                 }
             }
-            m_backupDir = backupDir;
+            _backupDir = backupDir;
 
             double interval = config.GetDouble("AutoBackupInterval", 720);
             interval *= 60000.0;
-            m_baseInterval = interval;
+            _baseInterval = interval;
 
             // How long to keep backup files in days, 0 Disables this feature
-            m_KeepFilesForDays = config.GetInt("AutoBackupKeepFilesForDays",m_KeepFilesForDays);
+            _KeepFilesForDays = config.GetInt("AutoBackupKeepFilesForDays",_KeepFilesForDays);
 
-            m_defaultState.Enabled = config.GetBoolean("AutoBackup", m_defaultState.Enabled);
+            _defaultState.Enabled = config.GetBoolean("AutoBackup", _defaultState.Enabled);
 
-            m_defaultState.SkipAssets = config.GetBoolean("AutoBackupSkipAssets",m_defaultState.SkipAssets);
+            _defaultState.SkipAssets = config.GetBoolean("AutoBackupSkipAssets",_defaultState.SkipAssets);
 
             // Set file naming algorithm
-            string stmpNamingType = config.GetString("AutoBackupNaming", m_defaultState.NamingType.ToString());
+            string stmpNamingType = config.GetString("AutoBackupNaming", _defaultState.NamingType.ToString());
             NamingType tmpNamingType;
             if (stmpNamingType.Equals("Time", StringComparison.CurrentCultureIgnoreCase))
                 tmpNamingType = NamingType.Time;
@@ -377,12 +368,12 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                 tmpNamingType = NamingType.Overwrite;
             else
             {
-                m_log.Warn("Unknown naming type specified for Default");
+                _log.Warn("Unknown naming type specified for Default");
                 tmpNamingType = NamingType.Time;
             }
-            m_defaultState.NamingType = tmpNamingType;
+            _defaultState.NamingType = tmpNamingType;
 
-            m_defaultState.Script = config.GetString("AutoBackupScript", m_defaultState.Script);
+            _defaultState.Script = config.GetString("AutoBackupScript", _defaultState.Script);
 
         }
 
@@ -410,14 +401,14 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
 
             state = new AutoBackupModuleState
             {
-                Enabled = regionConfig.GetBoolean("AutoBackup", m_defaultState.Enabled),
+                Enabled = regionConfig.GetBoolean("AutoBackup", _defaultState.Enabled),
 
                 // Included Option To Skip Assets
-                SkipAssets = regionConfig.GetBoolean("AutoBackupSkipAssets", m_defaultState.SkipAssets)
+                SkipAssets = regionConfig.GetBoolean("AutoBackupSkipAssets", _defaultState.SkipAssets)
             };
 
             // Set file naming algorithm
-            string stmpNamingType = regionConfig.GetString("AutoBackupNaming", m_defaultState.NamingType.ToString());
+            string stmpNamingType = regionConfig.GetString("AutoBackupNaming", _defaultState.NamingType.ToString());
             NamingType tmpNamingType;
             if (stmpNamingType.Equals("Time", StringComparison.CurrentCultureIgnoreCase))
                 tmpNamingType = NamingType.Time;
@@ -427,13 +418,13 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                 tmpNamingType = NamingType.Overwrite;
             else
             {
-                m_log.Warn("Unknown naming type specified for region " + sRegionName + ": " +
+                _log.Warn("Unknown naming type specified for region " + sRegionName + ": " +
                            stmpNamingType);
                 tmpNamingType = NamingType.Time;
             }
-            m_defaultState.NamingType = tmpNamingType;
+            _defaultState.NamingType = tmpNamingType;
 
-            state.Script = regionConfig.GetString("AutoBackupScript", m_defaultState.Script);
+            state.Script = regionConfig.GetString("AutoBackupScript", _defaultState.Script);
             return state;
         }
 
@@ -445,27 +436,27 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         /// <param name="e"></param>
         private void HandleElapsed(object sender, ElapsedEventArgs e)
         {
-            if (!m_enabled || m_busy)
+            if (!_enabled || _busy)
                 return;
 
-            m_busy = true;
-            if(m_doneFirst && m_KeepFilesForDays > 0)
+            _busy = true;
+            if(_doneFirst && _KeepFilesForDays > 0)
                 RemoveOldFiles();
 
-            foreach (IScene scene in m_Scenes)
+            foreach (IScene scene in _Scenes)
             {
-                if (!m_enabled)
+                if (!_enabled)
                     return;
                 DoRegionBackup(scene);
             }
 
-            if (m_enabled)
+            if (_enabled)
             {
-                m_masterTimer.Start();
-                m_busy = false;
+                _masterTimer.Start();
+                _busy = false;
             }
 
-            m_doneFirst = true;
+            _doneFirst = true;
         }
 
         /// <summary>
@@ -477,15 +468,15 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
             if (!scene.Ready)
             {
                 // We won't backup a region that isn't operating normally.
-                m_log.Warn("[AUTO BACKUP]: Not backing up region " + scene.RegionInfo.RegionName +
+                _log.Warn("[AUTO BACKUP]: Not backing up region " + scene.RegionInfo.RegionName +
                            " because its status is " + scene.RegionStatus);
                 return;
             }
 
-            m_busy = true;
+            _busy = true;
 
             AutoBackupModuleState state;
-            if(!m_states.TryGetValue(scene, out state))
+            if(!_states.TryGetValue(scene, out state))
                 return;
 
             if(state == null || !state.Enabled)
@@ -496,16 +487,16 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                 return;
 
             string savePath = BuildOarPath(scene.RegionInfo.RegionName,
-                                                m_backupDir,
+                                                _backupDir,
                                                 state.NamingType);
             if (savePath == null)
             {
-                m_log.Warn("[AUTO BACKUP]: savePath is null in HandleElapsed");
+                _log.Warn("[AUTO BACKUP]: savePath is null in HandleElapsed");
                 return;
             }
 
             Guid guid = Guid.NewGuid();
-            m_log.Info("[AUTO BACKUP]: Backing up region " + scene.RegionInfo.RegionName);
+            _log.Info("[AUTO BACKUP]: Backing up region " + scene.RegionInfo.RegionName);
 
             // Must pass options, even if dictionary is empty!
             Dictionary<string, object> options = new Dictionary<string, object>();
@@ -523,15 +514,15 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
             string[] files;
             try
             {
-                files = Directory.GetFiles(m_backupDir, "*.oar");
+                files = Directory.GetFiles(_backupDir, "*.oar");
             }
             catch (Exception Ex)
             {
-                m_log.Error("[AUTO BACKUP]: Error reading backup folder " + m_backupDir + ": " + Ex.Message);
+                _log.Error("[AUTO BACKUP]: Error reading backup folder " + _backupDir + ": " + Ex.Message);
                 return;
             }
 
-            DateTime CuttOffDate = DateTime.Now.AddDays(-m_KeepFilesForDays);
+            DateTime CuttOffDate = DateTime.Now.AddDays(-_KeepFilesForDays);
 
             foreach (string file in files)
             {
@@ -543,7 +534,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                 }
                 catch (Exception Ex)
                 {
-                    m_log.Error("[AUTO BACKUP]: Error deleting old backup file '" + file + "': " + Ex.Message);
+                    _log.Error("[AUTO BACKUP]: Error deleting old backup file '" + file + "': " + Ex.Message);
                 }
             }
         }
@@ -565,7 +556,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
             sw.Write(now.Hour);
             sw.Write("h_");
             sw.Write(now.Minute);
-            sw.Write("m_");
+            sw.Write("_");
             sw.Write(now.Second);
             sw.Write("s");
             sw.Flush();
@@ -605,7 +596,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
             }
             catch (Exception e)
             {
-                m_log.Warn(
+                _log.Warn(
                     "Exception encountered when trying to run script for oar backup " + savePath, e);
             }
         }
@@ -617,7 +608,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
         /// <param name="e"></param>
         private static void HandleProcErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            m_log.Warn("ExecuteScript hook " + ((Process) sender).ProcessName +
+            _log.Warn("ExecuteScript hook " + ((Process) sender).ProcessName +
                        " is yacking on stderr: " + e.Data);
         }
 
@@ -664,7 +655,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                     path = new FileInfo(GetNextFile(baseDir, regionName));
                     return path.FullName;
                 default:
-                    m_log.Warn("VERY BAD: Unhandled case element " + naming);
+                    _log.Warn("VERY BAD: Unhandled case element " + naming);
                     break;
             }
 
@@ -707,7 +698,7 @@ namespace OpenSim.Region.OptionalModules.World.AutoBackup
                         }
                         catch (FormatException fe)
                         {
-                            m_log.Warn(
+                            _log.Warn(
                                 "[AUTO BACKUP]: Error: Can't parse long value from file name to determine next OAR backup file number!",
                                 fe);
                             subtract++;

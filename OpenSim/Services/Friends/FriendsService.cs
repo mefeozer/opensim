@@ -44,7 +44,7 @@ namespace OpenSim.Services.Friends
 
         public virtual FriendInfo[] GetFriends(UUID PrincipalID)
         {
-            FriendsData[] data = m_Database.GetFriends(PrincipalID);
+            FriendsData[] data = _Database.GetFriends(PrincipalID);
             List<FriendInfo> info = new List<FriendInfo>();
 
             foreach (FriendsData d in data)
@@ -65,7 +65,7 @@ namespace OpenSim.Services.Friends
 
         public virtual FriendInfo[] GetFriends(string PrincipalID)
         {
-            FriendsData[] data = m_Database.GetFriends(PrincipalID);
+            FriendsData[] data = _Database.GetFriends(PrincipalID);
             List<FriendInfo> info = new List<FriendInfo>();
 
             foreach (FriendsData d in data)
@@ -99,17 +99,17 @@ namespace OpenSim.Services.Friends
             };
             d.Data["Flags"] = flags.ToString();
 
-            return m_Database.Store(d);
+            return _Database.Store(d);
         }
 
         public bool Delete(string principalID, string friend)
         {
-            return m_Database.Delete(principalID, friend);
+            return _Database.Delete(principalID, friend);
         }
 
         public virtual bool Delete(UUID PrincipalID, string Friend)
         {
-            return m_Database.Delete(PrincipalID, Friend);
+            return _Database.Delete(PrincipalID, Friend);
         }
 
     }

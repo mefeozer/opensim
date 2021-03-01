@@ -56,10 +56,7 @@ namespace OpenSim.Framework.Monitoring
                 return (double)Antecedent / c * 100;
             }
 
-            set
-            {
-                throw new InvalidOperationException("Cannot set value on a PercentageStat");
-            }
+            set => throw new InvalidOperationException("Cannot set value on a PercentageStat");
         }
 
         public PercentageStat(

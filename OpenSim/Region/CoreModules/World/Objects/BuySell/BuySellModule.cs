@@ -43,36 +43,36 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "BuySellModule")]
     public class BuySellModule : IBuySellModule, INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Scene m_scene = null;
-        protected IDialogModule m_dialogModule;
+        protected Scene _scene = null;
+        protected IDialogModule _dialogModule;
 
-        public string Name { get { return "Object BuySell Module"; } }
-        public Type ReplaceableInterface { get { return null; } }
+        public string Name => "Object BuySell Module";
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source) {}
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
-            m_scene.RegisterModuleInterface<IBuySellModule>(this);
-            m_scene.EventManager.OnNewClient += SubscribeToClientEvents;
+            _scene = scene;
+            _scene.RegisterModuleInterface<IBuySellModule>(this);
+            _scene.EventManager.OnNewClient += SubscribeToClientEvents;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            m_scene.EventManager.OnNewClient -= SubscribeToClientEvents;
+            _scene.EventManager.OnNewClient -= SubscribeToClientEvents;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            m_dialogModule = scene.RequestModuleInterface<IDialogModule>();
+            _dialogModule = scene.RequestModuleInterface<IDialogModule>();
         }
 
         public void Close()
         {
-            RemoveRegion(m_scene);
+            RemoveRegion(_scene);
         }
 
         public void SubscribeToClientEvents(IClientAPI client)
@@ -83,7 +83,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
         protected void ObjectSaleInfo(
             IClientAPI client, UUID agentID, UUID sessionID, uint localID, byte saleType, int salePrice)
         {
-            SceneObjectPart part = m_scene.GetSceneObjectPart(localID);
+            SceneObjectPart part = _scene.GetSceneObjectPart(localID);
             if (part == null)
                 return;
 
@@ -92,7 +92,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
                 return;
 
             // Does the user have the power to put the object on sale?
-            if (!m_scene.Permissions.CanSellObject(client, sog, saleType))
+            if (!_scene.Permissions.CanSellObject(client, sog, saleType))
             {
                 client.SendAgentAlertMessage("You don't have permission to set object on sale", false);
                 return;
@@ -110,7 +110,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
 
         public bool BuyObject(IClientAPI remoteClient, UUID categoryID, uint localID, byte saleType, int salePrice)
         {
-            SceneObjectPart rootpart = m_scene.GetSceneObjectPart(localID);
+            SceneObjectPart rootpart = _scene.GetSceneObjectPart(localID);
 
             if (rootpart == null)
                 return false;
@@ -129,14 +129,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
 
                     if ((effectivePerms & (uint)PermissionMask.Transfer) == 0)
                     {
-                        if (m_dialogModule != null)
-                            m_dialogModule.SendAlertToUser(remoteClient, "This item doesn't appear to be for sale");
+                        if (_dialogModule != null)
+                            _dialogModule.SendAlertToUser(remoteClient, "This item doesn't appear to be for sale");
                         return false;
                     }
 
                     group.SetOwner(remoteClient.AgentId, remoteClient.ActiveGroupId);
 
-                    if (m_scene.Permissions.PropagatePermissions())
+                    if (_scene.Permissions.PropagatePermissions())
                     {
                         foreach (SceneObjectPart child in group.Parts)
                         {
@@ -164,15 +164,15 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
 
                     if ((perms & (uint)PermissionMask.Transfer) == 0)
                     {
-                        if (m_dialogModule != null)
-                            m_dialogModule.SendAlertToUser(remoteClient, "This item doesn't appear to be for sale");
+                        if (_dialogModule != null)
+                            _dialogModule.SendAlertToUser(remoteClient, "This item doesn't appear to be for sale");
                         return false;
                     }
 
                     if ((perms & (uint)PermissionMask.Copy) == 0)
                     {
-                        if (m_dialogModule != null)
-                            m_dialogModule.SendAlertToUser(remoteClient, "This sale has been blocked by the permissions system");
+                        if (_dialogModule != null)
+                            _dialogModule.SendAlertToUser(remoteClient, "This sale has been blocked by the permissions system");
                         return false;
                     }
 
@@ -194,12 +194,12 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
                     string name = rootpart.Name;
                     string desc = rootpart.Description;
 
-                    AssetBase asset = m_scene.CreateAsset(
+                    AssetBase asset = _scene.CreateAsset(
                         name, desc,
                         (sbyte)AssetType.Object,
                         Utils.StringToBytes(sceneObjectXml),
                         rootpart.CreatorID);
-                    m_scene.AssetService.Store(asset);
+                    _scene.AssetService.Store(asset);
 
                     InventoryItemBase item = new InventoryItemBase
                     {
@@ -233,14 +233,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
                     item.Flags |= (uint)InventoryItemFlags.ObjectSlamPerm;
                     item.CreationDate = Util.UnixTimeSinceEpoch();
 
-                    if (m_scene.AddInventoryItem(item))
+                    if (_scene.AddInventoryItem(item))
                     {
                         remoteClient.SendInventoryItemCreateUpdate(item, 0);
                     }
                     else
                     {
-                        if (m_dialogModule != null)
-                            m_dialogModule.SendAlertToUser(remoteClient, "Cannot buy now. Your inventory is unavailable");
+                        if (_dialogModule != null)
+                            _dialogModule.SendAlertToUser(remoteClient, "Cannot buy now. Your inventory is unavailable");
                         return false;
                     }
                     break;
@@ -263,14 +263,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.BuySell
 
                     if (!okToSell)
                     {
-                        if (m_dialogModule != null)
-                            m_dialogModule.SendAlertToUser(
+                        if (_dialogModule != null)
+                            _dialogModule.SendAlertToUser(
                                 remoteClient, "This item's inventory doesn't appear to be for sale");
                         return false;
                     }
 
                     if (invList.Count > 0)
-                        m_scene.MoveTaskInventoryItems(remoteClient.AgentId, rootpart.Name, rootpart, invList);
+                        _scene.MoveTaskInventoryItems(remoteClient.AgentId, rootpart.Name, rootpart, invList);
                     break;
 
                 default:

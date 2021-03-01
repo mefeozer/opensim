@@ -41,7 +41,7 @@ namespace OpenSim.Framework
     {
         readonly Dictionary<TKey1, TValue> Dictionary1;
         readonly Dictionary<TKey2, TValue> Dictionary2;
-        private TValue[] m_array;
+        private TValue[] _array;
 
         readonly ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
 
@@ -49,14 +49,14 @@ namespace OpenSim.Framework
         {
             Dictionary1 = new Dictionary<TKey1,TValue>();
             Dictionary2 = new Dictionary<TKey2,TValue>();
-            m_array = null;
+            _array = null;
         }
 
         public DoubleDictionaryThreadAbortSafe(int capacity)
         {
             Dictionary1 = new Dictionary<TKey1, TValue>(capacity);
             Dictionary2 = new Dictionary<TKey2, TValue>(capacity);
-            m_array = null;
+            _array = null;
         }
 
         ~DoubleDictionaryThreadAbortSafe()
@@ -82,7 +82,7 @@ namespace OpenSim.Framework
                 }
                     Dictionary1[key1] = value;
                     Dictionary2[key2] = value;
-                    m_array = null;
+                    _array = null;
             }
             finally
             {
@@ -109,7 +109,7 @@ namespace OpenSim.Framework
                 }
                 success = Dictionary1.Remove(key1);
                 success &= Dictionary2.Remove(key2);
-                m_array = null;
+                _array = null;
             }
             finally
             {
@@ -150,7 +150,7 @@ namespace OpenSim.Framework
                             {
                                 Dictionary1.Remove(key1);
                                 Dictionary2.Remove(kvp.Key);
-                                m_array = null;
+                                _array = null;
                             }
                             found = true;
                             break;
@@ -197,7 +197,7 @@ namespace OpenSim.Framework
                             {
                                 Dictionary2.Remove(key2);
                                 Dictionary1.Remove(kvp.Key);
-                                m_array = null;
+                                _array = null;
                             }
                             found = true;
                             break;
@@ -230,7 +230,7 @@ namespace OpenSim.Framework
                     gotLock = true;
                     Dictionary1.Clear();
                     Dictionary2.Clear();
-                    m_array = null;
+                    _array = null;
                 }
             }
             finally
@@ -240,10 +240,7 @@ namespace OpenSim.Framework
             }
         }
 
-        public int Count
-        {
-            get { return Dictionary1.Count; }
-        }
+        public int Count => Dictionary1.Count;
 
         public bool ContainsKey(TKey1 key)
         {
@@ -445,7 +442,7 @@ namespace OpenSim.Framework
 
                         for (int i = 0; i < list2.Count; i++)
                             Dictionary2.Remove(list2[i]);
-                        m_array = null;
+                        _array = null;
                     }
                 }
                 finally
@@ -475,7 +472,7 @@ namespace OpenSim.Framework
                     gotupLock = true;
                 }
 
-                if (m_array == null)
+                if (_array == null)
                 {
                     bool gotwritelock = false;
                     try
@@ -487,8 +484,8 @@ namespace OpenSim.Framework
                             gotwritelock = true;
                         }
 
-                        m_array = new TValue[Dictionary1.Count];
-                        Dictionary1.Values.CopyTo(m_array, 0);
+                        _array = new TValue[Dictionary1.Count];
+                        Dictionary1.Values.CopyTo(_array, 0);
                     }
                     finally
                     {
@@ -496,7 +493,7 @@ namespace OpenSim.Framework
                             rwLock.ExitWriteLock();
                     }
                 }
-                return m_array;
+                return _array;
             }
             catch
             {

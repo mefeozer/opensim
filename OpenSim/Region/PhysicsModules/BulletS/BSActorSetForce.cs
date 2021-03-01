@@ -31,20 +31,17 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     public class BSActorSetForce : BSActor
 {
-    BSFMotor m_forceMotor;
+    BSFMotor _forceMotor;
 
     public BSActorSetForce(BSScene physicsScene, BSPhysObject pObj, string actorName)
         : base(physicsScene, pObj, actorName)
     {
-        m_forceMotor = null;
-        m_physicsScene.DetailLog("{0},BSActorSetForce,constructor", m_controllingPrim.LocalID);
+        _forceMotor = null;
+        _physicsScene.DetailLog("{0},BSActorSetForce,constructor", _controllingPrim.LocalID);
     }
 
     // BSActor.isActive
-    public override bool isActive
-    {
-        get { return Enabled && m_controllingPrim.IsPhysicallyActive; }
-    }
+    public override bool isActive => Enabled && _controllingPrim.IsPhysicallyActive;
 
     // Release any connections and resources used by the actor.
     // BSActor.Dispose()
@@ -59,12 +56,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // BSActor.Refresh()
     public override void Refresh()
     {
-        m_physicsScene.DetailLog("{0},BSActorSetForce,refresh", m_controllingPrim.LocalID);
+        _physicsScene.DetailLog("{0},BSActorSetForce,refresh", _controllingPrim.LocalID);
 
         // If not active any more, get rid of me (shouldn't ever happen, but just to be safe)
-        if (m_controllingPrim.RawForce == OMV.Vector3.Zero)
+        if (_controllingPrim.RawForce == OMV.Vector3.Zero)
         {
-            m_physicsScene.DetailLog("{0},BSActorSetForce,refresh,notSetForce,removing={1}", m_controllingPrim.LocalID, ActorName);
+            _physicsScene.DetailLog("{0},BSActorSetForce,refresh,notSetForce,removing={1}", _controllingPrim.LocalID, ActorName);
             Enabled = false;
             return;
         }
@@ -92,21 +89,21 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // If a hover motor has not been created, create one and start the hovering.
     private void ActivateSetForce()
     {
-        if (m_forceMotor == null)
+        if (_forceMotor == null)
         {
             // A fake motor that might be used someday
-            m_forceMotor = new BSFMotor("setForce", 1f, 1f, 1f);
+            _forceMotor = new BSFMotor("setForce", 1f, 1f, 1f);
 
-            m_physicsScene.BeforeStep += Mover;
+            _physicsScene.BeforeStep += Mover;
         }
     }
 
     private void DeactivateSetForce()
     {
-        if (m_forceMotor != null)
+        if (_forceMotor != null)
         {
-            m_physicsScene.BeforeStep -= Mover;
-            m_forceMotor = null;
+            _physicsScene.BeforeStep -= Mover;
+            _forceMotor = null;
         }
     }
 
@@ -117,11 +114,11 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         if (!isActive)
             return;
 
-        m_physicsScene.DetailLog("{0},BSActorSetForce,preStep,force={1}", m_controllingPrim.LocalID, m_controllingPrim.RawForce);
-        if (m_controllingPrim.PhysBody.HasPhysicalBody)
+        _physicsScene.DetailLog("{0},BSActorSetForce,preStep,force={1}", _controllingPrim.LocalID, _controllingPrim.RawForce);
+        if (_controllingPrim.PhysBody.HasPhysicalBody)
         {
-            m_physicsScene.PE.ApplyCentralForce(m_controllingPrim.PhysBody, m_controllingPrim.RawForce);
-            m_controllingPrim.ActivateIfPhysical(false);
+            _physicsScene.PE.ApplyCentralForce(_controllingPrim.PhysBody, _controllingPrim.RawForce);
+            _controllingPrim.ActivateIfPhysical(false);
         }
 
         // TODO:

@@ -45,46 +45,46 @@ namespace OpenSim.Framework
         {
             get
             {
-                lock (m_pool)
-                    return m_pool.Count;
+                lock (_pool)
+                    return _pool.Count;
             }
         }
 
-        private readonly Stack<T> m_pool;
+        private readonly Stack<T> _pool;
 
         /// <summary>
         /// Maximum pool size.  Beyond this, any returned objects are not pooled.
         /// </summary>
-        private readonly int m_maxPoolSize;
+        private readonly int _maxPoolSize;
 
-        private readonly Func<T> m_createFunction;
+        private readonly Func<T> _createFunction;
 
         public Pool(Func<T> createFunction, int maxSize)
         {
-            m_maxPoolSize = maxSize;
-            m_createFunction = createFunction;
-            m_pool = new Stack<T>(m_maxPoolSize);
+            _maxPoolSize = maxSize;
+            _createFunction = createFunction;
+            _pool = new Stack<T>(_maxPoolSize);
         }
 
         public T GetObject()
         {
-            lock (m_pool)
+            lock (_pool)
             {
-                if (m_pool.Count > 0)
-                    return m_pool.Pop();
+                if (_pool.Count > 0)
+                    return _pool.Pop();
                 else
-                    return m_createFunction();
+                    return _createFunction();
             }
         }
 
         public void ReturnObject(T obj)
         {
-            lock (m_pool)
+            lock (_pool)
             {
-                if (m_pool.Count >= m_maxPoolSize)
+                if (_pool.Count >= _maxPoolSize)
                     return;
                 else
-                    m_pool.Push(obj);
+                    _pool.Push(obj);
             }
         }
     }

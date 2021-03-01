@@ -42,14 +42,14 @@ namespace OpenSim.Server.Handlers.Avatar
 {
     public class AvatarServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAvatarService m_AvatarService;
+        private readonly IAvatarService _AvatarService;
 
         public AvatarServerPostHandler(IAvatarService service, IServiceAuth auth) :
                 base("POST", "/avatar", auth)
         {
-            m_AvatarService = service;
+            _AvatarService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -60,7 +60,7 @@ namespace OpenSim.Server.Handlers.Avatar
                 body = sr.ReadToEnd();
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
 
             try
             {
@@ -85,11 +85,11 @@ namespace OpenSim.Server.Handlers.Avatar
                     case "removeitems":
                         return RemoveItems(request);
                 }
-                m_log.DebugFormat("[AVATAR HANDLER]: unknown method request: {0}", method);
+                _log.DebugFormat("[AVATAR HANDLER]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.Debug("[AVATAR HANDLER]: Exception {0}" + e);
+                _log.Debug("[AVATAR HANDLER]: Exception {0}" + e);
             }
 
             return FailureResult();
@@ -105,7 +105,7 @@ namespace OpenSim.Server.Handlers.Avatar
 
             if (UUID.TryParse(request["UserID"].ToString(), out user))
             {
-                AvatarData avatar = m_AvatarService.GetAvatar(user);
+                AvatarData avatar = _AvatarService.GetAvatar(user);
                 if (avatar == null)
                     return FailureResult();
 
@@ -136,7 +136,7 @@ namespace OpenSim.Server.Handlers.Avatar
             RemoveRequestParamsNotForStorage(request);
 
             AvatarData avatar = new AvatarData(request);
-            if (m_AvatarService.SetAvatar(user, avatar))
+            if (_AvatarService.SetAvatar(user, avatar))
                 return SuccessResult();
 
             return FailureResult();
@@ -153,7 +153,7 @@ namespace OpenSim.Server.Handlers.Avatar
 
             RemoveRequestParamsNotForStorage(request);
 
-            if (m_AvatarService.ResetAvatar(user))
+            if (_AvatarService.ResetAvatar(user))
                 return SuccessResult();
 
             return FailureResult();
@@ -192,7 +192,7 @@ namespace OpenSim.Server.Handlers.Avatar
             List<string> _values = (List<string>)request["Values"];
             values = _values.ToArray();
 
-            if (m_AvatarService.SetItems(user, names, values))
+            if (_AvatarService.SetItems(user, names, values))
                 return SuccessResult();
 
             return FailureResult();
@@ -215,7 +215,7 @@ namespace OpenSim.Server.Handlers.Avatar
             List<string> _names = (List<string>)request["Names"];
             names = _names.ToArray();
 
-            if (m_AvatarService.RemoveItems(user, names))
+            if (_AvatarService.RemoveItems(user, names))
                 return SuccessResult();
 
             return FailureResult();

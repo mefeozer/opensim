@@ -36,20 +36,20 @@ namespace OpenSim.Server.Handlers.Simulation
 {
     public class SimulationServiceInConnector : ServiceConnector
     {
-        private readonly ISimulationService m_LocalSimulationService;
-//        private IAuthenticationService m_AuthenticationService;
+        private readonly ISimulationService _LocalSimulationService;
+//        private IAuthenticationService _AuthenticationService;
 
         public SimulationServiceInConnector(IConfigSource config, IHttpServer server, IScene scene) :
                 base(config, server, string.Empty)
         {
-            m_LocalSimulationService = scene.RequestModuleInterface<ISimulationService>();
-            m_LocalSimulationService = m_LocalSimulationService.GetInnerService();
+            _LocalSimulationService = scene.RequestModuleInterface<ISimulationService>();
+            _LocalSimulationService = _LocalSimulationService.GetInnerService();
 
             // This one MUST be a stream handler because compressed fatpacks
             // are pure binary and shoehorning that into a string with UTF-8
             // encoding breaks it
-            server.AddSimpleStreamHandler(new AgentSimpleHandler(m_LocalSimulationService), true);
-            server.AddSimpleStreamHandler(new ObjectSimpleHandler(m_LocalSimulationService), true);
+            server.AddSimpleStreamHandler(new AgentSimpleHandler(_LocalSimulationService), true);
+            server.AddSimpleStreamHandler(new ObjectSimpleHandler(_LocalSimulationService), true);
         }
     }
 }

@@ -43,9 +43,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
     public partial class XMRInstance
     {
 
-        private bool m_disposed;
+        private bool _disposed;
         // In case Dispose() doesn't get called, we want to be sure to clean
-        // up.  This makes sure we decrement m_CompiledScriptRefCount.
+        // up.  This makes sure we decrement _CompiledScriptRefCount.
         ~XMRInstance()
         {
             Dispose(false);
@@ -53,7 +53,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         /**
          * @brief Clean up stuff.
-         *        We specifically leave m_DescName intact for 'xmr ls' command.
+         *        We specifically leave _DescName intact for 'xmr ls' command.
          */
         public void Dispose()
         {
@@ -63,51 +63,51 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public void Dispose(bool fromdispose)
         {
-            if (m_disposed)
+            if (_disposed)
                 return;
 
             // Tell script stop executing next time it calls CheckRun().
             suspendOnCheckRunHold = true;
 
             // Don't send us any more events.
-            lock (m_RunLock)
+            lock (_RunLock)
             {
-                if(m_Part != null)
+                if(_Part != null)
                 {
-                    AsyncCommandManager.RemoveScript(m_Engine, m_LocalID, m_ItemID);
-                    m_Part = null;
+                    AsyncCommandManager.RemoveScript(_Engine, _LocalID, _ItemID);
+                    _Part = null;
                 }
             }
 
              // Let script methods get garbage collected if no one else is using
              // them.
             DecObjCodeRefCount();
-            m_disposed = true;
+            _disposed = true;
         }
 
         private void DecObjCodeRefCount()
         {
-            if(m_ObjCode != null)
+            if(_ObjCode != null)
             {
-                lock(m_CompileLock)
+                lock(_CompileLock)
                 {
                     ScriptObjCode objCode;
 
-                    if(m_CompiledScriptObjCode.TryGetValue(m_ScriptObjCodeKey, out objCode) &&
-                        objCode == m_ObjCode &&
+                    if(_CompiledScriptObjCode.TryGetValue(_ScriptObjCodeKey, out objCode) &&
+                        objCode == _ObjCode &&
                         --objCode.refCount == 0)
                     {
-                        m_CompiledScriptObjCode.Remove(m_ScriptObjCodeKey);
+                        _CompiledScriptObjCode.Remove(_ScriptObjCodeKey);
                     }
                 }
-                m_ObjCode = null;
+                _ObjCode = null;
             }
         }
 
         public void Verbose(string format, params object[] args)
         {
-            if(m_Engine.m_Verbose)
-                m_log.DebugFormat(format, args);
+            if(_Engine._Verbose)
+                _log.DebugFormat(format, args);
         }
 
         // Called by 'xmr top' console command
@@ -115,24 +115,24 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         //  Sacha 
         public void RunTestTop()
         {
-            if(m_InstEHSlice > 0)
+            if(_InstEHSlice > 0)
             {
-                Console.WriteLine(m_DescName);
-                Console.WriteLine("    m_LocalID       = " + m_LocalID);
-                Console.WriteLine("    m_ItemID        = " + m_ItemID);
-                Console.WriteLine("    m_Item.AssetID  = " + m_Item.AssetID);
-                Console.WriteLine("    m_StartParam    = " + m_StartParam);
-                Console.WriteLine("    m_PostOnRez     = " + m_PostOnRez);
-                Console.WriteLine("    m_StateSource   = " + m_StateSource);
-                Console.WriteLine("    m_SuspendCount  = " + m_SuspendCount);
-                Console.WriteLine("    m_SleepUntil    = " + m_SleepUntil);
-                Console.WriteLine("    m_IState        = " + m_IState.ToString());
-                Console.WriteLine("    m_StateCode     = " + GetStateName(stateCode));
+                Console.WriteLine(_DescName);
+                Console.WriteLine("    _LocalID       = " + _LocalID);
+                Console.WriteLine("    _ItemID        = " + _ItemID);
+                Console.WriteLine("    _Item.AssetID  = " + _Item.AssetID);
+                Console.WriteLine("    _StartParam    = " + _StartParam);
+                Console.WriteLine("    _PostOnRez     = " + _PostOnRez);
+                Console.WriteLine("    _StateSource   = " + _StateSource);
+                Console.WriteLine("    _SuspendCount  = " + _SuspendCount);
+                Console.WriteLine("    _SleepUntil    = " + _SleepUntil);
+                Console.WriteLine("    _IState        = " + _IState.ToString());
+                Console.WriteLine("    _StateCode     = " + GetStateName(stateCode));
                 Console.WriteLine("    eventCode       = " + eventCode.ToString());
-                Console.WriteLine("    m_LastRanAt     = " + m_LastRanAt.ToString());
+                Console.WriteLine("    _LastRanAt     = " + _LastRanAt.ToString());
                 Console.WriteLine("    heapUsed/Limit  = " + xmrHeapUsed() + "/" + heapLimit);
-                Console.WriteLine("    m_InstEHEvent   = " + m_InstEHEvent.ToString());
-                Console.WriteLine("    m_InstEHSlice   = " + m_InstEHSlice.ToString());
+                Console.WriteLine("    _InstEHEvent   = " + _InstEHEvent.ToString());
+                Console.WriteLine("    _InstEHSlice   = " + _InstEHSlice.ToString());
             }
         }
 
@@ -143,36 +143,36 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(flagFull)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine(m_DescName);
-                sb.AppendLine("    m_LocalID            = " + m_LocalID);
-                sb.AppendLine("    m_ItemID             = " + m_ItemID + "  (.state file)");
-                sb.AppendLine("    m_Item.AssetID       = " + m_Item.AssetID);
-                sb.AppendLine("    m_Part.WorldPosition = " + m_Part.GetWorldPosition());
-                sb.AppendLine("    m_ScriptObjCodeKey   = " + m_ScriptObjCodeKey + "  (source text)");
-                sb.AppendLine("    m_StartParam         = " + m_StartParam);
-                sb.AppendLine("    m_PostOnRez          = " + m_PostOnRez);
-                sb.AppendLine("    m_StateSource        = " + m_StateSource);
-                sb.AppendLine("    m_SuspendCount       = " + m_SuspendCount);
-                sb.AppendLine("    m_SleepUntil         = " + m_SleepUntil);
-                sb.AppendLine("    m_SleepEvMask1       = 0x" + m_SleepEventMask1.ToString("X"));
-                sb.AppendLine("    m_SleepEvMask2       = 0x" + m_SleepEventMask2.ToString("X"));
-                sb.AppendLine("    m_IState             = " + m_IState.ToString());
-                sb.AppendLine("    m_StateCode          = " + GetStateName(stateCode));
+                sb.AppendLine(_DescName);
+                sb.AppendLine("    _LocalID            = " + _LocalID);
+                sb.AppendLine("    _ItemID             = " + _ItemID + "  (.state file)");
+                sb.AppendLine("    _Item.AssetID       = " + _Item.AssetID);
+                sb.AppendLine("    _Part.WorldPosition = " + _Part.GetWorldPosition());
+                sb.AppendLine("    _ScriptObjCodeKey   = " + _ScriptObjCodeKey + "  (source text)");
+                sb.AppendLine("    _StartParam         = " + _StartParam);
+                sb.AppendLine("    _PostOnRez          = " + _PostOnRez);
+                sb.AppendLine("    _StateSource        = " + _StateSource);
+                sb.AppendLine("    _SuspendCount       = " + _SuspendCount);
+                sb.AppendLine("    _SleepUntil         = " + _SleepUntil);
+                sb.AppendLine("    _SleepEvMask1       = 0x" + _SleepEventMask1.ToString("X"));
+                sb.AppendLine("    _SleepEvMask2       = 0x" + _SleepEventMask2.ToString("X"));
+                sb.AppendLine("    _IState             = " + _IState.ToString());
+                sb.AppendLine("    _StateCode          = " + GetStateName(stateCode));
                 sb.AppendLine("    eventCode            = " + eventCode.ToString());
-                sb.AppendLine("    m_LastRanAt          = " + m_LastRanAt.ToString());
-                sb.AppendLine("    m_RunOnePhase        = " + m_RunOnePhase);
+                sb.AppendLine("    _LastRanAt          = " + _LastRanAt.ToString());
+                sb.AppendLine("    _RunOnePhase        = " + _RunOnePhase);
                 sb.AppendLine("    suspOnCkRunHold      = " + suspendOnCheckRunHold);
                 sb.AppendLine("    suspOnCkRunTemp      = " + suspendOnCheckRunTemp);
-                sb.AppendLine("    m_CheckRunPhase      = " + m_CheckRunPhase);
+                sb.AppendLine("    _CheckRunPhase      = " + _CheckRunPhase);
                 sb.AppendLine("    heapUsed/Limit       = " + xmrHeapUsed() + "/" + heapLimit);
-                sb.AppendLine("    m_InstEHEvent        = " + m_InstEHEvent.ToString());
-                sb.AppendLine("    m_InstEHSlice        = " + m_InstEHSlice.ToString());
-                sb.AppendLine("    m_CPUTime            = " + m_CPUTime);
+                sb.AppendLine("    _InstEHEvent        = " + _InstEHEvent.ToString());
+                sb.AppendLine("    _InstEHSlice        = " + _InstEHSlice.ToString());
+                sb.AppendLine("    _CPUTime            = " + _CPUTime);
                 sb.AppendLine("    callMode             = " + callMode);
-                lock(m_QueueLock)
+                lock(_QueueLock)
                 {
-                    sb.AppendLine("    m_Running            = " + m_Running);
-                    foreach(EventParams evt in m_EventQueue)
+                    sb.AppendLine("    _Running            = " + _Running);
+                    foreach(EventParams evt in _EventQueue)
                     {
                         sb.AppendLine("        evt.EventName        = " + evt.EventName);
                     }
@@ -182,12 +182,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             else
             {
                 return string.Format("{0} {1} {2} {3} {4} {5}",
-                        m_ItemID,
-                        m_CPUTime.ToString("F3").PadLeft(9),
-                        m_InstEHEvent.ToString().PadLeft(9),
-                        m_IState.ToString().PadRight(10),
-                        m_Part.GetWorldPosition().ToString().PadRight(32),
-                        m_DescName);
+                        _ItemID,
+                        _CPUTime.ToString("F3").PadLeft(9),
+                        _InstEHEvent.ToString().PadLeft(9),
+                        _IState.ToString().PadRight(10),
+                        _Part.GetWorldPosition().ToString().PadRight(32),
+                        _DescName);
             }
         }
 
@@ -198,7 +198,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public ulong GetStateEventFlags(int state)
         {
             if(state < 0 ||
-                state >= m_ObjCode.scriptEventHandlerTable.GetLength(0))
+                state >= _ObjCode.scriptEventHandlerTable.GetLength(0))
             {
                 return 0;
             }
@@ -206,7 +206,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             ulong flags = 0;
             for(int i = 0; i <(int)ScriptEventCode.Size; i++)
             {
-                if(m_ObjCode.scriptEventHandlerTable[state, i] != null)
+                if(_ObjCode.scriptEventHandlerTable[state, i] != null)
                 {
                     flags |= 1ul << i;
                 }
@@ -224,12 +224,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public string GetScriptFileName(string filename)
         {
-            return GetScriptFileName(m_ScriptBasePath, filename);
+            return GetScriptFileName(_ScriptBasePath, filename);
         }
 
         public string GetScriptILFileName(string filename)
         {
-            string path = Path.Combine(m_ScriptBasePath, "DebugIL");
+            string path = Path.Combine(_ScriptBasePath, "DebugIL");
             Directory.CreateDirectory(path);
             return Path.Combine(path, filename);
         }
@@ -273,7 +273,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             try
             {
-                return m_ObjCode.stateNames[stateCode];
+                return _ObjCode.stateNames[stateCode];
             }
             catch
             {
@@ -286,107 +286,71 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public int StartParam
         {
-            get
-            {
-                return m_StartParam;
-            }
-            set
-            {
-                m_StartParam = value;
-            }
+            get => _StartParam;
+            set => _StartParam = value;
         }
 
         public double MinEventDelay
         {
-            get
-            {
-                return m_minEventDelay;
-            }
+            get => _minEventDelay;
             set
             {
                 if (value > 0.001)
-                    m_minEventDelay = value;
+                    _minEventDelay = value;
                 else
-                    m_minEventDelay = 0.0;
+                    _minEventDelay = 0.0;
 
-                m_nextEventTime = 0.0; // reset it
+                _nextEventTime = 0.0; // reset it
             }
         }
 
 
-        public SceneObjectPart SceneObject
-        {
-            get
-            {
-                return m_Part;
-            }
-        }
+        public SceneObjectPart SceneObject => _Part;
 
         public DetectParams[] DetectParams
         {
-            get
-            {
-                return m_DetectParams;
-            }
-            set
-            {
-                m_DetectParams = value;
-            }
+            get => _DetectParams;
+            set => _DetectParams = value;
         }
 
-        public UUID ItemID
-        {
-            get
-            {
-                return m_ItemID;
-            }
-        }
+        public UUID ItemID => _ItemID;
 
-        public UUID AssetID
-        {
-            get
-            {
-                return m_Item.AssetID;
-            }
-        }
+        public UUID AssetID => _Item.AssetID;
 
         public bool Running
         {
-            get
-            {
-                return m_Running;
-            }
+            get => _Running;
             set
             {
-                lock(m_QueueLock)
+                lock(_QueueLock)
                 {
-                    m_Running = value;
+                    _Running = value;
                     if(value)
                     {
-                        if (m_IState == XMRInstState.SUSPENDED && m_SuspendCount == 0)
+                        if (_IState == XMRInstState.SUSPENDED && _SuspendCount == 0)
                         {
                             if(eventCode != ScriptEventCode.None)
                             {
-                                m_IState = XMRInstState.ONYIELDQ;
-                                m_Engine.QueueToYield(this);
+                                _IState = XMRInstState.ONYIELDQ;
+                                _Engine.QueueToYield(this);
                             }
-                            else if (m_EventQueue != null && m_EventQueue.First != null)
+                            else if (_EventQueue != null && _EventQueue.First != null)
                             {
-                                m_IState = XMRInstState.ONSTARTQ;
-                                m_Engine.QueueToStart(this);
+                                _IState = XMRInstState.ONSTARTQ;
+                                _Engine.QueueToStart(this);
                             }
                             else
-                                m_IState = XMRInstState.IDLE;
+                                _IState = XMRInstState.IDLE;
                         }
-                        //else if(m_SuspendCount != 0)
-                        //    m_IState = XMRInstState.IDLE;
+                        //else if(_SuspendCount != 0)
+                        //    _IState = XMRInstState.IDLE;
                     }
                     else
                     {
-                        if(m_IState == XMRInstState.ONSLEEPQ)
+                        if(_IState == XMRInstState.ONSLEEPQ)
                         {
-                            m_Engine.RemoveFromSleep(this);
-                            m_IState = XMRInstState.SUSPENDED;
+                            _Engine.RemoveFromSleep(this);
+                            _IState = XMRInstState.SUSPENDED;
                         }
                         EmptyEventQueues();
                     }
@@ -396,13 +360,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         /**
          * @brief Empty out the event queues.
-         *        Assumes caller has the m_QueueLock locked.
+         *        Assumes caller has the _QueueLock locked.
          */
         public void EmptyEventQueues()
         {
-            m_EventQueue.Clear();
-            for(int i = m_EventCounts.Length; --i >= 0;)
-                m_EventCounts[i] = 0;
+            _EventQueue.Clear();
+            for(int i = _EventCounts.Length; --i >= 0;)
+                _EventCounts[i] = 0;
         }
 
         /**

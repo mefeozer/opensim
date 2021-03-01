@@ -13,10 +13,7 @@ namespace Amib.Threading.Internal
             _dictionary = new Dictionary<TKey, TValue>();
         }
 
-        public int Count
-        {
-            get { return _dictionary.Count; }
-        }
+        public int Count => _dictionary.Count;
 
         public bool Contains(TKey key)
         {
@@ -34,10 +31,7 @@ namespace Amib.Threading.Internal
             }
         }
 
-        public object SyncRoot
-        {
-            get { return _lock; }
-        }
+        public object SyncRoot => _lock;
 
         public TValue this[TKey key]
         {

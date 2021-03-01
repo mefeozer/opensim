@@ -46,10 +46,10 @@ namespace OpenSim.Framework
     /// </remarks>
     public class TaskInventoryDictionary : Dictionary<UUID, TaskInventoryItem>, ICloneable, IXmlSerializable, IDisposable
     {
-        // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly XmlSerializer tiiSerializer = new XmlSerializer(typeof (TaskInventoryItem));
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private Thread LockedByThread;
 //        private string WriterStack;
@@ -60,7 +60,7 @@ namespace OpenSim.Framework
         /// <value>
         /// An advanced lock for inventory data
         /// </value>
-        private volatile System.Threading.ReaderWriterLockSlim m_itemLock = new System.Threading.ReaderWriterLockSlim();
+        private volatile System.Threading.ReaderWriterLockSlim _itemLock = new System.Threading.ReaderWriterLockSlim();
 
         ~TaskInventoryDictionary()
         {
@@ -79,8 +79,8 @@ namespace OpenSim.Framework
             // Check to see if Dispose has already been called.
             if (!disposed)
             {
-                m_itemLock.Dispose();
-                m_itemLock = null;
+                _itemLock.Dispose();
+                _itemLock = null;
                 disposed = true;
             }
         }
@@ -90,7 +90,7 @@ namespace OpenSim.Framework
         /// </summary>
         public bool IsReadLockedByMe()
         {
-            if (m_itemLock.RecursiveReadCount > 0)
+            if (_itemLock.RecursiveReadCount > 0)
             {
                 return true;
             }
@@ -107,18 +107,18 @@ namespace OpenSim.Framework
         {
             if (locked)
             {
-                if (m_itemLock.IsWriteLockHeld && LockedByThread != null)
+                if (_itemLock.IsWriteLockHeld && LockedByThread != null)
                 {
                     if (!LockedByThread.IsAlive)
                     {
                         //Locked by dead thread, reset.
-                        m_itemLock = new System.Threading.ReaderWriterLockSlim();
+                        _itemLock = new System.Threading.ReaderWriterLockSlim();
                     }
                 }
 
-                if (m_itemLock.RecursiveReadCount > 0)
+                if (_itemLock.RecursiveReadCount > 0)
                 {
-                    m_log.Error("[TaskInventoryDictionary] Recursive read lock requested. This should not happen and means something needs to be fixed. For now though, it's safe to continue.");
+                    _log.Error("[TaskInventoryDictionary] Recursive read lock requested. This should not happen and means something needs to be fixed. For now though, it's safe to continue.");
                     try
                     {
                         // That call stack is useful for end users only. RealProgrammers need a full dump. Commented.
@@ -128,7 +128,7 @@ namespace OpenSim.Framework
                         // // write call stack method names
                         // foreach (StackFrame stackFrame in stackFrames)
                         // {
-                        //     m_log.Error("[SceneObjectGroup.m_parts]  "+(stackFrame.GetMethod().Name));   // write method name
+                        //     _log.Error("[SceneObjectGroup._parts]  "+(stackFrame.GetMethod().Name));   // write method name
                         // }
 
                         // The below is far more useful
@@ -143,11 +143,11 @@ namespace OpenSim.Framework
                     }
                     catch
                     {}
-                    m_itemLock.ExitReadLock();
+                    _itemLock.ExitReadLock();
                 }
-                if (m_itemLock.RecursiveWriteCount > 0)
+                if (_itemLock.RecursiveWriteCount > 0)
                 {
-                    m_log.Error("[TaskInventoryDictionary] Recursive write lock requested. This should not happen and means something needs to be fixed.");
+                    _log.Error("[TaskInventoryDictionary] Recursive write lock requested. This should not happen and means something needs to be fixed.");
 //                    try
 //                    {
 //                        System.Console.WriteLine("------------------------------------------");
@@ -158,15 +158,15 @@ namespace OpenSim.Framework
 //                    }
 //                    catch
 //                    {}
-                    m_itemLock.ExitWriteLock();
+                    _itemLock.ExitWriteLock();
                 }
 
-                while (!m_itemLock.TryEnterReadLock(60000))
+                while (!_itemLock.TryEnterReadLock(60000))
                 {
-                    m_log.Error("Thread lock detected while trying to aquire READ lock in TaskInventoryDictionary. Locked by thread " + LockedByThread.Name + ". I'm going to try to solve the thread lock automatically to preserve region stability, but this needs to be fixed.");
-                    //if (m_itemLock.IsWriteLockHeld)
+                    _log.Error("Thread lock detected while trying to aquire READ lock in TaskInventoryDictionary. Locked by thread " + LockedByThread.Name + ". I'm going to try to solve the thread lock automatically to preserve region stability, but this needs to be fixed.");
+                    //if (_itemLock.IsWriteLockHeld)
                     //{
-                        m_itemLock = new System.Threading.ReaderWriterLockSlim();
+                        _itemLock = new System.Threading.ReaderWriterLockSlim();
 //                        System.Console.WriteLine("------------------------------------------");
 //                        System.Console.WriteLine("My call stack:\n" + Environment.StackTrace);
 //                        System.Console.WriteLine("------------------------------------------");
@@ -180,11 +180,11 @@ namespace OpenSim.Framework
             }
             else
             {
-                if (m_itemLock.RecursiveReadCount>0)
+                if (_itemLock.RecursiveReadCount>0)
                 {
-                    m_itemLock.ExitReadLock();
+                    _itemLock.ExitReadLock();
                 }
-//                if (m_itemLock.RecursiveReadCount == 0)
+//                if (_itemLock.RecursiveReadCount == 0)
 //                    ReadLockers.Remove(Thread.CurrentThread);
             }
         }
@@ -197,22 +197,22 @@ namespace OpenSim.Framework
             if (locked)
             {
                 //Enter a write lock, wait indefinately for one to open.
-                if (m_itemLock.RecursiveReadCount > 0)
+                if (_itemLock.RecursiveReadCount > 0)
                 {
-                    m_log.Error("[TaskInventoryDictionary] Recursive read lock requested. This should not happen and means something needs to be fixed. For now though, it's safe to continue.");
-                    m_itemLock.ExitReadLock();
+                    _log.Error("[TaskInventoryDictionary] Recursive read lock requested. This should not happen and means something needs to be fixed. For now though, it's safe to continue.");
+                    _itemLock.ExitReadLock();
                 }
-                if (m_itemLock.RecursiveWriteCount > 0)
+                if (_itemLock.RecursiveWriteCount > 0)
                 {
-                    m_log.Error("[TaskInventoryDictionary] Recursive write lock requested. This should not happen and means something needs to be fixed.");
+                    _log.Error("[TaskInventoryDictionary] Recursive write lock requested. This should not happen and means something needs to be fixed.");
 
-                    m_itemLock.ExitWriteLock();
+                    _itemLock.ExitWriteLock();
                 }
-                while (!m_itemLock.TryEnterWriteLock(60000))
+                while (!_itemLock.TryEnterWriteLock(60000))
                 {
-                    if (m_itemLock.IsWriteLockHeld)
+                    if (_itemLock.IsWriteLockHeld)
                     {
-                        m_log.Error("Thread lock detected while trying to aquire WRITE lock in TaskInventoryDictionary. Locked by thread " + LockedByThread.Name + ". I'm going to try to solve the thread lock automatically to preserve region stability, but this needs to be fixed.");
+                        _log.Error("Thread lock detected while trying to aquire WRITE lock in TaskInventoryDictionary. Locked by thread " + LockedByThread.Name + ". I'm going to try to solve the thread lock automatically to preserve region stability, but this needs to be fixed.");
 //                        System.Console.WriteLine("------------------------------------------");
 //                        System.Console.WriteLine("My call stack:\n" + Environment.StackTrace);
 //                        System.Console.WriteLine("------------------------------------------");
@@ -221,7 +221,7 @@ namespace OpenSim.Framework
                     }
                     else
                     {
-                        m_log.Error("Thread lock detected while trying to aquire WRITE lock in TaskInventoryDictionary. Locked by a reader. I'm going to try to solve the thread lock automatically to preserve region stability, but this needs to be fixed.");
+                        _log.Error("Thread lock detected while trying to aquire WRITE lock in TaskInventoryDictionary. Locked by a reader. I'm going to try to solve the thread lock automatically to preserve region stability, but this needs to be fixed.");
 //                        System.Console.WriteLine("------------------------------------------");
 //                        System.Console.WriteLine("My call stack:\n" + Environment.StackTrace);
 //                        System.Console.WriteLine("------------------------------------------");
@@ -231,7 +231,7 @@ namespace OpenSim.Framework
 //                            System.Console.WriteLine("------------------------------------------");
 //                        }
                     }
-                    m_itemLock = new System.Threading.ReaderWriterLockSlim();
+                    _itemLock = new System.Threading.ReaderWriterLockSlim();
 //                    ReadLockers.Clear();
                 }
 
@@ -240,9 +240,9 @@ namespace OpenSim.Framework
             }
             else
             {
-                if (m_itemLock.RecursiveWriteCount > 0)
+                if (_itemLock.RecursiveWriteCount > 0)
                 {
-                    m_itemLock.ExitWriteLock();
+                    _itemLock.ExitWriteLock();
                 }
             }
         }
@@ -253,12 +253,12 @@ namespace OpenSim.Framework
         {
             TaskInventoryDictionary clone = new TaskInventoryDictionary();
 
-            m_itemLock.EnterReadLock();
+            _itemLock.EnterReadLock();
             foreach (UUID uuid in Keys)
             {
                 clone.Add(uuid, (TaskInventoryItem) this[uuid].Clone());
             }
-            m_itemLock.ExitReadLock();
+            _itemLock.ExitReadLock();
 
             return clone;
         }
@@ -266,9 +266,9 @@ namespace OpenSim.Framework
 
         public List<TaskInventoryItem> GetItems()
         {
-            m_itemLock.EnterReadLock();
+            _itemLock.EnterReadLock();
             var ret = new List<TaskInventoryItem>(Values);
-            m_itemLock.ExitReadLock();
+            _itemLock.ExitReadLock();
             return ret;
         }
 
@@ -282,7 +282,7 @@ namespace OpenSim.Framework
         // see IXmlSerializable
         public void ReadXml(XmlReader reader)
         {
-            // m_log.DebugFormat("[TASK INVENTORY]: ReadXml current node before actions, {0}", reader.Name);
+            // _log.DebugFormat("[TASK INVENTORY]: ReadXml current node before actions, {0}", reader.Name);
 
             if (!reader.IsEmptyElement)
             {
@@ -292,21 +292,21 @@ namespace OpenSim.Framework
                     TaskInventoryItem item = (TaskInventoryItem) tiiSerializer.Deserialize(reader);
                     Add(item.ItemID, item);
 
-                    //m_log.DebugFormat("[TASK INVENTORY]: Instanted prim item {0}, {1} from xml", item.Name, item.ItemID);
+                    //_log.DebugFormat("[TASK INVENTORY]: Instanted prim item {0}, {1} from xml", item.Name, item.ItemID);
                 }
 
-               // m_log.DebugFormat("[TASK INVENTORY]: Instantiated {0} prim items in total from xml", Count);
+               // _log.DebugFormat("[TASK INVENTORY]: Instantiated {0} prim items in total from xml", Count);
             }
             // else
             // {
-            //     m_log.DebugFormat("[TASK INVENTORY]: Skipping empty element {0}", reader.Name);
+            //     _log.DebugFormat("[TASK INVENTORY]: Skipping empty element {0}", reader.Name);
             // }
 
             // For some .net implementations, this last read is necessary so that we advance beyond the end tag
             // of the element wrapping this object so that the rest of the serialization can complete normally.
             reader.Read();
 
-            // m_log.DebugFormat("[TASK INVENTORY]: ReadXml current node after actions, {0}", reader.Name);
+            // _log.DebugFormat("[TASK INVENTORY]: ReadXml current node after actions, {0}", reader.Name);
         }
 
         // see IXmlSerializable

@@ -37,8 +37,8 @@ namespace OpenSim.Services.Connectors
 {
     public class HGAssetServiceConnector : IAssetService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly ExpiringCacheOS<string, AssetServicesConnector> m_connectors = new ExpiringCacheOS<string, AssetServicesConnector>(60000);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ExpiringCacheOS<string, AssetServicesConnector> _connectors = new ExpiringCacheOS<string, AssetServicesConnector>(60000);
 
         public HGAssetServiceConnector(IConfigSource source)
         {
@@ -50,23 +50,23 @@ namespace OpenSim.Services.Connectors
                 IConfig assetConfig = source.Configs["AssetService"];
                 if (assetConfig == null)
                 {
-                    m_log.Error("[HG ASSET SERVICE]: AssetService missing from OpenSim.ini");
+                    _log.Error("[HG ASSET SERVICE]: AssetService missing from OpenSim.ini");
                     return;
                 }
 
-                m_log.Info("[HG ASSET SERVICE]: HG asset service enabled");
+                _log.Info("[HG ASSET SERVICE]: HG asset service enabled");
             }
         }
 
         private AssetServicesConnector GetConnector(string url)
         {
             AssetServicesConnector connector = null;
-            lock (m_connectors)
+            lock (_connectors)
             {
-                if (!m_connectors.TryGetValue(url, 60000, out connector))
+                if (!_connectors.TryGetValue(url, 60000, out connector))
                 {
                     connector = new AssetServicesConnector(url);
-                    m_connectors.Add(url, connector);
+                    _connectors.Add(url, connector);
                 }
             }
             return connector;

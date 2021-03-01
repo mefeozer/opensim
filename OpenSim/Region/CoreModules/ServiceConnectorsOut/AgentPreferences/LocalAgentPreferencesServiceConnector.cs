@@ -42,22 +42,16 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalAgentPreferencesServicesConnector")]
     public class LocalAgentPreferencesServicesConnector : ISharedRegionModule, IAgentPreferencesService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAgentPreferencesService m_AgentPreferencesService;
-        private bool m_Enabled = false;
+        private IAgentPreferencesService _AgentPreferencesService;
+        private bool _Enabled = false;
 
         #region ISharedRegionModule
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LocalAgentPreferencesServicesConnector"; }
-        }
+        public string Name => "LocalAgentPreferencesServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -70,7 +64,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
                     IConfig userConfig = source.Configs["AgentPreferencesService"];
                     if (userConfig == null)
                     {
-                        m_log.Error("[AGENT PREFERENCES CONNECTOR]: AgentPreferencesService missing from OpenSim.ini");
+                        _log.Error("[AGENT PREFERENCES CONNECTOR]: AgentPreferencesService missing from OpenSim.ini");
                         return;
                     }
 
@@ -78,39 +72,39 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
-                        m_log.Error("[AGENT PREFERENCES CONNECTOR]: No AgentPreferencesModule named in section AgentPreferencesService");
+                        _log.Error("[AGENT PREFERENCES CONNECTOR]: No AgentPreferencesModule named in section AgentPreferencesService");
                         return;
                     }
 
                     object[] args = new object[] { source };
-                    m_AgentPreferencesService = ServerUtils.LoadPlugin<IAgentPreferencesService>(serviceDll, args);
+                    _AgentPreferencesService = ServerUtils.LoadPlugin<IAgentPreferencesService>(serviceDll, args);
 
-                    if (m_AgentPreferencesService == null)
+                    if (_AgentPreferencesService == null)
                     {
-                        m_log.Error("[AGENT PREFERENCES CONNECTOR]: Can't load agent preferences service");
+                        _log.Error("[AGENT PREFERENCES CONNECTOR]: Can't load agent preferences service");
                         return;
                     }
-                    m_Enabled = true;
-                    m_log.Info("[AGENT PREFERENCES CONNECTOR]: Local agent preferences connector enabled");
+                    _Enabled = true;
+                    _log.Info("[AGENT PREFERENCES CONNECTOR]: Local agent preferences connector enabled");
                 }
             }
         }
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void Close()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IAgentPreferencesService>(this);
@@ -118,13 +112,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
@@ -134,17 +128,17 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.AgentPreferences
 
         public AgentPrefs GetAgentPreferences(UUID principalID)
         {
-            return m_AgentPreferencesService.GetAgentPreferences(principalID);
+            return _AgentPreferencesService.GetAgentPreferences(principalID);
         }
 
         public bool StoreAgentPreferences(AgentPrefs data)
         {
-            return m_AgentPreferencesService.StoreAgentPreferences(data);
+            return _AgentPreferencesService.StoreAgentPreferences(data);
         }
 
         public string GetLang(UUID principalID)
         {
-            return m_AgentPreferencesService.GetLang(principalID);
+            return _AgentPreferencesService.GetLang(principalID);
         }
 
         #endregion IAgentPreferencesService

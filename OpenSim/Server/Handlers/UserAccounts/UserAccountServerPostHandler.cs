@@ -44,11 +44,11 @@ namespace OpenSim.Server.Handlers.UserAccounts
 {
     public class UserAccountServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IUserAccountService m_UserAccountService;
-        private readonly bool m_AllowCreateUser = false;
-        private readonly bool m_AllowSetAccount = false;
+        private readonly IUserAccountService _UserAccountService;
+        private readonly bool _AllowCreateUser = false;
+        private readonly bool _AllowSetAccount = false;
 
         public UserAccountServerPostHandler(IUserAccountService service)
             : this(service, null, null) {}
@@ -56,12 +56,12 @@ namespace OpenSim.Server.Handlers.UserAccounts
         public UserAccountServerPostHandler(IUserAccountService service, IConfig config, IServiceAuth auth) :
                 base("POST", "/accounts", auth)
         {
-            m_UserAccountService = service;
+            _UserAccountService = service;
 
             if (config != null)
             {
-                m_AllowCreateUser = config.GetBoolean("AllowCreateUser", m_AllowCreateUser);
-                m_AllowSetAccount = config.GetBoolean("AllowSetAccount", m_AllowSetAccount);
+                _AllowCreateUser = config.GetBoolean("AllowCreateUser", _AllowCreateUser);
+                _AllowSetAccount = config.GetBoolean("AllowSetAccount", _AllowSetAccount);
             }
         }
 
@@ -76,7 +76,7 @@ namespace OpenSim.Server.Handlers.UserAccounts
             // We need to check the authorization header
             //httpRequest.Headers["authorization"] ...
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
             string method = string.Empty;
             try
             {
@@ -91,7 +91,7 @@ namespace OpenSim.Server.Handlers.UserAccounts
                 switch (method)
                 {
                     case "createuser":
-                        if (m_AllowCreateUser)
+                        if (_AllowCreateUser)
                             return CreateUser(request);
                         else
                             return FailureResult();
@@ -102,17 +102,17 @@ namespace OpenSim.Server.Handlers.UserAccounts
                     case "getmultiaccounts":
                         return GetMultiAccounts(request);
                     case "setaccount":
-                        if (m_AllowSetAccount)
+                        if (_AllowSetAccount)
                             return StoreAccount(request);
                         else
                             return FailureResult();
                 }
 
-                m_log.DebugFormat("[USER SERVICE HANDLER]: unknown method request: {0}", method);
+                _log.DebugFormat("[USER SERVICE HANDLER]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[USER SERVICE HANDLER]: Exception in method {0}: {1}", method, e);
+                _log.DebugFormat("[USER SERVICE HANDLER]: Exception in method {0}: {1}", method, e);
             }
 
             return FailureResult();
@@ -134,22 +134,22 @@ namespace OpenSim.Server.Handlers.UserAccounts
             {
                 UUID userID;
                 if (UUID.TryParse(request["UserID"].ToString(), out userID))
-                    account = m_UserAccountService.GetUserAccount(scopeID, userID);
+                    account = _UserAccountService.GetUserAccount(scopeID, userID);
             }
             else if (request.ContainsKey("PrincipalID") && request["PrincipalID"] != null)
             {
                 UUID userID;
                 if (UUID.TryParse(request["PrincipalID"].ToString(), out userID))
-                    account = m_UserAccountService.GetUserAccount(scopeID, userID);
+                    account = _UserAccountService.GetUserAccount(scopeID, userID);
             }
             else if (request.ContainsKey("Email") && request["Email"] != null)
             {
-                account = m_UserAccountService.GetUserAccount(scopeID, request["Email"].ToString());
+                account = _UserAccountService.GetUserAccount(scopeID, request["Email"].ToString());
             }
             else if (request.ContainsKey("FirstName") && request.ContainsKey("LastName") &&
                 request["FirstName"] != null && request["LastName"] != null)
             {
-                account = m_UserAccountService.GetUserAccount(scopeID, request["FirstName"].ToString(), request["LastName"].ToString());
+                account = _UserAccountService.GetUserAccount(scopeID, request["FirstName"].ToString(), request["LastName"].ToString());
             }
 
             if (account == null)
@@ -175,7 +175,7 @@ namespace OpenSim.Server.Handlers.UserAccounts
 
             string query = request["query"].ToString();
 
-            List<UserAccount> accounts = m_UserAccountService.GetUserAccounts(scopeID, query);
+            List<UserAccount> accounts = _UserAccountService.GetUserAccounts(scopeID, query);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
             if (accounts == null || accounts != null && accounts.Count == 0)
@@ -195,7 +195,7 @@ namespace OpenSim.Server.Handlers.UserAccounts
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -207,19 +207,19 @@ namespace OpenSim.Server.Handlers.UserAccounts
 
             if (!request.ContainsKey("IDS"))
             {
-                m_log.DebugFormat("[USER SERVICE HANDLER]: GetMultiAccounts called without required uuids argument");
+                _log.DebugFormat("[USER SERVICE HANDLER]: GetMultiAccounts called without required uuids argument");
                 return FailureResult();
             }
 
             if (!(request["IDS"] is List<string>))
             {
-                m_log.DebugFormat("[USER SERVICE HANDLER]: GetMultiAccounts input argument was of unexpected type {0}", request["IDS"].GetType().ToString());
+                _log.DebugFormat("[USER SERVICE HANDLER]: GetMultiAccounts input argument was of unexpected type {0}", request["IDS"].GetType().ToString());
                 return FailureResult();
             }
 
             List<string> userIDs = (List<string>)request["IDS"];
 
-            List<UserAccount> accounts = m_UserAccountService.GetUserAccounts(scopeID, userIDs);
+            List<UserAccount> accounts = _UserAccountService.GetUserAccounts(scopeID, userIDs);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
             if (accounts == null || accounts != null && accounts.Count == 0)
@@ -241,7 +241,7 @@ namespace OpenSim.Server.Handlers.UserAccounts
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -255,7 +255,7 @@ namespace OpenSim.Server.Handlers.UserAccounts
             if (request.ContainsKey("ScopeID") && !UUID.TryParse(request["ScopeID"].ToString(), out scopeID))
                 return FailureResult();
 
-            UserAccount existingAccount = m_UserAccountService.GetUserAccount(scopeID, principalID);
+            UserAccount existingAccount = _UserAccountService.GetUserAccount(scopeID, principalID);
             if (existingAccount == null)
                 return FailureResult();
 
@@ -285,9 +285,9 @@ namespace OpenSim.Server.Handlers.UserAccounts
             if (request.ContainsKey("UserTitle"))
                 existingAccount.UserTitle = request["UserTitle"].ToString();
 
-            if (!m_UserAccountService.StoreUserAccount(existingAccount))
+            if (!_UserAccountService.StoreUserAccount(existingAccount))
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[USER ACCOUNT SERVER POST HANDLER]: Account store failed for account {0} {1} {2}",
                     existingAccount.FirstName, existingAccount.LastName, existingAccount.PrincipalID);
 
@@ -330,9 +330,9 @@ namespace OpenSim.Server.Handlers.UserAccounts
 
             UserAccount createdUserAccount = null;
 
-            if (m_UserAccountService is UserAccountService)
+            if (_UserAccountService is UserAccountService)
                 createdUserAccount
-                    = ((UserAccountService)m_UserAccountService).CreateUser(
+                    = ((UserAccountService)_UserAccountService).CreateUser(
                         scopeID, principalID, firstName, lastName, password, email, model);
 
             if (createdUserAccount == null)

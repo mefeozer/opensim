@@ -51,7 +51,7 @@ namespace OpenSim.Data.SQLite
         {
             using (SqliteCommand cmd = new SqliteCommand())
             {
-                cmd.CommandText = string.Format("select a.*,case when b.Flags is null then -1 else b.Flags end as TheirFlags from {0} as a left join {0} as b on a.PrincipalID = b.Friend and a.Friend = b.PrincipalID where a.PrincipalID = :PrincipalID", m_Realm);
+                cmd.CommandText = string.Format("select a.*,case when b.Flags is null then -1 else b.Flags end as TheirFlags from {0} as a left join {0} as b on a.PrincipalID = b.Friend and a.Friend = b.PrincipalID where a.PrincipalID = :PrincipalID", _Realm);
                 cmd.Parameters.AddWithValue(":PrincipalID", userID.ToString());
 
                 return DoQuery(cmd);
@@ -67,11 +67,11 @@ namespace OpenSim.Data.SQLite
         {
             using (SqliteCommand cmd = new SqliteCommand())
             {
-                cmd.CommandText = string.Format("delete from {0} where PrincipalID = :PrincipalID and Friend = :Friend", m_Realm);
+                cmd.CommandText = string.Format("delete from {0} where PrincipalID = :PrincipalID and Friend = :Friend", _Realm);
                 cmd.Parameters.AddWithValue(":PrincipalID", principalID.ToString());
                 cmd.Parameters.AddWithValue(":Friend", friend);
 
-                ExecuteNonQuery(cmd, m_Connection);
+                ExecuteNonQuery(cmd, _Connection);
             }
 
             return true;

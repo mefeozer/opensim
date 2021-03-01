@@ -37,7 +37,7 @@ namespace OpenSim.Data.Null
     /// </summary>
     public class NullInventoryData : IInventoryDataPlugin
     {
-        public string Version { get { return "1.0.0.0"; } }
+        public string Version => "1.0.0.0";
 
         public void Initialise()
         {
@@ -48,10 +48,7 @@ namespace OpenSim.Data.Null
             // Do nothing.
         }
 
-        public string Name
-        {
-            get { return "Null Inventory Data Interface"; }
-        }
+        public string Name => "Null Inventory Data Interface";
 
         public void Initialise(string connect)
         {

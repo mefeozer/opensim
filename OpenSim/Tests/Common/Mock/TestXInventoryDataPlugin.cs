@@ -36,8 +36,8 @@ namespace OpenSim.Tests.Common
 {
     public class TestXInventoryDataPlugin : NullGenericDataHandler, IXInventoryData
     {
-        private readonly Dictionary<UUID, XInventoryFolder> m_allFolders = new Dictionary<UUID, XInventoryFolder>();
-        private readonly Dictionary<UUID, XInventoryItem> m_allItems = new Dictionary<UUID, XInventoryItem>();
+        private readonly Dictionary<UUID, XInventoryFolder> _allFolders = new Dictionary<UUID, XInventoryFolder>();
+        private readonly Dictionary<UUID, XInventoryItem> _allItems = new Dictionary<UUID, XInventoryItem>();
 
         public TestXInventoryDataPlugin(string conn, string realm) {}
 
@@ -46,7 +46,7 @@ namespace OpenSim.Tests.Common
 //            Console.WriteLine(
 //                "Requesting items, fields {0}, vals {1}", string.Join(", ", fields), string.Join(", ", vals));
 
-            List<XInventoryItem> origItems = Get<XInventoryItem>(fields, vals, m_allItems.Values.ToList());
+            List<XInventoryItem> origItems = Get<XInventoryItem>(fields, vals, _allItems.Values.ToList());
 
             XInventoryItem[] items = origItems.Select(i => i.Clone()).ToArray();
 
@@ -62,7 +62,7 @@ namespace OpenSim.Tests.Common
 //                "Requesting folders, fields {0}, vals {1}", string.Join(", ", fields), string.Join(", ", vals));
 
             List<XInventoryFolder> origFolders
-                = Get<XInventoryFolder>(fields, vals, m_allFolders.Values.ToList());
+                = Get<XInventoryFolder>(fields, vals, _allFolders.Values.ToList());
 
             XInventoryFolder[] folders = origFolders.Select(f => f.Clone()).ToArray();
 
@@ -74,7 +74,7 @@ namespace OpenSim.Tests.Common
 
         public bool StoreFolder(XInventoryFolder folder)
         {
-            m_allFolders[folder.folderID] = folder.Clone();
+            _allFolders[folder.folderID] = folder.Clone();
 
 //            Console.WriteLine("Added folder {0} {1}", folder.folderName, folder.folderID);
 
@@ -83,7 +83,7 @@ namespace OpenSim.Tests.Common
 
         public bool StoreItem(XInventoryItem item)
         {
-            m_allItems[item.inventoryID] = item.Clone();
+            _allItems[item.inventoryID] = item.Clone();
 
 //            Console.WriteLine(
 //                "Added item {0} {1}, folder {2}, creator {3}, owner {4}",
@@ -100,7 +100,7 @@ namespace OpenSim.Tests.Common
         public bool DeleteFolders(string[] fields, string[] vals)
         {
             XInventoryFolder[] foldersToDelete = GetFolders(fields, vals);
-            Array.ForEach(foldersToDelete, f => m_allFolders.Remove(f.folderID));
+            Array.ForEach(foldersToDelete, f => _allFolders.Remove(f.folderID));
 
             return true;
         }
@@ -113,7 +113,7 @@ namespace OpenSim.Tests.Common
         public bool DeleteItems(string[] fields, string[] vals)
         {
             XInventoryItem[] itemsToDelete = GetItems(fields, vals);
-            Array.ForEach(itemsToDelete, i => m_allItems.Remove(i.inventoryID));
+            Array.ForEach(itemsToDelete, i => _allItems.Remove(i.inventoryID));
 
             return true;
         }
@@ -122,7 +122,7 @@ namespace OpenSim.Tests.Common
         {
             UUID uid = new UUID(id);
             UUID upid = new UUID(newParent);
-            m_allItems[uid].parentFolderID = upid;
+            _allItems[uid].parentFolderID = upid;
             return true;
         }
 
@@ -138,7 +138,7 @@ namespace OpenSim.Tests.Common
         public bool MoveFolder(string id, string newParent)
         {
             // Don't use GetFolders() here - it takes a clone!
-            XInventoryFolder folder = m_allFolders[new UUID(id)];
+            XInventoryFolder folder = _allFolders[new UUID(id)];
 
             if (folder == null)
                 return false;

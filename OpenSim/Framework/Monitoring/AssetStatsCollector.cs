@@ -45,10 +45,10 @@ namespace OpenSim.Framework.Monitoring
         private long assetRequestsYesterday;
         private long assetRequestsNotFoundYesterday;
 
-        public long AssetRequestsToday { get { return assetRequestsToday; } }
-        public long AssetRequestsNotFoundToday { get { return assetRequestsNotFoundToday; } }
-        public long AssetRequestsYesterday { get { return assetRequestsYesterday; } }
-        public long AssetRequestsNotFoundYesterday { get { return assetRequestsNotFoundYesterday; } }
+        public long AssetRequestsToday => assetRequestsToday;
+        public long AssetRequestsNotFoundToday => assetRequestsNotFoundToday;
+        public long AssetRequestsYesterday => assetRequestsYesterday;
+        public long AssetRequestsNotFoundYesterday => assetRequestsNotFoundYesterday;
 
         public AssetStatsCollector()
         {

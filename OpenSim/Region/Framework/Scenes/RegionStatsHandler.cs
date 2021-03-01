@@ -36,7 +36,7 @@ namespace OpenSim.Region.Framework.Scenes
 {
     public class RegionStatsSimpleHandler : SimpleStreamHandler
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly string osXStatsURI = string.Empty;
         //private string osSecret = String.Empty;
@@ -87,7 +87,7 @@ namespace OpenSim.Region.Framework.Scenes
     // legacy do not use. This will removed in future
     public class RegionStatsHandler : BaseStreamHandler
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly string osXStatsURI = string.Empty;
         //private string osSecret = String.Empty;
@@ -108,10 +108,7 @@ namespace OpenSim.Region.Framework.Scenes
             return Util.UTF8.GetBytes(Report());
         }
 
-        public override string ContentType
-        {
-            get { return "text/plain"; }
-        }
+        public override string ContentType => "text/plain";
 
         private string Report()
         {

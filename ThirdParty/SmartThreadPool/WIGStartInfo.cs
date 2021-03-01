@@ -49,7 +49,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual bool UseCallerCallContext
         {
-            get { return _useCallerCallContext; }
+            get => _useCallerCallContext;
             set 
             { 
                 ThrowIfReadOnly();  
@@ -63,7 +63,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual bool DisposeOfStateObjects
         {
-            get { return _disposeOfStateObjects; }
+            get => _disposeOfStateObjects;
             set 
             { 
                 ThrowIfReadOnly();  
@@ -77,7 +77,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual CallToPostExecute CallToPostExecute
         {
-            get { return _callToPostExecute; }
+            get => _callToPostExecute;
             set 
             { 
                 ThrowIfReadOnly();  
@@ -91,7 +91,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual PostExecuteWorkItemCallback PostExecuteWorkItemCallback
         {
-            get { return _postExecuteWorkItemCallback; }
+            get => _postExecuteWorkItemCallback;
             set 
             { 
                 ThrowIfReadOnly();  
@@ -106,7 +106,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual bool StartSuspended
         {
-            get { return _startSuspended; }
+            get => _startSuspended;
             set 
             { 
                 ThrowIfReadOnly();  
@@ -121,7 +121,7 @@ namespace Amib.Threading
         /// </summary>
         public virtual bool FillStateWithArgs
         {
-            get { return _fillStateWithArgs; }
+            get => _fillStateWithArgs;
             set 
             { 
                 ThrowIfReadOnly();  

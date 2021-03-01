@@ -37,27 +37,27 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
 {
     public class EstateLoaderFileSystem : IEstateLoader
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IConfigSource m_configSource;
+        private IConfigSource _configSource;
 
-        private readonly OpenSimBase m_application;
+        private readonly OpenSimBase _application;
 
         public EstateLoaderFileSystem(OpenSimBase openSim)
         {
-            m_application = openSim;
+            _application = openSim;
         }
 
         public void SetIniConfigSource(IConfigSource configSource)
         {
-            m_configSource = configSource;
+            _configSource = configSource;
         }
 
         public void LoadEstates()
         {
             string estateConfigPath = Path.Combine(Util.configDir(), "Estates");
 
-            IConfig startupConfig = m_configSource.Configs["Startup"];
+            IConfig startupConfig = _configSource.Configs["Startup"];
             if(startupConfig == null)
                 return;
 
@@ -75,7 +75,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
             }
             catch
             {
-                m_log.Error("[ESTATE LOADER FILE SYSTEM]: could not open " + estateConfigPath);
+                _log.Error("[ESTATE LOADER FILE SYSTEM]: could not open " + estateConfigPath);
                 return;
             }
 
@@ -83,15 +83,15 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
             if (iniFiles == null || iniFiles.Length == 0)
                 return;
 
-            m_log.InfoFormat("[ESTATE LOADER FILE SYSTEM]: Loading estate config files from {0}", estateConfigPath);
+            _log.InfoFormat("[ESTATE LOADER FILE SYSTEM]: Loading estate config files from {0}", estateConfigPath);
 
             List<int> existingEstates;
 
-            List<int> existingEstateIDs = m_application.EstateDataService.GetEstatesAll();
+            List<int> existingEstateIDs = _application.EstateDataService.GetEstatesAll();
 
             foreach (string file in iniFiles)
             {
-                m_log.InfoFormat("[ESTATE LOADER FILE SYSTEM]: Loading config file {0}", file);
+                _log.InfoFormat("[ESTATE LOADER FILE SYSTEM]: Loading config file {0}", file);
 
                 IConfigSource source = null;
                 try
@@ -100,7 +100,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
                 }
                 catch
                 {
-                    m_log.WarnFormat("[ESTATE LOADER FILE SYSTEM]: failed to parse file {0}", file);
+                    _log.WarnFormat("[ESTATE LOADER FILE SYSTEM]: failed to parse file {0}", file);
                 }
 
                 if(source == null)
@@ -115,7 +115,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
 
                     if (estateName.Length > 64) // need check this and if utf8 is valid
                     {
-                        m_log.WarnFormat("[ESTATE LOADER FILE SYSTEM]: Estate name {0} is too large, ignoring", estateName);
+                        _log.WarnFormat("[ESTATE LOADER FILE SYSTEM]: Estate name {0} is too large, ignoring", estateName);
                         continue;
                     }
 
@@ -127,7 +127,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
                         continue;
 
                     // Check If Estate Exists (Skip If So)
-                    existingEstates = m_application.EstateDataService.GetEstates(estateName);
+                    existingEstates = _application.EstateDataService.GetEstates(estateName);
 
                     if (existingEstates.Count > 0)
                         continue;
@@ -142,27 +142,27 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
                         if (EstateID < 100)
                         {
                             // EstateID Cannot be less than 100
-                            m_log.WarnFormat("[ESTATE LOADER FILE SYSTEM]: Estate name {0} specified estateID that is less that 100, ignoring", estateName);
+                            _log.WarnFormat("[ESTATE LOADER FILE SYSTEM]: Estate name {0} specified estateID that is less that 100, ignoring", estateName);
                             continue;
                         }
                         else if(existingEstateIDs.Contains(EstateID))
                         {
                             // Specified EstateID Exists
-                            m_log.WarnFormat("[ESTATE LOADER FILE SYSTEM]: Estate name {0} specified estateID that is already in use, ignoring", estateName);
+                            _log.WarnFormat("[ESTATE LOADER FILE SYSTEM]: Estate name {0} specified estateID that is already in use, ignoring", estateName);
                             continue;
                         }
                     }
 
                     // Create a new estate with the name provided
-                    EstateSettings estateSettings = m_application.EstateDataService.CreateNewEstate(EstateID);
+                    EstateSettings estateSettings = _application.EstateDataService.CreateNewEstate(EstateID);
 
                     estateSettings.EstateName = estateName;
                     estateSettings.EstateOwner = estateOwner;
 
                     // Persistence does not seem to effect the need to save a new estate
-                    m_application.EstateDataService.StoreEstateSettings(estateSettings);
+                    _application.EstateDataService.StoreEstateSettings(estateSettings);
 
-                    m_log.InfoFormat("[ESTATE LOADER FILE SYSTEM]: Loaded config for estate {0}", estateName);
+                    _log.InfoFormat("[ESTATE LOADER FILE SYSTEM]: Loaded config for estate {0}", estateName);
                 }
             }
         }

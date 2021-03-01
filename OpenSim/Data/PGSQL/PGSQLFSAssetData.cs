@@ -39,24 +39,24 @@ namespace OpenSim.Data.PGSQL
     public class PGSQLFSAssetData : IFSAssetDataPlugin
     {
         private const string _migrationStore = "FSAssetStore";
-        private static readonly string m_Table = "fsassets";
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private long m_ticksToEpoch;
+        private static readonly string _Table = "fsassets";
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private long _ticksToEpoch;
 
-        private PGSQLManager m_database;
-        private string m_connectionString;
+        private PGSQLManager _database;
+        private string _connectionString;
 
         public void Initialise(string connect, string realm, int UpdateAccessTime)
         {
             DaysBetweenAccessTimeUpdates = UpdateAccessTime;
 
-            m_ticksToEpoch = new System.DateTime(1970, 1, 1).Ticks;
+            _ticksToEpoch = new System.DateTime(1970, 1, 1).Ticks;
 
-            m_connectionString = connect;
-            m_database = new PGSQLManager(m_connectionString);
+            _connectionString = connect;
+            _database = new PGSQLManager(_connectionString);
 
             //New migration to check for DB changes
-            m_database.CheckMigration(_migrationStore);
+            _database.CheckMigration(_migrationStore);
         }
 
         public void Initialise()
@@ -70,21 +70,15 @@ namespace OpenSim.Data.PGSQL
         /// </summary>
         private int DaysBetweenAccessTimeUpdates = 0;
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
-        
+        protected virtual Assembly Assembly => GetType().Assembly;
+
         #region IPlugin Members
 
-        public string Version { get { return "1.0.0.0"; } }
+        public string Version => "1.0.0.0";
 
         public void Dispose() { }
 
-        public string Name
-        {
-            get { return "PGSQL FSAsset storage engine"; }
-        }
+        public string Name => "PGSQL FSAsset storage engine";
 
         #endregion
 
@@ -96,12 +90,12 @@ namespace OpenSim.Data.PGSQL
             AssetMetadata meta = null;
             UUID uuid = new UUID(id);
 
-            string query = string.Format("select \"id\", \"type\", \"hash\", \"create_time\", \"access_time\", \"asset_flags\" from {0} where \"id\" = :id", m_Table);
-            using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+            string query = string.Format("select \"id\", \"type\", \"hash\", \"create_time\", \"access_time\", \"asset_flags\" from {0} where \"id\" = :id", _Table);
+            using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
             {
                 dbcon.Open();
-                cmd.Parameters.Add(m_database.CreateParameter("id", uuid));
+                cmd.Parameters.Add(_database.CreateParameter("id", uuid));
                 using (NpgsqlDataReader reader = cmd.ExecuteReader(CommandBehavior.Default))
                 {
                     if (reader.Read())
@@ -132,14 +126,14 @@ namespace OpenSim.Data.PGSQL
             if (DaysBetweenAccessTimeUpdates > 0 && (DateTime.UtcNow - Utils.UnixTimeToDateTime(AccessTime)).TotalDays < DaysBetweenAccessTimeUpdates)
                 return;
 
-            string query = string.Format("UPDATE {0} SET \"access_time\" = :access_time WHERE \"id\" = :id", m_Table);
-            using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+            string query = string.Format("UPDATE {0} SET \"access_time\" = :access_time WHERE \"id\" = :id", _Table);
+            using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
             {
                 dbcon.Open();
-                int now = (int)((System.DateTime.Now.Ticks - m_ticksToEpoch) / 10000000);
-                cmd.Parameters.Add(m_database.CreateParameter("id", id));
-                cmd.Parameters.Add(m_database.CreateParameter("access_time", now));
+                int now = (int)((System.DateTime.Now.Ticks - _ticksToEpoch) / 10000000);
+                cmd.Parameters.Add(_database.CreateParameter("id", id));
+                cmd.Parameters.Add(_database.CreateParameter("access_time", now));
                 cmd.ExecuteNonQuery();
             }
         }
@@ -152,32 +146,32 @@ namespace OpenSim.Data.PGSQL
                 string oldhash;
                 AssetMetadata existingAsset = Get(meta.ID, out oldhash);
 
-                string query = string.Format("UPDATE {0} SET \"access_time\" = :access_time WHERE \"id\" = :id", m_Table);
+                string query = string.Format("UPDATE {0} SET \"access_time\" = :access_time WHERE \"id\" = :id", _Table);
                 if (existingAsset == null)
                 {
-                   query = string.Format("insert into {0} (\"id\", \"type\", \"hash\", \"asset_flags\", \"create_time\", \"access_time\") values ( :id, :type, :hash, :asset_flags, :create_time, :access_time)", m_Table);
+                   query = string.Format("insert into {0} (\"id\", \"type\", \"hash\", \"asset_flags\", \"create_time\", \"access_time\") values ( :id, :type, :hash, :asset_flags, :create_time, :access_time)", _Table);
                    found = true;
                 }
 
-                using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
                 using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                 {
                     dbcon.Open();
-                    int now = (int)((System.DateTime.Now.Ticks - m_ticksToEpoch) / 10000000);
-                    cmd.Parameters.Add(m_database.CreateParameter("id", meta.FullID));
-                    cmd.Parameters.Add(m_database.CreateParameter("type", meta.Type));
-                    cmd.Parameters.Add(m_database.CreateParameter("hash", hash));
-                    cmd.Parameters.Add(m_database.CreateParameter("asset_flags", Convert.ToInt32(meta.Flags)));
-                    cmd.Parameters.Add(m_database.CreateParameter("create_time", now));
-                    cmd.Parameters.Add(m_database.CreateParameter("access_time", now));
+                    int now = (int)((System.DateTime.Now.Ticks - _ticksToEpoch) / 10000000);
+                    cmd.Parameters.Add(_database.CreateParameter("id", meta.FullID));
+                    cmd.Parameters.Add(_database.CreateParameter("type", meta.Type));
+                    cmd.Parameters.Add(_database.CreateParameter("hash", hash));
+                    cmd.Parameters.Add(_database.CreateParameter("asset_flags", Convert.ToInt32(meta.Flags)));
+                    cmd.Parameters.Add(_database.CreateParameter("create_time", now));
+                    cmd.Parameters.Add(_database.CreateParameter("access_time", now));
                     cmd.ExecuteNonQuery();
                 }
                 return found;
             }
             catch(Exception e)
             {
-                m_log.Error("[PGSQL FSASSETS] Failed to store asset with ID " + meta.ID);
-		        m_log.Error(e.ToString());
+                _log.Error("[PGSQL FSASSETS] Failed to store asset with ID " + meta.ID);
+		        _log.Error(e.ToString());
                 return false;
             }
         }
@@ -195,8 +189,8 @@ namespace OpenSim.Data.PGSQL
             HashSet<UUID> exists = new HashSet<UUID>();
 
             string ids = "'" + string.Join("','", uuids) + "'";
-            string query = string.Format("select \"id\" from {1} where id in ({0})", ids, m_Table);
-            using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+            string query = string.Format("select \"id\" from {1} where id in ({0})", ids, _Table);
+            using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
             {
                 dbcon.Open();
@@ -219,8 +213,8 @@ namespace OpenSim.Data.PGSQL
         public int Count()
         {
             int count = 0;
-            string query = string.Format("select count(*) as count from {0}", m_Table);
-            using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+            string query = string.Format("select count(*) as count from {0}", _Table);
+            using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
             {
                 dbcon.Open();
@@ -235,12 +229,12 @@ namespace OpenSim.Data.PGSQL
 
         public bool Delete(string id)
         {
-            string query = string.Format("delete from {0} where \"id\" = :id", m_Table);
-            using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+            string query = string.Format("delete from {0} where \"id\" = :id", _Table);
+            using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
             {
                 dbcon.Open();
-                cmd.Parameters.Add(m_database.CreateParameter("id", new UUID(id)));
+                cmd.Parameters.Add(_database.CreateParameter("id", new UUID(id)));
                 cmd.ExecuteNonQuery();
             }
 
@@ -298,7 +292,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PGSQL FSASSETS]: Error importing assets: {0}",
+                _log.ErrorFormat("[PGSQL FSASSETS]: Error importing assets: {0}",
                         e.Message.ToString());
                 return;
             }

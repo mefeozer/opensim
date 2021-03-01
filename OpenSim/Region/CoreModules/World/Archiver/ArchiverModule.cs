@@ -48,7 +48,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "ArchiverModule")]
     public class ArchiverModule : INonSharedRegionModule, IRegionArchiverModule
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public Scene Scene { get; private set; }
@@ -58,27 +58,21 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// </value>
         protected const string DEFAULT_OAR_BACKUP_FILENAME = "region.oar";
 
-        public string Name
-        {
-            get { return "RegionArchiverModule"; }
-        }
+        public string Name => "RegionArchiverModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
 
         public void Initialise(IConfigSource source)
         {
-            //m_log.Debug("[ARCHIVER] Initialising");
+            //_log.Debug("[ARCHIVER] Initialising");
         }
 
         public void AddRegion(Scene scene)
         {
             Scene = scene;
             Scene.RegisterModuleInterface<IRegionArchiverModule>(this);
-            //m_log.DebugFormat("[ARCHIVER]: Enabled for region {0}", scene.RegionInfo.RegionName);
+            //_log.DebugFormat("[ARCHIVER]: Enabled for region {0}", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
@@ -133,8 +127,8 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 }
                 catch
                 {
-                    m_log.ErrorFormat("[ARCHIVER MODULE] failure parsing displacement");
-                    m_log.ErrorFormat("[ARCHIVER MODULE]    Must be represented as vector3: --displacement \"<128,128,0>\"");
+                    _log.ErrorFormat("[ARCHIVER MODULE] failure parsing displacement");
+                    _log.ErrorFormat("[ARCHIVER MODULE]    Must be represented as vector3: --displacement \"<128,128,0>\"");
                     return;
                 }
             });
@@ -146,8 +140,8 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 }
                 catch
                 {
-                    m_log.ErrorFormat("[ARCHIVER MODULE] failure parsing rotation");
-                    m_log.ErrorFormat("[ARCHIVER MODULE]    Must be an angle in degrees between -360 and +360: --rotation 45");
+                    _log.ErrorFormat("[ARCHIVER MODULE] failure parsing rotation");
+                    _log.ErrorFormat("[ARCHIVER MODULE]    Must be an angle in degrees between -360 and +360: --rotation 45");
                     return;
                 }
                 //pass this in as degrees now, convert to radians later during actual work phase
@@ -157,13 +151,13 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             {
                 try
                 {
-                    m_log.Info("[ARCHIVER MODULE] Warning: --rotation-center no longer does anything and will be removed soon!");
+                    _log.Info("[ARCHIVER MODULE] Warning: --rotation-center no longer does anything and will be removed soon!");
                     rotationCenter = v == null ? Vector3.Zero : Vector3.Parse(v);
                 }
                 catch
                 {
-                    m_log.ErrorFormat("[ARCHIVER MODULE] failure parsing rotation displacement");
-                    m_log.ErrorFormat("[ARCHIVER MODULE]    Must be represented as vector3: --rotation-center \"<128,128,0>\"");
+                    _log.ErrorFormat("[ARCHIVER MODULE] failure parsing rotation displacement");
+                    _log.ErrorFormat("[ARCHIVER MODULE]    Must be represented as vector3: --rotation-center \"<128,128,0>\"");
                     return;
                 }
             });
@@ -175,8 +169,8 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 }
                 catch
                 {
-                    m_log.ErrorFormat("[ARCHIVER MODULE] failure parsing bounding cube origin");
-                    m_log.ErrorFormat("[ARCHIVER MODULE]    Must be represented as vector3: --bounding-origin \"<128,128,0>\"");
+                    _log.ErrorFormat("[ARCHIVER MODULE] failure parsing bounding cube origin");
+                    _log.ErrorFormat("[ARCHIVER MODULE]    Must be represented as vector3: --bounding-origin \"<128,128,0>\"");
                     return;
                 }
             });
@@ -188,8 +182,8 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 }
                 catch
                 {
-                    m_log.ErrorFormat("[ARCHIVER MODULE] failure parsing bounding cube size");
-                    m_log.ErrorFormat("[ARCHIVER MODULE]    Must be represented as a positive vector3: --bounding-size \"<256,256,4096>\"");
+                    _log.ErrorFormat("[ARCHIVER MODULE] failure parsing bounding cube size");
+                    _log.ErrorFormat("[ARCHIVER MODULE]    Must be represented as a positive vector3: --bounding-size \"<256,256,4096>\"");
                     return;
                 }
             });
@@ -197,7 +191,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
             // Send a message to the region ready module
             /* bluewall* Disable this for the time being
-            IRegionReadyModule rready = m_scene.RequestModuleInterface<IRegionReadyModule>();
+            IRegionReadyModule rready = _scene.RequestModuleInterface<IRegionReadyModule>();
 
             if (rready != null)
             {
@@ -207,10 +201,10 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
             List<string> mainParams = options.Parse(cmdparams);
 
-//            m_log.DebugFormat("MERGE OAR IS [{0}]", mergeOar);
+//            _log.DebugFormat("MERGE OAR IS [{0}]", mergeOar);
 //
 //            foreach (string param in mainParams)
-//                m_log.DebugFormat("GOT PARAM [{0}]", param);
+//                _log.DebugFormat("GOT PARAM [{0}]", param);
 
             Dictionary<string, object> archiveOptions = new Dictionary<string, object>();
             if (mergeOar) archiveOptions.Add("merge", null);
@@ -228,11 +222,11 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 }
                 catch
                 {
-                    m_log.ErrorFormat("[ARCHIVER MODULE] default user must be in format \"First Last\"", defaultUser);
+                    _log.ErrorFormat("[ARCHIVER MODULE] default user must be in format \"First Last\"", defaultUser);
                 }
                 if (defaultUserUUID == UUID.Zero)
                 {
-                    m_log.ErrorFormat("[ARCHIVER MODULE] cannot find specified default user {0}", defaultUser);
+                    _log.ErrorFormat("[ARCHIVER MODULE] cannot find specified default user {0}", defaultUser);
                     return;
                 }
                 else
@@ -300,7 +294,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
         public void ArchiveRegion(string savePath, Guid requestId, Dictionary<string, object> options)
         {
-            m_log.InfoFormat(
+            _log.InfoFormat(
                 "[ARCHIVER]: Writing archive for region {0} to {1}", Scene.RegionInfo.RegionName, savePath);
 
             new ArchiveWriteRequest(Scene, savePath, requestId).ArchiveRegion(options);
@@ -329,7 +323,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
         public void DearchiveRegion(string loadPath, Guid requestId, Dictionary<string, object> options)
         {
-            m_log.InfoFormat(
+            _log.InfoFormat(
                 "[ARCHIVER]: Loading archive to region {0} from {1}", Scene.RegionInfo.RegionName, loadPath);
 
             new ArchiveReadRequest(Scene, loadPath, requestId, options).DearchiveRegion();

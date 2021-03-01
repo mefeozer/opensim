@@ -36,7 +36,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 {
     public sealed class PacketPool
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly PacketPool instance = new PacketPool();
 
@@ -47,10 +47,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         private static readonly Dictionary<Type, Stack<object>> DataBlocks = new Dictionary<Type, Stack<object>>();
 
-        public static PacketPool Instance
-        {
-            get { return instance; }
-        }
+        public static PacketPool Instance => instance;
 
         public bool RecyclePackets { get; set; }
 
@@ -123,14 +120,14 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             {
                 if (!pool.ContainsKey(type) || pool[type] == null || pool[type].Count == 0)
                 {
-//                    m_log.DebugFormat("[PACKETPOOL]: Building {0} packet", type);
+//                    _log.DebugFormat("[PACKETPOOL]: Building {0} packet", type);
 
                     // Creating a new packet if we cannot reuse an old package
                     packet = Packet.BuildPacket(type);
                 }
                 else
                 {
-//                    m_log.DebugFormat("[PACKETPOOL]: Pulling {0} packet", type);
+//                    _log.DebugFormat("[PACKETPOOL]: Pulling {0} packet", type);
 
                     // Recycle old packages
                     PacketsReused++;
@@ -182,7 +179,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             int i = 0;
             Packet packet = GetPacket(type);
             if (packet == null)
-                m_log.WarnFormat("[PACKETPOOL]: Failed to get packet of type {0}", type);
+                _log.WarnFormat("[PACKETPOOL]: Failed to get packet of type {0}", type);
             else
                 packet.FromBytes(bytes, ref i, ref packetEnd, zeroBuffer);
 
@@ -240,7 +237,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
                 if (pool[type].Count < 50)
                 {
-//                  m_log.DebugFormat("[PACKETPOOL]: Pushing {0} packet", type);
+//                  _log.DebugFormat("[PACKETPOOL]: Pushing {0} packet", type);
                     pool[type].Push(packet);
                 }
             }

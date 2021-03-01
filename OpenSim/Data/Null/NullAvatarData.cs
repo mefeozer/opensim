@@ -32,7 +32,7 @@ namespace OpenSim.Data.Null
 {
     public class NullAvatarData : IAvatarData
     {
-        private static readonly Dictionary<UUID, AvatarBaseData> m_DataByUUID = new Dictionary<UUID, AvatarBaseData>();
+        private static readonly Dictionary<UUID, AvatarBaseData> _DataByUUID = new Dictionary<UUID, AvatarBaseData>();
 
         public NullAvatarData(string connectionString, string realm)
         {
@@ -44,8 +44,8 @@ namespace OpenSim.Data.Null
             {
                 UUID id = UUID.Zero;
                 if (UUID.TryParse(val, out id))
-                    if (m_DataByUUID.ContainsKey(id))
-                        return new AvatarBaseData[] { m_DataByUUID[id] };
+                    if (_DataByUUID.ContainsKey(id))
+                        return new AvatarBaseData[] { _DataByUUID[id] };
             }
 
             // Fail
@@ -54,15 +54,15 @@ namespace OpenSim.Data.Null
 
         public bool Store(AvatarBaseData data)
         {
-            m_DataByUUID[data.PrincipalID] = data;
+            _DataByUUID[data.PrincipalID] = data;
             return true;
         }
 
         public bool Delete(UUID principalID, string name)
         {
-            if (m_DataByUUID.ContainsKey(principalID) && m_DataByUUID[principalID].Data.ContainsKey(name))
+            if (_DataByUUID.ContainsKey(principalID) && _DataByUUID[principalID].Data.ContainsKey(name))
             {
-                    m_DataByUUID[principalID].Data.Remove(name);
+                    _DataByUUID[principalID].Data.Remove(name);
                     return true;
             }
 
@@ -75,9 +75,9 @@ namespace OpenSim.Data.Null
             {
                 UUID id = UUID.Zero;
                 if (UUID.TryParse(val, out id))
-                    if (m_DataByUUID.ContainsKey(id))
+                    if (_DataByUUID.ContainsKey(id))
                     {
-                        m_DataByUUID.Remove(id);
+                        _DataByUUID.Remove(id);
                         return true;
                     }
             }

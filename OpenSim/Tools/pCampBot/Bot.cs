@@ -49,28 +49,28 @@ namespace pCampBot
 
     public class Bot
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public int PacketDebugLevel
         {
-            get { return m_packetDebugLevel; }
+            get => _packetDebugLevel;
             set
             {
-                if (value == m_packetDebugLevel)
+                if (value == _packetDebugLevel)
                     return;
 
-                m_packetDebugLevel = value;
+                _packetDebugLevel = value;
 
                 if (Client != null)
                 {
-                    if (m_packetDebugLevel <= 0)
+                    if (_packetDebugLevel <= 0)
                         Client.Network.UnregisterCallback(PacketType.Default, PacketReceivedDebugHandler);
                     else
                         Client.Network.RegisterCallback(PacketType.Default, PacketReceivedDebugHandler, false);
                 }
             }
         }
-        private int m_packetDebugLevel;
+        private int _packetDebugLevel;
 
         public delegate void AnEvent(Bot callbot, EventType someevent); // event delegate for bot events
 
@@ -103,11 +103,11 @@ namespace pCampBot
         {
             get
             {
-                lock (m_objects)
-                    return new Dictionary<UUID, Primitive>(m_objects);
+                lock (_objects)
+                    return new Dictionary<UUID, Primitive>(_objects);
             }
         }
-        private readonly Dictionary<UUID, Primitive> m_objects = new Dictionary<UUID, Primitive>();
+        private readonly Dictionary<UUID, Primitive> _objects = new Dictionary<UUID, Primitive>();
 
         /// <summary>
         /// Is this bot connected to the grid?
@@ -152,7 +152,7 @@ namespace pCampBot
         /// <summary>
         /// Keep a track of the continuously acting thread so that we can abort it.
         /// </summary>
-        private Thread m_actionThread;
+        private Thread _actionThread;
 
         protected List<uint> objectIDs = new List<uint>();
 
@@ -292,7 +292,7 @@ namespace pCampBot
             newClient.Network.Disconnected += Network_OnDisconnected;
             newClient.Objects.ObjectUpdate += Objects_NewPrim;
 
-            if (m_packetDebugLevel > 0)
+            if (_packetDebugLevel > 0)
                 newClient.Network.RegisterCallback(PacketType.Default, PacketReceivedDebugHandler);
 
             Client = newClient;
@@ -308,7 +308,7 @@ namespace pCampBot
                 {
 //                        Thread.Sleep(Random.Next(3000, 10000));
 
-                    // m_log.DebugFormat("[pCAMPBOT]: For {0} performing action {1}", Name, b.GetType());
+                    // _log.DebugFormat("[pCAMPBOT]: For {0} performing action {1}", Name, b.GetType());
                     behaviour.Action();
                 }
             }
@@ -358,8 +358,8 @@ namespace pCampBot
                 ConnectionState = ConnectionState.Connected;
 
                 Thread.Sleep(Random.Next(1000, 10000));
-                m_actionThread = new Thread(Action);
-                m_actionThread.Start();
+                _actionThread = new Thread(Action);
+                _actionThread.Start();
 
 //                    OnConnected(this, EventType.CONNECTED);
                 if (wear == "save")
@@ -386,7 +386,7 @@ namespace pCampBot
             {
                 ConnectionState = ConnectionState.Disconnected;
 
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "{0} {1} cannot login: {2}", FirstName, LastName, Client.Network.LoginMessage);
 
                 if (OnDisconnected != null)
@@ -454,12 +454,12 @@ namespace pCampBot
                     }
                     else
                     {
-                        m_log.WarnFormat("Failed to decode {0} asset {1}", asset.AssetType, asset.AssetID);
+                        _log.WarnFormat("Failed to decode {0} asset {1}", asset.AssetType, asset.AssetID);
                     }
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat("Exception: {0}{1}", e.Message, e.StackTrace);
+                    _log.ErrorFormat("Exception: {0}{1}", e.Message, e.StackTrace);
                 }
             }
         }
@@ -493,7 +493,7 @@ namespace pCampBot
                 if (wear == "yes")
                 {
                     //TODO: Implement random outfit picking
-                    m_log.DebugFormat("Picks a random outfit. Not yet implemented.");
+                    _log.DebugFormat("Picks a random outfit. Not yet implemented.");
                 }
                 else if (wear != "save")
                     saveDir = "MyAppearance/" + wear;
@@ -523,7 +523,7 @@ namespace pCampBot
                         }
                         else
                         {
-                            m_log.WarnFormat("Failed to create item {0}", item.Name);
+                            _log.WarnFormat("Failed to create item {0}", item.Name);
                         }
                     }
                     );
@@ -547,7 +547,7 @@ namespace pCampBot
                         }
                         else
                         {
-                            m_log.WarnFormat("Failed to create item {0}", item.Name);
+                            _log.WarnFormat("Failed to create item {0}", item.Name);
                         }
                     }
                     );
@@ -557,11 +557,11 @@ namespace pCampBot
 
                 if (listwearables == null || listwearables.Count == 0)
                 {
-                    m_log.DebugFormat("Nothing to send on this folder!");
+                    _log.DebugFormat("Nothing to send on this folder!");
                 }
                 else
                 {
-                    m_log.DebugFormat("Sending {0} wearables...", listwearables.Count);
+                    _log.DebugFormat("Sending {0} wearables...", listwearables.Count);
                     Client.Appearance.WearOutfit(listwearables, false);
                 }
             }
@@ -589,7 +589,7 @@ namespace pCampBot
 
         public void Network_LoginProgress(object sender, LoginProgressEventArgs args)
         {
-            m_log.DebugFormat("[BOT]: Bot {0} {1} in Network_LoginProcess", Name, args.Status);
+            _log.DebugFormat("[BOT]: Bot {0} {1} in Network_LoginProcess", Name, args.Status);
 
             if (args.Status == LoginStatus.Success)
             {
@@ -602,13 +602,13 @@ namespace pCampBot
 
         public void Network_SimConnected(object sender, SimConnectedEventArgs args)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[BOT]: Bot {0} connected to region {1} at {2}", Name, args.Simulator.Name, args.Simulator.IPEndPoint);
         }
 
         public void Network_SimDisconnected(object sender, SimDisconnectedEventArgs args)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[BOT]: Bot {0} disconnected from region {1} at {2}", Name, args.Simulator.Name, args.Simulator.IPEndPoint);
         }
 
@@ -616,10 +616,10 @@ namespace pCampBot
         {
             ConnectionState = ConnectionState.Disconnected;
 
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[BOT]: Bot {0} disconnected from grid, reason {1}, message {2}", Name, args.Reason, args.Message);
 
-//            m_log.ErrorFormat("Fired Network_OnDisconnected");
+//            _log.ErrorFormat("Fired Network_OnDisconnected");
 
 //           if (
 //               (args.Reason == NetworkManager.DisconnectType.SimShutdown
@@ -648,8 +648,8 @@ namespace pCampBot
 
             if (prim != null)
             {
-                lock (m_objects)
-                    m_objects[prim.ID] = prim;
+                lock (_objects)
+                    _objects[prim.ID] = prim;
 
                 if (prim.Textures != null)
                 {
@@ -700,7 +700,7 @@ namespace pCampBot
             }
             catch (Exception e)
             {
-                m_log.Warn(string.Format("Error requesting {0} {1}", texture ? "texture" : "mesh", assetID), e);
+                _log.Warn(string.Format("Error requesting {0} {1}", texture ? "texture" : "mesh", assetID), e);
             }
         }
 
@@ -736,7 +736,7 @@ namespace pCampBot
             Header h = p.Header;
             Simulator s = args.Simulator;
 
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[BOT]: Bot {0} received from {1} packet {2} #{3}, rel {4}, res {5}",
                 Name, s.Name, p.Type, h.Sequence, h.Reliable, h.Resent);
         }

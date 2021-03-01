@@ -34,13 +34,13 @@ namespace OpenSim.Services.AuthorizationService
 {
     public class AuthorizationService : AuthorizationServiceBase, IAuthorizationService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
         public AuthorizationService(IConfigSource config) : base(config)
         {
-                m_log.Info("[AUTHORIZATION CONNECTOR]: Local Authorization service enabled");
+                _log.Info("[AUTHORIZATION CONNECTOR]: Local Authorization service enabled");
         }
 
         public bool IsAuthorizedForRegion(

@@ -57,40 +57,40 @@ namespace OpenSim.Region.OptionalModules.Example.BareBonesShared
     //[Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "BareBonesSharedModule")]
     public class BareBonesSharedModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public string Name { get { return "Bare Bones Shared Module"; } }
+        public string Name => "Bare Bones Shared Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-            m_log.DebugFormat("[BARE BONES SHARED]: INITIALIZED MODULE");
+            _log.DebugFormat("[BARE BONES SHARED]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-            m_log.DebugFormat("[BARE BONES SHARED]: POST INITIALIZED MODULE");
+            _log.DebugFormat("[BARE BONES SHARED]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-            m_log.DebugFormat("[BARE BONES SHARED]: CLOSED MODULE");
+            _log.DebugFormat("[BARE BONES SHARED]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-            m_log.DebugFormat("[BARE BONES SHARED]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+            _log.DebugFormat("[BARE BONES SHARED]: REGION {0} ADDED", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            m_log.DebugFormat("[BARE BONES SHARED]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+            _log.DebugFormat("[BARE BONES SHARED]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            m_log.DebugFormat("[BARE BONES SHARED]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+            _log.DebugFormat("[BARE BONES SHARED]: REGION {0} LOADED", scene.RegionInfo.RegionName);
         }
     }
 }

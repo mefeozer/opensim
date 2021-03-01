@@ -41,7 +41,7 @@ namespace OpenSim.Region.Framework.Scenes
 {
     public abstract class SceneBase : IScene
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 #pragma warning disable 414
         private static readonly string LogHeader = "[SCENE]";
@@ -55,12 +55,9 @@ namespace OpenSim.Region.Framework.Scenes
 
         #region Fields
 
-        public string Name { get { return RegionInfo.RegionName; } }
+        public string Name => RegionInfo.RegionName;
 
-        public IConfigSource Config
-        {
-            get { return GetConfig(); }
-        }
+        public IConfigSource Config => GetConfig();
 
         protected virtual IConfigSource GetConfig()
         {
@@ -70,11 +67,9 @@ namespace OpenSim.Region.Framework.Scenes
         /// <value>
         /// All the region modules attached to this scene.
         /// </value>
-        public Dictionary<string, IRegionModuleBase> RegionModules
-        {
-            get { return m_regionModules; }
-        }
-        private readonly Dictionary<string, IRegionModuleBase> m_regionModules = new Dictionary<string, IRegionModuleBase>();
+        public Dictionary<string, IRegionModuleBase> RegionModules => _regionModules;
+
+        private readonly Dictionary<string, IRegionModuleBase> _regionModules = new Dictionary<string, IRegionModuleBase>();
 
         /// <value>
         /// The module interfaces available from this scene.
@@ -93,62 +88,53 @@ namespace OpenSim.Region.Framework.Scenes
         /// <value>
         /// The module commanders available from this scene
         /// </value>
-        protected Dictionary<string, ICommander> m_moduleCommanders = new Dictionary<string, ICommander>();
+        protected Dictionary<string, ICommander> _moduleCommanders = new Dictionary<string, ICommander>();
 
         /// <value>
         /// Registered classes that are capable of creating entities.
         /// </value>
-        protected Dictionary<PCode, IEntityCreator> m_entityCreators = new Dictionary<PCode, IEntityCreator>();
+        protected Dictionary<PCode, IEntityCreator> _entityCreators = new Dictionary<PCode, IEntityCreator>();
 
         /// <summary>
         /// The last allocated local prim id.  When a new local id is requested, the next number in the sequence is
         /// dispensed.
         /// </summary>
-        protected int m_lastAllocatedLocalId = 720000;
-        protected int m_lastAllocatedIntId = 7200;
+        protected int _lastAllocatedLocalId = 720000;
+        protected int _lastAllocatedIntId = 7200;
 
-        protected readonly ClientManager m_clientManager = new ClientManager();
+        protected readonly ClientManager _clientManager = new ClientManager();
 
         public bool LoginsEnabled
         {
-            get
-            {
-                return m_loginsEnabled;
-            }
+            get => _loginsEnabled;
 
             set
             {
-                if (m_loginsEnabled != value)
+                if (_loginsEnabled != value)
                 {
-                    m_loginsEnabled = value;
+                    _loginsEnabled = value;
                     EventManager.TriggerRegionLoginsStatusChange(this);
                 }
             }
         }
-        private bool m_loginsEnabled;
+        private bool _loginsEnabled;
 
         public bool Ready
         {
-            get
-            {
-                return m_ready;
-            }
+            get => _ready;
 
             set
             {
-                if (m_ready != value)
+                if (_ready != value)
                 {
-                    m_ready = value;
+                    _ready = value;
                     EventManager.TriggerRegionReadyStatusChange(this);
                 }
             }
         }
-        private bool m_ready;
+        private bool _ready;
 
-        public float TimeDilation
-        {
-            get { return 1.0f; }
-        }
+        public float TimeDilation => 1.0f;
 
         public ITerrainChannel Heightmap;
         public ITerrainChannel Bakedmap;
@@ -162,24 +148,19 @@ namespace OpenSim.Region.Framework.Scenes
         /// Manage events that occur in this scene (avatar movement, script rez, etc.).  Commonly used by region modules
         /// to subscribe to scene events.
         /// </value>
-        public EventManager EventManager
-        {
-            get { return m_eventManager; }
-        }
-        protected EventManager m_eventManager;
+        public EventManager EventManager => _eventManager;
 
-        protected ScenePermissions m_permissions;
-        public ScenePermissions Permissions
-        {
-            get { return m_permissions; }
-        }
+        protected EventManager _eventManager;
 
-         /* Used by the loadbalancer plugin on GForge */
-        protected RegionStatus m_regStatus;
+        protected ScenePermissions _permissions;
+        public ScenePermissions Permissions => _permissions;
+
+        /* Used by the loadbalancer plugin on GForge */
+        protected RegionStatus _regStatus;
         public RegionStatus RegionStatus
         {
-            get { return m_regStatus; }
-            set { m_regStatus = value; }
+            get => _regStatus;
+            set => _regStatus = value;
         }
 
         #endregion
@@ -285,7 +266,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
             catch (Exception e)
             {
-                m_log.Error(string.Format("[SCENE]: SceneBase.cs: Close() - Failed with exception {0}", e));
+                _log.Error(string.Format("[SCENE]: SceneBase.cs: Close() - Failed with exception {0}", e));
             }
         }
 
@@ -297,12 +278,12 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns>A brand new local ID</returns>
         public uint AllocateLocalId()
         {
-            return (uint)Interlocked.Increment(ref m_lastAllocatedLocalId);
+            return (uint)Interlocked.Increment(ref _lastAllocatedLocalId);
         }
 
         public int AllocateIntId()
         {
-            return Interlocked.Increment(ref m_lastAllocatedLocalId);
+            return Interlocked.Increment(ref _lastAllocatedLocalId);
         }
 
 
@@ -333,9 +314,9 @@ namespace OpenSim.Region.Framework.Scenes
         /// <param name="commander"></param>
         public void RegisterModuleCommander(ICommander commander)
         {
-            lock (m_moduleCommanders)
+            lock (_moduleCommanders)
             {
-                m_moduleCommanders.Add(commander.Name, commander);
+                _moduleCommanders.Add(commander.Name, commander);
             }
         }
 
@@ -345,11 +326,11 @@ namespace OpenSim.Region.Framework.Scenes
         /// <param name="name"></param>
         public void UnregisterModuleCommander(string name)
         {
-            lock (m_moduleCommanders)
+            lock (_moduleCommanders)
             {
                 ICommander commander;
-                if (m_moduleCommanders.TryGetValue(name, out commander))
-                    m_moduleCommanders.Remove(name);
+                if (_moduleCommanders.TryGetValue(name, out commander))
+                    _moduleCommanders.Remove(name);
             }
         }
 
@@ -360,10 +341,10 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns>The module commander, null if no module commander with that name was found</returns>
         public ICommander GetCommander(string name)
         {
-            lock (m_moduleCommanders)
+            lock (_moduleCommanders)
             {
-                if (m_moduleCommanders.ContainsKey(name))
-                    return m_moduleCommanders[name];
+                if (_moduleCommanders.ContainsKey(name))
+                    return _moduleCommanders[name];
             }
 
             return null;
@@ -371,7 +352,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         public Dictionary<string, ICommander> GetCommanders()
         {
-            return m_moduleCommanders;
+            return _moduleCommanders;
         }
 
         public List<UUID> GetFormatsOffered()
@@ -414,7 +395,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <param name="mod"></param>
         public void RegisterModuleInterface<M>(M mod)
         {
-//            m_log.DebugFormat("[SCENE BASE]: Registering interface {0}", typeof(M));
+//            _log.DebugFormat("[SCENE BASE]: Registering interface {0}", typeof(M));
 
             List<object> l = null;
             if (!ModuleInterfaces.TryGetValue(typeof(M), out l))
@@ -435,7 +416,7 @@ namespace OpenSim.Region.Framework.Scenes
                 IEntityCreator entityCreator = (IEntityCreator)mod;
                 foreach (PCode pcode in entityCreator.CreationCapabilities)
                 {
-                    m_entityCreators[pcode] = entityCreator;
+                    _entityCreators[pcode] = entityCreator;
                 }
             }
         }
@@ -460,7 +441,7 @@ namespace OpenSim.Region.Framework.Scenes
                         IEntityCreator entityCreator = (IEntityCreator)mod;
                         foreach (PCode pcode in entityCreator.CreationCapabilities)
                         {
-                            m_entityCreators[pcode] = null;
+                            _entityCreators[pcode] = null;
                         }
                     }
                 }
@@ -487,7 +468,7 @@ namespace OpenSim.Region.Framework.Scenes
                 IEntityCreator entityCreator = (IEntityCreator)mod;
                 foreach (PCode pcode in entityCreator.CreationCapabilities)
                 {
-                    m_entityCreators[pcode] = entityCreator;
+                    _entityCreators[pcode] = entityCreator;
                 }
             }
 
@@ -614,10 +595,7 @@ namespace OpenSim.Region.Framework.Scenes
             return null;
         }
 
-        public virtual bool AllowScriptCrossings
-        {
-            get { return false; }
-        }
+        public virtual bool AllowScriptCrossings => false;
 
         public virtual void Start()
         {

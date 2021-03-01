@@ -32,31 +32,31 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
 {
     public class PresenceDetector
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IPresenceService m_PresenceService;
-        private Scene m_aScene;
+        private readonly IPresenceService _PresenceService;
+        private Scene _aScene;
 
         public PresenceDetector(IPresenceService presenceservice)
         {
-            m_PresenceService = presenceservice;
+            _PresenceService = presenceservice;
         }
 
         public void AddRegion(Scene scene)
         {
             scene.EventManager.OnMakeRootAgent += OnMakeRootAgent;
 
-            m_PresenceService.LogoutRegionAgents(scene.RegionInfo.RegionID);
+            _PresenceService.LogoutRegionAgents(scene.RegionInfo.RegionID);
 
-            if (m_aScene == null)
-                m_aScene = scene;
+            if (_aScene == null)
+                _aScene = scene;
         }
 
         public void RemoveRegion(Scene scene)
         {
             scene.EventManager.OnMakeRootAgent -= OnMakeRootAgent;
 
-            m_PresenceService.LogoutRegionAgents(scene.RegionInfo.RegionID);
+            _PresenceService.LogoutRegionAgents(scene.RegionInfo.RegionID);
         }
 
         public void OnMakeRootAgent(ScenePresence sp)
@@ -66,7 +66,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
 
             sp.ControllingClient.OnConnectionClosed += OnConnectionClose;
 
-            if (sp.m_gotCrossUpdate)
+            if (sp._gotCrossUpdate)
             {
                 Util.FireAndForget(delegate
                 {
@@ -79,17 +79,17 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
 
         public void DoOnMakeRootAgent(ScenePresence sp)
         {
-//            m_log.DebugFormat("[PRESENCE DETECTOR]: Detected root presence {0} in {1}", sp.UUID, sp.Scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[PRESENCE DETECTOR]: Detected root presence {0} in {1}", sp.UUID, sp.Scene.RegionInfo.RegionName);
             if (sp.PresenceType != PresenceType.Npc)
-                m_PresenceService.ReportAgent(sp.ControllingClient.SessionId, sp.Scene.RegionInfo.RegionID);
+                _PresenceService.ReportAgent(sp.ControllingClient.SessionId, sp.Scene.RegionInfo.RegionID);
         }
 
         public void OnConnectionClose(IClientAPI client)
         {
             if (client != null && client.SceneAgent != null && !client.SceneAgent.IsChildAgent)
             {
-//                m_log.DebugFormat("[PRESENCE DETECTOR]: Detected client logout {0} in {1}", client.AgentId, client.Scene.RegionInfo.RegionName);
-                m_PresenceService.LogoutAgent(client.SessionId);
+//                _log.DebugFormat("[PRESENCE DETECTOR]: Detected client logout {0} in {1}", client.AgentId, client.Scene.RegionInfo.RegionName);
+                _PresenceService.LogoutAgent(client.SessionId);
             }
         }
     }

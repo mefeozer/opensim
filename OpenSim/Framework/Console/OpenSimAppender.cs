@@ -36,24 +36,24 @@ namespace OpenSim.Framework.Console
     /// </summary>
     public class OpenSimAppender : AnsiColorTerminalAppender
     {
-        private ConsoleBase m_console = null;
+        private ConsoleBase _console = null;
 
         public ConsoleBase Console
         {
-            get { return m_console; }
-            set { m_console = value; }
+            get => _console;
+            set => _console = value;
         }
 
         override protected void Append(LoggingEvent le)
         {
-            if (m_console != null)
-                m_console.LockOutput();
+            if (_console != null)
+                _console.LockOutput();
 
             string loggingMessage = RenderLoggingEvent(le);
 
             try
             {
-                if (m_console != null)
+                if (_console != null)
                 {
                     ConsoleLevel level;
 
@@ -64,7 +64,7 @@ namespace OpenSim.Framework.Console
                     else
                         level = "normal";
 
-                    m_console.Output(loggingMessage, level);
+                    _console.Output(loggingMessage, level);
                 }
                 else
                 {
@@ -80,8 +80,8 @@ namespace OpenSim.Framework.Console
             }
             finally
             {
-                if (m_console != null)
-                    m_console.UnlockOutput();
+                if (_console != null)
+                    _console.UnlockOutput();
             }
         }
     }

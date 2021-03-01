@@ -10,26 +10,26 @@ namespace OpenSim.Framework
 {
     public class AssetPermissions
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly bool[] m_DisallowExport;
-        private readonly bool[] m_DisallowImport;
-        private readonly string[] m_AssetTypeNames;
+        private readonly bool[] _DisallowExport;
+        private readonly bool[] _DisallowImport;
+        private readonly string[] _AssetTypeNames;
 
         public AssetPermissions(IConfig config)
         {
             Type enumType = typeof(AssetType);
-            m_AssetTypeNames = Enum.GetNames(enumType);
-            for (int i = 0; i < m_AssetTypeNames.Length; i++)
-                m_AssetTypeNames[i] = m_AssetTypeNames[i].ToLower();
+            _AssetTypeNames = Enum.GetNames(enumType);
+            for (int i = 0; i < _AssetTypeNames.Length; i++)
+                _AssetTypeNames[i] = _AssetTypeNames[i].ToLower();
             int n = Enum.GetValues(enumType).Length;
-            m_DisallowExport = new bool[n];
-            m_DisallowImport = new bool[n];
+            _DisallowExport = new bool[n];
+            _DisallowImport = new bool[n];
 
-            LoadPermsFromConfig(config, "DisallowExport", m_DisallowExport);
-            LoadPermsFromConfig(config, "DisallowImport", m_DisallowImport);
+            LoadPermsFromConfig(config, "DisallowExport", _DisallowExport);
+            LoadPermsFromConfig(config, "DisallowImport", _DisallowImport);
 
         }
 
@@ -42,11 +42,11 @@ namespace OpenSim.Framework
             string[] parts = perms.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in parts)
             {
-                int index = Array.IndexOf(m_AssetTypeNames, s.Trim().ToLower());
+                int index = Array.IndexOf(_AssetTypeNames, s.Trim().ToLower());
                 if (index >= 0)
                     bitArray[index] = true;
                 else
-                    m_log.WarnFormat("[Asset Permissions]: Invalid AssetType {0}", s);
+                    _log.WarnFormat("[Asset Permissions]: Invalid AssetType {0}", s);
             }
 
         }
@@ -55,10 +55,10 @@ namespace OpenSim.Framework
         {
             string assetTypeName = ((AssetType)type).ToString();
 
-            int index = Array.IndexOf(m_AssetTypeNames, assetTypeName.ToLower());
-            if (index >= 0 && m_DisallowExport[index])
+            int index = Array.IndexOf(_AssetTypeNames, assetTypeName.ToLower());
+            if (index >= 0 && _DisallowExport[index])
             {
-                m_log.DebugFormat("[Asset Permissions]: Export denied: configuration does not allow export of AssetType {0}", assetTypeName);
+                _log.DebugFormat("[Asset Permissions]: Export denied: configuration does not allow export of AssetType {0}", assetTypeName);
                 return false;
             }
 
@@ -69,10 +69,10 @@ namespace OpenSim.Framework
         {
             string assetTypeName = ((AssetType)type).ToString();
 
-            int index = Array.IndexOf(m_AssetTypeNames, assetTypeName.ToLower());
-            if (index >= 0 && m_DisallowImport[index])
+            int index = Array.IndexOf(_AssetTypeNames, assetTypeName.ToLower());
+            if (index >= 0 && _DisallowImport[index])
             {
-                m_log.DebugFormat("[Asset Permissions]: Import denied: configuration does not allow import of AssetType {0}", assetTypeName);
+                _log.DebugFormat("[Asset Permissions]: Import denied: configuration does not allow import of AssetType {0}", assetTypeName);
                 return false;
             }
 

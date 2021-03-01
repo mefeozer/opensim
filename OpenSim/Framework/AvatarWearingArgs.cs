@@ -33,15 +33,15 @@ namespace OpenSim.Framework
 {
     public class AvatarWearingArgs : EventArgs
     {
-        private List<Wearable> m_nowWearing = new List<Wearable>();
+        private List<Wearable> _nowWearing = new List<Wearable>();
 
         /// <summary>
         ///
         /// </summary>
         public List<Wearable> NowWearing
         {
-            get { return m_nowWearing; }
-            set { m_nowWearing = value; }
+            get => _nowWearing;
+            set => _nowWearing = value;
         }
 
         #region Nested type: Wearable

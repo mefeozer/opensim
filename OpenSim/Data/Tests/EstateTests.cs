@@ -71,7 +71,7 @@ namespace OpenSim.Data.Tests
         {
             ClearDB();
             db = (IEstateDataStore)service;
-            db.Initialise(m_connStr);
+            db.Initialise(_connStr);
         }
 
         private void ClearDB()

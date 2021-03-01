@@ -53,9 +53,9 @@ namespace OpenSim.Server.Handlers.Authentication
             public byte[] PrivateData;
         }
 
-        readonly Dictionary<string, AssociationItem> m_store = new Dictionary<string, AssociationItem>();
-        readonly SortedList<DateTime, AssociationItem> m_sortedStore = new SortedList<DateTime, AssociationItem>();
-        readonly object m_syncRoot = new object();
+        readonly Dictionary<string, AssociationItem> _store = new Dictionary<string, AssociationItem>();
+        readonly SortedList<DateTime, AssociationItem> _sortedStore = new SortedList<DateTime, AssociationItem>();
+        readonly object _syncRoot = new object();
 
         #region IAssociationStore<AssociationRelyingPartyType> Members
 
@@ -69,20 +69,20 @@ namespace OpenSim.Server.Handlers.Authentication
                 PrivateData = assoc.SerializePrivateData()
             };
 
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                m_store[item.Handle] = item;
-                m_sortedStore[item.Expires] = item;
+                _store[item.Handle] = item;
+                _sortedStore[item.Expires] = item;
             }
         }
 
         public Association GetAssociation(AssociationRelyingPartyType distinguishingFactor)
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                if (m_sortedStore.Count > 0)
+                if (_sortedStore.Count > 0)
                 {
-                    AssociationItem item = m_sortedStore.Values[m_sortedStore.Count - 1];
+                    AssociationItem item = _sortedStore.Values[_sortedStore.Count - 1];
                     return Association.Deserialize(item.Handle, item.Expires.ToUniversalTime(), item.PrivateData);
                 }
                 else
@@ -96,8 +96,8 @@ namespace OpenSim.Server.Handlers.Authentication
         {
             AssociationItem item;
             bool success = false;
-            lock (m_syncRoot)
-                success = m_store.TryGetValue(handle, out item);
+            lock (_syncRoot)
+                success = _store.TryGetValue(handle, out item);
 
             if (success)
                 return Association.Deserialize(item.Handle, item.Expires.ToUniversalTime(), item.PrivateData);
@@ -107,27 +107,27 @@ namespace OpenSim.Server.Handlers.Authentication
 
         public bool RemoveAssociation(AssociationRelyingPartyType distinguishingFactor, string handle)
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                for (int i = 0; i < m_sortedStore.Values.Count; i++)
+                for (int i = 0; i < _sortedStore.Values.Count; i++)
                 {
-                    AssociationItem item = m_sortedStore.Values[i];
+                    AssociationItem item = _sortedStore.Values[i];
                     if (item.Handle == handle)
                     {
-                        m_sortedStore.RemoveAt(i);
+                        _sortedStore.RemoveAt(i);
                         break;
                     }
                 }
 
-                return m_store.Remove(handle);
+                return _store.Remove(handle);
             }
         }
 
         public void ClearExpiredAssociations()
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                List<AssociationItem> itemsCopy = new List<AssociationItem>(m_sortedStore.Values);
+                List<AssociationItem> itemsCopy = new List<AssociationItem>(_sortedStore.Values);
                 DateTime now = DateTime.Now;
 
                 for (int i = 0; i < itemsCopy.Count; i++)
@@ -136,8 +136,8 @@ namespace OpenSim.Server.Handlers.Authentication
 
                     if (item.Expires <= now)
                     {
-                        m_sortedStore.RemoveAt(i);
-                        m_store.Remove(item.Handle);
+                        _sortedStore.RemoveAt(i);
+                        _store.Remove(item.Handle);
                     }
                 }
             }
@@ -190,11 +190,11 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
 
         #endregion HTML
 
-        readonly IAuthenticationService m_authenticationService;
-        readonly IUserAccountService m_userAccountService;
-        readonly ProviderMemoryStore m_openidStore = new ProviderMemoryStore();
+        readonly IAuthenticationService _authenticationService;
+        readonly IUserAccountService _userAccountService;
+        readonly ProviderMemoryStore _openidStore = new ProviderMemoryStore();
 
-        public override string ContentType { get { return "text/html"; } }
+        public override string ContentType => "text/html";
 
         /// <summary>
         /// Constructor
@@ -203,8 +203,8 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
             string httpMethod, string path, IUserAccountService userService, IAuthenticationService authService)
             : base(httpMethod, path, "OpenId", "OpenID stream handler")
         {
-            m_authenticationService = authService;
-            m_userAccountService = userService;
+            _authenticationService = authService;
+            _userAccountService = userService;
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
                 NameValueCollection getQuery = HttpUtility.ParseQueryString(httpRequest.Url.Query);
                 NameValueCollection openIdQuery = postQuery.GetValues("openid.mode") != null ? postQuery : getQuery;
 
-                OpenIdProvider provider = new OpenIdProvider(m_openidStore, providerEndpoint, httpRequest.Url, openIdQuery);
+                OpenIdProvider provider = new OpenIdProvider(_openidStore, providerEndpoint, httpRequest.Url, openIdQuery);
 
                 if (provider.Request != null)
                 {
@@ -244,7 +244,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
                             if (passwordValues != null && passwordValues.Length == 1)
                             {
                                 if (account != null &&
-                                    !string.IsNullOrEmpty(m_authenticationService.Authenticate(account.PrincipalID, Util.Md5Hash(passwordValues[0]), 30)))
+                                    !string.IsNullOrEmpty(_authenticationService.Authenticate(account.PrincipalID, Util.Md5Hash(passwordValues[0]), 30)))
                                     authRequest.IsAuthenticated = true;
                                 else
                                     authRequest.IsAuthenticated = false;
@@ -329,7 +329,7 @@ For more information, see <a href='http://openid.net/'>http://openid.net/</a>.
 
                 if (name.Length == 2)
                 {
-                    account = m_userAccountService.GetUserAccount(UUID.Zero, name[0], name[1]);
+                    account = _userAccountService.GetUserAccount(UUID.Zero, name[0], name[1]);
                     return account != null;
                 }
             }

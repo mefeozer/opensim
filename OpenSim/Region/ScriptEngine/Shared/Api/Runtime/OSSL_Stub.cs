@@ -42,301 +42,301 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 {
     public partial class ScriptBaseClass : MarshalByRefObject
     {
-        public IOSSL_Api m_OSSL_Functions;
+        public IOSSL_Api _OSSL_Functions;
 
         public void ApiTypeOSSL(IScriptApi api)
         {
             if (!(api is IOSSL_Api))
                 return;
 
-            m_OSSL_Functions = (IOSSL_Api)api;
+            _OSSL_Functions = (IOSSL_Api)api;
 
             Prim = new OSSLPrim(this);
         }
 
         public void osSetRegionWaterHeight(double height)
         {
-            m_OSSL_Functions.osSetRegionWaterHeight(height);
+            _OSSL_Functions.osSetRegionWaterHeight(height);
         }
 
         public void osSetRegionSunSettings(bool useEstateSun, bool sunFixed, double sunHour)
         {
-            m_OSSL_Functions.osSetRegionSunSettings(useEstateSun, sunFixed, sunHour);
+            _OSSL_Functions.osSetRegionSunSettings(useEstateSun, sunFixed, sunHour);
         }
 
         public void osSetEstateSunSettings(bool sunFixed, double sunHour)
         {
-            m_OSSL_Functions.osSetEstateSunSettings(sunFixed, sunHour);
+            _OSSL_Functions.osSetEstateSunSettings(sunFixed, sunHour);
         }
 
         public LSL_Float osGetCurrentSunHour()
         {
-            return m_OSSL_Functions.osGetCurrentSunHour();
+            return _OSSL_Functions.osGetCurrentSunHour();
         }
 
         public LSL_Float osGetSunParam(LSL_String param)
         {
-            return m_OSSL_Functions.osGetSunParam(param);
+            return _OSSL_Functions.osGetSunParam(param);
         }
         // Deprecated
         public double osSunGetParam(string param)
         {
-            return m_OSSL_Functions.osSunGetParam(param);
+            return _OSSL_Functions.osSunGetParam(param);
         }
 
         public void osSetSunParam(string param, double value)
         {
-            m_OSSL_Functions.osSetSunParam(param, value);
+            _OSSL_Functions.osSetSunParam(param, value);
         }
         // Deprecated
         public void osSunSetParam(string param, double value)
         {
-            m_OSSL_Functions.osSunSetParam(param, value);
+            _OSSL_Functions.osSunSetParam(param, value);
         }
 
         public string osWindActiveModelPluginName()
         {
-            return m_OSSL_Functions.osWindActiveModelPluginName();
+            return _OSSL_Functions.osWindActiveModelPluginName();
         }
 
         public void osSetWindParam(string plugin, string param, LSL_Float value)
         {
-            m_OSSL_Functions.osSetWindParam(plugin, param, value);
+            _OSSL_Functions.osSetWindParam(plugin, param, value);
         }
 
         public LSL_Float osGetWindParam(string plugin, string param)
         {
-            return m_OSSL_Functions.osGetWindParam(plugin, param);
+            return _OSSL_Functions.osGetWindParam(plugin, param);
         }
 
         public LSL_Integer osGetParcelDwell(vector pos)
         {
-            return m_OSSL_Functions.osGetParcelDwell(pos);
+            return _OSSL_Functions.osGetParcelDwell(pos);
         }
 
         public void osParcelJoin(vector pos1, vector pos2)
         {
-            m_OSSL_Functions.osParcelJoin(pos1,pos2);
+            _OSSL_Functions.osParcelJoin(pos1,pos2);
         }
 
         public void osParcelSubdivide(vector pos1, vector pos2)
         {
-            m_OSSL_Functions.osParcelSubdivide(pos1, pos2);
+            _OSSL_Functions.osParcelSubdivide(pos1, pos2);
         }
 
         public void osSetParcelDetails(vector pos, LSL_List rules)
         {
-            m_OSSL_Functions.osSetParcelDetails(pos, rules);
+            _OSSL_Functions.osSetParcelDetails(pos, rules);
         }
         // Deprecated
         public void osParcelSetDetails(vector pos, LSL_List rules)
         {
-            m_OSSL_Functions.osParcelSetDetails(pos,rules);
+            _OSSL_Functions.osParcelSetDetails(pos,rules);
         }
 
         public string osSetDynamicTextureURL(string dynamicID, string contentType, string url, string extraParams,
                                              int timer)
         {
-            return m_OSSL_Functions.osSetDynamicTextureURL(dynamicID, contentType, url, extraParams, timer);
+            return _OSSL_Functions.osSetDynamicTextureURL(dynamicID, contentType, url, extraParams, timer);
         }
 
         public string osSetDynamicTextureData(string dynamicID, string contentType, string data, string extraParams,
                                              int timer)
         {
-            return m_OSSL_Functions.osSetDynamicTextureData(dynamicID, contentType, data, extraParams, timer);
+            return _OSSL_Functions.osSetDynamicTextureData(dynamicID, contentType, data, extraParams, timer);
         }
 
         public string osSetDynamicTextureDataFace(string dynamicID, string contentType, string data, string extraParams,
                                              int timer, int face)
         {
-            return m_OSSL_Functions.osSetDynamicTextureDataFace(dynamicID, contentType, data, extraParams, timer, face);
+            return _OSSL_Functions.osSetDynamicTextureDataFace(dynamicID, contentType, data, extraParams, timer, face);
         }
 
         public string osSetDynamicTextureURLBlend(string dynamicID, string contentType, string url, string extraParams,
                                            int timer, int alpha)
         {
-            return m_OSSL_Functions.osSetDynamicTextureURLBlend(dynamicID, contentType, url, extraParams, timer, alpha);
+            return _OSSL_Functions.osSetDynamicTextureURLBlend(dynamicID, contentType, url, extraParams, timer, alpha);
         }
 
         public string osSetDynamicTextureDataBlend(string dynamicID, string contentType, string data, string extraParams,
                                              int timer, int alpha)
         {
-            return m_OSSL_Functions.osSetDynamicTextureDataBlend(dynamicID, contentType, data, extraParams, timer, alpha);
+            return _OSSL_Functions.osSetDynamicTextureDataBlend(dynamicID, contentType, data, extraParams, timer, alpha);
         }
 
         public string osSetDynamicTextureURLBlendFace(string dynamicID, string contentType, string url, string extraParams,
                                            bool blend, int disp, int timer, int alpha, int face)
         {
-            return m_OSSL_Functions.osSetDynamicTextureURLBlendFace(dynamicID, contentType, url, extraParams,
+            return _OSSL_Functions.osSetDynamicTextureURLBlendFace(dynamicID, contentType, url, extraParams,
                                              blend, disp, timer, alpha, face);
         }
 
         public string osSetDynamicTextureDataBlendFace(string dynamicID, string contentType, string data, string extraParams,
                                              bool blend, int disp, int timer, int alpha, int face)
         {
-            return m_OSSL_Functions.osSetDynamicTextureDataBlendFace(dynamicID, contentType, data, extraParams,
+            return _OSSL_Functions.osSetDynamicTextureDataBlendFace(dynamicID, contentType, data, extraParams,
                                              blend, disp, timer, alpha, face);
         }
 
         public LSL_Float osGetTerrainHeight(int x, int y)
         {
-            return m_OSSL_Functions.osGetTerrainHeight(x, y);
+            return _OSSL_Functions.osGetTerrainHeight(x, y);
         }
         // Deprecated
         public LSL_Float osTerrainGetHeight(int x, int y)
         {
-            return m_OSSL_Functions.osTerrainGetHeight(x, y);
+            return _OSSL_Functions.osTerrainGetHeight(x, y);
         }
 
         public LSL_Integer osSetTerrainHeight(int x, int y, double val)
         {
-            return m_OSSL_Functions.osSetTerrainHeight(x, y, val);
+            return _OSSL_Functions.osSetTerrainHeight(x, y, val);
         }
         // Deprecated
         public LSL_Integer osTerrainSetHeight(int x, int y, double val)
         {
-            return m_OSSL_Functions.osTerrainSetHeight(x, y, val);
+            return _OSSL_Functions.osTerrainSetHeight(x, y, val);
         }
 
         public void osTerrainFlush()
         {
-            m_OSSL_Functions.osTerrainFlush();
+            _OSSL_Functions.osTerrainFlush();
         }
 
         public int osRegionRestart(double seconds)
         {
-            return m_OSSL_Functions.osRegionRestart(seconds);
+            return _OSSL_Functions.osRegionRestart(seconds);
         }
 
         public int osRegionRestart(double seconds, string msg)
         {
-            return m_OSSL_Functions.osRegionRestart(seconds, msg);
+            return _OSSL_Functions.osRegionRestart(seconds, msg);
         }
 
         public void osRegionNotice(string msg)
         {
-            m_OSSL_Functions.osRegionNotice(msg);
+            _OSSL_Functions.osRegionNotice(msg);
         }
 
         public void osRegionNotice(LSL_Key agentID, string msg)
         {
-            m_OSSL_Functions.osRegionNotice(agentID, msg);
+            _OSSL_Functions.osRegionNotice(agentID, msg);
         }
 
         public bool osConsoleCommand(string Command)
         {
-            return m_OSSL_Functions.osConsoleCommand(Command);
+            return _OSSL_Functions.osConsoleCommand(Command);
         }
 
         public void osSetParcelMusicURL(LSL_String url)
         {
-            m_OSSL_Functions.osSetParcelMusicURL(url);
+            _OSSL_Functions.osSetParcelMusicURL(url);
         }
 
         public void osSetParcelMediaURL(LSL_String url)
         {
-            m_OSSL_Functions.osSetParcelMediaURL(url);
+            _OSSL_Functions.osSetParcelMediaURL(url);
         }
 
         public void osSetParcelSIPAddress(string SIPAddress)
         {
-            m_OSSL_Functions.osSetParcelSIPAddress(SIPAddress);
+            _OSSL_Functions.osSetParcelSIPAddress(SIPAddress);
         }
 
         public void osSetPrimFloatOnWater(int floatYN)
         {
-            m_OSSL_Functions.osSetPrimFloatOnWater(floatYN);
+            _OSSL_Functions.osSetPrimFloatOnWater(floatYN);
         }
 
         // Teleport Functions
 
         public void osLocalTeleportAgent(LSL_Key agent, vector position, vector velocity, vector lookat, LSL_Integer flags)
         {
-            m_OSSL_Functions.osLocalTeleportAgent(agent, position, velocity, lookat, flags);
+            _OSSL_Functions.osLocalTeleportAgent(agent, position, velocity, lookat, flags);
         }
 
         public void osTeleportAgent(string agent, string regionName, vector position, vector lookat)
         {
-            m_OSSL_Functions.osTeleportAgent(agent, regionName, position, lookat);
+            _OSSL_Functions.osTeleportAgent(agent, regionName, position, lookat);
         }
 
         public void osTeleportAgent(string agent, int regionX, int regionY, vector position, vector lookat)
         {
-            m_OSSL_Functions.osTeleportAgent(agent, regionX, regionY, position, lookat);
+            _OSSL_Functions.osTeleportAgent(agent, regionX, regionY, position, lookat);
         }
 
         public void osTeleportAgent(string agent, vector position, vector lookat)
         {
-            m_OSSL_Functions.osTeleportAgent(agent, position, lookat);
+            _OSSL_Functions.osTeleportAgent(agent, position, lookat);
         }
 
         public void osTeleportOwner(string regionName, vector position, vector lookat)
         {
-            m_OSSL_Functions.osTeleportOwner(regionName, position, lookat);
+            _OSSL_Functions.osTeleportOwner(regionName, position, lookat);
         }
 
         public void osTeleportOwner(int regionX, int regionY, vector position, vector lookat)
         {
-            m_OSSL_Functions.osTeleportOwner(regionX, regionY, position, lookat);
+            _OSSL_Functions.osTeleportOwner(regionX, regionY, position, lookat);
         }
 
         public void osTeleportOwner(vector position, vector lookat)
         {
-            m_OSSL_Functions.osTeleportOwner(position, lookat);
+            _OSSL_Functions.osTeleportOwner(position, lookat);
         }
 
         public LSL_List osGetAgents()
         {
-            return m_OSSL_Functions.osGetAgents();
+            return _OSSL_Functions.osGetAgents();
         }
 
         public string osGetAgentIP(string agent)
         {
-            return m_OSSL_Functions.osGetAgentIP(agent);
+            return _OSSL_Functions.osGetAgentIP(agent);
         }
 
         // Animation Functions
 
         public void osAvatarPlayAnimation(LSL_Key avatar, string animation)
         {
-            m_OSSL_Functions.osAvatarPlayAnimation(avatar, animation);
+            _OSSL_Functions.osAvatarPlayAnimation(avatar, animation);
         }
 
         public void osAvatarStopAnimation(LSL_Key avatar, string animation)
         {
-            m_OSSL_Functions.osAvatarStopAnimation(avatar, animation);
+            _OSSL_Functions.osAvatarStopAnimation(avatar, animation);
         }
 
         #region Attachment commands
 
         public void osForceAttachToAvatar(int attachmentPoint)
         {
-            m_OSSL_Functions.osForceAttachToAvatar(attachmentPoint);
+            _OSSL_Functions.osForceAttachToAvatar(attachmentPoint);
         }
 
         public void osForceAttachToAvatarFromInventory(string itemName, int attachmentPoint)
         {
-            m_OSSL_Functions.osForceAttachToAvatarFromInventory(itemName, attachmentPoint);
+            _OSSL_Functions.osForceAttachToAvatarFromInventory(itemName, attachmentPoint);
         }
 
         public void osForceAttachToOtherAvatarFromInventory(string rawAvatarId, string itemName, int attachmentPoint)
         {
-            m_OSSL_Functions.osForceAttachToOtherAvatarFromInventory(rawAvatarId, itemName, attachmentPoint);
+            _OSSL_Functions.osForceAttachToOtherAvatarFromInventory(rawAvatarId, itemName, attachmentPoint);
         }
 
         public void osForceDetachFromAvatar()
         {
-            m_OSSL_Functions.osForceDetachFromAvatar();
+            _OSSL_Functions.osForceDetachFromAvatar();
         }
 
         public LSL_List osGetNumberOfAttachments(LSL_Key avatar, LSL_List attachmentPoints)
         {
-            return m_OSSL_Functions.osGetNumberOfAttachments(avatar, attachmentPoints);
+            return _OSSL_Functions.osGetNumberOfAttachments(avatar, attachmentPoints);
         }
 
         public void osMessageAttachments(LSL_Key avatar, string message, LSL_List attachmentPoints, int flags)
         {
-            m_OSSL_Functions.osMessageAttachments(avatar, message, attachmentPoints, flags);
+            _OSSL_Functions.osMessageAttachments(avatar, message, attachmentPoints, flags);
         }
 
         #endregion
@@ -345,420 +345,420 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
         public string osMovePen(string drawList, int x, int y)
         {
-            return m_OSSL_Functions.osMovePen(drawList, x, y);
+            return _OSSL_Functions.osMovePen(drawList, x, y);
         }
 
         public string osDrawLine(string drawList, int startX, int startY, int endX, int endY)
         {
-            return m_OSSL_Functions.osDrawLine(drawList, startX, startY, endX, endY);
+            return _OSSL_Functions.osDrawLine(drawList, startX, startY, endX, endY);
         }
 
         public string osDrawLine(string drawList, int endX, int endY)
         {
-            return m_OSSL_Functions.osDrawLine(drawList, endX, endY);
+            return _OSSL_Functions.osDrawLine(drawList, endX, endY);
         }
 
         public string osDrawText(string drawList, string text)
         {
-            return m_OSSL_Functions.osDrawText(drawList, text);
+            return _OSSL_Functions.osDrawText(drawList, text);
         }
 
         public string osDrawEllipse(string drawList, int width, int height)
         {
-            return m_OSSL_Functions.osDrawEllipse(drawList, width, height);
+            return _OSSL_Functions.osDrawEllipse(drawList, width, height);
         }
 
         public string osDrawFilledEllipse(string drawList, int width, int height)
         {
-            return m_OSSL_Functions.osDrawFilledEllipse(drawList, width, height);
+            return _OSSL_Functions.osDrawFilledEllipse(drawList, width, height);
         }
 
         public string osDrawRectangle(string drawList, int width, int height)
         {
-            return m_OSSL_Functions.osDrawRectangle(drawList, width, height);
+            return _OSSL_Functions.osDrawRectangle(drawList, width, height);
         }
 
         public string osDrawFilledRectangle(string drawList, int width, int height)
         {
-            return m_OSSL_Functions.osDrawFilledRectangle(drawList, width, height);
+            return _OSSL_Functions.osDrawFilledRectangle(drawList, width, height);
         }
 
         public string osDrawPolygon(string drawList, LSL_List x, LSL_List y)
         {
-            return m_OSSL_Functions.osDrawPolygon(drawList, x, y);
+            return _OSSL_Functions.osDrawPolygon(drawList, x, y);
         }
 
         public string osDrawFilledPolygon(string drawList, LSL_List x, LSL_List y)
         {
-            return m_OSSL_Functions.osDrawFilledPolygon(drawList, x, y);
+            return _OSSL_Functions.osDrawFilledPolygon(drawList, x, y);
         }
 
         public string osDrawResetTransform(string drawList)
         {
-            return m_OSSL_Functions.osDrawResetTransform(drawList);
+            return _OSSL_Functions.osDrawResetTransform(drawList);
         }
 
         public string osDrawRotationTransform(string drawList, LSL_Float x)
         {
-            return m_OSSL_Functions.osDrawRotationTransform(drawList, x);
+            return _OSSL_Functions.osDrawRotationTransform(drawList, x);
         }
 
         public string osDrawScaleTransform(string drawList, LSL_Float x, LSL_Float y)
         {
-            return m_OSSL_Functions.osDrawScaleTransform(drawList, x, y);
+            return _OSSL_Functions.osDrawScaleTransform(drawList, x, y);
         }
 
         public string osDrawTranslationTransform(string drawList, LSL_Float x, LSL_Float y)
         {
-            return m_OSSL_Functions.osDrawTranslationTransform(drawList, x, y);
+            return _OSSL_Functions.osDrawTranslationTransform(drawList, x, y);
         }
 
         public string osSetFontSize(string drawList, int fontSize)
         {
-            return m_OSSL_Functions.osSetFontSize(drawList, fontSize);
+            return _OSSL_Functions.osSetFontSize(drawList, fontSize);
         }
 
         public string osSetFontName(string drawList, string fontName)
         {
-            return m_OSSL_Functions.osSetFontName(drawList, fontName);
+            return _OSSL_Functions.osSetFontName(drawList, fontName);
         }
 
         public string osSetPenSize(string drawList, int penSize)
         {
-            return m_OSSL_Functions.osSetPenSize(drawList, penSize);
+            return _OSSL_Functions.osSetPenSize(drawList, penSize);
         }
 
         public string osSetPenCap(string drawList, string direction, string type)
         {
-            return m_OSSL_Functions.osSetPenCap(drawList, direction, type);
+            return _OSSL_Functions.osSetPenCap(drawList, direction, type);
         }
 
         public string osSetPenColor(string drawList, string color)
         {
-            return m_OSSL_Functions.osSetPenColor(drawList, color);
+            return _OSSL_Functions.osSetPenColor(drawList, color);
         }
 
         // Deprecated
         public string osSetPenColour(string drawList, string colour)
         {
-            return m_OSSL_Functions.osSetPenColour(drawList, colour);
+            return _OSSL_Functions.osSetPenColour(drawList, colour);
         }
 
         public string osDrawImage(string drawList, int width, int height, string imageUrl)
         {
-            return m_OSSL_Functions.osDrawImage(drawList, width, height, imageUrl);
+            return _OSSL_Functions.osDrawImage(drawList, width, height, imageUrl);
         }
 
         public vector osGetDrawStringSize(string contentType, string text, string fontName, int fontSize)
         {
-            return m_OSSL_Functions.osGetDrawStringSize(contentType, text, fontName, fontSize);
+            return _OSSL_Functions.osGetDrawStringSize(contentType, text, fontName, fontSize);
         }
 
         public string osGetScriptEngineName()
         {
-            return m_OSSL_Functions.osGetScriptEngineName();
+            return _OSSL_Functions.osGetScriptEngineName();
         }
 
         public LSL_Integer osCheckODE()
         {
-            return m_OSSL_Functions.osCheckODE();
+            return _OSSL_Functions.osCheckODE();
         }
 
         public string osGetPhysicsEngineType()
         {
-            return m_OSSL_Functions.osGetPhysicsEngineType();
+            return _OSSL_Functions.osGetPhysicsEngineType();
         }
 
         public string osGetPhysicsEngineName()
         {
-            return m_OSSL_Functions.osGetPhysicsEngineName();
+            return _OSSL_Functions.osGetPhysicsEngineName();
         }
 
         public string osGetSimulatorVersion()
         {
-           return m_OSSL_Functions.osGetSimulatorVersion();
+           return _OSSL_Functions.osGetSimulatorVersion();
         }
 
         public void osMessageObject(key objectUUID,string message)
         {
-            m_OSSL_Functions.osMessageObject(objectUUID,message);
+            _OSSL_Functions.osMessageObject(objectUUID,message);
         }
 
         public void osMakeNotecard(string notecardName, LSL_Types.list contents)
         {
-            m_OSSL_Functions.osMakeNotecard(notecardName, contents);
+            _OSSL_Functions.osMakeNotecard(notecardName, contents);
         }
 
         public string osGetNotecardLine(string name, int line)
         {
-            return m_OSSL_Functions.osGetNotecardLine(name, line);
+            return _OSSL_Functions.osGetNotecardLine(name, line);
         }
 
         public string osGetNotecard(string name)
         {
-            return m_OSSL_Functions.osGetNotecard(name);
+            return _OSSL_Functions.osGetNotecard(name);
         }
 
         public int osGetNumberOfNotecardLines(string name)
         {
-            return m_OSSL_Functions.osGetNumberOfNotecardLines(name);
+            return _OSSL_Functions.osGetNumberOfNotecardLines(name);
         }
 
         public string osAvatarName2Key(string firstname, string lastname)
         {
-            return m_OSSL_Functions.osAvatarName2Key(firstname, lastname);
+            return _OSSL_Functions.osAvatarName2Key(firstname, lastname);
         }
 
         public string osKey2Name(string id)
         {
-            return m_OSSL_Functions.osKey2Name(id);
+            return _OSSL_Functions.osKey2Name(id);
         }
 
         public string osSHA256(string input)
         {
-            return m_OSSL_Functions.osSHA256(input);
+            return _OSSL_Functions.osSHA256(input);
         }
 
         public string osGetGridNick()
         {
-            return m_OSSL_Functions.osGetGridNick();
+            return _OSSL_Functions.osGetGridNick();
         }
 
         public string osGetGridName()
         {
-            return m_OSSL_Functions.osGetGridName();
+            return _OSSL_Functions.osGetGridName();
         }
 
         public string osGetGridLoginURI()
         {
-            return m_OSSL_Functions.osGetGridLoginURI();
+            return _OSSL_Functions.osGetGridLoginURI();
         }
 
         public string osGetGridHomeURI()
         {
-            return m_OSSL_Functions.osGetGridHomeURI();
+            return _OSSL_Functions.osGetGridHomeURI();
         }
 
         public string osGetGridGatekeeperURI()
         {
-            return m_OSSL_Functions.osGetGridGatekeeperURI();
+            return _OSSL_Functions.osGetGridGatekeeperURI();
         }
 
         public string osGetGridCustom(string key)
         {
-            return m_OSSL_Functions.osGetGridCustom(key);
+            return _OSSL_Functions.osGetGridCustom(key);
         }
 
         public string osGetAvatarHomeURI(string uuid)
         {
-            return m_OSSL_Functions.osGetAvatarHomeURI(uuid);
+            return _OSSL_Functions.osGetAvatarHomeURI(uuid);
         }
 
         public LSL_String osFormatString(string str, LSL_List strings)
         {
-            return m_OSSL_Functions.osFormatString(str, strings);
+            return _OSSL_Functions.osFormatString(str, strings);
         }
 
         public LSL_List osMatchString(string src, string pattern, int start)
         {
-            return m_OSSL_Functions.osMatchString(src, pattern, start);
+            return _OSSL_Functions.osMatchString(src, pattern, start);
         }
 
         public LSL_String osReplaceString(string src, string pattern, string replace, int count, int start)
         {
-            return m_OSSL_Functions.osReplaceString(src,pattern,replace,count,start);
+            return _OSSL_Functions.osReplaceString(src,pattern,replace,count,start);
         }
 
 
         // Information about data loaded into the region
         public string osLoadedCreationDate()
         {
-            return m_OSSL_Functions.osLoadedCreationDate();
+            return _OSSL_Functions.osLoadedCreationDate();
         }
 
         public string osLoadedCreationTime()
         {
-            return m_OSSL_Functions.osLoadedCreationTime();
+            return _OSSL_Functions.osLoadedCreationTime();
         }
 
         public string osLoadedCreationID()
         {
-            return m_OSSL_Functions.osLoadedCreationID();
+            return _OSSL_Functions.osLoadedCreationID();
         }
 
         public LSL_List osGetLinkPrimitiveParams(int linknumber, LSL_List rules)
         {
-            return m_OSSL_Functions.osGetLinkPrimitiveParams(linknumber, rules);
+            return _OSSL_Functions.osGetLinkPrimitiveParams(linknumber, rules);
         }
 
         public void osForceCreateLink(string target, int parent)
         {
-            m_OSSL_Functions.osForceCreateLink(target, parent);
+            _OSSL_Functions.osForceCreateLink(target, parent);
         }
 
         public void osForceBreakLink(int linknum)
         {
-            m_OSSL_Functions.osForceBreakLink(linknum);
+            _OSSL_Functions.osForceBreakLink(linknum);
         }
 
         public void osForceBreakAllLinks()
         {
-            m_OSSL_Functions.osForceBreakAllLinks();
+            _OSSL_Functions.osForceBreakAllLinks();
         }
 
         public void osDie(LSL_Key objectUUID)
         {
-            m_OSSL_Functions.osDie(objectUUID);
+            _OSSL_Functions.osDie(objectUUID);
         }
 
         public LSL_Integer osIsNpc(LSL_Key npc)
         {
-            return m_OSSL_Functions.osIsNpc(npc);
+            return _OSSL_Functions.osIsNpc(npc);
         }
 
         public key osNpcCreate(string user, string name, vector position, key cloneFrom)
         {
-            return m_OSSL_Functions.osNpcCreate(user, name, position, cloneFrom);
+            return _OSSL_Functions.osNpcCreate(user, name, position, cloneFrom);
         }
 
         public key osNpcCreate(string user, string name, vector position, key cloneFrom, int options)
         {
-            return m_OSSL_Functions.osNpcCreate(user, name, position, cloneFrom, options);
+            return _OSSL_Functions.osNpcCreate(user, name, position, cloneFrom, options);
         }
 
         public key osNpcSaveAppearance(key npc, LSL_String notecard)
         {
-            return m_OSSL_Functions.osNpcSaveAppearance(npc, notecard);
+            return _OSSL_Functions.osNpcSaveAppearance(npc, notecard);
         }
 
         public key osNpcSaveAppearance(key npc, LSL_String notecard, LSL_Integer includeHuds)
         {
-            return m_OSSL_Functions.osNpcSaveAppearance(npc, notecard, includeHuds);
+            return _OSSL_Functions.osNpcSaveAppearance(npc, notecard, includeHuds);
         }
 
         public void osNpcLoadAppearance(key npc, string notecard)
         {
-            m_OSSL_Functions.osNpcLoadAppearance(npc, notecard);
+            _OSSL_Functions.osNpcLoadAppearance(npc, notecard);
         }
 
         public LSL_Key osNpcGetOwner(LSL_Key npc)
         {
-            return m_OSSL_Functions.osNpcGetOwner(npc);
+            return _OSSL_Functions.osNpcGetOwner(npc);
         }
 
         public vector osNpcGetPos(LSL_Key npc)
         {
-            return m_OSSL_Functions.osNpcGetPos(npc);
+            return _OSSL_Functions.osNpcGetPos(npc);
         }
 
         public void osNpcMoveTo(key npc, vector position)
         {
-            m_OSSL_Functions.osNpcMoveTo(npc, position);
+            _OSSL_Functions.osNpcMoveTo(npc, position);
         }
 
         public void osNpcMoveToTarget(key npc, vector target, int options)
         {
-            m_OSSL_Functions.osNpcMoveToTarget(npc, target, options);
+            _OSSL_Functions.osNpcMoveToTarget(npc, target, options);
         }
 
         public rotation osNpcGetRot(key npc)
         {
-            return m_OSSL_Functions.osNpcGetRot(npc);
+            return _OSSL_Functions.osNpcGetRot(npc);
         }
 
         public void osNpcSetRot(key npc, rotation rot)
         {
-            m_OSSL_Functions.osNpcSetRot(npc, rot);
+            _OSSL_Functions.osNpcSetRot(npc, rot);
         }
 
         public void osNpcStopMoveToTarget(LSL_Key npc)
         {
-            m_OSSL_Functions.osNpcStopMoveToTarget(npc);
+            _OSSL_Functions.osNpcStopMoveToTarget(npc);
         }
 
         public void osNpcSetProfileAbout(LSL_Key npc, string about)
         {
-            m_OSSL_Functions.osNpcSetProfileAbout(npc, about);
+            _OSSL_Functions.osNpcSetProfileAbout(npc, about);
         }
 
         public void osNpcSetProfileImage(LSL_Key npc, string image)
         {
-            m_OSSL_Functions.osNpcSetProfileImage(npc, image);
+            _OSSL_Functions.osNpcSetProfileImage(npc, image);
         }
 
         public void osNpcSay(key npc, string message)
         {
-            m_OSSL_Functions.osNpcSay(npc, message);
+            _OSSL_Functions.osNpcSay(npc, message);
         }
 
         public void osNpcSay(key npc, int channel, string message)
         {
-            m_OSSL_Functions.osNpcSay(npc, channel, message);
+            _OSSL_Functions.osNpcSay(npc, channel, message);
         }
 
         public void osNpcSayTo(LSL_Key npc, LSL_Key target, int channel, string msg)
         {
-            m_OSSL_Functions.osNpcSayTo(npc, target, channel, msg);
+            _OSSL_Functions.osNpcSayTo(npc, target, channel, msg);
         }
 
         public void osNpcShout(key npc, int channel, string message)
         {
-            m_OSSL_Functions.osNpcShout(npc, channel, message);
+            _OSSL_Functions.osNpcShout(npc, channel, message);
         }
 
         public void osNpcSit(LSL_Key npc, LSL_Key target, int options)
         {
-            m_OSSL_Functions.osNpcSit(npc, target, options);
+            _OSSL_Functions.osNpcSit(npc, target, options);
         }
 
         public void osNpcStand(LSL_Key npc)
         {
-            m_OSSL_Functions.osNpcStand(npc);
+            _OSSL_Functions.osNpcStand(npc);
         }
 
         public void osNpcRemove(key npc)
         {
-            m_OSSL_Functions.osNpcRemove(npc);
+            _OSSL_Functions.osNpcRemove(npc);
         }
 
         public void osNpcPlayAnimation(LSL_Key npc, string animation)
         {
-            m_OSSL_Functions.osNpcPlayAnimation(npc, animation);
+            _OSSL_Functions.osNpcPlayAnimation(npc, animation);
         }
 
         public void osNpcStopAnimation(LSL_Key npc, string animation)
         {
-            m_OSSL_Functions.osNpcStopAnimation(npc, animation);
+            _OSSL_Functions.osNpcStopAnimation(npc, animation);
         }
 
         public void osNpcWhisper(key npc, int channel, string message)
         {
-            m_OSSL_Functions.osNpcWhisper(npc, channel, message);
+            _OSSL_Functions.osNpcWhisper(npc, channel, message);
         }
 
         public void osNpcTouch(LSL_Key npcLSL_Key, LSL_Key object_key, LSL_Integer link_num)
         {
-            m_OSSL_Functions.osNpcTouch(npcLSL_Key, object_key, link_num);
+            _OSSL_Functions.osNpcTouch(npcLSL_Key, object_key, link_num);
         }
 
         public LSL_Key osOwnerSaveAppearance(LSL_String notecard)
         {
-            return m_OSSL_Functions.osOwnerSaveAppearance(notecard);
+            return _OSSL_Functions.osOwnerSaveAppearance(notecard);
         }
 
         public LSL_Key osOwnerSaveAppearance(LSL_String notecard, LSL_Integer includeHuds)
         {
-            return m_OSSL_Functions.osOwnerSaveAppearance(notecard, includeHuds);
+            return _OSSL_Functions.osOwnerSaveAppearance(notecard, includeHuds);
         }
 
         public LSL_Key osAgentSaveAppearance(LSL_Key agentId, LSL_String notecard)
         {
-            return m_OSSL_Functions.osAgentSaveAppearance(agentId, notecard);
+            return _OSSL_Functions.osAgentSaveAppearance(agentId, notecard);
         }
 
         public LSL_Key osAgentSaveAppearance(LSL_Key agentId, LSL_String notecard, LSL_Integer includeHuds)
         {
-            return m_OSSL_Functions.osAgentSaveAppearance(agentId, notecard, includeHuds);
+            return _OSSL_Functions.osAgentSaveAppearance(agentId, notecard, includeHuds);
         }
 
         public OSSLPrim Prim;
@@ -770,16 +770,16 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
             public OSSLPrim(ScriptBaseClass bc)
             {
                 OSSL = bc;
-                Position = new OSSLPrim_Position(this);
-                Rotation = new OSSLPrim_Rotation(this);
+                Position = new OSSLPri_Position(this);
+                Rotation = new OSSLPri_Rotation(this);
             }
 
-            public OSSLPrim_Position Position;
-            public OSSLPrim_Rotation Rotation;
+            public OSSLPri_Position Position;
+            public OSSLPri_Rotation Rotation;
             private TextStruct _text;
             public TextStruct Text
             {
-                get { return _text; }
+                get => _text;
                 set
                 {
                     _text = value;
@@ -797,11 +797,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
         }
 
         [Serializable]
-        public class OSSLPrim_Position
+        public class OSSLPri_Position
         {
             private OSSLPrim prim;
             private LSL_Types.Vector3 Position;
-            public OSSLPrim_Position(OSSLPrim _prim)
+            public OSSLPri_Position(OSSLPrim _prim)
             {
                 prim = _prim;
             }
@@ -873,11 +873,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
         }
 
         [Serializable]
-        public class OSSLPrim_Rotation
+        public class OSSLPri_Rotation
         {
             private OSSLPrim prim;
             private LSL_Types.Quaternion Rotation;
-            public OSSLPrim_Rotation(OSSLPrim _prim)
+            public OSSLPri_Rotation(OSSLPrim _prim)
             {
                 prim = _prim;
             }
@@ -950,27 +950,27 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
         public string osGetGender(LSL_Key rawAvatarId)
         {
-            return m_OSSL_Functions.osGetGender(rawAvatarId);
+            return _OSSL_Functions.osGetGender(rawAvatarId);
         }
 
         public key osGetMapTexture()
         {
-            return m_OSSL_Functions.osGetMapTexture();
+            return _OSSL_Functions.osGetMapTexture();
         }
 
         public key osGetRegionMapTexture(string regionNameOrID)
         {
-            return m_OSSL_Functions.osGetRegionMapTexture(regionNameOrID);
+            return _OSSL_Functions.osGetRegionMapTexture(regionNameOrID);
         }
 
         public LSL_List osGetRegionStats()
         {
-            return m_OSSL_Functions.osGetRegionStats();
+            return _OSSL_Functions.osGetRegionStats();
         }
 
         public vector osGetRegionSize()
         {
-            return m_OSSL_Functions.osGetRegionSize();
+            return _OSSL_Functions.osGetRegionSize();
         }
 
         /// <summary>
@@ -980,566 +980,566 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
         /// <returns></returns>
         public LSL_Integer osGetSimulatorMemory()
         {
-            return m_OSSL_Functions.osGetSimulatorMemory();
+            return _OSSL_Functions.osGetSimulatorMemory();
         }
 
         public LSL_Integer osGetSimulatorMemoryKB()
         {
-            return m_OSSL_Functions.osGetSimulatorMemoryKB();
+            return _OSSL_Functions.osGetSimulatorMemoryKB();
         }
 
         public void osKickAvatar(string FirstName, string SurName, string alert)
         {
-            m_OSSL_Functions.osKickAvatar(FirstName, SurName, alert);
+            _OSSL_Functions.osKickAvatar(FirstName, SurName, alert);
         }
 
         public void osKickAvatar(LSL_Key agentId, string alert)
         {
-            m_OSSL_Functions.osKickAvatar(agentId, alert);
+            _OSSL_Functions.osKickAvatar(agentId, alert);
         }
 
         public void osSetSpeed(string UUID, LSL_Float SpeedModifier)
         {
-            m_OSSL_Functions.osSetSpeed(UUID, SpeedModifier);
+            _OSSL_Functions.osSetSpeed(UUID, SpeedModifier);
         }
         
         public void osSetOwnerSpeed(LSL_Float SpeedModifier)
         {
-            m_OSSL_Functions.osSetOwnerSpeed(SpeedModifier);
+            _OSSL_Functions.osSetOwnerSpeed(SpeedModifier);
         }
 
         public LSL_Float osGetHealth(key avatar)
         {
-            return m_OSSL_Functions.osGetHealth(avatar);
+            return _OSSL_Functions.osGetHealth(avatar);
         }
 
         public void osCauseDamage(key avatar, LSL_Float damage)
         {
-            m_OSSL_Functions.osCauseDamage(avatar, damage);
+            _OSSL_Functions.osCauseDamage(avatar, damage);
         }
 
         public void osCauseHealing(key avatar, LSL_Float healing)
         {
-            m_OSSL_Functions.osCauseHealing(avatar, healing);
+            _OSSL_Functions.osCauseHealing(avatar, healing);
         }
 
         public void osSetHealth(key avatar, LSL_Float health)
         {
-            m_OSSL_Functions.osSetHealth(avatar, health);
+            _OSSL_Functions.osSetHealth(avatar, health);
         }
 
         public void osSetHealRate(key avatar, LSL_Float health)
         {
-            m_OSSL_Functions.osSetHealRate(avatar, health);
+            _OSSL_Functions.osSetHealRate(avatar, health);
         }
 
         public LSL_Float osGetHealRate(key avatar)
         {
-            return m_OSSL_Functions.osGetHealRate(avatar);
+            return _OSSL_Functions.osGetHealRate(avatar);
         }
 
         public void osForceOtherSit(string avatar)
         {
-            m_OSSL_Functions.osForceOtherSit(avatar);
+            _OSSL_Functions.osForceOtherSit(avatar);
         }
 
         public void osForceOtherSit(string avatar, string target)
         {
-            m_OSSL_Functions.osForceOtherSit(avatar, target);
+            _OSSL_Functions.osForceOtherSit(avatar, target);
         }
 
         public LSL_List osGetPrimitiveParams(LSL_Key prim, LSL_List rules)
         {
-            return m_OSSL_Functions.osGetPrimitiveParams(prim, rules);
+            return _OSSL_Functions.osGetPrimitiveParams(prim, rules);
         }
 
         public void osSetPrimitiveParams(LSL_Key prim, LSL_List rules)
         {
-            m_OSSL_Functions.osSetPrimitiveParams(prim, rules);
+            _OSSL_Functions.osSetPrimitiveParams(prim, rules);
         }
 
         public void osSetProjectionParams(LSL_Integer projection, LSL_Key texture, double fov, double focus, double amb)
         {
-            m_OSSL_Functions.osSetProjectionParams(projection, texture, fov, focus, amb);
+            _OSSL_Functions.osSetProjectionParams(projection, texture, fov, focus, amb);
         }
 
         public void osSetProjectionParams(LSL_Key prim, LSL_Integer projection, LSL_Key texture, double fov, double focus, double amb)
         {
-            m_OSSL_Functions.osSetProjectionParams(prim, projection, texture, fov, focus, amb);
+            _OSSL_Functions.osSetProjectionParams(prim, projection, texture, fov, focus, amb);
         }
 
         public void osSetProjectionParams(LSL_Integer linknumber, LSL_Integer projection, LSL_Key texture, LSL_Float fov, LSL_Float focus, LSL_Float amb)
         {
-            m_OSSL_Functions.osSetProjectionParams(linknumber, projection, texture, fov, focus, amb);
+            _OSSL_Functions.osSetProjectionParams(linknumber, projection, texture, fov, focus, amb);
         }
 
         public LSL_List osGetAvatarList()
         {
-            return m_OSSL_Functions.osGetAvatarList();
+            return _OSSL_Functions.osGetAvatarList();
         }
 
         public LSL_List osGetNPCList()
         {
-            return m_OSSL_Functions.osGetNPCList();
+            return _OSSL_Functions.osGetNPCList();
         }
 
         public LSL_String osUnixTimeToTimestamp(LSL_Integer time)
         {
-            return m_OSSL_Functions.osUnixTimeToTimestamp(time);
+            return _OSSL_Functions.osUnixTimeToTimestamp(time);
         }
 
         public LSL_Integer osInviteToGroup(LSL_Key agentId)
         {
-            return m_OSSL_Functions.osInviteToGroup(agentId);
+            return _OSSL_Functions.osInviteToGroup(agentId);
         }
 
         public LSL_Integer osEjectFromGroup(LSL_Key agentId)
         {
-            return m_OSSL_Functions.osEjectFromGroup(agentId);
+            return _OSSL_Functions.osEjectFromGroup(agentId);
         }
 
         public void osSetTerrainTexture(int level, LSL_Key texture)
         {
-            m_OSSL_Functions.osSetTerrainTexture(level, texture);
+            _OSSL_Functions.osSetTerrainTexture(level, texture);
         }
 
         public void osSetTerrainTextureHeight(int corner, double low, double high)
         {
-            m_OSSL_Functions.osSetTerrainTextureHeight(corner, low, high);
+            _OSSL_Functions.osSetTerrainTextureHeight(corner, low, high);
         }
 
         public LSL_Integer osIsUUID(string thing)
         {
-            return m_OSSL_Functions.osIsUUID(thing);
+            return _OSSL_Functions.osIsUUID(thing);
         }
 
         public LSL_Float osMin(double a, double b)
         {
-            return m_OSSL_Functions.osMin(a, b);
+            return _OSSL_Functions.osMin(a, b);
         }
 
         public LSL_Float osMax(double a, double b)
         {
-            return m_OSSL_Functions.osMax(a, b);
+            return _OSSL_Functions.osMax(a, b);
         }
 
         public LSL_Key osGetRezzingObject()
         {
-            return m_OSSL_Functions.osGetRezzingObject();
+            return _OSSL_Functions.osGetRezzingObject();
         }
 
         public void osSetContentType(LSL_Key id, string type)
         {
-            m_OSSL_Functions.osSetContentType(id,type);
+            _OSSL_Functions.osSetContentType(id,type);
         }
 
         public void osDropAttachment()
         {
-            m_OSSL_Functions.osDropAttachment();
+            _OSSL_Functions.osDropAttachment();
         }
 
         public void osForceDropAttachment()
         {
-            m_OSSL_Functions.osForceDropAttachment();
+            _OSSL_Functions.osForceDropAttachment();
         }
 
         public void osDropAttachmentAt(vector pos, rotation rot)
         {
-            m_OSSL_Functions.osDropAttachmentAt(pos, rot);
+            _OSSL_Functions.osDropAttachmentAt(pos, rot);
         }
 
         public void osForceDropAttachmentAt(vector pos, rotation rot)
         {
-            m_OSSL_Functions.osForceDropAttachmentAt(pos, rot);
+            _OSSL_Functions.osForceDropAttachmentAt(pos, rot);
         }
 
         public LSL_Integer osListenRegex(int channelID, string name, string ID, string msg, int regexBitfield)
         {
-            return m_OSSL_Functions.osListenRegex(channelID, name, ID, msg, regexBitfield);
+            return _OSSL_Functions.osListenRegex(channelID, name, ID, msg, regexBitfield);
         }
 
         public LSL_Integer osRegexIsMatch(string input, string pattern)
         {
-            return m_OSSL_Functions.osRegexIsMatch(input, pattern);
+            return _OSSL_Functions.osRegexIsMatch(input, pattern);
         }
 
         public LSL_String osRequestURL(LSL_List options)
         {
-            return m_OSSL_Functions.osRequestURL(options);
+            return _OSSL_Functions.osRequestURL(options);
         }
 
         public LSL_String osRequestSecureURL(LSL_List options)
         {
-            return m_OSSL_Functions.osRequestSecureURL(options);
+            return _OSSL_Functions.osRequestSecureURL(options);
         }
 
         public void osCollisionSound(string impact_sound, double impact_volume)
         {
-            m_OSSL_Functions.osCollisionSound(impact_sound, impact_volume);
+            _OSSL_Functions.osCollisionSound(impact_sound, impact_volume);
         }
 
         public void osVolumeDetect(int detect)
         {
-            m_OSSL_Functions.osVolumeDetect(detect);
+            _OSSL_Functions.osVolumeDetect(detect);
         }
 
         public LSL_List osGetInertiaData()
         {
-            return m_OSSL_Functions.osGetInertiaData();
+            return _OSSL_Functions.osGetInertiaData();
         }
 
         public void osSetInertia(LSL_Float mass, vector centerOfMass, vector principalInertiaScaled,  rotation rot)
         {
-            m_OSSL_Functions.osSetInertia(mass, centerOfMass, principalInertiaScaled, rot);
+            _OSSL_Functions.osSetInertia(mass, centerOfMass, principalInertiaScaled, rot);
         }
 
         public void osSetInertiaAsBox(LSL_Float mass, vector boxSize, vector centerOfMass, rotation rot)
         {
-            m_OSSL_Functions.osSetInertiaAsBox(mass, boxSize, centerOfMass, rot);
+            _OSSL_Functions.osSetInertiaAsBox(mass, boxSize, centerOfMass, rot);
         }
 
         public void osSetInertiaAsSphere(LSL_Float mass,  LSL_Float radius, vector centerOfMass)
         {
-            m_OSSL_Functions.osSetInertiaAsSphere(mass, radius, centerOfMass);
+            _OSSL_Functions.osSetInertiaAsSphere(mass, radius, centerOfMass);
         }
 
         public void osSetInertiaAsCylinder(LSL_Float mass,  LSL_Float radius, LSL_Float lenght, vector centerOfMass,rotation lslrot)
         {
-            m_OSSL_Functions.osSetInertiaAsCylinder( mass, radius, lenght, centerOfMass, lslrot);
+            _OSSL_Functions.osSetInertiaAsCylinder( mass, radius, lenght, centerOfMass, lslrot);
         }
 
         public void osClearInertia()
         {
-            m_OSSL_Functions.osClearInertia();
+            _OSSL_Functions.osClearInertia();
         }
 
         public LSL_Integer osTeleportObject(LSL_Key objectUUID, vector targetPos, rotation targetrotation, LSL_Integer flags)
         {
-            return m_OSSL_Functions.osTeleportObject(objectUUID, targetPos, targetrotation, flags);
+            return _OSSL_Functions.osTeleportObject(objectUUID, targetPos, targetrotation, flags);
         }
 
         public LSL_Integer osGetLinkNumber(LSL_String name)
         {
-            return m_OSSL_Functions.osGetLinkNumber(name);
+            return _OSSL_Functions.osGetLinkNumber(name);
         }
 
         public LSL_Float osRound(LSL_Float value, LSL_Integer digits)
         {
-            return m_OSSL_Functions.osRound(value, digits);
+            return _OSSL_Functions.osRound(value, digits);
         }
 
         public LSL_Float osVecMagSquare(vector a)
         {
-            return m_OSSL_Functions.osVecMagSquare(a);
+            return _OSSL_Functions.osVecMagSquare(a);
         }
 
         public LSL_Float osVecDistSquare(vector a, vector b)
         {
-            return m_OSSL_Functions.osVecDistSquare(a, b);
+            return _OSSL_Functions.osVecDistSquare(a, b);
         }
 
         public LSL_Float osAngleBetween(vector a, vector b)
         {
-            return m_OSSL_Functions.osAngleBetween(a, b);
+            return _OSSL_Functions.osAngleBetween(a, b);
         }
 
         public void osAdjustSoundVolume(LSL_Integer linknum, LSL_Float volume)
         {
-            m_OSSL_Functions.osAdjustSoundVolume(linknum, volume);
+            _OSSL_Functions.osAdjustSoundVolume(linknum, volume);
         }
 
         public void osSetSoundRadius(LSL_Integer linknum, LSL_Float radius)
         {
-            m_OSSL_Functions.osSetSoundRadius(linknum, radius);
+            _OSSL_Functions.osSetSoundRadius(linknum, radius);
         }
 
         public void osPlaySound(LSL_Integer linknum, LSL_String sound, LSL_Float volume)
         {
-            m_OSSL_Functions.osPlaySound(linknum, sound, volume);
+            _OSSL_Functions.osPlaySound(linknum, sound, volume);
         }
 
         public void osLoopSound(LSL_Integer linknum, LSL_String sound, LSL_Float volume)
         {
-            m_OSSL_Functions.osLoopSound(linknum, sound, volume);
+            _OSSL_Functions.osLoopSound(linknum, sound, volume);
         }
 
         public void osLoopSoundMaster(LSL_Integer linknum, LSL_String sound, LSL_Float volume)
         {
-            m_OSSL_Functions.osLoopSoundMaster(linknum, sound, volume);
+            _OSSL_Functions.osLoopSoundMaster(linknum, sound, volume);
         }
 
         public void osLoopSoundSlave(LSL_Integer linknum, LSL_String sound, LSL_Float volume)
         {
-            m_OSSL_Functions.osLoopSoundSlave(linknum, sound, volume);
+            _OSSL_Functions.osLoopSoundSlave(linknum, sound, volume);
         }
 
         public void osPlaySoundSlave(LSL_Integer linknum, LSL_String sound, LSL_Float volume)
         {
-            m_OSSL_Functions.osPlaySoundSlave(linknum, sound, volume);
+            _OSSL_Functions.osPlaySoundSlave(linknum, sound, volume);
         }
 
         public void osTriggerSound(LSL_Integer linknum, LSL_String sound, LSL_Float volume)
         {
-            m_OSSL_Functions.osTriggerSound(linknum, sound, volume);
+            _OSSL_Functions.osTriggerSound(linknum, sound, volume);
         }
 
         public void osTriggerSoundLimited(LSL_Integer linknum, LSL_String sound, LSL_Float volume,
-                 vector top_north_east, vector bottom_south_west)
+                 vector top_north_east, vector botto_south_west)
         {
-            m_OSSL_Functions.osTriggerSoundLimited(linknum, sound, volume,
-                                            top_north_east, bottom_south_west);
+            _OSSL_Functions.osTriggerSoundLimited(linknum, sound, volume,
+                                            top_north_east, botto_south_west);
         }
 
         public void osStopSound(LSL_Integer linknum)
         {
-            m_OSSL_Functions.osStopSound(linknum);
+            _OSSL_Functions.osStopSound(linknum);
         }
 
         public void osPreloadSound(LSL_Integer linknum, LSL_String sound)
         {
-            m_OSSL_Functions.osPreloadSound(linknum, sound);
+            _OSSL_Functions.osPreloadSound(linknum, sound);
         }
 
         public LSL_String osDetectedCountry(LSL_Integer number)
         {
-            return m_OSSL_Functions.osDetectedCountry(number);
+            return _OSSL_Functions.osDetectedCountry(number);
         }
 
         public LSL_String osGetAgentCountry(LSL_Key agentId)
         {
-            return m_OSSL_Functions.osGetAgentCountry(agentId);
+            return _OSSL_Functions.osGetAgentCountry(agentId);
         }
 
         public LSL_String osStringSubString(LSL_String src, LSL_Integer offset)
         {
-            return m_OSSL_Functions.osStringSubString(src, offset);
+            return _OSSL_Functions.osStringSubString(src, offset);
         }
 
         public LSL_String osStringSubString(LSL_String src, LSL_Integer offset, LSL_Integer length)
         {
-            return m_OSSL_Functions.osStringSubString(src, offset, length);
+            return _OSSL_Functions.osStringSubString(src, offset, length);
         }
 
         public LSL_Integer osStringStartsWith(LSL_String src, LSL_String value, LSL_Integer ignorecase)
         {
-            return m_OSSL_Functions.osStringStartsWith(src, value, ignorecase);
+            return _OSSL_Functions.osStringStartsWith(src, value, ignorecase);
         }
 
         public LSL_Integer osStringEndsWith(LSL_String src, LSL_String value, LSL_Integer ignorecase)
         {
-            return m_OSSL_Functions.osStringEndsWith(src, value, ignorecase);
+            return _OSSL_Functions.osStringEndsWith(src, value, ignorecase);
         }
 
         public LSL_Integer osStringIndexOf(LSL_String src, LSL_String value, LSL_Integer ignorecase)
         {
-            return m_OSSL_Functions.osStringIndexOf(src, value, ignorecase);
+            return _OSSL_Functions.osStringIndexOf(src, value, ignorecase);
         }
 
         public LSL_Integer osStringIndexOf(LSL_String src, LSL_String value, LSL_Integer offset, LSL_Integer count, LSL_Integer ignorecase)
         {
-            return m_OSSL_Functions.osStringIndexOf(src, value, offset, count, ignorecase);
+            return _OSSL_Functions.osStringIndexOf(src, value, offset, count, ignorecase);
         }
 
         public LSL_Integer osStringLastIndexOf(LSL_String src, LSL_String value, LSL_Integer ignorecase)
         {
-            return m_OSSL_Functions.osStringLastIndexOf(src, value, ignorecase);
+            return _OSSL_Functions.osStringLastIndexOf(src, value, ignorecase);
         }
 
         public LSL_Integer osStringLastIndexOf(LSL_String src, LSL_String value, LSL_Integer offset, LSL_Integer count, LSL_Integer ignorecase)
         {
-            return m_OSSL_Functions.osStringLastIndexOf(src, value, offset, count, ignorecase);
+            return _OSSL_Functions.osStringLastIndexOf(src, value, offset, count, ignorecase);
         }
 
         public LSL_String osStringRemove(LSL_String src, LSL_Integer offset, LSL_Integer count)
         {
-            return m_OSSL_Functions.osStringRemove(src, offset, count);
+            return _OSSL_Functions.osStringRemove(src, offset, count);
         }
 
         public LSL_String osStringReplace(LSL_String src, LSL_String oldvalue, LSL_String newvalue)
         {
-            return m_OSSL_Functions.osStringReplace(src, oldvalue, newvalue);
+            return _OSSL_Functions.osStringReplace(src, oldvalue, newvalue);
         }
 
         public LSL_Integer osApproxEquals(LSL_Float a, LSL_Float b)
         {
-            return m_OSSL_Functions.osApproxEquals(a, b);
+            return _OSSL_Functions.osApproxEquals(a, b);
         }
 
         public LSL_Integer osApproxEquals(LSL_Float a, LSL_Float b, LSL_Float margin)
         {
-            return m_OSSL_Functions.osApproxEquals(a, b, margin);
+            return _OSSL_Functions.osApproxEquals(a, b, margin);
         }
 
         public LSL_Integer osApproxEquals(vector va, vector vb)
         {
-            return m_OSSL_Functions.osApproxEquals(va, vb);
+            return _OSSL_Functions.osApproxEquals(va, vb);
         }
 
         public LSL_Integer osApproxEquals(vector va, vector vb, LSL_Float margin)
         {
-            return m_OSSL_Functions.osApproxEquals(va, vb, margin);
+            return _OSSL_Functions.osApproxEquals(va, vb, margin);
         }
 
         public LSL_Integer osApproxEquals(rotation ra, rotation rb)
         {
-            return m_OSSL_Functions.osApproxEquals(ra, rb);
+            return _OSSL_Functions.osApproxEquals(ra, rb);
         }
 
         public LSL_Integer osApproxEquals(rotation ra, rotation rb, LSL_Float margin)
         {
-            return m_OSSL_Functions.osApproxEquals(ra, rb, margin);
+            return _OSSL_Functions.osApproxEquals(ra, rb, margin);
         }
 
         public LSL_Key osGetInventoryLastOwner(LSL_String itemNameOrId)
         {
-            return m_OSSL_Functions.osGetInventoryLastOwner(itemNameOrId);
+            return _OSSL_Functions.osGetInventoryLastOwner(itemNameOrId);
         }
 
         public LSL_Key osGetInventoryItemKey(LSL_String name)
         {
-            return m_OSSL_Functions.osGetInventoryItemKey(name);
+            return _OSSL_Functions.osGetInventoryItemKey(name);
         }
 
         public LSL_String osGetInventoryName(LSL_Key itemId)
         {
-            return m_OSSL_Functions.osGetInventoryName(itemId);
+            return _OSSL_Functions.osGetInventoryName(itemId);
         }
 
         public LSL_String osGetInventoryDesc(LSL_String itemNameOrId)
         {
-            return m_OSSL_Functions.osGetInventoryDesc(itemNameOrId);
+            return _OSSL_Functions.osGetInventoryDesc(itemNameOrId);
         }
 
         public LSL_Key osGetLastChangedEventKey()
         {
-            return m_OSSL_Functions.osGetLastChangedEventKey();
+            return _OSSL_Functions.osGetLastChangedEventKey();
         }
 
         public LSL_Float osGetPSTWallclock()
         {
-            return m_OSSL_Functions.osGetPSTWallclock();
+            return _OSSL_Functions.osGetPSTWallclock();
         }
 
         public rotation osSlerp(rotation a, rotation b, LSL_Float amount)
         {
-            return m_OSSL_Functions.osSlerp(a, b, amount);
+            return _OSSL_Functions.osSlerp(a, b, amount);
         }
 
         public vector osSlerp(vector a, vector b, LSL_Float amount)
         {
-            return m_OSSL_Functions.osSlerp(a, b, amount);
+            return _OSSL_Functions.osSlerp(a, b, amount);
         }
 
         public void osResetAllScripts(LSL_Integer allLinkSet)
         {
-            m_OSSL_Functions.osResetAllScripts(allLinkSet);
+            _OSSL_Functions.osResetAllScripts(allLinkSet);
         }
 
         public LSL_Integer osIsNotValidNumber(LSL_Float v)
         {
-            return m_OSSL_Functions.osIsNotValidNumber(v);
+            return _OSSL_Functions.osIsNotValidNumber(v);
         }
 
         public void osSetSitActiveRange(LSL_Float v)
         {
-            m_OSSL_Functions.osSetSitActiveRange(v);
+            _OSSL_Functions.osSetSitActiveRange(v);
         }
 
         public void osSetLinkSitActiveRange(LSL_Integer linkNumber, LSL_Float v)
         {
-            m_OSSL_Functions.osSetLinkSitActiveRange(linkNumber, v);
+            _OSSL_Functions.osSetLinkSitActiveRange(linkNumber, v);
         }
 
         public LSL_Float osGetSitActiveRange()
         {
-            return m_OSSL_Functions.osGetSitActiveRange();
+            return _OSSL_Functions.osGetSitActiveRange();
         }
 
         public LSL_Float osGetLinkSitActiveRange(LSL_Integer linkNumber)
         {
-            return m_OSSL_Functions.osGetLinkSitActiveRange(linkNumber);
+            return _OSSL_Functions.osGetLinkSitActiveRange(linkNumber);
         }
 
         public void osSetStandTarget(vector v)
         {
-            m_OSSL_Functions.osSetStandTarget(v);
+            _OSSL_Functions.osSetStandTarget(v);
         }
 
         public void osSetLinkStandTarget(LSL_Integer linkNumber, vector v)
         {
-            m_OSSL_Functions.osSetLinkStandTarget(linkNumber, v);
+            _OSSL_Functions.osSetLinkStandTarget(linkNumber, v);
         }
 
         public vector osGetStandTarget()
         {
-            return m_OSSL_Functions.osGetStandTarget();
+            return _OSSL_Functions.osGetStandTarget();
         }
 
         public vector osGetLinkStandTarget(LSL_Integer linkNumber)
         {
-            return m_OSSL_Functions.osGetLinkStandTarget(linkNumber);
+            return _OSSL_Functions.osGetLinkStandTarget(linkNumber);
         }
 
         public LSL_Integer osClearObjectAnimations()
         {
-            return m_OSSL_Functions.osClearObjectAnimations();
+            return _OSSL_Functions.osClearObjectAnimations();
         }
 
         public LSL_Float osGetApparentTime()
         {
-            return m_OSSL_Functions.osGetApparentTime();
+            return _OSSL_Functions.osGetApparentTime();
         }
 
         public LSL_String osGetApparentTimeString(LSL_Integer format24)
         {
-            return m_OSSL_Functions.osGetApparentTimeString(format24);
+            return _OSSL_Functions.osGetApparentTimeString(format24);
         }
 
         public LSL_Float osGetApparentRegionTime()
         {
-            return m_OSSL_Functions.osGetApparentRegionTime();
+            return _OSSL_Functions.osGetApparentRegionTime();
         }
 
         public LSL_String osGetApparentRegionTimeString(LSL_Integer format24)
         {
-            return m_OSSL_Functions.osGetApparentRegionTimeString(format24);
+            return _OSSL_Functions.osGetApparentRegionTimeString(format24);
         }
 
         public LSL_Integer osReplaceAgentEnvironment(LSL_Key agentkey, LSL_Integer transition, LSL_String daycycle)
         {
-            return m_OSSL_Functions.osReplaceAgentEnvironment(agentkey, transition, daycycle);
+            return _OSSL_Functions.osReplaceAgentEnvironment(agentkey, transition, daycycle);
         }
 
         public LSL_Integer osReplaceParcelEnvironment(LSL_Integer transition, LSL_String daycycle)
         {
-            return m_OSSL_Functions.osReplaceParcelEnvironment(transition, daycycle);
+            return _OSSL_Functions.osReplaceParcelEnvironment(transition, daycycle);
         }
 
         public LSL_Integer osReplaceRegionEnvironment(LSL_Integer transition, LSL_String daycycle,
            LSL_Float daylen, LSL_Float dayoffset, LSL_Float altitude1, LSL_Float altitude2, LSL_Float altitude3)
         {
-            return m_OSSL_Functions.osReplaceRegionEnvironment(transition, daycycle, daylen,
+            return _OSSL_Functions.osReplaceRegionEnvironment(transition, daycycle, daylen,
                         dayoffset, altitude1, altitude2, altitude3);
         }
 
         public LSL_Integer osResetEnvironment(LSL_Integer parcelOrRegion, LSL_Integer transition)
         {
-            return m_OSSL_Functions.osResetEnvironment(parcelOrRegion, transition);
+            return _OSSL_Functions.osResetEnvironment(parcelOrRegion, transition);
         }
 
         public void osParticleSystem(LSL_List rules)
         {
-            m_OSSL_Functions.osParticleSystem(rules);
+            _OSSL_Functions.osParticleSystem(rules);
         }
 
         public void osLinkParticleSystem(LSL_Integer linknumber, LSL_List rules)
         {
-            m_OSSL_Functions.osLinkParticleSystem(linknumber, rules);
+            _OSSL_Functions.osLinkParticleSystem(linknumber, rules);
         }
 
         public LSL_Integer osNpcLookAt(LSL_Key npckey, LSL_Integer type, LSL_Key objkey, vector offset)
         {
-            return m_OSSL_Functions.osNpcLookAt(npckey, type, objkey, offset);
+            return _OSSL_Functions.osNpcLookAt(npckey, type, objkey, offset);
         }
     }
 }

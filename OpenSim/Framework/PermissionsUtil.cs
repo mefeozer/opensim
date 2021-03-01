@@ -33,7 +33,7 @@ namespace OpenSim.Framework
 {
     public static class PermissionsUtil
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Logs permissions flags. Useful when debugging permission problems.
@@ -41,7 +41,7 @@ namespace OpenSim.Framework
         /// <param name="message"></param>
         public static void LogPermissions(string name, string message, uint basePerm, uint curPerm, uint nextPerm)
         {
-            m_log.DebugFormat("Permissions of \"{0}\" at \"{1}\": Base {2} ({3:X4}), Current {4} ({5:X4}), NextOwner {6} ({7:X4})",
+            _log.DebugFormat("Permissions of \"{0}\" at \"{1}\": Base {2} ({3:X4}), Current {4} ({5:X4}), NextOwner {6} ({7:X4})",
                 name, message,
                 PermissionsToString(basePerm), basePerm, PermissionsToString(curPerm), curPerm, PermissionsToString(nextPerm), nextPerm);
         }

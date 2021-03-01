@@ -38,7 +38,7 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class GetAssetsHandler
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                    LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly Dictionary<string, AssetType> queryTypes = new Dictionary<string, AssetType>()
@@ -64,20 +64,20 @@ namespace OpenSim.Capabilities.Handlers
             {"settings_id", AssetType.Settings}
         };
 
-        private readonly IAssetService m_assetService;
+        private readonly IAssetService _assetService;
 
         public GetAssetsHandler(IAssetService assService)
         {
-            m_assetService = assService;
+            _assetService = assService;
         }
 
         public void Handle(OSHttpRequest req, OSHttpResponse response, string serviceURL = null)
         {
             response.ContentType = "text/plain";
 
-            if (m_assetService == null)
+            if (_assetService == null)
             {
-                //m_log.Warn("[GETASSET]: no service"); 
+                //_log.Warn("[GETASSET]: no service"); 
                 response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
                 response.KeepAlive = false;
                 return;
@@ -103,8 +103,8 @@ namespace OpenSim.Capabilities.Handlers
 
             if(type == AssetType.Unknown)
             {
-                //m_log.Warn("[GETASSET]: Unknown type: " + query);
-                m_log.Warn("[GETASSET]: Unknown type");
+                //_log.Warn("[GETASSET]: Unknown type: " + query);
+                _log.Warn("[GETASSET]: Unknown type");
                 response.StatusCode = (int)HttpStatusCode.NotFound;
                 return;
             }
@@ -116,24 +116,24 @@ namespace OpenSim.Capabilities.Handlers
             if(!UUID.TryParse(assetStr, out assetID))
                 return;
 
-            AssetBase asset = m_assetService.Get(assetID.ToString(), serviceURL, false);
+            AssetBase asset = _assetService.Get(assetID.ToString(), serviceURL, false);
             if (asset == null)
             {
-                // m_log.Warn("[GETASSET]: not found: " + query + " " + assetStr);
+                // _log.Warn("[GETASSET]: not found: " + query + " " + assetStr);
                 response.StatusCode = (int)HttpStatusCode.NotFound;
                 return;
             }
 
             if (asset.Type != (sbyte)type)
             {
-                m_log.Warn("[GETASSET]: asset with wrong type: " + assetStr + " " + asset.Type.ToString() + " != " + ((sbyte)type).ToString());
+                _log.Warn("[GETASSET]: asset with wrong type: " + assetStr + " " + asset.Type.ToString() + " != " + ((sbyte)type).ToString());
                 response.StatusCode = (int)HttpStatusCode.NotFound;
                 return;
             }
 
             if (asset.Data.Length == 0)
             {
-                m_log.Warn("[GETASSET]: asset with empty data: " + assetStr +" type " + asset.Type.ToString());
+                _log.Warn("[GETASSET]: asset with empty data: " + assetStr +" type " + asset.Type.ToString());
                 response.StatusCode = (int)HttpStatusCode.NotFound;
                 return;
             }
@@ -153,7 +153,7 @@ namespace OpenSim.Capabilities.Handlers
                 // viewers do send broken start, then flag good assets as bad
                 if (start >= asset.Data.Length)
                 {
-                    //m_log.Warn("[GETASSET]: bad start: " + range);
+                    //_log.Warn("[GETASSET]: bad start: " + range);
                     response.StatusCode = (int)HttpStatusCode.OK;
                 }
                 else
@@ -166,7 +166,7 @@ namespace OpenSim.Capabilities.Handlers
                     start = Utils.Clamp(start, 0, end);
                     len = end - start + 1;
 
-                //m_log.Debug("Serving " + start + " to " + end + " of " + texture.Data.Length + " bytes for texture " + texture.ID);
+                //_log.Debug("Serving " + start + " to " + end + " of " + texture.Data.Length + " bytes for texture " + texture.ID);
                 response.AddHeader("Content-Range", string.Format("bytes {0}-{1}/{2}", start, end, asset.Data.Length));
                 response.StatusCode = (int)HttpStatusCode.PartialContent;
                 response.RawBufferStart = start;

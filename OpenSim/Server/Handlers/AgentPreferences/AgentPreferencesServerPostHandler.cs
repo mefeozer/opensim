@@ -42,14 +42,14 @@ namespace OpenSim.Server.Handlers.AgentPreferences
 {
     public class AgentPreferencesServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAgentPreferencesService m_AgentPreferencesService;
+        private readonly IAgentPreferencesService _AgentPreferencesService;
 
         public AgentPreferencesServerPostHandler(IAgentPreferencesService service, IServiceAuth auth) :
         base("POST", "/agentprefs", auth)
         {
-            m_AgentPreferencesService = service;
+            _AgentPreferencesService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -60,7 +60,7 @@ namespace OpenSim.Server.Handlers.AgentPreferences
             sr.Close();
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
 
             try
             {
@@ -81,11 +81,11 @@ namespace OpenSim.Server.Handlers.AgentPreferences
                     case "getagentlang":
                         return GetAgentLang(request);
                 }
-                m_log.DebugFormat("[AGENT PREFERENCES HANDLER]: unknown method request: {0}", method);
+                _log.DebugFormat("[AGENT PREFERENCES HANDLER]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[AGENT PREFERENCES HANDLER]: Exception {0}", e);
+                _log.DebugFormat("[AGENT PREFERENCES HANDLER]: Exception {0}", e);
             }
 
             return FailureResult();
@@ -99,7 +99,7 @@ namespace OpenSim.Server.Handlers.AgentPreferences
             UUID userID;
             if (!UUID.TryParse(request["UserID"].ToString(), out userID))
                 return FailureResult();
-            AgentPrefs prefs = m_AgentPreferencesService.GetAgentPreferences(userID);
+            AgentPrefs prefs = _AgentPreferencesService.GetAgentPreferences(userID);
             Dictionary<string, object> result = new Dictionary<string, object>();
             if (prefs != null)
                 result = prefs.ToKeyValuePairs();
@@ -133,7 +133,7 @@ namespace OpenSim.Server.Handlers.AgentPreferences
                 PermNextOwner = int.Parse(request["PermNextOwner"].ToString())
             };
 
-            return m_AgentPreferencesService.StoreAgentPreferences(data) ? SuccessResult() : FailureResult();
+            return _AgentPreferencesService.StoreAgentPreferences(data) ? SuccessResult() : FailureResult();
         }
 
         byte[] GetAgentLang(Dictionary<string, object> request)
@@ -145,7 +145,7 @@ namespace OpenSim.Server.Handlers.AgentPreferences
                 return FailureResult();
 
             string lang = "en-us";
-            AgentPrefs prefs = m_AgentPreferencesService.GetAgentPreferences(userID);
+            AgentPrefs prefs = _AgentPreferencesService.GetAgentPreferences(userID);
             if (prefs != null)
             {
                 if (prefs.LanguageIsPublic)

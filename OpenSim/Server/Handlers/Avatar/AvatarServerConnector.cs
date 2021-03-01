@@ -37,15 +37,15 @@ namespace OpenSim.Server.Handlers.Avatar
 {
     public class AvatarServiceConnector : ServiceConnector
     {
-        private readonly IAvatarService m_AvatarService;
-        private readonly string m_ConfigName = "AvatarService";
+        private readonly IAvatarService _AvatarService;
+        private readonly string _ConfigName = "AvatarService";
 
         public AvatarServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string avatarService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -54,11 +54,11 @@ namespace OpenSim.Server.Handlers.Avatar
                 throw new Exception("No LocalServiceModule in config file");
 
             object[] args = new object[] { config };
-            m_AvatarService = ServerUtils.LoadPlugin<IAvatarService>(avatarService, args);
+            _AvatarService = ServerUtils.LoadPlugin<IAvatarService>(avatarService, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
-            server.AddStreamHandler(new AvatarServerPostHandler(m_AvatarService, auth));
+            server.AddStreamHandler(new AvatarServerPostHandler(_AvatarService, auth));
         }
     }
 }

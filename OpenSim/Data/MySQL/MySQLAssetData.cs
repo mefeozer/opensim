@@ -41,18 +41,15 @@ namespace OpenSim.Data.MySQL
     /// </summary>
     public class MySQLAssetData : AssetDataBase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_connectionString;
+        private string _connectionString;
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         #region IPlugin Members
 
-        public override string Version { get { return "1.0.0.0"; } }
+        public override string Version => "1.0.0.0";
 
         /// <summary>
         /// <para>Initialises Asset interface</para>
@@ -67,9 +64,9 @@ namespace OpenSim.Data.MySQL
         /// <param name="connect">connect string</param>
         public override void Initialise(string connect)
         {
-            m_connectionString = connect;
+            _connectionString = connect;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 Migration m = new Migration(dbcon, Assembly, "AssetStore");
@@ -88,10 +85,7 @@ namespace OpenSim.Data.MySQL
         /// <summary>
         /// The name of this DB provider
         /// </summary>
-        override public string Name
-        {
-            get { return "MySQL Asset storage engine"; }
-        }
+        override public string Name => "MySQL Asset storage engine";
 
         #endregion
 
@@ -107,7 +101,7 @@ namespace OpenSim.Data.MySQL
         {
             AssetBase asset = null;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -142,7 +136,7 @@ namespace OpenSim.Data.MySQL
                     }
                     catch (Exception e)
                     {
-                        m_log.Error(
+                        _log.Error(
                             string.Format("[ASSETS DB]: MySql failure fetching asset {0}.  Exception  ", assetID), e);
                     }
                 }
@@ -163,7 +157,7 @@ namespace OpenSim.Data.MySQL
             if (asset.Name.Length > AssetBase.MAX_ASSET_NAME)
             {
                 assetName = asset.Name.Substring(0, AssetBase.MAX_ASSET_NAME);
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[ASSET DB]: Name '{0}' for asset {1} truncated from {2} to {3} characters on add",
                     asset.Name, asset.ID, asset.Name.Length, assetName.Length);
             }
@@ -172,12 +166,12 @@ namespace OpenSim.Data.MySQL
             if (asset.Description.Length > AssetBase.MAX_ASSET_DESC)
             {
                 assetDescription = asset.Description.Substring(0, AssetBase.MAX_ASSET_DESC);
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[ASSET DB]: Description '{0}' for asset {1} truncated from {2} to {3} characters on add",
                     asset.Description, asset.ID, asset.Description.Length, assetDescription.Length);
             }
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 using (MySqlCommand cmd =
@@ -207,7 +201,7 @@ namespace OpenSim.Data.MySQL
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat("[ASSET DB]: MySQL failure creating asset {0} with name \"{1}\". Error: {2}",
+                        _log.ErrorFormat("[ASSET DB]: MySQL failure creating asset {0} with name \"{1}\". Error: {2}",
                             asset.FullID, asset.Name, e.Message);
                         dbcon.Close();
                         return false;
@@ -218,7 +212,7 @@ namespace OpenSim.Data.MySQL
 
         private void UpdateAccessTime(AssetBase asset)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -235,7 +229,7 @@ namespace OpenSim.Data.MySQL
                     }
                     catch (Exception e)
                     {
-                        m_log.Error(
+                        _log.Error(
                             string.Format(
                                 "[ASSETS DB]: Failure updating access_time for asset {0} with name {1}.  Exception  ",
                                 asset.FullID, asset.Name),
@@ -261,7 +255,7 @@ namespace OpenSim.Data.MySQL
             string ids = "'" + string.Join("','", uuids) + "'";
             string sql = string.Format("SELECT id FROM assets WHERE id IN ({0})", ids);
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 using (MySqlCommand cmd = new MySqlCommand(sql, dbcon))
@@ -297,7 +291,7 @@ namespace OpenSim.Data.MySQL
         {
             List<AssetMetadata> retList = new List<AssetMetadata>(count);
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -335,7 +329,7 @@ namespace OpenSim.Data.MySQL
                     }
                     catch (Exception e)
                     {
-                        m_log.Error(
+                        _log.Error(
                             string.Format(
                                 "[ASSETS DB]: MySql failure fetching asset set from {0}, count {1}.  Exception  ",
                                 start, count),
@@ -350,7 +344,7 @@ namespace OpenSim.Data.MySQL
 
         public override bool Delete(string id)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 

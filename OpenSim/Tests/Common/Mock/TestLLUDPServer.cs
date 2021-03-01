@@ -60,9 +60,9 @@ namespace OpenSim.Tests.Common
 
         public void ClientOutgoingPacketHandler(IClientAPI client, bool resendUnacked, bool sendAcks, bool sendPing)
         {
-            m_resendUnacked = resendUnacked;
-            m_sendAcks = sendAcks;
-            m_sendPing = sendPing;
+            _resendUnacked = resendUnacked;
+            _sendAcks = sendAcks;
+            _sendPing = sendPing;
 
             ClientOutgoingPacketHandler(client);
         }
@@ -70,13 +70,13 @@ namespace OpenSim.Tests.Common
 ////        /// <summary>
 ////        /// The chunks of data to pass to the LLUDPServer when it calls EndReceive
 ////        /// </summary>
-////        protected Queue<ChunkSenderTuple> m_chunksToLoad = new Queue<ChunkSenderTuple>();
+////        protected Queue<ChunkSenderTuple> _chunksToLoad = new Queue<ChunkSenderTuple>();
 //
 ////        protected override void BeginReceive()
 ////        {
-////            if (m_chunksToLoad.Count > 0 && m_chunksToLoad.Peek().BeginReceiveException)
+////            if (_chunksToLoad.Count > 0 && _chunksToLoad.Peek().BeginReceiveException)
 ////            {
-////                ChunkSenderTuple tuple = m_chunksToLoad.Dequeue();
+////                ChunkSenderTuple tuple = _chunksToLoad.Dequeue();
 ////                reusedEpSender = tuple.Sender;
 ////                throw new SocketException();
 ////            }
@@ -86,12 +86,12 @@ namespace OpenSim.Tests.Common
 ////        {
 ////            numBytes = 0;
 ////
-////            //m_log.Debug("Queue size " + m_chunksToLoad.Count);
+////            //_log.Debug("Queue size " + _chunksToLoad.Count);
 ////
-////            if (m_chunksToLoad.Count <= 0)
+////            if (_chunksToLoad.Count <= 0)
 ////                return false;
 ////
-////            ChunkSenderTuple tuple = m_chunksToLoad.Dequeue();
+////            ChunkSenderTuple tuple = _chunksToLoad.Dequeue();
 ////            RecvBuffer = tuple.Data;
 ////            numBytes   = tuple.Data.Length;
 ////            epSender   = tuple.Sender;
@@ -112,7 +112,7 @@ namespace OpenSim.Tests.Common
 //        {
 //            ChunkSenderTuple tuple = new ChunkSenderTuple(epSender);
 //            tuple.BeginReceiveException = true;
-//            m_chunksToLoad.Enqueue(tuple);
+//            _chunksToLoad.Enqueue(tuple);
 //        }
 //
 //        /// <summary>
@@ -122,7 +122,7 @@ namespace OpenSim.Tests.Common
 //        /// <param name="epSender"></param>
 //        public void LoadReceive(byte[] data, EndPoint epSender)
 //        {
-//            m_chunksToLoad.Enqueue(new ChunkSenderTuple(data, epSender));
+//            _chunksToLoad.Enqueue(new ChunkSenderTuple(data, epSender));
 //        }
 //
 //        /// <summary>
@@ -141,7 +141,7 @@ namespace OpenSim.Tests.Common
 //        public void ReceiveData(IAsyncResult result)
 //        {
 //            // Doesn't work the same way anymore
-////            while (m_chunksToLoad.Count > 0)
+////            while (_chunksToLoad.Count > 0)
 ////                OnReceivedData(result);
 //        }
     }

@@ -43,22 +43,16 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
     public class RemoteAuthorizationServicesConnector :
             AuthorizationServicesConnector, ISharedRegionModule, IAuthorizationService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
-        private readonly List<Scene> m_scenes = new List<Scene>();
+        private bool _Enabled = false;
+        private readonly List<Scene> _scenes = new List<Scene>();
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RemoteAuthorizationServicesConnector"; }
-        }
+        public string Name => "RemoteAuthorizationServicesConnector";
 
         public override void Initialise(IConfigSource source)
         {
@@ -71,15 +65,15 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
                     IConfig authorizationConfig = source.Configs["AuthorizationService"];
                     if (authorizationConfig == null)
                     {
-                        m_log.Info("[REMOTE AUTHORIZATION CONNECTOR]: AuthorizationService missing from OpenSim.ini");
+                        _log.Info("[REMOTE AUTHORIZATION CONNECTOR]: AuthorizationService missing from OpenSim.ini");
                         return;
                     }
 
-                    m_Enabled = true;
+                    _Enabled = true;
 
                     base.Initialise(source);
 
-                    m_log.Info("[REMOTE AUTHORIZATION CONNECTOR]: Remote authorization enabled");
+                    _log.Info("[REMOTE AUTHORIZATION CONNECTOR]: Remote authorization enabled");
                 }
             }
         }
@@ -94,12 +88,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (!m_scenes.Contains(scene))
+            if (!_scenes.Contains(scene))
             {
-                m_scenes.Add(scene);
+                _scenes.Add(scene);
                 scene.RegisterModuleInterface<IAuthorizationService>(this);
             }
 
@@ -111,17 +105,17 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_log.InfoFormat("[REMOTE AUTHORIZATION CONNECTOR]: Enabled remote authorization for region {0}", scene.RegionInfo.RegionName);
+            _log.InfoFormat("[REMOTE AUTHORIZATION CONNECTOR]: Enabled remote authorization for region {0}", scene.RegionInfo.RegionName);
 
         }
 
         public bool IsAuthorizedForRegion(
              string userID, string firstName, string lastName, string regionID, out string message)
         {
-            m_log.InfoFormat(
+            _log.InfoFormat(
                 "[REMOTE AUTHORIZATION CONNECTOR]: IsAuthorizedForRegion checking {0} for region {1}", userID, regionID);
 
             bool isAuthorized = true;
@@ -129,9 +123,9 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
 
             // get the scene this call is being made for
             Scene scene = null;
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene nextScene in m_scenes)
+                foreach (Scene nextScene in _scenes)
                 {
                     if (nextScene.RegionInfo.RegionID.ToString() == regionID)
                     {
@@ -160,7 +154,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authorization
             }
             else
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[REMOTE AUTHORIZATION CONNECTOR] IsAuthorizedForRegion, can't find scene to match region id of {0}",
                     regionID);
             }

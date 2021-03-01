@@ -39,12 +39,12 @@ namespace OpenSim.Framework.Capabilities
     /// </summary>
     public class CapsHandlers
     {
-        private readonly Dictionary<string, IRequestHandler> m_capsHandlers = new Dictionary<string, IRequestHandler>();
-        private readonly ConcurrentDictionary<string, ISimpleStreamHandler> m_capsSimpleHandlers = new ConcurrentDictionary<string, ISimpleStreamHandler>();
-        private readonly IHttpServer m_httpListener;
-        private readonly string m_httpListenerHostName;
-        private readonly uint m_httpListenerPort;
-        private readonly bool m_useSSL = false;
+        private readonly Dictionary<string, IRequestHandler> _capsHandlers = new Dictionary<string, IRequestHandler>();
+        private readonly ConcurrentDictionary<string, ISimpleStreamHandler> _capsSimpleHandlers = new ConcurrentDictionary<string, ISimpleStreamHandler>();
+        private readonly IHttpServer _httpListener;
+        private readonly string _httpListenerHostName;
+        private readonly uint _httpListenerPort;
+        private readonly bool _useSSL = false;
 
         /// <summary></summary>
         /// CapsHandlers is a cap handler container but also takes
@@ -56,13 +56,13 @@ namespace OpenSim.Framework.Capabilities
         /// <param name="httpListenerPort">HTTP port</param>
         public CapsHandlers(IHttpServer httpListener, string httpListenerHostname, uint httpListenerPort)
            {
-            m_httpListener = httpListener;
-            m_httpListenerHostName = httpListenerHostname;
-            m_httpListenerPort = httpListenerPort;
+            _httpListener = httpListener;
+            _httpListenerHostName = httpListenerHostname;
+            _httpListenerPort = httpListenerPort;
             if (httpListener != null && httpListener.UseSSL)
-                m_useSSL = true;
+                _useSSL = true;
             else
-                m_useSSL = false;
+                _useSSL = false;
         }
 
         /// <summary>
@@ -72,20 +72,20 @@ namespace OpenSim.Framework.Capabilities
         /// handler to be removed</param>
         public void Remove(string capsName)
         {
-            lock (m_capsHandlers)
+            lock (_capsHandlers)
             {
-                if(m_capsHandlers.ContainsKey(capsName))
+                if(_capsHandlers.ContainsKey(capsName))
                 {
-                    m_httpListener.RemoveStreamHandler("POST", m_capsHandlers[capsName].Path);
-                    m_httpListener.RemoveStreamHandler("PUT", m_capsHandlers[capsName].Path);
-                    m_httpListener.RemoveStreamHandler("GET", m_capsHandlers[capsName].Path);
-                    m_httpListener.RemoveStreamHandler("DELETE", m_capsHandlers[capsName].Path);
-                    m_capsHandlers.Remove(capsName);
+                    _httpListener.RemoveStreamHandler("POST", _capsHandlers[capsName].Path);
+                    _httpListener.RemoveStreamHandler("PUT", _capsHandlers[capsName].Path);
+                    _httpListener.RemoveStreamHandler("GET", _capsHandlers[capsName].Path);
+                    _httpListener.RemoveStreamHandler("DELETE", _capsHandlers[capsName].Path);
+                    _capsHandlers.Remove(capsName);
                 }
             }
-            if(m_capsSimpleHandlers.TryRemove(capsName, out ISimpleStreamHandler hdr))
+            if(_capsSimpleHandlers.TryRemove(capsName, out ISimpleStreamHandler hdr))
             {
-                m_httpListener.RemoveSimpleStreamHandler(hdr.Path);
+                _httpListener.RemoveSimpleStreamHandler(hdr.Path);
             }
         }
 
@@ -93,16 +93,16 @@ namespace OpenSim.Framework.Capabilities
         {
             if(ContainsCap(capName))
                 Remove(capName);
-            if(m_capsSimpleHandlers.TryAdd(capName, handler) && addToListener)
-                m_httpListener.AddSimpleStreamHandler(handler);
+            if(_capsSimpleHandlers.TryAdd(capName, handler) && addToListener)
+                _httpListener.AddSimpleStreamHandler(handler);
         }
 
         public bool ContainsCap(string cap)
         {
-            lock (m_capsHandlers)
-                if (m_capsHandlers.ContainsKey(cap))
+            lock (_capsHandlers)
+                if (_capsHandlers.ContainsKey(cap))
                     return true;
-            return m_capsSimpleHandlers.ContainsKey(cap);
+            return _capsSimpleHandlers.ContainsKey(cap);
         }
 
         /// <summary>
@@ -118,27 +118,27 @@ namespace OpenSim.Framework.Capabilities
         {
             get
             {
-                lock (m_capsHandlers)
-                    return m_capsHandlers[idx];
+                lock (_capsHandlers)
+                    return _capsHandlers[idx];
             }
 
             set
             {
-                lock (m_capsHandlers)
+                lock (_capsHandlers)
                 {
-                    if (m_capsHandlers.ContainsKey(idx))
+                    if (_capsHandlers.ContainsKey(idx))
                     {
-                        m_httpListener.RemoveStreamHandler("POST", m_capsHandlers[idx].Path);
-                        m_httpListener.RemoveStreamHandler("PUT", m_capsHandlers[idx].Path);
-                        m_httpListener.RemoveStreamHandler("GET", m_capsHandlers[idx].Path);
-                        m_httpListener.RemoveStreamHandler("DELETE", m_capsHandlers[idx].Path);
-                        m_capsHandlers.Remove(idx);
+                        _httpListener.RemoveStreamHandler("POST", _capsHandlers[idx].Path);
+                        _httpListener.RemoveStreamHandler("PUT", _capsHandlers[idx].Path);
+                        _httpListener.RemoveStreamHandler("GET", _capsHandlers[idx].Path);
+                        _httpListener.RemoveStreamHandler("DELETE", _capsHandlers[idx].Path);
+                        _capsHandlers.Remove(idx);
                     }
 
                     if (null == value) return;
 
-                    m_capsHandlers[idx] = value;
-                    m_httpListener.AddStreamHandler(value);
+                    _capsHandlers[idx] = value;
+                    _httpListener.AddStreamHandler(value);
                 }
             }
         }
@@ -151,11 +151,11 @@ namespace OpenSim.Framework.Capabilities
         {
             get
             {
-                lock (m_capsHandlers)
+                lock (_capsHandlers)
                 {
-                    string[] __keys = new string[m_capsHandlers.Keys.Count + m_capsSimpleHandlers.Keys.Count];
-                    m_capsHandlers.Keys.CopyTo(__keys, 0);
-                    m_capsSimpleHandlers.Keys.CopyTo(__keys, m_capsHandlers.Keys.Count);
+                    string[] __keys = new string[_capsHandlers.Keys.Count + _capsSimpleHandlers.Keys.Count];
+                    _capsHandlers.Keys.CopyTo(__keys, 0);
+                    _capsSimpleHandlers.Keys.CopyTo(__keys, _capsHandlers.Keys.Count);
                     return __keys;
                 }
             }
@@ -170,22 +170,22 @@ namespace OpenSim.Framework.Capabilities
         {
             Hashtable caps = new Hashtable();
 
-            string protocol = m_useSSL ? "https://" : "http://";
-            string baseUrl = protocol + m_httpListenerHostName + ":" + m_httpListenerPort.ToString();
+            string protocol = _useSSL ? "https://" : "http://";
+            string baseUrl = protocol + _httpListenerHostName + ":" + _httpListenerPort.ToString();
 
             if (requestedCaps == null)
             {
-                lock (m_capsHandlers)
+                lock (_capsHandlers)
                 {
-                    foreach (KeyValuePair<string, ISimpleStreamHandler> kvp in m_capsSimpleHandlers)
+                    foreach (KeyValuePair<string, ISimpleStreamHandler> kvp in _capsSimpleHandlers)
                         caps[kvp.Key] = baseUrl + kvp.Value.Path;
-                    foreach (KeyValuePair<string, IRequestHandler> kvp in m_capsHandlers)
+                    foreach (KeyValuePair<string, IRequestHandler> kvp in _capsHandlers)
                         caps[kvp.Key] = baseUrl + kvp.Value.Path;
                 }
                 return caps;
             }
 
-            lock (m_capsHandlers)
+            lock (_capsHandlers)
             {
                 for(int i = 0; i < requestedCaps.Count; ++i)
                 {
@@ -193,12 +193,12 @@ namespace OpenSim.Framework.Capabilities
                     if (excludeSeed && "SEED" == capsName)
                         continue;
 
-                    if (m_capsSimpleHandlers.TryGetValue(capsName, out ISimpleStreamHandler shdr))
+                    if (_capsSimpleHandlers.TryGetValue(capsName, out ISimpleStreamHandler shdr))
                     {
                         caps[capsName] = baseUrl + shdr.Path;
                         continue;
                     }
-                    if (m_capsHandlers.TryGetValue(capsName, out IRequestHandler chdr))
+                    if (_capsHandlers.TryGetValue(capsName, out IRequestHandler chdr))
                     {
                         caps[capsName] = baseUrl + chdr.Path;
                     }
@@ -216,8 +216,8 @@ namespace OpenSim.Framework.Capabilities
         /// </returns>
         public Dictionary<string, IRequestHandler> GetCapsHandlers()
         {
-            lock (m_capsHandlers)
-                return new Dictionary<string, IRequestHandler>(m_capsHandlers);
+            lock (_capsHandlers)
+                return new Dictionary<string, IRequestHandler>(_capsHandlers);
         }
     }
 }

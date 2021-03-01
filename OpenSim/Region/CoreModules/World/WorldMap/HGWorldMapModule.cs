@@ -43,14 +43,14 @@ namespace OpenSim.Region.CoreModules.Hypergrid
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "HGWorldMapModule")]
     public class HGWorldMapModule : WorldMapModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Remember the map area that each client has been exposed to in this region
-        private readonly Dictionary<UUID, List<MapBlockData>> m_SeenMapBlocks = new Dictionary<UUID, List<MapBlockData>>();
+        private readonly Dictionary<UUID, List<MapBlockData>> _SeenMapBlocks = new Dictionary<UUID, List<MapBlockData>>();
 
-        private string m_MapImageServerURL = string.Empty;
+        private string _MapImageServerURL = string.Empty;
 
-        private IUserManagement m_UserManagement;
+        private IUserManagement _UserManagement;
 
         #region INonSharedRegionModule Members
 
@@ -60,31 +60,31 @@ namespace OpenSim.Region.CoreModules.Hypergrid
             if (Util.GetConfigVarFromSections<string>(
                 source, "WorldMapModule", configSections, "WorldMap") == "HGWorldMap")
             {
-                m_Enabled = true;
+                _Enabled = true;
 
-                m_MapImageServerURL = Util.GetConfigVarFromSections<string>(source, "MapTileURL", new string[] {"LoginService", "HGWorldMap", "SimulatorFeatures"});
+                _MapImageServerURL = Util.GetConfigVarFromSections<string>(source, "MapTileURL", new string[] {"LoginService", "HGWorldMap", "SimulatorFeatures"});
 
-                if (!string.IsNullOrEmpty(m_MapImageServerURL))
+                if (!string.IsNullOrEmpty(_MapImageServerURL))
                 {
-                    m_MapImageServerURL = m_MapImageServerURL.Trim();
-                    if (!m_MapImageServerURL.EndsWith("/"))
-                        m_MapImageServerURL = m_MapImageServerURL + "/";
+                    _MapImageServerURL = _MapImageServerURL.Trim();
+                    if (!_MapImageServerURL.EndsWith("/"))
+                        _MapImageServerURL = _MapImageServerURL + "/";
                 }
 
                 expireBlackListTime = (int)Util.GetConfigVarFromSections<int>(source, "BlacklistTimeout", configSections, 10 * 60);
                 expireBlackListTime *= 1000;
-                m_exportPrintScale =
-                    Util.GetConfigVarFromSections<bool>(source, "ExportMapAddScale", configSections, m_exportPrintScale);
-                m_exportPrintRegionName =
-                    Util.GetConfigVarFromSections<bool>(source, "ExportMapAddRegionName", configSections, m_exportPrintRegionName);
-                m_localV1MapAssets =
-                    Util.GetConfigVarFromSections<bool>(source, "LocalV1MapAssets", configSections, m_localV1MapAssets);
+                _exportPrintScale =
+                    Util.GetConfigVarFromSections<bool>(source, "ExportMapAddScale", configSections, _exportPrintScale);
+                _exportPrintRegionName =
+                    Util.GetConfigVarFromSections<bool>(source, "ExportMapAddRegionName", configSections, _exportPrintRegionName);
+                _localV1MapAssets =
+                    Util.GetConfigVarFromSections<bool>(source, "LocalV1MapAssets", configSections, _localV1MapAssets);
             }
         }
 
         public override void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             base.AddRegion(scene);
@@ -94,22 +94,22 @@ namespace OpenSim.Region.CoreModules.Hypergrid
 
         public override void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             base.RegionLoaded(scene);
-            ISimulatorFeaturesModule featuresModule = m_scene.RequestModuleInterface<ISimulatorFeaturesModule>();
+            ISimulatorFeaturesModule featuresModule = _scene.RequestModuleInterface<ISimulatorFeaturesModule>();
 
             if (featuresModule != null)
                 featuresModule.OnSimulatorFeaturesRequest += OnSimulatorFeaturesRequest;
 
-            m_UserManagement = m_scene.RequestModuleInterface<IUserManagement>();
+            _UserManagement = _scene.RequestModuleInterface<IUserManagement>();
 
         }
 
         public override void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             base.RemoveRegion(scene);
@@ -117,10 +117,7 @@ namespace OpenSim.Region.CoreModules.Hypergrid
             scene.EventManager.OnClientClosed -= EventManager_OnClientClosed;
         }
 
-        public override string Name
-        {
-            get { return "HGWorldMap"; }
-        }
+        public override string Name => "HGWorldMap";
 
         #endregion
 
@@ -129,9 +126,9 @@ namespace OpenSim.Region.CoreModules.Hypergrid
             ScenePresence sp = scene.GetScenePresence(clientID);
             if (sp != null)
             {
-                if (m_SeenMapBlocks.ContainsKey(clientID))
+                if (_SeenMapBlocks.ContainsKey(clientID))
                 {
-                    List<MapBlockData> mapBlocks = m_SeenMapBlocks[clientID];
+                    List<MapBlockData> mapBlocks = _SeenMapBlocks[clientID];
                     foreach (MapBlockData b in mapBlocks)
                     {
                         b.Name = string.Empty;
@@ -139,9 +136,9 @@ namespace OpenSim.Region.CoreModules.Hypergrid
                         b.Access = (byte)SimAccess.Down;
                     }
 
-                    m_log.DebugFormat("[HG MAP]: Resetting {0} blocks", mapBlocks.Count);
+                    _log.DebugFormat("[HG MAP]: Resetting {0} blocks", mapBlocks.Count);
                     sp.ControllingClient.SendMapBlock(mapBlocks, 0);
-                    m_SeenMapBlocks.Remove(clientID);
+                    _SeenMapBlocks.Remove(clientID);
                 }
             }
         }
@@ -151,15 +148,15 @@ namespace OpenSim.Region.CoreModules.Hypergrid
             List<MapBlockData>  mapBlocks = base.GetAndSendBlocksInternal(remoteClient, minX, minY, maxX, maxY, flag);
             if(mapBlocks.Count > 0)
             {
-                lock (m_SeenMapBlocks)
+                lock (_SeenMapBlocks)
                 {
-                    if (!m_SeenMapBlocks.ContainsKey(remoteClient.AgentId))
+                    if (!_SeenMapBlocks.ContainsKey(remoteClient.AgentId))
                     {
-                        m_SeenMapBlocks.Add(remoteClient.AgentId, mapBlocks);
+                        _SeenMapBlocks.Add(remoteClient.AgentId, mapBlocks);
                     }
                     else
                     {
-                        List<MapBlockData> seen = m_SeenMapBlocks[remoteClient.AgentId];
+                        List<MapBlockData> seen = _SeenMapBlocks[remoteClient.AgentId];
                         List<MapBlockData> newBlocks = new List<MapBlockData>();
                         foreach (MapBlockData b in mapBlocks)
                             if (seen.Find(delegate(MapBlockData bdata) { return bdata.X == b.X && bdata.Y == b.Y; }) == null)
@@ -173,13 +170,13 @@ namespace OpenSim.Region.CoreModules.Hypergrid
 
         private void OnSimulatorFeaturesRequest(UUID agentID, ref OSDMap features)
         {
-            if (m_UserManagement != null && !string.IsNullOrEmpty(m_MapImageServerURL) && !m_UserManagement.IsLocalGridUser(agentID))
+            if (_UserManagement != null && !string.IsNullOrEmpty(_MapImageServerURL) && !_UserManagement.IsLocalGridUser(agentID))
             {
                 OSD extras;
                 if (!features.TryGetValue("OpenSimExtras", out extras))
                     extras = new OSDMap();
 
-                ((OSDMap)extras)["map-server-url"] = m_MapImageServerURL;
+                ((OSDMap)extras)["map-server-url"] = _MapImageServerURL;
 
             }
         }

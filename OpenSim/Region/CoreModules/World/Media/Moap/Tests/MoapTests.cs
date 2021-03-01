@@ -35,17 +35,17 @@ namespace OpenSim.Region.CoreModules.World.Media.Moap.Tests
     [TestFixture]
     public class MoapTests : OpenSimTestCase
     {
-        protected TestScene m_scene;
-        protected MoapModule m_module;
+        protected TestScene _scene;
+        protected MoapModule _module;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
 
-            m_module = new MoapModule();
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, m_module);
+            _module = new MoapModule();
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, _module);
         }
 
         [Test]
@@ -54,11 +54,11 @@ namespace OpenSim.Region.CoreModules.World.Media.Moap.Tests
             TestHelpers.InMethod();
 //            log4net.Config.XmlConfigurator.Configure();
 
-            SceneObjectPart part = SceneHelpers.AddSceneObject(m_scene).RootPart;
+            SceneObjectPart part = SceneHelpers.AddSceneObject(_scene).RootPart;
             MediaEntry me = new MediaEntry();
 
-            m_module.SetMediaEntry(part, 1, me);
-            m_module.ClearMediaEntry(part, 1);
+            _module.SetMediaEntry(part, 1, me);
+            _module.ClearMediaEntry(part, 1);
 
             Assert.That(part.Shape.Media[1], Is.EqualTo(null));
 
@@ -79,10 +79,10 @@ namespace OpenSim.Region.CoreModules.World.Media.Moap.Tests
 
             string homeUrl = "opensimulator.org";
 
-            SceneObjectPart part = SceneHelpers.AddSceneObject(m_scene).RootPart;
+            SceneObjectPart part = SceneHelpers.AddSceneObject(_scene).RootPart;
             MediaEntry me = new MediaEntry() { HomeURL = homeUrl };
 
-            m_module.SetMediaEntry(part, 1, me);
+            _module.SetMediaEntry(part, 1, me);
 
             Assert.That(part.Shape.Media[1].HomeURL, Is.EqualTo(homeUrl));
             Assert.That(part.MediaUrl, Is.EqualTo("x-mv:0000000001/" + UUID.Zero));

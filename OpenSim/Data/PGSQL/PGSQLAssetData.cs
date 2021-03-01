@@ -42,18 +42,15 @@ namespace OpenSim.Data.PGSQL
     {
         private const string _migrationStore = "AssetStore";
 
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private long m_ticksToEpoch;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private long _ticksToEpoch;
         /// <summary>
         /// Database manager
         /// </summary>
-        private PGSQLManager m_database;
-        private string m_connectionString;
+        private PGSQLManager _database;
+        private string _connectionString;
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         #region IPlugin Members
 
@@ -65,7 +62,7 @@ namespace OpenSim.Data.PGSQL
         // [Obsolete("Cannot be default-initialized!")]
         override public void Initialise()
         {
-            m_log.Info("[PGSQLAssetData]: " + Name + " cannot be default-initialized!");
+            _log.Info("[PGSQLAssetData]: " + Name + " cannot be default-initialized!");
             throw new PluginNotInitialisedException(Name);
         }
 
@@ -78,47 +75,41 @@ namespace OpenSim.Data.PGSQL
         /// <param name="connectionString">connect string</param>
         override public void Initialise(string connectionString)
         {
-            m_ticksToEpoch = new System.DateTime(1970, 1, 1).Ticks;
+            _ticksToEpoch = new System.DateTime(1970, 1, 1).Ticks;
 
-            m_database = new PGSQLManager(connectionString);
-            m_connectionString = connectionString;
+            _database = new PGSQLManager(connectionString);
+            _connectionString = connectionString;
 
             //New migration to check for DB changes
-            m_database.CheckMigration(_migrationStore);
+            _database.CheckMigration(_migrationStore);
         }
 
         /// <summary>
         /// Database provider version.
         /// </summary>
-        override public string Version
-        {
-            get { return m_database.getVersion(); }
-        }
+        override public string Version => _database.getVersion();
 
         /// <summary>
         /// The name of this DB provider.
         /// </summary>
-        override public string Name
-        {
-            get { return "PGSQL Asset storage engine"; }
-        }
+        override public string Name => "PGSQL Asset storage engine";
 
         #endregion
 
         #region IAssetDataPlugin Members
 
         /// <summary>
-        /// Fetch Asset from m_database
+        /// Fetch Asset from _database
         /// </summary>
         /// <param name="assetID">the asset UUID</param>
         /// <returns></returns>
         override public AssetBase GetAsset(UUID assetID)
         {
             string sql = "SELECT * FROM assets WHERE id = :id";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("id", assetID));
+                cmd.Parameters.Add(_database.CreateParameter("id", assetID));
                 conn.Open();
                 using (NpgsqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -146,7 +137,7 @@ namespace OpenSim.Data.PGSQL
         }
 
         /// <summary>
-        /// Create asset in m_database
+        /// Create asset in _database
         /// </summary>
         /// <param name="asset">the asset</param>
         override public bool StoreAsset(AssetBase asset)
@@ -169,7 +160,7 @@ namespace OpenSim.Data.PGSQL
             if (asset.Name.Length > AssetBase.MAX_ASSET_NAME)
             {
                 assetName = asset.Name.Substring(0, AssetBase.MAX_ASSET_NAME);
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[ASSET DB]: Name '{0}' for asset {1} truncated from {2} to {3} characters on add",
                     asset.Name, asset.ID, asset.Name.Length, assetName.Length);
             }
@@ -178,26 +169,26 @@ namespace OpenSim.Data.PGSQL
             if (asset.Description.Length > AssetBase.MAX_ASSET_DESC)
             {
                 assetDescription = asset.Description.Substring(0, AssetBase.MAX_ASSET_DESC);
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[ASSET DB]: Description '{0}' for asset {1} truncated from {2} to {3} characters on add",
                     asset.Description, asset.ID, asset.Description.Length, assetDescription.Length);
             }
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
             {
-                int now = (int)((System.DateTime.Now.Ticks - m_ticksToEpoch) / 10000000);
-                command.Parameters.Add(m_database.CreateParameter("id", asset.FullID));
-                command.Parameters.Add(m_database.CreateParameter("name", assetName));
-                command.Parameters.Add(m_database.CreateParameter("description", assetDescription));
-                command.Parameters.Add(m_database.CreateParameter("assetType", asset.Type));
-                command.Parameters.Add(m_database.CreateParameter("local", asset.Local));
-                command.Parameters.Add(m_database.CreateParameter("temporary", asset.Temporary));
-                command.Parameters.Add(m_database.CreateParameter("access_time", now));
-                command.Parameters.Add(m_database.CreateParameter("create_time", now));
-                command.Parameters.Add(m_database.CreateParameter("asset_flags", (int)asset.Flags));
-                command.Parameters.Add(m_database.CreateParameter("creatorid", asset.Metadata.CreatorID));
-                command.Parameters.Add(m_database.CreateParameter("data", asset.Data));
+                int now = (int)((System.DateTime.Now.Ticks - _ticksToEpoch) / 10000000);
+                command.Parameters.Add(_database.CreateParameter("id", asset.FullID));
+                command.Parameters.Add(_database.CreateParameter("name", assetName));
+                command.Parameters.Add(_database.CreateParameter("description", assetDescription));
+                command.Parameters.Add(_database.CreateParameter("assetType", asset.Type));
+                command.Parameters.Add(_database.CreateParameter("local", asset.Local));
+                command.Parameters.Add(_database.CreateParameter("temporary", asset.Temporary));
+                command.Parameters.Add(_database.CreateParameter("access_time", now));
+                command.Parameters.Add(_database.CreateParameter("create_time", now));
+                command.Parameters.Add(_database.CreateParameter("asset_flags", (int)asset.Flags));
+                command.Parameters.Add(_database.CreateParameter("creatorid", asset.Metadata.CreatorID));
+                command.Parameters.Add(_database.CreateParameter("data", asset.Data));
                 conn.Open();
                 try
                 {
@@ -205,7 +196,7 @@ namespace OpenSim.Data.PGSQL
                 }
                 catch(Exception e)
                 {
-                    m_log.Error("[ASSET DB]: Error storing item :" + e.Message + " sql "+sql);
+                    _log.Error("[ASSET DB]: Error storing item :" + e.Message + " sql "+sql);
                 }
             }
             return true;
@@ -215,9 +206,9 @@ namespace OpenSim.Data.PGSQL
 // Commented out since currently unused - this probably should be called in GetAsset()
 //        private void UpdateAccessTime(AssetBase asset)
 //        {
-//            using (AutoClosingSqlCommand cmd = m_database.Query("UPDATE assets SET access_time = :access_time WHERE id=:id"))
+//            using (AutoClosingSqlCommand cmd = _database.Query("UPDATE assets SET access_time = :access_time WHERE id=:id"))
 //            {
-//                int now = (int)((System.DateTime.Now.Ticks - m_ticksToEpoch) / 10000000);
+//                int now = (int)((System.DateTime.Now.Ticks - _ticksToEpoch) / 10000000);
 //                cmd.Parameters.AddWithValue(":id", asset.FullID.ToString());
 //                cmd.Parameters.AddWithValue(":access_time", now);
 //                try
@@ -226,7 +217,7 @@ namespace OpenSim.Data.PGSQL
 //                }
 //                catch (Exception e)
 //                {
-//                    m_log.Error(e.ToString());
+//                    _log.Error(e.ToString());
 //                }
 //            }
 //        }
@@ -246,7 +237,7 @@ namespace OpenSim.Data.PGSQL
             string ids = "'" + string.Join("','", uuids) + "'";
             string sql = string.Format("SELECT id FROM assets WHERE id IN ({0})", ids);
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 conn.Open();
@@ -283,11 +274,11 @@ namespace OpenSim.Data.PGSQL
                              limit :stop
                             offset :start;";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("start", start));
-                cmd.Parameters.Add(m_database.CreateParameter("stop", start + count - 1));
+                cmd.Parameters.Add(_database.CreateParameter("start", start));
+                cmd.Parameters.Add(_database.CreateParameter("stop", start + count - 1));
                 conn.Open();
                 using (NpgsqlDataReader reader = cmd.ExecuteReader())
                 {

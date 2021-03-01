@@ -19,24 +19,24 @@ namespace OSHttpServer
         public static readonly char[] UriSplitters = new[] { '/' };
         public static uint baseID = 0;
 
-        private readonly NameValueCollection m_headers = new NameValueCollection();
-        private readonly HttpParam m_param = new HttpParam(HttpInput.Empty, HttpInput.Empty);
-        private Stream m_body = new MemoryStream();
-        private int m_bodyBytesLeft;
-        private ConnectionType m_connection = ConnectionType.KeepAlive;
-        private int m_contentLength;
-        private string m_httpVersion = string.Empty;
-        private string m_method = string.Empty;
-        private NameValueCollection m_queryString = null;
-        private Uri m_uri = null;
-        private string m_uriPath;
-        public readonly IHttpClientContext m_context;
-        IPEndPoint m_remoteIPEndPoint = null;
+        private readonly NameValueCollection _headers = new NameValueCollection();
+        private readonly HttpParam _param = new HttpParam(HttpInput.Empty, HttpInput.Empty);
+        private Stream _body = new MemoryStream();
+        private int _bodyBytesLeft;
+        private ConnectionType _connection = ConnectionType.KeepAlive;
+        private int _contentLength;
+        private string _httpVersion = string.Empty;
+        private string _method = string.Empty;
+        private NameValueCollection _queryString = null;
+        private Uri _uri = null;
+        private string _uriPath;
+        public readonly IHttpClientContext _context;
+        IPEndPoint _remoteIPEndPoint = null;
 
         public HttpRequest(IHttpClientContext pContext)
         {
             ID = ++baseID;
-            m_context = pContext;
+            _context = pContext;
         }
 
         public uint ID { get; }
@@ -44,17 +44,18 @@ namespace OSHttpServer
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="HttpRequest"/> is secure.
         /// </summary>
-        public bool Secure { get { return m_context.IsSecured; } }
+        public bool Secure => _context.IsSecured;
 
-        public IHttpClientContext Context { get { return m_context; } }
+        public IHttpClientContext Context => _context;
+
         /// <summary>
         /// Path and query (will be merged with the host header) and put in Uri
         /// </summary>
         /// <see cref="Uri"/>
         public string UriPath
         {
-            get { return m_uriPath; }
-            set { m_uriPath = value; }
+            get => _uriPath;
+            set => _uriPath = value;
         }
 
         /// <summary>
@@ -80,8 +81,8 @@ namespace OSHttpServer
         /// </summary>
         public Stream Body
         {
-            get { return m_body; }
-            set { m_body = value; }
+            get => _body;
+            set => _body = value;
         }
 
         /// <summary>
@@ -89,8 +90,8 @@ namespace OSHttpServer
         /// </summary>
         public ConnectionType Connection
         {
-            get { return m_connection; }
-            set { m_connection = value; }
+            get => _connection;
+            set => _connection = value;
         }
 
         /// <summary>
@@ -98,21 +99,18 @@ namespace OSHttpServer
         /// </summary>
         public int ContentLength
         {
-            get { return m_contentLength; }
+            get => _contentLength;
             set
             {
-                m_contentLength = value;
-                m_bodyBytesLeft = value;
+                _contentLength = value;
+                _bodyBytesLeft = value;
             }
         }
 
         /// <summary>
         /// Gets headers sent by the client.
         /// </summary>
-        public NameValueCollection Headers
-        {
-            get { return m_headers; }
-        }
+        public NameValueCollection Headers => _headers;
 
         /// <summary>
         /// Gets or sets version of HTTP protocol that's used.
@@ -123,8 +121,8 @@ namespace OSHttpServer
         /// <seealso cref="HttpHelper"/>
         public string HttpVersion
         {
-            get { return m_httpVersion; }
-            set { m_httpVersion = value; }
+            get => _httpVersion;
+            set => _httpVersion = value;
         }
 
         /// <summary>
@@ -137,8 +135,8 @@ namespace OSHttpServer
         /// <see cref="OSHttpServer.Method"/>
         public string Method
         {
-            get { return m_method; }
-            set { m_method = value; }
+            get => _method;
+            set => _method = value;
         }
 
         /// <summary>
@@ -148,21 +146,21 @@ namespace OSHttpServer
         {
             get
             {
-                if(m_queryString == null)
+                if(_queryString == null)
                 {
-                    if(m_uri == null || m_uri.Query.Length == 0)
-                        m_queryString = new NameValueCollection();
+                    if(_uri == null || _uri.Query.Length == 0)
+                        _queryString = new NameValueCollection();
                     else
                     {
                         try
                         {
-                            m_queryString = HttpUtility.ParseQueryString(m_uri.Query);
+                            _queryString = HttpUtility.ParseQueryString(_uri.Query);
                         }
-                        catch { m_queryString = new NameValueCollection(); }
+                        catch { _queryString = new NameValueCollection(); }
                     }
                 }
 
-            return m_queryString;
+            return _queryString;
             }
         }
 
@@ -172,17 +170,14 @@ namespace OSHttpServer
         /// </summary>
         public Uri Uri
         {
-            get { return m_uri; }
-            set { m_uri = value ?? EmptyUri; } // not safe
+            get => _uri;
+            set => _uri = value ?? EmptyUri; // not safe
         }
 
         /// <summary>
         /// Gets parameter from <see cref="QueryString"/> or <see cref="Form"/>.
         /// </summary>
-        public HttpParam Param
-        {
-            get { return m_param; }
-        }
+        public HttpParam Param => _param;
 
         /// <summary>
         /// Gets form parameters.
@@ -218,28 +213,28 @@ namespace OSHttpServer
             // dont use it that much...
             var request = new HttpRequest(Context)
             {
-                Method = m_method
+                Method = _method
             };
             if (AcceptTypes != null)
             {
                 request.AcceptTypes = new string[AcceptTypes.Length];
                 AcceptTypes.CopyTo(request.AcceptTypes, 0);
             }
-            request.m_httpVersion = m_httpVersion;
-            request.m_queryString = m_queryString;
-            request.Uri = m_uri;
+            request._httpVersion = _httpVersion;
+            request._queryString = _queryString;
+            request.Uri = _uri;
 
-            var buffer = new byte[m_body.Length];
-            m_body.Read(buffer, 0, (int)m_body.Length);
+            var buffer = new byte[_body.Length];
+            _body.Read(buffer, 0, (int)_body.Length);
             request.Body = new MemoryStream();
             request.Body.Write(buffer, 0, buffer.Length);
             request.Body.Seek(0, SeekOrigin.Begin);
             request.Body.Flush();
 
-            request.m_headers.Clear();
-            foreach (string key in m_headers)
+            request._headers.Clear();
+            foreach (string key in _headers)
             {
-                string[] values = m_headers.GetValues(key);
+                string[] values = _headers.GetValues(key);
                 if (values != null)
                     foreach (string value in values)
                         request.AddHeader(key, value);
@@ -273,32 +268,32 @@ namespace OSHttpServer
             Cookies = cookies;
         }
 
-        public IPEndPoint LocalIPEndPoint { get {return m_context.LocalIPEndPoint; }}
+        public IPEndPoint LocalIPEndPoint => _context.LocalIPEndPoint;
 
         public IPEndPoint RemoteIPEndPoint
         {
             get
             {
-                if(m_remoteIPEndPoint == null)
+                if(_remoteIPEndPoint == null)
                 {
-                    string addr = m_headers["x-forwarded-for"];
+                    string addr = _headers["x-forwarded-for"];
                     if(!string.IsNullOrEmpty(addr))
                     {
-                        int port = m_context.LocalIPEndPoint.Port;
+                        int port = _context.LocalIPEndPoint.Port;
                         try
                         {
-                            m_remoteIPEndPoint = new IPEndPoint(IPAddress.Parse(addr), port);
+                            _remoteIPEndPoint = new IPEndPoint(IPAddress.Parse(addr), port);
                         }
                         catch
                         {
-                            m_remoteIPEndPoint = null;
+                            _remoteIPEndPoint = null;
                         }
                     }
                 }
-                if (m_remoteIPEndPoint == null)
-                    m_remoteIPEndPoint = m_context.LocalIPEndPoint;
+                if (_remoteIPEndPoint == null)
+                    _remoteIPEndPoint = _context.LocalIPEndPoint;
 
-                return m_remoteIPEndPoint;
+                return _remoteIPEndPoint;
             }
         }
         /*
@@ -346,17 +341,17 @@ namespace OSHttpServer
                 case "host":
                     try
                     {
-                        m_uri = new Uri((Secure ? "https://" : "http://") + value + m_uriPath);
-                        m_uriPath = m_uri.AbsolutePath;
+                        _uri = new Uri((Secure ? "https://" : "http://") + value + _uriPath);
+                        _uriPath = _uri.AbsolutePath;
                     }
                     catch (UriFormatException err)
                     {
-                        throw new BadRequestException("Failed to parse uri: " + value + m_uriPath, err);
+                        throw new BadRequestException("Failed to parse uri: " + value + _uriPath, err);
                     }
                     break;
                 case "remote_addr":
-                    if (m_headers[name] == null)
-                        m_headers.Add(name, value);
+                    if (_headers[name] == null)
+                        _headers.Add(name, value);
                     break;
 
                 case "forwarded":
@@ -378,7 +373,7 @@ namespace OSHttpServer
                     }
                     if(addr.Length > 7)
                     {
-                        m_headers.Add("x-forwarded-for", addr);
+                        _headers.Add("x-forwarded-for", addr);
                     }
                     break;
                 case "x-forwarded-for":
@@ -389,7 +384,7 @@ namespace OSHttpServer
                         {
                             string xs = xparts[0].Trim();
                             if(xs.Length > 7)
-                                m_headers.Add("x-forwarded-for", xs);
+                                _headers.Add("x-forwarded-for", xs);
                         }
                     }
                     break;
@@ -410,14 +405,14 @@ namespace OSHttpServer
                     {
 
                     }
-                    m_headers.Add(name, value);
+                    _headers.Add(name, value);
                     break;
                 case "user-agent":
 
                     break;
                 */
                 default:
-                    m_headers.Add(name, value);
+                    _headers.Add(name, value);
                     break;
             }
         }
@@ -440,16 +435,16 @@ namespace OSHttpServer
                 throw new ArgumentOutOfRangeException("offset");
             if (length == 0)
                 return 0;
-            if (!m_body.CanWrite)
+            if (!_body.CanWrite)
                 throw new InvalidOperationException("Body is not writable.");
 
-            if (length > m_bodyBytesLeft)
+            if (length > _bodyBytesLeft)
             {
-                length = m_bodyBytesLeft;
+                length = _bodyBytesLeft;
             }
 
-            m_body.Write(bytes, offset, length);
-            m_bodyBytesLeft -= length;
+            _body.Write(bytes, offset, length);
+            _bodyBytesLeft -= length;
 
             return length;
         }
@@ -459,16 +454,16 @@ namespace OSHttpServer
         /// </summary>
         public void Clear()
         {
-            if (m_body != null && m_body.CanRead)
-                m_body.Dispose();
-            m_body = null;
-            m_contentLength = 0;
-            m_method = string.Empty;
-            m_uri = null;
-            m_queryString = null;
-            m_bodyBytesLeft = 0;
-            m_headers.Clear();
-            m_connection = ConnectionType.KeepAlive;
+            if (_body != null && _body.CanRead)
+                _body.Dispose();
+            _body = null;
+            _contentLength = 0;
+            _method = string.Empty;
+            _uri = null;
+            _queryString = null;
+            _bodyBytesLeft = 0;
+            _headers.Clear();
+            _connection = ConnectionType.KeepAlive;
             IsAjax = false;
             //_form.Clear();
         }

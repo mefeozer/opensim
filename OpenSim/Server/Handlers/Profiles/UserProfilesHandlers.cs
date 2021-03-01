@@ -41,7 +41,7 @@ namespace OpenSim.Server.Handlers
 
     public class JsonRpcProfileHandlers
     {
-        static readonly ILog m_log =
+        static readonly ILog _log =
             LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -73,7 +73,7 @@ namespace OpenSim.Server.Handlers
             if(!json.ContainsKey("params"))
             {
                 response.Error.Code = ErrorCode.ParseError;
-                m_log.DebugFormat ("Classified Request");
+                _log.DebugFormat ("Classified Request");
                 return false;
             }
 
@@ -94,7 +94,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "Error parsing classified update request";
-                m_log.DebugFormat ("Classified Update Request");
+                _log.DebugFormat ("Classified Update Request");
                 return false;
             }
 
@@ -124,7 +124,7 @@ namespace OpenSim.Server.Handlers
             if(!json.ContainsKey("params"))
             {
                 response.Error.Code = ErrorCode.ParseError;
-                m_log.DebugFormat ("Classified Delete Request");
+                _log.DebugFormat ("Classified Delete Request");
                 return false;
             }
 
@@ -146,7 +146,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("Classified Info Request");
+                _log.DebugFormat ("Classified Info Request");
                 return false;
             }
 
@@ -178,7 +178,7 @@ namespace OpenSim.Server.Handlers
             if (!json.TryGetValue("params", out tmpParams) || !(tmpParams is OSDMap))
             {
                 response.Error.Code = ErrorCode.ParseError;
-                m_log.DebugFormat ("Avatar Picks Request");
+                _log.DebugFormat ("Avatar Picks Request");
                 return false;
             }
 
@@ -198,7 +198,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("Avatar Picks Info Request");
+                _log.DebugFormat ("Avatar Picks Info Request");
                 return false;
             }
 
@@ -224,7 +224,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("Avatar Picks Update Request");
+                _log.DebugFormat ("Avatar Picks Update Request");
                 return false;
             }
 
@@ -250,7 +250,7 @@ namespace OpenSim.Server.Handlers
             if (!json.TryGetValue("params", out tmpParams) || !(tmpParams is OSDMap))
             {
                 response.Error.Code = ErrorCode.ParseError;
-                m_log.DebugFormat ("Avatar Picks Delete Request");
+                _log.DebugFormat ("Avatar Picks Delete Request");
                 return false;
             }
 
@@ -273,7 +273,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "Params missing";
-                m_log.DebugFormat ("Avatar Notes Request");
+                _log.DebugFormat ("Avatar Notes Request");
                 return false;
             }
 
@@ -298,7 +298,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "No parameters";
-                m_log.DebugFormat ("Avatar Notes Update Request");
+                _log.DebugFormat ("Avatar Notes Update Request");
                 return false;
             }
 
@@ -322,7 +322,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("Avatar Properties Request");
+                _log.DebugFormat ("Avatar Properties Request");
                 return false;
             }
 
@@ -347,7 +347,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("Avatar Properties Update Request");
+                _log.DebugFormat ("Avatar Properties Update Request");
                 return false;
             }
 
@@ -374,7 +374,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("Avatar Interests Update Request");
+                _log.DebugFormat ("Avatar Interests Update Request");
                 return false;
             }
 
@@ -400,7 +400,7 @@ namespace OpenSim.Server.Handlers
             if(!json.ContainsKey("params"))
             {
                 response.Error.Code = ErrorCode.ParseError;
-                m_log.DebugFormat ("User Preferences Request");
+                _log.DebugFormat ("User Preferences Request");
                 return false;
             }
 
@@ -416,7 +416,7 @@ namespace OpenSim.Server.Handlers
 
             response.Error.Code = ErrorCode.InternalError;
             response.Error.Message = string.Format("{0}", result);
-//            m_log.InfoFormat("[PROFILES]: User preferences request error - {0}", response.Error.Message);
+//            _log.InfoFormat("[PROFILES]: User preferences request error - {0}", response.Error.Message);
             return false;
         }
 
@@ -426,7 +426,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("User Preferences Update Request");
+                _log.DebugFormat ("User Preferences Update Request");
                 return false;
             }
 
@@ -442,7 +442,7 @@ namespace OpenSim.Server.Handlers
 
             response.Error.Code = ErrorCode.InternalError;
             response.Error.Message = string.Format("{0}", result);
-            m_log.InfoFormat("[PROFILES]: User preferences update error - {0}", response.Error.Message);
+            _log.InfoFormat("[PROFILES]: User preferences update error - {0}", response.Error.Message);
             return false;
         }
         #endregion User Preferences
@@ -454,7 +454,7 @@ namespace OpenSim.Server.Handlers
             if(!json.ContainsKey("params"))
             {
                 response.Error.Code = ErrorCode.ParseError;
-                m_log.DebugFormat ("Avatar Image Assets Request");
+                _log.DebugFormat ("Avatar Image Assets Request");
                 return false;
             }
 
@@ -475,7 +475,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("User Application Service URL Request: No Parameters!");
+                _log.DebugFormat ("User Application Service URL Request: No Parameters!");
                 return false;
             }
 
@@ -504,7 +504,7 @@ namespace OpenSim.Server.Handlers
             {
                 response.Error.Code = ErrorCode.ParseError;
                 response.Error.Message = "no parameters supplied";
-                m_log.DebugFormat ("User App Data Update Request");
+                _log.DebugFormat ("User App Data Update Request");
                 return false;
             }
 

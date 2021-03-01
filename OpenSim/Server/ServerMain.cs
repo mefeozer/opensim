@@ -43,16 +43,16 @@ namespace OpenSim.Server
 {
     public class OpenSimServer
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected static HttpServerBase m_Server = null;
-        protected static List<IServiceConnector> m_ServiceConnectors = new List<IServiceConnector>();
+        protected static HttpServerBase _Server = null;
+        protected static List<IServiceConnector> _ServiceConnectors = new List<IServiceConnector>();
 
         protected static PluginLoader loader;
-        private static bool m_NoVerifyCertChain = false;
-        private static bool m_NoVerifyCertHostname = false;
+        private static bool _NoVerifyCertChain = false;
+        private static bool _NoVerifyCertHostname = false;
 
         public static bool ValidateServerCertificate(
             object sender,
@@ -60,10 +60,10 @@ namespace OpenSim.Server
             X509Chain chain,
             SslPolicyErrors sslPolicyErrors)
         {
-            if (m_NoVerifyCertChain)
+            if (_NoVerifyCertChain)
                 sslPolicyErrors &= ~SslPolicyErrors.RemoteCertificateChainErrors;
  
-            if (m_NoVerifyCertHostname)
+            if (_NoVerifyCertHostname)
                 sslPolicyErrors &= ~SslPolicyErrors.RemoteCertificateNameMismatch;
 
             if (sslPolicyErrors == SslPolicyErrors.None)
@@ -84,11 +84,11 @@ namespace OpenSim.Server
             ServicePointManager.UseNagleAlgorithm = false;
             ServicePointManager.ServerCertificateValidationCallback = ValidateServerCertificate;
 
-            m_Server = new HttpServerBase("R.O.B.U.S.T.", args);
+            _Server = new HttpServerBase("R.O.B.U.S.T.", args);
 
             string registryLocation;
 
-            IConfig serverConfig = m_Server.Config.Configs["Startup"];
+            IConfig serverConfig = _Server.Config.Configs["Startup"];
             if (serverConfig == null)
             {
                 System.Console.WriteLine("Startup config section missing in .ini file");
@@ -98,15 +98,15 @@ namespace OpenSim.Server
             int dnsTimeout = serverConfig.GetInt("DnsTimeout", 30000);
             try { ServicePointManager.DnsRefreshTimeout = dnsTimeout; } catch { }
 
-            m_NoVerifyCertChain = serverConfig.GetBoolean("NoVerifyCertChain", m_NoVerifyCertChain);
-            m_NoVerifyCertHostname = serverConfig.GetBoolean("NoVerifyCertHostname", m_NoVerifyCertHostname);
+            _NoVerifyCertChain = serverConfig.GetBoolean("NoVerifyCertChain", _NoVerifyCertChain);
+            _NoVerifyCertHostname = serverConfig.GetBoolean("NoVerifyCertHostname", _NoVerifyCertHostname);
 
 
             string connList = serverConfig.GetString("ServiceConnectors", string.Empty);
 
             registryLocation = serverConfig.GetString("RegistryLocation",".");
 
-            IConfig servicesConfig = m_Server.Config.Configs["ServiceList"];
+            IConfig servicesConfig = _Server.Config.Configs["ServiceList"];
             if (servicesConfig != null)
             {
                 List<string> servicesList = new List<string>();
@@ -165,36 +165,36 @@ namespace OpenSim.Server
                 if (friendlyName == "LLLoginServiceInConnector")
                     server.AddSimpleStreamHandler(new IndexPHPHandler(server));
 
-                m_log.InfoFormat("[SERVER]: Loading {0} on port {1}", friendlyName, server.Port);
+                _log.InfoFormat("[SERVER]: Loading {0} on port {1}", friendlyName, server.Port);
 
                 IServiceConnector connector = null;
 
-                object[] modargs = new object[] { m_Server.Config, server, configName };
+                object[] modargs = new object[] { _Server.Config, server, configName };
                 connector = ServerUtils.LoadPlugin<IServiceConnector>(conn, modargs);
 
                 if (connector == null)
                 {
-                    modargs = new object[] { m_Server.Config, server };
+                    modargs = new object[] { _Server.Config, server };
                     connector = ServerUtils.LoadPlugin<IServiceConnector>(conn, modargs);
                 }
 
                 if (connector != null)
                 {
-                    m_ServiceConnectors.Add(connector);
-                    m_log.InfoFormat("[SERVER]: {0} loaded successfully", friendlyName);
+                    _ServiceConnectors.Add(connector);
+                    _log.InfoFormat("[SERVER]: {0} loaded successfully", friendlyName);
                 }
                 else
                 {
-                    m_log.ErrorFormat("[SERVER]: Failed to load {0}", conn);
+                    _log.ErrorFormat("[SERVER]: Failed to load {0}", conn);
                 }
             }
 
-            loader = new PluginLoader(m_Server.Config, registryLocation);
+            loader = new PluginLoader(_Server.Config, registryLocation);
 
-            int res = m_Server.Run();
+            int res = _Server.Run();
 
-            if(m_Server != null)
-                m_Server.Shutdown();
+            if(_Server != null)
+                _Server.Shutdown();
 
             Util.StopThreadPool();
 

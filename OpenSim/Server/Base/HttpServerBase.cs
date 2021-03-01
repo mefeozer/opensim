@@ -38,9 +38,9 @@ namespace OpenSim.Server.Base
 {
     public class HttpServerBase : ServicesServerBase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private uint m_consolePort;
+        private uint _consolePort;
 
         // Handle all the automagical stuff
         //
@@ -70,7 +70,7 @@ namespace OpenSim.Server.Base
             bool ssl_listener = networkConfig.GetBoolean("https_listener",false);
             bool ssl_external = networkConfig.GetBoolean("https_external",false);
 
-            m_consolePort = (uint)networkConfig.GetInt("ConsolePort", 0);
+            _consolePort = (uint)networkConfig.GetInt("ConsolePort", 0);
 
             BaseHttpServer httpServer = null;
 
@@ -81,7 +81,7 @@ namespace OpenSim.Server.Base
             // Make the base server according to the port, etc.
             // ADD: Possibility to make main server ssl
             // Then, check for https settings and ADD a server to
-            // m_Servers
+            // _Servers
             //
             if (!ssl_main)
             {
@@ -114,7 +114,7 @@ namespace OpenSim.Server.Base
             {
                 uint https_port = (uint)networkConfig.GetInt("https_port", 0);
 
-                m_log.WarnFormat("[SSL]: External flag is {0}", ssl_external);
+                _log.WarnFormat("[SSL]: External flag is {0}", ssl_external);
                 if (!ssl_external)
                 {
                     string cert_path = networkConfig.GetString("cert_path", string.Empty);
@@ -134,7 +134,7 @@ namespace OpenSim.Server.Base
                 }
                 else
                 {
-                    m_log.WarnFormat("[SSL]: SSL port is active but no SSL is used because external SSL was requested.");
+                    _log.WarnFormat("[SSL]: SSL port is active but no SSL is used because external SSL was requested.");
                     MainServer.AddHttpServer(new BaseHttpServer(https_port));
                 }
             }
@@ -147,14 +147,14 @@ namespace OpenSim.Server.Base
 
             MainServer.RegisterHttpConsoleCommands(MainConsole.Instance);
 
-            MethodInfo mi = m_console.GetType().GetMethod("SetServer", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(BaseHttpServer) }, null);
+            MethodInfo mi = _console.GetType().GetMethod("SetServer", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(BaseHttpServer) }, null);
 
             if (mi != null)
             {
-                if (m_consolePort == 0)
+                if (_consolePort == 0)
                     mi.Invoke(MainConsole.Instance, new object[] { MainServer.Instance });
                 else
-                    mi.Invoke(MainConsole.Instance, new object[] { MainServer.GetHttpServer(m_consolePort) });
+                    mi.Invoke(MainConsole.Instance, new object[] { MainServer.GetHttpServer(_consolePort) });
             }
         }
     }

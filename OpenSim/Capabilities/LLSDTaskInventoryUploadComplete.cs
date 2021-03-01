@@ -35,7 +35,7 @@ namespace OpenSim.Framework.Capabilities
         /// <summary>
         /// The task inventory item that was updated
         /// </summary>
-        public UUID item_id;
+        public UUID ite_id;
 
         /// <summary>
         /// The task that was updated

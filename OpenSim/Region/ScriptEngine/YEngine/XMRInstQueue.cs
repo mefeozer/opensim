@@ -33,13 +33,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
      * @brief Implements a queue of XMRInstance's.
      *        Do our own queue to avoid shitty little mallocs.
      *
-     * Note: looping inst.m_NextInst and m_PrevInst back to itself
+     * Note: looping inst._NextInst and _PrevInst back to itself
      *       when inst is removed from a queue is purely for debug.
      */
     public class XMRInstQueue
     {
-        private XMRInstance m_Head = null;
-        private XMRInstance m_Tail = null;
+        private XMRInstance _Head = null;
+        private XMRInstance _Tail = null;
 
         /**
          * @brief Insert instance at head of queue (in front of all others)
@@ -47,16 +47,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void InsertHead(XMRInstance inst)
         {
-            if(inst.m_PrevInst != inst || inst.m_NextInst != inst)
+            if(inst._PrevInst != inst || inst._NextInst != inst)
                 throw new Exception("already in list");
 
-            inst.m_PrevInst = null;
-            if((inst.m_NextInst = m_Head) == null)
-                m_Tail = inst;
+            inst._PrevInst = null;
+            if((inst._NextInst = _Head) == null)
+                _Tail = inst;
             else
-                m_Head.m_PrevInst = inst;
+                _Head._PrevInst = inst;
 
-            m_Head = inst;
+            _Head = inst;
         }
 
         /**
@@ -65,16 +65,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void InsertTail(XMRInstance inst)
         {
-            if(inst.m_PrevInst != inst || inst.m_NextInst != inst)
+            if(inst._PrevInst != inst || inst._NextInst != inst)
                 throw new Exception("already in list");
 
-            inst.m_NextInst = null;
-            if((inst.m_PrevInst = m_Tail) == null)
-                m_Head = inst;
+            inst._NextInst = null;
+            if((inst._PrevInst = _Tail) == null)
+                _Head = inst;
             else
-                m_Tail.m_NextInst = inst;
+                _Tail._NextInst = inst;
 
-            m_Tail = inst;
+            _Tail = inst;
         }
 
         /**
@@ -84,20 +84,20 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void InsertBefore(XMRInstance inst, XMRInstance after)
         {
-            if(inst.m_PrevInst != inst || inst.m_NextInst != inst)
+            if(inst._PrevInst != inst || inst._NextInst != inst)
                 throw new Exception("already in list");
 
             if(after == null)
                 InsertTail(inst);
             else
             {
-                inst.m_NextInst = after;
-                inst.m_PrevInst = after.m_PrevInst;
-                if(inst.m_PrevInst == null)
-                    m_Head = inst;
+                inst._NextInst = after;
+                inst._PrevInst = after._PrevInst;
+                if(inst._PrevInst == null)
+                    _Head = inst;
                 else
-                    inst.m_PrevInst.m_NextInst = inst;
-                after.m_PrevInst = inst;
+                    inst._PrevInst._NextInst = inst;
+                after._PrevInst = inst;
             }
         }
 
@@ -108,7 +108,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public XMRInstance PeekHead()
         {
-            return m_Head;
+            return _Head;
         }
 
         /**
@@ -118,16 +118,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public XMRInstance RemoveHead()
         {
-            XMRInstance inst = m_Head;
+            XMRInstance inst = _Head;
             if(inst != null)
             {
-                if((m_Head = inst.m_NextInst) == null)
-                    m_Tail = null;
+                if((_Head = inst._NextInst) == null)
+                    _Tail = null;
                 else
-                    m_Head.m_PrevInst = null;
+                    _Head._PrevInst = null;
 
-                inst.m_NextInst = inst;
-                inst.m_PrevInst = inst;
+                inst._NextInst = inst;
+                inst._PrevInst = inst;
             }
             return inst;
         }
@@ -139,16 +139,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public XMRInstance RemoveTail()
         {
-            XMRInstance inst = m_Tail;
+            XMRInstance inst = _Tail;
             if(inst != null)
             {
-                if((m_Tail = inst.m_PrevInst) == null)
-                    m_Head = null;
+                if((_Tail = inst._PrevInst) == null)
+                    _Head = null;
                 else
-                    m_Tail.m_NextInst = null;
+                    _Tail._NextInst = null;
 
-                inst.m_NextInst = inst;
-                inst.m_PrevInst = inst;
+                inst._NextInst = inst;
+                inst._PrevInst = inst;
             }
             return inst;
         }
@@ -160,33 +160,33 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void Remove(XMRInstance inst)
         {
-            XMRInstance next = inst.m_NextInst;
-            XMRInstance prev = inst.m_PrevInst;
+            XMRInstance next = inst._NextInst;
+            XMRInstance prev = inst._PrevInst;
             if(prev == inst || next == inst)
                 throw new Exception("not in a list");
 
             if(next == null)
             {
-                if(m_Tail != inst)
+                if(_Tail != inst)
                     throw new Exception("not in this list");
 
-                m_Tail = prev;
+                _Tail = prev;
             }
             else
-                next.m_PrevInst = prev;
+                next._PrevInst = prev;
 
             if(prev == null)
             {
-                if(m_Head != inst)
+                if(_Head != inst)
                     throw new Exception("not in this list");
 
-                m_Head = next;
+                _Head = next;
             }
             else
-                prev.m_NextInst = next;
+                prev._NextInst = next;
 
-            inst.m_NextInst = inst;
-            inst.m_PrevInst = inst;
+            inst._NextInst = inst;
+            inst._PrevInst = inst;
         }
     }
 }

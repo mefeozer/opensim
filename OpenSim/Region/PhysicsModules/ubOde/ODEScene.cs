@@ -165,10 +165,10 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
     public class ODEScene : PhysicsScene
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public bool m_OSOdeLib = false;
-        public Scene m_frameWorkScene = null;
+        public bool _OSOdeLib = false;
+        public Scene _frameWorkScene = null;
 
 //        private int threadid = 0;
 
@@ -190,16 +190,16 @@ readonly float TerrainFriction = 0.3f;
         // this netx dimensions are only relevant for terrain partition (mega regions)
         // WorldExtents below has the simulation dimensions
         // they should be identical except on mega regions
-        private int m_regionWidth = (int)Constants.RegionSize;
-        private int m_regionHeight = (int)Constants.RegionSize;
+        private int _regionWidth = (int)Constants.RegionSize;
+        private int _regionHeight = (int)Constants.RegionSize;
 
         public float ODE_STEPSIZE = 0.020f;
         public float HalfOdeStep = 0.01f;
         public int odetimestepMS = 20; // rounded
-        private float m_timeDilation = 1.0f;
+        private float _timeDilation = 1.0f;
 
-        private double m_lastframe;
-        private double m_lastMeshExpire;
+        private double _lastframe;
+        private double _lastMeshExpire;
 
         public float gravityx = 0f;
         public float gravityy = 0f;
@@ -249,21 +249,21 @@ readonly float TerrainFriction = 0.3f;
         private SafeNativeMethods.Contact SharedTmpcontact = new SafeNativeMethods.Contact();
 
         const int maxContactsbeforedeath = 6000;
-        private volatile int m_global_contactcount = 0;
+        private volatile int _global_contactcount = 0;
 
         private IntPtr contactgroup;
 
-        public ContactData[] m_materialContactsData = new ContactData[8];
+        public ContactData[] _materialContactsData = new ContactData[8];
 
-        private IntPtr m_terrainGeom;
-        private float[] m_terrainHeights;
-        private GCHandle m_terrainHeightsHandler = new GCHandle();
+        private IntPtr _terrainGeom;
+        private float[] _terrainHeights;
+        private GCHandle _terrainHeightsHandler = new GCHandle();
         private IntPtr HeightmapData;
-        private int m_lastRegionWidth;
-        private int m_lastRegionHeight;
+        private int _lastRegionWidth;
+        private int _lastRegionHeight;
 
-        private readonly int m_physicsiterations = 15;
-        private const float m_SkipFramesAtms = 0.40f; // Drop frames gracefully at a 400 ms lag
+        private readonly int _physicsiterations = 15;
+        private const float _SkipFramesAtms = 0.40f; // Drop frames gracefully at a 400 ms lag
 //        private PhysicsActor PANull = new NullPhysicsActor();
         private float step_time = 0.0f;
 
@@ -286,12 +286,12 @@ readonly float TerrainFriction = 0.3f;
 
         public IMesher mesher;
 
-        public IConfigSource m_config;
+        public IConfigSource _config;
 
         public Vector2 WorldExtents = new Vector2((int)Constants.RegionSize, (int)Constants.RegionSize);
 
-        private ODERayCastRequestManager m_rayCastManager;
-        public ODEMeshWorker m_meshWorker;
+        private ODERayCastRequestManager _rayCastManager;
+        public ODEMeshWorker _meshWorker;
 
         /* maybe needed if ode uses tls
                 private void checkThread()
@@ -313,29 +313,29 @@ readonly float TerrainFriction = 0.3f;
             EngineType = pname;
             PhysicsSceneName = EngineType + "/" + pscene.RegionInfo.RegionName;
             EngineName = pname + " " + pversion;
-            m_config = psourceconfig;
-            m_OSOdeLib = pOSOdeLib;
+            _config = psourceconfig;
+            _OSOdeLib = pOSOdeLib;
 
-//            m_OSOdeLib = false; //debug
+//            _OSOdeLib = false; //debug
 
-            m_frameWorkScene = pscene;
+            _frameWorkScene = pscene;
 
-            m_frameWorkScene.RegisterModuleInterface<PhysicsScene>(this);
+            _frameWorkScene.RegisterModuleInterface<PhysicsScene>(this);
 
             Initialization();
         }
 
         public void RegionLoaded()
         {
-            mesher = m_frameWorkScene.RequestModuleInterface<IMesher>();
+            mesher = _frameWorkScene.RequestModuleInterface<IMesher>();
             if (mesher == null)
             {
-                m_log.ErrorFormat("[ubOde] No mesher. module disabled");
+                _log.ErrorFormat("[ubOde] No mesher. module disabled");
                 return;
             }
 
-            m_meshWorker = new ODEMeshWorker(this, m_log, mesher, physicsconfig);
-            m_frameWorkScene.PhysicsEnabled = true;
+            _meshWorker = new ODEMeshWorker(this, _log, mesher, physicsconfig);
+            _frameWorkScene.PhysicsEnabled = true;
         }
         /// <summary>
         /// Initiailizes the scene
@@ -348,12 +348,12 @@ readonly float TerrainFriction = 0.3f;
 
             nearCallback = near;
 
-            m_rayCastManager = new ODERayCastRequestManager(this);
+            _rayCastManager = new ODERayCastRequestManager(this);
 
-            WorldExtents.X = m_frameWorkScene.RegionInfo.RegionSizeX;
-            m_regionWidth = (int)WorldExtents.X;
-            WorldExtents.Y = m_frameWorkScene.RegionInfo.RegionSizeY;
-            m_regionHeight = (int)WorldExtents.Y;
+            WorldExtents.X = _frameWorkScene.RegionInfo.RegionSizeX;
+            _regionWidth = (int)WorldExtents.X;
+            WorldExtents.Y = _frameWorkScene.RegionInfo.RegionSizeY;
+            _regionHeight = (int)WorldExtents.Y;
 
             lock (OdeLock)
             {
@@ -439,9 +439,9 @@ readonly float TerrainFriction = 0.3f;
 
             physicsconfig = null;
 
-            if (m_config != null)
+            if (_config != null)
             {
-                physicsconfig = m_config.Configs["ODEPhysicsSettings"];
+                physicsconfig = _config.Configs["ODEPhysicsSettings"];
                 if (physicsconfig != null)
                 {
                     gravityx = physicsconfig.GetFloat("world_gravityx", gravityx);
@@ -461,14 +461,14 @@ readonly float TerrainFriction = 0.3f;
                     geomDefaultDensity = physicsconfig.GetFloat("geometry_default_density", geomDefaultDensity);
 //                    bodyFramesAutoDisable = physicsconfig.GetInt("body_frames_auto_disable", bodyFramesAutoDisable);
 
-                    minimumGroundFlightOffset = physicsconfig.GetFloat("minimum_ground_flight_offset", minimumGroundFlightOffset);
-                    maximumMassObject = physicsconfig.GetFloat("maximum_mass_object", maximumMassObject);
+                    minimumGroundFlightOffset = physicsconfig.GetFloat("minimu_ground_flight_offset", minimumGroundFlightOffset);
+                    maximumMassObject = physicsconfig.GetFloat("maximu_mass_object", maximumMassObject);
 
                     avDensity *= 3f / 80f;  // scale other engines density option to this
                 }
             }
 
-            float heartbeat = 1/m_frameWorkScene.FrameTime;
+            float heartbeat = 1/_frameWorkScene.FrameTime;
             maximumAngularVelocity = 0.49f * heartbeat *(float)Math.PI;
             maxAngVelocitySQ = maximumAngularVelocity * maximumAngularVelocity;
 
@@ -483,7 +483,7 @@ readonly float TerrainFriction = 0.3f;
             SafeNativeMethods.WorldSetLinearDampingThreshold(world, 0f);
             SafeNativeMethods.WorldSetMaxAngularSpeed(world, maximumAngularVelocity);
 
-            SafeNativeMethods.WorldSetQuickStepNumIterations(world, m_physicsiterations);
+            SafeNativeMethods.WorldSetQuickStepNumIterations(world, _physicsiterations);
 
             SafeNativeMethods.WorldSetContactSurfaceLayer(world, contactsurfacelayer);
             SafeNativeMethods.WorldSetContactMaxCorrectingVel(world, 60.0f);
@@ -509,38 +509,38 @@ readonly float TerrainFriction = 0.3f;
             SharedTmpcontact.surface.slip1 = comumContactSLIP;
             SharedTmpcontact.surface.slip2 = comumContactSLIP;
 
-            m_materialContactsData[(int)Material.Stone].mu = 0.8f;
-            m_materialContactsData[(int)Material.Stone].bounce = 0.4f;
+            _materialContactsData[(int)Material.Stone].mu = 0.8f;
+            _materialContactsData[(int)Material.Stone].bounce = 0.4f;
 
-            m_materialContactsData[(int)Material.Metal].mu = 0.3f;
-            m_materialContactsData[(int)Material.Metal].bounce = 0.4f;
+            _materialContactsData[(int)Material.Metal].mu = 0.3f;
+            _materialContactsData[(int)Material.Metal].bounce = 0.4f;
 
-            m_materialContactsData[(int)Material.Glass].mu = 0.2f;
-            m_materialContactsData[(int)Material.Glass].bounce = 0.7f;
+            _materialContactsData[(int)Material.Glass].mu = 0.2f;
+            _materialContactsData[(int)Material.Glass].bounce = 0.7f;
 
-            m_materialContactsData[(int)Material.Wood].mu = 0.6f;
-            m_materialContactsData[(int)Material.Wood].bounce = 0.5f;
+            _materialContactsData[(int)Material.Wood].mu = 0.6f;
+            _materialContactsData[(int)Material.Wood].bounce = 0.5f;
 
-            m_materialContactsData[(int)Material.Flesh].mu = 0.9f;
-            m_materialContactsData[(int)Material.Flesh].bounce = 0.3f;
+            _materialContactsData[(int)Material.Flesh].mu = 0.9f;
+            _materialContactsData[(int)Material.Flesh].bounce = 0.3f;
 
-            m_materialContactsData[(int)Material.Plastic].mu = 0.4f;
-            m_materialContactsData[(int)Material.Plastic].bounce = 0.7f;
+            _materialContactsData[(int)Material.Plastic].mu = 0.4f;
+            _materialContactsData[(int)Material.Plastic].bounce = 0.7f;
 
-            m_materialContactsData[(int)Material.Rubber].mu = 0.9f;
-            m_materialContactsData[(int)Material.Rubber].bounce = 0.95f;
+            _materialContactsData[(int)Material.Rubber].mu = 0.9f;
+            _materialContactsData[(int)Material.Rubber].bounce = 0.95f;
 
-            m_materialContactsData[(int)Material.light].mu = 0.0f;
-            m_materialContactsData[(int)Material.light].bounce = 0.0f;
+            _materialContactsData[(int)Material.light].mu = 0.0f;
+            _materialContactsData[(int)Material.light].bounce = 0.0f;
 
-            m_lastframe = Util.GetTimeStamp();
-            m_lastMeshExpire = m_lastframe;
+            _lastframe = Util.GetTimeStamp();
+            _lastMeshExpire = _lastframe;
             step_time = -1;
 
 
-            base.Initialise(m_frameWorkScene.PhysicsRequestAsset,
-                m_frameWorkScene.Heightmap != null ? m_frameWorkScene.Heightmap.GetFloatsSerialised() : new float[m_frameWorkScene.RegionInfo.RegionSizeX * m_frameWorkScene.RegionInfo.RegionSizeY],
-                (float)m_frameWorkScene.RegionInfo.RegionSettings.WaterHeight);
+            base.Initialise(_frameWorkScene.PhysicsRequestAsset,
+                _frameWorkScene.Heightmap != null ? _frameWorkScene.Heightmap.GetFloatsSerialised() : new float[_frameWorkScene.RegionInfo.RegionSizeX * _frameWorkScene.RegionInfo.RegionSizeY],
+                (float)_frameWorkScene.RegionInfo.RegionSettings.WaterHeight);
         }
 
         internal void waitForSpaceUnlock(IntPtr space)
@@ -554,10 +554,10 @@ readonly float TerrainFriction = 0.3f;
         // sets a global contact for a joint for contactgeom , and base contact description)
         private IntPtr CreateContacJoint(ref SafeNativeMethods.ContactGeom contactGeom,bool smooth)
         {
-            if (m_global_contactcount >= maxContactsbeforedeath)
+            if (_global_contactcount >= maxContactsbeforedeath)
                 return IntPtr.Zero;
 
-            m_global_contactcount++;
+            _global_contactcount++;
             if(smooth)
                 SharedTmpcontact.geom.depth = contactGeom.depth * 0.05f;
             else
@@ -565,7 +565,7 @@ readonly float TerrainFriction = 0.3f;
             SharedTmpcontact.geom.pos = contactGeom.pos;
             SharedTmpcontact.geom.normal = contactGeom.normal;
 
-            IntPtr contact = new IntPtr(GlobalContactsArray.ToInt64() + (long)(m_global_contactcount * SafeNativeMethods.Contact.unmanagedSizeOf));
+            IntPtr contact = new IntPtr(GlobalContactsArray.ToInt64() + (long)(_global_contactcount * SafeNativeMethods.Contact.unmanagedSizeOf));
             Marshal.StructureToPtr(SharedTmpcontact, contact, true);
             return SafeNativeMethods.JointCreateContactPtr(world, contactgroup, contact);
         }
@@ -592,7 +592,7 @@ readonly float TerrainFriction = 0.3f;
         {
             //  no lock here!  It's invoked from within Simulate(), which is thread-locked
 
-            if (m_global_contactcount >= maxContactsbeforedeath)
+            if (_global_contactcount >= maxContactsbeforedeath)
                 return;
 
             // Test if we're colliding a geom with a space.
@@ -612,7 +612,7 @@ readonly float TerrainFriction = 0.3f;
                 }
                 catch (AccessViolationException)
                 {
-                    m_log.Warn("[PHYSICS]: Unable to collide test a space");
+                    _log.Warn("[PHYSICS]: Unable to collide test a space");
                     return;
                 }
                 //here one should check collisions of geoms inside a space
@@ -643,13 +643,13 @@ readonly float TerrainFriction = 0.3f;
             }
             catch (SEHException)
             {
-                m_log.Error("[PHYSICS]: The Operating system shut down ODE because of corrupt memory.  This could be a result of really irregular terrain.  If this repeats continuously, restart using Basic Physics and terrain fill your terrain.  Restarting the sim.");
+                _log.Error("[PHYSICS]: The Operating system shut down ODE because of corrupt memory.  This could be a result of really irregular terrain.  If this repeats continuously, restart using Basic Physics and terrain fill your terrain.  Restarting the sim.");
                 //                ode.drelease(world);
                 base.TriggerPhysicsBasedRestart();
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[PHYSICS]: Unable to collide test an object: {0}", e.Message);
+                _log.WarnFormat("[PHYSICS]: Unable to collide test an object: {0}", e.Message);
                 return;
             }
 
@@ -666,14 +666,14 @@ readonly float TerrainFriction = 0.3f;
             PhysicsActor p1;
             if (!actor_name_map.TryGetValue(g1, out p1))
             {
-                m_log.WarnFormat("[PHYSICS]: failed actor mapping for geom 1");
+                _log.WarnFormat("[PHYSICS]: failed actor mapping for geom 1");
                 return;
             }
 
             PhysicsActor p2;
             if (!actor_name_map.TryGetValue(g2, out p2))
             {
-                m_log.WarnFormat("[PHYSICS]: failed actor mapping for geom 2");
+                _log.WarnFormat("[PHYSICS]: failed actor mapping for geom 2");
                 return;
             }
 
@@ -1036,7 +1036,7 @@ readonly float TerrainFriction = 0.3f;
                 }
                 catch (AccessViolationException)
                 {
-                    m_log.Warn("[PHYSICS]: Unable to collide Character to static space");
+                    _log.Warn("[PHYSICS]: Unable to collide Character to static space");
                 }
 
             }
@@ -1047,7 +1047,7 @@ readonly float TerrainFriction = 0.3f;
                 {
                     aprim.CollisionScore = 0;
                     aprim.IsColliding = false;
-                    if(!aprim.m_outbounds && SafeNativeMethods.BodyIsEnabled(aprim.Body))
+                    if(!aprim._outbounds && SafeNativeMethods.BodyIsEnabled(aprim.Body))
                         aprim.clearSleeperCollisions();
                 }
             }
@@ -1058,7 +1058,7 @@ readonly float TerrainFriction = 0.3f;
                 {
                     foreach (OdePrim aprim in _activegroups)
                     {
-                        if(!aprim.m_outbounds && SafeNativeMethods.BodyIsEnabled(aprim.Body) &&
+                        if(!aprim._outbounds && SafeNativeMethods.BodyIsEnabled(aprim.Body) &&
                                 aprim.collide_geom != IntPtr.Zero)
                         {
                             SafeNativeMethods.SpaceCollide2(StaticSpace, aprim.collide_geom, IntPtr.Zero, nearCallback);
@@ -1068,7 +1068,7 @@ readonly float TerrainFriction = 0.3f;
                 }
                 catch (Exception e)
                 {
-                    m_log.Warn("[PHYSICS]: Unable to collide Active to Static: " + e.Message);
+                    _log.Warn("[PHYSICS]: Unable to collide Active to Static: " + e.Message);
                 }
             }
 
@@ -1079,7 +1079,7 @@ readonly float TerrainFriction = 0.3f;
             }
             catch (Exception e)
             {
-                    m_log.Warn("[PHYSICS]: Unable to collide in Active: " + e.Message);
+                    _log.Warn("[PHYSICS]: Unable to collide in Active: " + e.Message);
             }
 
             // and with chars
@@ -1089,7 +1089,7 @@ readonly float TerrainFriction = 0.3f;
             }
             catch (Exception e)
             {
-                    m_log.Warn("[PHYSICS]: Unable to collide Active to Character: " + e.Message);
+                    _log.Warn("[PHYSICS]: Unable to collide Active to Character: " + e.Message);
             }
         }
 
@@ -1117,10 +1117,7 @@ readonly float TerrainFriction = 0.3f;
             }
         }
 
-        public override float TimeDilation
-        {
-            get { return m_timeDilation; }
-        }
+        public override float TimeDilation => _timeDilation;
 
         #region Add/Remove Entities
 
@@ -1149,7 +1146,7 @@ readonly float TerrainFriction = 0.3f;
                 {
                     _characters.Add(chr);
                     if (chr.bad)
-                        m_log.DebugFormat("[PHYSICS] Added BAD actor {0} to characters list", chr.m_uuid);
+                        _log.DebugFormat("[PHYSICS] Added BAD actor {0} to characters list", chr._uuid);
                 }
             }
         }
@@ -1176,7 +1173,7 @@ readonly float TerrainFriction = 0.3f;
 
         public override void RemoveAvatar(PhysicsActor actor)
         {
-            //m_log.Debug("[PHYSICS]:ODELOCK");
+            //_log.Debug("[PHYSICS]:ODELOCK");
             if (world == IntPtr.Zero)
                 return;
             ((OdeCharacter) actor).Destroy();
@@ -1259,7 +1256,7 @@ readonly float TerrainFriction = 0.3f;
 
         public void RemovePrimThreadLocked(OdePrim prim)
         {
-            //Console.WriteLine("RemovePrimThreadLocked " +  prim.m_primName);
+            //Console.WriteLine("RemovePrimThreadLocked " +  prim._primName);
             lock (_prims)
                 _prims.Remove(prim.LocalID);
         }
@@ -1351,7 +1348,7 @@ readonly float TerrainFriction = 0.3f;
                 }
                 else
                 {
-                    m_log.Info("[Physics]: Invalid or empty Space passed to 'MoveGeomToStaticSpace':" + currentspace +
+                    _log.Info("[Physics]: Invalid or empty Space passed to 'MoveGeomToStaticSpace':" + currentspace +
                                    " Geom:" + geom);
                 }
             }
@@ -1376,7 +1373,7 @@ readonly float TerrainFriction = 0.3f;
             // put the geom in the newspace
             waitForSpaceUnlock(StaticSpace);
             if(SafeNativeMethods.SpaceQuery(StaticSpace, geom))
-                m_log.Info("[Physics]: 'MoveGeomToStaticSpace' geom already in static space:" + geom);
+                _log.Info("[Physics]: 'MoveGeomToStaticSpace' geom already in static space:" + geom);
             else
                 SafeNativeMethods.SpaceAdd(StaticSpace, geom);
 
@@ -1427,7 +1424,7 @@ readonly float TerrainFriction = 0.3f;
                 int donechanges = 0;
                 if (!ChangesQueue.IsEmpty)
                 {
-                    m_log.InfoFormat("[ubOde] start processing pending actor operations");
+                    _log.InfoFormat("[ubOde] start processing pending actor operations");
                     int tstart = Util.EnvironmentTickCount();
 
                     SafeNativeMethods.AllocateODEDataForThread(~0U);
@@ -1448,18 +1445,18 @@ readonly float TerrainFriction = 0.3f;
                             }
                             catch
                             {
-                                m_log.WarnFormat("[PHYSICS]: Operation failed for a actor {0} {1}",
+                                _log.WarnFormat("[PHYSICS]: Operation failed for a actor {0} {1}",
                                     item.actor.Name, item.what.ToString());
                             }
                         }
                         donechanges++;
                     }
                     int time = Util.EnvironmentTickCountSubtract(tstart);
-                    m_log.InfoFormat("[ubOde] finished {0} operations in {1}ms", donechanges, time);
+                    _log.InfoFormat("[ubOde] finished {0} operations in {1}ms", donechanges, time);
                 }
-                m_log.InfoFormat("[ubOde] {0} prim actors loaded",_prims.Count);
+                _log.InfoFormat("[ubOde] {0} prim actors loaded",_prims.Count);
             }
-            m_lastframe = Util.GetTimeStamp() + 0.5;
+            _lastframe = Util.GetTimeStamp() + 0.5;
             step_time = -0.5f;
         }
 
@@ -1478,8 +1475,8 @@ readonly float TerrainFriction = 0.3f;
                 return 0;
 
             double now = Util.GetTimeStamp();
-            double timeStep = now - m_lastframe;
-            m_lastframe = now;
+            double timeStep = now - _lastframe;
+            _lastframe = now;
 
             // acumulate time so we can reduce error
             step_time += (float)timeStep;
@@ -1539,7 +1536,7 @@ readonly float TerrainFriction = 0.3f;
                             }
                             catch
                             {
-                                m_log.WarnFormat("[PHYSICS]: doChange failed for a actor {0} {1}",
+                                _log.WarnFormat("[PHYSICS]: doChange failed for a actor {0} {1}",
                                     item.actor.Name, item.what.ToString());
                             }
                         }
@@ -1555,7 +1552,7 @@ readonly float TerrainFriction = 0.3f;
                     try
                     {
                         // clear pointer/counter to contacts to pass into joints
-                        m_global_contactcount = 0;
+                        _global_contactcount = 0;
 
                         //                        tmpTime =  Util.GetTimeStampMS();
 
@@ -1582,7 +1579,7 @@ readonly float TerrainFriction = 0.3f;
                         // tmpTime =  Util.GetTimeStampMS();
                         lock (SimulationLock)
                         {
-                            m_rayCastManager.ProcessQueuedRequests();
+                            _rayCastManager.ProcessQueuedRequests();
                         // rayTime += Util.GetTimeStampMS() - tmpTime;
 
                         // tmpTime =  Util.GetTimeStampMS();
@@ -1612,13 +1609,13 @@ readonly float TerrainFriction = 0.3f;
 
                                 case ActorTypes.Prim:
                                     OdePrim pobj = (OdePrim)obj;
-                                    if (!pobj.m_outbounds)
+                                    if (!pobj._outbounds)
                                     {
                                         pobj.SendCollisions((int)odetimestepMS);
                                         lock(SimulationLock)
                                         {
-                                            if(pobj.Body != IntPtr.Zero && !pobj.m_isSelected &&
-                                                !pobj.m_disabled && !pobj.m_building &&
+                                            if(pobj.Body != IntPtr.Zero && !pobj._isSelected &&
+                                                !pobj._disabled && !pobj._building &&
                                                 !SafeNativeMethods.BodyIsEnabled(pobj.Body))
                                             sleepers.Add(pobj);
                                         }
@@ -1651,7 +1648,7 @@ readonly float TerrainFriction = 0.3f;
                                                 if (actor != null)
                                                 {
                                                     if (actor.bad)
-                                                        m_log.WarnFormat("[PHYSICS]: BAD Actor {0} in _characters list was not removed?", actor.m_uuid);
+                                                        _log.WarnFormat("[PHYSICS]: BAD Actor {0} in _characters list was not removed?", actor._uuid);
 
                                                     actor.UpdatePositionAndVelocity();
                                                 }
@@ -1680,7 +1677,7 @@ readonly float TerrainFriction = 0.3f;
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat("[PHYSICS]: {0}, {1}, {2}", e.Message, e.TargetSite, e);
+                        _log.ErrorFormat("[PHYSICS]: {0}, {1}, {2}", e.Message, e.TargetSite, e);
 //                        ode.dunlock(world);
                     }
 
@@ -1768,25 +1765,25 @@ readonly float TerrainFriction = 0.3f;
                 fps = (float)nodeframes * ODE_STEPSIZE / reqTimeStep;
 
                 if(step_time < HalfOdeStep)
-                    m_timeDilation = 1.0f;
-                else if (step_time > m_SkipFramesAtms)
+                    _timeDilation = 1.0f;
+                else if (step_time > _SkipFramesAtms)
                 {
                     // if we lag too much skip frames
-                    m_timeDilation = 0.0f;
+                    _timeDilation = 0.0f;
                     step_time = 0;
-                    m_lastframe = Util.GetTimeStamp(); // skip also the time lost
+                    _lastframe = Util.GetTimeStamp(); // skip also the time lost
                 }
                 else
                 {
-                    m_timeDilation = ODE_STEPSIZE / step_time;
-                    if (m_timeDilation > 1)
-                        m_timeDilation = 1;
+                    _timeDilation = ODE_STEPSIZE / step_time;
+                    if (_timeDilation > 1)
+                        _timeDilation = 1;
                 }
 
-                if (m_timeDilation == 1 && now - m_lastMeshExpire > 30)
+                if (_timeDilation == 1 && now - _lastMeshExpire > 30)
                 {
                     mesher.ExpireReleaseMeshs();
-                    m_lastMeshExpire = now;
+                    _lastMeshExpire = now;
                 }
             }
 
@@ -1795,10 +1792,10 @@ readonly float TerrainFriction = 0.3f;
 
         public float GetTerrainHeightAtXY(float x, float y)
         {
-            if (m_terrainGeom == IntPtr.Zero)
+            if (_terrainGeom == IntPtr.Zero)
                 return 0f;
 
-            if (m_terrainHeights == null || m_terrainHeights.Length == 0)
+            if (_terrainHeights == null || _terrainHeights.Length == 0)
                 return 0f;
 
             // TerrainHeightField for ODE as offset 1m
@@ -1818,8 +1815,8 @@ readonly float TerrainFriction = 0.3f;
             float dx;
             float dy;
 
-            int regsizeX = (int)m_regionWidth + 3; // map size see setterrain number of samples
-            int regsizeY = (int)m_regionHeight + 3; // map size see setterrain number of samples
+            int regsizeX = (int)_regionWidth + 3; // map size see setterrain number of samples
+            int regsizeY = (int)_regionHeight + 3; // map size see setterrain number of samples
             int regsize = regsizeX;
 
             if (x < regsizeX - 1)
@@ -1850,7 +1847,7 @@ readonly float TerrainFriction = 0.3f;
             iy *= regsize;
             iy += ix; // all indexes have iy + ix
 
-            float[] heights = m_terrainHeights;
+            float[] heights = _terrainHeights;
             /*
                         if ((dx + dy) <= 1.0f)
                         {
@@ -1889,10 +1886,10 @@ readonly float TerrainFriction = 0.3f;
         {
             Vector3 norm = new Vector3(0, 0, 1);
 
-            if (m_terrainGeom == IntPtr.Zero)
+            if (_terrainGeom == IntPtr.Zero)
                 return norm;
 
-            if (m_terrainHeights == null || m_terrainHeights.Length == 0)
+            if (_terrainHeights == null || _terrainHeights.Length == 0)
                 return norm;
 
             // TerrainHeightField for ODE as offset 1m
@@ -1912,8 +1909,8 @@ readonly float TerrainFriction = 0.3f;
             float dx;
             float dy;
 
-            int regsizeX = (int)m_regionWidth + 3; // map size see setterrain number of samples
-            int regsizeY = (int)m_regionHeight + 3; // map size see setterrain number of samples
+            int regsizeX = (int)_regionWidth + 3; // map size see setterrain number of samples
+            int regsizeY = (int)_regionHeight + 3; // map size see setterrain number of samples
             int regsize = regsizeX;
 
             int xstep = 1;
@@ -1949,7 +1946,7 @@ readonly float TerrainFriction = 0.3f;
             iy *= regsize;
             iy += ix; // all indexes have iy + ix
 
-            float[] heights = m_terrainHeights;
+            float[] heights = _terrainHeights;
 
             if (firstTri)
             {
@@ -1981,48 +1978,48 @@ readonly float TerrainFriction = 0.3f;
             {
                 SafeNativeMethods.AllocateODEDataForThread(~0U);
 
-                if (m_terrainGeom != IntPtr.Zero)
+                if (_terrainGeom != IntPtr.Zero)
                 {
-                    actor_name_map.Remove(m_terrainGeom);
-                    SafeNativeMethods.GeomDestroy(m_terrainGeom);
+                    actor_name_map.Remove(_terrainGeom);
+                    SafeNativeMethods.GeomDestroy(_terrainGeom);
                 }
 
-                if (m_terrainHeightsHandler.IsAllocated)
-                    m_terrainHeightsHandler.Free();
-                m_terrainHeights = null;
+                if (_terrainHeightsHandler.IsAllocated)
+                    _terrainHeightsHandler.Free();
+                _terrainHeights = null;
 
-                int heightmapWidthSamples = m_regionWidth + 3;
-                int heightmapHeightSamples = m_regionHeight + 3;
+                int heightmapWidthSamples = _regionWidth + 3;
+                int heightmapHeightSamples = _regionHeight + 3;
 
-                m_terrainHeights = new float[heightmapWidthSamples * heightmapHeightSamples];
-                m_terrainHeightsHandler = GCHandle.Alloc(m_terrainHeights, GCHandleType.Pinned);
+                _terrainHeights = new float[heightmapWidthSamples * heightmapHeightSamples];
+                _terrainHeightsHandler = GCHandle.Alloc(_terrainHeights, GCHandleType.Pinned);
 
-                m_lastRegionWidth = m_regionWidth;
+                _lastRegionWidth = _regionWidth;
 
                 HeightmapData = SafeNativeMethods.GeomOSTerrainDataCreate();
-                SafeNativeMethods.GeomOSTerrainDataBuild(HeightmapData, m_terrainHeightsHandler.AddrOfPinnedObject(), 0, 1.0f,
+                SafeNativeMethods.GeomOSTerrainDataBuild(HeightmapData, _terrainHeightsHandler.AddrOfPinnedObject(), 0, 1.0f,
                                                  heightmapWidthSamples, heightmapHeightSamples,
                                                  1, 0);
 
-                m_terrainGeom = SafeNativeMethods.CreateOSTerrain(GroundSpace, HeightmapData, 1);
-                if (m_terrainGeom != IntPtr.Zero)
+                _terrainGeom = SafeNativeMethods.CreateOSTerrain(GroundSpace, HeightmapData, 1);
+                if (_terrainGeom != IntPtr.Zero)
                 {
-                    SafeNativeMethods.GeomSetCategoryBits(m_terrainGeom, (uint)CollisionCategories.Land);
-                    SafeNativeMethods.GeomSetCollideBits(m_terrainGeom, 0);
+                    SafeNativeMethods.GeomSetCategoryBits(_terrainGeom, (uint)CollisionCategories.Land);
+                    SafeNativeMethods.GeomSetCollideBits(_terrainGeom, 0);
 
                         PhysicsActor pa = new NullPhysicsActor
                         {
                             Name = "Terrain",
                             PhysicsActorType = (int)ActorTypes.Ground
                         };
-                        actor_name_map[m_terrainGeom] = pa;
+                        actor_name_map[_terrainGeom] = pa;
 
-                    //geom_name_map[GroundGeom] = "Terrain";
+                    //geo_name_map[GroundGeom] = "Terrain";
 
-                    SafeNativeMethods.GeomSetPosition(m_terrainGeom, m_regionWidth * 0.5f, m_regionHeight * 0.5f, 0.0f);
+                    SafeNativeMethods.GeomSetPosition(_terrainGeom, _regionWidth * 0.5f, _regionHeight * 0.5f, 0.0f);
                 }
                 else
-                    m_terrainHeightsHandler.Free();
+                    _terrainHeightsHandler.Free();
             }
         }
 
@@ -2031,14 +2028,14 @@ readonly float TerrainFriction = 0.3f;
             // assumes 1m size grid and constante size square regions
             // needs to know about sims around in future
 
-            if(m_regionWidth != m_lastRegionWidth ||
-                    m_regionHeight != m_lastRegionHeight ||
-                    !m_terrainHeightsHandler.IsAllocated ||
-                    m_terrainGeom == IntPtr.Zero)
+            if(_regionWidth != _lastRegionWidth ||
+                    _regionHeight != _lastRegionHeight ||
+                    !_terrainHeightsHandler.IsAllocated ||
+                    _terrainGeom == IntPtr.Zero)
                 InitTerrain();
 
-            int regionsizeX = m_regionWidth;
-            int regionsizeY = m_regionHeight;
+            int regionsizeX = _regionWidth;
+            int regionsizeY = _regionHeight;
 
             int heightmapWidth = regionsizeX + 2;
             int heightmapHeight = regionsizeY + 2;
@@ -2076,7 +2073,7 @@ readonly float TerrainFriction = 0.3f;
                             maxH = val;
                         if(val < minH)
                             minH = val;
-                        m_terrainHeights[yt + x] = val;
+                        _terrainHeights[yt + x] = val;
                     }
                 }
                 yt += heightmapWidthSamples;
@@ -2086,7 +2083,7 @@ readonly float TerrainFriction = 0.3f;
             lock (OdeLock)
             {
                 SafeNativeMethods.GeomOSTerrainDataSetBounds(HeightmapData, minH, maxH);
-                SafeNativeMethods.GeomSetPosition(m_terrainGeom, m_regionWidth * 0.5f, m_regionHeight * 0.5f, 0.0f);
+                SafeNativeMethods.GeomSetPosition(_terrainGeom, _regionWidth * 0.5f, _regionHeight * 0.5f, 0.0f);
             }
         }
 
@@ -2114,13 +2111,13 @@ readonly float TerrainFriction = 0.3f;
 
                 SafeNativeMethods.AllocateODEDataForThread(~0U);
 
-                if (m_meshWorker != null)
-                    m_meshWorker.Stop();
+                if (_meshWorker != null)
+                    _meshWorker.Stop();
 
-                if (m_rayCastManager != null)
+                if (_rayCastManager != null)
                 {
-                    m_rayCastManager.Dispose();
-                    m_rayCastManager = null;
+                    _rayCastManager.Dispose();
+                    _rayCastManager = null;
                 }
 
                 lock (_prims)
@@ -2143,16 +2140,16 @@ readonly float TerrainFriction = 0.3f;
                 foreach (OdeCharacter ch in chtorem)
                     ch.DoAChange(changes.Remove, null);
 
-                if (m_terrainGeom != IntPtr.Zero)
-                        SafeNativeMethods.GeomDestroy(m_terrainGeom);
-                m_terrainGeom = IntPtr.Zero;
+                if (_terrainGeom != IntPtr.Zero)
+                        SafeNativeMethods.GeomDestroy(_terrainGeom);
+                _terrainGeom = IntPtr.Zero;
 
-                if (m_terrainHeightsHandler.IsAllocated)
-                    m_terrainHeightsHandler.Free();
+                if (_terrainHeightsHandler.IsAllocated)
+                    _terrainHeightsHandler.Free();
 
-                m_terrainHeights = null;
-                m_lastRegionWidth = 0;
-                m_lastRegionHeight = 0;
+                _terrainHeights = null;
+                _lastRegionWidth = 0;
+                _lastRegionHeight = 0;
 
                 if (ContactgeomsArray != IntPtr.Zero)
                 {
@@ -2209,7 +2206,7 @@ readonly float TerrainFriction = 0.3f;
                     filter = RayFilterFlags.AllPrims
                 };
 
-                m_rayCastManager.QueueRequest(req);
+                _rayCastManager.QueueRequest(req);
             }
         }
 
@@ -2228,7 +2225,7 @@ readonly float TerrainFriction = 0.3f;
                     filter = RayFilterFlags.AllPrims
                 };
 
-                m_rayCastManager.QueueRequest(req);
+                _rayCastManager.QueueRequest(req);
             }
         }
 
@@ -2259,7 +2256,7 @@ readonly float TerrainFriction = 0.3f;
 
             lock (SyncObject)
             {
-                m_rayCastManager.QueueRequest(req);
+                _rayCastManager.QueueRequest(req);
                 if (!Monitor.Wait(SyncObject, 500))
                     return null;
                 else
@@ -2299,7 +2296,7 @@ readonly float TerrainFriction = 0.3f;
 
             lock (SyncObject)
             {
-                m_rayCastManager.QueueRequest(req);
+                _rayCastManager.QueueRequest(req);
                 if (!Monitor.Wait(SyncObject, 500))
                     return null;
                 else
@@ -2314,9 +2311,9 @@ readonly float TerrainFriction = 0.3f;
 
             IntPtr geom;
             if (actor is OdePrim)
-                geom = ((OdePrim)actor).prim_geom;
+                geom = ((OdePrim)actor).pri_geom;
             else if (actor is OdeCharacter)
-                geom = ((OdePrim)actor).prim_geom;
+                geom = ((OdePrim)actor).pri_geom;
             else
                 return new List<ContactResult>();
 
@@ -2348,7 +2345,7 @@ readonly float TerrainFriction = 0.3f;
 
             lock (SyncObject)
             {
-                m_rayCastManager.QueueRequest(req);
+                _rayCastManager.QueueRequest(req);
                 if (!Monitor.Wait(SyncObject, 500))
                     return new List<ContactResult>();
             }
@@ -2385,7 +2382,7 @@ readonly float TerrainFriction = 0.3f;
 
             lock (SyncObject)
             {
-                m_rayCastManager.QueueRequest(req);
+                _rayCastManager.QueueRequest(req);
                 if (!Monitor.Wait(SyncObject, 500))
                     return new List<ContactResult>();
             }
@@ -2419,7 +2416,7 @@ readonly float TerrainFriction = 0.3f;
 
             lock (SyncObject)
             {
-                m_rayCastManager.QueueRequest(req);
+                _rayCastManager.QueueRequest(req);
                 if (!Monitor.Wait(SyncObject, 500))
                     return new List<ContactResult>();
             }
@@ -2436,9 +2433,9 @@ readonly float TerrainFriction = 0.3f;
             if (actor != null)
             {
                 if (actor is OdePrim)
-                    geom = ((OdePrim)actor).prim_geom;
+                    geom = ((OdePrim)actor).pri_geom;
                 else if (actor is OdeCharacter)
-                    geom = ((OdePrim)actor).prim_geom;
+                    geom = ((OdePrim)actor).pri_geom;
             }
 
             List<ContactResult> ourResults = null;
@@ -2464,7 +2461,7 @@ readonly float TerrainFriction = 0.3f;
 
             lock (SyncObject)
             {
-                m_rayCastManager.QueueRequest(req);
+                _rayCastManager.QueueRequest(req);
                 if (!Monitor.Wait(SyncObject, 500))
                     return new List<ContactResult>();
             }
@@ -2478,7 +2475,7 @@ readonly float TerrainFriction = 0.3f;
         {
             Util.FireAndForget( delegate
             {
-                ODESitAvatar sitAvatar = new ODESitAvatar(this, m_rayCastManager);
+                ODESitAvatar sitAvatar = new ODESitAvatar(this, _rayCastManager);
                 if(sitAvatar != null)
                     sitAvatar.Sit(actor, AbsolutePosition, CameraPosition, offset, AvatarSize, PhysicsSitResponse);
             });

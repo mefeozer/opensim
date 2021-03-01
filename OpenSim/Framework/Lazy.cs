@@ -216,13 +216,7 @@ namespace OpenSim.Framework
             return value;
         }
 
-        public bool IsValueCreated
-        {
-            get
-            {
-                return inited;
-            }
-        }
+        public bool IsValueCreated => inited;
 
         public override string ToString()
         {

@@ -41,8 +41,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
     [TestFixture]
     public class InventoryArchiveSaveTests : InventoryArchiveTestCase
     {
-        protected TestScene m_scene;
-        protected InventoryArchiverModule m_archiverModule;
+        protected TestScene _scene;
+        protected InventoryArchiverModule _archiverModule;
 
         [SetUp]
         public override void SetUp()
@@ -50,10 +50,10 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             base.SetUp();
 
             SerialiserModule serialiserModule = new SerialiserModule();
-            m_archiverModule = new InventoryArchiverModule();
+            _archiverModule = new InventoryArchiverModule();
 
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, serialiserModule, m_archiverModule);
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, serialiserModule, _archiverModule);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             TestHelpers.InMethod();
 //            log4net.Config.XmlConfigurator.Configure();
 
-            MemoryStream archiveReadStream = new MemoryStream(m_iarStreamBytes);
+            MemoryStream archiveReadStream = new MemoryStream(_iarStreamBytes);
             TarArchiveReader tar = new TarArchiveReader(archiveReadStream);
             string filePath;
             TarArchiveReader.TarEntryType tarEntryType;
@@ -94,13 +94,13 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             string userPassword = "troll";
             UUID userId = TestHelpers.ParseTail(0x20);
 
-            UserAccountHelpers.CreateUserWithInventory(m_scene, userFirstName, userLastName, userId, userPassword);
+            UserAccountHelpers.CreateUserWithInventory(_scene, userFirstName, userLastName, userId, userPassword);
 
             MemoryStream archiveWriteStream = new MemoryStream();
-            m_archiverModule.OnInventoryArchiveSaved += SaveCompleted;
+            _archiverModule.OnInventoryArchiveSaved += SaveCompleted;
 
             mre.Reset();
-            m_archiverModule.ArchiveInventory(
+            _archiverModule.ArchiveInventory(
                 UUID.Random(), userFirstName, userLastName, "/", userPassword, archiveWriteStream);
             mre.WaitOne(60000, false);
 
@@ -117,7 +117,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
                     "{0}{1}",
                     ArchiveConstants.INVENTORY_PATH,
                     InventoryArchiveWriteRequest.CreateArchiveFolderName(
-                        UserInventoryHelpers.GetInventoryFolder(m_scene.InventoryService, userId, "Objects")));
+                        UserInventoryHelpers.GetInventoryFolder(_scene.InventoryService, userId, "Objects")));
 
             string filePath;
             TarArchiveReader.TarEntryType tarEntryType;
@@ -147,29 +147,29 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             string userPassword = "troll";
             UUID userId = TestHelpers.ParseTail(0x20);
 
-            UserAccountHelpers.CreateUserWithInventory(m_scene, userFirstName, userLastName, userId, userPassword);
+            UserAccountHelpers.CreateUserWithInventory(_scene, userFirstName, userLastName, userId, userPassword);
 
             // Create base folder
             InventoryFolderBase f1
-                = UserInventoryHelpers.CreateInventoryFolder(m_scene.InventoryService, userId, "f1", true);
+                = UserInventoryHelpers.CreateInventoryFolder(_scene.InventoryService, userId, "f1", true);
 
             // Create item1
             SceneObjectGroup so1 = SceneHelpers.CreateSceneObject(1, userId, "My Little Dog Object", 0x5);
-            InventoryItemBase i1 = UserInventoryHelpers.AddInventoryItem(m_scene, so1, 0x50, 0x60, "f1");
+            InventoryItemBase i1 = UserInventoryHelpers.AddInventoryItem(_scene, so1, 0x50, 0x60, "f1");
 
             // Create embedded folder
             InventoryFolderBase f1_1
-                = UserInventoryHelpers.CreateInventoryFolder(m_scene.InventoryService, userId, "f1/f1.1", true);
+                = UserInventoryHelpers.CreateInventoryFolder(_scene.InventoryService, userId, "f1/f1.1", true);
 
             // Create embedded item
             SceneObjectGroup so1_1 = SceneHelpers.CreateSceneObject(1, userId, "My Little Cat Object", 0x6);
-            InventoryItemBase i2 = UserInventoryHelpers.AddInventoryItem(m_scene, so1_1, 0x500, 0x600, "f1/f1.1");
+            InventoryItemBase i2 = UserInventoryHelpers.AddInventoryItem(_scene, so1_1, 0x500, 0x600, "f1/f1.1");
 
             MemoryStream archiveWriteStream = new MemoryStream();
-            m_archiverModule.OnInventoryArchiveSaved += SaveCompleted;
+            _archiverModule.OnInventoryArchiveSaved += SaveCompleted;
 
             mre.Reset();
-            m_archiverModule.ArchiveInventory(
+            _archiverModule.ArchiveInventory(
                 UUID.Random(), userFirstName, userLastName, "f1", userPassword, archiveWriteStream);
             mre.WaitOne(60000, false);
 
@@ -231,7 +231,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             string userLastName = "Stirrup";
             string userPassword = "troll";
             UUID userId = UUID.Parse("00000000-0000-0000-0000-000000000020");
-            UserAccountHelpers.CreateUserWithInventory(m_scene, userFirstName, userLastName, userId, userPassword);
+            UserAccountHelpers.CreateUserWithInventory(_scene, userFirstName, userLastName, userId, userPassword);
 
             // Create asset
             UUID ownerId = UUID.Parse("00000000-0000-0000-0000-000000000040");
@@ -239,7 +239,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
 
             UUID asset1Id = UUID.Parse("00000000-0000-0000-0000-000000000060");
             AssetBase asset1 = AssetHelpers.CreateAsset(asset1Id, object1);
-            m_scene.AssetService.Store(asset1);
+            _scene.AssetService.Store(asset1);
 
             // Create item
             UUID item1Id = UUID.Parse("00000000-0000-0000-0000-000000000080");
@@ -251,15 +251,15 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
                 ID = item1Id
             };
             InventoryFolderBase objsFolder
-                = InventoryArchiveUtils.FindFoldersByPath(m_scene.InventoryService, userId, "Objects")[0];
+                = InventoryArchiveUtils.FindFoldersByPath(_scene.InventoryService, userId, "Objects")[0];
             item1.Folder = objsFolder.ID;
-            m_scene.AddInventoryItem(item1);
+            _scene.AddInventoryItem(item1);
 
             MemoryStream archiveWriteStream = new MemoryStream();
-            m_archiverModule.OnInventoryArchiveSaved += SaveCompleted;
+            _archiverModule.OnInventoryArchiveSaved += SaveCompleted;
 
             mre.Reset();
-            m_archiverModule.ArchiveInventory(
+            _archiverModule.ArchiveInventory(
                 UUID.Random(), userFirstName, userLastName, "Objects/" + item1Name, userPassword, archiveWriteStream);
             mre.WaitOne(60000, false);
 
@@ -328,7 +328,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             string userLastName = "Stirrup";
             string userPassword = "troll";
             UUID userId = UUID.Parse("00000000-0000-0000-0000-000000000020");
-            UserAccountHelpers.CreateUserWithInventory(m_scene, userFirstName, userLastName, userId, userPassword);
+            UserAccountHelpers.CreateUserWithInventory(_scene, userFirstName, userLastName, userId, userPassword);
 
             // Create asset
             UUID ownerId = UUID.Parse("00000000-0000-0000-0000-000000000040");
@@ -336,7 +336,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
 
             UUID asset1Id = UUID.Parse("00000000-0000-0000-0000-000000000060");
             AssetBase asset1 = AssetHelpers.CreateAsset(asset1Id, object1);
-            m_scene.AssetService.Store(asset1);
+            _scene.AssetService.Store(asset1);
 
             // Create item
             UUID item1Id = UUID.Parse("00000000-0000-0000-0000-000000000080");
@@ -348,9 +348,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
                 ID = item1Id
             };
             InventoryFolderBase objsFolder
-                = InventoryArchiveUtils.FindFoldersByPath(m_scene.InventoryService, userId, "Objects")[0];
+                = InventoryArchiveUtils.FindFoldersByPath(_scene.InventoryService, userId, "Objects")[0];
             item1.Folder = objsFolder.ID;
-            m_scene.AddInventoryItem(item1);
+            _scene.AddInventoryItem(item1);
 
             MemoryStream archiveWriteStream = new MemoryStream();
 
@@ -358,7 +358,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             options.Add("noassets", true);
 
             // When we're not saving assets, archiving is being done synchronously.
-            m_archiverModule.ArchiveInventory(
+            _archiverModule.ArchiveInventory(
                 UUID.Random(), userFirstName, userLastName, "Objects/" + item1Name, userPassword, archiveWriteStream, options);
 
             byte[] archive = archiveWriteStream.ToArray();

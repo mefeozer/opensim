@@ -36,7 +36,7 @@ namespace OpenSim.Data.PGSQL
         public PGSQLFriendsData(string connectionString, string realm)
             : base(connectionString, realm, "FriendsStore")
         {
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             {
                 conn.Open();
                 Migration m = new Migration(conn, GetType().Assembly, "FriendsStore");
@@ -59,12 +59,12 @@ namespace OpenSim.Data.PGSQL
 
         public bool Delete(UUID principalID, string friend)
         {
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
-                cmd.CommandText = string.Format("delete from {0} where \"PrincipalID\" = :PrincipalID and \"Friend\" = :Friend", m_Realm);
-                cmd.Parameters.Add(m_database.CreateParameter("PrincipalID", principalID.ToString()));
-                cmd.Parameters.Add(m_database.CreateParameter("Friend", friend));
+                cmd.CommandText = string.Format("delete from {0} where \"PrincipalID\" = :PrincipalID and \"Friend\" = :Friend", _Realm);
+                cmd.Parameters.Add(_database.CreateParameter("PrincipalID", principalID.ToString()));
+                cmd.Parameters.Add(_database.CreateParameter("Friend", friend));
                 cmd.Connection = conn;
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -87,14 +87,14 @@ namespace OpenSim.Data.PGSQL
 
         public FriendsData[] GetFriends(UUID principalID)
         {
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
 
                 cmd.CommandText = string.Format("select a.*,case when b.\"Flags\" is null then '-1' else b.\"Flags\" end as \"TheirFlags\" from {0} as a " +
                                                 " left join {0} as b on a.\"PrincipalID\" = b.\"Friend\" and a.\"Friend\" = b.\"PrincipalID\" " +
-                                                " where a.\"PrincipalID\" = :PrincipalID", m_Realm);
-                cmd.Parameters.Add(m_database.CreateParameter("PrincipalID", principalID.ToString()));
+                                                " where a.\"PrincipalID\" = :PrincipalID", _Realm);
+                cmd.Parameters.Add(_database.CreateParameter("PrincipalID", principalID.ToString()));
                 cmd.Connection = conn;
                 conn.Open();
                 return DoQuery(cmd);

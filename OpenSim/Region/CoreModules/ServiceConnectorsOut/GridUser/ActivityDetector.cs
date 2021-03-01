@@ -37,14 +37,14 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
 {
     public class ActivityDetector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IGridUserService m_GridUserService;
+        private readonly IGridUserService _GridUserService;
 
         public ActivityDetector(IGridUserService guservice)
         {
-            m_GridUserService = guservice;
-            m_log.DebugFormat("[ACTIVITY DETECTOR]: starting ");
+            _GridUserService = guservice;
+            _log.DebugFormat("[ACTIVITY DETECTOR]: starting ");
         }
 
         public void AddRegion(Scene scene)
@@ -66,7 +66,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
             if (sp.IsNPC)
                 return;
 
-            if(sp.m_gotCrossUpdate)
+            if(sp._gotCrossUpdate)
             {
                 Util.FireAndForget(delegate
                 {
@@ -80,11 +80,11 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
         public void DoOnMakeRootAgent(ScenePresence sp)
         {
             string userid;
-            //m_log.DebugFormat("[ACTIVITY DETECTOR]: Detected root presence {0} in {1}", userid, sp.Scene.RegionInfo.RegionName);
+            //_log.DebugFormat("[ACTIVITY DETECTOR]: Detected root presence {0} in {1}", userid, sp.Scene.RegionInfo.RegionName);
             if (sp.Scene.UserManagementModule.GetUserUUI(sp.UUID, out userid))
             {
                 /* we only setposition on known agents that have a valid lookup */
-                m_GridUserService.SetLastPosition(
+                _GridUserService.SetLastPosition(
                     userid, UUID.Zero, sp.Scene.RegionInfo.RegionID, sp.AbsolutePosition, sp.Lookat);
             }
         }
@@ -111,7 +111,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
                 Scene s = (Scene)client.Scene;
                 if(s.UserManagementModule.GetUserUUI(client.AgentId, out userId))
                 {
-                    m_GridUserService.LoggedOut(
+                    _GridUserService.LoggedOut(
                         userId, client.SessionId, client.Scene.RegionInfo.RegionID,
                         client.SceneAgent.AbsolutePosition, client.SceneAgent.Lookat);
                 }

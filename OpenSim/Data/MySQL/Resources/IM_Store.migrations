@@ -2,7 +2,7 @@
 
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS `im_offline` (
+CREATE TABLE IF NOT EXISTS `i_offline` (
   `ID` mediumint(9) NOT NULL AUTO_INCREMENT,
   `PrincipalID` char(36) NOT NULL DEFAULT '',
   `FromID` char(36) NOT NULL DEFAULT '',

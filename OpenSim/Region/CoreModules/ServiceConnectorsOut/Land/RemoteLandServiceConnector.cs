@@ -44,22 +44,16 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
     public class RemoteLandServicesConnector :
             LandServicesConnector, ISharedRegionModule, ILandService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
-        private LocalLandServicesConnector m_LocalService;
+        private bool _Enabled = false;
+        private LocalLandServicesConnector _LocalService;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RemoteLandServicesConnector"; }
-        }
+        public string Name => "RemoteLandServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -69,11 +63,11 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
                 string name = moduleConfig.GetString("LandServices", "");
                 if (name == Name)
                 {
-                    m_LocalService = new LocalLandServicesConnector();
+                    _LocalService = new LocalLandServicesConnector();
 
-                    m_Enabled = true;
+                    _Enabled = true;
 
-                    m_log.Info("[LAND CONNECTOR]: Remote Land connector enabled");
+                    _log.Info("[LAND CONNECTOR]: Remote Land connector enabled");
                 }
             }
         }
@@ -88,23 +82,23 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_LocalService.AddRegion(scene);
+            _LocalService.AddRegion(scene);
             scene.RegisterModuleInterface<ILandService>(this);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (m_Enabled)
-                m_LocalService.RemoveRegion(scene);
+            if (_Enabled)
+                _LocalService.RemoveRegion(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (m_Enabled)
-                m_GridService = scene.GridService;
+            if (_Enabled)
+                _GridService = scene.GridService;
         }
 
 
@@ -112,7 +106,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
 
         public override LandData GetLandData(UUID scopeID, ulong regionHandle, uint x, uint y, out byte regionAccess)
         {
-            LandData land = m_LocalService.GetLandData(scopeID, regionHandle, x, y, out regionAccess);
+            LandData land = _LocalService.GetLandData(scopeID, regionHandle, x, y, out regionAccess);
             if (land != null)
                 return land;
 

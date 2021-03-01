@@ -34,7 +34,7 @@ namespace OpenSim.Framework.Capabilities
     public class LLSDStreamhandler<TRequest, TResponse> : BaseStreamHandler
         where TRequest : new()
     {
-        private readonly LLSDMethod<TRequest, TResponse> m_method;
+        private readonly LLSDMethod<TRequest, TResponse> _method;
 
         public LLSDStreamhandler(string httpMethod, string path, LLSDMethod<TRequest, TResponse> method)
             : this(httpMethod, path, method, null, null) {}
@@ -43,7 +43,7 @@ namespace OpenSim.Framework.Capabilities
             string httpMethod, string path, LLSDMethod<TRequest, TResponse> method, string name, string description)
             : base(httpMethod, path, name, description)
         {
-            m_method = method;
+            _method = method;
         }
 
         protected override byte[] ProcessRequest(string path, Stream request,
@@ -65,7 +65,7 @@ namespace OpenSim.Framework.Capabilities
             TRequest llsdRequest = new TRequest();
             LLSDHelpers.DeserialiseOSDMap(hash, llsdRequest);
 
-            TResponse response = m_method(llsdRequest);
+            TResponse response = _method(llsdRequest);
 
             return Util.UTF8NoBomEncoding.GetBytes(LLSDHelpers.SerialiseLLSDReply(response));
         }

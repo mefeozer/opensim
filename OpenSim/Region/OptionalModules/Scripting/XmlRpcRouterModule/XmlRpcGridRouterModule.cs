@@ -50,13 +50,13 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "XmlRpcGridRouter")]
     public class XmlRpcGridRouter : INonSharedRegionModule, IXmlRpcRouter
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Dictionary<UUID, UUID> m_Channels =
+        private readonly Dictionary<UUID, UUID> _Channels =
                 new Dictionary<UUID, UUID>();
 
-        private bool m_Enabled = false;
-        private string m_ServerURI = string.Empty;
+        private bool _Enabled = false;
+        private string _ServerURI = string.Empty;
 
         #region INonSharedRegionModule
 
@@ -69,19 +69,19 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
             if (startupConfig.GetString("XmlRpcRouterModule",
                     "XmlRpcRouterModule") == "XmlRpcGridRouterModule")
             {
-                m_ServerURI = startupConfig.GetString("XmlRpcHubURI", string.Empty);
-                if (string.IsNullOrEmpty(m_ServerURI))
+                _ServerURI = startupConfig.GetString("XmlRpcHubURI", string.Empty);
+                if (string.IsNullOrEmpty(_ServerURI))
                 {
-                    m_log.Error("[XMLRPC GRID ROUTER] Module configured but no URI given. Disabling");
+                    _log.Error("[XMLRPC GRID ROUTER] Module configured but no URI given. Disabling");
                     return;
                 }
-                m_Enabled = true;
+                _Enabled = true;
             }
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IXmlRpcRouter>(this);
@@ -101,7 +101,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.UnregisterModuleInterface<IXmlRpcRouter>(this);
@@ -111,24 +111,18 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
         {
         }
 
-        public string Name
-        {
-            get { return "XmlRpcGridRouterModule"; }
-        }
+        public string Name => "XmlRpcGridRouterModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
         public void RegisterNewReceiver(IScriptModule scriptEngine, UUID channel, UUID objectID, UUID itemID, string uri)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_log.InfoFormat("[XMLRPC GRID ROUTER]: New receiver Obj: {0} Ch: {1} ID: {2} URI: {3}",
+            _log.InfoFormat("[XMLRPC GRID ROUTER]: New receiver Obj: {0} Ch: {1} ID: {2} URI: {3}",
                                 objectID.ToString(), channel.ToString(), itemID.ToString(), uri);
 
             XmlRpcInfo info = new XmlRpcInfo
@@ -139,20 +133,20 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
             };
 
             bool success = SynchronousRestObjectRequester.MakeRequest<XmlRpcInfo, bool>(
-                    "POST", m_ServerURI+"/RegisterChannel/", info);
+                    "POST", _ServerURI+"/RegisterChannel/", info);
 
             if (!success)
             {
-                m_log.Error("[XMLRPC GRID ROUTER] Error contacting server");
+                _log.Error("[XMLRPC GRID ROUTER] Error contacting server");
             }
 
-            m_Channels[itemID] = channel;
+            _Channels[itemID] = channel;
 
         }
 
         public void UnRegisterReceiver(string channelID, UUID itemID)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             RemoveChannel(itemID);
@@ -161,7 +155,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
 
         public void ScriptRemoved(UUID itemID)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             RemoveChannel(itemID);
@@ -170,20 +164,20 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
 
         public void ObjectRemoved(UUID objectID)
         {
-            // m_log.InfoFormat("[XMLRPC GRID ROUTER]: Object Removed {0}",objectID.ToString());
+            // _log.InfoFormat("[XMLRPC GRID ROUTER]: Object Removed {0}",objectID.ToString());
         }
 
         private bool RemoveChannel(UUID itemID)
         {
-            if(!m_Channels.ContainsKey(itemID))
+            if(!_Channels.ContainsKey(itemID))
             {
-                //m_log.InfoFormat("[XMLRPC GRID ROUTER]: Attempted to unregister non-existing Item: {0}", itemID.ToString());
+                //_log.InfoFormat("[XMLRPC GRID ROUTER]: Attempted to unregister non-existing Item: {0}", itemID.ToString());
                 return false;
             }
 
             XmlRpcInfo info = new XmlRpcInfo
             {
-                channel = m_Channels[itemID],
+                channel = _Channels[itemID],
                 item = itemID,
                 uri = "http://0.0.0.0:00"
             };
@@ -191,14 +185,14 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcGridRouterModule
             if (info != null)
             {
                 bool success = SynchronousRestObjectRequester.MakeRequest<XmlRpcInfo, bool>(
-                        "POST", m_ServerURI+"/RemoveChannel/", info);
+                        "POST", _ServerURI+"/RemoveChannel/", info);
 
                 if (!success)
                 {
-                    m_log.Error("[XMLRPC GRID ROUTER] Error contacting server");
+                    _log.Error("[XMLRPC GRID ROUTER] Error contacting server");
                 }
 
-                m_Channels.Remove(itemID);
+                _Channels.Remove(itemID);
                 return true;
             }
             return false;

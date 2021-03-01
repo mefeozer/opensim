@@ -38,7 +38,7 @@ namespace OpenSim.Framework.Servers.HttpServer
     /// </summary>
     public class JsonRpcRequestManager
     {
-        static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Sends json-rpc request with a serializable type.
@@ -85,13 +85,13 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
             catch (Exception e)
             {
-                m_log.Debug(string.Format("JsonRpc request '{0}' to {1} failed", method, uri), e);
+                _log.Debug(string.Format("JsonRpc request '{0}' to {1} failed", method, uri), e);
                 return false;
             }
 
             if (!response.ContainsKey("_Result"))
             {
-                m_log.DebugFormat("JsonRpc request '{0}' to {1} returned an invalid response: {2}",
+                _log.DebugFormat("JsonRpc request '{0}' to {1} returned an invalid response: {2}",
                     method, uri, OSDParser.SerializeJsonString(response));
                 return false;
             }
@@ -102,14 +102,14 @@ namespace OpenSim.Framework.Servers.HttpServer
             if (response.ContainsKey("error"))
             {
                 data = response["error"];
-                m_log.DebugFormat("JsonRpc request '{0}' to {1} returned an error: {2}",
+                _log.DebugFormat("JsonRpc request '{0}' to {1} returned an error: {2}",
                     method, uri, OSDParser.SerializeJsonString(data));
                 return false;
             }
 
             if (!response.ContainsKey("result"))
             {
-                m_log.DebugFormat("JsonRpc request '{0}' to {1} returned an invalid response: {2}",
+                _log.DebugFormat("JsonRpc request '{0}' to {1} returned an invalid response: {2}",
                     method, uri, OSDParser.SerializeJsonString(response));
                 return false;
             }
@@ -156,13 +156,13 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
             catch (Exception e)
             {
-                m_log.Debug(string.Format("JsonRpc request '{0}' to {1} failed", method, uri), e);
+                _log.Debug(string.Format("JsonRpc request '{0}' to {1} failed", method, uri), e);
                 return false;
             }
 
             if (!response.ContainsKey("_Result"))
             {
-                m_log.DebugFormat("JsonRpc request '{0}' to {1} returned an invalid response: {2}",
+                _log.DebugFormat("JsonRpc request '{0}' to {1} returned an invalid response: {2}",
                     method, uri, OSDParser.SerializeJsonString(response));
                 return false;
             }
@@ -171,7 +171,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             if (response.ContainsKey("error"))
             {
                 data = response["error"];
-                m_log.DebugFormat("JsonRpc request '{0}' to {1} returned an error: {2}",
+                _log.DebugFormat("JsonRpc request '{0}' to {1} returned an error: {2}",
                     method, uri, OSDParser.SerializeJsonString(data));
                 return false;
             }

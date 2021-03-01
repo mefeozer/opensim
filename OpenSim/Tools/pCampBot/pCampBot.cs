@@ -47,7 +47,7 @@ namespace pCampBot
 
     public class pCampBot
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public const string ConfigFileName = "pCampBot.ini";
 
@@ -76,7 +76,7 @@ namespace pCampBot
 
                 if (File.Exists(iniFilePath))
                 {
-                    m_log.InfoFormat("[PCAMPBOT]: Reading configuration settings from {0}", iniFilePath);
+                    _log.InfoFormat("[PCAMPBOT]: Reading configuration settings from {0}", iniFilePath);
 
                     IConfigSource configSource = new IniConfigSource(iniFilePath);
 
@@ -114,7 +114,7 @@ namespace pCampBot
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat("Command error: {0}", e);
+                        _log.ErrorFormat("Command error: {0}", e);
                     }
                 }
             }

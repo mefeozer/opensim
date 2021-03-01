@@ -46,7 +46,7 @@ namespace OpenSim.Data.SQLite
     /// </summary>
     public class SQLiteAssetData : AssetDataBase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string SelectAssetSQL = "select * from assets where UUID=:UUID";
         private const string SelectAssetMetadataSQL = "select Name, Description, Type, Temporary, asset_flags, UUID, CreatorID from assets limit :start, :count";
@@ -55,19 +55,16 @@ namespace OpenSim.Data.SQLite
         private const string UpdateAssetSQL = "update assets set Name=:Name, Description=:Description, Type=:Type, Local=:Local, Temporary=:Temporary, asset_flags=:Flags, CreatorID=:CreatorID, Data=:Data where UUID=:UUID";
         private const string assetSelect = "select * from assets";
 
-        private SqliteConnection m_conn;
+        private SqliteConnection _conn;
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         override public void Dispose()
         {
-            if (m_conn != null)
+            if (_conn != null)
             {
-                m_conn.Close();
-                m_conn = null;
+                _conn.Close();
+                _conn = null;
             }
         }
 
@@ -88,10 +85,10 @@ namespace OpenSim.Data.SQLite
             {
                 dbconnect = "URI=file:Asset.db,version=3";
             }
-            m_conn = new SqliteConnection(dbconnect);
-            m_conn.Open();
+            _conn = new SqliteConnection(dbconnect);
+            _conn.Open();
 
-            Migration m = new Migration(m_conn, Assembly, "AssetStore");
+            Migration m = new Migration(_conn, Assembly, "AssetStore");
             m.Update();
 
             return;
@@ -106,7 +103,7 @@ namespace OpenSim.Data.SQLite
         {
             lock (this)
             {
-                using (SqliteCommand cmd = new SqliteCommand(SelectAssetSQL, m_conn))
+                using (SqliteCommand cmd = new SqliteCommand(SelectAssetSQL, _conn))
                 {
                     cmd.Parameters.Add(new SqliteParameter(":UUID", uuid.ToString()));
                     using (IDataReader reader = cmd.ExecuteReader())
@@ -137,7 +134,7 @@ namespace OpenSim.Data.SQLite
             if (asset.Name.Length > AssetBase.MAX_ASSET_NAME)
             {
                 assetName = asset.Name.Substring(0, AssetBase.MAX_ASSET_NAME);
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[ASSET DB]: Name '{0}' for asset {1} truncated from {2} to {3} characters on add",
                     asset.Name, asset.ID, asset.Name.Length, assetName.Length);
             }
@@ -146,19 +143,19 @@ namespace OpenSim.Data.SQLite
             if (asset.Description.Length > AssetBase.MAX_ASSET_DESC)
             {
                 assetDescription = asset.Description.Substring(0, AssetBase.MAX_ASSET_DESC);
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[ASSET DB]: Description '{0}' for asset {1} truncated from {2} to {3} characters on add",
                     asset.Description, asset.ID, asset.Description.Length, assetDescription.Length);
             }
 
-            //m_log.Info("[ASSET DB]: Creating Asset " + asset.FullID.ToString());
+            //_log.Info("[ASSET DB]: Creating Asset " + asset.FullID.ToString());
             if (AssetsExist(new[] { asset.FullID })[0])
             {
                 //LogAssetLoad(asset);
 
                 lock (this)
                 {
-                    using (SqliteCommand cmd = new SqliteCommand(UpdateAssetSQL, m_conn))
+                    using (SqliteCommand cmd = new SqliteCommand(UpdateAssetSQL, _conn))
                     {
                         cmd.Parameters.Add(new SqliteParameter(":UUID", asset.FullID.ToString()));
                         cmd.Parameters.Add(new SqliteParameter(":Name", assetName));
@@ -179,7 +176,7 @@ namespace OpenSim.Data.SQLite
             {
                 lock (this)
                 {
-                    using (SqliteCommand cmd = new SqliteCommand(InsertAssetSQL, m_conn))
+                    using (SqliteCommand cmd = new SqliteCommand(InsertAssetSQL, _conn))
                     {
                         cmd.Parameters.Add(new SqliteParameter(":UUID", asset.FullID.ToString()));
                         cmd.Parameters.Add(new SqliteParameter(":Name", assetName));
@@ -209,7 +206,7 @@ namespace OpenSim.Data.SQLite
 //
 //            int assetLength = (asset.Data != null) ? asset.Data.Length : 0;
 //
-//            m_log.Debug("[ASSET DB]: " +
+//            _log.Debug("[ASSET DB]: " +
 //                                     string.Format("Loaded {5} {4} Asset: [{0}][{3}] \"{1}\":{2} ({6} bytes)",
 //                                                   asset.FullID, asset.Name, asset.Description, asset.Type,
 //                                                   temporary, local, assetLength));
@@ -232,7 +229,7 @@ namespace OpenSim.Data.SQLite
 
             lock (this)
             {
-                using (SqliteCommand cmd = new SqliteCommand(sql, m_conn))
+                using (SqliteCommand cmd = new SqliteCommand(sql, _conn))
                 {
                     using (IDataReader reader = cmd.ExecuteReader())
                     {
@@ -310,7 +307,7 @@ namespace OpenSim.Data.SQLite
 
             lock (this)
             {
-                using (SqliteCommand cmd = new SqliteCommand(SelectAssetMetadataSQL, m_conn))
+                using (SqliteCommand cmd = new SqliteCommand(SelectAssetMetadataSQL, _conn))
                 {
                     cmd.Parameters.Add(new SqliteParameter(":start", start));
                     cmd.Parameters.Add(new SqliteParameter(":count", count));
@@ -368,10 +365,7 @@ namespace OpenSim.Data.SQLite
         /// <summary>
         /// Name of this DB provider
         /// </summary>
-        override public string Name
-        {
-            get { return "SQLite Asset storage engine"; }
-        }
+        override public string Name => "SQLite Asset storage engine";
 
         // TODO: (AlexRa): one of these is to be removed eventually (?)
 
@@ -383,7 +377,7 @@ namespace OpenSim.Data.SQLite
         {
             lock (this)
             {
-                using (SqliteCommand cmd = new SqliteCommand(DeleteAssetSQL, m_conn))
+                using (SqliteCommand cmd = new SqliteCommand(DeleteAssetSQL, _conn))
                 {
                     cmd.Parameters.Add(new SqliteParameter(":UUID", uuid.ToString()));
                     cmd.ExecuteNonQuery();

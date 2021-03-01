@@ -37,15 +37,15 @@ namespace OpenSim.Region.Framework.Scenes.Tests
     [TestFixture]
     public class SceneObjectSpatialTests : OpenSimTestCase
     {
-        TestScene m_scene;
-        readonly UUID m_ownerId = TestHelpers.ParseTail(0x1);
+        TestScene _scene;
+        readonly UUID _ownerId = TestHelpers.ParseTail(0x1);
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
 
-            m_scene = new SceneHelpers().SetupScene();
+            _scene = new SceneHelpers().SetupScene();
         }
 
         [Test]
@@ -56,9 +56,9 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Vector3 position = new Vector3(10, 20, 30);
 
             SceneObjectGroup so
-                = SceneHelpers.CreateSceneObject(1, m_ownerId, "obj1", 0x10);
+                = SceneHelpers.CreateSceneObject(1, _ownerId, "obj1", 0x10);
             so.AbsolutePosition = position;
-            m_scene.AddNewSceneObject(so, false);
+            _scene.AddNewSceneObject(so, false);
 
             Assert.That(so.AbsolutePosition, Is.EqualTo(position));
         }
@@ -71,9 +71,9 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Vector3 partPosition = new Vector3(10, 20, 30);
 
             SceneObjectGroup so
-                = SceneHelpers.CreateSceneObject(1, m_ownerId, "obj1", 0x10);
+                = SceneHelpers.CreateSceneObject(1, _ownerId, "obj1", 0x10);
             so.AbsolutePosition = partPosition;
-            m_scene.AddNewSceneObject(so, false);
+            _scene.AddNewSceneObject(so, false);
 
             Assert.That(so.RootPart.AbsolutePosition, Is.EqualTo(partPosition));
             Assert.That(so.RootPart.GroupPosition, Is.EqualTo(partPosition));
@@ -91,11 +91,11 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Vector3 childOffsetPosition = new Vector3(2, 3, 4);
 
             SceneObjectGroup so
-                = SceneHelpers.CreateSceneObject(2, m_ownerId, "obj1", 0x10);
+                = SceneHelpers.CreateSceneObject(2, _ownerId, "obj1", 0x10);
             so.AbsolutePosition = rootPartPosition;
             so.Parts[1].OffsetPosition = childOffsetPosition;
 
-            m_scene.AddNewSceneObject(so, false);
+            _scene.AddNewSceneObject(so, false);
 
             // Calculate child absolute position.
             Vector3 childPosition = new Vector3(rootPartPosition + childOffsetPosition);
@@ -117,11 +117,11 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Vector3 childOffsetPosition = new Vector3(2, 3, 4);
 
             SceneObjectGroup so
-                = SceneHelpers.CreateSceneObject(2, m_ownerId, "obj1", 0x10);
+                = SceneHelpers.CreateSceneObject(2, _ownerId, "obj1", 0x10);
             so.AbsolutePosition = rootPartPosition;
             so.Parts[1].OffsetPosition = childOffsetPosition;
 
-            m_scene.AddNewSceneObject(so, false);
+            _scene.AddNewSceneObject(so, false);
 
             so.UpdateGroupRotationR(Quaternion.CreateFromEulers(0, 0, -90 * Utils.DEG_TO_RAD));
 

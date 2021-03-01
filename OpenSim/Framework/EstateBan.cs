@@ -35,87 +35,57 @@ namespace OpenSim.Framework
 {
     public class EstateBan
     {
-        private uint m_estateID = 1;
+        private uint _estateID = 1;
         /// <summary>
         /// ID of the estate this ban limits access to.
         /// </summary>
         public uint EstateID
         {
-            get
-            {
-                return m_estateID;
-            }
-            set
-            {
-                m_estateID = value;
-            }
+            get => _estateID;
+            set => _estateID = value;
         }
 
-        private UUID m_bannedUserID = UUID.Zero;
+        private UUID _bannedUserID = UUID.Zero;
         /// <summary>
         /// ID of the banned user.
         /// </summary>
         public UUID BannedUserID
         {
-            get
-            {
-                return m_bannedUserID;
-            }
-            set
-            {
-                m_bannedUserID = value;
-            }
+            get => _bannedUserID;
+            set => _bannedUserID = value;
         }
 
         public UUID BanningUserID { get; set; }
         public int BanTime { get; set; }
 
-        private string m_bannedHostAddress = string.Empty;
+        private string _bannedHostAddress = string.Empty;
         /// <summary>
         /// IP address or domain name of the banned client.
         /// </summary>
         public string BannedHostAddress
         {
-            get
-            {
-                return m_bannedHostAddress;
-            }
-            set
-            {
-                m_bannedHostAddress = value;
-            }
+            get => _bannedHostAddress;
+            set => _bannedHostAddress = value;
         }
 
-        private string m_bannedHostIPMask = string.Empty;
+        private string _bannedHostIPMask = string.Empty;
         /// <summary>
         /// IP address mask for banning group of client hosts.
         /// </summary>
         public string BannedHostIPMask
         {
-           get
-            {
-                return m_bannedHostIPMask;
-            }
-            set
-            {
-                m_bannedHostIPMask = value;
-            }
+           get => _bannedHostIPMask;
+           set => _bannedHostIPMask = value;
         }
 
-        private string m_bannedHostNameMask = string.Empty;
+        private string _bannedHostNameMask = string.Empty;
         /// <summary>
         /// Domain name mask for banning group of client hosts.
         /// </summary>
         public string BannedHostNameMask
         {
-            get
-            {
-                return m_bannedHostNameMask;
-            }
-            set
-            {
-                m_bannedHostNameMask = value;
-            }
+            get => _bannedHostNameMask;
+            set => _bannedHostNameMask = value;
         }
 
         public EstateBan() { }

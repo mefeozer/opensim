@@ -34,7 +34,7 @@ namespace OpenSim.Framework
 {
     public class EstateSettings
     {
-        // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public delegate void SaveDelegate(EstateSettings rs);
 
@@ -42,208 +42,208 @@ namespace OpenSim.Framework
 
         // Only the client uses these
         //
-        private uint m_EstateID = 0;
+        private uint _EstateID = 0;
         public uint EstateID
         {
-            get { return m_EstateID; }
-            set { m_EstateID = value; }
+            get => _EstateID;
+            set => _EstateID = value;
         }
 
-        private string m_EstateName = "My Estate";
+        private string _EstateName = "My Estate";
         public string EstateName
         {
-            get { return m_EstateName; }
-            set { m_EstateName = value; }
+            get => _EstateName;
+            set => _EstateName = value;
         }
 
-        private bool m_AllowLandmark = true;
+        private bool _AllowLandmark = true;
         public bool AllowLandmark
         {
-            get { return m_AllowLandmark; }
-            set { m_AllowLandmark = value; }
+            get => _AllowLandmark;
+            set => _AllowLandmark = value;
         }
 
-        private bool m_AllowParcelChanges = true;
+        private bool _AllowParcelChanges = true;
         public bool AllowParcelChanges
         {
-            get { return m_AllowParcelChanges; }
-            set { m_AllowParcelChanges = value; }
+            get => _AllowParcelChanges;
+            set => _AllowParcelChanges = value;
         }
 
-        private bool m_AllowSetHome = true;
+        private bool _AllowSetHome = true;
         public bool AllowSetHome
         {
-            get { return m_AllowSetHome; }
-            set { m_AllowSetHome = value; }
+            get => _AllowSetHome;
+            set => _AllowSetHome = value;
         }
 
-        private uint m_ParentEstateID = 1;
+        private uint _ParentEstateID = 1;
         public uint ParentEstateID
         {
-            get { return m_ParentEstateID; }
-            set { m_ParentEstateID = value; }
+            get => _ParentEstateID;
+            set => _ParentEstateID = value;
         }
 
-        private float m_BillableFactor = 0.0f;
+        private float _BillableFactor = 0.0f;
         public float BillableFactor
         {
-            get { return m_BillableFactor; }
-            set { m_BillableFactor = value; }
+            get => _BillableFactor;
+            set => _BillableFactor = value;
         }
 
-        private int m_PricePerMeter = 1;
+        private int _PricePerMeter = 1;
         public int PricePerMeter
         {
-            get { return m_PricePerMeter; }
-            set { m_PricePerMeter = value; }
+            get => _PricePerMeter;
+            set => _PricePerMeter = value;
         }
 
-        private int m_RedirectGridX = 0;
+        private int _RedirectGridX = 0;
         public int RedirectGridX
         {
-            get { return m_RedirectGridX; }
-            set { m_RedirectGridX = value; }
+            get => _RedirectGridX;
+            set => _RedirectGridX = value;
         }
 
-        private int m_RedirectGridY = 0;
+        private int _RedirectGridY = 0;
         public int RedirectGridY
         {
-            get { return m_RedirectGridY; }
-            set { m_RedirectGridY = value; }
+            get => _RedirectGridY;
+            set => _RedirectGridY = value;
         }
 
         // Used by the sim
         //
-        private bool m_UseGlobalTime = false;
+        private bool _UseGlobalTime = false;
         public bool UseGlobalTime
         {
-            get { return m_UseGlobalTime; }
-            //set { m_UseGlobalTime = value; }
-            set { m_UseGlobalTime = false; }
+            get => _UseGlobalTime;
+            //set { _UseGlobalTime = value; }
+            set => _UseGlobalTime = false;
         }
 
-        private bool m_FixedSun = false;
+        private bool _FixedSun = false;
         public bool FixedSun
         {
-            get { return m_FixedSun; }
-            // set { m_FixedSun = value; }
-            set { m_FixedSun = false; }
+            get => _FixedSun;
+            // set { _FixedSun = value; }
+            set => _FixedSun = false;
         }
 
-        private double m_SunPosition = 0.0;
+        private double _SunPosition = 0.0;
         public double SunPosition
         {
-            get { return m_SunPosition; }
-            //set { m_SunPosition = value; }
-            set { m_SunPosition = 0; }
+            get => _SunPosition;
+            //set { _SunPosition = value; }
+            set => _SunPosition = 0;
         }
 
-        private bool m_AllowVoice = true;
+        private bool _AllowVoice = true;
         public bool AllowVoice
         {
-            get { return m_AllowVoice; }
-            set { m_AllowVoice = value; }
+            get => _AllowVoice;
+            set => _AllowVoice = value;
         }
 
-        private bool m_AllowDirectTeleport = true;
+        private bool _AllowDirectTeleport = true;
         public bool AllowDirectTeleport
         {
-            get { return m_AllowDirectTeleport; }
-            set { m_AllowDirectTeleport = value; }
+            get => _AllowDirectTeleport;
+            set => _AllowDirectTeleport = value;
         }
 
-        private bool m_DenyAnonymous = false;
+        private bool _DenyAnonymous = false;
         public bool DenyAnonymous
         {
-            get { return DoDenyAnonymous && m_DenyAnonymous; }
-            set { m_DenyAnonymous = value; }
+            get => DoDenyAnonymous && _DenyAnonymous;
+            set => _DenyAnonymous = value;
         }
 
         // no longer in used, may be reassigned
-        private bool m_DenyIdentified = false;
+        private bool _DenyIdentified = false;
         public bool DenyIdentified
         {
-            get { return m_DenyIdentified; }
-            set { m_DenyIdentified = value; }
+            get => _DenyIdentified;
+            set => _DenyIdentified = value;
         }
 
         // no longer in used, may be reassigned
-        private bool m_DenyTransacted = false;
+        private bool _DenyTransacted = false;
         public bool DenyTransacted
         {
-            get { return m_DenyTransacted; }
-            set { m_DenyTransacted = value; }
+            get => _DenyTransacted;
+            set => _DenyTransacted = value;
         }
 
-        private bool m_AbuseEmailToEstateOwner = false;
+        private bool _AbuseEmailToEstateOwner = false;
         public bool AbuseEmailToEstateOwner
         {
-            get { return m_AbuseEmailToEstateOwner; }
-            set { m_AbuseEmailToEstateOwner = value; }
+            get => _AbuseEmailToEstateOwner;
+            set => _AbuseEmailToEstateOwner = value;
         }
 
-        private bool m_BlockDwell = false;
+        private bool _BlockDwell = false;
         public bool BlockDwell
         {
-            get { return m_BlockDwell; }
-            set { m_BlockDwell = value; }
+            get => _BlockDwell;
+            set => _BlockDwell = value;
         }
 
-        private bool m_EstateSkipScripts = false;
+        private bool _EstateSkipScripts = false;
         public bool EstateSkipScripts
         {
-            get { return m_EstateSkipScripts; }
-            set { m_EstateSkipScripts = value; }
+            get => _EstateSkipScripts;
+            set => _EstateSkipScripts = value;
         }
 
-        private bool m_ResetHomeOnTeleport = false;
+        private bool _ResetHomeOnTeleport = false;
         public bool ResetHomeOnTeleport
         {
-            get { return m_ResetHomeOnTeleport; }
-            set { m_ResetHomeOnTeleport = value; }
+            get => _ResetHomeOnTeleport;
+            set => _ResetHomeOnTeleport = value;
         }
 
-        private bool m_TaxFree = false;
+        private bool _TaxFree = false;
         public bool TaxFree // this is now !AllowAccessOverride, keeping same name to reuse DB entries
         {
-            get { return m_TaxFree; }
-            set { m_TaxFree = value; }
+            get => _TaxFree;
+            set => _TaxFree = value;
         }
 
-        private bool m_PublicAccess = true;
+        private bool _PublicAccess = true;
         public bool PublicAccess
         {
-            get { return m_PublicAccess; }
-            set { m_PublicAccess = value; }
+            get => _PublicAccess;
+            set => _PublicAccess = value;
         }
 
-        private string m_AbuseEmail = string.Empty;
+        private string _AbuseEmail = string.Empty;
 
         public string AbuseEmail
         {
-            get { return m_AbuseEmail; }
-            set { m_AbuseEmail= value; }
+            get => _AbuseEmail;
+            set => _AbuseEmail= value;
         }
 
-        private UUID m_EstateOwner = UUID.Zero;
+        private UUID _EstateOwner = UUID.Zero;
         public UUID EstateOwner
         {
-            get { return m_EstateOwner; }
-            set { m_EstateOwner = value; }
+            get => _EstateOwner;
+            set => _EstateOwner = value;
         }
 
-        private bool m_DenyMinors = false;
+        private bool _DenyMinors = false;
         public bool DenyMinors
         {
-            get { return DoDenyMinors && m_DenyMinors; }
-            set { m_DenyMinors = value; }
+            get => DoDenyMinors && _DenyMinors;
+            set => _DenyMinors = value;
         }
 
-        private bool m_AllowEnviromentOverride = false; //keep the mispell so not to go change the dbs
+        private bool _AllowEnviromentOverride = false; //keep the mispell so not to go change the dbs
         public bool AllowEnvironmentOverride
         {
-            get { return m_AllowEnviromentOverride; }
-            set { m_AllowEnviromentOverride = value; }
+            get => _AllowEnviromentOverride;
+            set => _AllowEnviromentOverride = value;
         }
 
         // All those lists...
@@ -252,30 +252,30 @@ namespace OpenSim.Framework
 
         public UUID[] EstateManagers
         {
-            get { return l_EstateManagers.ToArray(); }
-            set { l_EstateManagers = new List<UUID>(value); }
+            get => l_EstateManagers.ToArray();
+            set => l_EstateManagers = new List<UUID>(value);
         }
 
         private List<EstateBan> l_EstateBans = new List<EstateBan>();
 
         public EstateBan[] EstateBans
         {
-            get { return l_EstateBans.ToArray(); }
-            set { l_EstateBans = new List<EstateBan>(value); }
+            get => l_EstateBans.ToArray();
+            set => l_EstateBans = new List<EstateBan>(value);
         }
 
         private List<UUID> l_EstateAccess = new List<UUID>();
         public UUID[] EstateAccess
         {
-            get { return l_EstateAccess.ToArray(); }
-            set { l_EstateAccess = new List<UUID>(value); }
+            get => l_EstateAccess.ToArray();
+            set => l_EstateAccess = new List<UUID>(value);
         }
 
         private List<UUID> l_EstateGroups = new List<UUID>();
         public UUID[] EstateGroups
         {
-            get { return l_EstateGroups.ToArray(); }
-            set { l_EstateGroups = new List<UUID>(value); }
+            get => l_EstateGroups.ToArray();
+            set => l_EstateGroups = new List<UUID>(value);
         }
 
         public bool DoDenyMinors = true;
@@ -361,7 +361,7 @@ namespace OpenSim.Framework
 
         public bool IsEstateOwner(UUID avatarID)
         {
-            if (avatarID == m_EstateOwner)
+            if (avatarID == _EstateOwner)
                 return true;
 
             return false;

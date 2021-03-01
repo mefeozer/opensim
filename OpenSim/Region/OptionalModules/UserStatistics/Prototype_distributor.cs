@@ -46,10 +46,8 @@ namespace OpenSim.Region.UserStatistics
             jsFileName = jsName;
         }
 
-        public string ReportName
-        {
-            get { return ""; }
-        }
+        public string ReportName => "";
+
         public Hashtable ProcessModel(Hashtable pParams)
         {
             Hashtable pResult = new Hashtable();

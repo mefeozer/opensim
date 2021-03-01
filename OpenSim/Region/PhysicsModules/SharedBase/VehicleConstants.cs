@@ -121,44 +121,44 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
     public struct VehicleData
     {
-        public Vehicle m_type;
-        public VehicleFlag m_flags;
+        public Vehicle _type;
+        public VehicleFlag _flags;
 
         // Linear properties
-        public Vector3 m_linearMotorDirection;
-        public Vector3 m_linearFrictionTimescale;
-        public float m_linearMotorDecayTimescale;
-        public float m_linearMotorTimescale;
-        public Vector3 m_linearMotorOffset;
+        public Vector3 _linearMotorDirection;
+        public Vector3 _linearFrictionTimescale;
+        public float _linearMotorDecayTimescale;
+        public float _linearMotorTimescale;
+        public Vector3 _linearMotorOffset;
 
         //Angular properties
-        public Vector3 m_angularMotorDirection;
-        public float m_angularMotorTimescale;
-        public float m_angularMotorDecayTimescale;
-        public Vector3 m_angularFrictionTimescale;
+        public Vector3 _angularMotorDirection;
+        public float _angularMotorTimescale;
+        public float _angularMotorDecayTimescale;
+        public Vector3 _angularFrictionTimescale;
 
         //Deflection properties
-        public float m_angularDeflectionEfficiency;
-        public float m_angularDeflectionTimescale;
-        public float m_linearDeflectionEfficiency;
-        public float m_linearDeflectionTimescale;
+        public float _angularDeflectionEfficiency;
+        public float _angularDeflectionTimescale;
+        public float _linearDeflectionEfficiency;
+        public float _linearDeflectionTimescale;
 
         //Banking properties
-        public float m_bankingEfficiency;
-        public float m_bankingMix;
-        public float m_bankingTimescale;
+        public float _bankingEfficiency;
+        public float _bankingMix;
+        public float _bankingTimescale;
 
         //Hover and Buoyancy properties
-        public float m_VhoverHeight;
-        public float m_VhoverEfficiency;
-        public float m_VhoverTimescale;
-        public float m_VehicleBuoyancy;
+        public float _VhoverHeight;
+        public float _VhoverEfficiency;
+        public float _VhoverTimescale;
+        public float _VehicleBuoyancy;
 
         //Attractor properties
-        public float m_verticalAttractionEfficiency;
-        public float m_verticalAttractionTimescale;
+        public float _verticalAttractionEfficiency;
+        public float _verticalAttractionTimescale;
 
         // Axis
-        public Quaternion m_referenceFrame;
+        public Quaternion _referenceFrame;
     }
 }

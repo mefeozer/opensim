@@ -40,56 +40,56 @@ namespace OpenSim.Framework.Servers.HttpServer
     /// </remarks>
     public class SimpleBinaryHandler : SimpleBaseRequestHandler, ISimpleStreamHandler
     {
-        protected string m_httMethod;
-        protected IServiceAuth m_Auth;
-        protected SimpleBinaryMethod m_processRequest;
-        protected int m_maxDatasize = -1;
+        protected string _httMethod;
+        protected IServiceAuth _Auth;
+        protected SimpleBinaryMethod _processRequest;
+        protected int _maxDatasize = -1;
 
         public SimpleBinaryHandler(string httpmethod, string path) : base(path)
         {
-            m_httMethod = httpmethod.ToUpper();
+            _httMethod = httpmethod.ToUpper();
         }
         public SimpleBinaryHandler(string httpmethod, string path, string name) : base(path, name)
         {
-            m_httMethod = httpmethod.ToUpper();
+            _httMethod = httpmethod.ToUpper();
         }
         public SimpleBinaryHandler(string httpmethod, string path, SimpleBinaryMethod processRequest) : base(path)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_processRequest = processRequest;
+            _httMethod = httpmethod.ToUpper();
+            _processRequest = processRequest;
         }
         public SimpleBinaryHandler(string httpmethod, string path, SimpleBinaryMethod processRequest, string name) : base(path, name)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_processRequest = processRequest;
+            _httMethod = httpmethod.ToUpper();
+            _processRequest = processRequest;
         }
 
         public SimpleBinaryHandler(string httpmethod, string path, IServiceAuth auth) : base(path)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_Auth = auth;
+            _httMethod = httpmethod.ToUpper();
+            _Auth = auth;
         }
 
         public SimpleBinaryHandler(string httpmethod, string path, IServiceAuth auth, SimpleBinaryMethod processRequest)
             : base(path)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_Auth = auth;
-            m_processRequest = processRequest;
+            _httMethod = httpmethod.ToUpper();
+            _Auth = auth;
+            _processRequest = processRequest;
         }
 
         public SimpleBinaryHandler(string httpmethod, string path, IServiceAuth auth, SimpleBinaryMethod processRequest, string name)
             : base(path, name)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_Auth = auth;
-            m_processRequest = processRequest;
+            _httMethod = httpmethod.ToUpper();
+            _Auth = auth;
+            _processRequest = processRequest;
         }
 
         public virtual void Handle(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
             RequestsReceived++;
-            if(httpRequest.HttpMethod != m_httMethod)
+            if(httpRequest.HttpMethod != _httMethod)
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.NotFound;
                 return;
@@ -101,7 +101,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 return;
             }
 
-            if (m_maxDatasize > 0 && httpRequest.InputStream.Length > m_maxDatasize)
+            if (_maxDatasize > 0 && httpRequest.InputStream.Length > _maxDatasize)
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.RequestEntityTooLarge;
                 return;
@@ -130,9 +130,9 @@ namespace OpenSim.Framework.Servers.HttpServer
                 return;
             }
 
-            if (m_Auth != null)
+            if (_Auth != null)
             {
-                if (!m_Auth.Authenticate(httpRequest.Headers, httpResponse.AddHeader, out HttpStatusCode statusCode))
+                if (!_Auth.Authenticate(httpRequest.Headers, httpResponse.AddHeader, out HttpStatusCode statusCode))
                 {
                     httpResponse.StatusCode = (int)statusCode;
                     return;
@@ -140,8 +140,8 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
             try
             {
-                if(m_processRequest != null)
-                    m_processRequest(httpRequest, httpResponse, data);
+                if(_processRequest != null)
+                    _processRequest(httpRequest, httpResponse, data);
                 else
                     ProcessRequest(httpRequest, httpResponse, data);
             }
@@ -153,7 +153,9 @@ namespace OpenSim.Framework.Servers.HttpServer
             RequestsHandled++;
         }
 
-        public int MaxDataSize { get { return m_maxDatasize; } set { m_maxDatasize = value; }}
+        public int MaxDataSize { get => _maxDatasize;
+            set => _maxDatasize = value;
+        }
 
         protected virtual void ProcessRequest(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, byte[] data)
         {

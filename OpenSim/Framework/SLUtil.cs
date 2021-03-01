@@ -34,7 +34,7 @@ namespace OpenSim.Framework
 {
     public static class SLUtil
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Asset types used only in OpenSim.
@@ -69,35 +69,17 @@ namespace OpenSim.Framework
             private readonly string contentType2;
             private readonly string extension;
 
-            public sbyte AssetTypeCode
-            {
-                get { return assetType; }
-            }
+            public sbyte AssetTypeCode => assetType;
 
-            public object AssetType
-            {
-                get { return AssetTypeFromCode(assetType); }
-            }
+            public object AssetType => AssetTypeFromCode(assetType);
 
-            public sbyte InventoryType
-            {
-                get { return inventoryType; }
-            }
+            public sbyte InventoryType => inventoryType;
 
-            public string ContentType
-            {
-                get { return contentType; }
-            }
+            public string ContentType => contentType;
 
-            public string ContentType2
-            {
-                get { return contentType2; }
-            }
+            public string ContentType2 => contentType2;
 
-            public string Extension
-            {
-                get { return extension; }
-            }
+            public string Extension => extension;
 
             private TypeMapping(sbyte assetType, sbyte inventoryType, string contentType, string contentType2, string extension)
             {

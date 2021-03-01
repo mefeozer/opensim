@@ -33,7 +33,7 @@ namespace OpenSim.Tests.Common
 {
     public class BaseRequestHandlerHelpers
     {
-        private static readonly string[] m_emptyStringArray = new string[] { };
+        private static readonly string[] _emptyStringArray = new string[] { };
 
         public static void BaseTestGetParams(BaseRequestHandler handler, string assetsPath)
         {
@@ -52,12 +52,12 @@ namespace OpenSim.Tests.Common
 
         public static void BaseTestSplitParams(BaseRequestHandler handler, string assetsPath)
         {
-            Assert.AreEqual(m_emptyStringArray, handler.SplitParams(null), "Failed on null.");
-            Assert.AreEqual(m_emptyStringArray, handler.SplitParams(""), "Failed on empty path.");
-            Assert.AreEqual(m_emptyStringArray, handler.SplitParams("corruptUrl"), "Failed on corrupt url.");
+            Assert.AreEqual(_emptyStringArray, handler.SplitParams(null), "Failed on null.");
+            Assert.AreEqual(_emptyStringArray, handler.SplitParams(""), "Failed on empty path.");
+            Assert.AreEqual(_emptyStringArray, handler.SplitParams("corruptUrl"), "Failed on corrupt url.");
 
-            Assert.AreEqual(m_emptyStringArray, handler.SplitParams(assetsPath), "Failed on empty params.");
-            Assert.AreEqual(m_emptyStringArray, handler.SplitParams(assetsPath + "/"), "Failed on single slash.");
+            Assert.AreEqual(_emptyStringArray, handler.SplitParams(assetsPath), "Failed on empty params.");
+            Assert.AreEqual(_emptyStringArray, handler.SplitParams(assetsPath + "/"), "Failed on single slash.");
 
             Assert.AreEqual(new string[] { "a" }, handler.SplitParams(assetsPath + "/a"), "Failed on first segment.");
             Assert.AreEqual(new string[] { "b" }, handler.SplitParams(assetsPath + "/b/"), "Failed on second slash.");

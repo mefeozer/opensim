@@ -48,20 +48,20 @@ public override int yynum { get { return 99; }}
 public GlobalVariableDeclaration(Parser yyp):base(yyp){}}
 //%+GlobalFunctionDefinition+100
 public class GlobalFunctionDefinition : SYMBOL{
- private  string  m_returnType ;
- private readonly string  m_name ;
+ private  string  _returnType ;
+ private readonly string  _name ;
  public  GlobalFunctionDefinition (Parser yyp, string  returnType , string  name , ArgumentDeclarationList  adl , CompoundStatement  cs ):base((LSLSyntax
-     )yyp){ m_returnType = returnType ;
- m_name = name ;
+     )yyp){ _returnType = returnType ;
+ _name = name ;
  kids . Add ( adl );
  kids . Add ( cs );
 }
- public  string  ReturnType { get { return  m_returnType ;
+ public  string  ReturnType { get { return  _returnType ;
 }
- set { m_returnType = value ;
+ set { _returnType = value ;
 }
 }
- public  string  Name { get { return  m_name ;
+ public  string  Name { get { return  _name ;
 }
 }
 
@@ -83,14 +83,14 @@ public override int yynum { get { return 101; }}
 public States(Parser yyp):base(yyp){}}
 //%+State+102
 public class State : SYMBOL{
- private readonly string  m_name ;
+ private readonly string  _name ;
  public  State (Parser yyp, string  name , StateBody  sb ):base((LSLSyntax
-     )yyp){ m_name = name ;
+     )yyp){ _name = name ;
  while (0< sb . kids . Count ) kids . Add ( sb . kids . Pop ());
 }
- public  override  string  ToString (){ return "STATE<"+ m_name +">";
+ public  override  string  ToString (){ return "STATE<"+ _name +">";
 }
- public  string  Name { get { return  m_name ;
+ public  string  Name { get { return  _name ;
 }
 }
 
@@ -112,19 +112,19 @@ public override int yynum { get { return 103; }}
 public StateBody(Parser yyp):base(yyp){}}
 //%+StateEvent+104
 public class StateEvent : SYMBOL{
- private readonly string  m_name ;
+ private readonly string  _name ;
  public  StateEvent (Parser yyp, string  name , CompoundStatement  cs ):base((LSLSyntax
-     )yyp){ m_name = name ;
+     )yyp){ _name = name ;
  kids . Add ( cs );
 }
  public  StateEvent (Parser yyp, string  name , ArgumentDeclarationList  adl , CompoundStatement  cs ):base((LSLSyntax
-     )yyp){ m_name = name ;
+     )yyp){ _name = name ;
  if (0< adl . kids . Count ) kids . Add ( adl );
  kids . Add ( cs );
 }
- public  override  string  ToString (){ return "EVENT<"+ m_name +">";
+ public  override  string  ToString (){ return "EVENT<"+ _name +">";
 }
- public  string  Name { get { return  m_name ;
+ public  string  Name { get { return  _name ;
 }
 }
 
@@ -259,20 +259,20 @@ public override int yynum { get { return 118; }}
 public KeyIntIntArgumentDeclarationList(Parser yyp):base(yyp){}}
 //%+Declaration+119
 public class Declaration : SYMBOL{
- private  string  m_datatype ;
- private readonly string  m_id ;
+ private  string  _datatype ;
+ private readonly string  _id ;
  public  Declaration (Parser yyp, string  type , string  id ):base((LSLSyntax
-     )yyp){ m_datatype = type ;
- m_id = id ;
+     )yyp){ _datatype = type ;
+ _id = id ;
 }
- public  override  string  ToString (){ return "Declaration<"+ m_datatype +":"+ m_id +">";
+ public  override  string  ToString (){ return "Declaration<"+ _datatype +":"+ _id +">";
 }
- public  string  Datatype { get { return  m_datatype ;
+ public  string  Datatype { get { return  _datatype ;
 }
- set { m_datatype = value ;
+ set { _datatype = value ;
 }
 }
- public  string  Id { get { return  m_id ;
+ public  string  Id { get { return  _id ;
 }
 }
 
@@ -474,21 +474,21 @@ public override int yynum { get { return 136; }}
 }
 //%+Assignment+137
 public class Assignment : SYMBOL{
- protected  string  m_assignmentType ;
+ protected  string  _assignmentType ;
  public  Assignment (Parser yyp, SYMBOL  lhs , SYMBOL  rhs , string  assignmentType ):base((LSLSyntax
-     )yyp){ m_assignmentType = assignmentType ;
+     )yyp){ _assignmentType = assignmentType ;
  kids . Add ( lhs );
  if ( rhs  is  ConstantExpression ) while (0< rhs . kids . Count ) kids . Add ( rhs . kids . Pop ());
  else  kids . Add ( rhs );
 }
  public  Assignment (Parser yyp, SimpleAssignment  sa ):base((LSLSyntax
-     )yyp){ m_assignmentType = sa . AssignmentType ;
+     )yyp){ _assignmentType = sa . AssignmentType ;
  while (0< sa . kids . Count ) kids . Add ( sa . kids . Pop ());
 }
- public  string  AssignmentType { get { return  m_assignmentType ;
+ public  string  AssignmentType { get { return  _assignmentType ;
 }
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+ m_assignmentType +">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+ _assignmentType +">";
 }
 
 public override string yyname { get { return "Assignment"; }}
@@ -497,7 +497,7 @@ public Assignment(Parser yyp):base(yyp){}}
 //%+SimpleAssignment+138
 public class SimpleAssignment : Assignment{
  public  SimpleAssignment (Parser yyp, SYMBOL  lhs , SYMBOL  rhs , string  assignmentType ):base((LSLSyntax
-     )yyp){ m_assignmentType = assignmentType ;
+     )yyp){ _assignmentType = assignmentType ;
  kids . Add ( lhs );
  if ( rhs  is  ConstantExpression ) while (0< rhs . kids . Count ) kids . Add ( rhs . kids . Pop ());
  else  kids . Add ( rhs );
@@ -520,14 +520,14 @@ public override int yynum { get { return 139; }}
 }
 //%+JumpLabel+140
 public class JumpLabel : SYMBOL{
- private readonly string  m_labelName ;
+ private readonly string  _labelName ;
  public  JumpLabel (Parser yyp, string  labelName ):base((LSLSyntax
-     )yyp){ m_labelName = labelName ;
+     )yyp){ _labelName = labelName ;
 }
- public  string  LabelName { get { return  m_labelName ;
+ public  string  LabelName { get { return  _labelName ;
 }
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+ m_labelName +">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+ _labelName +">";
 }
 
 public override string yyname { get { return "JumpLabel"; }}
@@ -535,14 +535,14 @@ public override int yynum { get { return 140; }}
 public JumpLabel(Parser yyp):base(yyp){}}
 //%+JumpStatement+141
 public class JumpStatement : SYMBOL{
- private readonly string  m_targetName ;
+ private readonly string  _targetName ;
  public  JumpStatement (Parser yyp, string  targetName ):base((LSLSyntax
-     )yyp){ m_targetName = targetName ;
+     )yyp){ _targetName = targetName ;
 }
- public  string  TargetName { get { return  m_targetName ;
+ public  string  TargetName { get { return  _targetName ;
 }
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+ m_targetName +">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+ _targetName +">";
 }
 
 public override string yyname { get { return "JumpStatement"; }}
@@ -550,11 +550,11 @@ public override int yynum { get { return 141; }}
 public JumpStatement(Parser yyp):base(yyp){}}
 //%+StateChange+142
 public class StateChange : SYMBOL{
- private readonly string  m_newState ;
+ private readonly string  _newState ;
  public  StateChange (Parser yyp, string  newState ):base((LSLSyntax
-     )yyp){ m_newState = newState ;
+     )yyp){ _newState = newState ;
 }
- public  string  NewState { get { return  m_newState ;
+ public  string  NewState { get { return  _newState ;
 }
 }
 
@@ -637,14 +637,14 @@ public override int yynum { get { return 147; }}
 public ForLoopStatement(Parser yyp):base(yyp){}}
 //%+FunctionCall+148
 public class FunctionCall : SYMBOL{
- private readonly string  m_id ;
+ private readonly string  _id ;
  public  FunctionCall (Parser yyp, string  id , ArgumentList  al ):base((LSLSyntax
-     )yyp){ m_id = id ;
+     )yyp){ _id = id ;
  kids . Add ( al );
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+ m_id +">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+ _id +">";
 }
- public  string  Id { get { return  m_id ;
+ public  string  Id { get { return  _id ;
 }
 }
 
@@ -684,22 +684,22 @@ public override int yynum { get { return 151; }}
 public ExpressionArgument(Parser yyp):base(yyp){}}
 //%+Constant+152
 public class Constant : SYMBOL{
- private  string  m_type ;
- private  string  m_val ;
+ private  string  _type ;
+ private  string  _val ;
  public  Constant (Parser yyp, string  type , string  val ):base((LSLSyntax
-     )yyp){ m_type = type ;
- m_val = val ;
+     )yyp){ _type = type ;
+ _val = val ;
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+ m_type +":"+ m_val +">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+ _type +":"+ _val +">";
 }
- public  string  Value { get { return  m_val ;
+ public  string  Value { get { return  _val ;
 }
- set { m_val = value ;
+ set { _val = value ;
 }
 }
- public  string  Type { get { return  m_type ;
+ public  string  Type { get { return  _type ;
 }
- set { m_type = value ;
+ set { _type = value ;
 }
 }
 
@@ -758,13 +758,13 @@ public override int yynum { get { return 157; }}
 public ConstantExpression(Parser yyp):base(yyp){}}
 //%+IdentExpression+158
 public class IdentExpression : Expression{
- protected  string  m_name ;
+ protected  string  _name ;
  public  IdentExpression (Parser yyp, string  name ):base((LSLSyntax
-     )yyp){ m_name = name ;
+     )yyp){ _name = name ;
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+ m_name +">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+ _name +">";
 }
- public  string  Name { get { return  m_name ;
+ public  string  Name { get { return  _name ;
 }
 }
 
@@ -773,14 +773,14 @@ public override int yynum { get { return 158; }}
 public IdentExpression(Parser yyp):base(yyp){}}
 //%+IdentDotExpression+159
 public class IdentDotExpression : IdentExpression{
- private readonly string  m_member ;
+ private readonly string  _member ;
  public  IdentDotExpression (Parser yyp, string  name , string  member ):base((LSLSyntax
-     )yyp, name ){ m_member = member ;
+     )yyp, name ){ _member = member ;
 }
  public  override  string  ToString (){ string  baseToString = base . ToString ();
- return  baseToString . Substring (0, baseToString . Length -1)+"."+ m_member +">";
+ return  baseToString . Substring (0, baseToString . Length -1)+"."+ _member +">";
 }
- public  string  Member { get { return  m_member ;
+ public  string  Member { get { return  _member ;
 }
 }
 
@@ -798,16 +798,16 @@ public override int yynum { get { return 160; }}
 public FunctionCallExpression(Parser yyp):base(yyp){}}
 //%+BinaryExpression+161
 public class BinaryExpression : Expression{
- private readonly string  m_expressionSymbol ;
+ private readonly string  _expressionSymbol ;
  public  BinaryExpression (Parser yyp, Expression  lhs , Expression  rhs , string  expressionSymbol ):base((LSLSyntax
-     )yyp){ m_expressionSymbol = expressionSymbol ;
+     )yyp){ _expressionSymbol = expressionSymbol ;
  AddExpression ( lhs );
  AddExpression ( rhs );
 }
- public  string  ExpressionSymbol { get { return  m_expressionSymbol ;
+ public  string  ExpressionSymbol { get { return  _expressionSymbol ;
 }
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+ m_expressionSymbol +">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+ _expressionSymbol +">";
 }
 
 public override string yyname { get { return "BinaryExpression"; }}
@@ -815,15 +815,15 @@ public override int yynum { get { return 161; }}
 public BinaryExpression(Parser yyp):base(yyp){}}
 //%+UnaryExpression+162
 public class UnaryExpression : Expression{
- private readonly string  m_unarySymbol ;
+ private readonly string  _unarySymbol ;
  public  UnaryExpression (Parser yyp, string  unarySymbol , Expression  e ):base((LSLSyntax
-     )yyp){ m_unarySymbol = unarySymbol ;
+     )yyp){ _unarySymbol = unarySymbol ;
  AddExpression ( e );
 }
- public  string  UnarySymbol { get { return  m_unarySymbol ;
+ public  string  UnarySymbol { get { return  _unarySymbol ;
 }
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+ m_unarySymbol +">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+ _unarySymbol +">";
 }
 
 public override string yyname { get { return "UnaryExpression"; }}
@@ -831,14 +831,14 @@ public override int yynum { get { return 162; }}
 public UnaryExpression(Parser yyp):base(yyp){}}
 //%+TypecastExpression+163
 public class TypecastExpression : Expression{
- private  string  m_typecastType ;
+ private  string  _typecastType ;
  public  TypecastExpression (Parser yyp, string  typecastType , SYMBOL  rhs ):base((LSLSyntax
-     )yyp){ m_typecastType = typecastType ;
+     )yyp){ _typecastType = typecastType ;
  kids . Add ( rhs );
 }
- public  string  TypecastType { get { return  m_typecastType ;
+ public  string  TypecastType { get { return  _typecastType ;
 }
- set { m_typecastType = value ;
+ set { _typecastType = value ;
 }
 }
 
@@ -856,28 +856,28 @@ public override int yynum { get { return 164; }}
 public ParenthesisExpression(Parser yyp):base(yyp){}}
 //%+IncrementDecrementExpression+165
 public class IncrementDecrementExpression : Expression{
- private readonly string  m_name ;
- private readonly string  m_operation ;
- private readonly bool  m_postOperation ;
+ private readonly string  _name ;
+ private readonly string  _operation ;
+ private readonly bool  _postOperation ;
  public  IncrementDecrementExpression (Parser yyp, string  name , string  operation , bool  postOperation ):base((LSLSyntax
-     )yyp){ m_name = name ;
- m_operation = operation ;
- m_postOperation = postOperation ;
+     )yyp){ _name = name ;
+ _operation = operation ;
+ _postOperation = postOperation ;
 }
  public  IncrementDecrementExpression (Parser yyp, IdentDotExpression  ide , string  operation , bool  postOperation ):base((LSLSyntax
-     )yyp){ m_operation = operation ;
- m_postOperation = postOperation ;
+     )yyp){ _operation = operation ;
+ _postOperation = postOperation ;
  kids . Add ( ide );
 }
- public  override  string  ToString (){ return  base . ToString ()+"<"+( m_postOperation ? m_name + m_operation : m_operation + m_name )+">";
+ public  override  string  ToString (){ return  base . ToString ()+"<"+( _postOperation ? _name + _operation : _operation + _name )+">";
 }
- public  string  Name { get { return  m_name ;
-}
-}
- public  string  Operation { get { return  m_operation ;
+ public  string  Name { get { return  _name ;
 }
 }
- public  bool  PostOperation { get { return  m_postOperation ;
+ public  string  Operation { get { return  _operation ;
+}
+}
+ public  bool  PostOperation { get { return  _postOperation ;
 }
 }
 
@@ -887,354 +887,354 @@ public IncrementDecrementExpression(Parser yyp):base(yyp){}}
 
 public class LSLProgramRoot_1 : LSLProgramRoot {
   public LSLProgramRoot_1(Parser yyq):base(yyq,
-	(GlobalDefinitions)yyq.StackAt(1).m_value
+	(GlobalDefinitions)yyq.StackAt(1)._value
 	, 
-	(States)yyq.StackAt(0).m_value
+	(States)yyq.StackAt(0)._value
 	){}}
 
 public class LSLProgramRoot_2 : LSLProgramRoot {
   public LSLProgramRoot_2(Parser yyq):base(yyq,
-	(States)yyq.StackAt(0).m_value
+	(States)yyq.StackAt(0)._value
 	){}}
 
 public class GlobalDefinitions_1 : GlobalDefinitions {
   public GlobalDefinitions_1(Parser yyq):base(yyq,
-	(GlobalVariableDeclaration)yyq.StackAt(0).m_value
+	(GlobalVariableDeclaration)yyq.StackAt(0)._value
 	){}}
 
 public class GlobalDefinitions_2 : GlobalDefinitions {
   public GlobalDefinitions_2(Parser yyq):base(yyq,
-	(GlobalDefinitions)yyq.StackAt(1).m_value
+	(GlobalDefinitions)yyq.StackAt(1)._value
 	, 
-	(GlobalVariableDeclaration)yyq.StackAt(0).m_value
+	(GlobalVariableDeclaration)yyq.StackAt(0)._value
 	){}}
 
 public class GlobalDefinitions_3 : GlobalDefinitions {
   public GlobalDefinitions_3(Parser yyq):base(yyq,
-	(GlobalFunctionDefinition)yyq.StackAt(0).m_value
+	(GlobalFunctionDefinition)yyq.StackAt(0)._value
 	){}}
 
 public class GlobalDefinitions_4 : GlobalDefinitions {
   public GlobalDefinitions_4(Parser yyq):base(yyq,
-	(GlobalDefinitions)yyq.StackAt(1).m_value
+	(GlobalDefinitions)yyq.StackAt(1)._value
 	, 
-	(GlobalFunctionDefinition)yyq.StackAt(0).m_value
+	(GlobalFunctionDefinition)yyq.StackAt(0)._value
 	){}}
 
 public class GlobalVariableDeclaration_1 : GlobalVariableDeclaration {
   public GlobalVariableDeclaration_1(Parser yyq):base(yyq,
-	(Declaration)yyq.StackAt(1).m_value
+	(Declaration)yyq.StackAt(1)._value
 	){}}
 
 public class GlobalVariableDeclaration_2 : GlobalVariableDeclaration {
   public GlobalVariableDeclaration_2(Parser yyq):base(yyq,new Assignment((LSLSyntax
       )yyq, 
-	(Declaration)yyq.StackAt(3).m_value
+	(Declaration)yyq.StackAt(3)._value
 	, 
-	(Expression)yyq.StackAt(1).m_value
+	(Expression)yyq.StackAt(1)._value
 	, 
-	((EQUALS)yyq.StackAt(2).m_value)
+	((EQUALS)yyq.StackAt(2)._value)
 	.yytext)){}}
 
 public class GlobalFunctionDefinition_1 : GlobalFunctionDefinition {
   public GlobalFunctionDefinition_1(Parser yyq):base(yyq,"void", 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	(ArgumentDeclarationList)yyq.StackAt(2).m_value
+	(ArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class GlobalFunctionDefinition_2 : GlobalFunctionDefinition {
   public GlobalFunctionDefinition_2(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(5).m_value)
+	((Typename)yyq.StackAt(5)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	(ArgumentDeclarationList)yyq.StackAt(2).m_value
+	(ArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class States_1 : States {
   public States_1(Parser yyq):base(yyq,
-	(State)yyq.StackAt(0).m_value
+	(State)yyq.StackAt(0)._value
 	){}}
 
 public class States_2 : States {
   public States_2(Parser yyq):base(yyq,
-	(States)yyq.StackAt(1).m_value
+	(States)yyq.StackAt(1)._value
 	, 
-	(State)yyq.StackAt(0).m_value
+	(State)yyq.StackAt(0)._value
 	){}}
 
 public class State_1 : State {
   public State_1(Parser yyq):base(yyq,
-	((DEFAULT_STATE)yyq.StackAt(3).m_value)
+	((DEFAULT_STATE)yyq.StackAt(3)._value)
 	.yytext, 
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	){}}
 
 public class State_2 : State {
   public State_2(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(3).m_value)
+	((IDENT)yyq.StackAt(3)._value)
 	.yytext, 
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	){}}
 
 public class StateBody_1 : StateBody {
   public StateBody_1(Parser yyq):base(yyq,
-	(StateEvent)yyq.StackAt(0).m_value
+	(StateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_2 : StateBody {
   public StateBody_2(Parser yyq):base(yyq,
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	, 
-	(StateEvent)yyq.StackAt(0).m_value
+	(StateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_3 : StateBody {
   public StateBody_3(Parser yyq):base(yyq,
-	(VoidArgStateEvent)yyq.StackAt(0).m_value
+	(VoidArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_4 : StateBody {
   public StateBody_4(Parser yyq):base(yyq,
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	, 
-	(VoidArgStateEvent)yyq.StackAt(0).m_value
+	(VoidArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_5 : StateBody {
   public StateBody_5(Parser yyq):base(yyq,
-	(KeyArgStateEvent)yyq.StackAt(0).m_value
+	(KeyArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_6 : StateBody {
   public StateBody_6(Parser yyq):base(yyq,
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	, 
-	(KeyArgStateEvent)yyq.StackAt(0).m_value
+	(KeyArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_7 : StateBody {
   public StateBody_7(Parser yyq):base(yyq,
-	(IntArgStateEvent)yyq.StackAt(0).m_value
+	(IntArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_8 : StateBody {
   public StateBody_8(Parser yyq):base(yyq,
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	, 
-	(IntArgStateEvent)yyq.StackAt(0).m_value
+	(IntArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_9 : StateBody {
   public StateBody_9(Parser yyq):base(yyq,
-	(VectorArgStateEvent)yyq.StackAt(0).m_value
+	(VectorArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_10 : StateBody {
   public StateBody_10(Parser yyq):base(yyq,
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	, 
-	(VectorArgStateEvent)yyq.StackAt(0).m_value
+	(VectorArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_11 : StateBody {
   public StateBody_11(Parser yyq):base(yyq,
-	(IntRotRotArgStateEvent)yyq.StackAt(0).m_value
+	(IntRotRotArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_12 : StateBody {
   public StateBody_12(Parser yyq):base(yyq,
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	, 
-	(IntRotRotArgStateEvent)yyq.StackAt(0).m_value
+	(IntRotRotArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_13 : StateBody {
   public StateBody_13(Parser yyq):base(yyq,
-	(IntVecVecArgStateEvent)yyq.StackAt(0).m_value
+	(IntVecVecArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_14 : StateBody {
   public StateBody_14(Parser yyq):base(yyq,
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	, 
-	(IntVecVecArgStateEvent)yyq.StackAt(0).m_value
+	(IntVecVecArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_15 : StateBody {
   public StateBody_15(Parser yyq):base(yyq,
-	(KeyIntIntArgStateEvent)yyq.StackAt(0).m_value
+	(KeyIntIntArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateBody_16 : StateBody {
   public StateBody_16(Parser yyq):base(yyq,
-	(StateBody)yyq.StackAt(1).m_value
+	(StateBody)yyq.StackAt(1)._value
 	, 
-	(KeyIntIntArgStateEvent)yyq.StackAt(0).m_value
+	(KeyIntIntArgStateEvent)yyq.StackAt(0)._value
 	){}}
 
 public class StateEvent_1 : StateEvent {
   public StateEvent_1(Parser yyq):base(yyq,
-	((Event)yyq.StackAt(4).m_value)
+	((Event)yyq.StackAt(4)._value)
 	.yytext, 
-	(ArgumentDeclarationList)yyq.StackAt(2).m_value
+	(ArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class VoidArgStateEvent_1 : VoidArgStateEvent {
   public VoidArgStateEvent_1(Parser yyq):base(yyq,
-	((VoidArgEvent)yyq.StackAt(3).m_value)
+	((VoidArgEvent)yyq.StackAt(3)._value)
 	.yytext, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class KeyArgStateEvent_1 : KeyArgStateEvent {
   public KeyArgStateEvent_1(Parser yyq):base(yyq,
-	((KeyArgEvent)yyq.StackAt(4).m_value)
+	((KeyArgEvent)yyq.StackAt(4)._value)
 	.yytext, 
-	(KeyArgumentDeclarationList)yyq.StackAt(2).m_value
+	(KeyArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class IntArgStateEvent_1 : IntArgStateEvent {
   public IntArgStateEvent_1(Parser yyq):base(yyq,
-	((IntArgEvent)yyq.StackAt(4).m_value)
+	((IntArgEvent)yyq.StackAt(4)._value)
 	.yytext, 
-	(IntArgumentDeclarationList)yyq.StackAt(2).m_value
+	(IntArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class VectorArgStateEvent_1 : VectorArgStateEvent {
   public VectorArgStateEvent_1(Parser yyq):base(yyq,
-	((VectorArgEvent)yyq.StackAt(4).m_value)
+	((VectorArgEvent)yyq.StackAt(4)._value)
 	.yytext, 
-	(VectorArgumentDeclarationList)yyq.StackAt(2).m_value
+	(VectorArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class IntRotRotArgStateEvent_1 : IntRotRotArgStateEvent {
   public IntRotRotArgStateEvent_1(Parser yyq):base(yyq,
-	((IntRotRotArgEvent)yyq.StackAt(4).m_value)
+	((IntRotRotArgEvent)yyq.StackAt(4)._value)
 	.yytext, 
-	(IntRotRotArgumentDeclarationList)yyq.StackAt(2).m_value
+	(IntRotRotArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class IntVecVecArgStateEvent_1 : IntVecVecArgStateEvent {
   public IntVecVecArgStateEvent_1(Parser yyq):base(yyq,
-	((IntVecVecArgEvent)yyq.StackAt(4).m_value)
+	((IntVecVecArgEvent)yyq.StackAt(4)._value)
 	.yytext, 
-	(IntVecVecArgumentDeclarationList)yyq.StackAt(2).m_value
+	(IntVecVecArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class KeyIntIntArgStateEvent_1 : KeyIntIntArgStateEvent {
   public KeyIntIntArgStateEvent_1(Parser yyq):base(yyq,
-	((KeyIntIntArgEvent)yyq.StackAt(4).m_value)
+	((KeyIntIntArgEvent)yyq.StackAt(4)._value)
 	.yytext, 
-	(KeyIntIntArgumentDeclarationList)yyq.StackAt(2).m_value
+	(KeyIntIntArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class ArgumentDeclarationList_1 : ArgumentDeclarationList {
   public ArgumentDeclarationList_1(Parser yyq):base(yyq,
-	(Declaration)yyq.StackAt(0).m_value
+	(Declaration)yyq.StackAt(0)._value
 	){}}
 
 public class ArgumentDeclarationList_2 : ArgumentDeclarationList {
   public ArgumentDeclarationList_2(Parser yyq):base(yyq,
-	(ArgumentDeclarationList)yyq.StackAt(2).m_value
+	(ArgumentDeclarationList)yyq.StackAt(2)._value
 	, 
-	(Declaration)yyq.StackAt(0).m_value
+	(Declaration)yyq.StackAt(0)._value
 	){}}
 
 public class KeyArgumentDeclarationList_1 : KeyArgumentDeclarationList {
   public KeyArgumentDeclarationList_1(Parser yyq):base(yyq,
-	(KeyDeclaration)yyq.StackAt(0).m_value
+	(KeyDeclaration)yyq.StackAt(0)._value
 	){}}
 
 public class IntArgumentDeclarationList_1 : IntArgumentDeclarationList {
   public IntArgumentDeclarationList_1(Parser yyq):base(yyq,
-	(IntDeclaration)yyq.StackAt(0).m_value
+	(IntDeclaration)yyq.StackAt(0)._value
 	){}}
 
 public class VectorArgumentDeclarationList_1 : VectorArgumentDeclarationList {
   public VectorArgumentDeclarationList_1(Parser yyq):base(yyq,
-	(VecDeclaration)yyq.StackAt(0).m_value
+	(VecDeclaration)yyq.StackAt(0)._value
 	){}}
 
 public class IntRotRotArgumentDeclarationList_1 : IntRotRotArgumentDeclarationList {
   public IntRotRotArgumentDeclarationList_1(Parser yyq):base(yyq,
-	(IntDeclaration)yyq.StackAt(4).m_value
+	(IntDeclaration)yyq.StackAt(4)._value
 	, 
-	(RotDeclaration)yyq.StackAt(2).m_value
+	(RotDeclaration)yyq.StackAt(2)._value
 	, 
-	(RotDeclaration)yyq.StackAt(0).m_value
+	(RotDeclaration)yyq.StackAt(0)._value
 	){}}
 
 public class IntVecVecArgumentDeclarationList_1 : IntVecVecArgumentDeclarationList {
   public IntVecVecArgumentDeclarationList_1(Parser yyq):base(yyq,
-	(IntDeclaration)yyq.StackAt(4).m_value
+	(IntDeclaration)yyq.StackAt(4)._value
 	, 
-	(VecDeclaration)yyq.StackAt(2).m_value
+	(VecDeclaration)yyq.StackAt(2)._value
 	, 
-	(VecDeclaration)yyq.StackAt(0).m_value
+	(VecDeclaration)yyq.StackAt(0)._value
 	){}}
 
 public class KeyIntIntArgumentDeclarationList_1 : KeyIntIntArgumentDeclarationList {
   public KeyIntIntArgumentDeclarationList_1(Parser yyq):base(yyq,
-	(KeyDeclaration)yyq.StackAt(4).m_value
+	(KeyDeclaration)yyq.StackAt(4)._value
 	, 
-	(IntDeclaration)yyq.StackAt(2).m_value
+	(IntDeclaration)yyq.StackAt(2)._value
 	, 
-	(IntDeclaration)yyq.StackAt(0).m_value
+	(IntDeclaration)yyq.StackAt(0)._value
 	){}}
 
 public class Declaration_1 : Declaration {
   public Declaration_1(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(1).m_value)
+	((Typename)yyq.StackAt(1)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class KeyDeclaration_1 : KeyDeclaration {
   public KeyDeclaration_1(Parser yyq):base(yyq,
-	((KEY_TYPE)yyq.StackAt(1).m_value)
+	((KEY_TYPE)yyq.StackAt(1)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntDeclaration_1 : IntDeclaration {
   public IntDeclaration_1(Parser yyq):base(yyq,
-	((INTEGER_TYPE)yyq.StackAt(1).m_value)
+	((INTEGER_TYPE)yyq.StackAt(1)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VecDeclaration_1 : VecDeclaration {
   public VecDeclaration_1(Parser yyq):base(yyq,
-	((VECTOR_TYPE)yyq.StackAt(1).m_value)
+	((VECTOR_TYPE)yyq.StackAt(1)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class RotDeclaration_1 : RotDeclaration {
   public RotDeclaration_1(Parser yyq):base(yyq,
-	((ROTATION_TYPE)yyq.StackAt(1).m_value)
+	((ROTATION_TYPE)yyq.StackAt(1)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class CompoundStatement_1 : CompoundStatement {
@@ -1242,19 +1242,19 @@ public class CompoundStatement_1 : CompoundStatement {
 
 public class CompoundStatement_2 : CompoundStatement {
   public CompoundStatement_2(Parser yyq):base(yyq,
-	(StatementList)yyq.StackAt(1).m_value
+	(StatementList)yyq.StackAt(1)._value
 	){}}
 
 public class StatementList_1 : StatementList {
   public StatementList_1(Parser yyq):base(yyq,
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class StatementList_2 : StatementList {
   public StatementList_2(Parser yyq):base(yyq,
-	(StatementList)yyq.StackAt(1).m_value
+	(StatementList)yyq.StackAt(1)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class EmptyStatement_1 : EmptyStatement {
@@ -1262,462 +1262,462 @@ public class EmptyStatement_1 : EmptyStatement {
 
 public class Statement_1 : Statement {
   public Statement_1(Parser yyq):base(yyq,
-	(EmptyStatement)yyq.StackAt(1).m_value
+	(EmptyStatement)yyq.StackAt(1)._value
 	){}}
 
 public class Statement_2 : Statement {
   public Statement_2(Parser yyq):base(yyq,
-	(Declaration)yyq.StackAt(1).m_value
+	(Declaration)yyq.StackAt(1)._value
 	){}}
 
 public class Statement_3 : Statement {
   public Statement_3(Parser yyq):base(yyq,
-	(Assignment)yyq.StackAt(1).m_value
+	(Assignment)yyq.StackAt(1)._value
 	){}}
 
 public class Statement_4 : Statement {
   public Statement_4(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(1).m_value
+	(Expression)yyq.StackAt(1)._value
 	){}}
 
 public class Statement_5 : Statement {
   public Statement_5(Parser yyq):base(yyq,
-	(ReturnStatement)yyq.StackAt(1).m_value
+	(ReturnStatement)yyq.StackAt(1)._value
 	){}}
 
 public class Statement_6 : Statement {
   public Statement_6(Parser yyq):base(yyq,
-	(JumpLabel)yyq.StackAt(1).m_value
+	(JumpLabel)yyq.StackAt(1)._value
 	){}}
 
 public class Statement_7 : Statement {
   public Statement_7(Parser yyq):base(yyq,
-	(JumpStatement)yyq.StackAt(1).m_value
+	(JumpStatement)yyq.StackAt(1)._value
 	){}}
 
 public class Statement_8 : Statement {
   public Statement_8(Parser yyq):base(yyq,
-	(StateChange)yyq.StackAt(1).m_value
+	(StateChange)yyq.StackAt(1)._value
 	){}}
 
 public class Statement_9 : Statement {
   public Statement_9(Parser yyq):base(yyq,
-	(IfStatement)yyq.StackAt(0).m_value
+	(IfStatement)yyq.StackAt(0)._value
 	){}}
 
 public class Statement_10 : Statement {
   public Statement_10(Parser yyq):base(yyq,
-	(WhileStatement)yyq.StackAt(0).m_value
+	(WhileStatement)yyq.StackAt(0)._value
 	){}}
 
 public class Statement_11 : Statement {
   public Statement_11(Parser yyq):base(yyq,
-	(DoWhileStatement)yyq.StackAt(0).m_value
+	(DoWhileStatement)yyq.StackAt(0)._value
 	){}}
 
 public class Statement_12 : Statement {
   public Statement_12(Parser yyq):base(yyq,
-	(ForLoop)yyq.StackAt(0).m_value
+	(ForLoop)yyq.StackAt(0)._value
 	){}}
 
 public class Statement_13 : Statement {
   public Statement_13(Parser yyq):base(yyq,
-	(CompoundStatement)yyq.StackAt(0).m_value
+	(CompoundStatement)yyq.StackAt(0)._value
 	){}}
 
 public class JumpLabel_1 : JumpLabel {
   public JumpLabel_1(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class JumpStatement_1 : JumpStatement {
   public JumpStatement_1(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class StateChange_1 : StateChange {
   public StateChange_1(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class StateChange_2 : StateChange {
   public StateChange_2(Parser yyq):base(yyq,
-	((DEFAULT_STATE)yyq.StackAt(0).m_value)
+	((DEFAULT_STATE)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IfStatement_1 : IfStatement {
   public IfStatement_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class IfStatement_2 : IfStatement {
   public IfStatement_2(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(4).m_value
+	(Expression)yyq.StackAt(4)._value
 	, 
-	(Statement)yyq.StackAt(2).m_value
+	(Statement)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class IfStatement_3 : IfStatement {
   public IfStatement_3(Parser yyq):base(yyq,
-	(SimpleAssignment)yyq.StackAt(2).m_value
+	(SimpleAssignment)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class IfStatement_4 : IfStatement {
   public IfStatement_4(Parser yyq):base(yyq,
-	(SimpleAssignment)yyq.StackAt(4).m_value
+	(SimpleAssignment)yyq.StackAt(4)._value
 	, 
-	(Statement)yyq.StackAt(2).m_value
+	(Statement)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class WhileStatement_1 : WhileStatement {
   public WhileStatement_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class WhileStatement_2 : WhileStatement {
   public WhileStatement_2(Parser yyq):base(yyq,
-	(SimpleAssignment)yyq.StackAt(2).m_value
+	(SimpleAssignment)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class DoWhileStatement_1 : DoWhileStatement {
   public DoWhileStatement_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(5).m_value
+	(Statement)yyq.StackAt(5)._value
 	){}}
 
 public class DoWhileStatement_2 : DoWhileStatement {
   public DoWhileStatement_2(Parser yyq):base(yyq,
-	(SimpleAssignment)yyq.StackAt(2).m_value
+	(SimpleAssignment)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(5).m_value
+	(Statement)yyq.StackAt(5)._value
 	){}}
 
 public class ForLoop_1 : ForLoop {
   public ForLoop_1(Parser yyq):base(yyq,
-	(ForLoopStatement)yyq.StackAt(6).m_value
+	(ForLoopStatement)yyq.StackAt(6)._value
 	, 
-	(Expression)yyq.StackAt(4).m_value
+	(Expression)yyq.StackAt(4)._value
 	, 
-	(ForLoopStatement)yyq.StackAt(2).m_value
+	(ForLoopStatement)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class ForLoop_2 : ForLoop {
   public ForLoop_2(Parser yyq):base(yyq,null, 
-	(Expression)yyq.StackAt(4).m_value
+	(Expression)yyq.StackAt(4)._value
 	, 
-	(ForLoopStatement)yyq.StackAt(2).m_value
+	(ForLoopStatement)yyq.StackAt(2)._value
 	, 
-	(Statement)yyq.StackAt(0).m_value
+	(Statement)yyq.StackAt(0)._value
 	){}}
 
 public class ForLoopStatement_1 : ForLoopStatement {
   public ForLoopStatement_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	){}}
 
 public class ForLoopStatement_2 : ForLoopStatement {
   public ForLoopStatement_2(Parser yyq):base(yyq,
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	){}}
 
 public class ForLoopStatement_3 : ForLoopStatement {
   public ForLoopStatement_3(Parser yyq):base(yyq,
-	(ForLoopStatement)yyq.StackAt(2).m_value
+	(ForLoopStatement)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	){}}
 
 public class ForLoopStatement_4 : ForLoopStatement {
   public ForLoopStatement_4(Parser yyq):base(yyq,
-	(ForLoopStatement)yyq.StackAt(2).m_value
+	(ForLoopStatement)yyq.StackAt(2)._value
 	, 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	){}}
 
 public class Assignment_1 : Assignment {
   public Assignment_1(Parser yyq):base(yyq,
-	(Declaration)yyq.StackAt(2).m_value
+	(Declaration)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((EQUALS)yyq.StackAt(1).m_value)
+	((EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class Assignment_2 : Assignment {
   public Assignment_2(Parser yyq):base(yyq,
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	){}}
 
 public class SimpleAssignment_1 : SimpleAssignment {
   public SimpleAssignment_1(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((EQUALS)yyq.StackAt(1).m_value)
+	((EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_2 : SimpleAssignment {
   public SimpleAssignment_2(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((PLUS_EQUALS)yyq.StackAt(1).m_value)
+	((PLUS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_3 : SimpleAssignment {
   public SimpleAssignment_3(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((MINUS_EQUALS)yyq.StackAt(1).m_value)
+	((MINUS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_4 : SimpleAssignment {
   public SimpleAssignment_4(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((STAR_EQUALS)yyq.StackAt(1).m_value)
+	((STAR_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_5 : SimpleAssignment {
   public SimpleAssignment_5(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((SLASH_EQUALS)yyq.StackAt(1).m_value)
+	((SLASH_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_6 : SimpleAssignment {
   public SimpleAssignment_6(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((PERCENT_EQUALS)yyq.StackAt(1).m_value)
+	((PERCENT_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_7 : SimpleAssignment {
   public SimpleAssignment_7(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((EQUALS)yyq.StackAt(1).m_value)
+	((EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_8 : SimpleAssignment {
   public SimpleAssignment_8(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((PLUS_EQUALS)yyq.StackAt(1).m_value)
+	((PLUS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_9 : SimpleAssignment {
   public SimpleAssignment_9(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((MINUS_EQUALS)yyq.StackAt(1).m_value)
+	((MINUS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_10 : SimpleAssignment {
   public SimpleAssignment_10(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((STAR_EQUALS)yyq.StackAt(1).m_value)
+	((STAR_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_11 : SimpleAssignment {
   public SimpleAssignment_11(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((SLASH_EQUALS)yyq.StackAt(1).m_value)
+	((SLASH_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_12 : SimpleAssignment {
   public SimpleAssignment_12(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((PERCENT_EQUALS)yyq.StackAt(1).m_value)
+	((PERCENT_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_13 : SimpleAssignment {
   public SimpleAssignment_13(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((EQUALS)yyq.StackAt(1).m_value)
+	((EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_14 : SimpleAssignment {
   public SimpleAssignment_14(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((PLUS_EQUALS)yyq.StackAt(1).m_value)
+	((PLUS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_15 : SimpleAssignment {
   public SimpleAssignment_15(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((MINUS_EQUALS)yyq.StackAt(1).m_value)
+	((MINUS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_16 : SimpleAssignment {
   public SimpleAssignment_16(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((STAR_EQUALS)yyq.StackAt(1).m_value)
+	((STAR_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_17 : SimpleAssignment {
   public SimpleAssignment_17(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((SLASH_EQUALS)yyq.StackAt(1).m_value)
+	((SLASH_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_18 : SimpleAssignment {
   public SimpleAssignment_18(Parser yyq):base(yyq,
-	(IDENT)yyq.StackAt(2).m_value
+	(IDENT)yyq.StackAt(2)._value
 	, 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((PERCENT_EQUALS)yyq.StackAt(1).m_value)
+	((PERCENT_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_19 : SimpleAssignment {
   public SimpleAssignment_19(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((EQUALS)yyq.StackAt(1).m_value)
+	((EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_20 : SimpleAssignment {
   public SimpleAssignment_20(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((PLUS_EQUALS)yyq.StackAt(1).m_value)
+	((PLUS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_21 : SimpleAssignment {
   public SimpleAssignment_21(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((MINUS_EQUALS)yyq.StackAt(1).m_value)
+	((MINUS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_22 : SimpleAssignment {
   public SimpleAssignment_22(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((STAR_EQUALS)yyq.StackAt(1).m_value)
+	((STAR_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_23 : SimpleAssignment {
   public SimpleAssignment_23(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((SLASH_EQUALS)yyq.StackAt(1).m_value)
+	((SLASH_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class SimpleAssignment_24 : SimpleAssignment {
   public SimpleAssignment_24(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(4).m_value)
+	((IDENT)yyq.StackAt(4)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext), 
-	(SimpleAssignment)yyq.StackAt(0).m_value
+	(SimpleAssignment)yyq.StackAt(0)._value
 	, 
-	((PERCENT_EQUALS)yyq.StackAt(1).m_value)
+	((PERCENT_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class ReturnStatement_1 : ReturnStatement {
   public ReturnStatement_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	){}}
 
 public class ReturnStatement_2 : ReturnStatement {
@@ -1725,649 +1725,649 @@ public class ReturnStatement_2 : ReturnStatement {
 
 public class Constant_1 : Constant {
   public Constant_1(Parser yyq):base(yyq,"integer", 
-	((INTEGER_CONSTANT)yyq.StackAt(0).m_value)
+	((INTEGER_CONSTANT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Constant_2 : Constant {
   public Constant_2(Parser yyq):base(yyq,"integer", 
-	((HEX_INTEGER_CONSTANT)yyq.StackAt(0).m_value)
+	((HEX_INTEGER_CONSTANT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Constant_3 : Constant {
   public Constant_3(Parser yyq):base(yyq,"float", 
-	((FLOAT_CONSTANT)yyq.StackAt(0).m_value)
+	((FLOAT_CONSTANT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Constant_4 : Constant {
   public Constant_4(Parser yyq):base(yyq,"string", 
-	((STRING_CONSTANT)yyq.StackAt(0).m_value)
+	((STRING_CONSTANT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class ListConstant_1 : ListConstant {
   public ListConstant_1(Parser yyq):base(yyq,
-	(ArgumentList)yyq.StackAt(1).m_value
+	(ArgumentList)yyq.StackAt(1)._value
 	){}}
 
 public class VectorConstant_1 : VectorConstant {
   public VectorConstant_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(5).m_value
+	(Expression)yyq.StackAt(5)._value
 	, 
-	(Expression)yyq.StackAt(3).m_value
+	(Expression)yyq.StackAt(3)._value
 	, 
-	(Expression)yyq.StackAt(1).m_value
+	(Expression)yyq.StackAt(1)._value
 	){}}
 
 public class RotationConstant_1 : RotationConstant {
   public RotationConstant_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(7).m_value
+	(Expression)yyq.StackAt(7)._value
 	, 
-	(Expression)yyq.StackAt(5).m_value
+	(Expression)yyq.StackAt(5)._value
 	, 
-	(Expression)yyq.StackAt(3).m_value
+	(Expression)yyq.StackAt(3)._value
 	, 
-	(Expression)yyq.StackAt(1).m_value
+	(Expression)yyq.StackAt(1)._value
 	){}}
 
 public class ConstantExpression_1 : ConstantExpression {
   public ConstantExpression_1(Parser yyq):base(yyq,
-	(Constant)yyq.StackAt(0).m_value
+	(Constant)yyq.StackAt(0)._value
 	){}}
 
 public class IdentExpression_1 : IdentExpression {
   public IdentExpression_1(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IdentDotExpression_1 : IdentDotExpression {
   public IdentDotExpression_1(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IncrementDecrementExpression_1 : IncrementDecrementExpression {
   public IncrementDecrementExpression_1(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(1).m_value)
+	((IDENT)yyq.StackAt(1)._value)
 	.yytext, 
-	((INCREMENT)yyq.StackAt(0).m_value)
+	((INCREMENT)yyq.StackAt(0)._value)
 	.yytext, true){}}
 
 public class IncrementDecrementExpression_2 : IncrementDecrementExpression {
   public IncrementDecrementExpression_2(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(1).m_value)
+	((IDENT)yyq.StackAt(1)._value)
 	.yytext, 
-	((DECREMENT)yyq.StackAt(0).m_value)
+	((DECREMENT)yyq.StackAt(0)._value)
 	.yytext, true){}}
 
 public class IncrementDecrementExpression_3 : IncrementDecrementExpression {
   public IncrementDecrementExpression_3(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(3).m_value)
+	((IDENT)yyq.StackAt(3)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(1).m_value)
+	((IDENT)yyq.StackAt(1)._value)
 	.yytext), 
-	((INCREMENT)yyq.StackAt(0).m_value)
+	((INCREMENT)yyq.StackAt(0)._value)
 	.yytext, true){}}
 
 public class IncrementDecrementExpression_4 : IncrementDecrementExpression {
   public IncrementDecrementExpression_4(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(3).m_value)
+	((IDENT)yyq.StackAt(3)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(1).m_value)
+	((IDENT)yyq.StackAt(1)._value)
 	.yytext), 
-	((DECREMENT)yyq.StackAt(0).m_value)
+	((DECREMENT)yyq.StackAt(0)._value)
 	.yytext, true){}}
 
 public class IncrementDecrementExpression_5 : IncrementDecrementExpression {
   public IncrementDecrementExpression_5(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext, 
-	((INCREMENT)yyq.StackAt(1).m_value)
+	((INCREMENT)yyq.StackAt(1)._value)
 	.yytext, false){}}
 
 public class IncrementDecrementExpression_6 : IncrementDecrementExpression {
   public IncrementDecrementExpression_6(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext, 
-	((DECREMENT)yyq.StackAt(1).m_value)
+	((DECREMENT)yyq.StackAt(1)._value)
 	.yytext, false){}}
 
 public class IncrementDecrementExpression_7 : IncrementDecrementExpression {
   public IncrementDecrementExpression_7(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext), 
-	((INCREMENT)yyq.StackAt(3).m_value)
+	((INCREMENT)yyq.StackAt(3)._value)
 	.yytext, false){}}
 
 public class IncrementDecrementExpression_8 : IncrementDecrementExpression {
   public IncrementDecrementExpression_8(Parser yyq):base(yyq,new IdentDotExpression((LSLSyntax
           )yyq, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext), 
-	((DECREMENT)yyq.StackAt(3).m_value)
+	((DECREMENT)yyq.StackAt(3)._value)
 	.yytext, false){}}
 
 public class FunctionCallExpression_1 : FunctionCallExpression {
   public FunctionCallExpression_1(Parser yyq):base(yyq,
-	(FunctionCall)yyq.StackAt(0).m_value
+	(FunctionCall)yyq.StackAt(0)._value
 	){}}
 
 public class BinaryExpression_1 : BinaryExpression {
   public BinaryExpression_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((PLUS)yyq.StackAt(1).m_value)
+	((PLUS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_2 : BinaryExpression {
   public BinaryExpression_2(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((MINUS)yyq.StackAt(1).m_value)
+	((MINUS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_3 : BinaryExpression {
   public BinaryExpression_3(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((STAR)yyq.StackAt(1).m_value)
+	((STAR)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_4 : BinaryExpression {
   public BinaryExpression_4(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((SLASH)yyq.StackAt(1).m_value)
+	((SLASH)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_5 : BinaryExpression {
   public BinaryExpression_5(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((PERCENT)yyq.StackAt(1).m_value)
+	((PERCENT)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_6 : BinaryExpression {
   public BinaryExpression_6(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((AMP)yyq.StackAt(1).m_value)
+	((AMP)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_7 : BinaryExpression {
   public BinaryExpression_7(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((STROKE)yyq.StackAt(1).m_value)
+	((STROKE)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_8 : BinaryExpression {
   public BinaryExpression_8(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((CARET)yyq.StackAt(1).m_value)
+	((CARET)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_9 : BinaryExpression {
   public BinaryExpression_9(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((RIGHT_ANGLE)yyq.StackAt(1).m_value)
+	((RIGHT_ANGLE)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_10 : BinaryExpression {
   public BinaryExpression_10(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((LEFT_ANGLE)yyq.StackAt(1).m_value)
+	((LEFT_ANGLE)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_11 : BinaryExpression {
   public BinaryExpression_11(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((EQUALS_EQUALS)yyq.StackAt(1).m_value)
+	((EQUALS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_12 : BinaryExpression {
   public BinaryExpression_12(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((EXCLAMATION_EQUALS)yyq.StackAt(1).m_value)
+	((EXCLAMATION_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_13 : BinaryExpression {
   public BinaryExpression_13(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((LESS_EQUALS)yyq.StackAt(1).m_value)
+	((LESS_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_14 : BinaryExpression {
   public BinaryExpression_14(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((GREATER_EQUALS)yyq.StackAt(1).m_value)
+	((GREATER_EQUALS)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_15 : BinaryExpression {
   public BinaryExpression_15(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((AMP_AMP)yyq.StackAt(1).m_value)
+	((AMP_AMP)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_16 : BinaryExpression {
   public BinaryExpression_16(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((STROKE_STROKE)yyq.StackAt(1).m_value)
+	((STROKE_STROKE)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_17 : BinaryExpression {
   public BinaryExpression_17(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((LEFT_SHIFT)yyq.StackAt(1).m_value)
+	((LEFT_SHIFT)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class BinaryExpression_18 : BinaryExpression {
   public BinaryExpression_18(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(2).m_value
+	(Expression)yyq.StackAt(2)._value
 	, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	, 
-	((RIGHT_SHIFT)yyq.StackAt(1).m_value)
+	((RIGHT_SHIFT)yyq.StackAt(1)._value)
 	.yytext){}}
 
 public class UnaryExpression_1 : UnaryExpression {
   public UnaryExpression_1(Parser yyq):base(yyq,
-	((EXCLAMATION)yyq.StackAt(1).m_value)
+	((EXCLAMATION)yyq.StackAt(1)._value)
 	.yytext, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	){}}
 
 public class UnaryExpression_2 : UnaryExpression {
   public UnaryExpression_2(Parser yyq):base(yyq,
-	((MINUS)yyq.StackAt(1).m_value)
+	((MINUS)yyq.StackAt(1)._value)
 	.yytext, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	){}}
 
 public class UnaryExpression_3 : UnaryExpression {
   public UnaryExpression_3(Parser yyq):base(yyq,
-	((TILDE)yyq.StackAt(1).m_value)
+	((TILDE)yyq.StackAt(1)._value)
 	.yytext, 
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	){}}
 
 public class ParenthesisExpression_1 : ParenthesisExpression {
   public ParenthesisExpression_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(1).m_value
+	(Expression)yyq.StackAt(1)._value
 	){}}
 
 public class ParenthesisExpression_2 : ParenthesisExpression {
   public ParenthesisExpression_2(Parser yyq):base(yyq,
-	(SimpleAssignment)yyq.StackAt(1).m_value
+	(SimpleAssignment)yyq.StackAt(1)._value
 	){}}
 
 public class TypecastExpression_1 : TypecastExpression {
   public TypecastExpression_1(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(2).m_value)
+	((Typename)yyq.StackAt(2)._value)
 	.yytext, 
-	(Constant)yyq.StackAt(0).m_value
+	(Constant)yyq.StackAt(0)._value
 	){}}
 
 public class TypecastExpression_2 : TypecastExpression {
   public TypecastExpression_2(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(2).m_value)
+	((Typename)yyq.StackAt(2)._value)
 	.yytext, new IdentExpression((LSLSyntax
         )yyq, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext)){}}
 
 public class TypecastExpression_3 : TypecastExpression {
   public TypecastExpression_3(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(4).m_value)
+	((Typename)yyq.StackAt(4)._value)
 	.yytext, new IdentDotExpression((LSLSyntax
         )yyq, 
-	((IDENT)yyq.StackAt(2).m_value)
+	((IDENT)yyq.StackAt(2)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(0).m_value)
+	((IDENT)yyq.StackAt(0)._value)
 	.yytext)){}}
 
 public class TypecastExpression_4 : TypecastExpression {
   public TypecastExpression_4(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(3).m_value)
+	((Typename)yyq.StackAt(3)._value)
 	.yytext, new IncrementDecrementExpression((LSLSyntax
         )yyq, 
-	((IDENT)yyq.StackAt(1).m_value)
+	((IDENT)yyq.StackAt(1)._value)
 	.yytext, 
-	((INCREMENT)yyq.StackAt(0).m_value)
+	((INCREMENT)yyq.StackAt(0)._value)
 	.yytext, true)){}}
 
 public class TypecastExpression_5 : TypecastExpression {
   public TypecastExpression_5(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(5).m_value)
+	((Typename)yyq.StackAt(5)._value)
 	.yytext, new IncrementDecrementExpression((LSLSyntax
         )yyq, new IdentDotExpression((LSLSyntax
             )yyq, 
-	((IDENT)yyq.StackAt(3).m_value)
+	((IDENT)yyq.StackAt(3)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(1).m_value)
+	((IDENT)yyq.StackAt(1)._value)
 	.yytext), 
-	((INCREMENT)yyq.StackAt(0).m_value)
+	((INCREMENT)yyq.StackAt(0)._value)
 	.yytext, true)){}}
 
 public class TypecastExpression_6 : TypecastExpression {
   public TypecastExpression_6(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(3).m_value)
+	((Typename)yyq.StackAt(3)._value)
 	.yytext, new IncrementDecrementExpression((LSLSyntax
         )yyq, 
-	((IDENT)yyq.StackAt(1).m_value)
+	((IDENT)yyq.StackAt(1)._value)
 	.yytext, 
-	((DECREMENT)yyq.StackAt(0).m_value)
+	((DECREMENT)yyq.StackAt(0)._value)
 	.yytext, true)){}}
 
 public class TypecastExpression_7 : TypecastExpression {
   public TypecastExpression_7(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(5).m_value)
+	((Typename)yyq.StackAt(5)._value)
 	.yytext, new IncrementDecrementExpression((LSLSyntax
         )yyq, new IdentDotExpression((LSLSyntax
             )yyq, 
-	((IDENT)yyq.StackAt(3).m_value)
+	((IDENT)yyq.StackAt(3)._value)
 	.yytext, 
-	((IDENT)yyq.StackAt(1).m_value)
+	((IDENT)yyq.StackAt(1)._value)
 	.yytext), 
-	((DECREMENT)yyq.StackAt(0).m_value)
+	((DECREMENT)yyq.StackAt(0)._value)
 	.yytext, true)){}}
 
 public class TypecastExpression_8 : TypecastExpression {
   public TypecastExpression_8(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(2).m_value)
+	((Typename)yyq.StackAt(2)._value)
 	.yytext, 
-	(FunctionCall)yyq.StackAt(0).m_value
+	(FunctionCall)yyq.StackAt(0)._value
 	){}}
 
 public class TypecastExpression_9 : TypecastExpression {
   public TypecastExpression_9(Parser yyq):base(yyq,
-	((Typename)yyq.StackAt(4).m_value)
+	((Typename)yyq.StackAt(4)._value)
 	.yytext, 
-	(Expression)yyq.StackAt(1).m_value
+	(Expression)yyq.StackAt(1)._value
 	){}}
 
 public class FunctionCall_1 : FunctionCall {
   public FunctionCall_1(Parser yyq):base(yyq,
-	((IDENT)yyq.StackAt(3).m_value)
+	((IDENT)yyq.StackAt(3)._value)
 	.yytext, 
-	(ArgumentList)yyq.StackAt(1).m_value
+	(ArgumentList)yyq.StackAt(1)._value
 	){}}
 
 public class ArgumentList_1 : ArgumentList {
   public ArgumentList_1(Parser yyq):base(yyq,
-	(Argument)yyq.StackAt(0).m_value
+	(Argument)yyq.StackAt(0)._value
 	){}}
 
 public class ArgumentList_2 : ArgumentList {
   public ArgumentList_2(Parser yyq):base(yyq,
-	(ArgumentList)yyq.StackAt(2).m_value
+	(ArgumentList)yyq.StackAt(2)._value
 	, 
-	(Argument)yyq.StackAt(0).m_value
+	(Argument)yyq.StackAt(0)._value
 	){}}
 
 public class ExpressionArgument_1 : ExpressionArgument {
   public ExpressionArgument_1(Parser yyq):base(yyq,
-	(Expression)yyq.StackAt(0).m_value
+	(Expression)yyq.StackAt(0)._value
 	){}}
 
 public class Typename_1 : Typename {
   public Typename_1(Parser yyq):base(yyq,
-	((INTEGER_TYPE)yyq.StackAt(0).m_value)
+	((INTEGER_TYPE)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Typename_2 : Typename {
   public Typename_2(Parser yyq):base(yyq,
-	((FLOAT_TYPE)yyq.StackAt(0).m_value)
+	((FLOAT_TYPE)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Typename_3 : Typename {
   public Typename_3(Parser yyq):base(yyq,
-	((STRING_TYPE)yyq.StackAt(0).m_value)
+	((STRING_TYPE)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Typename_4 : Typename {
   public Typename_4(Parser yyq):base(yyq,
-	((KEY_TYPE)yyq.StackAt(0).m_value)
+	((KEY_TYPE)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Typename_5 : Typename {
   public Typename_5(Parser yyq):base(yyq,
-	((VECTOR_TYPE)yyq.StackAt(0).m_value)
+	((VECTOR_TYPE)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Typename_6 : Typename {
   public Typename_6(Parser yyq):base(yyq,
-	((ROTATION_TYPE)yyq.StackAt(0).m_value)
+	((ROTATION_TYPE)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Typename_7 : Typename {
   public Typename_7(Parser yyq):base(yyq,
-	((LIST_TYPE)yyq.StackAt(0).m_value)
+	((LIST_TYPE)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_1 : Event {
   public Event_1(Parser yyq):base(yyq,
-	((DATASERVER_EVENT)yyq.StackAt(0).m_value)
+	((DATASERVER_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_2 : Event {
   public Event_2(Parser yyq):base(yyq,
-	((EMAIL_EVENT)yyq.StackAt(0).m_value)
+	((EMAIL_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_3 : Event {
   public Event_3(Parser yyq):base(yyq,
-	((HTTP_RESPONSE_EVENT)yyq.StackAt(0).m_value)
+	((HTTP_RESPONSE_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_4 : Event {
   public Event_4(Parser yyq):base(yyq,
-	((LINK_MESSAGE_EVENT)yyq.StackAt(0).m_value)
+	((LINK_MESSAGE_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_5 : Event {
   public Event_5(Parser yyq):base(yyq,
-	((LISTEN_EVENT)yyq.StackAt(0).m_value)
+	((LISTEN_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_6 : Event {
   public Event_6(Parser yyq):base(yyq,
-	((MONEY_EVENT)yyq.StackAt(0).m_value)
+	((MONEY_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_7 : Event {
   public Event_7(Parser yyq):base(yyq,
-	((REMOTE_DATA_EVENT)yyq.StackAt(0).m_value)
+	((REMOTE_DATA_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_8 : Event {
   public Event_8(Parser yyq):base(yyq,
-	((HTTP_REQUEST_EVENT)yyq.StackAt(0).m_value)
+	((HTTP_REQUEST_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class Event_9 : Event {
   public Event_9(Parser yyq):base(yyq,
-	((TRANSACTION_RESULT_EVENT)yyq.StackAt(0).m_value)
+	((TRANSACTION_RESULT_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VoidArgEvent_1 : VoidArgEvent {
   public VoidArgEvent_1(Parser yyq):base(yyq,
-	((STATE_ENTRY_EVENT)yyq.StackAt(0).m_value)
+	((STATE_ENTRY_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VoidArgEvent_2 : VoidArgEvent {
   public VoidArgEvent_2(Parser yyq):base(yyq,
-	((STATE_EXIT_EVENT)yyq.StackAt(0).m_value)
+	((STATE_EXIT_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VoidArgEvent_3 : VoidArgEvent {
   public VoidArgEvent_3(Parser yyq):base(yyq,
-	((MOVING_END_EVENT)yyq.StackAt(0).m_value)
+	((MOVING_END_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VoidArgEvent_4 : VoidArgEvent {
   public VoidArgEvent_4(Parser yyq):base(yyq,
-	((MOVING_START_EVENT)yyq.StackAt(0).m_value)
+	((MOVING_START_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VoidArgEvent_5 : VoidArgEvent {
   public VoidArgEvent_5(Parser yyq):base(yyq,
-	((NO_SENSOR_EVENT)yyq.StackAt(0).m_value)
+	((NO_SENSOR_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VoidArgEvent_6 : VoidArgEvent {
   public VoidArgEvent_6(Parser yyq):base(yyq,
-	((NOT_AT_ROT_TARGET_EVENT)yyq.StackAt(0).m_value)
+	((NOT_AT_ROT_TARGET_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VoidArgEvent_7 : VoidArgEvent {
   public VoidArgEvent_7(Parser yyq):base(yyq,
-	((NOT_AT_TARGET_EVENT)yyq.StackAt(0).m_value)
+	((NOT_AT_TARGET_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VoidArgEvent_8 : VoidArgEvent {
   public VoidArgEvent_8(Parser yyq):base(yyq,
-	((TIMER_EVENT)yyq.StackAt(0).m_value)
+	((TIMER_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class KeyArgEvent_1 : KeyArgEvent {
   public KeyArgEvent_1(Parser yyq):base(yyq,
-	((ATTACH_EVENT)yyq.StackAt(0).m_value)
+	((ATTACH_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class KeyArgEvent_2 : KeyArgEvent {
   public KeyArgEvent_2(Parser yyq):base(yyq,
-	((OBJECT_REZ_EVENT)yyq.StackAt(0).m_value)
+	((OBJECT_REZ_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_1 : IntArgEvent {
   public IntArgEvent_1(Parser yyq):base(yyq,
-	((CHANGED_EVENT)yyq.StackAt(0).m_value)
+	((CHANGED_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_2 : IntArgEvent {
   public IntArgEvent_2(Parser yyq):base(yyq,
-	((COLLISION_EVENT)yyq.StackAt(0).m_value)
+	((COLLISION_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_3 : IntArgEvent {
   public IntArgEvent_3(Parser yyq):base(yyq,
-	((COLLISION_END_EVENT)yyq.StackAt(0).m_value)
+	((COLLISION_END_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_4 : IntArgEvent {
   public IntArgEvent_4(Parser yyq):base(yyq,
-	((COLLISION_START_EVENT)yyq.StackAt(0).m_value)
+	((COLLISION_START_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_5 : IntArgEvent {
   public IntArgEvent_5(Parser yyq):base(yyq,
-	((ON_REZ_EVENT)yyq.StackAt(0).m_value)
+	((ON_REZ_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_6 : IntArgEvent {
   public IntArgEvent_6(Parser yyq):base(yyq,
-	((RUN_TIME_PERMISSIONS_EVENT)yyq.StackAt(0).m_value)
+	((RUN_TIME_PERMISSIONS_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_7 : IntArgEvent {
   public IntArgEvent_7(Parser yyq):base(yyq,
-	((SENSOR_EVENT)yyq.StackAt(0).m_value)
+	((SENSOR_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_8 : IntArgEvent {
   public IntArgEvent_8(Parser yyq):base(yyq,
-	((TOUCH_EVENT)yyq.StackAt(0).m_value)
+	((TOUCH_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_9 : IntArgEvent {
   public IntArgEvent_9(Parser yyq):base(yyq,
-	((TOUCH_END_EVENT)yyq.StackAt(0).m_value)
+	((TOUCH_END_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntArgEvent_10 : IntArgEvent {
   public IntArgEvent_10(Parser yyq):base(yyq,
-	((TOUCH_START_EVENT)yyq.StackAt(0).m_value)
+	((TOUCH_START_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VectorArgEvent_1 : VectorArgEvent {
   public VectorArgEvent_1(Parser yyq):base(yyq,
-	((LAND_COLLISION_EVENT)yyq.StackAt(0).m_value)
+	((LAND_COLLISION_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VectorArgEvent_2 : VectorArgEvent {
   public VectorArgEvent_2(Parser yyq):base(yyq,
-	((LAND_COLLISION_END_EVENT)yyq.StackAt(0).m_value)
+	((LAND_COLLISION_END_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class VectorArgEvent_3 : VectorArgEvent {
   public VectorArgEvent_3(Parser yyq):base(yyq,
-	((LAND_COLLISION_START_EVENT)yyq.StackAt(0).m_value)
+	((LAND_COLLISION_START_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntRotRotArgEvent_1 : IntRotRotArgEvent {
   public IntRotRotArgEvent_1(Parser yyq):base(yyq,
-	((AT_ROT_TARGET_EVENT)yyq.StackAt(0).m_value)
+	((AT_ROT_TARGET_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class IntVecVecArgEvent_1 : IntVecVecArgEvent {
   public IntVecVecArgEvent_1(Parser yyq):base(yyq,
-	((AT_TARGET_EVENT)yyq.StackAt(0).m_value)
+	((AT_TARGET_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 
 public class KeyIntIntArgEvent_1 : KeyIntIntArgEvent {
   public KeyIntIntArgEvent_1(Parser yyq):base(yyq,
-	((CONTROL_EVENT)yyq.StackAt(0).m_value)
+	((CONTROL_EVENT)yyq.StackAt(0)._value)
 	.yytext){}}
 public class yyLSLSyntax
 : YyParser {

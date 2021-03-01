@@ -53,19 +53,13 @@ namespace OpenSim.Region.PhysicsModule.Meshing
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "ZeroMesher")]
     public class ZeroMesher : IMesher, INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private bool m_Enabled = false;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private bool _Enabled = false;
 
         #region INonSharedRegionModule
-        public string Name
-        {
-            get { return "ZeroMesher"; }
-        }
+        public string Name => "ZeroMesher";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -76,7 +70,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
                 // This is the default Mesher
                 string mesher = config.GetString("meshing", Name);
                 if (mesher == Name)
-                    m_Enabled = true;
+                    _Enabled = true;
             }
         }
 
@@ -86,7 +80,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IMesher>(this);
@@ -94,7 +88,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.UnregisterModuleInterface<IMesher>(this);
@@ -102,7 +96,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
         #endregion

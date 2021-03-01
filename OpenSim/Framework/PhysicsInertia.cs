@@ -221,17 +221,17 @@ namespace OpenSim.Framework
             errors = false;
             reader = _reader;
 
-            Dictionary<string, Action> m_XmlProcessors = new Dictionary<string, Action>();
+            Dictionary<string, Action> _XmlProcessors = new Dictionary<string, Action>();
 
-            m_XmlProcessors.Add("MASS", ProcessXR_Mass);
-            m_XmlProcessors.Add("CM", ProcessXR_CM);
-            m_XmlProcessors.Add("INERTIA", ProcessXR_Inertia);
-            m_XmlProcessors.Add("IROT", ProcessXR_InertiaRotation);
+            _XmlProcessors.Add("MASS", ProcessXR_Mass);
+            _XmlProcessors.Add("CM", ProcessXR_CM);
+            _XmlProcessors.Add("INERTIA", ProcessXR_Inertia);
+            _XmlProcessors.Add("IROT", ProcessXR_InertiaRotation);
 
             reader.ReadStartElement("PhysicsInertia", string.Empty);
 
             errors = EReadProcessors(
-                m_XmlProcessors,
+                _XmlProcessors,
                 reader);
 
             reader.ReadEndElement();

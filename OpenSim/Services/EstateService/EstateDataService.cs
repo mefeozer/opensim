@@ -38,11 +38,11 @@ namespace OpenSim.Services.EstateService
 {
     public class EstateDataService : ServiceBase, IEstateDataService
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //                LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected IEstateDataStore m_database;
+        protected IEstateDataStore _database;
 
         public EstateDataService(IConfigSource config)
             : base(config)
@@ -71,64 +71,64 @@ namespace OpenSim.Services.EstateService
             if (string.IsNullOrEmpty(dllName))
                 throw new Exception("No StorageProvider configured");
 
-            m_database = LoadPlugin<IEstateDataStore>(dllName, new object[] { connString });
-            if (m_database == null)
+            _database = LoadPlugin<IEstateDataStore>(dllName, new object[] { connString });
+            if (_database == null)
                 throw new Exception("Could not find a storage interface in the given module");
         }
 
         public EstateSettings LoadEstateSettings(UUID regionID, bool create)
         {
-            return m_database.LoadEstateSettings(regionID, create);
+            return _database.LoadEstateSettings(regionID, create);
         }
 
         public EstateSettings LoadEstateSettings(int estateID)
         {
-            return m_database.LoadEstateSettings(estateID);
+            return _database.LoadEstateSettings(estateID);
         }
 
         public EstateSettings CreateNewEstate(int estateID = 0)
         {
-            return m_database.CreateNewEstate(estateID);
+            return _database.CreateNewEstate(estateID);
         }
 
         public List<EstateSettings> LoadEstateSettingsAll()
         {
-            return m_database.LoadEstateSettingsAll();
+            return _database.LoadEstateSettingsAll();
         }
 
         public void StoreEstateSettings(EstateSettings es)
         {
-            m_database.StoreEstateSettings(es);
+            _database.StoreEstateSettings(es);
         }
 
         public List<int> GetEstates(string search)
         {
-            return m_database.GetEstates(search);
+            return _database.GetEstates(search);
         }
 
         public List<int> GetEstatesAll()
         {
-            return m_database.GetEstatesAll();
+            return _database.GetEstatesAll();
         }
 
         public List<int> GetEstatesByOwner(UUID ownerID)
         {
-            return m_database.GetEstatesByOwner(ownerID);
+            return _database.GetEstatesByOwner(ownerID);
         }
 
         public bool LinkRegion(UUID regionID, int estateID)
         {
-            return m_database.LinkRegion(regionID, estateID);
+            return _database.LinkRegion(regionID, estateID);
         }
 
         public List<UUID> GetRegions(int estateID)
         {
-            return m_database.GetRegions(estateID);
+            return _database.GetRegions(estateID);
         }
 
         public bool DeleteEstate(int estateID)
         {
-            return m_database.DeleteEstate(estateID);
+            return _database.DeleteEstate(estateID);
         }
     }
 }

@@ -38,20 +38,20 @@ namespace OpenSim.Server.Handlers.Asset
 {
     public class AssetsExistHandler : BaseStreamHandler
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAssetService m_AssetService;
+        private readonly IAssetService _AssetService;
 
         public AssetsExistHandler(IAssetService service) :
             base("POST", "/get_assets_exist")
         {
-            m_AssetService = service;
+            _AssetService = service;
         }
 
         public AssetsExistHandler(IAssetService service, IServiceAuth auth) :
             base("POST", "/get_assets_exist", auth)
         {
-            m_AssetService = service;
+            _AssetService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream request, IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
@@ -70,7 +70,7 @@ namespace OpenSim.Server.Handlers.Asset
                 return null;
             }
 
-            bool[] exist = m_AssetService.AssetsExist(ids);
+            bool[] exist = _AssetService.AssetsExist(ids);
 
             xs = new XmlSerializer(typeof(bool[]));
             return ServerUtils.SerializeResult(xs, exist);

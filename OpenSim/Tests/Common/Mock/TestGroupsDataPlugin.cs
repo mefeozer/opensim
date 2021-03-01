@@ -11,10 +11,7 @@ namespace OpenSim.Tests.Common.Mock
         class CompositeKey
         {
             private readonly string _key;
-            public string Key
-            {
-                get { return _key;  }
-            }
+            public string Key => _key;
 
             public CompositeKey(UUID _k1, string _k2)
             {
@@ -46,23 +43,23 @@ namespace OpenSim.Tests.Common.Mock
             }
         }
 
-        private readonly Dictionary<UUID, GroupData> m_Groups;
-        private readonly Dictionary<CompositeKey, MembershipData> m_Membership;
-        private readonly Dictionary<CompositeKey, RoleData> m_Roles;
-        private readonly Dictionary<CompositeKey, RoleMembershipData> m_RoleMembership;
-        private Dictionary<UUID, InvitationData> m_Invites;
-        private Dictionary<UUID, NoticeData> m_Notices;
-        private readonly Dictionary<string, PrincipalData> m_Principals;
+        private readonly Dictionary<UUID, GroupData> _Groups;
+        private readonly Dictionary<CompositeKey, MembershipData> _Membership;
+        private readonly Dictionary<CompositeKey, RoleData> _Roles;
+        private readonly Dictionary<CompositeKey, RoleMembershipData> _RoleMembership;
+        private Dictionary<UUID, InvitationData> _Invites;
+        private Dictionary<UUID, NoticeData> _Notices;
+        private readonly Dictionary<string, PrincipalData> _Principals;
 
         public TestGroupsDataPlugin(string connectionString, string realm)
         {
-            m_Groups = new Dictionary<UUID, GroupData>();
-            m_Membership = new Dictionary<CompositeKey, MembershipData>();
-            m_Roles = new Dictionary<CompositeKey, RoleData>();
-            m_RoleMembership = new Dictionary<CompositeKey, RoleMembershipData>();
-            m_Invites = new Dictionary<UUID, InvitationData>();
-            m_Notices = new Dictionary<UUID, NoticeData>();
-            m_Principals = new Dictionary<string, PrincipalData>();
+            _Groups = new Dictionary<UUID, GroupData>();
+            _Membership = new Dictionary<CompositeKey, MembershipData>();
+            _Roles = new Dictionary<CompositeKey, RoleData>();
+            _RoleMembership = new Dictionary<CompositeKey, RoleMembershipData>();
+            _Invites = new Dictionary<UUID, InvitationData>();
+            _Notices = new Dictionary<UUID, NoticeData>();
+            _Principals = new Dictionary<string, PrincipalData>();
         }
 
         #region groups table
@@ -73,15 +70,15 @@ namespace OpenSim.Tests.Common.Mock
 
         public GroupData RetrieveGroup(UUID groupID)
         {
-            if (m_Groups.ContainsKey(groupID))
-                return m_Groups[groupID];
+            if (_Groups.ContainsKey(groupID))
+                return _Groups[groupID];
 
             return null;
         }
 
         public GroupData RetrieveGroup(string name)
         {
-            return m_Groups.Values.First(g => g.Data.ContainsKey("Name") && g.Data["Name"] == name);
+            return _Groups.Values.First(g => g.Data.ContainsKey("Name") && g.Data["Name"] == name);
         }
 
         public GroupData[] RetrieveGroups(string pattern)
@@ -89,19 +86,19 @@ namespace OpenSim.Tests.Common.Mock
             if (string.IsNullOrEmpty(pattern))
                 pattern = "1";
 
-            IEnumerable<GroupData> groups = m_Groups.Values.Where(g => g.Data.ContainsKey("Name") && (g.Data["Name"].StartsWith(pattern) || g.Data["Name"].EndsWith(pattern)));
+            IEnumerable<GroupData> groups = _Groups.Values.Where(g => g.Data.ContainsKey("Name") && (g.Data["Name"].StartsWith(pattern) || g.Data["Name"].EndsWith(pattern)));
 
             return groups != null ? groups.ToArray() : new GroupData[0];
         }
 
         public bool DeleteGroup(UUID groupID)
         {
-            return m_Groups.Remove(groupID);
+            return _Groups.Remove(groupID);
         }
 
         public int GroupsCount()
         {
-            return m_Groups.Count;
+            return _Groups.Count;
         }
         #endregion
 
@@ -109,22 +106,22 @@ namespace OpenSim.Tests.Common.Mock
         public MembershipData RetrieveMember(UUID groupID, string pricipalID)
         {
             CompositeKey dkey = new CompositeKey(groupID, pricipalID);
-            if (m_Membership.ContainsKey(dkey))
-                return m_Membership[dkey];
+            if (_Membership.ContainsKey(dkey))
+                return _Membership[dkey];
 
             return null;
         }
 
         public MembershipData[] RetrieveMembers(UUID groupID)
         {
-            IEnumerable<CompositeKey> keys = m_Membership.Keys.Where(k => k.Key.StartsWith(groupID.ToString()));
-            return keys.Where(m_Membership.ContainsKey).Select(x => m_Membership[x]).ToArray();
+            IEnumerable<CompositeKey> keys = _Membership.Keys.Where(k => k.Key.StartsWith(groupID.ToString()));
+            return keys.Where(_Membership.ContainsKey).Select(x => _Membership[x]).ToArray();
         }
 
         public MembershipData[] RetrieveMemberships(string principalID)
         {
-            IEnumerable<CompositeKey> keys = m_Membership.Keys.Where(k => k.Key.EndsWith(principalID.ToString()));
-            return keys.Where(m_Membership.ContainsKey).Select(x => m_Membership[x]).ToArray();
+            IEnumerable<CompositeKey> keys = _Membership.Keys.Where(k => k.Key.EndsWith(principalID.ToString()));
+            return keys.Where(_Membership.ContainsKey).Select(x => _Membership[x]).ToArray();
         }
 
         public MembershipData[] RetrievePrincipalGroupMemberships(string principalID)
@@ -135,30 +132,30 @@ namespace OpenSim.Tests.Common.Mock
         public MembershipData RetrievePrincipalGroupMembership(string principalID, UUID groupID)
         {
             CompositeKey dkey = new CompositeKey(groupID, principalID);
-            if (m_Membership.ContainsKey(dkey))
-                return m_Membership[dkey];
+            if (_Membership.ContainsKey(dkey))
+                return _Membership[dkey];
             return null;
         }
 
         public bool StoreMember(MembershipData data)
         {
             CompositeKey dkey = new CompositeKey(data.GroupID, data.PrincipalID);
-            m_Membership[dkey] = data;
+            _Membership[dkey] = data;
             return true;
         }
 
         public bool DeleteMember(UUID groupID, string principalID)
         {
             CompositeKey dkey = new CompositeKey(groupID, principalID);
-            if (m_Membership.ContainsKey(dkey))
-                return m_Membership.Remove(dkey);
+            if (_Membership.ContainsKey(dkey))
+                return _Membership.Remove(dkey);
 
             return false;
         }
 
         public int MemberCount(UUID groupID)
         {
-            return m_Membership.Count;
+            return _Membership.Count;
         }
         #endregion
 
@@ -166,94 +163,94 @@ namespace OpenSim.Tests.Common.Mock
         public bool StoreRole(RoleData data)
         {
             CompositeKey dkey = new CompositeKey(data.GroupID, data.RoleID.ToString());
-            m_Roles[dkey] = data;
+            _Roles[dkey] = data;
             return true;
         }
 
         public RoleData RetrieveRole(UUID groupID, UUID roleID)
         {
             CompositeKey dkey = new CompositeKey(groupID, roleID.ToString());
-            if (m_Roles.ContainsKey(dkey))
-                return m_Roles[dkey];
+            if (_Roles.ContainsKey(dkey))
+                return _Roles[dkey];
 
             return null;
         }
 
         public RoleData[] RetrieveRoles(UUID groupID)
         {
-            IEnumerable<CompositeKey> keys = m_Roles.Keys.Where(k => k.Key.StartsWith(groupID.ToString()));
-            return keys.Where(m_Roles.ContainsKey).Select(x => m_Roles[x]).ToArray();
+            IEnumerable<CompositeKey> keys = _Roles.Keys.Where(k => k.Key.StartsWith(groupID.ToString()));
+            return keys.Where(_Roles.ContainsKey).Select(x => _Roles[x]).ToArray();
         }
 
         public bool DeleteRole(UUID groupID, UUID roleID)
         {
             CompositeKey dkey = new CompositeKey(groupID, roleID.ToString());
-            if (m_Roles.ContainsKey(dkey))
-                return m_Roles.Remove(dkey);
+            if (_Roles.ContainsKey(dkey))
+                return _Roles.Remove(dkey);
 
             return false;
         }
 
         public int RoleCount(UUID groupID)
         {
-            return m_Roles.Count;
+            return _Roles.Count;
         }
         #endregion
 
         #region rolememberhip table
         public RoleMembershipData[] RetrieveRolesMembers(UUID groupID)
         {
-            IEnumerable<CompositeKey> keys = m_Roles.Keys.Where(k => k.Key.StartsWith(groupID.ToString()));
-            return keys.Where(m_RoleMembership.ContainsKey).Select(x => m_RoleMembership[x]).ToArray();
+            IEnumerable<CompositeKey> keys = _Roles.Keys.Where(k => k.Key.StartsWith(groupID.ToString()));
+            return keys.Where(_RoleMembership.ContainsKey).Select(x => _RoleMembership[x]).ToArray();
         }
 
         public RoleMembershipData[] RetrieveRoleMembers(UUID groupID, UUID roleID)
         {
-            IEnumerable<CompositeKey> keys = m_Roles.Keys.Where(k => k.Key.StartsWith(groupID.ToString() + roleID.ToString()));
-            return keys.Where(m_RoleMembership.ContainsKey).Select(x => m_RoleMembership[x]).ToArray();
+            IEnumerable<CompositeKey> keys = _Roles.Keys.Where(k => k.Key.StartsWith(groupID.ToString() + roleID.ToString()));
+            return keys.Where(_RoleMembership.ContainsKey).Select(x => _RoleMembership[x]).ToArray();
         }
 
         public RoleMembershipData[] RetrieveMemberRoles(UUID groupID, string principalID)
         {
-            IEnumerable<CompositeKey> keys = m_Roles.Keys.Where(k => k.Key.StartsWith(groupID.ToString()) && k.Key.EndsWith(principalID));
-            return keys.Where(m_RoleMembership.ContainsKey).Select(x => m_RoleMembership[x]).ToArray();
+            IEnumerable<CompositeKey> keys = _Roles.Keys.Where(k => k.Key.StartsWith(groupID.ToString()) && k.Key.EndsWith(principalID));
+            return keys.Where(_RoleMembership.ContainsKey).Select(x => _RoleMembership[x]).ToArray();
         }
 
         public RoleMembershipData RetrieveRoleMember(UUID groupID, UUID roleID, string principalID)
         {
             CompositeKey dkey = new CompositeKey(groupID, roleID.ToString(), principalID);
-            if (m_RoleMembership.ContainsKey(dkey))
-                return m_RoleMembership[dkey];
+            if (_RoleMembership.ContainsKey(dkey))
+                return _RoleMembership[dkey];
 
             return null;
         }
 
         public int RoleMemberCount(UUID groupID, UUID roleID)
         {
-            return m_RoleMembership.Count;
+            return _RoleMembership.Count;
         }
 
         public bool StoreRoleMember(RoleMembershipData data)
         {
             CompositeKey dkey = new CompositeKey(data.GroupID, data.RoleID.ToString(), data.PrincipalID);
-            m_RoleMembership[dkey] = data;
+            _RoleMembership[dkey] = data;
             return true;
         }
 
         public bool DeleteRoleMember(RoleMembershipData data)
         {
             CompositeKey dkey = new CompositeKey(data.GroupID, data.RoleID.ToString(), data.PrincipalID);
-            if (m_RoleMembership.ContainsKey(dkey))
-                return m_RoleMembership.Remove(dkey);
+            if (_RoleMembership.ContainsKey(dkey))
+                return _RoleMembership.Remove(dkey);
 
             return false;
         }
 
         public bool DeleteMemberAllRoles(UUID groupID, string principalID)
         {
-            List<CompositeKey> keys = m_RoleMembership.Keys.Where(k => k.Key.StartsWith(groupID.ToString()) && k.Key.EndsWith(principalID)).ToList();
+            List<CompositeKey> keys = _RoleMembership.Keys.Where(k => k.Key.StartsWith(groupID.ToString()) && k.Key.EndsWith(principalID)).ToList();
             foreach (CompositeKey k in keys)
-                m_RoleMembership.Remove(k);
+                _RoleMembership.Remove(k);
             return true;
         }
         #endregion
@@ -261,22 +258,22 @@ namespace OpenSim.Tests.Common.Mock
         #region principals table
         public bool StorePrincipal(PrincipalData data)
         {
-            m_Principals[data.PrincipalID] = data;
+            _Principals[data.PrincipalID] = data;
             return true;
         }
 
         public PrincipalData RetrievePrincipal(string principalID)
         {
-            if (m_Principals.ContainsKey(principalID))
-                return m_Principals[principalID];
+            if (_Principals.ContainsKey(principalID))
+                return _Principals[principalID];
 
             return null;
         }
 
         public bool DeletePrincipal(string principalID)
         {
-            if (m_Principals.ContainsKey(principalID))
-                return m_Principals.Remove(principalID);
+            if (_Principals.ContainsKey(principalID))
+                return _Principals.Remove(principalID);
             return false;
         }
         #endregion

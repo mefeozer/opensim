@@ -34,39 +34,39 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     private static readonly string LogHeader = "[BULLETSIM CONSTRAINT]";
 
-    protected BulletWorld m_world;
+    protected BulletWorld _world;
     protected BSScene PhysicsScene;
-    protected BulletBody m_body1;
-    protected BulletBody m_body2;
-    protected BulletConstraint m_constraint;
-    protected bool m_enabled = false;
+    protected BulletBody _body1;
+    protected BulletBody _body2;
+    protected BulletConstraint _constraint;
+    protected bool _enabled = false;
 
-    public BulletBody Body1 { get { return m_body1; } }
-    public BulletBody Body2 { get { return m_body2; } }
-    public BulletConstraint Constraint { get { return m_constraint; } }
+    public BulletBody Body1 => _body1;
+    public BulletBody Body2 => _body2;
+    public BulletConstraint Constraint => _constraint;
     public abstract ConstraintType Type { get; }
-    public bool IsEnabled { get { return m_enabled; } }
+    public bool IsEnabled => _enabled;
 
     public BSConstraint(BulletWorld world)
     {
-        m_world = world;
-        PhysicsScene = m_world.physicsScene;
+        _world = world;
+        PhysicsScene = _world.physicsScene;
     }
 
     public virtual void Dispose()
     {
-        if (m_enabled)
+        if (_enabled)
         {
-            m_enabled = false;
-            if (m_constraint.HasPhysicalConstraint)
+            _enabled = false;
+            if (_constraint.HasPhysicalConstraint)
             {
-                bool success = PhysicsScene.PE.DestroyConstraint(m_world, m_constraint);
-                m_world.physicsScene.DetailLog("{0},BSConstraint.Dispose,taint,id1={1},body1={2},id2={3},body2={4},success={5}",
-                                    m_body1.ID,
-                                    m_body1.ID, m_body1.AddrString,
-                                    m_body2.ID, m_body2.AddrString,
+                bool success = PhysicsScene.PE.DestroyConstraint(_world, _constraint);
+                _world.physicsScene.DetailLog("{0},BSConstraint.Dispose,taint,id1={1},body1={2},id2={3},body2={4},success={5}",
+                                    _body1.ID,
+                                    _body1.ID, _body1.AddrString,
+                                    _body2.ID, _body2.AddrString,
                                     success);
-                m_constraint.Clear();
+                _constraint.Clear();
             }
         }
     }
@@ -74,10 +74,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public virtual bool SetLinearLimits(Vector3 low, Vector3 high)
     {
         bool ret = false;
-        if (m_enabled)
+        if (_enabled)
         {
-            m_world.physicsScene.DetailLog("{0},BSConstraint.SetLinearLimits,taint,low={1},high={2}", m_body1.ID, low, high);
-            ret = PhysicsScene.PE.SetLinearLimits(m_constraint, low, high);
+            _world.physicsScene.DetailLog("{0},BSConstraint.SetLinearLimits,taint,low={1},high={2}", _body1.ID, low, high);
+            ret = PhysicsScene.PE.SetLinearLimits(_constraint, low, high);
         }
         return ret;
     }
@@ -85,10 +85,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public virtual bool SetAngularLimits(Vector3 low, Vector3 high)
     {
         bool ret = false;
-        if (m_enabled)
+        if (_enabled)
         {
-            m_world.physicsScene.DetailLog("{0},BSConstraint.SetAngularLimits,taint,low={1},high={2}", m_body1.ID, low, high);
-            ret = PhysicsScene.PE.SetAngularLimits(m_constraint, low, high);
+            _world.physicsScene.DetailLog("{0},BSConstraint.SetAngularLimits,taint,low={1},high={2}", _body1.ID, low, high);
+            ret = PhysicsScene.PE.SetAngularLimits(_constraint, low, high);
         }
         return ret;
     }
@@ -96,9 +96,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public virtual bool SetSolverIterations(float cnt)
     {
         bool ret = false;
-        if (m_enabled)
+        if (_enabled)
         {
-            PhysicsScene.PE.SetConstraintNumSolverIterations(m_constraint, cnt);
+            PhysicsScene.PE.SetConstraintNumSolverIterations(_constraint, cnt);
             ret = true;
         }
         return ret;
@@ -107,10 +107,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public virtual bool CalculateTransforms()
     {
         bool ret = false;
-        if (m_enabled)
+        if (_enabled)
         {
             // Recompute the internal transforms
-            PhysicsScene.PE.CalculateTransforms(m_constraint);
+            PhysicsScene.PE.CalculateTransforms(_constraint);
             ret = true;
         }
         return ret;
@@ -121,7 +121,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public virtual bool RecomputeConstraintVariables(float mass)
     {
         bool ret = false;
-        if (m_enabled)
+        if (_enabled)
         {
             ret = CalculateTransforms();
             if (ret)
@@ -129,11 +129,11 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 // Setting an object's mass to zero (making it static like when it's selected)
                 //     automatically disables the constraints.
                 // If the link is enabled, be sure to set the constraint itself to enabled.
-                PhysicsScene.PE.SetConstraintEnable(m_constraint, BSParam.NumericBool(true));
+                PhysicsScene.PE.SetConstraintEnable(_constraint, BSParam.NumericBool(true));
             }
             else
             {
-                m_world.physicsScene.Logger.ErrorFormat("{0} CalculateTransforms failed. A={1}, B={2}", LogHeader, Body1.ID, Body2.ID);
+                _world.physicsScene.Logger.ErrorFormat("{0} CalculateTransforms failed. A={1}, B={2}", LogHeader, Body1.ID, Body2.ID);
             }
         }
         return ret;

@@ -41,59 +41,59 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 {
     public partial class ScriptBaseClass : MarshalByRefObject
     {
-        public IMOD_Api m_MOD_Functions;
+        public IMOD_Api _MOD_Functions;
 
         public void ApiTypeMOD(IScriptApi api)
         {
             if (!(api is IMOD_Api))
                 return;
 
-            m_MOD_Functions = (IMOD_Api)api;
+            _MOD_Functions = (IMOD_Api)api;
         }
 
         public void modInvokeN(string fname, params object[] parms)
         {
-            m_MOD_Functions.modInvokeN(fname, parms);
+            _MOD_Functions.modInvokeN(fname, parms);
         }
 
         public LSL_String modInvokeS(string fname, params object[] parms)
         {
-            return m_MOD_Functions.modInvokeS(fname, parms);
+            return _MOD_Functions.modInvokeS(fname, parms);
         }
 
         public LSL_Integer modInvokeI(string fname, params object[] parms)
         {
-            return m_MOD_Functions.modInvokeI(fname, parms);
+            return _MOD_Functions.modInvokeI(fname, parms);
         }
 
         public LSL_Float modInvokeF(string fname, params object[] parms)
         {
-            return m_MOD_Functions.modInvokeF(fname, parms);
+            return _MOD_Functions.modInvokeF(fname, parms);
         }
 
         public LSL_Key modInvokeK(string fname, params object[] parms)
         {
-            return m_MOD_Functions.modInvokeK(fname, parms);
+            return _MOD_Functions.modInvokeK(fname, parms);
         }
 
         public LSL_Vector modInvokeV(string fname, params object[] parms)
         {
-            return m_MOD_Functions.modInvokeV(fname, parms);
+            return _MOD_Functions.modInvokeV(fname, parms);
         }
 
         public LSL_Rotation modInvokeR(string fname, params object[] parms)
         {
-            return m_MOD_Functions.modInvokeR(fname, parms);
+            return _MOD_Functions.modInvokeR(fname, parms);
         }
 
         public LSL_List modInvokeL(string fname, params object[] parms)
         {
-            return m_MOD_Functions.modInvokeL(fname, parms);
+            return _MOD_Functions.modInvokeL(fname, parms);
         }
 
         public string modSendCommand(string module, string command, string k)
         {
-            return m_MOD_Functions.modSendCommand(module, command, k);
+            return _MOD_Functions.modSendCommand(module, command, k);
         }
     }
 }

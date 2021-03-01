@@ -37,7 +37,7 @@ namespace Robust.Tests
     [SetUpFixture]
     public class DemonServer : OpenSimServer
     {
-        private Thread m_demon;
+        private Thread _demon;
 
         public static string Address = "http://localhost:8888";
 
@@ -48,8 +48,8 @@ namespace Robust.Tests
                 File.Delete("Robust.Tests.log");
 
             Console.WriteLine("**** Starting demon Robust server ****");
-            m_demon = new Thread( () => Main(new string[] {"-inifile=Robust.Tests.ini"}));
-            m_demon.Start();
+            _demon = new Thread( () => Main(new string[] {"-inifile=Robust.Tests.ini"}));
+            _demon.Start();
             // Give some time for the server to instantiate all services
             Thread.Sleep(3000);
             Console.WriteLine("**** Setup Finished ****");
@@ -59,7 +59,7 @@ namespace Robust.Tests
         public void StopDemon()
         {
             Console.WriteLine("**** Killing demon Robust Server ****");
-            m_Server.Shutdown();
+            _Server.Shutdown();
         }
     }
 }

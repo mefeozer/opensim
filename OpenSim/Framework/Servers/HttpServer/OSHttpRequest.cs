@@ -43,41 +43,26 @@ namespace OpenSim.Framework.Servers.HttpServer
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected IHttpRequest m_request = null;
-        protected IHttpClientContext m_context = null;
+        protected IHttpRequest _request = null;
+        protected IHttpClientContext _context = null;
 
-        public string[] AcceptTypes
-        {
-            get { return m_request.AcceptTypes; }
-        }
+        public string[] AcceptTypes => _request.AcceptTypes;
 
-        public Encoding ContentEncoding
-        {
-            get { return m_contentEncoding; }
-        }
-        private readonly Encoding m_contentEncoding;
+        public Encoding ContentEncoding => _contentEncoding;
+        private readonly Encoding _contentEncoding;
 
-        public long ContentLength
-        {
-            get { return m_request.ContentLength; }
-        }
+        public long ContentLength => _request.ContentLength;
 
-        public long ContentLength64
-        {
-            get { return ContentLength; }
-        }
+        public long ContentLength64 => ContentLength;
 
-        public string ContentType
-        {
-            get { return m_contentType; }
-        }
-        private readonly string m_contentType;
+        public string ContentType => _contentType;
+        private readonly string _contentType;
 
         public HttpCookieCollection Cookies
         {
             get
             {
-                RequestCookies cookies = m_request.Cookies;
+                RequestCookies cookies = _request.Cookies;
                 HttpCookieCollection httpCookies = new HttpCookieCollection();
                 if(cookies != null)
                 {
@@ -88,49 +73,28 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
         }
 
-        public bool HasEntityBody
-        {
-            get { return m_request.ContentLength != 0; }
-        }
+        public bool HasEntityBody => _request.ContentLength != 0;
 
-        public NameValueCollection Headers
-        {
-            get { return m_request.Headers; }
-        }
+        public NameValueCollection Headers => _request.Headers;
 
-        public string HttpMethod
-        {
-            get { return m_request.Method; }
-        }
+        public string HttpMethod => _request.Method;
 
-        public Stream InputStream
-        {
-            get { return m_request.Body; }
-        }
+        public Stream InputStream => _request.Body;
 
-        public bool IsSecured
-        {
-            get { return m_context.IsSecured; }
-        }
+        public bool IsSecured => _context.IsSecured;
 
-        public bool KeepAlive
-        {
-            get { return ConnectionType.KeepAlive == m_request.Connection; }
-        }
+        public bool KeepAlive => ConnectionType.KeepAlive == _request.Connection;
 
-        public NameValueCollection QueryString
-        {
-            get { return m_request.QueryString;}
-        }
+        public NameValueCollection QueryString => _request.QueryString;
 
-        private Hashtable m_queryAsHashtable = null;
+        private Hashtable _queryAsHashtable = null;
         public Hashtable Query
         {
             get
             {
-                if (m_queryAsHashtable == null)
+                if (_queryAsHashtable == null)
                     BuildQueryHashtable();
-                return m_queryAsHashtable;
+                return _queryAsHashtable;
             }
         }
 
@@ -146,14 +110,14 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
         }
 
-        private HashSet<string> m_queryFlags = null;
+        private HashSet<string> _queryFlags = null;
         public HashSet<string> QueryFlags
         {
             get
             {
-                if (m_queryFlags == null)
+                if (_queryFlags == null)
                     BuildQueryDictionary();
-                return m_queryFlags;
+                return _queryFlags;
             }
         }
     /// <value>
@@ -161,74 +125,45 @@ namespace OpenSim.Framework.Servers.HttpServer
     /// </value>
     //        public Hashtable Form { get; private set; }
 
-        public string RawUrl
-        {
-            get { return m_request.Uri.AbsolutePath; }
-        }
+        public string RawUrl => _request.Uri.AbsolutePath;
 
-        public IPEndPoint RemoteIPEndPoint
-        {
-            get { return m_request.RemoteIPEndPoint; }
-        }
+    public IPEndPoint RemoteIPEndPoint => _request.RemoteIPEndPoint;
 
-        public IPEndPoint LocalIPEndPoint
-        {
-            get { return m_request.LocalIPEndPoint; }
-        }
+    public IPEndPoint LocalIPEndPoint => _request.LocalIPEndPoint;
 
-        public Uri Url
-        {
-            get { return m_request.Uri; }
-        }
+    public Uri Url => _request.Uri;
 
-        public string UriPath
-        {
-            get { return m_request.UriPath; }
-        }
+    public string UriPath => _request.UriPath;
 
-        public string UserAgent
-        {
-            get { return m_userAgent; }
-        }
-        private readonly string m_userAgent;
+    public string UserAgent => _userAgent;
+    private readonly string _userAgent;
 
-        public double ArrivalTS
-        {
-            get { return m_request.ArrivalTS;}
-        }
+        public double ArrivalTS => _request.ArrivalTS;
 
-        internal IHttpRequest IHttpRequest
-        {
-            get { return m_request; }
-        }
+        internal IHttpRequest IHttpRequest => _request;
 
-        internal IHttpClientContext IHttpClientContext
-        {
-            get { return m_context; }
-        }
+        internal IHttpClientContext IHttpClientContext => _context;
 
         /// <summary>
         /// Internal whiteboard for handlers to store temporary stuff
         /// into.
         /// </summary>
-        internal Dictionary<string, object> Whiteboard
-        {
-            get { return _whiteboard; }
-        }
+        internal Dictionary<string, object> Whiteboard => _whiteboard;
+
         private readonly Dictionary<string, object> _whiteboard = new Dictionary<string, object>();
 
         public OSHttpRequest() {}
 
         public OSHttpRequest(IHttpRequest req)
         {
-            m_request = req;
-            m_context = req.Context;
+            _request = req;
+            _context = req.Context;
 
             if (null != req.Headers["content-encoding"])
             {
                 try
                 {
-                    m_contentEncoding = Encoding.GetEncoding(m_request.Headers["content-encoding"]);
+                    _contentEncoding = Encoding.GetEncoding(_request.Headers["content-encoding"]);
                 }
                 catch
                 {
@@ -237,9 +172,9 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
 
             if (null != req.Headers["content-type"])
-                m_contentType = m_request.Headers["content-type"];
+                _contentType = _request.Headers["content-type"];
             if (null != req.Headers["user-agent"])
-                m_userAgent = req.Headers["user-agent"];
+                _userAgent = req.Headers["user-agent"];
 
 //            Form = new Hashtable();
 //            foreach (HttpInputItem item in req.Form)
@@ -251,9 +186,9 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         private void BuildQueryDictionary()
         {
-            NameValueCollection q = m_request.QueryString;
+            NameValueCollection q = _request.QueryString;
             _queryAsDictionay = new Dictionary<string, string>();
-            m_queryFlags = new HashSet<string>();
+            _queryFlags = new HashSet<string>();
             for(int i = 0; i <q.Count; ++i)
             {
                 try
@@ -262,7 +197,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                     if(!string.IsNullOrEmpty(name))
                         _queryAsDictionay[name] = q[i];
                     else
-                        m_queryFlags.Add(q[i]);
+                        _queryFlags.Add(q[i]);
                 }
                 catch {}
             }
@@ -270,18 +205,18 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         private void BuildQueryHashtable()
         {
-            NameValueCollection q = m_request.QueryString;
-            m_queryAsHashtable = new Hashtable();
-            m_queryFlags = new HashSet<string>();
+            NameValueCollection q = _request.QueryString;
+            _queryAsHashtable = new Hashtable();
+            _queryFlags = new HashSet<string>();
             for (int i = 0; i < q.Count; ++i)
             {
                 try
                 {
                     var name = q.GetKey(i);
                     if (!string.IsNullOrEmpty(name))
-                        m_queryAsHashtable[name] = q[i];
+                        _queryAsHashtable[name] = q[i];
                     else
-                        m_queryFlags.Add(q[i]);
+                        _queryFlags.Add(q[i]);
                 }
                 catch { }
             }

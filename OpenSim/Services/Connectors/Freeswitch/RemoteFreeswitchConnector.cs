@@ -38,11 +38,11 @@ namespace OpenSim.Services.Connectors
 {
     public class RemoteFreeswitchConnector : IFreeswitchService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
+        private string _ServerURI = string.Empty;
 
         public RemoteFreeswitchConnector()
         {
@@ -50,7 +50,7 @@ namespace OpenSim.Services.Connectors
 
         public RemoteFreeswitchConnector(string serverURI)
         {
-            m_ServerURI = serverURI.TrimEnd('/') + "/region-config";
+            _ServerURI = serverURI.TrimEnd('/') + "/region-config";
         }
 
         public RemoteFreeswitchConnector(IConfigSource source)
@@ -63,7 +63,7 @@ namespace OpenSim.Services.Connectors
             IConfig freeswitchConfig = source.Configs["FreeSwitchVoice"];
             if (freeswitchConfig == null)
             {
-                m_log.Error("[FREESWITCH CONNECTOR]: FreeSwitchVoice missing from OpenSim.ini");
+                _log.Error("[FREESWITCH CONNECTOR]: FreeSwitchVoice missing from OpenSim.ini");
                 throw new Exception("Freeswitch connector init error");
             }
 
@@ -72,10 +72,10 @@ namespace OpenSim.Services.Connectors
 
             if (string.IsNullOrEmpty(serviceURI))
             {
-                m_log.Error("[FREESWITCH CONNECTOR]: No FreeswitchServiceURL named in section FreeSwitchVoice");
+                _log.Error("[FREESWITCH CONNECTOR]: No FreeswitchServiceURL named in section FreeSwitchVoice");
                 throw new Exception("Freeswitch connector init error");
             }
-            m_ServerURI = serviceURI.TrimEnd('/') + "/region-config";
+            _ServerURI = serviceURI.TrimEnd('/') + "/region-config";
         }
 
         public Hashtable HandleDirectoryRequest(Hashtable requestBody)
@@ -92,9 +92,9 @@ namespace OpenSim.Services.Connectors
 
         public string GetJsonConfig()
         {
-            m_log.DebugFormat("[FREESWITCH CONNECTOR]: Requesting config from {0}", m_ServerURI);
+            _log.DebugFormat("[FREESWITCH CONNECTOR]: Requesting config from {0}", _ServerURI);
             return SynchronousRestFormsRequester.MakeRequest("GET",
-                    m_ServerURI, string.Empty);
+                    _ServerURI, string.Empty);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace OpenSim.Data.SQLite
                 cmd.Parameters.AddWithValue(":MuteID", muteID.ToString());
                 cmd.Parameters.AddWithValue(":MuteName", muteName);
 
-                if (ExecuteNonQuery(cmd, m_Connection) > 0)
+                if (ExecuteNonQuery(cmd, _Connection) > 0)
                     return true;
                 return false;
             }

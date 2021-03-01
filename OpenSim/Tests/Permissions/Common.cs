@@ -46,19 +46,13 @@ namespace OpenSim.Tests.Permissions
     {
         public static Common TheInstance;
 
-        public static TestScene TheScene
-        {
-            get { return TheInstance.m_Scene; }
-        }
+        public static TestScene TheScene => TheInstance._Scene;
 
-        public static ScenePresence[] TheAvatars
-        {
-            get { return TheInstance.m_Avatars;  }
-        }
+        public static ScenePresence[] TheAvatars => TheInstance._Avatars;
 
         private static readonly string Perms = "Owner: {0}; Group: {1}; Everyone: {2}; Next: {3}";
-        private TestScene m_Scene;
-        private readonly ScenePresence[] m_Avatars = new ScenePresence[3];
+        private TestScene _Scene;
+        private readonly ScenePresence[] _Avatars = new ScenePresence[3];
 
         [SetUp]
         public override void SetUp()
@@ -87,9 +81,9 @@ namespace OpenSim.Tests.Permissions
             config.Configs["Groups"].Set("ServicesConnectorModule", "Groups Local Service Connector");
             config.Configs["Groups"].Set("LocalService", "local");
 
-            m_Scene = new SceneHelpers().SetupScene("Test", UUID.Random(), 1000, 1000, config);
+            _Scene = new SceneHelpers().SetupScene("Test", UUID.Random(), 1000, 1000, config);
             // Add modules
-            SceneHelpers.SetupSceneModules(m_Scene, config, new DefaultPermissionsModule(), new InventoryTransferModule(), new BasicInventoryAccessModule());
+            SceneHelpers.SetupSceneModules(_Scene, config, new DefaultPermissionsModule(), new InventoryTransferModule(), new BasicInventoryAccessModule());
 
             SetUpBasicEnvironment();
         }
@@ -112,11 +106,11 @@ namespace OpenSim.Tests.Permissions
             {
                 UUID id = TestHelpers.ParseTail(i + 1);
 
-                m_Avatars[i] = AddScenePresence("Bot", "Bot_" + (i+1), id);
-                Assert.That(m_Avatars[i], Is.Not.Null);
-                Assert.That(m_Avatars[i].IsChildAgent, Is.False);
-                Assert.That(m_Avatars[i].UUID, Is.EqualTo(id));
-                Assert.That(m_Scene.GetScenePresences().Count, Is.EqualTo(i + 1));
+                _Avatars[i] = AddScenePresence("Bot", "Bot_" + (i+1), id);
+                Assert.That(_Avatars[i], Is.Not.Null);
+                Assert.That(_Avatars[i].IsChildAgent, Is.False);
+                Assert.That(_Avatars[i].UUID, Is.EqualTo(id));
+                Assert.That(_Scene.GetScenePresences().Count, Is.EqualTo(i + 1));
             }
 
             AddA1Object("Box C", 10, PermissionMask.Copy);
@@ -131,8 +125,8 @@ namespace OpenSim.Tests.Permissions
 
             Thread.Sleep(5000);
 
-            InventoryFolderBase objsFolder = UserInventoryHelpers.GetInventoryFolder(m_Scene.InventoryService, m_Avatars[0].UUID, "Objects");
-            List<InventoryItemBase> items = m_Scene.InventoryService.GetFolderItems(m_Avatars[0].UUID, objsFolder.ID);
+            InventoryFolderBase objsFolder = UserInventoryHelpers.GetInventoryFolder(_Scene.InventoryService, _Avatars[0].UUID, "Objects");
+            List<InventoryItemBase> items = _Scene.InventoryService.GetFolderItems(_Avatars[0].UUID, objsFolder.ID);
             Assert.That(items.Count, Is.EqualTo(7));
 
             RevokePermission(0, "Box MCT-C", PermissionMask.Copy);
@@ -140,9 +134,9 @@ namespace OpenSim.Tests.Permissions
 
         private ScenePresence AddScenePresence(string first, string last, UUID id)
         {
-            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(m_Scene, first, last, id, "pw");
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_Scene, id);
-            Assert.That(m_Scene.AuthenticateHandler.GetAgentCircuitData(id), Is.Not.Null);
+            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(_Scene, first, last, id, "pw");
+            ScenePresence sp = SceneHelpers.AddScenePresence(_Scene, id);
+            Assert.That(_Scene.AuthenticateHandler.GetAgentCircuitData(id), Is.Not.Null);
 
             return sp;
         }
@@ -150,7 +144,7 @@ namespace OpenSim.Tests.Permissions
         private void AddA1Object(string name, int suffix, PermissionMask nextOwnerPerms)
         {
             // Create a Box. Default permissions are just T
-            SceneObjectGroup box = AddSceneObject(name, suffix, 1, m_Avatars[0].UUID);
+            SceneObjectGroup box = AddSceneObject(name, suffix, 1, _Avatars[0].UUID);
             Assert.True((box.RootPart.NextOwnerMask & (int)PermissionMask.Copy) == 0);
             Assert.True((box.RootPart.NextOwnerMask & (int)PermissionMask.Modify) == 0);
             Assert.True((box.RootPart.NextOwnerMask & (int)PermissionMask.Transfer) != 0);
@@ -159,16 +153,16 @@ namespace OpenSim.Tests.Permissions
             // set = 1 means add the permission; set = 0 means remove permission
 
             if ((nextOwnerPerms & PermissionMask.Copy) != 0)
-                m_Scene.HandleObjectPermissionsUpdate(m_Avatars[0].ControllingClient, m_Avatars[0].UUID,
-                    m_Avatars[0].ControllingClient.SessionId, 16, box.LocalId, (uint)PermissionMask.Copy, 1);
+                _Scene.HandleObjectPermissionsUpdate(_Avatars[0].ControllingClient, _Avatars[0].UUID,
+                    _Avatars[0].ControllingClient.SessionId, 16, box.LocalId, (uint)PermissionMask.Copy, 1);
 
             if ((nextOwnerPerms & PermissionMask.Modify) != 0)
-                m_Scene.HandleObjectPermissionsUpdate(m_Avatars[0].ControllingClient, m_Avatars[0].UUID,
-                    m_Avatars[0].ControllingClient.SessionId, 16, box.LocalId, (uint)PermissionMask.Modify, 1);
+                _Scene.HandleObjectPermissionsUpdate(_Avatars[0].ControllingClient, _Avatars[0].UUID,
+                    _Avatars[0].ControllingClient.SessionId, 16, box.LocalId, (uint)PermissionMask.Modify, 1);
 
             if ((nextOwnerPerms & PermissionMask.Transfer) == 0)
-                m_Scene.HandleObjectPermissionsUpdate(m_Avatars[0].ControllingClient, m_Avatars[0].UUID,
-                    m_Avatars[0].ControllingClient.SessionId, 16, box.LocalId, (uint)PermissionMask.Transfer, 0);
+                _Scene.HandleObjectPermissionsUpdate(_Avatars[0].ControllingClient, _Avatars[0].UUID,
+                    _Avatars[0].ControllingClient.SessionId, 16, box.LocalId, (uint)PermissionMask.Transfer, 0);
 
             PrintPerms(box);
             AssertPermissions(nextOwnerPerms, (PermissionMask)box.RootPart.NextOwnerMask, box.OwnerID.ToString().Substring(34) + " : " + box.Name);
@@ -179,7 +173,7 @@ namespace OpenSim.Tests.Permissions
 
         public void RevokePermission(int ownerIndex, string name, PermissionMask perm)
         {
-            InventoryItemBase item = Common.TheInstance.GetItemFromInventory(m_Avatars[ownerIndex].UUID, "Objects", name);
+            InventoryItemBase item = Common.TheInstance.GetItemFromInventory(_Avatars[ownerIndex].UUID, "Objects", name);
             Assert.That(item, Is.Not.Null);
 
             // Clone it, so to avoid aliasing -- just like the viewer does.
@@ -191,9 +185,9 @@ namespace OpenSim.Tests.Permissions
             Assert.That(clone.ID == item.ID);
 
             // Update properties of the item in inventory. This should affect the original item above.
-            Common.TheScene.UpdateInventoryItemAsset(m_Avatars[ownerIndex].ControllingClient, UUID.Zero, clone.ID, clone);
+            Common.TheScene.UpdateInventoryItemAsset(_Avatars[ownerIndex].ControllingClient, UUID.Zero, clone.ID, clone);
 
-            item = Common.TheInstance.GetItemFromInventory(m_Avatars[ownerIndex].UUID, "Objects", name);
+            item = Common.TheInstance.GetItemFromInventory(_Avatars[ownerIndex].UUID, "Objects", name);
             Assert.That(item, Is.Not.Null);
             Common.TheInstance.PrintPerms(item);
             Common.TheInstance.AssertPermissions((PermissionMask)item.NextPermissions & ~perm,
@@ -242,8 +236,8 @@ namespace OpenSim.Tests.Permissions
             so.Name = name;
             so.Description = name;
 
-            Assert.That(m_Scene.AddNewSceneObject(so, false), Is.True);
-            SceneObjectGroup retrievedSo = m_Scene.GetSceneObjectGroup(so.UUID);
+            Assert.That(_Scene.AddNewSceneObject(so, false), Is.True);
+            SceneObjectGroup retrievedSo = _Scene.GetSceneObjectGroup(so.UUID);
 
             // If the parts have the same UUID then we will consider them as one and the same
             Assert.That(retrievedSo.PrimCount, Is.EqualTo(partsToTestCount));
@@ -253,19 +247,19 @@ namespace OpenSim.Tests.Permissions
 
         public void TakeCopyToInventory(int userIndex, SceneObjectGroup sog)
         {
-            InventoryFolderBase objsFolder = UserInventoryHelpers.GetInventoryFolder(m_Scene.InventoryService, m_Avatars[userIndex].UUID, "Objects");
+            InventoryFolderBase objsFolder = UserInventoryHelpers.GetInventoryFolder(_Scene.InventoryService, _Avatars[userIndex].UUID, "Objects");
             Assert.That(objsFolder, Is.Not.Null);
 
             List<uint> localIds = new List<uint>(); localIds.Add(sog.LocalId);
             // This is an async operation
-            m_Scene.DeRezObjects(m_Avatars[userIndex].ControllingClient, localIds, m_Avatars[userIndex].UUID, DeRezAction.TakeCopy, objsFolder.ID);
+            _Scene.DeRezObjects(_Avatars[userIndex].ControllingClient, localIds, _Avatars[userIndex].UUID, DeRezAction.TakeCopy, objsFolder.ID);
         }
 
         public InventoryItemBase GetItemFromInventory(UUID userID, string folderName, string itemName)
         {
-            InventoryFolderBase objsFolder = UserInventoryHelpers.GetInventoryFolder(m_Scene.InventoryService, userID, folderName);
+            InventoryFolderBase objsFolder = UserInventoryHelpers.GetInventoryFolder(_Scene.InventoryService, userID, folderName);
             Assert.That(objsFolder, Is.Not.Null);
-            List<InventoryItemBase> items = m_Scene.InventoryService.GetFolderItems(userID, objsFolder.ID);
+            List<InventoryItemBase> items = _Scene.InventoryService.GetFolderItems(userID, objsFolder.ID);
             InventoryItemBase item = items.Find(i => i.Name == itemName);
             Assert.That(item, Is.Not.Null);
 
@@ -339,7 +333,7 @@ namespace OpenSim.Tests.Permissions
 
             GridInstantMessage giveIm
                 = new GridInstantMessage(
-                    m_Scene,
+                    _Scene,
                     giverSp.UUID,
                     giverSp.Name,
                     receiverSp.UUID,
@@ -357,7 +351,7 @@ namespace OpenSim.Tests.Permissions
             // These details might not all be correct.
             GridInstantMessage acceptIm
                 = new GridInstantMessage(
-                    m_Scene,
+                    _Scene,
                     receiverSp.UUID,
                     receiverSp.Name,
                     giverSp.UUID,

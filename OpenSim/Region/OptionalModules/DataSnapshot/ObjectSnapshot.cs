@@ -39,23 +39,23 @@ namespace OpenSim.Region.DataSnapshot.Providers
 {
     public class ObjectSnapshot : IDataSnapshotProvider
     {
-        private Scene m_scene = null;
-        // private DataSnapshotManager m_parent = null;
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private bool m_stale = true;
+        private Scene _scene = null;
+        // private DataSnapshotManager _parent = null;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private bool _stale = true;
 
-        private static readonly UUID m_DefaultImage = new UUID("89556747-24cb-43ed-920b-47caed15465f");
-        private static readonly UUID m_BlankImage = new UUID("5748decc-f629-461c-9a36-a35a221fe21f");
+        private static readonly UUID _DefaultImage = new UUID("89556747-24cb-43ed-920b-47caed15465f");
+        private static readonly UUID _BlankImage = new UUID("5748decc-f629-461c-9a36-a35a221fe21f");
 
 
         public void Initialize(Scene scene, DataSnapshotManager parent)
         {
-            m_scene = scene;
-            // m_parent = parent;
+            _scene = scene;
+            // _parent = parent;
 
             //To check for staleness, we must catch all incoming client packets.
-            m_scene.EventManager.OnNewClient += OnNewClient;
-            m_scene.EventManager.OnParcelPrimCountAdd += delegate(SceneObjectGroup obj) { this.Stale = true; };
+            _scene.EventManager.OnNewClient += OnNewClient;
+            _scene.EventManager.OnParcelPrimCountAdd += delegate(SceneObjectGroup obj) { this.Stale = true; };
         }
 
         public void OnNewClient(IClientAPI client)
@@ -89,19 +89,16 @@ namespace OpenSim.Region.DataSnapshot.Providers
                 bool RemoveItem, UUID fromTaskID) { this.Stale = true; };
         }
 
-        public Scene GetParentScene
-        {
-            get { return m_scene; }
-        }
+        public Scene GetParentScene => _scene;
 
         public XmlNode RequestSnapshotData(XmlDocument nodeFactory)
         {
-            m_log.Debug("[DATASNAPSHOT]: Generating object data for scene " + m_scene.RegionInfo.RegionName);
+            _log.Debug("[DATASNAPSHOT]: Generating object data for scene " + _scene.RegionInfo.RegionName);
 
             XmlNode parent = nodeFactory.CreateNode(XmlNodeType.Element, "objectdata", "");
             XmlNode node;
 
-            EntityBase[] entities = m_scene.Entities.GetEntities();
+            EntityBase[] entities = _scene.Entities.GetEntities();
             foreach (EntityBase entity in entities)
             {
                 // only objects, not avatars
@@ -109,16 +106,16 @@ namespace OpenSim.Region.DataSnapshot.Providers
                 {
                     SceneObjectGroup obj = (SceneObjectGroup)entity;
 
-//                    m_log.Debug("[DATASNAPSHOT]: Found object " + obj.Name + " in scene");
+//                    _log.Debug("[DATASNAPSHOT]: Found object " + obj.Name + " in scene");
 
                     // libomv will complain about PrimFlags.JointWheel
                     // being obsolete, so we...
                     #pragma warning disable 0612
                     if ((obj.RootPart.Flags & PrimFlags.JointWheel) == PrimFlags.JointWheel)
                     {
-                        SceneObjectPart m_rootPart = obj.RootPart;
+                        SceneObjectPart _rootPart = obj.RootPart;
 
-                        ILandObject land = m_scene.LandChannel.GetLandObject(m_rootPart.AbsolutePosition.X, m_rootPart.AbsolutePosition.Y);
+                        ILandObject land = _scene.LandChannel.GetLandObject(_rootPart.AbsolutePosition.X, _rootPart.AbsolutePosition.Y);
 
                         XmlNode xmlobject = nodeFactory.CreateNode(XmlNodeType.Element, "object", "");
                         node = nodeFactory.CreateNode(XmlNodeType.Element, "uuid", "");
@@ -126,19 +123,19 @@ namespace OpenSim.Region.DataSnapshot.Providers
                         xmlobject.AppendChild(node);
 
                         node = nodeFactory.CreateNode(XmlNodeType.Element, "title", "");
-                        node.InnerText = m_rootPart.Name;
+                        node.InnerText = _rootPart.Name;
                         xmlobject.AppendChild(node);
 
                         node = nodeFactory.CreateNode(XmlNodeType.Element, "description", "");
-                        node.InnerText = m_rootPart.Description;
+                        node.InnerText = _rootPart.Description;
                         xmlobject.AppendChild(node);
 
                         node = nodeFactory.CreateNode(XmlNodeType.Element, "flags", "");
-                        node.InnerText = string.Format("{0:x}", (uint)m_rootPart.Flags);
+                        node.InnerText = string.Format("{0:x}", (uint)_rootPart.Flags);
                         xmlobject.AppendChild(node);
 
                         node = nodeFactory.CreateNode(XmlNodeType.Element, "regionuuid", "");
-                        node.InnerText = m_scene.RegionInfo.RegionSettings.RegionUUID.ToString();
+                        node.InnerText = _scene.RegionInfo.RegionSettings.RegionUUID.ToString();
                         xmlobject.AppendChild(node);
 
                         if (land != null && land.LandData != null)
@@ -150,7 +147,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
                         else
                         {
                             // Something is wrong with this object. Let's not list it.
-                            m_log.WarnFormat("[DATASNAPSHOT]: Bad data for object {0} ({1}) in region {2}", obj.Name, obj.UUID, m_scene.RegionInfo.RegionName);
+                            _log.WarnFormat("[DATASNAPSHOT]: Bad data for object {0} ({1}) in region {2}", obj.Name, obj.UUID, _scene.RegionInfo.RegionName);
                             continue;
                         }
 
@@ -176,22 +173,16 @@ namespace OpenSim.Region.DataSnapshot.Providers
             return parent;
         }
 
-        public string Name
-        {
-            get { return "ObjectSnapshot"; }
-        }
+        public string Name => "ObjectSnapshot";
 
         public bool Stale
         {
-            get
-            {
-                return m_stale;
-            }
+            get => _stale;
             set
             {
-                m_stale = value;
+                _stale = value;
 
-                if (m_stale)
+                if (_stale)
                     OnStale(this);
             }
         }
@@ -219,8 +210,8 @@ namespace OpenSim.Region.DataSnapshot.Providers
                 {
                     if (textures.DefaultTexture != null &&
                         textures.DefaultTexture.TextureID != UUID.Zero &&
-                        textures.DefaultTexture.TextureID != m_DefaultImage &&
-                        textures.DefaultTexture.TextureID != m_BlankImage &&
+                        textures.DefaultTexture.TextureID != _DefaultImage &&
+                        textures.DefaultTexture.TextureID != _BlankImage &&
                         textures.DefaultTexture.RGBA.A < 50f)
                     {
                         counts[textures.DefaultTexture.TextureID] = 8;
@@ -232,7 +223,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
                         {
                             if (tentry != null)
                             {
-                                if (tentry.TextureID != UUID.Zero && tentry.TextureID != m_DefaultImage && tentry.TextureID != m_BlankImage && tentry.RGBA.A < 50)
+                                if (tentry.TextureID != UUID.Zero && tentry.TextureID != _DefaultImage && tentry.TextureID != _BlankImage && tentry.RGBA.A < 50)
                                 {
                                     int c = 0;
                                     counts.TryGetValue(tentry.TextureID, out c);

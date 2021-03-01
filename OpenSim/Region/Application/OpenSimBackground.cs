@@ -37,7 +37,7 @@ namespace OpenSim
     /// </summary>
     public class OpenSimBackground : OpenSim
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly ManualResetEvent WorldHasComeToAnEnd = new ManualResetEvent(false);
 
@@ -50,11 +50,11 @@ namespace OpenSim
         /// </summary>
         public override void Startup()
         {
-            m_gui = false;
+            _gui = false;
 
             base.Startup();
 
-            m_log.InfoFormat("[OPENSIM MAIN]: Startup complete, serving {0} region{1}",
+            _log.InfoFormat("[OPENSIM MAIN]: Startup complete, serving {0} region{1}",
                              SceneManager.Scenes.Count, SceneManager.Scenes.Count > 1 ? "s" : "");
 
             WorldHasComeToAnEnd.WaitOne();
@@ -67,7 +67,7 @@ namespace OpenSim
         public override void Shutdown()
         {
             WorldHasComeToAnEnd.Set();
-            m_log.Info("[OPENSIM MAIN]: World has come to an end");
+            _log.Info("[OPENSIM MAIN]: World has come to an end");
             base.Shutdown();
         }
     }

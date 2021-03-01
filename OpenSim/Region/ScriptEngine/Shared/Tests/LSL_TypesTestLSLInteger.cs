@@ -34,8 +34,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     [TestFixture]
     public class LSL_TypesTestLSLInteger : OpenSimTestCase
     {
-        private Dictionary<double, int> m_doubleIntSet;
-        private Dictionary<string, int> m_stringIntSet;
+        private Dictionary<double, int> _doubleIntSet;
+        private Dictionary<string, int> _stringIntSet;
 
         /// <summary>
         /// Sets up dictionaries and arrays used in the tests.
@@ -43,33 +43,33 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
         [TestFixtureSetUp]
         public void SetUpDataSets()
         {
-            m_doubleIntSet = new Dictionary<double, int>();
-            m_doubleIntSet.Add(2.0, 2);
-            m_doubleIntSet.Add(-2.0, -2);
-            m_doubleIntSet.Add(0.0, 0);
-            m_doubleIntSet.Add(1.0, 1);
-            m_doubleIntSet.Add(-1.0, -1);
-            m_doubleIntSet.Add(999999999.0, 999999999);
-            m_doubleIntSet.Add(-99999999.0, -99999999);
+            _doubleIntSet = new Dictionary<double, int>();
+            _doubleIntSet.Add(2.0, 2);
+            _doubleIntSet.Add(-2.0, -2);
+            _doubleIntSet.Add(0.0, 0);
+            _doubleIntSet.Add(1.0, 1);
+            _doubleIntSet.Add(-1.0, -1);
+            _doubleIntSet.Add(999999999.0, 999999999);
+            _doubleIntSet.Add(-99999999.0, -99999999);
 
-            m_stringIntSet = new Dictionary<string, int>();
-            m_stringIntSet.Add("2", 2);
-            m_stringIntSet.Add("-2", -2);
-            m_stringIntSet.Add("0", 0);
-            m_stringIntSet.Add("1", 1);
-            m_stringIntSet.Add("-1", -1);
-            m_stringIntSet.Add("123.9", 123);
-            m_stringIntSet.Add("999999999", 999999999);
-            m_stringIntSet.Add("-99999999", -99999999);
-            m_stringIntSet.Add("", 0);
-            m_stringIntSet.Add("aa", 0);
-            m_stringIntSet.Add("56foo", 56);
-            m_stringIntSet.Add("42", 42);
-            m_stringIntSet.Add("42 is the answer", 42);
-            m_stringIntSet.Add(" 42", 42);
-            m_stringIntSet.Add("42,123,456", 42);
-            m_stringIntSet.Add("0xff", 255);
-            m_stringIntSet.Add("12345678900000", -1);
+            _stringIntSet = new Dictionary<string, int>();
+            _stringIntSet.Add("2", 2);
+            _stringIntSet.Add("-2", -2);
+            _stringIntSet.Add("0", 0);
+            _stringIntSet.Add("1", 1);
+            _stringIntSet.Add("-1", -1);
+            _stringIntSet.Add("123.9", 123);
+            _stringIntSet.Add("999999999", 999999999);
+            _stringIntSet.Add("-99999999", -99999999);
+            _stringIntSet.Add("", 0);
+            _stringIntSet.Add("aa", 0);
+            _stringIntSet.Add("56foo", 56);
+            _stringIntSet.Add("42", 42);
+            _stringIntSet.Add("42 is the answer", 42);
+            _stringIntSet.Add(" 42", 42);
+            _stringIntSet.Add("42,123,456", 42);
+            _stringIntSet.Add("0xff", 255);
+            _stringIntSet.Add("12345678900000", -1);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             LSL_Types.LSLInteger testInteger;
 
-            foreach (KeyValuePair<double, int> number in m_doubleIntSet)
+            foreach (KeyValuePair<double, int> number in _doubleIntSet)
             {
                 testInteger = (LSL_Types.LSLInteger) new LSL_Types.LSLFloat(number.Key);
                 Assert.AreEqual(testInteger.value, number.Value);
@@ -99,7 +99,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             LSL_Types.LSLInteger testInteger;
 
-            foreach (KeyValuePair<string, int> number in m_stringIntSet)
+            foreach (KeyValuePair<string, int> number in _stringIntSet)
             {
                 testInteger = (LSL_Types.LSLInteger) number.Key;
                 Assert.AreEqual(testInteger.value, number.Value);
@@ -116,7 +116,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             LSL_Types.LSLInteger testInteger;
 
-            foreach (KeyValuePair<string, int> number in m_stringIntSet)
+            foreach (KeyValuePair<string, int> number in _stringIntSet)
             {
                 testInteger = (LSL_Types.LSLInteger) new LSL_Types.LSLString(number.Key);
                 Assert.AreEqual(testInteger.value, number.Value);

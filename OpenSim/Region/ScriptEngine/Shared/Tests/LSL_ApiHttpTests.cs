@@ -49,12 +49,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     [TestFixture]
     public class LSL_ApiHttpTests : OpenSimTestCase
     {
-        private Scene m_scene;
-        private MockScriptEngine m_engine;
-        private UrlModule m_urlModule;
+        private Scene _scene;
+        private MockScriptEngine _engine;
+        private UrlModule _urlModule;
 
-        private TaskInventoryItem m_scriptItem;
-        private LSL_Api m_lslApi;
+        private TaskInventoryItem _scriptItem;
+        private LSL_Api _lslApi;
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
@@ -82,13 +82,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             uint port = 9999;
             MainServer.RemoveHttpServer(port);
 
-            m_engine = new MockScriptEngine();
-            m_urlModule = new UrlModule();
+            _engine = new MockScriptEngine();
+            _urlModule = new UrlModule();
 
             IConfigSource config = new IniConfigSource();
             config.AddConfig("Network");
             config.Configs["Network"].Set("ExternalHostNameForLSL", "127.0.0.1");
-            m_scene = new SceneHelpers().SetupScene();
+            _scene = new SceneHelpers().SetupScene();
 
             BaseHttpServer server = new BaseHttpServer(port);
             MainServer.AddHttpServer(server);
@@ -96,15 +96,15 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             server.Start();
 
-            SceneHelpers.SetupSceneModules(m_scene, config, m_engine, m_urlModule);
+            SceneHelpers.SetupSceneModules(_scene, config, _engine, _urlModule);
 
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
-            m_scriptItem = TaskInventoryHelpers.AddScript(m_scene.AssetService, so.RootPart);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
+            _scriptItem = TaskInventoryHelpers.AddScript(_scene.AssetService, so.RootPart);
 
             // This is disconnected from the actual script - the mock engine does not set up any LSL_Api atm.
             // Possibly this could be done and we could obtain it directly from the MockScriptEngine.
-            m_lslApi = new LSL_Api();
-            m_lslApi.Initialize(m_engine, so.RootPart, m_scriptItem);
+            _lslApi = new LSL_Api();
+            _lslApi.Initialize(_engine, so.RootPart, _scriptItem);
         }
 
         [TearDown]
@@ -118,30 +118,30 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
         {
             TestHelpers.InMethod();
 
-            m_lslApi.llRequestURL();
-            string returnedUri = m_engine.PostedEvents[m_scriptItem.ItemID][0].Params[2].ToString();
+            _lslApi.llRequestURL();
+            string returnedUri = _engine.PostedEvents[_scriptItem.ItemID][0].Params[2].ToString();
 
             {
                 // Check that the initial number of URLs is correct
-                Assert.That(m_lslApi.llGetFreeURLs().value, Is.EqualTo(m_urlModule.TotalUrls - 1));
+                Assert.That(_lslApi.llGetFreeURLs().value, Is.EqualTo(_urlModule.TotalUrls - 1));
             }
 
             {
                 // Check releasing a non-url
-                m_lslApi.llReleaseURL("GARBAGE");
-                Assert.That(m_lslApi.llGetFreeURLs().value, Is.EqualTo(m_urlModule.TotalUrls - 1));
+                _lslApi.llReleaseURL("GARBAGE");
+                Assert.That(_lslApi.llGetFreeURLs().value, Is.EqualTo(_urlModule.TotalUrls - 1));
             }
 
             {
                 // Check releasing a non-existing url
-                m_lslApi.llReleaseURL("http://example.com");
-                Assert.That(m_lslApi.llGetFreeURLs().value, Is.EqualTo(m_urlModule.TotalUrls - 1));
+                _lslApi.llReleaseURL("http://example.com");
+                Assert.That(_lslApi.llGetFreeURLs().value, Is.EqualTo(_urlModule.TotalUrls - 1));
             }
 
             {
                 // Check URL release
-                m_lslApi.llReleaseURL(returnedUri);
-                Assert.That(m_lslApi.llGetFreeURLs().value, Is.EqualTo(m_urlModule.TotalUrls));
+                _lslApi.llReleaseURL(returnedUri);
+                Assert.That(_lslApi.llGetFreeURLs().value, Is.EqualTo(_urlModule.TotalUrls));
 
                 HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(returnedUri);
 
@@ -164,8 +164,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             {
                 // Check releasing the same URL again
-                m_lslApi.llReleaseURL(returnedUri);
-                Assert.That(m_lslApi.llGetFreeURLs().value, Is.EqualTo(m_urlModule.TotalUrls));
+                _lslApi.llReleaseURL(returnedUri);
+                Assert.That(_lslApi.llGetFreeURLs().value, Is.EqualTo(_urlModule.TotalUrls));
             }
         }
 
@@ -174,17 +174,17 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
         {
             TestHelpers.InMethod();
 
-            string requestId = m_lslApi.llRequestURL();
+            string requestId = _lslApi.llRequestURL();
             Assert.That(requestId, Is.Not.EqualTo(UUID.Zero.ToString()));
             string returnedUri;
 
             {
                 // Check that URL is correctly set up
-                Assert.That(m_lslApi.llGetFreeURLs().value, Is.EqualTo(m_urlModule.TotalUrls - 1));
+                Assert.That(_lslApi.llGetFreeURLs().value, Is.EqualTo(_urlModule.TotalUrls - 1));
 
-                Assert.That(m_engine.PostedEvents.ContainsKey(m_scriptItem.ItemID));
+                Assert.That(_engine.PostedEvents.ContainsKey(_scriptItem.ItemID));
 
-                List<EventParams> events = m_engine.PostedEvents[m_scriptItem.ItemID];
+                List<EventParams> events = _engine.PostedEvents[_scriptItem.ItemID];
                 Assert.That(events.Count, Is.EqualTo(1));
                 EventParams eventParams = events[0];
                 Assert.That(eventParams.EventName, Is.EqualTo("http_request"));
@@ -203,17 +203,17 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 // Check that request to URL works.
                 string testResponse = "Hello World";
 
-                m_engine.ClearPostedEvents();
-                m_engine.PostEventHook
-                    += (itemId, evp) => m_lslApi.llHTTPResponse(evp.Params[0].ToString(), 200, testResponse);
+                _engine.ClearPostedEvents();
+                _engine.PostEventHook
+                    += (itemId, evp) => _lslApi.llHTTPResponse(evp.Params[0].ToString(), 200, testResponse);
 
 //                Console.WriteLine("Trying {0}", returnedUri);
 
                 AssertHttpResponse(returnedUri, testResponse);
 
-                Assert.That(m_engine.PostedEvents.ContainsKey(m_scriptItem.ItemID));
+                Assert.That(_engine.PostedEvents.ContainsKey(_scriptItem.ItemID));
 
-                List<EventParams> events = m_engine.PostedEvents[m_scriptItem.ItemID];
+                List<EventParams> events = _engine.PostedEvents[_scriptItem.ItemID];
                 Assert.That(events.Count, Is.EqualTo(1));
                 EventParams eventParams = events[0];
                 Assert.That(eventParams.EventName, Is.EqualTo("http_request"));

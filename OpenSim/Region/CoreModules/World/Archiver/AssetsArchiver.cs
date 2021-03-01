@@ -37,7 +37,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
     /// </summary>
     public class AssetsArchiver
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <value>
         /// Post a message to the log every x assets as a progress bar
@@ -47,13 +47,13 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <value>
         /// Keep a count of the number of assets written so that we can provide status updates
         /// </value>
-        protected int m_assetsWritten;
+        protected int _assetsWritten;
 
-        protected TarArchiveWriter m_archiveWriter;
+        protected TarArchiveWriter _archiveWriter;
 
         public AssetsArchiver(TarArchiveWriter archiveWriter)
         {
-            m_archiveWriter = archiveWriter;
+            _archiveWriter = archiveWriter;
         }
 
         /// <summary>
@@ -80,9 +80,9 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 //
 //            xtw.WriteStartElement("assets");
 //
-//            foreach (UUID uuid in m_assets.Keys)
+//            foreach (UUID uuid in _assets.Keys)
 //            {
-//                AssetBase asset = m_assets[uuid];
+//                AssetBase asset = _assets[uuid];
 //
 //                if (asset != null)
 //                {
@@ -129,21 +129,21 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             }
             else
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[ARCHIVER]: Unrecognized asset type {0} with uuid {1}.  This asset will be saved but not reloaded",
                     asset.Type, asset.ID);
             }
 
-            m_archiveWriter.WriteFile(
+            _archiveWriter.WriteFile(
                 ArchiveConstants.ASSETS_PATH + asset.FullID.ToString() + extension,
                 asset.Data);
 
-            m_assetsWritten++;
+            _assetsWritten++;
 
-            //m_log.DebugFormat("[ARCHIVER]: Added asset {0}", m_assetsWritten);
+            //_log.DebugFormat("[ARCHIVER]: Added asset {0}", _assetsWritten);
 
-            if (m_assetsWritten % LOG_ASSET_LOAD_NOTIFICATION_INTERVAL == 0)
-                m_log.InfoFormat("[ARCHIVER]: Added {0} assets to archive", m_assetsWritten);
+            if (_assetsWritten % LOG_ASSET_LOAD_NOTIFICATION_INTERVAL == 0)
+                _log.InfoFormat("[ARCHIVER]: Added {0} assets to archive", _assetsWritten);
         }
 
     }

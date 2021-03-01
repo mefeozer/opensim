@@ -43,13 +43,13 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
     public class HGAssetMapper
     {
         #region Fields
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // This maps between inventory server urls and inventory server clients
-//        private Dictionary<string, InventoryClient> m_inventoryServers = new Dictionary<string, InventoryClient>();
+//        private Dictionary<string, InventoryClient> _inventoryServers = new Dictionary<string, InventoryClient>();
 
-        private readonly Scene m_scene;
-        private readonly string m_HomeURI;
+        private readonly Scene _scene;
+        private readonly string _HomeURI;
 
         #endregion
 
@@ -57,8 +57,8 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
 
         public HGAssetMapper(Scene scene, string homeURL)
         {
-            m_scene = scene;
-            m_HomeURI = homeURL;
+            _scene = scene;
+            _HomeURI = homeURL;
         }
 
         #endregion
@@ -72,32 +72,32 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
 
             string assetIDstr = assetID.ToString();
             // Test if it's already here
-            AssetMetadata meta = m_scene.AssetService.GetMetadata(assetIDstr);
+            AssetMetadata meta = _scene.AssetService.GetMetadata(assetIDstr);
             if (meta == null)
             {
                 if (!url.EndsWith("/") && !url.EndsWith("="))
                     url = url + "/";
 
-                meta = m_scene.AssetService.GetMetadata(url + assetIDstr);
+                meta = _scene.AssetService.GetMetadata(url + assetIDstr);
 
                 if (meta != null)
-                    m_log.DebugFormat("[HG ASSET MAPPER]: Fetched metadata for asset {0} of type {1} from {2} ", assetIDstr, meta.Type, url);
+                    _log.DebugFormat("[HG ASSET MAPPER]: Fetched metadata for asset {0} of type {1} from {2} ", assetIDstr, meta.Type, url);
                 else
-                    m_log.DebugFormat("[HG ASSET MAPPER]: Unable to fetched metadata for asset {0} from {1} ", assetIDstr, url);
+                    _log.DebugFormat("[HG ASSET MAPPER]: Unable to fetched metadata for asset {0} from {1} ", assetIDstr, url);
             }
             return meta;
         }
 
         private AssetBase FetchAsset(string url, UUID assetID)
         {
-            return m_scene.AssetService.Get(assetID.ToString(), url, true);
+            return _scene.AssetService.Get(assetID.ToString(), url, true);
         }
 
         public bool PostAsset(string url, AssetBase asset, bool verbose = true)
         {
             if (asset == null)
             {
-                m_log.Warn("[HG ASSET MAPPER]: Tried to post asset to remote server, but asset not in local cache.");
+                _log.Warn("[HG ASSET MAPPER]: Tried to post asset to remote server, but asset not in local cache.");
                 return false;
             }
 
@@ -126,16 +126,16 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
             else
                 asset1.Data = asset.Data;
 
-            string id = m_scene.AssetService.Store(asset1);
+            string id = _scene.AssetService.Store(asset1);
             if (string.IsNullOrEmpty(id))
             {
                 if (verbose)
-                    m_log.DebugFormat("[HG ASSET MAPPER]: Asset server {0} did not accept {1}", url, asset.ID);
+                    _log.DebugFormat("[HG ASSET MAPPER]: Asset server {0} did not accept {1}", url, asset.ID);
                 return false;
             }
 
             if (verbose)
-                m_log.DebugFormat("[HG ASSET MAPPER]: Posted copy of asset {0} from local asset server to {1}", asset1.ID, url);
+                _log.DebugFormat("[HG ASSET MAPPER]: Posted copy of asset {0} from local asset server to {1}", asset1.ID, url);
             return true;
         }
 
@@ -157,9 +157,9 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
             {
                 if(UUID.TryParse(meta.CreatorID, out UUID uuid))
                 {
-                    UserAccount creator = m_scene.UserAccountService.GetUserAccount(m_scene.RegionInfo.ScopeID, uuid);
+                    UserAccount creator = _scene.UserAccountService.GetUserAccount(_scene.RegionInfo.ScopeID, uuid);
                     if (creator != null)
-                        meta.CreatorID = m_HomeURI + ";" + creator.FirstName + " " + creator.LastName;
+                        meta.CreatorID = _HomeURI + ";" + creator.FirstName + " " + creator.LastName;
                 }
             }
         }
@@ -173,17 +173,17 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
         protected string RewriteSOP(string xmlData)
         {
 //            Console.WriteLine("Input XML [{0}]", xmlData);
-            return ExternalRepresentationUtils.RewriteSOP(xmlData, m_scene.Name, m_HomeURI, m_scene.UserAccountService, m_scene.RegionInfo.ScopeID);
+            return ExternalRepresentationUtils.RewriteSOP(xmlData, _scene.Name, _HomeURI, _scene.UserAccountService, _scene.RegionInfo.ScopeID);
 
         }
 
         // TODO: unused
         // private void Dump(Dictionary<UUID, bool> lst)
         // {
-        //     m_log.Debug("XXX -------- UUID DUMP ------- XXX");
+        //     _log.Debug("XXX -------- UUID DUMP ------- XXX");
         //     foreach (KeyValuePair<UUID, bool> kvp in lst)
-        //         m_log.Debug(" >> " + kvp.Key + " (texture? " + kvp.Value + ")");
-        //     m_log.Debug("XXX -------- UUID DUMP ------- XXX");
+        //         _log.Debug(" >> " + kvp.Key + " (texture? " + kvp.Value + ")");
+        //     _log.Debug("XXX -------- UUID DUMP ------- XXX");
         // }
 
         #endregion
@@ -195,11 +195,11 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
         {
             // The act of gathering UUIDs downloads some assets from the remote server
             // but not all...
-            HGUuidGatherer uuidGatherer = new HGUuidGatherer(m_scene.AssetService, userAssetURL);
+            HGUuidGatherer uuidGatherer = new HGUuidGatherer(_scene.AssetService, userAssetURL);
             uuidGatherer.AddForInspection(assetID);
             uuidGatherer.GatherAll();
 
-            m_log.DebugFormat("[HG ASSET MAPPER]: Preparing to get {0} assets", uuidGatherer.GatheredUuids.Count);
+            _log.DebugFormat("[HG ASSET MAPPER]: Preparing to get {0} assets", uuidGatherer.GatheredUuids.Count);
             bool success = true;
             foreach (UUID uuid in uuidGatherer.GatheredUuids.Keys)
             {
@@ -211,23 +211,23 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
 
             // maybe all pieces got here...
             if (!success)
-                m_log.DebugFormat("[HG ASSET MAPPER]: Problems getting item {0} from asset server {1}", assetID, userAssetURL);
+                _log.DebugFormat("[HG ASSET MAPPER]: Problems getting item {0} from asset server {1}", assetID, userAssetURL);
             else
-                m_log.DebugFormat("[HG ASSET MAPPER]: Successfully got item {0} from asset server {1}", assetID, userAssetURL);
+                _log.DebugFormat("[HG ASSET MAPPER]: Successfully got item {0} from asset server {1}", assetID, userAssetURL);
         }
 
         public void Post(UUID assetID, UUID ownerID, string userAssetURL)
         {
-            AssetBase asset = m_scene.AssetService.Get(assetID.ToString());
+            AssetBase asset = _scene.AssetService.Get(assetID.ToString());
             if (asset == null)
             {
-                m_log.DebugFormat("[HG ASSET MAPPER POST]: Something wrong with asset {0}, it could not be found", assetID);
+                _log.DebugFormat("[HG ASSET MAPPER POST]: Something wrong with asset {0}, it could not be found", assetID);
                 return;
             }
-            m_log.DebugFormat("[HG ASSET MAPPER  POST]: Starting to send asset {0} to asset server {1}", assetID, userAssetURL);
+            _log.DebugFormat("[HG ASSET MAPPER  POST]: Starting to send asset {0} to asset server {1}", assetID, userAssetURL);
 
             // Find all the embedded assets
-            HGUuidGatherer uuidGatherer = new HGUuidGatherer(m_scene.AssetService, string.Empty);
+            HGUuidGatherer uuidGatherer = new HGUuidGatherer(_scene.AssetService, string.Empty);
             uuidGatherer.AddForInspection(asset.FullID);
             uuidGatherer.GatherAll(true);
 
@@ -245,11 +245,11 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
             bool[] exist;
             try
             {
-                exist = m_scene.AssetService.AssetsExist(remoteAssetIDs);
+                exist = _scene.AssetService.AssetsExist(remoteAssetIDs);
             }
             catch
             {
-                m_log.DebugFormat("[HG ASSET MAPPER POST]: Problems sending asset {0} to asset server {1}", assetID, userAssetURL);
+                _log.DebugFormat("[HG ASSET MAPPER POST]: Problems sending asset {0} to asset server {1}", assetID, userAssetURL);
                 return;
             }
 
@@ -274,7 +274,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 if (existSet.Contains(idstr))
                     continue;
 
-                asset = m_scene.AssetService.Get(idstr);
+                asset = _scene.AssetService.Get(idstr);
                 if (asset == null)
                 {
                     notFound.Add(idstr);
@@ -290,7 +290,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                 }
                 catch (Exception e)
                 {
-                    m_log.Error(
+                    _log.Error(
                         string.Format(
                             "[HG ASSET MAPPER POST]: Failed to post asset {0} (type {1}, length {2}) referenced from {3} to {4} with exception  ",
                             asset.ID, asset.Type, asset.Data.Length, assetID, userAssetURL),
@@ -316,7 +316,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                     if (i < j)
                         sb.Append(',');
                 }
-                m_log.Debug(sb.ToString());
+                _log.Debug(sb.ToString());
                 sb.Clear();
             }
             if (existSet.Count > 0)
@@ -331,7 +331,7 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                     if (--i > 0)
                         sb.Append(',');
                 }
-                m_log.Debug(sb.ToString());
+                _log.Debug(sb.ToString());
                 sb.Clear();
             }
             if (posted.Count > 0)
@@ -346,13 +346,13 @@ namespace OpenSim.Region.CoreModules.Framework.InventoryAccess
                     if (i < j)
                         sb.Append(',');
                 }
-                m_log.Debug(sb.ToString());
+                _log.Debug(sb.ToString());
             }
 
             if (!success)
-                m_log.DebugFormat("[HG ASSET MAPPER POST]: Problems sending asset {0} to asset server {1}", assetID, userAssetURL);
+                _log.DebugFormat("[HG ASSET MAPPER POST]: Problems sending asset {0} to asset server {1}", assetID, userAssetURL);
             else
-                m_log.DebugFormat("[HG ASSET MAPPER POST]: Successfully sent asset {0} to asset server {1}", assetID, userAssetURL);
+                _log.DebugFormat("[HG ASSET MAPPER POST]: Successfully sent asset {0} to asset server {1}", assetID, userAssetURL);
         }
 
         #endregion

@@ -33,7 +33,7 @@ namespace OpenSim.Server.Handlers.Grid
 {
     public class GridInfoServerInConnector : ServiceConnector
     {
-//        private string m_ConfigName = "GridInfoService";
+//        private string _ConfigName = "GridInfoService";
 
         public GridInfoServerInConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)

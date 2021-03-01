@@ -40,11 +40,11 @@ namespace pCampBot
     /// </summary>
     public class CrossBehaviour : AbstractBehaviour
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public AutoResetEvent m_regionCrossedMutex = new AutoResetEvent(false);
+        public AutoResetEvent _regionCrossedMutex = new AutoResetEvent(false);
 
-        public const int m_regionCrossingTimeout = 1000 * 60;
+        public const int _regionCrossingTimeout = 1000 * 60;
 
         public CrossBehaviour()
         {
@@ -90,7 +90,7 @@ namespace pCampBot
                 else if (targetY > currentY)
                     pos.Y = Constants.RegionSize + 1;
 
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[CROSS BEHAVIOUR]: {0} moving to cross from {1} into {2}, target {3}",
                     Bot.Name, currentSim.Name, destRegion.Name, pos);
 
@@ -104,15 +104,15 @@ namespace pCampBot
                 Bot.Client.Self.Movement.AtPos = true;
 
                 // Stop when reach region target or border cross detected
-                if (!m_regionCrossedMutex.WaitOne(m_regionCrossingTimeout))
+                if (!_regionCrossedMutex.WaitOne(_regionCrossingTimeout))
                 {
-                    m_log.ErrorFormat(
+                    _log.ErrorFormat(
                         "[CROSS BEHAVIOUR]: {0} failed to cross from {1} into {2} with {3}ms",
-                        Bot.Name, currentSim.Name, destRegion.Name, m_regionCrossingTimeout);
+                        Bot.Name, currentSim.Name, destRegion.Name, _regionCrossingTimeout);
                 }
                 else
                 {
-                    m_log.DebugFormat(
+                    _log.DebugFormat(
                         "[CROSS BEHAVIOUR]: {0} crossed from {1} into {2}",
                         Bot.Name, currentSim.Name, destRegion.Name);
                 }
@@ -122,7 +122,7 @@ namespace pCampBot
                 // We will hackishly carry on travelling into the region for a little bit.
                 Thread.Sleep(6000);
 
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[CROSS BEHAVIOUR]: {0} stopped moving after cross from {1} into {2}",
                     Bot.Name, currentSim.Name, destRegion.Name);
 
@@ -130,7 +130,7 @@ namespace pCampBot
             }
             else
             {
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[CROSS BEHAVIOUR]: No candidate region for {0} to cross into from {1}.  Ignoring.",
                     Bot.Name, currentSim.Name);
             }
@@ -145,12 +145,12 @@ namespace pCampBot
                 if (knownRegions.Count == 0)
                     return false;
 
-                m_log.DebugFormat("[CROSS BEHAVIOUR]: Looking for region with handle {0} in known regions", handle);
+                _log.DebugFormat("[CROSS BEHAVIOUR]: Looking for region with handle {0} in known regions", handle);
 
                 if (knownRegions.ContainsKey(handle))
                 {
                     GridRegion region = knownRegions[handle];
-                    m_log.DebugFormat(
+                    _log.DebugFormat(
                         "[CROSS BEHAVIOUR]: Adding region {0} to crossing candidates for {1}", region.Name, Bot.Name);
 
                     regions.Add(region);
@@ -166,7 +166,7 @@ namespace pCampBot
 
         internal void Self_RegionCrossed(object o, RegionCrossedEventArgs args)
         {
-            m_regionCrossedMutex.Set();
+            _regionCrossedMutex.Set();
         }
     }
 }

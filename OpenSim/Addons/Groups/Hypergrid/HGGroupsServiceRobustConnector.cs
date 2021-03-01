@@ -119,7 +119,7 @@ namespace OpenSim.Groups
 
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
 
             try
             {
@@ -190,7 +190,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -213,7 +213,7 @@ namespace OpenSim.Groups
                     result["RESULT"] = "true";
             }
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(ServerUtils.BuildXmlResponse(result));
         }
 
@@ -245,7 +245,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -281,7 +281,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -315,7 +315,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -349,7 +349,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -388,7 +388,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -405,13 +405,13 @@ namespace OpenSim.Groups
                 UUID groupId = new UUID(request["GroupID"].ToString());
 
                 bool success = _mGroupsService.VerifyNotice(noticeId, groupId);
-                //m_log.DebugFormat("[XXX]: VerifyNotice returned {0}", success);
+                //_log.DebugFormat("[XXX]: VerifyNotice returned {0}", success);
                 result["RESULT"] = success.ToString();
             }
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 

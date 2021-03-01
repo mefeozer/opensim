@@ -38,26 +38,26 @@ namespace OpenSim.Server.Handlers.Land
 {
     public class LandServiceInConnector : ServiceConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ILandService m_LandService;
-        // TODO : private IAuthenticationService m_AuthenticationService;
+        private readonly ILandService _LandService;
+        // TODO : private IAuthenticationService _AuthenticationService;
 
         public LandServiceInConnector(IConfigSource source, IHttpServer server, ILandService service, IScene scene) :
                 base(source, server, string.Empty)
         {
-            m_LandService = service;
-            if (m_LandService == null)
+            _LandService = service;
+            if (_LandService == null)
             {
-                m_log.Error("[LAND IN CONNECTOR]: Land service was not provided");
+                _log.Error("[LAND IN CONNECTOR]: Land service was not provided");
                 return;
             }
 
             //bool authentication = neighbourConfig.GetBoolean("RequireAuthentication", false);
             //if (authentication)
-            //    m_AuthenticationService = scene.RequestModuleInterface<IAuthenticationService>();
+            //    _AuthenticationService = scene.RequestModuleInterface<IAuthenticationService>();
 
-            LandHandlers landHandlers = new LandHandlers(m_LandService);
+            LandHandlers landHandlers = new LandHandlers(_LandService);
             server.AddXmlRPCHandler("land_data", landHandlers.GetLandData, false);
         }
     }

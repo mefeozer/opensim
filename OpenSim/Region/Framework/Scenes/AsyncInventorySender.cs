@@ -70,23 +70,23 @@ namespace OpenSim.Region.Framework.Scenes
     /// </remarks>
     public class AsyncInventorySender
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Scene m_scene;
+        protected Scene _scene;
 
         /// <summary>
         /// Queues fetch requests
         /// </summary>
-        private static readonly ConcurrentQueue<FetchHolder> m_fetchHolder = new ConcurrentQueue<FetchHolder>();
-        static private readonly object m_threadLock = new object();
-        static private bool m_running;
+        private static readonly ConcurrentQueue<FetchHolder> _fetchHolder = new ConcurrentQueue<FetchHolder>();
+        static private readonly object _threadLock = new object();
+        static private bool _running;
 
         /// <summary>
         /// Signal whether a queue is currently being processed or not.
         /// </summary>
         public AsyncInventorySender(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
         }
 
         /// <summary>
@@ -97,18 +97,18 @@ namespace OpenSim.Region.Framework.Scenes
         /// <param name="ownerID"></param>
         public void HandleFetchInventory(IClientAPI remoteClient, UUID[] items, UUID[] owners)
         {
-               //m_log.DebugFormat(
+               //_log.DebugFormat(
                //     "[ASYNC INVENTORY SENDER]: Putting request from {0} for {1} on queue", remoteClient.Name, itemID);
 
-            m_fetchHolder.Enqueue(new FetchHolder(remoteClient, items, owners));
-            if (Monitor.TryEnter(m_threadLock))
+            _fetchHolder.Enqueue(new FetchHolder(remoteClient, items, owners));
+            if (Monitor.TryEnter(_threadLock))
             {
-                if (!m_running)
+                if (!_running)
                 {
-                    m_running = true;
+                    _running = true;
                     Util.FireAndForget(x => ProcessQueue());
                 }
-                Monitor.Exit(m_threadLock);
+                Monitor.Exit(_threadLock);
             }
         }
 
@@ -117,28 +117,28 @@ namespace OpenSim.Region.Framework.Scenes
         /// </summary>
         protected void ProcessQueue()
         {
-            lock(m_threadLock)
+            lock(_threadLock)
             {
                 try
                 {
-                    while (m_fetchHolder.TryDequeue(out FetchHolder fh))
+                    while (_fetchHolder.TryDequeue(out FetchHolder fh))
                     {
                         if (!fh.Client.IsActive)
                             continue;
-                        // m_log.DebugFormat(
+                        // _log.DebugFormat(
                         //     "[ASYNC INVENTORY SENDER]: Handling request from {0} for {1} on queue", fh.Client.Name, fh.ItemID);
 
                         var items = new List<InventoryItemBase>();
                         for(int i = 0; i < fh.Items.Length; ++i )
                         {
-                            InventoryItemBase item = m_scene.InventoryService.GetItem(fh.Owners[i], fh.Items[i]);
+                            InventoryItemBase item = _scene.InventoryService.GetItem(fh.Owners[i], fh.Items[i]);
                             if (item == null)
                                 continue;
 
                             /*
                             if (item.AssetType == (int)AssetType.Link)
                             {
-                                InventoryItemBase itemlk = m_scene.InventoryService.GetItem(fh.Owners[i], item.AssetID);
+                                InventoryItemBase itemlk = _scene.InventoryService.GetItem(fh.Owners[i], item.AssetID);
                                 if(itemlk != null)
                                     items.Add(itemlk);
                             }
@@ -152,7 +152,7 @@ namespace OpenSim.Region.Framework.Scenes
                     }
                 }
                 catch  { }
-                m_running = false;
+                _running = false;
             }
         }
     }

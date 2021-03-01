@@ -56,8 +56,8 @@ namespace OSHttpServer
         /// </summary>
         public string Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get => _name;
+            set => _name = value;
         }
 
         /// <summary>
@@ -100,13 +100,7 @@ namespace OSHttpServer
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Returns <see cref="HttpInputItem.Empty"/> if item was not found.</returns>
-        public HttpInputItem this[string name]
-        {
-            get
-            {
-                return _items.ContainsKey(name) ? _items[name] : HttpInputItem.Empty;
-            }
-        }
+        public HttpInputItem this[string name] => _items.ContainsKey(name) ? _items[name] : HttpInputItem.Empty;
 
         /// <summary>
         /// Returns true if the class contains a <see cref="HttpInput"/> with the corresponding name.

@@ -42,7 +42,7 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "HGUserManagementModule")]
     public class HGUserManagementModule : UserManagementModule, ISharedRegionModule, IUserManagement
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region ISharedRegionModule
 
@@ -51,16 +51,13 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
             string umanmod = config.Configs["Modules"].GetString("UserManagementModule", null);
             if (umanmod == Name)
             {
-                m_Enabled = true;
+                _Enabled = true;
                 base.Init(config);
-                m_log.DebugFormat("[USER MANAGEMENT MODULE]: {0} is enabled", Name);
+                _log.DebugFormat("[USER MANAGEMENT MODULE]: {0} is enabled", Name);
             }
         }
 
-        public override string Name
-        {
-            get { return "HGUserManagementModule"; }
-        }
+        public override string Name => "HGUserManagementModule";
 
         #endregion ISharedRegionModule
 
@@ -71,7 +68,7 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
                 string[] words = query.Split(new char[] { '@' });
                 if (words.Length != 2)
                 {
-                    m_log.DebugFormat("[USER MANAGEMENT MODULE]: Malformed address {0}", query);
+                    _log.DebugFormat("[USER MANAGEMENT MODULE]: Malformed address {0}", query);
                     return;
                 }
 
@@ -80,7 +77,7 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
                 string match1 = "@" + words[1];
                 if (string.IsNullOrWhiteSpace(words[0])) // query was @foo.com?
                 {
-                    foreach (UserData d in m_userCacheByID.Values)
+                    foreach (UserData d in _userCacheByID.Values)
                     {
                         if(found.Contains(d.Id))
                             continue;
@@ -95,7 +92,7 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
                 string match0 = words[0].ToLower();
                 // words.Length == 2 and words[0] != string.empty
                 // first.last@foo.com ?
-                foreach (UserData d in m_userCacheByID.Values)
+                foreach (UserData d in _userCacheByID.Values)
                 {
                     if (found.Contains(d.Id))
                         continue;
@@ -122,7 +119,7 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
                         }
                         catch (UriFormatException)
                         {
-                            m_log.DebugFormat("[USER MANAGEMENT MODULE]: Malformed address {0}", uriStr);
+                            _log.DebugFormat("[USER MANAGEMENT MODULE]: Malformed address {0}", uriStr);
                             return;
                         }
 
@@ -137,7 +134,7 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
                             }
                             catch (Exception e)
                             {
-                                m_log.Debug("[USER MANAGEMENT MODULE]: GetUUID call failed ", e);
+                                _log.Debug("[USER MANAGEMENT MODULE]: GetUUID call failed ", e);
                             }
                         }
 
@@ -151,10 +148,10 @@ namespace OpenSim.Region.CoreModules.Framework.UserManagement
                             };
                             users.Add(ud);
                             AddUser(userID, names[0], names[1], uriStr);
-                            m_log.DebugFormat("[USER MANAGEMENT MODULE]: User {0}@{1} found", words[0], words[1]);
+                            _log.DebugFormat("[USER MANAGEMENT MODULE]: User {0}@{1} found", words[0], words[1]);
                         }
                         else
-                            m_log.DebugFormat("[USER MANAGEMENT MODULE]: User {0}@{1} not found", words[0], words[1]);
+                            _log.DebugFormat("[USER MANAGEMENT MODULE]: User {0}@{1} not found", words[0], words[1]);
                     }
                 }
             }

@@ -75,7 +75,7 @@ namespace OpenSim.Region.ClientStack.Linden
         public virtual void EnableSimulator(ulong handle, IPEndPoint endPoint, UUID avatarID, int regionSizeX, int regionSizeY)
         {
             if (DebugLevel > 0)
-                m_log.DebugFormat("{0} EnableSimulator. handle={1}, endPoint={2}, avatarID={3}",
+                _log.DebugFormat("{0} EnableSimulator. handle={1}, endPoint={2}, avatarID={3}",
                     LogHeader, handle, endPoint, avatarID, regionSizeX, regionSizeY);
 
             osUTF8 sb = StartEvent("EnableSimulator");
@@ -94,7 +94,7 @@ namespace OpenSim.Region.ClientStack.Linden
                                 ulong regionHandle, int regionSizeX, int regionSizeY)
         {
             if (DebugLevel > 0)
-                m_log.DebugFormat("{0} EstablishAgentCommunication. handle={1}, endPoint={2}, avatarID={3}",
+                _log.DebugFormat("{0} EstablishAgentCommunication. handle={1}, endPoint={2}, avatarID={3}",
                     LogHeader, regionHandle, endPoint, avatarID, regionSizeX, regionSizeY);
 
             osUTF8 sb = StartEvent("EstablishAgentCommunication");
@@ -116,7 +116,7 @@ namespace OpenSim.Region.ClientStack.Linden
                                         UUID avatarID, int regionSizeX, int regionSizeY)
         {
             if (DebugLevel > 0)
-                m_log.DebugFormat("{0} TeleportFinishEvent. handle={1}, endPoint={2}, avatarID={3}",
+                _log.DebugFormat("{0} TeleportFinishEvent. handle={1}, endPoint={2}, avatarID={3}",
                     LogHeader, regionHandle, regionExternalEndPoint, avatarID, regionSizeX, regionSizeY);
 
             // not sure why flags get overwritten here
@@ -148,7 +148,7 @@ namespace OpenSim.Region.ClientStack.Linden
                                 string capsURL, UUID avatarID, UUID sessionID, int regionSizeX, int regionSizeY)
         {
             if (DebugLevel > 0)
-                m_log.DebugFormat("{0} CrossRegion. handle={1}, avatarID={2}, regionSize={3},{4}>",
+                _log.DebugFormat("{0} CrossRegion. handle={1}, avatarID={2}, regionSize={3},{4}>",
                     LogHeader, handle, avatarID, regionSizeX, regionSizeY);
 
             osUTF8 sb = StartEvent("CrossedRegion");
@@ -195,13 +195,13 @@ namespace OpenSim.Region.ClientStack.Linden
 
             LLSDxmlEncode2.AddElem("message", message, sb);
             LLSDxmlEncode2.AddElem("id", transactionID, sb);
-            LLSDxmlEncode2.AddElem("from_name", fromName, sb);
+            LLSDxmlEncode2.AddElem("fro_name", fromName, sb);
             LLSDxmlEncode2.AddElem("timestamp", timeStamp, sb);
             LLSDxmlEncode2.AddElem("offline", offline ? 1 : 0, sb);
             LLSDxmlEncode2.AddElem("parent_estate_id", parentEstateID, sb);
             LLSDxmlEncode2.AddElem("ttl", (int)ttl, sb);
-            LLSDxmlEncode2.AddElem("from_id", fromAgent, sb);
-            LLSDxmlEncode2.AddElem("from_group", fromGroup, sb);
+            LLSDxmlEncode2.AddElem("fro_id", fromAgent, sb);
+            LLSDxmlEncode2.AddElem("fro_group", fromGroup, sb);
             LLSDxmlEncode2.AddEndMap(sb); //messageParams
 
             LLSDxmlEncode2.AddMap("agent_params", sb);
@@ -222,9 +222,9 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             osUTF8 sb = StartEvent("ChatterBoxInvitation");
             LLSDxmlEncode2.AddElem("session_id", sessionID, sb);
-            LLSDxmlEncode2.AddElem("from_name", fromName, sb);
+            LLSDxmlEncode2.AddElem("fro_name", fromName, sb);
             LLSDxmlEncode2.AddElem("session_name", sessionName, sb);
-            LLSDxmlEncode2.AddElem("from_id", fromAgent, sb);
+            LLSDxmlEncode2.AddElem("fro_id", fromAgent, sb);
 
             LLSDxmlEncode2.AddLLSD(InstantMessageBody(fromAgent, message, toAgent,
                 fromName, dialog, timeStamp, offline, parentEstateID, position,

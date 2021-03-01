@@ -103,68 +103,68 @@ namespace OpenSim.Framework
 
         public virtual UUID ProfileID
         {
-            get { return UUID; }
-            set { UUID = value; }
+            get => UUID;
+            set => UUID = value;
         }
 
         public virtual UUID SessionID
         {
-            get { return sessionID; }
-            set { sessionID = value; }
+            get => sessionID;
+            set => sessionID = value;
         }
 
         public virtual UUID SecureSessionID
         {
-            get { return secureSessionID; }
-            set { secureSessionID = value; }
+            get => secureSessionID;
+            set => secureSessionID = value;
         }
 
         public virtual string AgentIP
         {
-            get { return agentIP; }
-            set { agentIP = value; }
+            get => agentIP;
+            set => agentIP = value;
         }
 
         public virtual uint AgentPort
         {
-            get { return agentPort; }
-            set { agentPort = value; }
+            get => agentPort;
+            set => agentPort = value;
         }
 
         public virtual bool AgentOnline
         {
-            get { return agentOnline; }
-            set { agentOnline = value; }
+            get => agentOnline;
+            set => agentOnline = value;
         }
 
         public virtual int LoginTime
         {
-            get { return loginTime; }
-            set { loginTime = value; }
+            get => loginTime;
+            set => loginTime = value;
         }
 
         public virtual int LogoutTime
         {
-            get { return logoutTime; }
-            set { logoutTime = value; }
+            get => logoutTime;
+            set => logoutTime = value;
         }
 
         public virtual UUID Region
         {
-            get { return regionID; }
-            set { regionID = value; }
+            get => regionID;
+            set => regionID = value;
         }
 
         public virtual ulong Handle
         {
-            get { return regionHandle; }
-            set { regionHandle = value; }
+            get => regionHandle;
+            set => regionHandle = value;
         }
 
         public virtual Vector3 Position
         {
-            get { return currentPos; }
-            set { currentPos = value; }
+            get => currentPos;
+            set => currentPos = value;
         }
 
 /* 2008-08-28-tyre: Not really useful
@@ -189,14 +189,14 @@ namespace OpenSim.Framework
 
         public virtual Vector3 LookAt
         {
-            get { return currentLookAt; }
-            set { currentLookAt = value; }
+            get => currentLookAt;
+            set => currentLookAt = value;
         }
 
         public virtual UUID InitialRegion
         {
-            get { return originRegionID; }
-            set { originRegionID = value; }
+            get => originRegionID;
+            set => originRegionID = value;
         }
 
     }

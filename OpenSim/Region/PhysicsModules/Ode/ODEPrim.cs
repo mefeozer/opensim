@@ -57,38 +57,35 @@ namespace OpenSim.Region.PhysicsModule.ODE
     /// </summary>
     public class OdePrim : PhysicsActor
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_isphysical;
+        private bool _isphysical;
 
-        public int ExpectedCollisionContacts { get { return m_expectedCollisionContacts; } }
-        private int m_expectedCollisionContacts = 0;
+        public int ExpectedCollisionContacts => _expectedCollisionContacts;
+        private int _expectedCollisionContacts = 0;
 
         /// <summary>
         /// Gets collide bits so that we can still perform land collisions if a mesh fails to load.
         /// </summary>
-        private int BadMeshAssetCollideBits
-        {
-            get { return m_isphysical ? (int)CollisionCategories.Land : 0; }
-        }
+        private int BadMeshAssetCollideBits => _isphysical ? (int)CollisionCategories.Land : 0;
 
         /// <summary>
         /// Is this prim subject to physics?  Even if not, it's still solid for collision purposes.
         /// </summary>
         public override bool IsPhysical
         {
-            get { return m_isphysical; }
+            get => _isphysical;
             set
             {
-                m_isphysical = value;
-                if (!m_isphysical)
+                _isphysical = value;
+                if (!_isphysical)
                 {
                     _zeroFlag = true; // Zero the remembered last velocity
-                    m_lastVelocity = Vector3.Zero;
+                    _lastVelocity = Vector3.Zero;
                     _acceleration = Vector3.Zero;
                     _velocity = Vector3.Zero;
-                    m_taintVelocity = Vector3.Zero;
-                    m_rotationalVelocity = Vector3.Zero;
+                    _taintVelocity = Vector3.Zero;
+                    _rotationalVelocity = Vector3.Zero;
                 }
             }
         }
@@ -96,75 +93,75 @@ namespace OpenSim.Region.PhysicsModule.ODE
         private Vector3 _position;
         private Vector3 _velocity;
         private Vector3 _torque;
-        private Vector3 m_lastVelocity;
-        private Vector3 m_lastposition;
-        private Quaternion m_lastorientation = new Quaternion();
-        private Vector3 m_rotationalVelocity;
+        private Vector3 _lastVelocity;
+        private Vector3 _lastposition;
+        private Quaternion _lastorientation = new Quaternion();
+        private Vector3 _rotationalVelocity;
         private Vector3 _size;
         private Vector3 _acceleration;
         // private d.Vector3 _zeroPosition = new d.Vector3(0.0f, 0.0f, 0.0f);
         private Quaternion _orientation;
-        private Vector3 m_taintposition;
-        private Vector3 m_taintsize;
-        private Vector3 m_taintVelocity;
-        private Vector3 m_taintTorque;
-        private Quaternion m_taintrot;
+        private Vector3 _taintposition;
+        private Vector3 _taintsize;
+        private Vector3 _taintVelocity;
+        private Vector3 _taintTorque;
+        private Quaternion _taintrot;
 
         private IntPtr Amotor = IntPtr.Zero;
 
-        private byte m_taintAngularLock = 0;
-        private byte m_angularlock = 0;
+        private byte _taintAngularLock = 0;
+        private byte _angularlock = 0;
 
-        private bool m_assetFailed = false;
+        private bool _assetFailed = false;
 
-        private Vector3 m_PIDTarget;
-        private float m_PIDTau;
+        private Vector3 _PIDTarget;
+        private float _PIDTau;
         private readonly float PID_D = 35f;
         private float PID_G = 25f;
 
         // KF: These next 7 params apply to llSetHoverHeight(float height, integer water, float tau),
         // and are for non-VEHICLES only.
 
-        private float m_PIDHoverHeight;
-        private float m_PIDHoverTau;
-        private bool m_useHoverPID;
-        private PIDHoverType m_PIDHoverType = PIDHoverType.Ground;
-        private float m_targetHoverHeight;
-        private float m_groundHeight;
-        private float m_waterHeight;
-        private float m_buoyancy;                //KF: m_buoyancy should be set by llSetBuoyancy() for non-vehicle.
+        private float _PIDHoverHeight;
+        private float _PIDHoverTau;
+        private bool _useHoverPID;
+        private PIDHoverType _PIDHoverType = PIDHoverType.Ground;
+        private float _targetHoverHeight;
+        private float _groundHeight;
+        private float _waterHeight;
+        private float _buoyancy;                //KF: _buoyancy should be set by llSetBuoyancy() for non-vehicle.
 
-        // private float m_tensor = 5f;
+        // private float _tensor = 5f;
         private readonly int body_autodisable_frames = 20;
 
 
-        private const CollisionCategories m_default_collisionFlags = CollisionCategories.Geom
+        private const CollisionCategories _default_collisionFlags = CollisionCategories.Geom
                                                                      | CollisionCategories.Space
                                                                      | CollisionCategories.Body
                                                                      | CollisionCategories.Character;
-        private bool m_taintshape;
-        private bool m_taintPhysics;
-        private readonly bool m_collidesLand = true;
-        private bool m_collidesWater;
+        private bool _taintshape;
+        private bool _taintPhysics;
+        private readonly bool _collidesLand = true;
+        private bool _collidesWater;
 
         // Default we're a Geometry
-        private CollisionCategories m_collisionCategories = CollisionCategories.Geom;
+        private CollisionCategories _collisionCategories = CollisionCategories.Geom;
 
         // Default, Collide with Other Geometries, spaces and Bodies
-        private CollisionCategories m_collisionFlags = m_default_collisionFlags;
+        private CollisionCategories _collisionFlags = _default_collisionFlags;
 
-        public bool m_taintremove { get; private set; }
-        public bool m_taintdisable { get; private set; }
-        internal bool m_disabled;
-        public bool m_taintadd { get; private set; }
-        public bool m_taintselected { get; private set; }
-        public bool m_taintCollidesWater { get; private set; }
+        public bool _taintremove { get; private set; }
+        public bool _taintdisable { get; private set; }
+        internal bool _disabled;
+        public bool _taintadd { get; private set; }
+        public bool _taintselected { get; private set; }
+        public bool _taintCollidesWater { get; private set; }
 
-        private bool m_taintforce = false;
-        private bool m_taintaddangularforce = false;
-        private Vector3 m_force;
-        private List<Vector3> m_forcelist = new List<Vector3>();
-        private readonly List<Vector3> m_angularforcelist = new List<Vector3>();
+        private bool _taintforce = false;
+        private bool _taintaddangularforce = false;
+        private Vector3 _force;
+        private List<Vector3> _forcelist = new List<Vector3>();
+        private readonly List<Vector3> _angularforcelist = new List<Vector3>();
 
         private PrimitiveBaseShape _pbs;
         private readonly OdeScene _parent_scene;
@@ -172,7 +169,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <summary>
         /// The physics space which contains prim geometries
         /// </summary>
-        public IntPtr m_targetSpace = IntPtr.Zero;
+        public IntPtr _targetSpace = IntPtr.Zero;
 
         /// <summary>
         /// The prim geometry, used for collision detection.
@@ -181,38 +178,38 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// This is never null except for a brief period when the geometry needs to be replaced (due to resizing or
         /// mesh change) or when the physical prim is being removed from the scene.
         /// </remarks>
-        public IntPtr prim_geom { get; private set; }
+        public IntPtr pri_geom { get; private set; }
 
         public IntPtr _triMeshData { get; private set; }
 
         private readonly IntPtr _linkJointGroup = IntPtr.Zero;
         private PhysicsActor _parent;
-        private PhysicsActor m_taintparent;
+        private PhysicsActor _taintparent;
 
         private readonly List<OdePrim> childrenPrim = new List<OdePrim>();
 
         private bool iscolliding;
-        private bool m_isSelected;
+        private bool _isSelected;
 
-        internal bool m_isVolumeDetect; // If true, this prim only detects collisions but doesn't collide actively
+        internal bool _isVolumeDetect; // If true, this prim only detects collisions but doesn't collide actively
 
-        private bool m_throttleUpdates;
+        private bool _throttleUpdates;
         private int throttleCounter;
-        public int m_interpenetrationcount { get; private set; }
-        internal float m_collisionscore;
-        public int m_roundsUnderMotionThreshold { get; private set; }
+        public int _interpenetrationcount { get; private set; }
+        internal float _collisionscore;
+        public int _roundsUnderMotionThreshold { get; private set; }
 
         public bool outofBounds { get; private set; }
-        private readonly float m_density = 10.000006836f; // Aluminum g/cm3;
+        private readonly float _density = 10.000006836f; // Aluminum g/cm3;
 
         public bool _zeroFlag { get; private set; }
-        private bool m_lastUpdateSent;
+        private bool _lastUpdateSent;
 
         public IntPtr Body = IntPtr.Zero;
         private Vector3 _target_velocity;
         private SafeNativeMethods.Mass pMass;
 
-        private int m_eventsubscription;
+        private int _eventsubscription;
         private readonly CollisionEventUpdate CollisionEventsThisFrame = new CollisionEventUpdate();
 
         /// <summary>
@@ -222,44 +219,44 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <remarks>
         /// This is probably a temporary measure, pending storing this information consistently in CollisionEventUpdate itself.
         /// </remarks>
-        private bool m_collisionsOnPreviousFrame;
+        private bool _collisionsOnPreviousFrame;
 
-        private IntPtr m_linkJoint = IntPtr.Zero;
+        private IntPtr _linkJoint = IntPtr.Zero;
 
         internal volatile bool childPrim;
 
-        private readonly ODEDynamics m_vehicle;
+        private readonly ODEDynamics _vehicle;
 
-        internal int m_material = (int)Material.Wood;
+        internal int _material = (int)Material.Wood;
 
         public OdePrim(
             string primName, OdeScene parent_scene, Vector3 pos, Vector3 size,
             Quaternion rotation, PrimitiveBaseShape pbs, bool pisPhysical)
         {
             Name = primName;
-            m_vehicle = new ODEDynamics();
-            //gc = GCHandle.Alloc(prim_geom, GCHandleType.Pinned);
+            _vehicle = new ODEDynamics();
+            //gc = GCHandle.Alloc(pri_geom, GCHandleType.Pinned);
 
             if (!pos.IsFinite())
             {
                 pos = new Vector3((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f,
                     parent_scene.GetTerrainHeightAtXY((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f) + 0.5f);
-                m_log.WarnFormat("[PHYSICS]: Got nonFinite Object create Position for {0}", Name);
+                _log.WarnFormat("[PHYSICS]: Got nonFinite Object create Position for {0}", Name);
             }
             _position = pos;
-            m_taintposition = pos;
+            _taintposition = pos;
             PID_D = parent_scene.bodyPIDD;
             PID_G = parent_scene.bodyPIDG;
-            m_density = parent_scene.geomDefaultDensity;
-            // m_tensor = parent_scene.bodyMotorJointMaxforceTensor;
+            _density = parent_scene.geomDefaultDensity;
+            // _tensor = parent_scene.bodyMotorJointMaxforceTensor;
             body_autodisable_frames = parent_scene.bodyFramesAutoDisable;
 
-            prim_geom = IntPtr.Zero;
+            pri_geom = IntPtr.Zero;
 
             if (!pos.IsFinite())
             {
                 size = new Vector3(0.5f, 0.5f, 0.5f);
-                m_log.WarnFormat("[PHYSICS]: Got nonFinite Object create Size for {0}", Name);
+                _log.WarnFormat("[PHYSICS]: Got nonFinite Object create Size for {0}", Name);
             }
 
             if (size.X <= 0) size.X = 0.01f;
@@ -267,20 +264,20 @@ namespace OpenSim.Region.PhysicsModule.ODE
             if (size.Z <= 0) size.Z = 0.01f;
 
             _size = size;
-            m_taintsize = _size;
+            _taintsize = _size;
 
             if (!QuaternionIsFinite(rotation))
             {
                 rotation = Quaternion.Identity;
-                m_log.WarnFormat("[PHYSICS]: Got nonFinite Object create Rotation for {0}", Name);
+                _log.WarnFormat("[PHYSICS]: Got nonFinite Object create Rotation for {0}", Name);
             }
 
             _orientation = rotation;
-            m_taintrot = _orientation;
+            _taintrot = _orientation;
             _pbs = pbs;
 
             _parent_scene = parent_scene;
-            m_targetSpace = (IntPtr)0;
+            _targetSpace = (IntPtr)0;
 
             if (pos.Z < 0)
             {
@@ -292,23 +289,23 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 // If we're physical, we need to be in the master space for now.
                 // linksets *should* be in a space together..  but are not currently
                 if (IsPhysical)
-                    m_targetSpace = _parent_scene.space;
+                    _targetSpace = _parent_scene.space;
             }
 
-            m_taintadd = true;
-            m_assetFailed = false;
+            _taintadd = true;
+            _assetFailed = false;
             _parent_scene.AddPhysicsActorTaint(this);
         }
 
         public override int PhysicsActorType
         {
-            get { return (int) ActorTypes.Prim; }
+            get => (int) ActorTypes.Prim;
             set { return; }
         }
 
         public override bool SetAlwaysRun
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
@@ -325,20 +322,20 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 // is physical or the object is modified somehow *IN THE FUTURE*
                 // without this, if an avatar selects prim, they can walk right
                 // through it while it's selected
-                m_collisionscore = 0;
+                _collisionscore = 0;
 
                 if (IsPhysical && !_zeroFlag || !value)
                 {
-                    m_taintselected = value;
+                    _taintselected = value;
                     _parent_scene.AddPhysicsActorTaint(this);
                 }
                 else
                 {
-                    m_taintselected = value;
-                    m_isSelected = value;
+                    _taintselected = value;
+                    _isSelected = value;
                 }
 
-                if (m_isSelected)
+                if (_isSelected)
                     disableBodySoft();
             }
         }
@@ -349,22 +346,22 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <param name="geom"></param>
         private void SetGeom(IntPtr geom)
         {
-            prim_geom = geom;
-//Console.WriteLine("SetGeom to " + prim_geom + " for " + Name);
+            pri_geom = geom;
+//Console.WriteLine("SetGeom to " + pri_geom + " for " + Name);
 
-            if (m_assetFailed)
+            if (_assetFailed)
             {
-                SafeNativeMethods.GeomSetCategoryBits(prim_geom, 0);
-                SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)BadMeshAssetCollideBits);
+                SafeNativeMethods.GeomSetCategoryBits(pri_geom, 0);
+                SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)BadMeshAssetCollideBits);
             }
             else
             {
-                SafeNativeMethods.GeomSetCategoryBits(prim_geom, (uint)m_collisionCategories);
-                SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
+                SafeNativeMethods.GeomSetCategoryBits(pri_geom, (uint)_collisionCategories);
+                SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)_collisionFlags);
             }
 
-            _parent_scene.geom_name_map[prim_geom] = Name;
-            _parent_scene.actor_name_map[prim_geom] = this;
+            _parent_scene.geo_name_map[pri_geom] = Name;
+            _parent_scene.actor_name_map[pri_geom] = this;
 
             if (childPrim)
             {
@@ -375,7 +372,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     parent.ChildSetGeom(this);
                 }
             }
-            //m_log.Warn("Setting Geom to: " + prim_geom);
+            //_log.Warn("Setting Geom to: " + pri_geom);
         }
 
         private void enableBodySoft()
@@ -385,17 +382,17 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 if (IsPhysical && Body != IntPtr.Zero)
                 {
                     SafeNativeMethods.BodyEnable(Body);
-                    if (m_vehicle.Type != Vehicle.TYPE_NONE)
-                        m_vehicle.Enable(Body, _parent_scene);
+                    if (_vehicle.Type != Vehicle.TYPE_NONE)
+                        _vehicle.Enable(Body, _parent_scene);
                 }
 
-                m_disabled = false;
+                _disabled = false;
             }
         }
 
         private void disableBodySoft()
         {
-            m_disabled = true;
+            _disabled = true;
 
             if (IsPhysical && Body != IntPtr.Zero)
             {
@@ -425,21 +422,21 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     W = _orientation.W
                 };
                 SafeNativeMethods.BodySetQuaternion(Body, ref myrot);
-                SafeNativeMethods.GeomSetBody(prim_geom, Body);
+                SafeNativeMethods.GeomSetBody(pri_geom, Body);
 
-                if (m_assetFailed)
+                if (_assetFailed)
                 {
-                    SafeNativeMethods.GeomSetCategoryBits(prim_geom, 0);
-                    SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)BadMeshAssetCollideBits);
+                    SafeNativeMethods.GeomSetCategoryBits(pri_geom, 0);
+                    SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)BadMeshAssetCollideBits);
                 }
                 else
                 {
-                    m_collisionCategories |= CollisionCategories.Body;
-                    m_collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
+                    _collisionCategories |= CollisionCategories.Body;
+                    _collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
                 }
 
-                SafeNativeMethods.GeomSetCategoryBits(prim_geom, (uint)m_collisionCategories);
-                SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
+                SafeNativeMethods.GeomSetCategoryBits(pri_geom, (uint)_collisionCategories);
+                SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)_collisionFlags);
 
                 SafeNativeMethods.BodySetAutoDisableFlag(Body, true);
                 SafeNativeMethods.BodySetAutoDisableSteps(Body, body_autodisable_frames);
@@ -447,18 +444,18 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 // disconnect from world gravity so we can apply buoyancy
                 SafeNativeMethods.BodySetGravityMode (Body, false);
 
-                m_interpenetrationcount = 0;
-                m_collisionscore = 0;
-                m_disabled = false;
+                _interpenetrationcount = 0;
+                _collisionscore = 0;
+                _disabled = false;
 
                 // The body doesn't already have a finite rotation mode set here
-                if (m_angularlock != 0 && _parent == null)
+                if (_angularlock != 0 && _parent == null)
                 {
-                    createAMotor(m_angularlock);
+                    createAMotor(_angularlock);
                 }
-                if (m_vehicle.Type != Vehicle.TYPE_NONE)
+                if (_vehicle.Type != Vehicle.TYPE_NONE)
                 {
-                    m_vehicle.Enable(Body, _parent_scene);
+                    _vehicle.Enable(Body, _parent_scene);
                 }
 
                 _parent_scene.ActivatePrim(this);
@@ -737,7 +734,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
             profileEnd = 1.0f - (float)_pbs.ProfileEnd * 2.0e-5f;
             volume *= profileEnd - profileBegin;
 
-            returnMass = m_density * volume;
+            returnMass = _density * volume;
 
             if (returnMass <= 0)
                 returnMass = 0.0001f;//ckrinke: Mass must be greater then zero.
@@ -763,7 +760,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
                 for (int i = 0; i < childPrimArr.Length; i++)
                 {
-                    if (childPrimArr[i] != null && !childPrimArr[i].m_taintremove)
+                    if (childPrimArr[i] != null && !childPrimArr[i]._taintremove)
                         returnMass += childPrimArr[i].CalculateMass();
                     // failsafe, this shouldn't happen but with OpenSim, you never know :)
                     if (i > 256)
@@ -785,7 +782,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
             {
                 float newmass = CalculateMass();
 
-                //m_log.Info("[PHYSICS]: New Mass: " + newmass.ToString());
+                //_log.Info("[PHYSICS]: New Mass: " + newmass.ToString());
 
                 SafeNativeMethods.MassSetBoxTotal(out pMass, newmass, _size.X, _size.Y, _size.Z);
                 SafeNativeMethods.BodySetMass(Body, ref pMass);
@@ -813,18 +810,18 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     if (Body != IntPtr.Zero)
                     {
                         _parent_scene.DeactivatePrim(this);
-                        m_collisionCategories &= ~CollisionCategories.Body;
-                        m_collisionFlags &= ~(CollisionCategories.Wind | CollisionCategories.Land);
+                        _collisionCategories &= ~CollisionCategories.Body;
+                        _collisionFlags &= ~(CollisionCategories.Wind | CollisionCategories.Land);
 
-                        if (m_assetFailed)
+                        if (_assetFailed)
                         {
-                            SafeNativeMethods.GeomSetCategoryBits(prim_geom, 0);
-                            SafeNativeMethods.GeomSetCollideBits(prim_geom, 0);
+                            SafeNativeMethods.GeomSetCategoryBits(pri_geom, 0);
+                            SafeNativeMethods.GeomSetCollideBits(pri_geom, 0);
                         }
                         else
                         {
-                            SafeNativeMethods.GeomSetCategoryBits(prim_geom, (uint)m_collisionCategories);
-                            SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
+                            SafeNativeMethods.GeomSetCategoryBits(pri_geom, (uint)_collisionCategories);
+                            SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)_collisionFlags);
                         }
 
                         SafeNativeMethods.BodyDestroy(Body);
@@ -846,34 +843,34 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 {
                     _parent_scene.DeactivatePrim(this);
 
-                    m_collisionCategories &= ~CollisionCategories.Body;
-                    m_collisionFlags &= ~(CollisionCategories.Wind | CollisionCategories.Land);
+                    _collisionCategories &= ~CollisionCategories.Body;
+                    _collisionFlags &= ~(CollisionCategories.Wind | CollisionCategories.Land);
 
-                    if (m_assetFailed)
+                    if (_assetFailed)
                     {
-                        SafeNativeMethods.GeomSetCategoryBits(prim_geom, 0);
-                        SafeNativeMethods.GeomSetCollideBits(prim_geom, 0);
+                        SafeNativeMethods.GeomSetCategoryBits(pri_geom, 0);
+                        SafeNativeMethods.GeomSetCollideBits(pri_geom, 0);
                     }
                     else
                     {
 
-                        SafeNativeMethods.GeomSetCategoryBits(prim_geom, (uint)m_collisionCategories);
-                        SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
+                        SafeNativeMethods.GeomSetCategoryBits(pri_geom, (uint)_collisionCategories);
+                        SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)_collisionFlags);
                     }
 
                     Body = IntPtr.Zero;
                 }
             }
 
-            m_disabled = true;
-            m_collisionscore = 0;
+            _disabled = true;
+            _collisionscore = 0;
         }
 
-        private static readonly Dictionary<IMesh, IntPtr> m_MeshToTriMeshMap = new Dictionary<IMesh, IntPtr>();
+        private static readonly Dictionary<IMesh, IntPtr> _MeshToTriMeshMap = new Dictionary<IMesh, IntPtr>();
 
         private void setMesh(OdeScene parent_scene, IMesh mesh)
         {
-//            m_log.DebugFormat("[ODE PRIM]: Setting mesh on {0} to {1}", Name, mesh);
+//            _log.DebugFormat("[ODE PRIM]: Setting mesh on {0} to {1}", Name, mesh);
 
             // This sleeper is there to moderate how long it takes between
             // setting up the mesh and pre-processing it when we get rapid fire mesh requests on a single object
@@ -902,16 +899,16 @@ namespace OpenSim.Region.PhysicsModule.ODE
             int vertexStride, triStride;
             mesh.getVertexListAsPtrToFloatArray(out vertices, out vertexStride, out vertexCount); // Note, that vertices are fixed in unmanaged heap
             mesh.getIndexListAsPtrToIntArray(out indices, out triStride, out indexCount); // Also fixed, needs release after usage
-            m_expectedCollisionContacts = indexCount;
+            _expectedCollisionContacts = indexCount;
             mesh.releaseSourceMeshData(); // free up the original mesh data to save memory
 
-            // We must lock here since m_MeshToTriMeshMap is static and multiple scene threads may call this method at
+            // We must lock here since _MeshToTriMeshMap is static and multiple scene threads may call this method at
             // the same time.
-            lock (m_MeshToTriMeshMap)
+            lock (_MeshToTriMeshMap)
             {
-                if (m_MeshToTriMeshMap.ContainsKey(mesh))
+                if (_MeshToTriMeshMap.ContainsKey(mesh))
                 {
-                    _triMeshData = m_MeshToTriMeshMap[mesh];
+                    _triMeshData = _MeshToTriMeshMap[mesh];
                 }
                 else
                 {
@@ -919,26 +916,26 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
                     SafeNativeMethods.GeomTriMeshDataBuildSimple(_triMeshData, vertices, vertexStride, vertexCount, indices, indexCount, triStride);
                     SafeNativeMethods.GeomTriMeshDataPreprocess(_triMeshData);
-                    m_MeshToTriMeshMap[mesh] = _triMeshData;
+                    _MeshToTriMeshMap[mesh] = _triMeshData;
                 }
             }
 
-//            _parent_scene.waitForSpaceUnlock(m_targetSpace);
+//            _parent_scene.waitForSpaceUnlock(_targetSpace);
             try
             {
-                SetGeom(SafeNativeMethods.CreateTriMesh(m_targetSpace, _triMeshData, null, null, null));
+                SetGeom(SafeNativeMethods.CreateTriMesh(_targetSpace, _triMeshData, null, null, null));
             }
             catch (AccessViolationException)
             {
-                m_log.ErrorFormat("[PHYSICS]: MESH LOCKED FOR {0}", Name);
+                _log.ErrorFormat("[PHYSICS]: MESH LOCKED FOR {0}", Name);
                 return;
             }
 
            // if (IsPhysical && Body == (IntPtr) 0)
            // {
                 // Recreate the body
-          //     m_interpenetrationcount = 0;
-           //     m_collisionscore = 0;
+          //     _interpenetrationcount = 0;
+           //     _collisionscore = 0;
 
            //     enableBody();
            // }
@@ -950,15 +947,15 @@ namespace OpenSim.Region.PhysicsModule.ODE
 Console.WriteLine("ZProcessTaints for " + Name);
 #endif
 
-            // This must be processed as the very first taint so that later operations have a prim_geom to work with
+            // This must be processed as the very first taint so that later operations have a pri_geom to work with
             // if this is a new prim.
-            if (m_taintadd)
+            if (_taintadd)
                 changeadd();
 
-            if (!_position.ApproxEquals(m_taintposition, 0f))
+            if (!_position.ApproxEquals(_taintposition, 0f))
                  changemove();
 
-            if (m_taintrot != _orientation)
+            if (_taintrot != _orientation)
             {
                 if (childPrim && IsPhysical)    // For physical child prim...
                 {
@@ -975,40 +972,40 @@ Console.WriteLine("ZProcessTaints for " + Name);
                 }
             }
 
-            if (m_taintPhysics != IsPhysical && !(m_taintparent != _parent))
+            if (_taintPhysics != IsPhysical && !(_taintparent != _parent))
                 changePhysicsStatus();
 
-            if (!_size.ApproxEquals(m_taintsize, 0f))
+            if (!_size.ApproxEquals(_taintsize, 0f))
                 changesize();
 
-            if (m_taintshape)
+            if (_taintshape)
                 changeshape();
 
-            if (m_taintforce)
+            if (_taintforce)
                 changeAddForce();
 
-            if (m_taintaddangularforce)
+            if (_taintaddangularforce)
                 changeAddAngularForce();
 
-            if (!m_taintTorque.ApproxEquals(Vector3.Zero, 0.001f))
+            if (!_taintTorque.ApproxEquals(Vector3.Zero, 0.001f))
                 changeSetTorque();
 
-            if (m_taintdisable)
+            if (_taintdisable)
                 changedisable();
 
-            if (m_taintselected != m_isSelected)
+            if (_taintselected != _isSelected)
                 changeSelectedStatus();
 
-            if (!m_taintVelocity.ApproxEquals(Vector3.Zero, 0.001f))
+            if (!_taintVelocity.ApproxEquals(Vector3.Zero, 0.001f))
                 changevelocity();
 
-            if (m_taintparent != _parent)
+            if (_taintparent != _parent)
                 changelink();
 
-            if (m_taintCollidesWater != m_collidesWater)
+            if (_taintCollidesWater != _collidesWater)
                 changefloatonwater();
 
-            if (m_taintAngularLock != m_angularlock)
+            if (_taintAngularLock != _angularlock)
                 changeAngularLock();
         }
 
@@ -1024,9 +1021,9 @@ Console.WriteLine("ZProcessTaints for " + Name);
                 //If we have a parent then we're not authorative here
                 if (_parent == null)
                 {
-                    if (m_taintAngularLock != 0)
+                    if (_taintAngularLock != 0)
                     {
-                        createAMotor(m_taintAngularLock);
+                        createAMotor(_taintAngularLock);
                     }
                     else
                     {
@@ -1039,7 +1036,7 @@ Console.WriteLine("ZProcessTaints for " + Name);
                 }
             }
 
-            m_angularlock = m_taintAngularLock;
+            _angularlock = _taintAngularLock;
         }
 
         /// <summary>
@@ -1049,11 +1046,11 @@ Console.WriteLine("ZProcessTaints for " + Name);
         {
             // If the newly set parent is not null
             // create link
-            if (_parent == null && m_taintparent != null)
+            if (_parent == null && _taintparent != null)
             {
-                if (m_taintparent.PhysicsActorType == (int)ActorTypes.Prim)
+                if (_taintparent.PhysicsActorType == (int)ActorTypes.Prim)
                 {
-                    OdePrim obj = (OdePrim)m_taintparent;
+                    OdePrim obj = (OdePrim)_taintparent;
                     //obj.disableBody();
 //Console.WriteLine("changelink calls ParentPrim");
                     obj.AddChildPrim(this);
@@ -1062,16 +1059,16 @@ Console.WriteLine("ZProcessTaints for " + Name);
                     if (obj.Body != (IntPtr)0 && Body != (IntPtr)0 && obj.Body != Body)
                     {
                         _linkJointGroup = d.JointGroupCreate(0);
-                        m_linkJoint = d.JointCreateFixed(_parent_scene.world, _linkJointGroup);
-                        d.JointAttach(m_linkJoint, obj.Body, Body);
-                        d.JointSetFixed(m_linkJoint);
+                        _linkJoint = d.JointCreateFixed(_parent_scene.world, _linkJointGroup);
+                        d.JointAttach(_linkJoint, obj.Body, Body);
+                        d.JointSetFixed(_linkJoint);
                     }
                      */
                 }
             }
             // If the newly set parent is null
             // destroy link
-            else if (_parent != null && m_taintparent == null)
+            else if (_parent != null && _taintparent == null)
             {
 //Console.WriteLine("  changelink B");
 
@@ -1088,12 +1085,12 @@ Console.WriteLine("ZProcessTaints for " + Name);
                     d.JointGroupDestroy(_linkJointGroup);
 
                     _linkJointGroup = (IntPtr)0;
-                    m_linkJoint = (IntPtr)0;
+                    _linkJoint = (IntPtr)0;
                 */
             }
 
-            _parent = m_taintparent;
-            m_taintPhysics = IsPhysical;
+            _parent = _taintparent;
+            _taintPhysics = IsPhysical;
         }
 
         /// <summary>
@@ -1116,7 +1113,7 @@ Console.WriteLine("ZProcessTaints for " + Name);
                 if (childrenPrim.Contains(prim))
                     return;
 
-//                m_log.DebugFormat(
+//                _log.DebugFormat(
 //                    "[ODE PRIM]: Linking prim {0} {1} to {2} {3}", prim.Name, prim.LocalID, Name, LocalID);
 
                 childrenPrim.Add(prim);
@@ -1144,19 +1141,19 @@ Console.WriteLine("ZProcessTaints for " + Name);
 
                 foreach (OdePrim prm in childrenPrim)
                 {
-                    prm.m_collisionCategories |= CollisionCategories.Body;
-                    prm.m_collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
+                    prm._collisionCategories |= CollisionCategories.Body;
+                    prm._collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
 
-//Console.WriteLine(" GeomSetCategoryBits 1: " + prm.prim_geom + " - " + (int)prm.m_collisionCategories + " for " + Name);
-                    if (prm.m_assetFailed)
+//Console.WriteLine(" GeomSetCategoryBits 1: " + prm.pri_geom + " - " + (int)prm._collisionCategories + " for " + Name);
+                    if (prm._assetFailed)
                     {
-                        SafeNativeMethods.GeomSetCategoryBits(prm.prim_geom, 0);
-                        SafeNativeMethods.GeomSetCollideBits(prm.prim_geom, (uint)prm.BadMeshAssetCollideBits);
+                        SafeNativeMethods.GeomSetCategoryBits(prm.pri_geom, 0);
+                        SafeNativeMethods.GeomSetCollideBits(prm.pri_geom, (uint)prm.BadMeshAssetCollideBits);
                     }
                     else
                     {
-                        SafeNativeMethods.GeomSetCategoryBits(prm.prim_geom, (uint)prm.m_collisionCategories);
-                        SafeNativeMethods.GeomSetCollideBits(prm.prim_geom, (uint)prm.m_collisionFlags);
+                        SafeNativeMethods.GeomSetCategoryBits(prm.pri_geom, (uint)prm._collisionCategories);
+                        SafeNativeMethods.GeomSetCollideBits(prm.pri_geom, (uint)prm._collisionFlags);
                     }
 
                     SafeNativeMethods.Quaternion quat = new SafeNativeMethods.Quaternion
@@ -1171,45 +1168,45 @@ Console.WriteLine("ZProcessTaints for " + Name);
                     SafeNativeMethods.RfromQ(out mat, ref quat);
                     if (Body != IntPtr.Zero)
                     {
-                        SafeNativeMethods.GeomSetBody(prm.prim_geom, Body);
+                        SafeNativeMethods.GeomSetBody(prm.pri_geom, Body);
                         prm.childPrim = true;
-                        SafeNativeMethods.GeomSetOffsetWorldPosition(prm.prim_geom, prm.Position.X , prm.Position.Y, prm.Position.Z);
-                        //d.GeomSetOffsetPosition(prim.prim_geom,
+                        SafeNativeMethods.GeomSetOffsetWorldPosition(prm.pri_geom, prm.Position.X , prm.Position.Y, prm.Position.Z);
+                        //d.GeomSetOffsetPosition(prim.pri_geom,
                         //    (Position.X - prm.Position.X) - pMass.c.X,
                         //    (Position.Y - prm.Position.Y) - pMass.c.Y,
                         //    (Position.Z - prm.Position.Z) - pMass.c.Z);
-                        SafeNativeMethods.GeomSetOffsetWorldRotation(prm.prim_geom, ref mat);
-                        //d.GeomSetOffsetRotation(prm.prim_geom, ref mat);
+                        SafeNativeMethods.GeomSetOffsetWorldRotation(prm.pri_geom, ref mat);
+                        //d.GeomSetOffsetRotation(prm.pri_geom, ref mat);
                         SafeNativeMethods.MassTranslate(ref pMass, -pMass.c.X, -pMass.c.Y, -pMass.c.Z);
                         SafeNativeMethods.BodySetMass(Body, ref pMass);
                     }
                     else
                     {
-                        m_log.DebugFormat("[PHYSICS]: {0} ain't got no boooooooooddy, no body", Name);
+                        _log.DebugFormat("[PHYSICS]: {0} ain't got no boooooooooddy, no body", Name);
                     }
 
-                    prm.m_interpenetrationcount = 0;
-                    prm.m_collisionscore = 0;
-                    prm.m_disabled = false;
+                    prm._interpenetrationcount = 0;
+                    prm._collisionscore = 0;
+                    prm._disabled = false;
 
                     prm.Body = Body;
                     _parent_scene.ActivatePrim(prm);
                 }
 
-                m_collisionCategories |= CollisionCategories.Body;
-                m_collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
+                _collisionCategories |= CollisionCategories.Body;
+                _collisionFlags |= CollisionCategories.Land | CollisionCategories.Wind;
 
-                if (m_assetFailed)
+                if (_assetFailed)
                 {
-                    SafeNativeMethods.GeomSetCategoryBits(prim_geom, 0);
-                    SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)BadMeshAssetCollideBits);
+                    SafeNativeMethods.GeomSetCategoryBits(pri_geom, 0);
+                    SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)BadMeshAssetCollideBits);
                 }
                 else
                 {
-                    //Console.WriteLine("GeomSetCategoryBits 2: " + prim_geom + " - " + (int)m_collisionCategories + " for " + Name);
-                    SafeNativeMethods.GeomSetCategoryBits(prim_geom, (uint)m_collisionCategories);
+                    //Console.WriteLine("GeomSetCategoryBits 2: " + pri_geom + " - " + (int)_collisionCategories + " for " + Name);
+                    SafeNativeMethods.GeomSetCategoryBits(pri_geom, (uint)_collisionCategories);
                     //Console.WriteLine(" Post GeomSetCategoryBits 2");
-                    SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
+                    SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)_collisionFlags);
                 }
 
                 SafeNativeMethods.Quaternion quat2 = new SafeNativeMethods.Quaternion
@@ -1222,34 +1219,34 @@ Console.WriteLine("ZProcessTaints for " + Name);
 
                 SafeNativeMethods.Matrix3 mat2 = new SafeNativeMethods.Matrix3();
                 SafeNativeMethods.RfromQ(out mat2, ref quat2);
-                SafeNativeMethods.GeomSetBody(prim_geom, Body);
-                SafeNativeMethods.GeomSetOffsetWorldPosition(prim_geom, Position.X - pMass.c.X, Position.Y - pMass.c.Y, Position.Z - pMass.c.Z);
-                //d.GeomSetOffsetPosition(prim.prim_geom,
+                SafeNativeMethods.GeomSetBody(pri_geom, Body);
+                SafeNativeMethods.GeomSetOffsetWorldPosition(pri_geom, Position.X - pMass.c.X, Position.Y - pMass.c.Y, Position.Z - pMass.c.Z);
+                //d.GeomSetOffsetPosition(prim.pri_geom,
                 //    (Position.X - prm.Position.X) - pMass.c.X,
                 //    (Position.Y - prm.Position.Y) - pMass.c.Y,
                 //    (Position.Z - prm.Position.Z) - pMass.c.Z);
-                //d.GeomSetOffsetRotation(prim_geom, ref mat2);
+                //d.GeomSetOffsetRotation(pri_geom, ref mat2);
                 SafeNativeMethods.MassTranslate(ref pMass, -pMass.c.X, -pMass.c.Y, -pMass.c.Z);
                 SafeNativeMethods.BodySetMass(Body, ref pMass);
 
                 SafeNativeMethods.BodySetAutoDisableFlag(Body, true);
                 SafeNativeMethods.BodySetAutoDisableSteps(Body, body_autodisable_frames);
 
-                m_interpenetrationcount = 0;
-                m_collisionscore = 0;
-                m_disabled = false;
+                _interpenetrationcount = 0;
+                _collisionscore = 0;
+                _disabled = false;
 
                 // The body doesn't already have a finite rotation mode set here
                 // or remove
                 if (_parent == null)
                 {
-                    createAMotor(m_angularlock);
+                    createAMotor(_angularlock);
                 }
 
                 SafeNativeMethods.BodySetPosition(Body, Position.X, Position.Y, Position.Z);
 
-                if (m_vehicle.Type != Vehicle.TYPE_NONE)
-                    m_vehicle.Enable(Body, _parent_scene);
+                if (_vehicle.Type != Vehicle.TYPE_NONE)
+                    _vehicle.Enable(Body, _parent_scene);
 
                 _parent_scene.ActivatePrim(this);
             }
@@ -1257,7 +1254,7 @@ Console.WriteLine("ZProcessTaints for " + Name);
 
         private void ChildSetGeom(OdePrim odePrim)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[ODE PRIM]: ChildSetGeom {0} {1} for {2} {3}", odePrim.Name, odePrim.LocalID, Name, LocalID);
 
             //if (IsPhysical && Body != IntPtr.Zero)
@@ -1267,10 +1264,10 @@ Console.WriteLine("ZProcessTaints for " + Name);
                 {
                     //prm.childPrim = true;
                     prm.disableBody();
-                    //prm.m_taintparent = null;
+                    //prm._taintparent = null;
                     //prm._parent = null;
-                    //prm.m_taintPhysics = false;
-                    //prm.m_disabled = true;
+                    //prm._taintPhysics = false;
+                    //prm._disabled = true;
                     //prm.childPrim = false;
                 }
             }
@@ -1295,7 +1292,7 @@ Console.WriteLine("ZProcessTaints for " + Name);
 
         private void ChildDelink(OdePrim odePrim)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[ODE PRIM]: Delinking prim {0} {1} from {2} {3}", odePrim.Name, odePrim.LocalID, Name, LocalID);
 
             // Okay, we have a delinked child..   need to rebuild the body.
@@ -1305,10 +1302,10 @@ Console.WriteLine("ZProcessTaints for " + Name);
                 {
                     prm.childPrim = true;
                     prm.disableBody();
-                    //prm.m_taintparent = null;
+                    //prm._taintparent = null;
                     //prm._parent = null;
-                    //prm.m_taintPhysics = false;
-                    //prm.m_disabled = true;
+                    //prm._taintPhysics = false;
+                    //prm._disabled = true;
                     //prm.childPrim = false;
                 }
             }
@@ -1342,10 +1339,10 @@ Console.WriteLine("ZProcessTaints for " + Name);
         /// </summary>
         private void changeSelectedStatus()
         {
-            if (m_taintselected)
+            if (_taintselected)
             {
-                m_collisionCategories = CollisionCategories.Selected;
-                m_collisionFlags = CollisionCategories.Sensor | CollisionCategories.Space;
+                _collisionCategories = CollisionCategories.Selected;
+                _collisionFlags = CollisionCategories.Sensor | CollisionCategories.Space;
 
                 // We do the body disable soft twice because 'in theory' a collision could have happened
                 // in between the disabling and the collision properties setting
@@ -1374,15 +1371,15 @@ Console.WriteLine("ZProcessTaints for " + Name);
                     disableBodySoft();
                 }
 
-                if (m_assetFailed)
+                if (_assetFailed)
                 {
-                    SafeNativeMethods.GeomSetCategoryBits(prim_geom, 0);
-                    SafeNativeMethods.GeomSetCollideBits(prim_geom, 0);
+                    SafeNativeMethods.GeomSetCategoryBits(pri_geom, 0);
+                    SafeNativeMethods.GeomSetCollideBits(pri_geom, 0);
                 }
                 else
                 {
-                    SafeNativeMethods.GeomSetCategoryBits(prim_geom, (uint)m_collisionCategories);
-                    SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
+                    SafeNativeMethods.GeomSetCategoryBits(pri_geom, (uint)_collisionCategories);
+                    SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)_collisionFlags);
                 }
 
                 if (IsPhysical)
@@ -1392,27 +1389,27 @@ Console.WriteLine("ZProcessTaints for " + Name);
             }
             else
             {
-                m_collisionCategories = CollisionCategories.Geom;
+                _collisionCategories = CollisionCategories.Geom;
 
                 if (IsPhysical)
-                    m_collisionCategories |= CollisionCategories.Body;
+                    _collisionCategories |= CollisionCategories.Body;
 
-                m_collisionFlags = m_default_collisionFlags;
+                _collisionFlags = _default_collisionFlags;
 
-                if (m_collidesLand)
-                    m_collisionFlags |= CollisionCategories.Land;
-                if (m_collidesWater)
-                    m_collisionFlags |= CollisionCategories.Water;
+                if (_collidesLand)
+                    _collisionFlags |= CollisionCategories.Land;
+                if (_collidesWater)
+                    _collisionFlags |= CollisionCategories.Water;
 
-                if (m_assetFailed)
+                if (_assetFailed)
                 {
-                    SafeNativeMethods.GeomSetCategoryBits(prim_geom, 0);
-                    SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)BadMeshAssetCollideBits);
+                    SafeNativeMethods.GeomSetCategoryBits(pri_geom, 0);
+                    SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)BadMeshAssetCollideBits);
                 }
                 else
                 {
-                    SafeNativeMethods.GeomSetCategoryBits(prim_geom, (uint)m_collisionCategories);
-                    SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
+                    SafeNativeMethods.GeomSetCategoryBits(pri_geom, (uint)_collisionCategories);
+                    SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)_collisionFlags);
                 }
 
                 if (IsPhysical)
@@ -1427,28 +1424,28 @@ Console.WriteLine("ZProcessTaints for " + Name);
             }
 
             resetCollisionAccounting();
-            m_isSelected = m_taintselected;
+            _isSelected = _taintselected;
         }//end changeSelectedStatus
 
         internal void ResetTaints()
         {
-            m_taintposition = _position;
-            m_taintrot = _orientation;
-            m_taintPhysics = IsPhysical;
-            m_taintselected = m_isSelected;
-            m_taintsize = _size;
-            m_taintshape = false;
-            m_taintforce = false;
-            m_taintdisable = false;
-            m_taintVelocity = Vector3.Zero;
+            _taintposition = _position;
+            _taintrot = _orientation;
+            _taintPhysics = IsPhysical;
+            _taintselected = _isSelected;
+            _taintsize = _size;
+            _taintshape = false;
+            _taintforce = false;
+            _taintdisable = false;
+            _taintVelocity = Vector3.Zero;
         }
 
         /// <summary>
         /// Create a geometry for the given mesh in the given target space.
         /// </summary>
-        /// <param name="m_targetSpace"></param>
+        /// <param name="_targetSpace"></param>
         /// <param name="mesh">If null, then a mesh is used that is based on the profile shape data.</param>
-        private void CreateGeom(IntPtr m_targetSpace, IMesh mesh)
+        private void CreateGeom(IntPtr _targetSpace, IMesh mesh)
         {
 #if SPAM
 Console.WriteLine("CreateGeom:");
@@ -1465,63 +1462,63 @@ Console.WriteLine("CreateGeom:");
                     {
                         if (_size.X / 2f > 0f)
                         {
-//                            _parent_scene.waitForSpaceUnlock(m_targetSpace);
+//                            _parent_scene.waitForSpaceUnlock(_targetSpace);
                             try
                             {
 //Console.WriteLine(" CreateGeom 1");
-                                SetGeom(SafeNativeMethods.CreateSphere(m_targetSpace, _size.X / 2));
-                                m_expectedCollisionContacts = 3;
+                                SetGeom(SafeNativeMethods.CreateSphere(_targetSpace, _size.X / 2));
+                                _expectedCollisionContacts = 3;
                             }
                             catch (AccessViolationException)
                             {
-                                m_log.WarnFormat("[PHYSICS]: Unable to create physics proxy for object {0}", Name);
+                                _log.WarnFormat("[PHYSICS]: Unable to create physics proxy for object {0}", Name);
                                 return;
                             }
                         }
                         else
                         {
-//                            _parent_scene.waitForSpaceUnlock(m_targetSpace);
+//                            _parent_scene.waitForSpaceUnlock(_targetSpace);
                             try
                             {
 //Console.WriteLine(" CreateGeom 2");
-                                SetGeom(SafeNativeMethods.CreateBox(m_targetSpace, _size.X, _size.Y, _size.Z));
-                                m_expectedCollisionContacts = 4;
+                                SetGeom(SafeNativeMethods.CreateBox(_targetSpace, _size.X, _size.Y, _size.Z));
+                                _expectedCollisionContacts = 4;
                             }
                             catch (AccessViolationException)
                             {
-                                m_log.WarnFormat("[PHYSICS]: Unable to create physics proxy for object {0}", Name);
+                                _log.WarnFormat("[PHYSICS]: Unable to create physics proxy for object {0}", Name);
                                 return;
                             }
                         }
                     }
                     else
                     {
-//                        _parent_scene.waitForSpaceUnlock(m_targetSpace);
+//                        _parent_scene.waitForSpaceUnlock(_targetSpace);
                         try
                         {
 //Console.WriteLine("  CreateGeom 3");
-                            SetGeom(SafeNativeMethods.CreateBox(m_targetSpace, _size.X, _size.Y, _size.Z));
-                            m_expectedCollisionContacts = 4;
+                            SetGeom(SafeNativeMethods.CreateBox(_targetSpace, _size.X, _size.Y, _size.Z));
+                            _expectedCollisionContacts = 4;
                         }
                         catch (AccessViolationException)
                         {
-                            m_log.WarnFormat("[PHYSICS]: Unable to create physics proxy for object {0}", Name);
+                            _log.WarnFormat("[PHYSICS]: Unable to create physics proxy for object {0}", Name);
                             return;
                         }
                     }
                 }
                 else
                 {
-//                    _parent_scene.waitForSpaceUnlock(m_targetSpace);
+//                    _parent_scene.waitForSpaceUnlock(_targetSpace);
                     try
                     {
 //Console.WriteLine("  CreateGeom 4");
-                        SetGeom(SafeNativeMethods.CreateBox(m_targetSpace, _size.X, _size.Y, _size.Z));
-                        m_expectedCollisionContacts = 4;
+                        SetGeom(SafeNativeMethods.CreateBox(_targetSpace, _size.X, _size.Y, _size.Z));
+                        _expectedCollisionContacts = 4;
                     }
                     catch (AccessViolationException)
                     {
-                        m_log.WarnFormat("[PHYSICS]: Unable to create physics proxy for object {0}", Name);
+                        _log.WarnFormat("[PHYSICS]: Unable to create physics proxy for object {0}", Name);
                         return;
                     }
                 }
@@ -1531,26 +1528,26 @@ Console.WriteLine("CreateGeom:");
         /// <summary>
         /// Remove the existing geom from this prim.
         /// </summary>
-        /// <param name="m_targetSpace"></param>
+        /// <param name="_targetSpace"></param>
         /// <param name="mesh">If null, then a mesh is used that is based on the profile shape data.</param>
         /// <returns>true if the geom was successfully removed, false if it was already gone or the remove failed.</returns>
         internal bool RemoveGeom()
         {
-            if (prim_geom != IntPtr.Zero)
+            if (pri_geom != IntPtr.Zero)
             {
                 try
                 {
-                    _parent_scene.geom_name_map.Remove(prim_geom);
-                    _parent_scene.actor_name_map.Remove(prim_geom);
-                    SafeNativeMethods.GeomDestroy(prim_geom);
-                    m_expectedCollisionContacts = 0;
-                    prim_geom = IntPtr.Zero;
+                    _parent_scene.geo_name_map.Remove(pri_geom);
+                    _parent_scene.actor_name_map.Remove(pri_geom);
+                    SafeNativeMethods.GeomDestroy(pri_geom);
+                    _expectedCollisionContacts = 0;
+                    pri_geom = IntPtr.Zero;
                 }
                 catch (System.AccessViolationException)
                 {
-                    prim_geom = IntPtr.Zero;
-                    m_expectedCollisionContacts = 0;
-                    m_log.ErrorFormat("[PHYSICS]: PrimGeom dead for {0}", Name);
+                    pri_geom = IntPtr.Zero;
+                    _expectedCollisionContacts = 0;
+                    _log.ErrorFormat("[PHYSICS]: PrimGeom dead for {0}", Name);
 
                     return false;
                 }
@@ -1559,7 +1556,7 @@ Console.WriteLine("CreateGeom:");
             }
             else
             {
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[ODE PRIM]: Called RemoveGeom() on {0} {1} where geometry was already null.", Name, LocalID);
 
                 return false;
@@ -1570,7 +1567,7 @@ Console.WriteLine("CreateGeom:");
         /// </summary>
         private void changeadd()
         {
-//            m_log.DebugFormat("[ODE PRIM]: Adding prim {0}", Name);
+//            _log.DebugFormat("[ODE PRIM]: Adding prim {0}", Name);
 
             int[] iprimspaceArrItem = _parent_scene.calculateSpaceArrayItemFromPos(_position);
             IntPtr targetspace = _parent_scene.calculateSpaceForGeom(_position);
@@ -1578,7 +1575,7 @@ Console.WriteLine("CreateGeom:");
             if (targetspace == IntPtr.Zero)
                 targetspace = _parent_scene.createprimspace(iprimspaceArrItem[0], iprimspaceArrItem[1]);
 
-            m_targetSpace = targetspace;
+            _targetSpace = targetspace;
 
             IMesh mesh = null;
 
@@ -1587,19 +1584,19 @@ Console.WriteLine("CreateGeom:");
                 // Don't need to re-enable body..   it's done in SetMesh
                 mesh = _parent_scene.mesher.CreateMesh(Name, _pbs, _size, _parent_scene.meshSculptLOD, IsPhysical);
                 // createmesh returns null when it's a shape that isn't a cube.
-               // m_log.Debug(m_localID);
+               // _log.Debug(_localID);
                 if (mesh == null)
                     CheckMeshAsset();
                 else
-                    m_assetFailed = false;
+                    _assetFailed = false;
             }
 
 #if SPAM
 Console.WriteLine("changeadd 1");
 #endif
-            CreateGeom(m_targetSpace, mesh);
+            CreateGeom(_targetSpace, mesh);
 
-            SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
+            SafeNativeMethods.GeomSetPosition(pri_geom, _position.X, _position.Y, _position.Z);
             SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
             {
                 X = _orientation.X,
@@ -1607,14 +1604,14 @@ Console.WriteLine("changeadd 1");
                 Z = _orientation.Z,
                 W = _orientation.W
             };
-            SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
+            SafeNativeMethods.GeomSetQuaternion(pri_geom, ref myrot);
 
             if (IsPhysical && Body == IntPtr.Zero)
                 enableBody();
 
             changeSelectedStatus();
 
-            m_taintadd = false;
+            _taintadd = false;
         }
 
         /// <summary>
@@ -1624,7 +1621,7 @@ Console.WriteLine("changeadd 1");
         {
             if (IsPhysical)
             {
-                if (!m_disabled && !m_taintremove && !childPrim)
+                if (!_disabled && !_taintremove && !childPrim)
                 {
                     if (Body == IntPtr.Zero)
                         enableBody();
@@ -1633,10 +1630,10 @@ Console.WriteLine("changeadd 1");
                     //if you move it, re-enable the prim manually.
                     if (_parent != null)
                     {
-                        if (m_linkJoint != IntPtr.Zero)
+                        if (_linkJoint != IntPtr.Zero)
                         {
-                            SafeNativeMethods.JointDestroy(m_linkJoint);
-                            m_linkJoint = IntPtr.Zero;
+                            SafeNativeMethods.JointDestroy(_linkJoint);
+                            _linkJoint = IntPtr.Zero;
                         }
                     }
 
@@ -1651,46 +1648,46 @@ Console.WriteLine("changeadd 1");
                             {
 // KF: Fixed Joints were removed? Anyway - this Console.WriteLine does not show up, so routine is not used??
 Console.WriteLine(" JointCreateFixed");
-                                m_linkJoint = SafeNativeMethods.JointCreateFixed(_parent_scene.world, _linkJointGroup);
-                                SafeNativeMethods.JointAttach(m_linkJoint, Body, odParent.Body);
-                                SafeNativeMethods.JointSetFixed(m_linkJoint);
+                                _linkJoint = SafeNativeMethods.JointCreateFixed(_parent_scene.world, _linkJointGroup);
+                                SafeNativeMethods.JointAttach(_linkJoint, Body, odParent.Body);
+                                SafeNativeMethods.JointSetFixed(_linkJoint);
                             }
                         }
                         SafeNativeMethods.BodyEnable(Body);
-                        if (m_vehicle.Type != Vehicle.TYPE_NONE)
+                        if (_vehicle.Type != Vehicle.TYPE_NONE)
                         {
-                            m_vehicle.Enable(Body, _parent_scene);
+                            _vehicle.Enable(Body, _parent_scene);
                         }
                     }
                     else
                     {
-                        m_log.WarnFormat("[PHYSICS]: Body for {0} still null after enableBody().  This is a crash scenario.", Name);
+                        _log.WarnFormat("[PHYSICS]: Body for {0} still null after enableBody().  This is a crash scenario.", Name);
                     }
                 }
                 //else
                // {
-                    //m_log.Debug("[BUG]: race!");
+                    //_log.Debug("[BUG]: race!");
                 //}
             }
 
             // string primScenAvatarIn = _parent_scene.whichspaceamIin(_position);
             // int[] arrayitem = _parent_scene.calculateSpaceArrayItemFromPos(_position);
-//          _parent_scene.waitForSpaceUnlock(m_targetSpace);
+//          _parent_scene.waitForSpaceUnlock(_targetSpace);
 
-            IntPtr tempspace = _parent_scene.recalculateSpaceForGeom(prim_geom, _position, m_targetSpace);
-            m_targetSpace = tempspace;
+            IntPtr tempspace = _parent_scene.recalculateSpaceForGeom(pri_geom, _position, _targetSpace);
+            _targetSpace = tempspace;
 
-//                _parent_scene.waitForSpaceUnlock(m_targetSpace);
+//                _parent_scene.waitForSpaceUnlock(_targetSpace);
 
-            SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
+            SafeNativeMethods.GeomSetPosition(pri_geom, _position.X, _position.Y, _position.Z);
 
-//                    _parent_scene.waitForSpaceUnlock(m_targetSpace);
-            SafeNativeMethods.SpaceAdd(m_targetSpace, prim_geom);
+//                    _parent_scene.waitForSpaceUnlock(_targetSpace);
+            SafeNativeMethods.SpaceAdd(_targetSpace, pri_geom);
 
             changeSelectedStatus();
 
             resetCollisionAccounting();
-            m_taintposition = _position;
+            _taintposition = _position;
         }
 
         internal void Move(float timestep)
@@ -1702,29 +1699,29 @@ Console.WriteLine(" JointCreateFixed");
             if (outofBounds)
                 return;
 
-            if (IsPhysical && Body != IntPtr.Zero && !m_isSelected && !childPrim)        // KF: Only move root prims.
+            if (IsPhysical && Body != IntPtr.Zero && !_isSelected && !childPrim)        // KF: Only move root prims.
             {
-                if (m_vehicle.Type != Vehicle.TYPE_NONE)
+                if (_vehicle.Type != Vehicle.TYPE_NONE)
                 {
                     // 'VEHICLES' are dealt with in ODEDynamics.cs
-                    m_vehicle.Step(timestep, _parent_scene);
+                    _vehicle.Step(timestep, _parent_scene);
                 }
                 else
                 {
 //Console.WriteLine("Move " +  Name);
                     if (!SafeNativeMethods.BodyIsEnabled (Body))  SafeNativeMethods.BodyEnable (Body); // KF add 161009
 
-                    float m_mass = CalculateMass();
+                    float _mass = CalculateMass();
 
 //                    fz = 0f;
-                    //m_log.Info(m_collisionFlags.ToString());
+                    //_log.Info(_collisionFlags.ToString());
 
 
-                    //KF: m_buoyancy should be set by llSetBuoyancy() for non-vehicle.
+                    //KF: _buoyancy should be set by llSetBuoyancy() for non-vehicle.
                     // would come from SceneObjectPart.cs, public void SetBuoyancy(float fvalue) , PhysActor.Buoyancy = fvalue; ??
-                    // m_buoyancy: (unlimited value) <0=Falls fast; 0=1g; 1=0g; >1 = floats up
-                    // gravityz multiplier = 1 - m_buoyancy
-                    fz = _parent_scene.gravityz * (1.0f - m_buoyancy) * m_mass;
+                    // _buoyancy: (unlimited value) <0=Falls fast; 0=1g; 1=0g; >1 = floats up
+                    // gravityz multiplier = 1 - _buoyancy
+                    fz = _parent_scene.gravityz * (1.0f - _buoyancy) * _mass;
 
                     if (PIDActive)
                     {
@@ -1733,7 +1730,7 @@ Console.WriteLine(" JointCreateFixed");
                         //if (!d.BodyIsEnabled(Body))
                         //d.BodySetForce(Body, 0f, 0f, 0f);
                         // If we're using the PID controller, then we have no gravity
-                        //fz = (-1 * _parent_scene.gravityz) * m_mass;     //KF: ?? Prims have no global gravity,so simply...
+                        //fz = (-1 * _parent_scene.gravityz) * _mass;     //KF: ?? Prims have no global gravity,so simply...
                         fz = 0f;
 
                         //  no lock; for now it's only called from within Simulate()
@@ -1741,15 +1738,15 @@ Console.WriteLine(" JointCreateFixed");
                         // If the PID Controller isn't active then we set our force
                         // calculating base velocity to the current position
 
-                        if (m_PIDTau < 1 && m_PIDTau != 0)
+                        if (_PIDTau < 1 && _PIDTau != 0)
                         {
-                            //PID_G = PID_G / m_PIDTau;
-                            m_PIDTau = 1;
+                            //PID_G = PID_G / _PIDTau;
+                            _PIDTau = 1;
                         }
 
-                        if (PID_G - m_PIDTau <= 0)
+                        if (PID_G - _PIDTau <= 0)
                         {
-                            PID_G = m_PIDTau + 1;
+                            PID_G = _PIDTau + 1;
                         }
                         //PidStatus = true;
 
@@ -1759,9 +1756,9 @@ Console.WriteLine(" JointCreateFixed");
                         SafeNativeMethods.Vector3 pos = SafeNativeMethods.BodyGetPosition(Body);
                         _target_velocity =
                             new Vector3(
-                                (m_PIDTarget.X - pos.X) * ((PID_G - m_PIDTau) * timestep),
-                                (m_PIDTarget.Y - pos.Y) * ((PID_G - m_PIDTau) * timestep),
-                                (m_PIDTarget.Z - pos.Z) * ((PID_G - m_PIDTau) * timestep)
+                                (_PIDTarget.X - pos.X) * ((PID_G - _PIDTau) * timestep),
+                                (_PIDTarget.Y - pos.Y) * ((PID_G - _PIDTau) * timestep),
+                                (_PIDTarget.Z - pos.Z) * ((PID_G - _PIDTau) * timestep)
                                 );
 
                         //  if velocity is zero, use position control; otherwise, velocity control
@@ -1778,7 +1775,7 @@ Console.WriteLine(" JointCreateFixed");
                             //fx = (_target_velocity.X - vel.X) * (PID_D) + (_zeroPosition.X - pos.X) * (PID_P * 2);
                             //fy = (_target_velocity.Y - vel.Y) * (PID_D) + (_zeroPosition.Y - pos.Y) * (PID_P * 2);
                             //fz = fz + (_target_velocity.Z - vel.Z) * (PID_D) + (_zeroPosition.Z - pos.Z) * PID_P;
-                            SafeNativeMethods.BodySetPosition(Body, m_PIDTarget.X, m_PIDTarget.Y, m_PIDTarget.Z);
+                            SafeNativeMethods.BodySetPosition(Body, _PIDTarget.X, _PIDTarget.Y, _PIDTarget.Z);
                             SafeNativeMethods.BodySetLinearVel(Body, 0, 0, 0);
                             SafeNativeMethods.BodyAddForce(Body, 0, 0, fz);
                             return;
@@ -1793,31 +1790,31 @@ Console.WriteLine(" JointCreateFixed");
 
                             // vec.Z = (_target_velocity.Z - vel.Z) * PID_D + (_zeroPosition.Z - pos.Z) * PID_P;
 
-                            fz = fz + (_target_velocity.Z - vel.Z) * PID_D * m_mass;
+                            fz = fz + (_target_velocity.Z - vel.Z) * PID_D * _mass;
                         }
                     }        // end if (PIDActive)
 
                     // Hover PID Controller needs to be mutually exlusive to MoveTo PID controller
-                    if (m_useHoverPID && !PIDActive)
+                    if (_useHoverPID && !PIDActive)
                     {
 //Console.WriteLine("Hover " +  Name);
 
                         // If we're using the PID controller, then we have no gravity
-                        fz = -1 * _parent_scene.gravityz * m_mass;
+                        fz = -1 * _parent_scene.gravityz * _mass;
 
                         //  no lock; for now it's only called from within Simulate()
 
                         // If the PID Controller isn't active then we set our force
                         // calculating base velocity to the current position
 
-                        if (m_PIDTau < 1)
+                        if (_PIDTau < 1)
                         {
-                            PID_G = PID_G / m_PIDTau;
+                            PID_G = PID_G / _PIDTau;
                         }
 
-                        if (PID_G - m_PIDTau <= 0)
+                        if (PID_G - _PIDTau <= 0)
                         {
-                            PID_G = m_PIDTau + 1;
+                            PID_G = _PIDTau + 1;
                         }
 
                         // Where are we, and where are we headed?
@@ -1826,31 +1823,31 @@ Console.WriteLine(" JointCreateFixed");
 
                         //    Non-Vehicles have a limited set of Hover options.
                         // determine what our target height really is based on HoverType
-                        switch (m_PIDHoverType)
+                        switch (_PIDHoverType)
                         {
                             case PIDHoverType.Ground:
-                                m_groundHeight = _parent_scene.GetTerrainHeightAtXY(pos.X, pos.Y);
-                                m_targetHoverHeight = m_groundHeight + m_PIDHoverHeight;
+                                _groundHeight = _parent_scene.GetTerrainHeightAtXY(pos.X, pos.Y);
+                                _targetHoverHeight = _groundHeight + _PIDHoverHeight;
                                 break;
                             case PIDHoverType.GroundAndWater:
-                                m_groundHeight = _parent_scene.GetTerrainHeightAtXY(pos.X, pos.Y);
-                                m_waterHeight  = _parent_scene.GetWaterLevel();
-                                if (m_groundHeight > m_waterHeight)
+                                _groundHeight = _parent_scene.GetTerrainHeightAtXY(pos.X, pos.Y);
+                                _waterHeight  = _parent_scene.GetWaterLevel();
+                                if (_groundHeight > _waterHeight)
                                 {
-                                    m_targetHoverHeight = m_groundHeight + m_PIDHoverHeight;
+                                    _targetHoverHeight = _groundHeight + _PIDHoverHeight;
                                 }
                                 else
                                 {
-                                    m_targetHoverHeight = m_waterHeight + m_PIDHoverHeight;
+                                    _targetHoverHeight = _waterHeight + _PIDHoverHeight;
                                 }
                                 break;
 
-                        }     // end switch (m_PIDHoverType)
+                        }     // end switch (_PIDHoverType)
 
 
                         _target_velocity =
                             new Vector3(0.0f, 0.0f,
-                                (m_targetHoverHeight - pos.Z) * ((PID_G - m_PIDHoverTau) * timestep)
+                                (_targetHoverHeight - pos.Z) * ((PID_G - _PIDHoverTau) * timestep)
                                 );
 
                         //  if velocity is zero, use position control; otherwise, velocity control
@@ -1864,7 +1861,7 @@ Console.WriteLine(" JointCreateFixed");
                             // Avatar to Avatar collisions
                             // Prim to avatar collisions
 
-                            SafeNativeMethods.BodySetPosition(Body, pos.X, pos.Y, m_targetHoverHeight);
+                            SafeNativeMethods.BodySetPosition(Body, pos.X, pos.Y, _targetHoverHeight);
                             SafeNativeMethods.BodySetLinearVel(Body, vel.X, vel.Y, 0);
                             SafeNativeMethods.BodyAddForce(Body, 0, 0, fz);
                             return;
@@ -1874,22 +1871,22 @@ Console.WriteLine(" JointCreateFixed");
                             _zeroFlag = false;
 
                             // We're flying and colliding with something
-                            fz = fz + (_target_velocity.Z - vel.Z) * PID_D * m_mass;
+                            fz = fz + (_target_velocity.Z - vel.Z) * PID_D * _mass;
                         }
                     }
 
-                    fx *= m_mass;
-                    fy *= m_mass;
-                    //fz *= m_mass;
+                    fx *= _mass;
+                    fy *= _mass;
+                    //fz *= _mass;
 
-                    fx += m_force.X;
-                    fy += m_force.Y;
-                    fz += m_force.Z;
+                    fx += _force.X;
+                    fy += _force.Y;
+                    fz += _force.Z;
 
-                    //m_log.Info("[OBJPID]: X:" + fx.ToString() + " Y:" + fy.ToString() + " Z:" + fz.ToString());
+                    //_log.Info("[OBJPID]: X:" + fx.ToString() + " Y:" + fy.ToString() + " Z:" + fz.ToString());
                     if (fx != 0 || fy != 0 || fz != 0)
                     {
-                        //m_taintdisable = true;
+                        //_taintdisable = true;
                         //base.RaiseOutOfBounds(Position);
                         //d.BodySetLinearVel(Body, fx, fy, 0f);
                         if (!SafeNativeMethods.BodyIsEnabled(Body))
@@ -1903,8 +1900,8 @@ Console.WriteLine(" JointCreateFixed");
                         }
 
                         // 35x10 = 350n times the mass per second applied maximum.
-                        float nmax = 35f * m_mass;
-                        float nmin = -35f * m_mass;
+                        float nmax = 35f * _mass;
+                        float nmin = -35f * _mass;
 
                         if (fx > nmax)
                             fx = nmax;
@@ -1944,24 +1941,24 @@ Console.WriteLine(" JointCreateFixed");
                 if (IsPhysical)
                 {
                     // create or remove locks
-                    createAMotor(m_angularlock);
+                    createAMotor(_angularlock);
                 }
             }
             else
             {
                 // daughter prim, do Geom set
-                SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
+                SafeNativeMethods.GeomSetQuaternion(pri_geom, ref myrot);
             }
 
             resetCollisionAccounting();
-            m_taintrot = _orientation;
+            _taintrot = _orientation;
         }
 
         private void resetCollisionAccounting()
         {
-            m_collisionscore = 0;
-            m_interpenetrationcount = 0;
-            m_disabled = false;
+            _collisionscore = 0;
+            _interpenetrationcount = 0;
+            _disabled = false;
         }
 
         /// <summary>
@@ -1969,14 +1966,14 @@ Console.WriteLine(" JointCreateFixed");
         /// </summary>
         private void changedisable()
         {
-            m_disabled = true;
+            _disabled = true;
             if (Body != IntPtr.Zero)
             {
                 SafeNativeMethods.BodyDisable(Body);
                 Body = IntPtr.Zero;
             }
 
-            m_taintdisable = false;
+            _taintdisable = false;
         }
 
         /// <summary>
@@ -2028,7 +2025,7 @@ Console.WriteLine(" JointCreateFixed");
             changeSelectedStatus();
 
             resetCollisionAccounting();
-            m_taintPhysics = IsPhysical;
+            _taintPhysics = IsPhysical;
         }
 
         /// <summary>
@@ -2037,7 +2034,7 @@ Console.WriteLine(" JointCreateFixed");
         private void changesize()
         {
 #if SPAM
-            m_log.DebugFormat("[ODE PRIM]: Called changesize");
+            _log.DebugFormat("[ODE PRIM]: Called changesize");
 #endif
 
             if (_size.X <= 0) _size.X = 0.01f;
@@ -2061,10 +2058,10 @@ Console.WriteLine(" JointCreateFixed");
                 }
             }
 
-            if (SafeNativeMethods.SpaceQuery(m_targetSpace, prim_geom))
+            if (SafeNativeMethods.SpaceQuery(_targetSpace, pri_geom))
             {
-//                _parent_scene.waitForSpaceUnlock(m_targetSpace);
-                SafeNativeMethods.SpaceRemove(m_targetSpace, prim_geom);
+//                _parent_scene.waitForSpaceUnlock(_targetSpace);
+                SafeNativeMethods.SpaceRemove(_targetSpace, pri_geom);
             }
 
             RemoveGeom();
@@ -2088,13 +2085,13 @@ Console.WriteLine(" JointCreateFixed");
                     if (mesh == null)
                         CheckMeshAsset();
                     else
-                        m_assetFailed = false;
+                        _assetFailed = false;
                 }
 
             }
 
-            CreateGeom(m_targetSpace, mesh);
-            SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
+            CreateGeom(_targetSpace, mesh);
+            SafeNativeMethods.GeomSetPosition(pri_geom, _position.X, _position.Y, _position.Z);
             SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
             {
                 X = _orientation.X,
@@ -2102,9 +2099,9 @@ Console.WriteLine(" JointCreateFixed");
                 Z = _orientation.Z,
                 W = _orientation.W
             };
-            SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
+            SafeNativeMethods.GeomSetQuaternion(pri_geom, ref myrot);
 
-            //d.GeomBoxSetLengths(prim_geom, _size.X, _size.Y, _size.Z);
+            //d.GeomBoxSetLengths(pri_geom, _size.X, _size.Y, _size.Z);
             if (IsPhysical && Body == IntPtr.Zero && !childPrim)
             {
                 // Re creates body on size.
@@ -2124,7 +2121,7 @@ Console.WriteLine(" JointCreateFixed");
                 }
             }
             resetCollisionAccounting();
-            m_taintsize = _size;
+            _taintsize = _size;
         }
 
         /// <summary>
@@ -2133,29 +2130,29 @@ Console.WriteLine(" JointCreateFixed");
         /// <param name="timestep"></param>
         private void changefloatonwater()
         {
-            m_collidesWater = m_taintCollidesWater;
+            _collidesWater = _taintCollidesWater;
 
-            if (m_collidesWater)
+            if (_collidesWater)
             {
-                m_collisionFlags |= CollisionCategories.Water;
+                _collisionFlags |= CollisionCategories.Water;
             }
             else
             {
-                m_collisionFlags &= ~CollisionCategories.Water;
+                _collisionFlags &= ~CollisionCategories.Water;
             }
 
-            if (m_assetFailed)
-                SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)BadMeshAssetCollideBits);
+            if (_assetFailed)
+                SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)BadMeshAssetCollideBits);
             else
 
-                SafeNativeMethods.GeomSetCollideBits(prim_geom, (uint)m_collisionFlags);
+                SafeNativeMethods.GeomSetCollideBits(pri_geom, (uint)_collisionFlags);
         }
         /// <summary>
         /// Change prim in response to a shape taint.
         /// </summary>
         private void changeshape()
         {
-            m_taintshape = false;
+            _taintshape = false;
 
             // Cleanup of old prim geometry and Bodies
             if (IsPhysical && Body != IntPtr.Zero)
@@ -2198,11 +2195,11 @@ Console.WriteLine(" JointCreateFixed");
                 if (mesh == null)
                     CheckMeshAsset();
                 else
-                    m_assetFailed = false;
+                    _assetFailed = false;
             }
 
-            CreateGeom(m_targetSpace, mesh);
-            SafeNativeMethods.GeomSetPosition(prim_geom, _position.X, _position.Y, _position.Z);
+            CreateGeom(_targetSpace, mesh);
+            SafeNativeMethods.GeomSetPosition(pri_geom, _position.X, _position.Y, _position.Z);
             SafeNativeMethods.Quaternion myrot = new SafeNativeMethods.Quaternion
             {
                 //myrot.W = _orientation.w;
@@ -2211,9 +2208,9 @@ Console.WriteLine(" JointCreateFixed");
                 Y = _orientation.Y,
                 Z = _orientation.Z
             };
-            SafeNativeMethods.GeomSetQuaternion(prim_geom, ref myrot);
+            SafeNativeMethods.GeomSetQuaternion(pri_geom, ref myrot);
 
-            //d.GeomBoxSetLengths(prim_geom, _size.X, _size.Y, _size.Z);
+            //d.GeomBoxSetLengths(pri_geom, _size.X, _size.Y, _size.Z);
             if (IsPhysical && Body == IntPtr.Zero)
             {
                 // Re creates body on size.
@@ -2237,7 +2234,7 @@ Console.WriteLine(" JointCreateFixed");
             }
 
             resetCollisionAccounting();
-//            m_taintshape = false;
+//            _taintshape = false;
         }
 
         /// <summary>
@@ -2245,50 +2242,50 @@ Console.WriteLine(" JointCreateFixed");
         /// </summary>
         private void changeAddForce()
         {
-            if (!m_isSelected)
+            if (!_isSelected)
             {
-                lock (m_forcelist)
+                lock (_forcelist)
                 {
-                    //m_log.Info("[PHYSICS]: dequeing forcelist");
+                    //_log.Info("[PHYSICS]: dequeing forcelist");
                     if (IsPhysical)
                     {
                         Vector3 iforce = Vector3.Zero;
                         int i = 0;
                         try
                         {
-                            for (i = 0; i < m_forcelist.Count; i++)
+                            for (i = 0; i < _forcelist.Count; i++)
                             {
 
-                                iforce = iforce + m_forcelist[i] * 100;
+                                iforce = iforce + _forcelist[i] * 100;
                             }
                         }
                         catch (IndexOutOfRangeException)
                         {
-                            m_forcelist = new List<Vector3>();
-                            m_collisionscore = 0;
-                            m_interpenetrationcount = 0;
-                            m_taintforce = false;
+                            _forcelist = new List<Vector3>();
+                            _collisionscore = 0;
+                            _interpenetrationcount = 0;
+                            _taintforce = false;
                             return;
                         }
                         catch (ArgumentOutOfRangeException)
                         {
-                            m_forcelist = new List<Vector3>();
-                            m_collisionscore = 0;
-                            m_interpenetrationcount = 0;
-                            m_taintforce = false;
+                            _forcelist = new List<Vector3>();
+                            _collisionscore = 0;
+                            _interpenetrationcount = 0;
+                            _taintforce = false;
                             return;
                         }
                         SafeNativeMethods.BodyEnable(Body);
                         SafeNativeMethods.BodyAddForce(Body, iforce.X, iforce.Y, iforce.Z);
                     }
-                    m_forcelist.Clear();
+                    _forcelist.Clear();
                 }
 
-                m_collisionscore = 0;
-                m_interpenetrationcount = 0;
+                _collisionscore = 0;
+                _interpenetrationcount = 0;
             }
 
-            m_taintforce = false;
+            _taintforce = false;
         }
 
         /// <summary>
@@ -2296,15 +2293,15 @@ Console.WriteLine(" JointCreateFixed");
         /// </summary>
         private void changeSetTorque()
         {
-            if (!m_isSelected)
+            if (!_isSelected)
             {
                 if (IsPhysical && Body != IntPtr.Zero)
                 {
-                    SafeNativeMethods.BodySetTorque(Body, m_taintTorque.X, m_taintTorque.Y, m_taintTorque.Z);
+                    SafeNativeMethods.BodySetTorque(Body, _taintTorque.X, _taintTorque.Y, _taintTorque.Z);
                 }
             }
 
-            m_taintTorque = Vector3.Zero;
+            _taintTorque = Vector3.Zero;
         }
 
         /// <summary>
@@ -2312,30 +2309,30 @@ Console.WriteLine(" JointCreateFixed");
         /// </summary>
         private void changeAddAngularForce()
         {
-            if (!m_isSelected)
+            if (!_isSelected)
             {
-                lock (m_angularforcelist)
+                lock (_angularforcelist)
                 {
-                    //m_log.Info("[PHYSICS]: dequeing forcelist");
+                    //_log.Info("[PHYSICS]: dequeing forcelist");
                     if (IsPhysical)
                     {
                         Vector3 iforce = Vector3.Zero;
-                        for (int i = 0; i < m_angularforcelist.Count; i++)
+                        for (int i = 0; i < _angularforcelist.Count; i++)
                         {
-                            iforce = iforce + m_angularforcelist[i] * 100;
+                            iforce = iforce + _angularforcelist[i] * 100;
                         }
                         SafeNativeMethods.BodyEnable(Body);
                         SafeNativeMethods.BodyAddTorque(Body, iforce.X, iforce.Y, iforce.Z);
 
                     }
-                    m_angularforcelist.Clear();
+                    _angularforcelist.Clear();
                 }
 
-                m_collisionscore = 0;
-                m_interpenetrationcount = 0;
+                _collisionscore = 0;
+                _interpenetrationcount = 0;
             }
 
-            m_taintaddangularforce = false;
+            _taintaddangularforce = false;
         }
 
         /// <summary>
@@ -2343,7 +2340,7 @@ Console.WriteLine(" JointCreateFixed");
         /// </summary>
         private void changevelocity()
         {
-            if (!m_isSelected)
+            if (!_isSelected)
             {
                 // Not sure exactly why this sleep is here, but from experimentation it appears to stop an avatar
                 // walking through a default rez size prim if it keeps kicking it around - justincc.
@@ -2353,129 +2350,122 @@ Console.WriteLine(" JointCreateFixed");
                 {
                     if (Body != IntPtr.Zero)
                     {
-                        SafeNativeMethods.BodySetLinearVel(Body, m_taintVelocity.X, m_taintVelocity.Y, m_taintVelocity.Z);
+                        SafeNativeMethods.BodySetLinearVel(Body, _taintVelocity.X, _taintVelocity.Y, _taintVelocity.Z);
                     }
                 }
 
                 //resetCollisionAccounting();
             }
 
-            m_taintVelocity = Vector3.Zero;
+            _taintVelocity = Vector3.Zero;
         }
 
         internal void setPrimForRemoval()
         {
-            m_taintremove = true;
+            _taintremove = true;
         }
 
         public override bool Flying
         {
             // no flying prims for you
-            get { return false; }
+            get => false;
             set { }
         }
 
         public override bool IsColliding
         {
-            get { return iscolliding; }
-            set { iscolliding = value; }
+            get => iscolliding;
+            set => iscolliding = value;
         }
 
         public override bool CollidingGround
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool CollidingObj
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool ThrottleUpdates
         {
-            get { return m_throttleUpdates; }
-            set { m_throttleUpdates = value; }
+            get => _throttleUpdates;
+            set => _throttleUpdates = value;
         }
 
-        public override bool Stopped
-        {
-            get { return _zeroFlag; }
-        }
+        public override bool Stopped => _zeroFlag;
 
         public override Vector3 Position
         {
-            get { return _position; }
+            get => _position;
 
-            set { _position = value;
-                //m_log.Info("[PHYSICS]: " + _position.ToString());
-            }
+            set => _position = value;
+            //_log.Info("[PHYSICS]: " + _position.ToString());
         }
 
         public override Vector3 Size
         {
-            get { return _size; }
+            get => _size;
             set
             {
                 if (value.IsFinite())
                 {
                     _size = value;
-//                    m_log.DebugFormat("[PHYSICS]: Set size on {0} to {1}", Name, value);
+//                    _log.DebugFormat("[PHYSICS]: Set size on {0} to {1}", Name, value);
                 }
                 else
                 {
-                    m_log.WarnFormat("[PHYSICS]: Got NaN Size on object {0}", Name);
+                    _log.WarnFormat("[PHYSICS]: Got NaN Size on object {0}", Name);
                 }
             }
         }
 
-        public override float Mass
-        {
-            get { return CalculateMass(); }
-        }
+        public override float Mass => CalculateMass();
 
         public override Vector3 Force
         {
             //get { return Vector3.Zero; }
-            get { return m_force; }
+            get => _force;
             set
             {
                 if (value.IsFinite())
                 {
-                    m_force = value;
+                    _force = value;
                 }
                 else
                 {
-                    m_log.WarnFormat("[PHYSICS]: NaN in Force Applied to an Object {0}", Name);
+                    _log.WarnFormat("[PHYSICS]: NaN in Force Applied to an Object {0}", Name);
                 }
             }
         }
 
         public override int VehicleType
         {
-            get { return (int)m_vehicle.Type; }
-            set { m_vehicle.ProcessTypeChange((Vehicle)value); }
+            get => (int)_vehicle.Type;
+            set => _vehicle.ProcessTypeChange((Vehicle)value);
         }
 
         public override void VehicleFloatParam(int param, float value)
         {
-            m_vehicle.ProcessFloatVehicleParam((Vehicle) param, value);
+            _vehicle.ProcessFloatVehicleParam((Vehicle) param, value);
         }
 
         public override void VehicleVectorParam(int param, Vector3 value)
         {
-            m_vehicle.ProcessVectorVehicleParam((Vehicle) param, value);
+            _vehicle.ProcessVectorVehicleParam((Vehicle) param, value);
         }
 
         public override void VehicleRotationParam(int param, Quaternion rotation)
         {
-            m_vehicle.ProcessRotationVehicleParam((Vehicle) param, rotation);
+            _vehicle.ProcessRotationVehicleParam((Vehicle) param, rotation);
         }
 
         public override void VehicleFlags(int param, bool remove)
         {
-            m_vehicle.ProcessVehicleFlags(param, remove);
+            _vehicle.ProcessVehicleFlags(param, remove);
         }
 
         public override void SetVolumeDetect(int param)
@@ -2484,27 +2474,21 @@ Console.WriteLine(" JointCreateFixed");
             // possible collisions with this prim or for none of them.
             lock (_parent_scene.OdeLock)
             {
-                m_isVolumeDetect = param != 0;
+                _isVolumeDetect = param != 0;
             }
         }
 
-        public override Vector3 CenterOfMass
-        {
-            get { return Vector3.Zero; }
-        }
+        public override Vector3 CenterOfMass => Vector3.Zero;
 
-        public override Vector3 GeometricCenter
-        {
-            get { return Vector3.Zero; }
-        }
+        public override Vector3 GeometricCenter => Vector3.Zero;
 
         public override PrimitiveBaseShape Shape
         {
             set
             {
                 _pbs = value;
-                m_assetFailed = false;
-                m_taintshape = true;
+                _assetFailed = false;
+                _taintshape = true;
             }
         }
 
@@ -2518,9 +2502,9 @@ Console.WriteLine(" JointCreateFixed");
                     return Vector3.Zero;
 
                 Vector3 returnVelocity = Vector3.Zero;
-                returnVelocity.X = (m_lastVelocity.X + _velocity.X) * 0.5f; // 0.5f is mathematically equiv to '/ 2'
-                returnVelocity.Y = (m_lastVelocity.Y + _velocity.Y) * 0.5f;
-                returnVelocity.Z = (m_lastVelocity.Z + _velocity.Z) * 0.5f;
+                returnVelocity.X = (_lastVelocity.X + _velocity.X) * 0.5f; // 0.5f is mathematically equiv to '/ 2'
+                returnVelocity.Y = (_lastVelocity.Y + _velocity.Y) * 0.5f;
+                returnVelocity.Z = (_lastVelocity.Z + _velocity.Z) * 0.5f;
                 return returnVelocity;
             }
             set
@@ -2529,12 +2513,12 @@ Console.WriteLine(" JointCreateFixed");
                 {
                     _velocity = value;
 
-                    m_taintVelocity = value;
+                    _taintVelocity = value;
                     _parent_scene.AddPhysicsActorTaint(this);
                 }
                 else
                 {
-                    m_log.WarnFormat("[PHYSICS]: Got NaN Velocity in Object {0}", Name);
+                    _log.WarnFormat("[PHYSICS]: Got NaN Velocity in Object {0}", Name);
                 }
 
             }
@@ -2554,37 +2538,37 @@ Console.WriteLine(" JointCreateFixed");
             {
                 if (value.IsFinite())
                 {
-                    m_taintTorque = value;
+                    _taintTorque = value;
                     _parent_scene.AddPhysicsActorTaint(this);
                 }
                 else
                 {
-                    m_log.WarnFormat("[PHYSICS]: Got NaN Torque in Object {0}", Name);
+                    _log.WarnFormat("[PHYSICS]: Got NaN Torque in Object {0}", Name);
                 }
             }
         }
 
         public override float CollisionScore
         {
-            get { return m_collisionscore; }
-            set { m_collisionscore = value; }
+            get => _collisionscore;
+            set => _collisionscore = value;
         }
 
         public override bool Kinematic
         {
-            get { return false; }
+            get => false;
             set { }
         }
 
         public override Quaternion Orientation
         {
-            get { return _orientation; }
+            get => _orientation;
             set
             {
                 if (QuaternionIsFinite(value))
                     _orientation = value;
                 else
-                    m_log.WarnFormat("[PHYSICS]: Got NaN quaternion Orientation from Scene in Object {0}", Name);
+                    _log.WarnFormat("[PHYSICS]: Got NaN quaternion Orientation from Scene in Object {0}", Name);
             }
         }
 
@@ -2603,36 +2587,36 @@ Console.WriteLine(" JointCreateFixed");
 
         public override Vector3 Acceleration
         {
-            get { return _acceleration; }
-            set { _acceleration = value; }
+            get => _acceleration;
+            set => _acceleration = value;
         }
 
         public override void AddForce(Vector3 force, bool pushforce)
         {
             if (force.IsFinite())
             {
-                lock (m_forcelist)
-                    m_forcelist.Add(force);
+                lock (_forcelist)
+                    _forcelist.Add(force);
 
-                m_taintforce = true;
+                _taintforce = true;
             }
             else
             {
-                m_log.WarnFormat("[PHYSICS]: Got Invalid linear force vector from Scene in Object {0}", Name);
+                _log.WarnFormat("[PHYSICS]: Got Invalid linear force vector from Scene in Object {0}", Name);
             }
-            //m_log.Info("[PHYSICS]: Added Force:" + force.ToString() +  " to prim at " + Position.ToString());
+            //_log.Info("[PHYSICS]: Added Force:" + force.ToString() +  " to prim at " + Position.ToString());
         }
 
         public override void AddAngularForce(Vector3 force, bool pushforce)
         {
             if (force.IsFinite())
             {
-                m_angularforcelist.Add(force);
-                m_taintaddangularforce = true;
+                _angularforcelist.Add(force);
+                _taintaddangularforce = true;
             }
             else
             {
-                m_log.WarnFormat("[PHYSICS]: Got Invalid Angular force vector from Scene in Object {0}", Name);
+                _log.WarnFormat("[PHYSICS]: Got Invalid Angular force vector from Scene in Object {0}", Name);
             }
         }
 
@@ -2643,23 +2627,23 @@ Console.WriteLine(" JointCreateFixed");
                 Vector3 pv = Vector3.Zero;
                 if (_zeroFlag)
                     return pv;
-                m_lastUpdateSent = false;
+                _lastUpdateSent = false;
 
-                if (m_rotationalVelocity.ApproxEquals(pv, 0.2f))
+                if (_rotationalVelocity.ApproxEquals(pv, 0.2f))
                     return pv;
 
-                return m_rotationalVelocity;
+                return _rotationalVelocity;
             }
             set
             {
                 if (value.IsFinite())
                 {
-                    m_rotationalVelocity = value;
+                    _rotationalVelocity = value;
                     setAngularVelocity(value.X, value.Y, value.Z);
                 }
                 else
                 {
-                    m_log.WarnFormat("[PHYSICS]: Got NaN RotationalVelocity in Object {0}", Name);
+                    _log.WarnFormat("[PHYSICS]: Got NaN RotationalVelocity in Object {0}", Name);
                 }
             }
         }
@@ -2667,15 +2651,15 @@ Console.WriteLine(" JointCreateFixed");
         public override void CrossingFailure()
         {
             /*
-                        m_crossingfailures++;
-                        if (m_crossingfailures > _parent_scene.geomCrossingFailuresBeforeOutofbounds)
+                        _crossingfailures++;
+                        if (_crossingfailures > _parent_scene.geomCrossingFailuresBeforeOutofbounds)
                         {
                             base.RaiseOutOfBounds(_position);
                             return;
                         }
-                        else if (m_crossingfailures == _parent_scene.geomCrossingFailuresBeforeOutofbounds)
+                        else if (_crossingfailures == _parent_scene.geomCrossingFailuresBeforeOutofbounds)
                         {
-                            m_log.Warn("[PHYSICS]: Too many crossing failures for: " + Name);
+                            _log.Warn("[PHYSICS]: Too many crossing failures for: " + Name);
                         }
             */
 
@@ -2685,12 +2669,12 @@ Console.WriteLine(" JointCreateFixed");
             _position.Y = Util.Clip(_position.Y, 0.5f, _parent_scene.WorldExtents.Y - 0.5f);
             _position.Z = Util.Clip(_position.Z + 0.2f, -100f, 50000f);
 
-            m_lastposition = _position;
+            _lastposition = _position;
             _velocity.X = 0;
             _velocity.Y = 0;
             _velocity.Z = 0;
 
-            m_lastVelocity = _velocity;
+            _lastVelocity = _velocity;
 
             if (Body != IntPtr.Zero)
             {
@@ -2698,8 +2682,8 @@ Console.WriteLine(" JointCreateFixed");
                 SafeNativeMethods.BodySetPosition(Body, _position.X, _position.Y, _position.Z);
             }
 
-            if(m_vehicle != null && m_vehicle.Type != Vehicle.TYPE_NONE)
-                m_vehicle.Stop(); // this also updates vehicle last position from the body position
+            if(_vehicle != null && _vehicle.Type != Vehicle.TYPE_NONE)
+                _vehicle.Stop(); // this also updates vehicle last position from the body position
 
             enableBodySoft();
 
@@ -2710,24 +2694,24 @@ Console.WriteLine(" JointCreateFixed");
 
         public override float Buoyancy
         {
-            get { return m_buoyancy; }
-            set { m_buoyancy = value; }
+            get => _buoyancy;
+            set => _buoyancy = value;
         }
 
         public override void link(PhysicsActor obj)
         {
-            m_taintparent = obj;
+            _taintparent = obj;
         }
 
         public override void delink()
         {
-            m_taintparent = null;
+            _taintparent = null;
         }
 
         public override void LockAngularMotion(byte axislocks)
         {
-            // m_log.DebugFormat("[axislocks]: {0}", axislocks);
-            m_taintAngularLock = axislocks;
+            // _log.DebugFormat("[axislocks]: {0}", axislocks);
+            _taintAngularLock = axislocks;
         }
 
         internal void UpdatePositionAndVelocity()
@@ -2739,7 +2723,7 @@ Console.WriteLine(" JointCreateFixed");
             {
                 Vector3 pv = Vector3.Zero;
                 bool lastZeroFlag = _zeroFlag;
-                float m_minvelocity = 0;
+                float _minvelocity = 0;
                 if (Body != IntPtr.Zero) // FIXME -> or if it is a joint
                 {
                     SafeNativeMethods.Vector3 vec = SafeNativeMethods.BodyGetPosition(Body);
@@ -2751,8 +2735,8 @@ Console.WriteLine(" JointCreateFixed");
                     Vector3 l_position = Vector3.Zero;
                     Quaternion l_orientation = Quaternion.Identity;
 
-                    m_lastposition = _position;
-                    m_lastorientation = _orientation;
+                    _lastposition = _position;
+                    _lastorientation = _orientation;
 
                     l_position.X = vec.X;
                     l_position.Y = vec.Y;
@@ -2779,9 +2763,9 @@ Console.WriteLine(" JointCreateFixed");
                         _velocity.X = 0;
                         _velocity.Y = 0;
                         _velocity.Z = 0;
-                        m_rotationalVelocity.X = 0;
-                        m_rotationalVelocity.Y = 0;
-                        m_rotationalVelocity.Z = 0;
+                        _rotationalVelocity.X = 0;
+                        _rotationalVelocity.Y = 0;
+                        _rotationalVelocity.Z = 0;
 
                         if (_parent == null)
                             base.RaiseOutOfBounds(_position);
@@ -2789,7 +2773,7 @@ Console.WriteLine(" JointCreateFixed");
                         if (_parent == null)
                             base.RequestPhysicsterseUpdate();
 
-                        m_throttleUpdates = false;
+                        _throttleUpdates = false;
                         throttleCounter = 0;
                         _zeroFlag = true;
                         //outofBounds = true;
@@ -2800,7 +2784,7 @@ Console.WriteLine(" JointCreateFixed");
                     {
                         //base.RaiseOutOfBounds(l_position);
                         /*
-                                                if (m_crossingfailures < _parent_scene.geomCrossingFailuresBeforeOutofbounds)
+                                                if (_crossingfailures < _parent_scene.geomCrossingFailuresBeforeOutofbounds)
                                                 {
                                                     _position = l_position;
                                                     //_parent_scene.remActivePrim(this);
@@ -2841,24 +2825,24 @@ Console.WriteLine(" JointCreateFixed");
                     }
 
 
-                    //float Adiff = 1.0f - Math.Abs(Quaternion.Dot(m_lastorientation, l_orientation));
+                    //float Adiff = 1.0f - Math.Abs(Quaternion.Dot(_lastorientation, l_orientation));
                     //Console.WriteLine("Adiff " + Name + " = " + Adiff);
-                    if (Math.Abs(m_lastposition.X - l_position.X) < 0.02
-                        && Math.Abs(m_lastposition.Y - l_position.Y) < 0.02
-                        && Math.Abs(m_lastposition.Z - l_position.Z) < 0.02
-//                        && (1.0 - Math.Abs(Quaternion.Dot(m_lastorientation, l_orientation)) < 0.01))
-                        && 1.0 - Math.Abs(Quaternion.Dot(m_lastorientation, l_orientation)) < 0.0001)  // KF 0.01 is far to large
+                    if (Math.Abs(_lastposition.X - l_position.X) < 0.02
+                        && Math.Abs(_lastposition.Y - l_position.Y) < 0.02
+                        && Math.Abs(_lastposition.Z - l_position.Z) < 0.02
+//                        && (1.0 - Math.Abs(Quaternion.Dot(_lastorientation, l_orientation)) < 0.01))
+                        && 1.0 - Math.Abs(Quaternion.Dot(_lastorientation, l_orientation)) < 0.0001)  // KF 0.01 is far to large
                     {
                         _zeroFlag = true;
 //Console.WriteLine("ZFT 2");
-                        m_throttleUpdates = false;
+                        _throttleUpdates = false;
                     }
                     else
                     {
-                        //m_log.Debug(Math.Abs(m_lastposition.X - l_position.X).ToString());
+                        //_log.Debug(Math.Abs(_lastposition.X - l_position.X).ToString());
                         _zeroFlag = false;
-                        m_lastUpdateSent = false;
-                        //m_throttleUpdates = false;
+                        _lastUpdateSent = false;
+                        //_throttleUpdates = false;
                     }
 
                     if (_zeroFlag)
@@ -2875,21 +2859,21 @@ Console.WriteLine(" JointCreateFixed");
                         //_orientation.X = 0f;
                         //_orientation.Y = 0f;
                         //_orientation.Z = 0f;
-                        m_rotationalVelocity.X = 0;
-                        m_rotationalVelocity.Y = 0;
-                        m_rotationalVelocity.Z = 0;
-                        if (!m_lastUpdateSent)
+                        _rotationalVelocity.X = 0;
+                        _rotationalVelocity.Y = 0;
+                        _rotationalVelocity.Z = 0;
+                        if (!_lastUpdateSent)
                         {
-                            m_throttleUpdates = false;
+                            _throttleUpdates = false;
                             throttleCounter = 0;
-                            m_rotationalVelocity = pv;
+                            _rotationalVelocity = pv;
 
                             if (_parent == null)
                             {
                                 base.RequestPhysicsterseUpdate();
                             }
 
-                            m_lastUpdateSent = true;
+                            _lastUpdateSent = true;
                         }
                     }
                     else
@@ -2902,7 +2886,7 @@ Console.WriteLine(" JointCreateFixed");
                             }
                         }
 
-                        m_lastVelocity = _velocity;
+                        _lastVelocity = _velocity;
 
                         _position = l_position;
 
@@ -2910,39 +2894,39 @@ Console.WriteLine(" JointCreateFixed");
                         _velocity.Y = vel.Y;
                         _velocity.Z = vel.Z;
 
-                        _acceleration = (_velocity - m_lastVelocity) / 0.1f;
-                        _acceleration = new Vector3(_velocity.X - m_lastVelocity.X / 0.1f, _velocity.Y - m_lastVelocity.Y / 0.1f, _velocity.Z - m_lastVelocity.Z / 0.1f);
-                        //m_log.Info("[PHYSICS]: V1: " + _velocity + " V2: " + m_lastVelocity + " Acceleration: " + _acceleration.ToString());
+                        _acceleration = (_velocity - _lastVelocity) / 0.1f;
+                        _acceleration = new Vector3(_velocity.X - _lastVelocity.X / 0.1f, _velocity.Y - _lastVelocity.Y / 0.1f, _velocity.Z - _lastVelocity.Z / 0.1f);
+                        //_log.Info("[PHYSICS]: V1: " + _velocity + " V2: " + _lastVelocity + " Acceleration: " + _acceleration.ToString());
 
                         // Note here that linearvelocity is affecting angular velocity...  so I'm guessing this is a vehicle specific thing...
                         // it does make sense to do this for tiny little instabilities with physical prim, however 0.5m/frame is fairly large.
                         // reducing this to 0.02m/frame seems to help the angular rubberbanding quite a bit, however, to make sure it doesn't affect elevators and vehicles
                         // adding these logical exclusion situations to maintain this where I think it was intended to be.
-                        if (m_throttleUpdates || PIDActive || m_vehicle != null && m_vehicle.Type != Vehicle.TYPE_NONE || Amotor != IntPtr.Zero)
+                        if (_throttleUpdates || PIDActive || _vehicle != null && _vehicle.Type != Vehicle.TYPE_NONE || Amotor != IntPtr.Zero)
                         {
-                            m_minvelocity = 0.5f;
+                            _minvelocity = 0.5f;
                         }
                         else
                         {
-                            m_minvelocity = 0.02f;
+                            _minvelocity = 0.02f;
                         }
 
-                        if (_velocity.ApproxEquals(pv, m_minvelocity))
+                        if (_velocity.ApproxEquals(pv, _minvelocity))
                         {
-                            m_rotationalVelocity = pv;
+                            _rotationalVelocity = pv;
                         }
                         else
                         {
-                            m_rotationalVelocity = new Vector3(rotvel.X, rotvel.Y, rotvel.Z);
+                            _rotationalVelocity = new Vector3(rotvel.X, rotvel.Y, rotvel.Z);
                         }
 
-                        //m_log.Debug("ODE: " + m_rotationalVelocity.ToString());
+                        //_log.Debug("ODE: " + _rotationalVelocity.ToString());
                         _orientation.X = ori.X;
                         _orientation.Y = ori.Y;
                         _orientation.Z = ori.Z;
                         _orientation.W = ori.W;
-                        m_lastUpdateSent = false;
-                        if (!m_throttleUpdates || throttleCounter > _parent_scene.geomUpdatesPerThrottledUpdate)
+                        _lastUpdateSent = false;
+                        if (!_throttleUpdates || throttleCounter > _parent_scene.geomUpdatesPerThrottledUpdate)
                         {
                             if (_parent == null)
                             {
@@ -2954,7 +2938,7 @@ Console.WriteLine(" JointCreateFixed");
                             throttleCounter++;
                         }
                     }
-                    m_lastposition = l_position;
+                    _lastposition = l_position;
                 }
                 else
                 {
@@ -2967,9 +2951,9 @@ Console.WriteLine(" JointCreateFixed");
                     _acceleration.Y = 0;
                     _acceleration.Z = 0;
 
-                    m_rotationalVelocity.X = 0;
-                    m_rotationalVelocity.Y = 0;
-                    m_rotationalVelocity.Z = 0;
+                    _rotationalVelocity.X = 0;
+                    _rotationalVelocity.Y = 0;
+                    _rotationalVelocity.Z = 0;
                     _zeroFlag = true;
                 }
             }
@@ -2978,7 +2962,7 @@ Console.WriteLine(" JointCreateFixed");
         public override bool FloatOnWater
         {
             set {
-                m_taintCollidesWater = value;
+                _taintCollidesWater = value;
                 _parent_scene.AddPhysicsActorTaint(this);
             }
         }
@@ -2993,20 +2977,22 @@ Console.WriteLine(" JointCreateFixed");
             {
                 if (value.IsFinite())
                 {
-                    m_PIDTarget = value;
+                    _PIDTarget = value;
                 }
                 else
-                    m_log.WarnFormat("[PHYSICS]: Got NaN PIDTarget from Scene on Object {0}", Name);
+                    _log.WarnFormat("[PHYSICS]: Got NaN PIDTarget from Scene on Object {0}", Name);
             }
         }
 
         public override bool PIDActive { get; set; }
-        public override float PIDTau { set { m_PIDTau = value; } }
+        public override float PIDTau { set => _PIDTau = value; }
 
-        public override float PIDHoverHeight { set { m_PIDHoverHeight = value; ; } }
-        public override bool PIDHoverActive { get { return m_useHoverPID;} set { m_useHoverPID = value; } }
-        public override PIDHoverType PIDHoverType { set { m_PIDHoverType = value; } }
-        public override float PIDHoverTau { set { m_PIDHoverTau = value; } }
+        public override float PIDHoverHeight { set => _PIDHoverHeight = value; }
+        public override bool PIDHoverActive { get => _useHoverPID;
+            set => _useHoverPID = value;
+        }
+        public override PIDHoverType PIDHoverType { set => _PIDHoverType = value; }
+        public override float PIDHoverTau { set => _PIDHoverTau = value; }
 
         public override Quaternion APIDTarget{ set { return; } }
 
@@ -3130,14 +3116,14 @@ Console.WriteLine(" JointCreateFixed");
 
         public override void SubscribeEvents(int ms)
         {
-            m_eventsubscription = ms;
+            _eventsubscription = ms;
             _parent_scene.AddCollisionEventReporting(this);
         }
 
         public override void UnSubscribeEvents()
         {
             _parent_scene.RemoveCollisionEventReporting(this);
-            m_eventsubscription = 0;
+            _eventsubscription = 0;
         }
 
         public override void AddCollisionEvent(uint CollidedWith, ContactPoint contact)
@@ -3147,39 +3133,39 @@ Console.WriteLine(" JointCreateFixed");
 
         public void SendCollisions()
         {
-            if (m_collisionsOnPreviousFrame || CollisionEventsThisFrame.Count > 0)
+            if (_collisionsOnPreviousFrame || CollisionEventsThisFrame.Count > 0)
             {
                 base.SendCollisionUpdate(CollisionEventsThisFrame);
 
                 if (CollisionEventsThisFrame.Count > 0)
                 {
-                    m_collisionsOnPreviousFrame = true;
+                    _collisionsOnPreviousFrame = true;
                     CollisionEventsThisFrame.Clear();
                 }
                 else
                 {
-                    m_collisionsOnPreviousFrame = false;
+                    _collisionsOnPreviousFrame = false;
                 }
             }
         }
 
         public override bool SubscribedEvents()
         {
-            if (m_eventsubscription > 0)
+            if (_eventsubscription > 0)
                 return true;
             return false;
         }
 
         public override void SetMaterial(int pMaterial)
         {
-            m_material = pMaterial;
+            _material = pMaterial;
         }
 
         private void CheckMeshAsset()
         {
-            if (_pbs.SculptEntry && !m_assetFailed && _pbs.SculptTexture != UUID.Zero)
+            if (_pbs.SculptEntry && !_assetFailed && _pbs.SculptTexture != UUID.Zero)
             {
-                m_assetFailed = true;
+                _assetFailed = true;
                 Util.FireAndForget(delegate
                     {
                         RequestAssetDelegate assetProvider = _parent_scene.RequestAssetMethod;
@@ -3200,18 +3186,18 @@ Console.WriteLine(" JointCreateFixed");
 
                 _pbs.SculptData = new byte[asset.Data.Length];
                 asset.Data.CopyTo(_pbs.SculptData, 0);
-//                m_assetFailed = false;
+//                _assetFailed = false;
 
-//                m_log.DebugFormat(
+//                _log.DebugFormat(
 //                    "[ODE PRIM]: Received mesh/sculpt data asset {0} with {1} bytes for {2} at {3} in {4}",
 //                    _pbs.SculptTexture, _pbs.SculptData.Length, Name, _position, _parent_scene.Name);
 
-                m_taintshape = true;
+                _taintshape = true;
                _parent_scene.AddPhysicsActorTaint(this);
             }
             else
             {
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[ODE PRIM]: Could not get mesh/sculpt asset {0} for {1} at {2} in {3}",
                     _pbs.SculptTexture, Name, _position, _parent_scene.PhysicsSceneName);
             }

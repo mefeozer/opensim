@@ -37,7 +37,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
     public partial class ScriptBaseClass : MarshalByRefObject, IScript
     {
         private readonly Dictionary<string, MethodInfo> inits = new Dictionary<string, MethodInfo>();
-//        private ScriptSponsor m_sponser;
+//        private ScriptSponsor _sponser;
 
         public override object InitializeLifetimeService()
         {
@@ -62,7 +62,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
         public ScriptBaseClass()
         {
-            m_Executor = new Executor(this);
+            _Executor = new Executor(this);
 
             MethodInfo[] myArrayMethodInfo = GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
 
@@ -75,20 +75,20 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
                 }
             }
 
-//            m_sponser = new ScriptSponsor();
+//            _sponser = new ScriptSponsor();
         }
 
-        private readonly Executor m_Executor = null;
+        private readonly Executor _Executor = null;
 
         public ulong GetStateEventFlags(string state)
         {
-            return (ulong)m_Executor.GetStateEventFlags(state);
+            return (ulong)_Executor.GetStateEventFlags(state);
         }
 
         [DebuggerNonUserCode]
         public void ExecuteEvent(string state, string FunctionName, object[] args)
         {
-            m_Executor.ExecuteEvent(state, FunctionName, args);
+            _Executor.ExecuteEvent(state, FunctionName, args);
         }
 
         public string[] GetApis()
@@ -98,9 +98,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
             return apis;
         }
 
-        private Dictionary<string, object> m_InitialValues =
+        private Dictionary<string, object> _InitialValues =
                 new Dictionary<string, object>();
-        private readonly Dictionary<string, FieldInfo> m_Fields =
+        private readonly Dictionary<string, FieldInfo> _Fields =
                 new Dictionary<string, FieldInfo>();
 
         public void InitApi(string api, IScriptApi data)
@@ -110,7 +110,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
             //ILease lease = (ILease)RemotingServices.GetLifetimeService(data as MarshalByRefObject);
             //RemotingServices.GetLifetimeService(data as MarshalByRefObject);
-//            lease.Register(m_sponser);
+//            lease.Register(_sponser);
 
             MethodInfo mi = inits[api];
 
@@ -119,7 +119,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
             mi.Invoke(this, args);
 
-            m_InitialValues = GetVars();
+            _InitialValues = GetVars();
         }
 
         public virtual void StateChange(string newState)
@@ -128,17 +128,17 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
         public void Close()
         {
-//            m_sponser.Close();
+//            _sponser.Close();
         }
 
         public Dictionary<string, object> GetVars()
         {
             Dictionary<string, object> vars = new Dictionary<string, object>();
 
-            if (m_Fields == null)
+            if (_Fields == null)
                 return vars;
 
-            m_Fields.Clear();
+            _Fields.Clear();
 
             Type t = GetType();
 
@@ -149,7 +149,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
             foreach (FieldInfo field in fields)
             {
-                m_Fields[field.Name] = field;
+                _Fields[field.Name] = field;
 
                 if (field.FieldType == typeof(LSL_Types.list)) // ref type, copy
                 {
@@ -185,30 +185,30 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
         {
             foreach (KeyValuePair<string, object> var in vars)
             {
-                if (m_Fields.ContainsKey(var.Key))
+                if (_Fields.ContainsKey(var.Key))
                 {
-                    if (m_Fields[var.Key].FieldType == typeof(LSL_Types.list))
+                    if (_Fields[var.Key].FieldType == typeof(LSL_Types.list))
                     {
-                        LSL_Types.list v = (LSL_Types.list)m_Fields[var.Key].GetValue(this);
+                        LSL_Types.list v = (LSL_Types.list)_Fields[var.Key].GetValue(this);
                         object[] data = ((LSL_Types.list)var.Value).Data;
                         v.Data = new object[data.Length];
                         Array.Copy(data, 0, v.Data, 0, data.Length);
-                        m_Fields[var.Key].SetValue(this, v);
+                        _Fields[var.Key].SetValue(this, v);
                     }
-                    else if (m_Fields[var.Key].FieldType == typeof(LSL_Types.LSLInteger) ||
-                            m_Fields[var.Key].FieldType == typeof(LSL_Types.LSLString) ||
-                            m_Fields[var.Key].FieldType == typeof(LSL_Types.LSLFloat) ||
-                            m_Fields[var.Key].FieldType == typeof(int) ||
-                            m_Fields[var.Key].FieldType == typeof(double) ||
-                            m_Fields[var.Key].FieldType == typeof(float) ||
-                            m_Fields[var.Key].FieldType == typeof(string) ||
-                            m_Fields[var.Key].FieldType == typeof(byte) ||
-                            m_Fields[var.Key].FieldType == typeof(short) ||
-                            m_Fields[var.Key].FieldType == typeof(LSL_Types.Vector3) ||
-                            m_Fields[var.Key].FieldType == typeof(LSL_Types.Quaternion)
+                    else if (_Fields[var.Key].FieldType == typeof(LSL_Types.LSLInteger) ||
+                            _Fields[var.Key].FieldType == typeof(LSL_Types.LSLString) ||
+                            _Fields[var.Key].FieldType == typeof(LSL_Types.LSLFloat) ||
+                            _Fields[var.Key].FieldType == typeof(int) ||
+                            _Fields[var.Key].FieldType == typeof(double) ||
+                            _Fields[var.Key].FieldType == typeof(float) ||
+                            _Fields[var.Key].FieldType == typeof(string) ||
+                            _Fields[var.Key].FieldType == typeof(byte) ||
+                            _Fields[var.Key].FieldType == typeof(short) ||
+                            _Fields[var.Key].FieldType == typeof(LSL_Types.Vector3) ||
+                            _Fields[var.Key].FieldType == typeof(LSL_Types.Quaternion)
                         )
                     {
-                        m_Fields[var.Key].SetValue(this, var.Value);
+                        _Fields[var.Key].SetValue(this, var.Value);
                     }
                 }
             }
@@ -216,7 +216,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
         public void ResetVars()
         {
-            SetVars(m_InitialValues);
+            SetVars(_InitialValues);
         }
 
         public void NoOp()

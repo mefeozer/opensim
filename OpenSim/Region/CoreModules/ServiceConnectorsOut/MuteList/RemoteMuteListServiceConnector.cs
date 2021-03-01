@@ -42,23 +42,17 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "RemoteMuteListServicesConnector")]
     public class RemoteMuteListServicesConnector : ISharedRegionModule, IMuteListService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region ISharedRegionModule
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
-        private IMuteListService m_remoteConnector;
+        private IMuteListService _remoteConnector;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RemoteMuteListServicesConnector"; }
-        }
+        public string Name => "RemoteMuteListServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -76,8 +70,8 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
                 string name = moduleConfig.GetString("MuteListService", "");
                 if (name == Name)
                 {
-                    m_remoteConnector = new MuteListServicesConnector(source);
-                    m_Enabled = true;
+                    _remoteConnector = new MuteListServicesConnector(source);
+                    _Enabled = true;
                 }
             }
         }
@@ -92,22 +86,22 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IMuteListService>(this);
-            m_log.InfoFormat("[MUTELIST CONNECTOR]: Enabled for region {0}", scene.RegionInfo.RegionName);
+            _log.InfoFormat("[MUTELIST CONNECTOR]: Enabled for region {0}", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
@@ -116,23 +110,23 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
         #region IMuteListService
         public byte[] MuteListRequest(UUID agentID, uint crc)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return null;
-            return m_remoteConnector.MuteListRequest(agentID, crc);
+            return _remoteConnector.MuteListRequest(agentID, crc);
         }
 
         public bool UpdateMute(MuteData mute)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return false;
-            return m_remoteConnector.UpdateMute(mute);
+            return _remoteConnector.UpdateMute(mute);
         }
 
         public bool RemoveMute(UUID agentID, UUID muteID, string muteName)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return false;
-            return m_remoteConnector.RemoveMute(agentID, muteID, muteName);
+            return _remoteConnector.RemoveMute(agentID, muteID, muteName);
         }
 
         #endregion IMuteListService

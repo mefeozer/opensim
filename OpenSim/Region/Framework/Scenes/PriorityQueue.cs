@@ -35,7 +35,7 @@ namespace OpenSim.Region.Framework.Scenes
 {
     public class PriorityQueue
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public delegate bool UpdatePriorityHandler(ref int priority, ISceneEntity entity);
 
@@ -43,75 +43,67 @@ namespace OpenSim.Region.Framework.Scenes
         /// Total number of queues (priorities) available
         /// </summary>
 
-        public const int NumberOfQueues = 13; // includes immediate queues, m_queueCounts need to be set acording
+        public const int NumberOfQueues = 13; // includes immediate queues, _queueCounts need to be set acording
 
         /// <summary>
         /// Number of queuest (priorities) that are processed immediately
         /// </summary.
         public const int NumberOfImmediateQueues = 2;
         // first queues are immediate, so no counts
-        private static readonly int[] m_queueCounts = {0, 0, 8, 8, 5, 4, 3, 2, 1, 1, 1, 1, 1 };
+        private static readonly int[] _queueCounts = {0, 0, 8, 8, 5, 4, 3, 2, 1, 1, 1, 1, 1 };
         // this is                     ava, ava, attach, <10m, 20,40,80,160m,320,640,1280, +
 
-        private PriorityMinHeap[] m_heaps = new PriorityMinHeap[NumberOfQueues];
-        private ConcurrentDictionary<uint, EntityUpdate> m_lookupTable;
+        private PriorityMinHeap[] _heaps = new PriorityMinHeap[NumberOfQueues];
+        private ConcurrentDictionary<uint, EntityUpdate> _lookupTable;
 
         // internal state used to ensure the deqeues are spread across the priority
         // queues "fairly". queuecounts is the amount to pull from each queue in
         // each pass. weighted towards the higher priority queues
-        private int m_nextQueue = 0;
-        private int m_countFromQueue = 0;
+        private int _nextQueue = 0;
+        private int _countFromQueue = 0;
 
         // next request is a counter of the number of updates queued, it provides
         // a total ordering on the updates coming through the queue and is more
         // lightweight (and more discriminating) than tick count
-        private ulong m_nextRequest = 0;
+        private ulong _nextRequest = 0;
 
         /// <summary>
         /// Lock for enqueue and dequeue operations on the priority queue
         /// </summary>
-        private readonly object m_syncRoot = new object();
-        public object SyncRoot {
-            get { return m_syncRoot; }
-        }
+        private readonly object _syncRoot = new object();
+        public object SyncRoot => _syncRoot;
 
-#region constructor
+        #region constructor
         public PriorityQueue(int capacity)
         {
             capacity /= 4;
-            for (int i = 0; i < m_heaps.Length; ++i)
-                m_heaps[i] = new PriorityMinHeap(capacity);
+            for (int i = 0; i < _heaps.Length; ++i)
+                _heaps[i] = new PriorityMinHeap(capacity);
 
-            m_lookupTable = new ConcurrentDictionary<uint, EntityUpdate>();
-            m_nextQueue = NumberOfImmediateQueues;
-            m_countFromQueue = m_queueCounts[m_nextQueue];
+            _lookupTable = new ConcurrentDictionary<uint, EntityUpdate>();
+            _nextQueue = NumberOfImmediateQueues;
+            _countFromQueue = _queueCounts[_nextQueue];
         }
 #endregion Constructor
 
 #region PublicMethods
         public void Close()
         {
-            for (int i = 0; i < m_heaps.Length; ++i)
+            for (int i = 0; i < _heaps.Length; ++i)
             {
-                m_heaps[i].Clear();
-                m_heaps[i] = null;
+                _heaps[i].Clear();
+                _heaps[i] = null;
             }
 
-            m_heaps = null;
-            m_lookupTable.Clear();
-            m_lookupTable = null;
+            _heaps = null;
+            _lookupTable.Clear();
+            _lookupTable = null;
         }
 
         /// <summary>
         /// Return the number of items in the queues
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return m_lookupTable.Count;
-            }
-        }
+        public int Count => _lookupTable.Count;
 
         /// <summary>
         /// Enqueue an item into the specified priority queue
@@ -122,7 +114,7 @@ namespace OpenSim.Region.Framework.Scenes
             EntityUpdate existentup;
 
             uint localid = value.Entity.LocalId;
-            if (m_lookupTable.TryGetValue(localid, out existentup))
+            if (_lookupTable.TryGetValue(localid, out existentup))
             {
                 int eqqueue = existentup.PriorityQueue;
 
@@ -131,17 +123,17 @@ namespace OpenSim.Region.Framework.Scenes
 
                 if (pqueue != eqqueue)
                 {
-                    m_heaps[eqqueue].RemoveAt(existentup.PriorityQueueIndex);
-                    m_heaps[pqueue].Add(existentup);
+                    _heaps[eqqueue].RemoveAt(existentup.PriorityQueueIndex);
+                    _heaps[pqueue].Add(existentup);
                 }
                 return true;
             }
 
-            entry = m_nextRequest++;
+            entry = _nextRequest++;
             value.Update(pqueue, entry);
 
-            m_heaps[pqueue].Add(value);
-            m_lookupTable[localid] = value;
+            _heaps[pqueue].Add(value);
+            _lookupTable[localid] = value;
             return true;
         }
 
@@ -150,9 +142,9 @@ namespace OpenSim.Region.Framework.Scenes
             EntityUpdate lookup;
             foreach (uint localid in ids)
             {
-                if (m_lookupTable.TryRemove(localid, out lookup))
+                if (_lookupTable.TryRemove(localid, out lookup))
                 {
-                    m_heaps[lookup.PriorityQueue].RemoveAt(lookup.PriorityQueueIndex);
+                    _heaps[lookup.PriorityQueue].RemoveAt(lookup.PriorityQueueIndex);
                     lookup.Free();
                 }
             }
@@ -170,10 +162,10 @@ namespace OpenSim.Region.Framework.Scenes
 
             for (int iq = 0; iq < NumberOfImmediateQueues; iq++)
             {
-                if (m_heaps[iq].Count > 0)
+                if (_heaps[iq].Count > 0)
                 {
-                    value = m_heaps[iq].RemoveNext();
-                    return m_lookupTable.TryRemove(value.Entity.LocalId, out value);
+                    value = _heaps[iq].RemoveNext();
+                    return _lookupTable.TryRemove(value.Entity.LocalId, out value);
                 }
             }
 
@@ -183,32 +175,32 @@ namespace OpenSim.Region.Framework.Scenes
             // to give lower numbered queues a higher priority and higher percentage
             // of the bandwidth.
 
-            PriorityMinHeap curheap = m_heaps[m_nextQueue];
+            PriorityMinHeap curheap = _heaps[_nextQueue];
             // Check for more items to be pulled from the current queue
-            if (m_countFromQueue > 0 && curheap.Count > 0)
+            if (_countFromQueue > 0 && curheap.Count > 0)
             {
-                --m_countFromQueue;
+                --_countFromQueue;
 
                 value = curheap.RemoveNext();
-                return m_lookupTable.TryRemove(value.Entity.LocalId, out value);
+                return _lookupTable.TryRemove(value.Entity.LocalId, out value);
             }
 
             // Find the next non-immediate queue with updates in it
             for (int i = NumberOfImmediateQueues; i < NumberOfQueues; ++i)
             {
-                m_nextQueue++;
-                if(m_nextQueue >= NumberOfQueues)
-                    m_nextQueue = NumberOfImmediateQueues;
+                _nextQueue++;
+                if(_nextQueue >= NumberOfQueues)
+                    _nextQueue = NumberOfImmediateQueues;
  
-                curheap = m_heaps[m_nextQueue];
+                curheap = _heaps[_nextQueue];
                 if (curheap.Count == 0)
                     continue;
 
-                m_countFromQueue = m_queueCounts[m_nextQueue];
-                --m_countFromQueue;
+                _countFromQueue = _queueCounts[_nextQueue];
+                --_countFromQueue;
 
                 value = curheap.RemoveNext();
-                return m_lookupTable.TryRemove(value.Entity.LocalId, out value);
+                return _lookupTable.TryRemove(value.Entity.LocalId, out value);
             }
 
             value = null;
@@ -219,11 +211,11 @@ namespace OpenSim.Region.Framework.Scenes
         {
             for (int iq = 0; iq < NumberOfQueues; ++iq)
             {
-                PriorityMinHeap curheap = m_heaps[iq];
+                PriorityMinHeap curheap = _heaps[iq];
                 if (curheap.Count > 0)
                 {
                     value = curheap.RemoveNext();
-                    return m_lookupTable.TryRemove(value.Entity.LocalId, out value);
+                    return _lookupTable.TryRemove(value.Entity.LocalId, out value);
                 }
             }
 
@@ -238,7 +230,7 @@ namespace OpenSim.Region.Framework.Scenes
         public void Reprioritize(UpdatePriorityHandler handler)
         {
             int pqueue = 0;
-            foreach (EntityUpdate currentEU in m_lookupTable.Values)
+            foreach (EntityUpdate currentEU in _lookupTable.Values)
             {
                 if (handler(ref pqueue, currentEU.Entity))
                 {
@@ -246,9 +238,9 @@ namespace OpenSim.Region.Framework.Scenes
                     // the entry
                     if (pqueue != currentEU.PriorityQueue)
                     {
-                        m_heaps[currentEU.PriorityQueue].RemoveAt(currentEU.PriorityQueueIndex);
+                        _heaps[currentEU.PriorityQueue].RemoveAt(currentEU.PriorityQueueIndex);
                         currentEU.PriorityQueue = pqueue;
-                        m_heaps[pqueue].Add(currentEU);
+                        _heaps[pqueue].Add(currentEU);
                     }
                 }
                 else
@@ -264,7 +256,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             string s = "";
             for (int i = 0; i < NumberOfQueues; i++)
-                s += string.Format("{0,7} ", m_heaps[i].Count);
+                s += string.Format("{0,7} ", _heaps[i].Count);
             return s;
         }
 
@@ -275,39 +267,39 @@ namespace OpenSim.Region.Framework.Scenes
     {
         public const int MIN_CAPACITY = 16;
 
-        private EntityUpdate[] m_items;
-        private int m_size;
+        private EntityUpdate[] _items;
+        private int _size;
         private readonly int minCapacity;
 
         public PriorityMinHeap(int _capacity)
         {
             minCapacity = MIN_CAPACITY;
-            m_items = new EntityUpdate[_capacity];
-            m_size = 0;
+            _items = new EntityUpdate[_capacity];
+            _size = 0;
         }
 
-        public int Count { get { return m_size; } }
+        public int Count => _size;
 
         private bool BubbleUp(int index)
         {
             EntityUpdate tmp;
-            EntityUpdate item = m_items[index];
+            EntityUpdate item = _items[index];
             ulong itemEntryOrder = item.EntryOrder;
             int current, parent;
 
             for (current = index, parent = (current - 1) / 2;
-                    current > 0 && m_items[parent].EntryOrder > itemEntryOrder;
+                    current > 0 && _items[parent].EntryOrder > itemEntryOrder;
                     current = parent, parent = (current - 1) / 2)
             {
-                tmp = m_items[parent];
+                tmp = _items[parent];
                 tmp.PriorityQueueIndex = current;
-                m_items[current] = tmp;
+                _items[current] = tmp;
             }
 
             if (current != index)
             {
                 item.PriorityQueueIndex = current;
-                m_items[current] = item;
+                _items[current] = item;
                 return true;
             }
             return false;
@@ -315,26 +307,26 @@ namespace OpenSim.Region.Framework.Scenes
 
         private void BubbleDown(int index)
         {
-            if(m_size < 2)
+            if(_size < 2)
                 return;
 
             EntityUpdate childItem;
             EntityUpdate childItemR;
-            EntityUpdate item = m_items[index];
+            EntityUpdate item = _items[index];
 
             ulong itemEntryOrder = item.EntryOrder;
             int current;
             int child;
-            int childlimit = m_size - 1;
+            int childlimit = _size - 1;
 
             for (current = index, child = 2 * current + 1;
-                        current < m_size / 2;
+                        current < _size / 2;
                         current = child, child = 2 * current + 1)
             {
-                childItem = m_items[child];
+                childItem = _items[child];
                 if (child < childlimit)
                 {
-                    childItemR = m_items[child + 1];
+                    childItemR = _items[child + 1];
 
                     if(childItem.EntryOrder > childItemR.EntryOrder)
                     {
@@ -346,83 +338,83 @@ namespace OpenSim.Region.Framework.Scenes
                     break;
 
                 childItem.PriorityQueueIndex = current;
-                m_items[current] = childItem;
+                _items[current] = childItem;
             }
 
             if (current != index)
             {
                 item.PriorityQueueIndex = current;
-                m_items[current] = item;
+                _items[current] = item;
             }
         }
 
         public void Add(EntityUpdate value)
         {
-            if (m_size == m_items.Length)
+            if (_size == _items.Length)
             {
-                int newcapacity = (int)(m_items.Length * 200L / 100L);
-                if (newcapacity < m_items.Length + MIN_CAPACITY)
-                    newcapacity = m_items.Length + MIN_CAPACITY;
-                Array.Resize<EntityUpdate>(ref m_items, newcapacity);
+                int newcapacity = (int)(_items.Length * 200L / 100L);
+                if (newcapacity < _items.Length + MIN_CAPACITY)
+                    newcapacity = _items.Length + MIN_CAPACITY;
+                Array.Resize<EntityUpdate>(ref _items, newcapacity);
             }
 
-            value.PriorityQueueIndex = m_size;
-            m_items[m_size] = value;
+            value.PriorityQueueIndex = _size;
+            _items[_size] = value;
 
-            BubbleUp(m_size);
-            ++m_size;
+            BubbleUp(_size);
+            ++_size;
         }
 
         public void Clear()
         {
-            for (int index = 0; index < m_size; ++index)
-                m_items[index].Free();
-            m_size = 0;
+            for (int index = 0; index < _size; ++index)
+                _items[index].Free();
+            _size = 0;
         }
 
         public void RemoveAt(int index)
         {
-            if (m_size == 0)
+            if (_size == 0)
                 throw new InvalidOperationException("Heap is empty");
-            if (index >= m_size)
+            if (index >= _size)
                 throw new ArgumentOutOfRangeException("index");
 
-            --m_size;
-            if (m_size > 0)
+            --_size;
+            if (_size > 0)
             {
-                if (index != m_size)
+                if (index != _size)
                 {
-                    EntityUpdate tmp = m_items[m_size];
+                    EntityUpdate tmp = _items[_size];
                     tmp.PriorityQueueIndex = index;
-                    m_items[index] = tmp;
+                    _items[index] = tmp;
 
-                    m_items[m_size] = null;
+                    _items[_size] = null;
                     if (!BubbleUp(index))
                         BubbleDown(index);
                 }
             }
-            else if (m_items.Length > 4 * minCapacity)
-                m_items = new EntityUpdate[minCapacity];
+            else if (_items.Length > 4 * minCapacity)
+                _items = new EntityUpdate[minCapacity];
         }
 
         public EntityUpdate RemoveNext()
         {
-            if (m_size == 0)
+            if (_size == 0)
                 throw new InvalidOperationException("Heap is empty");
 
-            EntityUpdate item = m_items[0];
-            --m_size;
-            if (m_size > 0)
+            EntityUpdate item = _items[0];
+            --_size;
+            if (_size > 0)
             {
-                EntityUpdate tmp = m_items[m_size];
+                EntityUpdate tmp = _items[_size];
                 tmp.PriorityQueueIndex = 0;
-                m_items[0] = tmp;
-                m_items[m_size] = null;
+                _items[0] = tmp;
+                _items[_size] = null;
 
                 BubbleDown(0);
             }
-            else if (m_items.Length > 4 * minCapacity)
-                m_items = new EntityUpdate[minCapacity];
+            else if (_items.Length > 4 * minCapacity)
+                _items = new EntityUpdate[minCapacity];
 
             return item;
         }

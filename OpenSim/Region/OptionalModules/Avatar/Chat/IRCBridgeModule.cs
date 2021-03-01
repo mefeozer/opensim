@@ -43,53 +43,47 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "IRCBridgeModule")]
     public class IRCBridgeModule : INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         internal static bool Enabled = false;
-        internal static IConfig m_config = null;
+        internal static IConfig _config = null;
 
-        internal static List<ChannelState> m_channels = new List<ChannelState>();
-        internal static List<RegionState> m_regions = new List<RegionState>();
+        internal static List<ChannelState> _channels = new List<ChannelState>();
+        internal static List<RegionState> _regions = new List<RegionState>();
 
-        internal static string m_password = string.Empty;
-        internal RegionState m_region = null;
+        internal static string _password = string.Empty;
+        internal RegionState _region = null;
 
         #region INonSharedRegionModule Members
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "IRCBridgeModule"; }
-        }
+        public string Name => "IRCBridgeModule";
 
         public void Initialise(IConfigSource config)
         {
-            m_config = config.Configs["IRC"];
-            if (m_config == null)
+            _config = config.Configs["IRC"];
+            if (_config == null)
             {
-                //                m_log.InfoFormat("[IRC-Bridge] module not configured");
+                //                _log.InfoFormat("[IRC-Bridge] module not configured");
                 return;
             }
 
-            if (!m_config.GetBoolean("enabled", false))
+            if (!_config.GetBoolean("enabled", false))
             {
-                //                m_log.InfoFormat("[IRC-Bridge] module disabled in configuration");
-                m_config = null;
+                //                _log.InfoFormat("[IRC-Bridge] module disabled in configuration");
+                _config = null;
                 return;
             }
 
             if (config.Configs["RemoteAdmin"] != null)
             {
-                m_password = config.Configs["RemoteAdmin"].GetString("access_password", m_password);
+                _password = config.Configs["RemoteAdmin"].GetString("access_password", _password);
             }
 
             Enabled = true;
 
-            m_log.InfoFormat("[IRC-Bridge]: Module is enabled");
+            _log.InfoFormat("[IRC-Bridge]: Module is enabled");
         }
 
         public void AddRegion(Scene scene)
@@ -98,25 +92,25 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             {
                 try
                 {
-                    m_log.InfoFormat("[IRC-Bridge] Connecting region {0}", scene.RegionInfo.RegionName);
+                    _log.InfoFormat("[IRC-Bridge] Connecting region {0}", scene.RegionInfo.RegionName);
 
-                    if (!string.IsNullOrEmpty(m_password))
+                    if (!string.IsNullOrEmpty(_password))
                         MainServer.Instance.AddXmlRPCHandler("irc_admin", XmlRpcAdminMethod, false);
 
-                    m_region = new RegionState(scene, m_config);
-                    lock (m_regions)
-                        m_regions.Add(m_region);
-                    m_region.Open();
+                    _region = new RegionState(scene, _config);
+                    lock (_regions)
+                        _regions.Add(_region);
+                    _region.Open();
                 }
                 catch (Exception e)
                 {
-                    m_log.WarnFormat("[IRC-Bridge] Region {0} not connected to IRC : {1}", scene.RegionInfo.RegionName, e.Message);
-                    m_log.Debug(e);
+                    _log.WarnFormat("[IRC-Bridge] Region {0} not connected to IRC : {1}", scene.RegionInfo.RegionName, e.Message);
+                    _log.Debug(e);
                 }
             }
             else
             {
-                //m_log.DebugFormat("[IRC-Bridge] Not enabled. Connect for region {0} ignored", scene.RegionInfo.RegionName);
+                //_log.DebugFormat("[IRC-Bridge] Not enabled. Connect for region {0} ignored", scene.RegionInfo.RegionName);
             }
         }
 
@@ -130,17 +124,17 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             if (!Enabled)
                 return;
 
-            if (m_region == null)
+            if (_region == null)
                 return;
 
-            if (!string.IsNullOrEmpty(m_password))
+            if (!string.IsNullOrEmpty(_password))
                 MainServer.Instance.RemoveXmlRPCHandler("irc_admin");
 
-            m_region.Close();
+            _region.Close();
 
-            if (m_regions.Contains(m_region))
+            if (_regions.Contains(_region))
             {
-                lock (m_regions) m_regions.Remove(m_region);
+                lock (_regions) _regions.Remove(_region);
             }
         }
 
@@ -151,7 +145,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
         public static XmlRpcResponse XmlRpcAdminMethod(XmlRpcRequest request, IPEndPoint remoteClient)
         {
-            m_log.Debug("[IRC-Bridge]: XML RPC Admin Entry");
+            _log.Debug("[IRC-Bridge]: XML RPC Admin Entry");
 
             XmlRpcResponse response = new XmlRpcResponse();
             Hashtable responseData = new Hashtable();
@@ -162,11 +156,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 bool found = false;
                 string region = string.Empty;
 
-                if (!string.IsNullOrEmpty(m_password))
+                if (!string.IsNullOrEmpty(_password))
                 {
                     if (!requestData.ContainsKey("password"))
                         throw new Exception("Invalid request");
-                    if ((string)requestData["password"] != m_password)
+                    if ((string)requestData["password"] != _password)
                         throw new Exception("Invalid request");
                 }
 
@@ -174,7 +168,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     throw new Exception("No region name specified");
                 region = (string)requestData["region"];
 
-                foreach (RegionState rs in m_regions)
+                foreach (RegionState rs in _regions)
                 {
                     if (rs.Region == region)
                     {
@@ -196,7 +190,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[IRC-Bridge] XML RPC Admin request failed : {0}", e.Message);
+                _log.ErrorFormat("[IRC-Bridge] XML RPC Admin request failed : {0}", e.Message);
 
                 responseData["success"] = "false";
                 responseData["error"] = e.Message;
@@ -206,7 +200,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 response.Value = responseData;
             }
 
-            m_log.Debug("[IRC-Bridge]: XML RPC Admin Exit");
+            _log.Debug("[IRC-Bridge]: XML RPC Admin Exit");
 
             return response;
         }

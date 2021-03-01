@@ -37,18 +37,18 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class FetchInventory2ServerConnector : ServiceConnector
     {
-        private readonly IInventoryService m_InventoryService;
-        private readonly string m_ConfigName = "CapsService";
+        private readonly IInventoryService _InventoryService;
+        private readonly string _ConfigName = "CapsService";
 
         public FetchInventory2ServerConnector(IConfigSource config, IHttpServer server, string configName)
             : base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string invService = serverConfig.GetString("InventoryService", string.Empty);
 
@@ -56,12 +56,12 @@ namespace OpenSim.Capabilities.Handlers
                 throw new Exception("No InventoryService in config file");
 
             object[] args = new object[] { config };
-            m_InventoryService = ServerUtils.LoadPlugin<IInventoryService>(invService, args);
+            _InventoryService = ServerUtils.LoadPlugin<IInventoryService>(invService, args);
 
-            if (m_InventoryService == null)
-                throw new Exception(string.Format("Failed to load InventoryService from {0}; config is {1}", invService, m_ConfigName));
+            if (_InventoryService == null)
+                throw new Exception(string.Format("Failed to load InventoryService from {0}; config is {1}", invService, _ConfigName));
 
-            FetchInventory2Handler fiHandler = new FetchInventory2Handler(m_InventoryService, UUID.Zero);
+            FetchInventory2Handler fiHandler = new FetchInventory2Handler(_InventoryService, UUID.Zero);
             IRequestHandler reqHandler
                 = new RestStreamHandler(
                     "POST", "/CAPS/FetchInventory/", fiHandler.FetchInventoryRequest, "FetchInventory", null);

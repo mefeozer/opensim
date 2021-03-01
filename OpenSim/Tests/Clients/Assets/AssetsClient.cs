@@ -41,13 +41,13 @@ namespace OpenSim.Tests.Clients.AssetsClient
 {
     public class AssetsClient
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static int m_MaxThreadID = 0;
+        private static int _MaxThreadID = 0;
         private static readonly int NREQS = 150;
-        private static int m_NReceived = 0;
+        private static int _NReceived = 0;
 
         public static void Main(string[] args)
         {
@@ -63,22 +63,22 @@ namespace OpenSim.Tests.Clients.AssetsClient
                 serverURI = args[1];
             int max1, max2;
             ThreadPool.GetMaxThreads(out max1, out max2);
-            m_log.InfoFormat("[ASSET CLIENT]: Connecting to {0} max threads = {1} - {2}", serverURI, max1, max2);
+            _log.InfoFormat("[ASSET CLIENT]: Connecting to {0} max threads = {1} - {2}", serverURI, max1, max2);
             ThreadPool.GetMinThreads(out max1, out max2);
-            m_log.InfoFormat("[ASSET CLIENT]: Connecting to {0} min threads = {1} - {2}", serverURI, max1, max2);
+            _log.InfoFormat("[ASSET CLIENT]: Connecting to {0} min threads = {1} - {2}", serverURI, max1, max2);
 
             if (!ThreadPool.SetMinThreads(1, 1))
-                m_log.WarnFormat("[ASSET CLIENT]: Failed to set min threads");
+                _log.WarnFormat("[ASSET CLIENT]: Failed to set min threads");
 
             if (!ThreadPool.SetMaxThreads(10, 3))
-                m_log.WarnFormat("[ASSET CLIENT]: Failed to set max threads");
+                _log.WarnFormat("[ASSET CLIENT]: Failed to set max threads");
 
             ThreadPool.GetMaxThreads(out max1, out max2);
-            m_log.InfoFormat("[ASSET CLIENT]: Post set max threads = {1} - {2}", serverURI, max1, max2);
+            _log.InfoFormat("[ASSET CLIENT]: Post set max threads = {1} - {2}", serverURI, max1, max2);
             ThreadPool.GetMinThreads(out max1, out max2);
-            m_log.InfoFormat("[ASSET CLIENT]: Post set min threads = {1} - {2}", serverURI, max1, max2);
+            _log.InfoFormat("[ASSET CLIENT]: Post set min threads = {1} - {2}", serverURI, max1, max2);
 
-            AssetServicesConnector m_Connector = new AssetServicesConnector(serverURI)
+            AssetServicesConnector _Connector = new AssetServicesConnector(serverURI)
             {
                 MaxAssetRequestConcurrency = 30
             };
@@ -86,8 +86,8 @@ namespace OpenSim.Tests.Clients.AssetsClient
             for (int i = 0; i < NREQS; i++)
             {
                 UUID uuid = UUID.Random();
-                m_Connector.Get(uuid.ToString(), null, ResponseReceived);
-                m_log.InfoFormat("[ASSET CLIENT]: [{0}] requested asset {1}", i, uuid);
+                _Connector.Get(uuid.ToString(), null, ResponseReceived);
+                _log.InfoFormat("[ASSET CLIENT]: [{0}] requested asset {1}", i, uuid);
             }
 
             for (int i = 0; i < 500; i++)
@@ -100,24 +100,24 @@ namespace OpenSim.Tests.Clients.AssetsClient
             }
 
             Thread.Sleep(30 * 1000);
-            m_log.InfoFormat("[ASSET CLIENT]: Received responses {0}", m_NReceived);
+            _log.InfoFormat("[ASSET CLIENT]: Received responses {0}", _NReceived);
         }
 
         private static void ResponseReceived(string id, object sender, AssetBase asset)
         {
-            if (Thread.CurrentThread.ManagedThreadId > m_MaxThreadID)
-                m_MaxThreadID = Thread.CurrentThread.ManagedThreadId;
+            if (Thread.CurrentThread.ManagedThreadId > _MaxThreadID)
+                _MaxThreadID = Thread.CurrentThread.ManagedThreadId;
             int max1, max2;
             ThreadPool.GetAvailableThreads(out max1, out max2);
-            m_log.InfoFormat("[ASSET CLIENT]: Received asset {0} ({1}) ({2}-{3}) {4}", id, m_MaxThreadID, max1, max2, DateTime.Now.ToString("hh:mm:ss"));
-            m_NReceived++;
+            _log.InfoFormat("[ASSET CLIENT]: Received asset {0} ({1}) ({2}-{3}) {4}", id, _MaxThreadID, max1, max2, DateTime.Now.ToString("hh:mm:ss"));
+            _NReceived++;
         }
 
         private static void Dummy(int i)
         {
             int max1, max2;
             ThreadPool.GetAvailableThreads(out max1, out max2);
-            m_log.InfoFormat("[ASSET CLIENT]: ({0}) Hello! {1} - {2} {3}", i, max1, max2, DateTime.Now.ToString("hh:mm:ss"));
+            _log.InfoFormat("[ASSET CLIENT]: ({0}) Hello! {1} - {2} {3}", i, max1, max2, DateTime.Now.ToString("hh:mm:ss"));
             Thread.Sleep(2000);
         }
     }

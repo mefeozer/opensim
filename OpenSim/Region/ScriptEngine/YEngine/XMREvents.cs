@@ -46,7 +46,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private void InitEvents()
         {
-            m_log.Info("[YEngine] Hooking up to server events");
+            _log.Info("[YEngine] Hooking up to server events");
             this.World.EventManager.OnAttach += attach;
             this.World.EventManager.OnObjectGrab += touch_start;
             this.World.EventManager.OnObjectGrabbing += touch;

@@ -39,157 +39,49 @@ namespace OpenSim.Tests.Common
 {
     public class TestOSHttpRequest : IOSHttpRequest
     {
-        public string[] AcceptTypes
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public string[] AcceptTypes => throw new NotImplementedException ();
 
-        public Encoding ContentEncoding
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public Encoding ContentEncoding => throw new NotImplementedException ();
 
-        public long ContentLength
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public long ContentLength => throw new NotImplementedException ();
 
-        public long ContentLength64
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public long ContentLength64 => throw new NotImplementedException ();
 
-        public string ContentType
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public string ContentType => throw new NotImplementedException ();
 
-        public HttpCookieCollection Cookies
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public HttpCookieCollection Cookies => throw new NotImplementedException ();
 
-        public bool HasEntityBody
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public bool HasEntityBody => throw new NotImplementedException ();
 
         public NameValueCollection Headers { get; set; }
 
-        public string HttpMethod
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public string HttpMethod => throw new NotImplementedException ();
 
         public Stream InputStream { get; set;}
 
-        public bool IsSecured
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public bool IsSecured => throw new NotImplementedException ();
 
-        public bool KeepAlive
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public bool KeepAlive => throw new NotImplementedException ();
 
-        public NameValueCollection QueryString
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public NameValueCollection QueryString => throw new NotImplementedException ();
 
-        public Hashtable Query
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public Hashtable Query => throw new NotImplementedException();
 
-        public Dictionary<string, string> QueryAsDictionary
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public Dictionary<string, string> QueryAsDictionary => throw new NotImplementedException();
 
-        public HashSet<string> QueryFlags
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public HashSet<string> QueryFlags => throw new NotImplementedException();
 
-        public string RawUrl
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public string RawUrl => throw new NotImplementedException ();
 
-        public IPEndPoint RemoteIPEndPoint
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public IPEndPoint RemoteIPEndPoint => throw new NotImplementedException();
 
-        public IPEndPoint LocalIPEndPoint
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public IPEndPoint LocalIPEndPoint => throw new NotImplementedException();
 
         public Uri Url { get; set; }
         public string UriPath { get;}
         public double ArrivalTS { get; }
 
-        public string UserAgent
-        {
-            get
-            {
-                throw new NotImplementedException ();
-            }
-        }
+        public string UserAgent => throw new NotImplementedException ();
 
         public TestOSHttpRequest()
         {

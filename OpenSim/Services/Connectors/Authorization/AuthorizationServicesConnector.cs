@@ -36,12 +36,12 @@ namespace OpenSim.Services.Connectors
 {
     public class AuthorizationServicesConnector
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
-        private bool m_ResponseOnFailure = true;
+        private string _ServerURI = string.Empty;
+        private bool _ResponseOnFailure = true;
 
         public AuthorizationServicesConnector()
         {
@@ -49,7 +49,7 @@ namespace OpenSim.Services.Connectors
 
         public AuthorizationServicesConnector(string serverURI)
         {
-            m_ServerURI = serverURI.TrimEnd('/');
+            _ServerURI = serverURI.TrimEnd('/');
         }
 
         public AuthorizationServicesConnector(IConfigSource source)
@@ -62,7 +62,7 @@ namespace OpenSim.Services.Connectors
             IConfig authorizationConfig = source.Configs["AuthorizationService"];
             if (authorizationConfig == null)
             {
-                //m_log.Info("[AUTHORIZATION CONNECTOR]: AuthorizationService missing from OpenSim.ini");
+                //_log.Info("[AUTHORIZATION CONNECTOR]: AuthorizationService missing from OpenSim.ini");
                 throw new Exception("Authorization connector init error");
             }
 
@@ -71,25 +71,25 @@ namespace OpenSim.Services.Connectors
 
             if (string.IsNullOrEmpty(serviceURI))
             {
-                m_log.Error("[AUTHORIZATION CONNECTOR]: No Server URI named in section AuthorizationService");
+                _log.Error("[AUTHORIZATION CONNECTOR]: No Server URI named in section AuthorizationService");
                 throw new Exception("Authorization connector init error");
             }
-            m_ServerURI = serviceURI;
+            _ServerURI = serviceURI;
 
             // this dictates what happens if the remote service fails, if the service fails and the value is true
             // the user is authorized for the region.
             bool responseOnFailure = authorizationConfig.GetBoolean("ResponseOnFailure",true);
 
-            m_ResponseOnFailure = responseOnFailure;
-            m_log.Info("[AUTHORIZATION CONNECTOR]: AuthorizationService initialized");
+            _ResponseOnFailure = responseOnFailure;
+            _log.Info("[AUTHORIZATION CONNECTOR]: AuthorizationService initialized");
         }
 
         public bool IsAuthorizedForRegion(string userID, string firstname, string surname, string email, string regionName, string regionID, out string message)
         {
             // do a remote call to the authorization server specified in the AuthorizationServerURI
-            m_log.InfoFormat("[AUTHORIZATION CONNECTOR]: IsAuthorizedForRegion checking {0} at remote server {1}", userID, m_ServerURI);
+            _log.InfoFormat("[AUTHORIZATION CONNECTOR]: IsAuthorizedForRegion checking {0} at remote server {1}", userID, _ServerURI);
 
-            string uri = m_ServerURI;
+            string uri = _ServerURI;
 
             AuthorizationRequest req = new AuthorizationRequest(userID, firstname, surname, email, regionName, regionID);
 
@@ -100,16 +100,16 @@ namespace OpenSim.Services.Connectors
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[AUTHORIZATION CONNECTOR]: Unable to send authorize {0} for region {1} error thrown during comms with remote server. Reason: {2}", userID, regionID, e.Message);
+                _log.WarnFormat("[AUTHORIZATION CONNECTOR]: Unable to send authorize {0} for region {1} error thrown during comms with remote server. Reason: {2}", userID, regionID, e.Message);
                 message = e.Message;
-                return m_ResponseOnFailure;
+                return _ResponseOnFailure;
             }
             if (response == null)
             {
                 message = "Null response";
-                return m_ResponseOnFailure;
+                return _ResponseOnFailure;
             }
-            m_log.DebugFormat("[AUTHORIZATION CONNECTOR] response from remote service was {0}", response.Message);
+            _log.DebugFormat("[AUTHORIZATION CONNECTOR] response from remote service was {0}", response.Message);
             message = response.Message;
 
             return response.IsAuthorized;

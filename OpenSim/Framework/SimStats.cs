@@ -38,52 +38,28 @@ namespace OpenSim.Framework
     /// </summary>
     public class SimStats
     {
-        public uint RegionX
-        {
-            get { return m_regionX; }
-        }
-        private readonly uint m_regionX;
+        public uint RegionX => _regionX;
+        private readonly uint _regionX;
 
-        public uint RegionY
-        {
-            get { return m_regionY; }
-        }
-        private readonly uint m_regionY;
+        public uint RegionY => _regionY;
+        private readonly uint _regionY;
 
-        public SimStatsPacket.RegionBlock RegionBlock
-        {
-            get { return m_regionBlock; }
-        }
-        private readonly SimStatsPacket.RegionBlock m_regionBlock;
+        public SimStatsPacket.RegionBlock RegionBlock => _regionBlock;
+        private readonly SimStatsPacket.RegionBlock _regionBlock;
 
-        public SimStatsPacket.StatBlock[] StatsBlock
-        {
-            get { return m_statsBlock; }
-        }
-        private readonly SimStatsPacket.StatBlock[] m_statsBlock;
+        public SimStatsPacket.StatBlock[] StatsBlock => _statsBlock;
+        private readonly SimStatsPacket.StatBlock[] _statsBlock;
 
-        public SimStatsPacket.StatBlock[] ExtraStatsBlock
-        {
-            get { return m_extraStatsBlock; }
-        }
-        private readonly SimStatsPacket.StatBlock[] m_extraStatsBlock;
+        public SimStatsPacket.StatBlock[] ExtraStatsBlock => _extraStatsBlock;
+        private readonly SimStatsPacket.StatBlock[] _extraStatsBlock;
 
-        public uint RegionFlags
-        {
-            get { return m_regionFlags; }
-        }
-        private readonly uint m_regionFlags;
+        public uint RegionFlags => _regionFlags;
+        private readonly uint _regionFlags;
 
-        public uint ObjectCapacity
-        {
-            get { return m_objectCapacity; }
-        }
-        private readonly uint m_objectCapacity;
+        public uint ObjectCapacity => _objectCapacity;
+        private readonly uint _objectCapacity;
 
-        public UUID RegionUUID
-        {
-            get { return regionUUID; }
-        }
+        public UUID RegionUUID => regionUUID;
         private readonly UUID regionUUID;
 
         public SimStats(
@@ -92,13 +68,13 @@ namespace OpenSim.Framework
             SimStatsPacket.StatBlock[] ExtraStatsBlock, UUID pRUUID)
         {
             regionUUID = pRUUID;
-            m_regionX = regionX;
-            m_regionY = regionY;
-            m_regionFlags = regionFlags;
-            m_objectCapacity = objectCapacity;
-            m_regionBlock = regionBlock;
-            m_statsBlock = statsBlock;
-            m_extraStatsBlock = ExtraStatsBlock;
+            _regionX = regionX;
+            _regionY = regionY;
+            _regionFlags = regionFlags;
+            _objectCapacity = objectCapacity;
+            _regionBlock = regionBlock;
+            _statsBlock = statsBlock;
+            _extraStatsBlock = ExtraStatsBlock;
         }
     }
 }

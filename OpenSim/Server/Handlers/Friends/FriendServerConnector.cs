@@ -37,15 +37,15 @@ namespace OpenSim.Server.Handlers.Friends
 {
     public class FriendsServiceConnector : ServiceConnector
     {
-        private readonly IFriendsService m_FriendsService;
-        private readonly string m_ConfigName = "FriendsService";
+        private readonly IFriendsService _FriendsService;
+        private readonly string _ConfigName = "FriendsService";
 
         public FriendsServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string theService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -54,10 +54,10 @@ namespace OpenSim.Server.Handlers.Friends
                 throw new Exception("No LocalServiceModule in config file");
 
             object[] args = new object[] { config };
-            m_FriendsService = ServerUtils.LoadPlugin<IFriendsService>(theService, args);
+            _FriendsService = ServerUtils.LoadPlugin<IFriendsService>(theService, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
-            server.AddStreamHandler(new FriendsServerPostHandler(m_FriendsService, auth));
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
+            server.AddStreamHandler(new FriendsServerPostHandler(_FriendsService, auth));
         }
     }
 }

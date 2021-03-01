@@ -40,12 +40,12 @@ namespace OpenSim.Region.CoreModules.World.Vegetation
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "VegetationModule")]
     public class VegetationModule : INonSharedRegionModule, IVegetationModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Scene m_scene;
+        protected Scene _scene;
 
         protected static readonly PCode[] creationCapabilities = new PCode[] { PCode.Grass, PCode.NewTree, PCode.Tree };
-        public PCode[] CreationCapabilities { get { return creationCapabilities; } }
+        public PCode[] CreationCapabilities => creationCapabilities;
 
         public void Initialise(IConfigSource source)
         {
@@ -53,22 +53,19 @@ namespace OpenSim.Region.CoreModules.World.Vegetation
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
-            m_scene.RegisterModuleInterface<IVegetationModule>(this);
+            _scene = scene;
+            _scene.RegisterModuleInterface<IVegetationModule>(this);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            m_scene.UnregisterModuleInterface<IVegetationModule>(this);
+            _scene.UnregisterModuleInterface<IVegetationModule>(this);
         }
 
         public void Close() {}
-        public string Name { get { return "Vegetation Module"; } }
+        public string Name => "Vegetation Module";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void RegionLoaded(Scene scene)
         {
@@ -86,7 +83,7 @@ namespace OpenSim.Region.CoreModules.World.Vegetation
                 State = (byte)treeType
             };
 
-            return m_scene.AddNewPrim(uuid, groupID, position, rotation, treeShape);
+            return _scene.AddNewPrim(uuid, groupID, position, rotation, treeShape);
         }
 
         public SceneObjectGroup CreateEntity(
@@ -94,7 +91,7 @@ namespace OpenSim.Region.CoreModules.World.Vegetation
         {
             if (Array.IndexOf(creationCapabilities, (PCode)shape.PCode) < 0)
             {
-                m_log.DebugFormat("[VEGETATION]: PCode {0} not handled by {1}", shape.PCode, Name);
+                _log.DebugFormat("[VEGETATION]: PCode {0} not handled by {1}", shape.PCode, Name);
                 return null;
             }
 
@@ -108,7 +105,7 @@ namespace OpenSim.Region.CoreModules.World.Vegetation
                 AdaptTree(ref shape);
 
             sceneObject.SetGroup(groupID, null);
-            m_scene.AddNewSceneObject(sceneObject, true);
+            _scene.AddNewSceneObject(sceneObject, true);
             sceneObject.InvalidateDeepEffectivePerms();
 
             return sceneObject;

@@ -52,14 +52,14 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
 //        private static byte[] s_asset1Data;
 //        private static byte[] s_asset2Data;
 
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly object thisLock = new object();
-        private static Graphics m_graph = null; // just to get chars sizes
+        private static Graphics _graph = null; // just to get chars sizes
 
-        private Scene m_scene;
-        private IDynamicTextureManager m_textureManager;
+        private Scene _scene;
+        private IDynamicTextureManager _textureManager;
 
-        private string m_fontName = "Arial";
+        private string _fontName = "Arial";
 
         #region IDynamicTextureRender Members
 
@@ -101,13 +101,13 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
 
         public bool AsyncConvertData(UUID id, string bodyData, string extraParams)
         {
-            if (m_textureManager == null)
+            if (_textureManager == null)
             {
-                m_log.Warn("[VECTORRENDERMODULE]: No texture manager. Can't function");
+                _log.Warn("[VECTORRENDERMODULE]: No texture manager. Can't function");
                 return false;
             }
             // XXX: This isn't actually being done asynchronously!
-            m_textureManager.ReturnData(id, ConvertData(bodyData, extraParams));
+            _textureManager.ReturnData(id, ConvertData(bodyData, extraParams));
 
             return true;
         }
@@ -121,7 +121,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
                 {
                     SizeF stringSize = new SizeF();
 
-                    stringSize = m_graph.MeasureString(text, myFont);
+                    stringSize = _graph.MeasureString(text, myFont);
                     xSize = stringSize.Width;
                     ySize = stringSize.Height;
                 }
@@ -137,18 +137,18 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
             IConfig cfg = config.Configs["VectorRender"];
             if (null != cfg)
             {
-                m_fontName = cfg.GetString("font_name", m_fontName);
+                _fontName = cfg.GetString("font_name", _fontName);
             }
-            m_log.DebugFormat("[VECTORRENDERMODULE]: using font \"{0}\" for text rendering.", m_fontName);
+            _log.DebugFormat("[VECTORRENDERMODULE]: using font \"{0}\" for text rendering.", _fontName);
 
             // We won't dispose of these explicitly since this module is only removed when the entire simulator
             // is shut down.
             lock(thisLock)
             {
-                if(m_graph == null)
+                if(_graph == null)
                 {
                     Bitmap bitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
-                    m_graph = Graphics.FromImage(bitmap);
+                    _graph = Graphics.FromImage(bitmap);
                 }
             }
         }
@@ -159,20 +159,20 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
 
         public void AddRegion(Scene scene)
         {
-            if (m_scene == null)
+            if (_scene == null)
             {
-                m_scene = scene;
+                _scene = scene;
             }
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (m_textureManager == null && m_scene == scene)
+            if (_textureManager == null && _scene == scene)
             {
-                m_textureManager = m_scene.RequestModuleInterface<IDynamicTextureManager>();
-                if (m_textureManager != null)
+                _textureManager = _scene.RequestModuleInterface<IDynamicTextureManager>();
+                if (_textureManager != null)
                 {
-                    m_textureManager.RegisterRender(GetContentType(), this);
+                    _textureManager.RegisterRender(GetContentType(), this);
                 }
             }
         }
@@ -185,15 +185,9 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
         {
         }
 
-        public string Name
-        {
-            get { return "VectorRenderModule"; }
-        }
+        public string Name => "VectorRenderModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -392,7 +386,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat(
+                    _log.ErrorFormat(
                         "[VECTORRENDERMODULE]: OpenJpeg Encode Failed.  Exception {0}{1}",
                         e.Message, e.StackTrace);
                 }
@@ -423,7 +417,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
             catch (Exception)
             {
                 //Ckrinke: Add a WriteLine to remove the warning about 'e' defined but not used
-                // m_log.Debug("Problem with Draw. Please verify parameters." + e.ToString());
+                // _log.Debug("Problem with Draw. Please verify parameters." + e.ToString());
                 parsed = -1;
             }
 
@@ -492,7 +486,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
             try
             {
                 drawPen = new Pen(Color.Black, 7);
-                string fontName = m_fontName;
+                string fontName = _fontName;
                 float fontSize = 14;
                 myFont = new Font(fontName, fontSize);
                 myBrush = new SolidBrush(Color.Black);
@@ -503,7 +497,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
                 {
                     string nextLine = line.TrimStart();
 
-//                    m_log.DebugFormat("[VECTOR RENDER MODULE]: Processing line '{0}'", nextLine);
+//                    _log.DebugFormat("[VECTOR RENDER MODULE]: Processing line '{0}'", nextLine);
 
                     if (nextLine.StartsWith("Text") && nextLine.Length > 5)
                     {
@@ -583,7 +577,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
                             }
                             else
                             {
-                                using (Font errorFont = new Font(m_fontName,6))
+                                using (Font errorFont = new Font(_fontName,6))
                                 {
                                     graph.DrawString("URL couldn't be resolved or is", errorFont,
                                                      myBrush, startPoint);
@@ -853,7 +847,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
                     PointF point = new PointF(x, y);
                     points[i / 2] = point;
 
-//                    m_log.DebugFormat("[VECTOR RENDER MODULE]: Got point {0}", points[i / 2]);
+//                    _log.DebugFormat("[VECTOR RENDER MODULE]: Got point {0}", points[i / 2]);
                 }
             }
         }

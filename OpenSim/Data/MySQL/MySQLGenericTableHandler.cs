@@ -37,24 +37,21 @@ namespace OpenSim.Data.MySQL
 {
     public class MySQLGenericTableHandler<T> : MySqlFramework where T: class, new()
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Dictionary<string, FieldInfo> m_Fields =
+        protected Dictionary<string, FieldInfo> _Fields =
                 new Dictionary<string, FieldInfo>();
 
-        protected List<string> m_ColumnNames = null;
-        protected string m_Realm;
-        protected FieldInfo m_DataField = null;
+        protected List<string> _ColumnNames = null;
+        protected string _Realm;
+        protected FieldInfo _DataField = null;
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         public MySQLGenericTableHandler(MySqlTransaction trans,
                 string realm, string storeName) : base(trans)
         {
-            m_Realm = realm;
+            _Realm = realm;
 
             CommonConstruct(storeName);
         }
@@ -62,7 +59,7 @@ namespace OpenSim.Data.MySQL
         public MySQLGenericTableHandler(string connectionString,
                 string realm, string storeName) : base(connectionString)
         {
-            m_Realm = realm;
+            _Realm = realm;
 
             CommonConstruct(storeName);
         }
@@ -72,7 +69,7 @@ namespace OpenSim.Data.MySQL
             if (!string.IsNullOrEmpty(storeName))
             {
                 // We always use a new connection for any Migrations
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
                     Migration m = new Migration(dbcon, Assembly, storeName);
@@ -91,15 +88,15 @@ namespace OpenSim.Data.MySQL
             foreach (FieldInfo f in  fields)
             {
                 if (f.Name != "Data")
-                    m_Fields[f.Name] = f;
+                    _Fields[f.Name] = f;
                 else
-                    m_DataField = f;
+                    _DataField = f;
             }
         }
 
         private void CheckColumnNames(IDataReader reader)
         {
-            if (m_ColumnNames != null)
+            if (_ColumnNames != null)
                 return;
 
             List<string> columnNames = new List<string>();
@@ -108,11 +105,11 @@ namespace OpenSim.Data.MySQL
             foreach (DataRow row in schemaTable.Rows)
             {
                 if (row["ColumnName"] != null &&
-                        !m_Fields.ContainsKey(row["ColumnName"].ToString()))
+                        !_Fields.ContainsKey(row["ColumnName"].ToString()))
                     columnNames.Add(row["ColumnName"].ToString());
             }
 
-            m_ColumnNames = columnNames;
+            _ColumnNames = columnNames;
         }
 
         public virtual T[] Get(string field, string key)
@@ -120,7 +117,7 @@ namespace OpenSim.Data.MySQL
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Parameters.AddWithValue(field, key);
-                cmd.CommandText = string.Format("select * from {0} where `{1}` = ?{1}", m_Realm, field);
+                cmd.CommandText = string.Format("select * from {0} where `{1}` = ?{1}", _Realm, field);
                 return DoQuery(cmd);
             }
         }
@@ -133,7 +130,7 @@ namespace OpenSim.Data.MySQL
 
             int flast = flen - 1;
             StringBuilder sb = new StringBuilder(1024);
-            sb.AppendFormat("select * from {0} where {1} IN (?", m_Realm, field);
+            sb.AppendFormat("select * from {0} where {1} IN (?", _Realm, field);
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 for (int i = 0 ; i < flen ; i++)
@@ -165,7 +162,7 @@ namespace OpenSim.Data.MySQL
 
             int flast = flen - 1;
             StringBuilder sb = new StringBuilder(1024);
-            sb.AppendFormat("select * from {0} where ", m_Realm);
+            sb.AppendFormat("select * from {0} where ", _Realm);
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
@@ -187,9 +184,9 @@ namespace OpenSim.Data.MySQL
 
         protected T[] DoQuery(MySqlCommand cmd)
         {
-            if (m_trans == null)
+            if (_trans == null)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
                     T[] ret = DoQueryWithConnection(cmd, dbcon);
@@ -199,7 +196,7 @@ namespace OpenSim.Data.MySQL
             }
             else
             {
-                return DoQueryWithTransaction(cmd, m_trans);
+                return DoQueryWithTransaction(cmd, _trans);
             }
         }
 
@@ -227,50 +224,50 @@ namespace OpenSim.Data.MySQL
                 {
                     T row = new T();
 
-                    foreach (string name in m_Fields.Keys)
+                    foreach (string name in _Fields.Keys)
                     {
                         if (reader[name] is DBNull)
                         {
                             continue;
                         }
-                        if (m_Fields[name].FieldType == typeof(bool))
+                        if (_Fields[name].FieldType == typeof(bool))
                         {
                             int v = Convert.ToInt32(reader[name]);
-                            m_Fields[name].SetValue(row, v != 0);
+                            _Fields[name].SetValue(row, v != 0);
                         }
-                        else if (m_Fields[name].FieldType == typeof(UUID))
+                        else if (_Fields[name].FieldType == typeof(UUID))
                         {
-                            m_Fields[name].SetValue(row, DBGuid.FromDB(reader[name]));
+                            _Fields[name].SetValue(row, DBGuid.FromDB(reader[name]));
                         }
-                        else if (m_Fields[name].FieldType == typeof(int))
+                        else if (_Fields[name].FieldType == typeof(int))
                         {
                             int v = Convert.ToInt32(reader[name]);
-                            m_Fields[name].SetValue(row, v);
+                            _Fields[name].SetValue(row, v);
                         }
-                        else if (m_Fields[name].FieldType == typeof(uint))
+                        else if (_Fields[name].FieldType == typeof(uint))
                         {
                             uint v = Convert.ToUInt32(reader[name]);
-                            m_Fields[name].SetValue(row, v);
+                            _Fields[name].SetValue(row, v);
                         }
                         else
                         {
-                            m_Fields[name].SetValue(row, reader[name]);
+                            _Fields[name].SetValue(row, reader[name]);
                         }
                     }
 
-                    if (m_DataField != null)
+                    if (_DataField != null)
                     {
                         Dictionary<string, string> data =
                             new Dictionary<string, string>();
 
-                        foreach (string col in m_ColumnNames)
+                        foreach (string col in _ColumnNames)
                         {
                             data[col] = reader[col].ToString();
                             if (data[col] == null)
                                 data[col] = string.Empty;
                         }
 
-                        m_DataField.SetValue(row, data);
+                        _DataField.SetValue(row, data);
                     }
 
                     result.Add(row);
@@ -285,7 +282,7 @@ namespace OpenSim.Data.MySQL
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 string query = string.Format("select * from {0} where {1}",
-                                             m_Realm, where);
+                                             _Realm, where);
 
                 cmd.CommandText = query;
 
@@ -295,7 +292,7 @@ namespace OpenSim.Data.MySQL
 
         public virtual bool Store(T row)
         {
-//            m_log.DebugFormat("[MYSQL GENERIC TABLE HANDLER]: Store(T row) invoked");
+//            _log.DebugFormat("[MYSQL GENERIC TABLE HANDLER]: Store(T row) invoked");
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
@@ -303,7 +300,7 @@ namespace OpenSim.Data.MySQL
                 List<string> names = new List<string>();
                 List<string> values = new List<string>();
 
-                foreach (FieldInfo fi in m_Fields.Values)
+                foreach (FieldInfo fi in _Fields.Values)
                 {
                     names.Add(fi.Name);
                     values.Add("?" + fi.Name);
@@ -320,10 +317,10 @@ namespace OpenSim.Data.MySQL
                     cmd.Parameters.AddWithValue(fi.Name, fi.GetValue(row).ToString());
                 }
 
-                if (m_DataField != null)
+                if (_DataField != null)
                 {
                     Dictionary<string, string> data =
-                        (Dictionary<string, string>)m_DataField.GetValue(row);
+                        (Dictionary<string, string>)_DataField.GetValue(row);
 
                     foreach (KeyValuePair<string, string> kvp in data)
                     {
@@ -333,7 +330,7 @@ namespace OpenSim.Data.MySQL
                     }
                 }
 
-                query = string.Format("replace into {0} (`", m_Realm) + string.Join("`,`", names.ToArray()) + "`) values (" + string.Join(",", values.ToArray()) + ")";
+                query = string.Format("replace into {0} (`", _Realm) + string.Join("`,`", names.ToArray()) + "`) values (" + string.Join(",", values.ToArray()) + ")";
 
                 cmd.CommandText = query;
 
@@ -351,7 +348,7 @@ namespace OpenSim.Data.MySQL
 
         public virtual bool Delete(string[] fields, string[] keys)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[MYSQL GENERIC TABLE HANDLER]: Delete(string[] fields, string[] keys) invoked with {0}:{1}",
 //                string.Join(",", fields), string.Join(",", keys));
 
@@ -361,7 +358,7 @@ namespace OpenSim.Data.MySQL
 
             int flast = flen - 1;
             StringBuilder sb = new StringBuilder(1024);
-            sb.AppendFormat("delete from {0} where ", m_Realm);
+            sb.AppendFormat("delete from {0} where ", _Realm);
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
@@ -392,7 +389,7 @@ namespace OpenSim.Data.MySQL
 
             int flast = flen - 1;
             StringBuilder sb = new StringBuilder(1024);
-            sb.AppendFormat("select count(*) from {0} where ", m_Realm);
+            sb.AppendFormat("select count(*) from {0} where ", _Realm);
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
@@ -417,7 +414,7 @@ namespace OpenSim.Data.MySQL
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 string query = string.Format("select count(*) from {0} where {1}",
-                                             m_Realm, where);
+                                             _Realm, where);
 
                 cmd.CommandText = query;
 
@@ -429,9 +426,9 @@ namespace OpenSim.Data.MySQL
 
         public object DoQueryScalar(MySqlCommand cmd)
         {
-            if (m_trans == null)
+            if (_trans == null)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
                     cmd.Connection = dbcon;
@@ -444,8 +441,8 @@ namespace OpenSim.Data.MySQL
             }
             else
             {
-                cmd.Connection = m_trans.Connection;
-                cmd.Transaction = m_trans;
+                cmd.Connection = _trans.Connection;
+                cmd.Transaction = _trans;
 
                 return cmd.ExecuteScalar();
             }

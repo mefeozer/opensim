@@ -35,11 +35,11 @@ namespace OpenSim.Framework.Servers
 {
     public class MainServer
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static BaseHttpServer instance = null;
         private static BaseHttpServer unsecureinstance = null;
-        private static readonly Dictionary<uint, BaseHttpServer> m_Servers = new Dictionary<uint, BaseHttpServer>();
+        private static readonly Dictionary<uint, BaseHttpServer> _Servers = new Dictionary<uint, BaseHttpServer>();
 
         /// <summary>
         /// Control the printing of certain debug messages.
@@ -54,13 +54,13 @@ namespace OpenSim.Framework.Servers
         /// </remarks>
         public static int DebugLevel
         {
-            get { return s_debugLevel; }
+            get => s_debugLevel;
             set
             {
                 s_debugLevel = value;
 
-                lock (m_Servers)
-                    foreach (BaseHttpServer server in m_Servers.Values)
+                lock (_Servers)
+                    foreach (BaseHttpServer server in _Servers.Values)
                         server.DebugLevel = s_debugLevel;
             }
         }
@@ -78,13 +78,13 @@ namespace OpenSim.Framework.Servers
         /// </exception>
         public static BaseHttpServer Instance
         {
-            get { return instance; }
+            get => instance;
 
             set
             {
-                lock (m_Servers)
+                lock (_Servers)
                 {
-                    if (!m_Servers.ContainsValue(value))
+                    if (!_Servers.ContainsValue(value))
                         throw new Exception("HTTP server must already have been registered to be set as the main instance");
 
                     instance = value;
@@ -94,12 +94,12 @@ namespace OpenSim.Framework.Servers
 
         public static BaseHttpServer UnSecureInstance
         {
-            get { return unsecureinstance; }
+            get => unsecureinstance;
 
             set
             {
-                lock (m_Servers)
-                    if (!m_Servers.ContainsValue(value))
+                lock (_Servers)
+                    if (!_Servers.ContainsValue(value))
                         throw new Exception("HTTP server must already have been registered to be set as the main instance");
 
                 unsecureinstance = value;
@@ -113,10 +113,7 @@ namespace OpenSim.Framework.Servers
         /// Returns a copy of the dictionary so this can be iterated through without locking.
         /// </remarks>
         /// <value></value>
-        public static Dictionary<uint, BaseHttpServer> Servers
-        {
-            get { return new Dictionary<uint, BaseHttpServer>(m_Servers); }
-        }
+        public static Dictionary<uint, BaseHttpServer> Servers => new Dictionary<uint, BaseHttpServer>(_Servers);
 
         public static void RegisterHttpConsoleCommands(ICommandConsole console)
         {
@@ -230,9 +227,9 @@ namespace OpenSim.Framework.Servers
 
             StringBuilder handlers = new StringBuilder();
 
-            lock (m_Servers)
+            lock (_Servers)
             {
-                foreach (BaseHttpServer httpServer in m_Servers.Values)
+                foreach (BaseHttpServer httpServer in _Servers.Values)
                 {
                     handlers.AppendFormat(
                         "Registered HTTP Handlers for server at {0}:{1}\n", httpServer.ListenIPAddress, httpServer.Port);
@@ -314,12 +311,12 @@ namespace OpenSim.Framework.Servers
         /// <param name='server'></param>
         public static void AddHttpServer(BaseHttpServer server)
         {
-            lock (m_Servers)
+            lock (_Servers)
             {
-                if (m_Servers.ContainsKey(server.Port))
+                if (_Servers.ContainsKey(server.Port))
                     throw new Exception(string.Format("HTTP server for port {0} already exists.", server.Port));
 
-                m_Servers.Add(server.Port, server);
+                _Servers.Add(server.Port, server);
             }
         }
 
@@ -333,12 +330,12 @@ namespace OpenSim.Framework.Servers
         /// <returns></returns>
         public static bool RemoveHttpServer(uint port)
         {
-            lock (m_Servers)
+            lock (_Servers)
             {
                 if (instance != null && instance.Port == port)
                     instance = null;
 
-                return m_Servers.Remove(port);
+                return _Servers.Remove(port);
             }
         }
 
@@ -352,8 +349,8 @@ namespace OpenSim.Framework.Servers
         /// <returns>true if a server with the given port is registered, false otherwise.</returns>
         public static bool ContainsHttpServer(uint port)
         {
-            lock (m_Servers)
-                return m_Servers.ContainsKey(port);
+            lock (_Servers)
+                return _Servers.ContainsKey(port);
         }
 
         /// <summary>
@@ -387,27 +384,27 @@ namespace OpenSim.Framework.Servers
             if (instance != null && port == Instance.Port)
                 return Instance;
 
-            lock (m_Servers)
+            lock (_Servers)
             {
-                if (m_Servers.ContainsKey(port))
-                    return m_Servers[port];
+                if (_Servers.ContainsKey(port))
+                    return _Servers[port];
 
-                m_Servers[port] = new BaseHttpServer(port);
+                _Servers[port] = new BaseHttpServer(port);
 
                 if (ipaddr != null)
-                    m_Servers[port].ListenIPAddress = ipaddr;
+                    _Servers[port].ListenIPAddress = ipaddr;
 
-                m_Servers[port].Start();
+                _Servers[port].Start();
 
-                return m_Servers[port];
+                return _Servers[port];
             }
         }
 
         public static void Stop()
         {
-            lock (m_Servers)
+            lock (_Servers)
             {
-                foreach (BaseHttpServer httpServer in m_Servers.Values)
+                foreach (BaseHttpServer httpServer in _Servers.Values)
                 {
                     httpServer.Stop(true);
                 }

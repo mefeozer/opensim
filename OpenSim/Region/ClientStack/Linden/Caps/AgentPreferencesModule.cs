@@ -45,9 +45,9 @@ namespace OpenSim.Region.ClientStack.LindenCaps
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "AgentPreferencesModule")]
     public class AgentPreferencesModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<Scene> m_scenes = new List<Scene>();
+        private readonly List<Scene> _scenes = new List<Scene>();
 
         public void Initialise(IConfigSource source)
         {
@@ -58,14 +58,14 @@ namespace OpenSim.Region.ClientStack.LindenCaps
 
         public void AddRegion(Scene scene)
         {
-            lock (m_scenes)
-                m_scenes.Add(scene);
+            lock (_scenes)
+                _scenes.Add(scene);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            lock (m_scenes)
-                m_scenes.Remove(scene);
+            lock (_scenes)
+                _scenes.Remove(scene);
             scene.EventManager.OnRegisterCaps -= RegisterCaps;
             scene = null;
         }
@@ -84,12 +84,9 @@ namespace OpenSim.Region.ClientStack.LindenCaps
 
         public void Close() {}
 
-        public string Name { get { return "AgentPreferencesModule"; } }
+        public string Name => "AgentPreferencesModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void RegisterCaps(UUID agent, Caps caps)
         {
@@ -119,7 +116,7 @@ namespace OpenSim.Region.ClientStack.LindenCaps
                 return;
             }
 
-            //m_log.DebugFormat("[AgentPrefs]: UpdateAgentPreferences for {0}", agent.ToString());
+            //_log.DebugFormat("[AgentPrefs]: UpdateAgentPreferences for {0}", agent.ToString());
             OSDMap req;
             try
             {
@@ -131,7 +128,7 @@ namespace OpenSim.Region.ClientStack.LindenCaps
                 return;
             }
 
-            IAgentPreferencesService aps = m_scenes[0].AgentPreferencesService;
+            IAgentPreferencesService aps = _scenes[0].AgentPreferencesService;
             AgentPrefs data = null;
             if(aps != null)
                 data = aps.GetAgentPreferences(agent);
@@ -147,7 +144,7 @@ namespace OpenSim.Region.ClientStack.LindenCaps
                 data.AccessPrefs = accessPrefs["max"].AsString();
                 changed = true;
             }
-            if (req.TryGetValue("default_object_perm_masks", out tmp) && tmp is OSDMap)
+            if (req.TryGetValue("default_object_per_masks", out tmp) && tmp is OSDMap)
             {
                 OSDMap permsMap = (OSDMap)tmp;
                 data.PermEveryone = permsMap["Everyone"].AsInteger();
@@ -174,7 +171,7 @@ namespace OpenSim.Region.ClientStack.LindenCaps
             if(changed)
                 aps?.StoreAgentPreferences(data);
 
-            IAvatarFactoryModule afm = m_scenes[0].RequestModuleInterface<IAvatarFactoryModule>();
+            IAvatarFactoryModule afm = _scenes[0].RequestModuleInterface<IAvatarFactoryModule>();
             afm?.SetPreferencesHoverZ(agent, (float)data.HoverHeight);
 
             OSDMap resp = new OSDMap();
@@ -187,7 +184,7 @@ namespace OpenSim.Region.ClientStack.LindenCaps
             respDefaultPerms["Group"] = data.PermGroup;
             respDefaultPerms["NextOwner"] = data.PermNextOwner;
 
-            resp["default_object_perm_masks"] = respDefaultPerms;
+            resp["default_object_per_masks"] = respDefaultPerms;
             resp["god_level"] = 0; // *TODO: Add this
             resp["hover_height"] = data.HoverHeight;
             resp["language"] = data.Language;

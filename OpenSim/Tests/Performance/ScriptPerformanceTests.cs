@@ -50,19 +50,19 @@ namespace OpenSim.Tests.Performance
     [TestFixture]
     public class ScriptPerformanceTests : OpenSimTestCase
     {
-        private TestScene m_scene;
-        private XEngine m_xEngine;
-        private readonly AutoResetEvent m_chatEvent = new AutoResetEvent(false);
+        private TestScene _scene;
+        private XEngine _xEngine;
+        private readonly AutoResetEvent _chatEvent = new AutoResetEvent(false);
 
-        private int m_expectedChatMessages;
-        private readonly List<OSChatMessage> m_osChatMessagesReceived = new List<OSChatMessage>();
+        private int _expectedChatMessages;
+        private readonly List<OSChatMessage> _osChatMessagesReceived = new List<OSChatMessage>();
 
         [SetUp]
         public void Init()
         {
             //AppDomain.CurrentDomain.SetData("APPBASE", Environment.CurrentDirectory + "/bin");
 //            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
-            m_xEngine = new XEngine();
+            _xEngine = new XEngine();
 
             // Necessary to stop serialization complaining
             WorldCommModule wcModule = new WorldCommModule();
@@ -79,18 +79,18 @@ namespace OpenSim.Tests.Performance
             // to AssemblyResolver.OnAssemblyResolve fails.
             xEngineConfig.Set("AppDomainLoading", "false");
 
-            m_scene = new SceneHelpers().SetupScene("My Test", UUID.Random(), 1000, 1000, configSource);
-            SceneHelpers.SetupSceneModules(m_scene, configSource, m_xEngine, wcModule);
+            _scene = new SceneHelpers().SetupScene("My Test", UUID.Random(), 1000, 1000, configSource);
+            SceneHelpers.SetupSceneModules(_scene, configSource, _xEngine, wcModule);
 
-            m_scene.EventManager.OnChatFromWorld += OnChatFromWorld;
-            m_scene.StartScripts();
+            _scene.EventManager.OnChatFromWorld += OnChatFromWorld;
+            _scene.StartScripts();
         }
 
         [TearDown]
         public void TearDown()
         {
-            m_scene.Close();
-            m_scene = null;
+            _scene.Close();
+            _scene = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
@@ -108,7 +108,7 @@ namespace OpenSim.Tests.Performance
         {
             UUID userId = TestHelpers.ParseTail(0x1);
 
-            m_expectedChatMessages = scriptsToCreate;
+            _expectedChatMessages = scriptsToCreate;
             int startingObjectIdTail = 0x100;
 
             GC.Collect();
@@ -118,11 +118,11 @@ namespace OpenSim.Tests.Performance
                 AddObjectAndScript(idTail, userId);
             }
 
-            m_chatEvent.WaitOne(40000 + scriptsToCreate * 1000);
+            _chatEvent.WaitOne(40000 + scriptsToCreate * 1000);
 
-            Assert.That(m_osChatMessagesReceived.Count, Is.EqualTo(m_expectedChatMessages));
+            Assert.That(_osChatMessagesReceived.Count, Is.EqualTo(_expectedChatMessages));
 
-            foreach (OSChatMessage msg in m_osChatMessagesReceived)
+            foreach (OSChatMessage msg in _osChatMessagesReceived)
                 Assert.That(
                     msg.Message,
                     Is.EqualTo("Script running"),
@@ -136,7 +136,7 @@ namespace OpenSim.Tests.Performance
             string itemName = string.Format("AddObjectAndScript() Item for object {0}", objectIdTail);
 
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, "AddObjectAndScriptPart_", objectIdTail);
-            m_scene.AddNewSceneObject(so, true);
+            _scene.AddNewSceneObject(so, true);
 
             InventoryItemBase itemTemplate = new InventoryItemBase
             {
@@ -146,19 +146,19 @@ namespace OpenSim.Tests.Performance
                 InvType = (int)InventoryType.LSL
             };
 
-            m_scene.RezNewScript(userId, itemTemplate);
+            _scene.RezNewScript(userId, itemTemplate);
         }
 
         private void OnChatFromWorld(object sender, OSChatMessage oscm)
         {
 //            Console.WriteLine("Got chat [{0}]", oscm.Message);
 
-            lock (m_osChatMessagesReceived)
+            lock (_osChatMessagesReceived)
             {
-                m_osChatMessagesReceived.Add(oscm);
+                _osChatMessagesReceived.Add(oscm);
 
-                if (m_osChatMessagesReceived.Count == m_expectedChatMessages)
-                    m_chatEvent.Set();
+                if (_osChatMessagesReceived.Count == _expectedChatMessages)
+                    _chatEvent.Set();
             }
         }
     }

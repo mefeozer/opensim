@@ -42,16 +42,13 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public BSActorLockAxis(BSScene physicsScene, BSPhysObject pObj, string actorName)
         : base(physicsScene, pObj, actorName)
     {
-        m_physicsScene.DetailLog("{0},BSActorLockAxis,constructor", m_controllingPrim.LocalID);
+        _physicsScene.DetailLog("{0},BSActorLockAxis,constructor", _controllingPrim.LocalID);
         LockAxisConstraint = null;
         HaveRegisteredForBeforeStepCallback = false;
     }
 
     // BSActor.isActive
-    public override bool isActive
-    {
-        get { return Enabled && m_controllingPrim.IsPhysicallyActive; }
-    }
+    public override bool isActive => Enabled && _controllingPrim.IsPhysicallyActive;
 
     // Release any connections and resources used by the actor.
     // BSActor.Dispose()
@@ -75,8 +72,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         // Refresh() only turns off. Enabling is done by InitializeAxisActor()
         //      whenever parameters are changed.
         //      This leaves 'enable' free to turn off an actor when it is not wanted to run.
-        if (m_controllingPrim.LockedAngularAxis == m_controllingPrim.LockedAxisFree
-                && m_controllingPrim.LockedLinearAxis == m_controllingPrim.LockedAxisFree)
+        if (_controllingPrim.LockedAngularAxis == _controllingPrim.LockedAxisFree
+                && _controllingPrim.LockedLinearAxis == _controllingPrim.LockedAxisFree)
         {
             Enabled = false;
         }
@@ -105,7 +102,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         if (!HaveRegisteredForBeforeStepCallback)
         {
-            m_physicsScene.BeforeStep += PhysicsScene_BeforeStep;
+            _physicsScene.BeforeStep += PhysicsScene_BeforeStep;
             HaveRegisteredForBeforeStepCallback = true;
         }
     }
@@ -114,7 +111,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         if (HaveRegisteredForBeforeStepCallback)
         {
-            m_physicsScene.BeforeStep -= PhysicsScene_BeforeStep;
+            _physicsScene.BeforeStep -= PhysicsScene_BeforeStep;
             HaveRegisteredForBeforeStepCallback = false;
         }
     }
@@ -122,8 +119,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     private void PhysicsScene_BeforeStep(float timestep)
     {
         // If all the axis are free, we don't need to exist
-        if (m_controllingPrim.LockedAngularAxis == m_controllingPrim.LockedAxisFree
-                && m_controllingPrim.LockedLinearAxis == m_controllingPrim.LockedAxisFree)
+        if (_controllingPrim.LockedAngularAxis == _controllingPrim.LockedAxisFree
+                && _controllingPrim.LockedLinearAxis == _controllingPrim.LockedAxisFree)
         {
             Enabled = false;
         }
@@ -132,8 +129,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         if (isActive)
         {
             // Check to see if the locking parameters have changed
-            if (m_controllingPrim.LockedLinearAxis != this.LockAxisLinearFlags
-                || m_controllingPrim.LockedAngularAxis != this.LockAxisAngularFlags)
+            if (_controllingPrim.LockedLinearAxis != this.LockAxisLinearFlags
+                || _controllingPrim.LockedAngularAxis != this.LockAxisAngularFlags)
             {
                 // The locking has changed. Remove the old constraint and build a new one
                 RemoveAxisLockConstraint();
@@ -160,41 +157,41 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             // Remove any existing axis constraint (just to be sure)
             RemoveAxisLockConstraint();
 
-            BSConstraint6Dof axisConstrainer = new BSConstraint6Dof(m_physicsScene.World, m_controllingPrim.PhysBody,
+            BSConstraint6Dof axisConstrainer = new BSConstraint6Dof(_physicsScene.World, _controllingPrim.PhysBody,
                                 OMV.Vector3.Zero, OMV.Quaternion.Identity,
                                 false /* useLinearReferenceFrameB */, true /* disableCollisionsBetweenLinkedBodies */);
             LockAxisConstraint = axisConstrainer;
-            m_physicsScene.Constraints.AddConstraint(LockAxisConstraint);
+            _physicsScene.Constraints.AddConstraint(LockAxisConstraint);
 
             // Remember the clocking being inforced so we can notice if they have changed
-            LockAxisLinearFlags = m_controllingPrim.LockedLinearAxis;
-            LockAxisAngularFlags = m_controllingPrim.LockedAngularAxis;
+            LockAxisLinearFlags = _controllingPrim.LockedLinearAxis;
+            LockAxisAngularFlags = _controllingPrim.LockedAngularAxis;
 
             // The constraint is tied to the world and oriented to the prim.
 
-            if (!axisConstrainer.SetLinearLimits(m_controllingPrim.LockedLinearAxisLow, m_controllingPrim.LockedLinearAxisHigh))
+            if (!axisConstrainer.SetLinearLimits(_controllingPrim.LockedLinearAxisLow, _controllingPrim.LockedLinearAxisHigh))
             {
-                m_physicsScene.DetailLog("{0},BSActorLockAxis.AddAxisLockConstraint,failedSetLinearLimits",
-                        m_controllingPrim.LocalID);
+                _physicsScene.DetailLog("{0},BSActorLockAxis.AddAxisLockConstraint,failedSetLinearLimits",
+                        _controllingPrim.LocalID);
             }
 
-            if (!axisConstrainer.SetAngularLimits(m_controllingPrim.LockedAngularAxisLow, m_controllingPrim.LockedAngularAxisHigh))
+            if (!axisConstrainer.SetAngularLimits(_controllingPrim.LockedAngularAxisLow, _controllingPrim.LockedAngularAxisHigh))
             {
-                m_physicsScene.DetailLog("{0},BSActorLockAxis.AddAxisLockConstraint,failedSetAngularLimits",
-                        m_controllingPrim.LocalID);
+                _physicsScene.DetailLog("{0},BSActorLockAxis.AddAxisLockConstraint,failedSetAngularLimits",
+                        _controllingPrim.LocalID);
             }
 
-            m_physicsScene.DetailLog("{0},BSActorLockAxis.AddAxisLockConstraint,create,linLow={1},linHi={2},angLow={3},angHi={4}",
-                                        m_controllingPrim.LocalID,
-                                        m_controllingPrim.LockedLinearAxisLow,
-                                        m_controllingPrim.LockedLinearAxisHigh,
-                                        m_controllingPrim.LockedAngularAxisLow,
-                                        m_controllingPrim.LockedAngularAxisHigh);
+            _physicsScene.DetailLog("{0},BSActorLockAxis.AddAxisLockConstraint,create,linLow={1},linHi={2},angLow={3},angHi={4}",
+                                        _controllingPrim.LocalID,
+                                        _controllingPrim.LockedLinearAxisLow,
+                                        _controllingPrim.LockedLinearAxisHigh,
+                                        _controllingPrim.LockedAngularAxisLow,
+                                        _controllingPrim.LockedAngularAxisHigh);
 
             // Constants from one of the posts mentioned above and used in Bullet's ConstraintDemo.
             axisConstrainer.TranslationalLimitMotor(true /* enable */, 5.0f, 0.1f);
 
-            axisConstrainer.RecomputeConstraintVariables(m_controllingPrim.RawMass);
+            axisConstrainer.RecomputeConstraintVariables(_controllingPrim.RawMass);
 
             RegisterForBeforeStepCallback();
         }
@@ -205,9 +202,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         UnRegisterForBeforeStepCallback();
         if (LockAxisConstraint != null)
         {
-            m_physicsScene.Constraints.RemoveAndDestroyConstraint(LockAxisConstraint);
+            _physicsScene.Constraints.RemoveAndDestroyConstraint(LockAxisConstraint);
             LockAxisConstraint = null;
-            m_physicsScene.DetailLog("{0},BSActorLockAxis.RemoveAxisLockConstraint,destroyingConstraint", m_controllingPrim.LocalID);
+            _physicsScene.DetailLog("{0},BSActorLockAxis.RemoveAxisLockConstraint,destroyingConstraint", _controllingPrim.LocalID);
         }
     }
 }

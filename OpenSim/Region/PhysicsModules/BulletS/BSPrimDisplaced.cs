@@ -144,15 +144,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     }
 
     // These are also overridden by BSPrimLinkable if the prim can be part of a linkset
-    public override OMV.Vector3 CenterOfMass
-    {
-        get { return RawPosition; }
-    }
+    public override OMV.Vector3 CenterOfMass => RawPosition;
 
-    public override OMV.Vector3 GeometricCenter
-    {
-        get { return RawPosition; }
-    }
+    public override OMV.Vector3 GeometricCenter => RawPosition;
 
     public override void UpdateProperties(EntityProperties entprop)
     {

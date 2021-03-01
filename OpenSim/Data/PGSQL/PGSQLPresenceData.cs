@@ -37,7 +37,7 @@ namespace OpenSim.Data.PGSQL
     public class PGSQLPresenceData : PGSQLGenericTableHandler<PresenceData>,
             IPresenceData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public PGSQLPresenceData(string connectionString, string realm) :
                 base(connectionString, realm, "Presence")
@@ -56,13 +56,13 @@ namespace OpenSim.Data.PGSQL
 
         public void LogoutRegionAgents(UUID regionID)
         {
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
 
-                cmd.CommandText = string.Format("DELETE FROM {0} WHERE \"RegionID\" = :regionID", m_Realm);
+                cmd.CommandText = string.Format("DELETE FROM {0} WHERE \"RegionID\" = :regionID", _Realm);
 
-                cmd.Parameters.Add(m_database.CreateParameter("RegionID", regionID));
+                cmd.Parameters.Add(_database.CreateParameter("RegionID", regionID));
                 cmd.Connection = conn;
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -78,14 +78,14 @@ namespace OpenSim.Data.PGSQL
             if (regionID == UUID.Zero)
                 return false;
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
 
-                cmd.CommandText = string.Format("UPDATE {0} SET \"RegionID\" = :regionID, \"LastSeen\" = now() WHERE \"SessionID\" = :sessionID", m_Realm);
+                cmd.CommandText = string.Format("UPDATE {0} SET \"RegionID\" = :regionID, \"LastSeen\" = now() WHERE \"SessionID\" = :sessionID", _Realm);
 
-                cmd.Parameters.Add(m_database.CreateParameter("SessionID", sessionID));
-                cmd.Parameters.Add(m_database.CreateParameter("RegionID", regionID));
+                cmd.Parameters.Add(_database.CreateParameter("SessionID", sessionID));
+                cmd.Parameters.Add(_database.CreateParameter("RegionID", regionID));
                 cmd.Connection = conn;
                 conn.Open();
                 if (cmd.ExecuteNonQuery() == 0)

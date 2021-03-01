@@ -45,17 +45,17 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <summary>
         /// Pending raycast requests
         /// </summary>
-        protected List<ODERayCastRequest> m_PendingRequests = new List<ODERayCastRequest>();
+        protected List<ODERayCastRequest> _PendingRequests = new List<ODERayCastRequest>();
 
         /// <summary>
         /// Pending ray requests
         /// </summary>
-        protected List<ODERayRequest> m_PendingRayRequests = new List<ODERayRequest>();
+        protected List<ODERayRequest> _PendingRayRequests = new List<ODERayRequest>();
 
         /// <summary>
         /// Scene that created this object.
         /// </summary>
-        private OdeScene m_scene;
+        private OdeScene _scene;
 
         /// <summary>
         /// ODE contact array to be filled by the collision testing
@@ -66,13 +66,13 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// ODE near callback delegate
         /// </summary>
         private readonly SafeNativeMethods.NearCallback nearCallback;
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly List<ContactResult> m_contactResults = new List<ContactResult>();
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly List<ContactResult> _contactResults = new List<ContactResult>();
 
 
         public ODERayCastRequestManager(OdeScene pScene)
         {
-            m_scene = pScene;
+            _scene = pScene;
             nearCallback = near;
 
         }
@@ -86,7 +86,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <param name="retMethod">Return method to send the results</param>
         public void QueueRequest(Vector3 position, Vector3 direction, float length, RaycastCallback retMethod)
         {
-            lock (m_PendingRequests)
+            lock (_PendingRequests)
             {
                 ODERayCastRequest req = new ODERayCastRequest
                 {
@@ -96,7 +96,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     Origin = position
                 };
 
-                m_PendingRequests.Add(req);
+                _PendingRequests.Add(req);
             }
         }
 
@@ -110,7 +110,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// <param name="retMethod">Return method to send the results</param>
         public void QueueRequest(Vector3 position, Vector3 direction, float length, int count, RayCallback retMethod)
         {
-            lock (m_PendingRequests)
+            lock (_PendingRequests)
             {
                 ODERayRequest req = new ODERayRequest
                 {
@@ -121,7 +121,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     Count = count
                 };
 
-                m_PendingRayRequests.Add(req);
+                _PendingRayRequests.Add(req);
             }
         }
 
@@ -132,38 +132,38 @@ namespace OpenSim.Region.PhysicsModule.ODE
         public int ProcessQueuedRequests()
         {
             int time = System.Environment.TickCount;
-            lock (m_PendingRequests)
+            lock (_PendingRequests)
             {
-                if (m_PendingRequests.Count > 0)
+                if (_PendingRequests.Count > 0)
                 {
-                    ODERayCastRequest[] reqs = m_PendingRequests.ToArray();
+                    ODERayCastRequest[] reqs = _PendingRequests.ToArray();
                     for (int i = 0; i < reqs.Length; i++)
                     {
                         if (reqs[i].callbackMethod != null) // quick optimization here, don't raycast
                             RayCast(reqs[i]);               // if there isn't anyone to send results
                     }
 
-                    m_PendingRequests.Clear();
+                    _PendingRequests.Clear();
                 }
             }
 
-            lock (m_PendingRayRequests)
+            lock (_PendingRayRequests)
             {
-                if (m_PendingRayRequests.Count > 0)
+                if (_PendingRayRequests.Count > 0)
                 {
-                    ODERayRequest[] reqs = m_PendingRayRequests.ToArray();
+                    ODERayRequest[] reqs = _PendingRayRequests.ToArray();
                     for (int i = 0; i < reqs.Length; i++)
                     {
                         if (reqs[i].callbackMethod != null) // quick optimization here, don't raycast
                             RayCast(reqs[i]);               // if there isn't anyone to send results
                     }
 
-                    m_PendingRayRequests.Clear();
+                    _PendingRayRequests.Clear();
                 }
             }
 
-            lock (m_contactResults)
-                m_contactResults.Clear();
+            lock (_contactResults)
+                _contactResults.Clear();
 
             return System.Environment.TickCount - time;
         }
@@ -182,11 +182,11 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 len = 100f;
 
             // Create the ray
-            IntPtr ray = SafeNativeMethods.CreateRay(m_scene.space, len);
+            IntPtr ray = SafeNativeMethods.CreateRay(_scene.space, len);
             SafeNativeMethods.GeomRaySet(ray, req.Origin.X, req.Origin.Y, req.Origin.Z, req.Normal.X, req.Normal.Y, req.Normal.Z);
 
             // Collide test
-            SafeNativeMethods.SpaceCollide2(m_scene.space, ray, IntPtr.Zero, nearCallback);
+            SafeNativeMethods.SpaceCollide2(_scene.space, ray, IntPtr.Zero, nearCallback);
 
             // Remove Ray
             SafeNativeMethods.GeomDestroy(ray);
@@ -199,9 +199,9 @@ namespace OpenSim.Region.PhysicsModule.ODE
             Vector3 snormal = Vector3.Zero;
 
             // Find closest contact and object.
-            lock (m_contactResults)
+            lock (_contactResults)
             {
-                foreach (ContactResult cResult in m_contactResults)
+                foreach (ContactResult cResult in _contactResults)
                 {
                     if (Vector3.Distance(req.Origin, cResult.Pos) < Vector3.Distance(req.Origin, closestcontact))
                     {
@@ -213,7 +213,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     }
                 }
 
-                m_contactResults.Clear();
+                _contactResults.Clear();
             }
 
             // Return results
@@ -233,21 +233,21 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 len = 100f;
 
             // Create the ray
-            IntPtr ray = SafeNativeMethods.CreateRay(m_scene.space, len);
+            IntPtr ray = SafeNativeMethods.CreateRay(_scene.space, len);
             SafeNativeMethods.GeomRaySet(ray, req.Origin.X, req.Origin.Y, req.Origin.Z, req.Normal.X, req.Normal.Y, req.Normal.Z);
 
             // Collide test
-            SafeNativeMethods.SpaceCollide2(m_scene.space, ray, IntPtr.Zero, nearCallback);
+            SafeNativeMethods.SpaceCollide2(_scene.space, ray, IntPtr.Zero, nearCallback);
 
             // Remove Ray
             SafeNativeMethods.GeomDestroy(ray);
 
             // Find closest contact and object.
-            lock (m_contactResults)
+            lock (_contactResults)
             {
                 // Return results
                 if (req.callbackMethod != null)
-                    req.callbackMethod(m_contactResults);
+                    req.callbackMethod(_contactResults);
             }
         }
 
@@ -276,7 +276,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 }
                 catch (AccessViolationException)
                 {
-                    m_log.Warn("[PHYSICS]: Unable to collide test a space");
+                    _log.Warn("[PHYSICS]: Unable to collide test a space");
                     return;
                 }
                 //Colliding a space or a geom with a space or a geom. so drill down
@@ -304,11 +304,11 @@ namespace OpenSim.Region.PhysicsModule.ODE
             }
             catch (SEHException)
             {
-                m_log.Error("[PHYSICS]: The Operating system shut down ODE because of corrupt memory.  This could be a result of really irregular terrain.  If this repeats continuously, restart using Basic Physics and terrain fill your terrain.  Restarting the sim.");
+                _log.Error("[PHYSICS]: The Operating system shut down ODE because of corrupt memory.  This could be a result of really irregular terrain.  If this repeats continuously, restart using Basic Physics and terrain fill your terrain.  Restarting the sim.");
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[PHYSICS]: Unable to collide test an object: {0}", e.Message);
+                _log.WarnFormat("[PHYSICS]: Unable to collide test an object: {0}", e.Message);
                 return;
             }
 
@@ -316,10 +316,10 @@ namespace OpenSim.Region.PhysicsModule.ODE
             PhysicsActor p2 = null;
 
             if (g1 != IntPtr.Zero)
-                m_scene.actor_name_map.TryGetValue(g1, out p1);
+                _scene.actor_name_map.TryGetValue(g1, out p1);
 
             if (g2 != IntPtr.Zero)
-                m_scene.actor_name_map.TryGetValue(g1, out p2);
+                _scene.actor_name_map.TryGetValue(g1, out p2);
 
             // Loop over contacts, build results.
             for (int i = 0; i < count; i++)
@@ -336,8 +336,8 @@ namespace OpenSim.Region.PhysicsModule.ODE
                             Normal = new Vector3(contacts[i].normal.X, contacts[i].normal.Y,
                                                              contacts[i].normal.Z)
                         };
-                        lock (m_contactResults)
-                            m_contactResults.Add(collisionresult);
+                        lock (_contactResults)
+                            _contactResults.Add(collisionresult);
                     }
                 }
 
@@ -354,8 +354,8 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                       contacts[i].normal.Z)
                         };
 
-                        lock (m_contactResults)
-                            m_contactResults.Add(collisionresult);
+                        lock (_contactResults)
+                            _contactResults.Add(collisionresult);
                     }
                 }
             }
@@ -366,7 +366,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         /// </summary>
         internal void Dispose()
         {
-            m_scene = null;
+            _scene = null;
         }
     }
 

@@ -33,7 +33,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 {
     public class DefaultAvatarAnimations
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static readonly string DefaultAnimationsPath = "data/avataranimations.xml";
 
@@ -73,7 +73,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                             if (animState != "")
                                 AnimStateNames.Add(id, animState);
 
-//                            m_log.DebugFormat("[AVATAR ANIMATIONS]: Loaded {0} {1} {2}", id, name, animState);
+//                            _log.DebugFormat("[AVATAR ANIMATIONS]: Loaded {0} {1} {2}", id, name, animState);
                         }
                     }
 //                }
@@ -89,12 +89,12 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// <returns></returns>
         public static UUID GetDefaultAnimation(string name)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[AVATAR ANIMATIONS]: Looking for default avatar animation with name {0}", name);
             UUID id;
             if (AnimsUUIDbyName.TryGetValue(name.ToUpper(), out id))
             {
-//                m_log.DebugFormat(
+//                _log.DebugFormat(
 //                    "[AVATAR ANIMATIONS]: Found {0} {1} in GetDefaultAvatarAnimation()", AnimsUUID[name], name);
 
                 return id;

@@ -43,7 +43,7 @@ namespace OpenSim.Region.Framework.Scenes
 
     public static class CollisionSounds
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int MaxMaterials = 7;
         // part part
@@ -92,7 +92,7 @@ namespace OpenSim.Region.Framework.Scenes
         private static readonly UUID snd_TerrainPlastic = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
         private static readonly UUID snd_TerrainRubber = new UUID("be7295c0-a158-11e1-b3dd-0807200c9a66");
 
-        public static UUID[] m_TerrainPart = {
+        public static UUID[] _TerrainPart = {
             snd_TerrainStone,
             snd_TerrainMetal,
             snd_TerrainGlass,
@@ -103,7 +103,7 @@ namespace OpenSim.Region.Framework.Scenes
             };
 
         // simetric sounds
-        public static UUID[] m_PartPart = {
+        public static UUID[] _PartPart = {
             snd_StoneStone, snd_StoneMetal, snd_StoneGlass, snd_StoneWood, snd_StoneFlesh, snd_StonePlastic, snd_StoneRubber,
             snd_StoneMetal, snd_MetalMetal, snd_MetalGlass, snd_MetalWood, snd_MetalFlesh, snd_MetalPlastic, snd_MetalRubber,
             snd_StoneGlass, snd_MetalGlass, snd_GlassGlass, snd_GlassWood, snd_GlassFlesh, snd_GlassPlastic, snd_GlassRubber,
@@ -183,7 +183,7 @@ namespace OpenSim.Region.Framework.Scenes
                                 if (vol > 1.0f)
                                     vol = 1.0f;
 
-                                soundID = m_TerrainPart[thisMaterial];
+                                soundID = _TerrainPart[thisMaterial];
                                 volume *= vol;
                             }
                             part.SendCollisionSound(soundID, volume, colInfo.position);
@@ -236,7 +236,7 @@ namespace OpenSim.Region.Framework.Scenes
                             if (otherMaterial >= MaxMaterials)
                                 otherMaterial = 3;
 
-                            soundID = m_PartPart[thisMatScaled + otherMaterial];
+                            soundID = _PartPart[thisMatScaled + otherMaterial];
                             volume *= vol;
                         }
                     }
@@ -306,7 +306,7 @@ namespace OpenSim.Region.Framework.Scenes
                         // should never be heard.
                         if (volume < 3.2f)
                             continue;
-//                        m_log.DebugFormat("Collision speed was {0}", volume);
+//                        _log.DebugFormat("Collision speed was {0}", volume);
 
                         // Cap to 0.2 times volume because climbing stairs should not be noisy
                         // Also changed scaling
@@ -318,7 +318,7 @@ namespace OpenSim.Region.Framework.Scenes
                             otherMaterial = 3;
 
                         volume *= volmod;
-                        soundID = m_PartPart[thisMatScaled + otherMaterial];
+                        soundID = _PartPart[thisMatScaled + otherMaterial];
                         otherPart.SendCollisionSound(soundID, volume, colInfo.position);
                     }
                     continue;

@@ -43,13 +43,13 @@ namespace OpenSim.Server.Handlers.Authentication
 {
     public class AuthenticationServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAuthenticationService m_AuthenticationService;
+        private readonly IAuthenticationService _AuthenticationService;
 
-        private readonly bool m_AllowGetAuthInfo = false;
-        private readonly bool m_AllowSetAuthInfo = false;
-        private readonly bool m_AllowSetPassword = false;
+        private readonly bool _AllowGetAuthInfo = false;
+        private readonly bool _AllowSetAuthInfo = false;
+        private readonly bool _AllowSetPassword = false;
 
         public AuthenticationServerPostHandler(IAuthenticationService service) :
                 this(service, null, null) {}
@@ -57,20 +57,20 @@ namespace OpenSim.Server.Handlers.Authentication
         public AuthenticationServerPostHandler(IAuthenticationService service, IConfig config, IServiceAuth auth) :
                 base("POST", "/auth", auth)
         {
-            m_AuthenticationService = service;
+            _AuthenticationService = service;
 
             if (config != null)
             {
-                m_AllowGetAuthInfo = config.GetBoolean("AllowGetAuthInfo", m_AllowGetAuthInfo);
-                m_AllowSetAuthInfo = config.GetBoolean("AllowSetAuthInfo", m_AllowSetAuthInfo);
-                m_AllowSetPassword = config.GetBoolean("AllowSetPassword", m_AllowSetPassword);
+                _AllowGetAuthInfo = config.GetBoolean("AllowGetAuthInfo", _AllowGetAuthInfo);
+                _AllowSetAuthInfo = config.GetBoolean("AllowSetAuthInfo", _AllowSetAuthInfo);
+                _AllowSetPassword = config.GetBoolean("AllowSetPassword", _AllowSetPassword);
             }
         }
 
         protected override byte[] ProcessRequest(string path, Stream request,
                 IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
-//            m_log.Error("[XXX]: Authenticating...");
+//            _log.Error("[XXX]: Authenticating...");
             string[] p = SplitParams(path);
 
             if (p.Length > 0)
@@ -129,20 +129,20 @@ namespace OpenSim.Server.Handlers.Authentication
                     if (!request.ContainsKey("PASSWORD"))
                         return FailureResult();
 
-                    token = m_AuthenticationService.Authenticate(principalID, request["PASSWORD"].ToString(), lifetime);
+                    token = _AuthenticationService.Authenticate(principalID, request["PASSWORD"].ToString(), lifetime);
 
                     if (!string.IsNullOrEmpty(token))
                         return SuccessResult(token);
                     return FailureResult();
 
                 case "setpassword":
-                    if (!m_AllowSetPassword)
+                    if (!_AllowSetPassword)
                         return FailureResult();
 
                     if (!request.ContainsKey("PASSWORD"))
                         return FailureResult();
 
-                    if (m_AuthenticationService.SetPassword(principalID, request["PASSWORD"].ToString()))
+                    if (_AuthenticationService.SetPassword(principalID, request["PASSWORD"].ToString()))
                         return SuccessResult();
                     else
                         return FailureResult();
@@ -151,7 +151,7 @@ namespace OpenSim.Server.Handlers.Authentication
                     if (!request.ContainsKey("TOKEN"))
                         return FailureResult();
 
-                    if (m_AuthenticationService.Verify(principalID, request["TOKEN"].ToString(), lifetime))
+                    if (_AuthenticationService.Verify(principalID, request["TOKEN"].ToString(), lifetime))
                         return SuccessResult();
 
                     return FailureResult();
@@ -160,19 +160,19 @@ namespace OpenSim.Server.Handlers.Authentication
                     if (!request.ContainsKey("TOKEN"))
                         return FailureResult();
 
-                    if (m_AuthenticationService.Release(principalID, request["TOKEN"].ToString()))
+                    if (_AuthenticationService.Release(principalID, request["TOKEN"].ToString()))
                         return SuccessResult();
 
                     return FailureResult();
 
                 case "getauthinfo":
-                    if (m_AllowGetAuthInfo)
+                    if (_AllowGetAuthInfo)
                         return GetAuthInfo(principalID);
 
                     break;
 
                 case "setauthinfo":
-                    if (m_AllowSetAuthInfo)
+                    if (_AllowSetAuthInfo)
                         return SetAuthInfo(principalID, request);
 
                     break;
@@ -210,7 +210,7 @@ namespace OpenSim.Server.Handlers.Authentication
 
         byte[] GetAuthInfo(UUID principalID)
         {
-            AuthInfo info = m_AuthenticationService.GetAuthInfo(principalID);
+            AuthInfo info = _AuthenticationService.GetAuthInfo(principalID);
 
             if (info != null)
             {
@@ -227,7 +227,7 @@ namespace OpenSim.Server.Handlers.Authentication
 
         byte[] SetAuthInfo(UUID principalID, Dictionary<string, object> request)
         {
-            AuthInfo existingInfo = m_AuthenticationService.GetAuthInfo(principalID);
+            AuthInfo existingInfo = _AuthenticationService.GetAuthInfo(principalID);
 
             if (existingInfo == null)
                 return FailureResult();
@@ -244,9 +244,9 @@ namespace OpenSim.Server.Handlers.Authentication
             if (request.ContainsKey("WebLoginKey"))
                 existingInfo.WebLoginKey = request["WebLoginKey"].ToString();
 
-            if (!m_AuthenticationService.SetAuthInfo(existingInfo))
+            if (!_AuthenticationService.SetAuthInfo(existingInfo))
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[AUTHENTICATION SERVER POST HANDLER]: Authentication info store failed for account {0} {1} {2}",
                     existingInfo.PrincipalID);
 

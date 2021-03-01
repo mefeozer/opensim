@@ -2,7 +2,7 @@ using System;using Tools;
 namespace OpenSim.Region.ScriptEngine.Shared.CodeTools {
 //%+STRING_CONSTANT+3
 public class STRING_CONSTANT : TOKEN{
-public override string yyname { get { return "STRING_CONSTANT"; }}
+public override string yyname => "STRING_CONSTANT";
 public override int yynum { get { return 3; }}
 public STRING_CONSTANT(Lexer yyl):base(yyl){}}
 //%INCREMENT+4

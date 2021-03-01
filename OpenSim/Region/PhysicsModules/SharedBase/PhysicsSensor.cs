@@ -43,10 +43,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
     public abstract class PhysicsSensor
     {
-        public static PhysicsSensor Null
-        {
-            get { return new NullPhysicsSensor(); }
-        }
+        public static PhysicsSensor Null => new NullPhysicsSensor();
         public abstract Vector3 Position { get; set; }
         public abstract void TimerCallback (object obj, ElapsedEventArgs eea);
         public abstract float radianarc {get; set;}
@@ -61,18 +58,24 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
     {
         public override Vector3 Position
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
         public override void TimerCallback(object obj, ElapsedEventArgs eea)
         {
             // don't do squat
         }
-        public override float radianarc { get { return 0f; } set { } }
-        public override string targetname { get { return ""; } set { } }
-        public override Guid targetKey { get { return Guid.Empty; } set { } }
-        public override SenseType sensetype { get { return SenseType.NONE; } set { } }
-        public override float range { get { return 0; } set { } }
-        public override float rateSeconds { get { return 0; } set { } }
+        public override float radianarc { get => 0f;
+            set { } }
+        public override string targetname { get => "";
+            set { } }
+        public override Guid targetKey { get => Guid.Empty;
+            set { } }
+        public override SenseType sensetype { get => SenseType.NONE;
+            set { } }
+        public override float range { get => 0;
+            set { } }
+        public override float rateSeconds { get => 0;
+            set { } }
     }
 }

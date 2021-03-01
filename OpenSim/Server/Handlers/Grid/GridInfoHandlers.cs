@@ -43,7 +43,7 @@ namespace OpenSim.Server.Handlers.Grid
     public class GridInfoHandlers
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IConfigSource m_Config;
+        private readonly IConfigSource _Config;
         private readonly Hashtable _info = new Hashtable();
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace OpenSim.Server.Handlers.Grid
         /// </remarks>
         public GridInfoHandlers(IConfigSource configSource)
         {
-            m_Config = configSource;
+            _Config = configSource;
             loadGridInfo(configSource);
         }
 
@@ -181,14 +181,14 @@ namespace OpenSim.Server.Handlers.Grid
                 map[k] = OSD.FromString(_info[k].ToString());
             }
 
-            string HomeURI = Util.GetConfigVarFromSections<string>(m_Config, "HomeURI",
+            string HomeURI = Util.GetConfigVarFromSections<string>(_Config, "HomeURI",
                 new string[] { "Startup", "Hypergrid" }, string.Empty);
 
             if (!string.IsNullOrEmpty(HomeURI))
                 map["home"] = OSD.FromString(HomeURI);
             else // Legacy. Remove soon!
             {
-                IConfig cfg = m_Config.Configs["LoginService"];
+                IConfig cfg = _Config.Configs["LoginService"];
 
                 if (null != cfg)
                     HomeURI = cfg.GetString("SRV_HomeURI", HomeURI);

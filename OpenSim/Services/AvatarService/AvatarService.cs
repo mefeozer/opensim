@@ -39,14 +39,14 @@ namespace OpenSim.Services.AvatarService
 {
     public class AvatarService : AvatarServiceBase, IAvatarService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
         public AvatarService(IConfigSource config)
             : base(config)
         {
-            m_log.Debug("[AVATAR SERVICE]: Starting avatar service");
+            _log.Debug("[AVATAR SERVICE]: Starting avatar service");
         }
 
         public AvatarAppearance GetAppearance(UUID principalID)
@@ -63,7 +63,7 @@ namespace OpenSim.Services.AvatarService
 
         public AvatarData GetAvatar(UUID principalID)
         {
-            AvatarBaseData[] av = m_Database.Get("PrincipalID", principalID.ToString());
+            AvatarBaseData[] av = _Database.Get("PrincipalID", principalID.ToString());
             AvatarData ret = new AvatarData
             {
                 Data = new Dictionary<string, string>()
@@ -93,8 +93,8 @@ namespace OpenSim.Services.AvatarService
                 if (kvp.Key.StartsWith("_"))
                     count++;
 
-//            m_log.DebugFormat("[AVATAR SERVICE]: SetAvatar for {0}, attachs={1}", principalID, count);
-            m_Database.Delete("PrincipalID", principalID.ToString());
+//            _log.DebugFormat("[AVATAR SERVICE]: SetAvatar for {0}, attachs={1}", principalID, count);
+            _Database.Delete("PrincipalID", principalID.ToString());
 
             AvatarBaseData av = new AvatarBaseData
             {
@@ -105,7 +105,7 @@ namespace OpenSim.Services.AvatarService
             av.Data["Name"] = "AvatarType";
             av.Data["Value"] = avatar.AvatarType.ToString();
 
-            if (!m_Database.Store(av))
+            if (!_Database.Store(av))
                 return false;
 
             foreach (KeyValuePair<string,string> kvp in avatar.Data)
@@ -127,7 +127,7 @@ namespace OpenSim.Services.AvatarService
                         if (!float.TryParse(rawHeight, out height) || height < 0 || height > 10)
                             height = 1.771488f;
 
-                        m_log.DebugFormat(
+                        _log.DebugFormat(
                             "[AVATAR SERVICE]: Rectifying height of avatar {0} from {1} to {2}",
                             principalID, kvp.Value, height);
                     }
@@ -139,9 +139,9 @@ namespace OpenSim.Services.AvatarService
                     av.Data["Value"] = kvp.Value;
                 }
 
-                if (!m_Database.Store(av))
+                if (!_Database.Store(av))
                 {
-                    m_Database.Delete("PrincipalID", principalID.ToString());
+                    _Database.Delete("PrincipalID", principalID.ToString());
                     return false;
                 }
             }
@@ -151,7 +151,7 @@ namespace OpenSim.Services.AvatarService
 
         public bool ResetAvatar(UUID principalID)
         {
-            return m_Database.Delete("PrincipalID", principalID.ToString());
+            return _Database.Delete("PrincipalID", principalID.ToString());
         }
 
         public bool SetItems(UUID principalID, string[] names, string[] values)
@@ -170,7 +170,7 @@ namespace OpenSim.Services.AvatarService
                 av.Data["Name"] = names[i];
                 av.Data["Value"] = values[i];
 
-                if (!m_Database.Store(av))
+                if (!_Database.Store(av))
                     return false;
             }
 
@@ -181,7 +181,7 @@ namespace OpenSim.Services.AvatarService
         {
             foreach (string name in names)
             {
-                m_Database.Delete(principalID, name);
+                _Database.Delete(principalID, name);
             }
             return true;
         }

@@ -37,8 +37,8 @@ namespace OpenSim.Tools.LSL.Compiler
 {
     class Program
     {
-//        Commented out because generated warning since m_positionMap could never be anything other than null
-//        private static Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>> m_positionMap;
+//        Commented out because generated warning since _positionMap could never be anything other than null
+//        private static Dictionary<KeyValuePair<int, int>, KeyValuePair<int, int>> _positionMap;
         private static readonly CSharpCodeProvider CScodeProvider = new CSharpCodeProvider();
 
         static void Main(string[] args)
@@ -209,9 +209,9 @@ namespace OpenSim.Tools.LSL.Compiler
             sfs.Close();
 
             string posmap = string.Empty;
-//            if (m_positionMap != null)
+//            if (_positionMap != null)
 //            {
-//                foreach (KeyValuePair<KeyValuePair<int, int>, KeyValuePair<int, int>> kvp in m_positionMap)
+//                foreach (KeyValuePair<KeyValuePair<int, int>, KeyValuePair<int, int>> kvp in _positionMap)
 //                {
 //                    KeyValuePair<int, int> k = kvp.Key;
 //                    KeyValuePair<int, int> v = kvp.Value;
@@ -252,7 +252,7 @@ namespace OpenSim.Tools.LSL.Compiler
 
         private static KeyValuePair<int, int> FindErrorPosition(int line, int col)
         {
-            //return FindErrorPosition(line, col, m_positionMap);
+            //return FindErrorPosition(line, col, _positionMap);
             return FindErrorPosition(line, col, null);
         }
 
@@ -289,16 +289,16 @@ namespace OpenSim.Tools.LSL.Compiler
 
             foreach (KeyValuePair<KeyValuePair<int, int>, KeyValuePair<int, int>> posmap in sorted)
             {
-                //m_log.DebugFormat("[Compiler]: Scanning line map {0},{1} --> {2},{3}", posmap.Key.Key, posmap.Key.Value, posmap.Value.Key, posmap.Value.Value);
+                //_log.DebugFormat("[Compiler]: Scanning line map {0},{1} --> {2},{3}", posmap.Key.Key, posmap.Key.Value, posmap.Value.Key, posmap.Value.Value);
                 int nl = posmap.Value.Key + line - posmap.Key.Key;      // New, translated LSL line and column.
                 int nc = posmap.Value.Value + col - posmap.Key.Value;
                 // Keep going until we find the first point passed line,col.
                 if (posmap.Key.Key > line)
                 {
-                  //m_log.DebugFormat("[Compiler]: Line is larger than requested {0},{1}, returning {2},{3}", line, col, l, c);
+                  //_log.DebugFormat("[Compiler]: Line is larger than requested {0},{1}, returning {2},{3}", line, col, l, c);
                   if (pl < line)
                   {
-                    //m_log.DebugFormat("[Compiler]: Previous line ({0}) is less than requested line ({1}), setting column to 1.", pl, line);
+                    //_log.DebugFormat("[Compiler]: Previous line ({0}) is less than requested line ({1}), setting column to 1.", pl, line);
                     c = 1;
                   }
                   break;
@@ -308,12 +308,12 @@ namespace OpenSim.Tools.LSL.Compiler
                   // Never move l,c backwards.
                   if (nl > l || nl == l && nc > c)
                   {
-                    //m_log.DebugFormat("[Compiler]: Using offset relative to this: {0} + {1} - {2}, {3} + {4} - {5} = {6}, {7}",
+                    //_log.DebugFormat("[Compiler]: Using offset relative to this: {0} + {1} - {2}, {3} + {4} - {5} = {6}, {7}",
                     //    posmap.Value.Key, line, posmap.Key.Key, posmap.Value.Value, col, posmap.Key.Value, nl, nc);
                     l = nl;
                     c = nc;
                   }
-                  //m_log.DebugFormat("[Compiler]: Column is larger than requested {0},{1}, returning {2},{3}", line, col, l, c);
+                  //_log.DebugFormat("[Compiler]: Column is larger than requested {0},{1}, returning {2},{3}", line, col, l, c);
                   break;
                 }
                 pl = posmap.Key.Key;

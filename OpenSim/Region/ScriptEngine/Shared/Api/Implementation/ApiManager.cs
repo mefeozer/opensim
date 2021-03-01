@@ -34,13 +34,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 {
     public class ApiManager
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Dictionary<string,Type> m_Apis = new Dictionary<string,Type>();
+        private readonly Dictionary<string,Type> _Apis = new Dictionary<string,Type>();
 
         public string[] GetApis()
         {
-            if (m_Apis.Count <= 0)
+            if (_Apis.Count <= 0)
             {
                 Assembly a = Assembly.GetExecutingAssembly();
 
@@ -56,22 +56,22 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     if (name.EndsWith("_Api"))
                     {
                         name = name.Substring(0, name.Length - 4);
-                        m_Apis[name] = t;
+                        _Apis[name] = t;
                     }
                 }
             }
 
-//            m_log.DebugFormat("[API MANAGER]: Found {0} apis", m_Apis.Keys.Count);
+//            _log.DebugFormat("[API MANAGER]: Found {0} apis", _Apis.Keys.Count);
 
-            return new List<string>(m_Apis.Keys).ToArray();
+            return new List<string>(_Apis.Keys).ToArray();
         }
 
         public IScriptApi CreateApi(string api)
         {
-            if (!m_Apis.ContainsKey(api))
+            if (!_Apis.ContainsKey(api))
                 return null;
 
-            IScriptApi ret = (IScriptApi)Activator.CreateInstance(m_Apis[api]);
+            IScriptApi ret = (IScriptApi)Activator.CreateInstance(_Apis[api]);
             return ret;
         }
     }

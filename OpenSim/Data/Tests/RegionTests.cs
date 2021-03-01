@@ -61,7 +61,7 @@ namespace OpenSim.Data.Tests
         where TConn : DbConnection, new()
         where TRegStore : class, ISimulationDataStore, new()
     {
-        readonly bool m_rebuildDB;
+        readonly bool _rebuildDB;
 
         public ISimulationDataStore db;
         public UUID zero = UUID.Zero;
@@ -91,7 +91,7 @@ namespace OpenSim.Data.Tests
         public RegionTests(string conn, bool rebuild)
             : base(conn)
         {
-            m_rebuildDB = rebuild;
+            _rebuildDB = rebuild;
         }
 
         public RegionTests() : this("", true) { }
@@ -103,7 +103,7 @@ namespace OpenSim.Data.Tests
         {
             ClearDB();
             db = (ISimulationDataStore)service;
-            db.Initialise(m_connStr);
+            db.Initialise(_connStr);
         }
 
         private void ClearDB()
@@ -112,7 +112,7 @@ namespace OpenSim.Data.Tests
                 "prims", "primshapes", "primitems", "terrain", "land", "landaccesslist", "regionban", "regionsettings"
             };
 
-            if (m_rebuildDB)
+            if (_rebuildDB)
             {
                 DropTables(reg_tables);
                 ResetMigrations("RegionStore");
@@ -171,7 +171,7 @@ namespace OpenSim.Data.Tests
             }
             catch (Exception e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
                 Assert.Fail();
             }
 
@@ -181,7 +181,7 @@ namespace OpenSim.Data.Tests
             }
             catch (Exception e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
                 Assert.Fail();
             }
 

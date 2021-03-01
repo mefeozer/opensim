@@ -49,8 +49,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     [TestFixture]
     public class OSSL_ApiAttachmentTests : OpenSimTestCase
     {
-        protected Scene m_scene;
-        protected XEngine.XEngine m_engine;
+        protected Scene _scene;
+        protected XEngine.XEngine _engine;
 
         [SetUp]
         public override void SetUp()
@@ -70,13 +70,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             IConfig modulesConfig = initConfigSource.AddConfig("Modules");
             modulesConfig.Set("InventoryAccessModule", "BasicInventoryAccessModule");
 
-            m_scene = new SceneHelpers().SetupScene();
+            _scene = new SceneHelpers().SetupScene();
             SceneHelpers.SetupSceneModules(
-                m_scene, initConfigSource, new AttachmentsModule(), new BasicInventoryAccessModule());
+                _scene, initConfigSource, new AttachmentsModule(), new BasicInventoryAccessModule());
 
-            m_engine = new XEngine.XEngine();
-            m_engine.Initialise(initConfigSource);
-            m_engine.AddRegion(m_scene);
+            _engine = new XEngine.XEngine();
+            _engine.Initialise(initConfigSource);
+            _engine.AddRegion(_scene);
         }
 
         [Test]
@@ -89,19 +89,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID taskInvObjItemId = UUID.Parse("00000000-0000-0000-0000-100000000000");
             AttachmentPoint attachPoint = AttachmentPoint.Chin;
 
-            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(m_scene, 0x1);
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, ua1.PrincipalID);
-            SceneObjectGroup inWorldObj = SceneHelpers.AddSceneObject(m_scene, "inWorldObj", ua1.PrincipalID);
-            TaskInventoryItem scriptItem = TaskInventoryHelpers.AddScript(m_scene.AssetService, inWorldObj.RootPart);
+            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(_scene, 0x1);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, ua1.PrincipalID);
+            SceneObjectGroup inWorldObj = SceneHelpers.AddSceneObject(_scene, "inWorldObj", ua1.PrincipalID);
+            TaskInventoryItem scriptItem = TaskInventoryHelpers.AddScript(_scene.AssetService, inWorldObj.RootPart);
 
-            new LSL_Api().Initialize(m_engine, inWorldObj.RootPart, scriptItem);
+            new LSL_Api().Initialize(_engine, inWorldObj.RootPart, scriptItem);
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, inWorldObj.RootPart, scriptItem);
+            osslApi.Initialize(_engine, inWorldObj.RootPart, scriptItem);
 
 //            SceneObjectGroup sog1 = SceneHelpers.CreateSceneObject(1, ua1.PrincipalID);
 
             // Create an object embedded inside the first
-            TaskInventoryHelpers.AddSceneObject(m_scene.AssetService, inWorldObj.RootPart, taskInvObjItemName, taskInvObjItemId, ua1.PrincipalID);
+            TaskInventoryHelpers.AddSceneObject(_scene.AssetService, inWorldObj.RootPart, taskInvObjItemName, taskInvObjItemId, ua1.PrincipalID);
 
             osslApi.osForceAttachToAvatarFromInventory(taskInvObjItemName, (int)attachPoint);
 
@@ -135,18 +135,18 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID taskInvObjItemId = UUID.Parse("00000000-0000-0000-0000-100000000000");
             AttachmentPoint attachPoint = AttachmentPoint.Chin;
 
-            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(m_scene, 0x1);
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, ua1.PrincipalID);
-            SceneObjectGroup inWorldObj = SceneHelpers.AddSceneObject(m_scene, "inWorldObj", ua1.PrincipalID);
-            TaskInventoryItem scriptItem = TaskInventoryHelpers.AddScript(m_scene.AssetService, inWorldObj.RootPart);
+            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(_scene, 0x1);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, ua1.PrincipalID);
+            SceneObjectGroup inWorldObj = SceneHelpers.AddSceneObject(_scene, "inWorldObj", ua1.PrincipalID);
+            TaskInventoryItem scriptItem = TaskInventoryHelpers.AddScript(_scene.AssetService, inWorldObj.RootPart);
 
-            new LSL_Api().Initialize(m_engine, inWorldObj.RootPart, scriptItem);
+            new LSL_Api().Initialize(_engine, inWorldObj.RootPart, scriptItem);
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, inWorldObj.RootPart, scriptItem);
+            osslApi.Initialize(_engine, inWorldObj.RootPart, scriptItem);
 
             // Create an object embedded inside the first
             TaskInventoryHelpers.AddNotecard(
-                m_scene.AssetService, inWorldObj.RootPart, taskInvObjItemName, taskInvObjItemId, TestHelpers.ParseTail(0x900), "Hello World!");
+                _scene.AssetService, inWorldObj.RootPart, taskInvObjItemName, taskInvObjItemId, TestHelpers.ParseTail(0x900), "Hello World!");
 
             bool exceptionCaught = false;
 
@@ -181,22 +181,22 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID taskInvObjItemId = UUID.Parse("00000000-0000-0000-0000-100000000000");
             AttachmentPoint attachPoint = AttachmentPoint.Chin;
 
-            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(m_scene, "user", "one", 0x1, "pass");
-            UserAccount ua2 = UserAccountHelpers.CreateUserWithInventory(m_scene, "user", "two", 0x2, "pass");
+            UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(_scene, "user", "one", 0x1, "pass");
+            UserAccount ua2 = UserAccountHelpers.CreateUserWithInventory(_scene, "user", "two", 0x2, "pass");
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, ua1);
-            SceneObjectGroup inWorldObj = SceneHelpers.AddSceneObject(m_scene, "inWorldObj", ua1.PrincipalID);
-            TaskInventoryItem scriptItem = TaskInventoryHelpers.AddScript(m_scene.AssetService, inWorldObj.RootPart);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, ua1);
+            SceneObjectGroup inWorldObj = SceneHelpers.AddSceneObject(_scene, "inWorldObj", ua1.PrincipalID);
+            TaskInventoryItem scriptItem = TaskInventoryHelpers.AddScript(_scene.AssetService, inWorldObj.RootPart);
 
-            new LSL_Api().Initialize(m_engine, inWorldObj.RootPart, scriptItem);
+            new LSL_Api().Initialize(_engine, inWorldObj.RootPart, scriptItem);
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, inWorldObj.RootPart, scriptItem);
+            osslApi.Initialize(_engine, inWorldObj.RootPart, scriptItem);
 
             // Create an object embedded inside the first
             TaskInventoryHelpers.AddSceneObject(
-                m_scene.AssetService, inWorldObj.RootPart, taskInvObjItemName, taskInvObjItemId, ua1.PrincipalID);
+                _scene.AssetService, inWorldObj.RootPart, taskInvObjItemName, taskInvObjItemId, ua1.PrincipalID);
 
-            ScenePresence sp2 = SceneHelpers.AddScenePresence(m_scene, ua2);
+            ScenePresence sp2 = SceneHelpers.AddScenePresence(_scene, ua2);
 
             osslApi.osForceAttachToOtherAvatarFromInventory(sp2.UUID.ToString(), taskInvObjItemName, (int)attachPoint);
 

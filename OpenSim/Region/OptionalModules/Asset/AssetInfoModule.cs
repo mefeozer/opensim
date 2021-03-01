@@ -43,45 +43,45 @@ namespace OpenSim.Region.OptionalModules.Asset
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "AssetInfoModule")]
     public class AssetInfoModule : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
+        private Scene _scene;
 
-        public string Name { get { return "Asset Information Module"; } }
+        public string Name => "Asset Information Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[ASSET INFO MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[ASSET INFO MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[ASSET INFO MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[ASSET INFO MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[ASSET INFO MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[ASSET INFO MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[ASSET INFO MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ASSET INFO MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[ASSET INFO MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ASSET INFO MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[ASSET INFO MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ASSET INFO MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
 
-            if (m_scene == null)
-                m_scene = scene;
+            if (_scene == null)
+                _scene = scene;
 
             MainConsole.Instance.Commands.AddCommand(
                 "Assets",
@@ -115,7 +115,7 @@ namespace OpenSim.Region.OptionalModules.Asset
                 return;
             }
 
-            AssetBase asset = m_scene.AssetService.Get(assetId.ToString());
+            AssetBase asset = _scene.AssetService.Get(assetId.ToString());
             if (asset == null)
             {
                 MainConsole.Instance.Output("ERROR: No asset found with ID {0}", assetId);
@@ -146,7 +146,7 @@ namespace OpenSim.Region.OptionalModules.Asset
                 return;
             }
 
-            AssetBase asset = m_scene.AssetService.Get(args[2]);
+            AssetBase asset = _scene.AssetService.Get(args[2]);
 
             if (asset == null || asset.Data.Length == 0)
             {

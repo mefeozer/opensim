@@ -42,14 +42,14 @@ namespace OpenSim.Server.Handlers.GridUser
 {
     public class GridUserServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IGridUserService m_GridUserService;
+        private readonly IGridUserService _GridUserService;
 
         public GridUserServerPostHandler(IGridUserService service, IServiceAuth auth) :
                 base("POST", "/griduser", auth)
         {
-            m_GridUserService = service;
+            _GridUserService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -60,7 +60,7 @@ namespace OpenSim.Server.Handlers.GridUser
                 body = sr.ReadToEnd();
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
             string method = string.Empty;
             try
             {
@@ -87,11 +87,11 @@ namespace OpenSim.Server.Handlers.GridUser
                     case "getgriduserinfos":
                         return GetGridUserInfos(request);
                 }
-                m_log.DebugFormat("[GRID USER HANDLER]: unknown method request: {0}", method);
+                _log.DebugFormat("[GRID USER HANDLER]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID USER HANDLER]: Exception in method {0}: {1}", method, e);
+                _log.DebugFormat("[GRID USER HANDLER]: Exception in method {0}: {1}", method, e);
             }
 
             return FailureResult();
@@ -107,14 +107,14 @@ namespace OpenSim.Server.Handlers.GridUser
 
             user = request["UserID"].ToString();
 
-            GridUserInfo guinfo = m_GridUserService.LoggedIn(user);
+            GridUserInfo guinfo = _GridUserService.LoggedIn(user);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
             result["result"] = guinfo.ToKeyValuePairs();
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[GRID USER HANDLER]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[GRID USER HANDLER]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -128,7 +128,7 @@ namespace OpenSim.Server.Handlers.GridUser
             if (!UnpackArgs(request, out userID, out regionID, out position, out lookat))
                 return FailureResult();
 
-            if (m_GridUserService.LoggedOut(userID, UUID.Zero, regionID, position, lookat))
+            if (_GridUserService.LoggedOut(userID, UUID.Zero, regionID, position, lookat))
                 return SuccessResult();
 
             return FailureResult();
@@ -144,7 +144,7 @@ namespace OpenSim.Server.Handlers.GridUser
             if (!UnpackArgs(request, out user, out region, out position, out look))
                 return FailureResult();
 
-            if (m_GridUserService.SetHome(user, region, position, look))
+            if (_GridUserService.SetHome(user, region, position, look))
                 return SuccessResult();
 
             return FailureResult();
@@ -163,7 +163,7 @@ namespace OpenSim.Server.Handlers.GridUser
             if (!UnpackArgs(request, out user, out region, out position, out look))
                 return FailureResult();
 
-            if (m_GridUserService.SetLastPosition(user, UUID.Zero, region, position, look))
+            if (_GridUserService.SetLastPosition(user, UUID.Zero, region, position, look))
                 return SuccessResult();
 
             return FailureResult();
@@ -178,7 +178,7 @@ namespace OpenSim.Server.Handlers.GridUser
 
             user = request["UserID"].ToString();
 
-            GridUserInfo guinfo = m_GridUserService.GetGridUserInfo(user);
+            GridUserInfo guinfo = _GridUserService.GetGridUserInfo(user);
 
             if (guinfo == null)
                 return FailureResult();
@@ -190,7 +190,7 @@ namespace OpenSim.Server.Handlers.GridUser
                 result["result"] = "null";
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
-            //m_log.DebugFormat("[GRID USER HANDLER]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[GRID USER HANDLER]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -201,19 +201,19 @@ namespace OpenSim.Server.Handlers.GridUser
 
             if (!request.ContainsKey("AgentIDs"))
             {
-                m_log.DebugFormat("[GRID USER HANDLER]: GetGridUserInfos called without required uuids argument");
+                _log.DebugFormat("[GRID USER HANDLER]: GetGridUserInfos called without required uuids argument");
                 return FailureResult();
             }
 
             if (!(request["AgentIDs"] is List<string>))
             {
-                m_log.DebugFormat("[GRID USER HANDLER]: GetGridUserInfos input argument was of unexpected type {0}", request["uuids"].GetType().ToString());
+                _log.DebugFormat("[GRID USER HANDLER]: GetGridUserInfos input argument was of unexpected type {0}", request["uuids"].GetType().ToString());
                 return FailureResult();
             }
 
             userIDs = ((List<string>)request["AgentIDs"]).ToArray();
 
-            GridUserInfo[] pinfos = m_GridUserService.GetGridUserInfo(userIDs);
+            GridUserInfo[] pinfos = _GridUserService.GetGridUserInfo(userIDs);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
             if (pinfos == null || pinfos != null && pinfos.Length == 0)

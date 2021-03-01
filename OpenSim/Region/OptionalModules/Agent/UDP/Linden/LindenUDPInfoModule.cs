@@ -51,35 +51,35 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LindenUDPInfoModule")]
     public class LindenUDPInfoModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Dictionary<UUID, Scene> m_scenes = new Dictionary<UUID, Scene>();
+        protected Dictionary<UUID, Scene> _scenes = new Dictionary<UUID, Scene>();
 
-        public string Name { get { return "Linden UDP Module"; } }
+        public string Name => "Linden UDP Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[LINDEN UDP INFO MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[LINDEN UDP INFO MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[LINDEN UDP INFO MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[LINDEN UDP INFO MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[LINDEN UDP INFO MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[LINDEN UDP INFO MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[LINDEN UDP INFO MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[LINDEN UDP INFO MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
 
-            lock (m_scenes)
-                m_scenes[scene.RegionInfo.RegionID] = scene;
+            lock (_scenes)
+                _scenes[scene.RegionInfo.RegionID] = scene;
 
             scene.AddCommand(
                 "Comms", this, "show pqueues",
@@ -127,15 +127,15 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[LINDEN UDP INFO MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[LINDEN UDP INFO MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
 
-            lock (m_scenes)
-                m_scenes.Remove(scene.RegionInfo.RegionID);
+            lock (_scenes)
+                _scenes.Remove(scene.RegionInfo.RegionID);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[LINDEN UDP INFO MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[LINDEN UDP INFO MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
         }
 
         protected string HandleImageQueuesClear(string[] cmd)
@@ -148,9 +148,9 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
 
             List<ScenePresence> foundAgents = new List<ScenePresence>();
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes.Values)
+                foreach (Scene scene in _scenes.Values)
                 {
                     ScenePresence sp = scene.GetScenePresence(firstName, lastName);
                     if (sp != null)
@@ -230,9 +230,9 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
                 "Pri 10",
                 "Pri 11");
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes.Values)
+                foreach (Scene scene in _scenes.Values)
                 {
                     scene.ForEachClient(
                         delegate(IClientAPI client)
@@ -278,9 +278,9 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
 
             List<ScenePresence> foundAgents = new List<ScenePresence>();
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes.Values)
+                foreach (Scene scene in _scenes.Values)
                 {
                     ScenePresence sp = scene.GetScenePresence(firstName, lastName);
                     if (sp != null && (showChildAgents || !sp.IsChildAgent))
@@ -390,9 +390,9 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
                 "Texture",
                 "Asset");
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes.Values)
+                foreach (Scene scene in _scenes.Values)
                 {
                     scene.ForEachClient(
                         delegate(IClientAPI client)
@@ -480,9 +480,9 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
 
             report.AppendLine();
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes.Values)
+                foreach (Scene scene in _scenes.Values)
                 {
                     scene.ForEachClient(
                         delegate(IClientAPI client)
@@ -532,12 +532,12 @@ namespace OpenSim.Region.OptionalModules.UDP.Linden
 
         private void PrintRequests(string type, Dictionary<string, int> sortedDict, int sum)
         {
-            m_log.InfoFormat("[INFO]:");
-            m_log.InfoFormat("[INFO]: {0,25}", type);
+            _log.InfoFormat("[INFO]:");
+            _log.InfoFormat("[INFO]: {0,25}", type);
             foreach (KeyValuePair<string, int> kvp in sortedDict.Take(12))
-                m_log.InfoFormat("[INFO]: {0,25} {1,-6}", kvp.Key, kvp.Value);
-            m_log.InfoFormat("[INFO]: {0,25}", "...");
-            m_log.InfoFormat("[INFO]: {0,25} {1,-6}", "Total", sum);
+                _log.InfoFormat("[INFO]: {0,25} {1,-6}", kvp.Key, kvp.Value);
+            _log.InfoFormat("[INFO]: {0,25}", "...");
+            _log.InfoFormat("[INFO]: {0,25} {1,-6}", "Total", sum);
         }
     }
 }

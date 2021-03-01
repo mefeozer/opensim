@@ -45,10 +45,10 @@ namespace OpenSim.Data.MySQL
     /// </summary>
     public class MySQLSimulationData : ISimulationDataStore
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string LogHeader = "[REGION DB MYSQL]";
 
-        private string m_connectionString;
+        private string _connectionString;
 
         /// <summary>
         /// This lock was being used to serialize database operations when the connection was shared, but this has
@@ -58,12 +58,9 @@ namespace OpenSim.Data.MySQL
         /// unrelated operations to block each other or unrelated operations on the same tables from blocking each
         /// other.
         /// </summary>
-        private readonly object m_dbLock = new object();
+        private readonly object _dbLock = new object();
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         public MySQLSimulationData()
         {
@@ -76,9 +73,9 @@ namespace OpenSim.Data.MySQL
 
         public virtual void Initialise(string connectionString)
         {
-            m_connectionString = connectionString;
+            _connectionString = connectionString;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -100,7 +97,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("{0} MySQL error in ExecuteReader: {1}", LogHeader, e);
+                _log.ErrorFormat("{0} MySQL error in ExecuteReader: {1}", LogHeader, e);
                 throw;
             }
 
@@ -115,7 +112,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error("[REGION DB]: MySQL error in ExecuteNonQuery: " + e.Message);
+                _log.Error("[REGION DB]: MySQL error in ExecuteNonQuery: " + e.Message);
                 throw;
             }
         }
@@ -131,9 +128,9 @@ namespace OpenSim.Data.MySQL
             if ((flags & (uint)PrimFlags.TemporaryOnRez) != 0)
                 return;
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -259,12 +256,12 @@ namespace OpenSim.Data.MySQL
 
         public virtual void RemoveObject(UUID obj, UUID regionUUID)
         {
-//            m_log.DebugFormat("[REGION DB]: Deleting scene object {0} from {1} in database", obj, regionUUID);
+//            _log.DebugFormat("[REGION DB]: Deleting scene object {0} from {1} in database", obj, regionUUID);
 
             List<string> uuids = new List<string>();
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -332,9 +329,9 @@ namespace OpenSim.Data.MySQL
 
             #region Prim Loading
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -363,7 +360,7 @@ namespace OpenSim.Data.MySQL
 
                                 ++count;
                                 if (count % ROWS_PER_QUERY == 0)
-                                    m_log.Debug("[REGION DB]: Loaded " + count + " prims...");
+                                    _log.Debug("[REGION DB]: Loaded " + count + " prims...");
                             }
                         }
                     }
@@ -403,7 +400,7 @@ namespace OpenSim.Data.MySQL
                     }
                     else
                     {
-                        m_log.WarnFormat(
+                        _log.WarnFormat(
                             "[REGION DB]: Database contains an orphan child prim {0} {1} in region {2} pointing to missing parent {3}.  This prim will not be loaded.",
                             prim.Name, prim.UUID, regionID, prim.ParentUUID);
                     }
@@ -412,7 +409,7 @@ namespace OpenSim.Data.MySQL
 
             #endregion SceneObjectGroup Creation
 
-            m_log.DebugFormat("[REGION DB]: Loaded {0} objects using {1} prims", objects.Count, prims.Count);
+            _log.DebugFormat("[REGION DB]: Loaded {0} objects using {1} prims", objects.Count, prims.Count);
 
             #region Prim Inventory Loading
 
@@ -421,9 +418,9 @@ namespace OpenSim.Data.MySQL
             // list from DB of all prims which have items and
             // LoadItems only on those
             List<SceneObjectPart> primsWithInventory = new List<SceneObjectPart>();
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -454,7 +451,7 @@ namespace OpenSim.Data.MySQL
 
             #endregion Prim Inventory Loading
 
-            m_log.DebugFormat("[REGION DB]: Loaded inventory from {0} objects", primsWithInventory.Count);
+            _log.DebugFormat("[REGION DB]: Loaded inventory from {0} objects", primsWithInventory.Count);
 
             return new List<SceneObjectGroup>(objects.Values);
         }
@@ -465,11 +462,11 @@ namespace OpenSim.Data.MySQL
         /// <param name="prim">The prim</param>
         private void LoadItems(SceneObjectPart prim)
         {
-            lock (m_dbLock)
+            lock (_dbLock)
             {
                 List<TaskInventoryItem> inventory = new List<TaskInventoryItem>();
 
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -506,15 +503,15 @@ namespace OpenSim.Data.MySQL
         {
             Util.FireAndForget(delegate(object x)
             {
-                m_log.Info("[REGION DB]: Storing terrain");
+                _log.Info("[REGION DB]: Storing terrain");
 
                 int terrainDBRevision;
                 Array terrainDBblob;
                 terrData.GetDatabaseBlob(out terrainDBRevision, out terrainDBblob);
 
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -540,7 +537,7 @@ namespace OpenSim.Data.MySQL
                                 }
                                 catch (Exception e)
                                 {
-                                    m_log.ErrorFormat(e.ToString());
+                                    _log.ErrorFormat(e.ToString());
                                 }
                             }
                         }
@@ -554,15 +551,15 @@ namespace OpenSim.Data.MySQL
         {
             Util.FireAndForget(delegate(object x)
             {
-                m_log.Info("[REGION DB]: Storing Baked terrain");
+                _log.Info("[REGION DB]: Storing Baked terrain");
 
                 int terrainDBRevision;
                 Array terrainDBblob;
                 terrData.GetDatabaseBlob(out terrainDBRevision, out terrainDBblob);
 
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -588,7 +585,7 @@ namespace OpenSim.Data.MySQL
                                 }
                                 catch (Exception e)
                                 {
-                                    m_log.ErrorFormat(e.ToString());
+                                    _log.ErrorFormat(e.ToString());
                                 }
                             }
                         }
@@ -615,10 +612,10 @@ namespace OpenSim.Data.MySQL
             byte[] blob = null;
             int rev = 0;
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
 
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -657,9 +654,9 @@ namespace OpenSim.Data.MySQL
             byte[] blob = null;
             int rev = 0;
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -692,9 +689,9 @@ namespace OpenSim.Data.MySQL
 
         public virtual void RemoveLandObject(UUID globalID)
         {
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -712,9 +709,9 @@ namespace OpenSim.Data.MySQL
 
         public virtual void StoreLandObject(ILandObject parcel)
         {
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -775,9 +772,9 @@ namespace OpenSim.Data.MySQL
             RegionSettings rs = null;
             bool needStore = false;
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -820,7 +817,7 @@ namespace OpenSim.Data.MySQL
         #region RegionEnvironmentSettings
         public string LoadRegionEnvironmentSettings(UUID regionUUID)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -852,7 +849,7 @@ namespace OpenSim.Data.MySQL
 
         public void StoreRegionEnvironmentSettings(UUID regionUUID, string settings)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -871,7 +868,7 @@ namespace OpenSim.Data.MySQL
 
         public void RemoveRegionEnvironmentSettings(UUID regionUUID)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -888,7 +885,7 @@ namespace OpenSim.Data.MySQL
 
         public virtual void StoreRegionSettings(RegionSettings rs)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -943,9 +940,9 @@ namespace OpenSim.Data.MySQL
         {
             List<LandData> landData = new List<LandData>();
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -1248,7 +1245,7 @@ namespace OpenSim.Data.MySQL
             }
             catch
             {
-                m_log.ErrorFormat("[MYSQL DB]: Error reading task inventory: itemID was {0}, primID was {1}", row["itemID"].ToString(), row["primID"].ToString());
+                _log.ErrorFormat("[MYSQL DB]: Error reading task inventory: itemID was {0}, primID was {1}", row["itemID"].ToString(), row["primID"].ToString());
                 throw;
             }
         }
@@ -1380,7 +1377,7 @@ namespace OpenSim.Data.MySQL
             {
                 newData.UserLocation = Vector3.Zero;
                 newData.UserLookAt = Vector3.Zero;
-                m_log.ErrorFormat("[PARCEL]: unable to get parcel telehub settings for {1}", newData.Name);
+                _log.ErrorFormat("[PARCEL]: unable to get parcel telehub settings for {1}", newData.Name);
             }
 
             newData.MediaDescription = (string) row["MediaDescription"];
@@ -1896,9 +1893,9 @@ namespace OpenSim.Data.MySQL
 
         public virtual void StorePrimInventory(UUID primID, ICollection<TaskInventoryItem> items)
         {
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -1950,9 +1947,9 @@ namespace OpenSim.Data.MySQL
         {
             List<UUID> uuids = new List<UUID>();
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -1982,9 +1979,9 @@ namespace OpenSim.Data.MySQL
         {
             rs.ClearSpawnPoints();
 
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -2015,9 +2012,9 @@ namespace OpenSim.Data.MySQL
 
         private void SaveSpawnPoints(RegionSettings rs)
         {
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -2050,7 +2047,7 @@ namespace OpenSim.Data.MySQL
 
         public void SaveExtra(UUID regionID, string name, string val)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -2069,7 +2066,7 @@ namespace OpenSim.Data.MySQL
 
         public void RemoveExtra(UUID regionID, string name)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -2089,7 +2086,7 @@ namespace OpenSim.Data.MySQL
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 

@@ -37,19 +37,19 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 {
     public class SimulatorFeaturesHelper
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Scene m_scene;
+        private readonly Scene _scene;
 
         public SimulatorFeaturesHelper(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
         }
 
         public int UserLevel(UUID agentID)
         {
             int level = 0;
-            UserAccount account = m_scene.UserAccountService.GetUserAccount(m_scene.RegionInfo.ScopeID, agentID);
+            UserAccount account = _scene.UserAccountService.GetUserAccount(_scene.RegionInfo.ScopeID, agentID);
             if (account != null)
                 level = account.UserLevel;
 

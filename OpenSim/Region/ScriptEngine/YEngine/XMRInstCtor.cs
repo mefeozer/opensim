@@ -74,19 +74,19 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 heapSize = 16384;
 
             // Save all call parameters in instance vars for easy access.
-            m_Engine = engine;
-            m_ScriptBasePath = scriptBasePath;
-            m_StackSize = stackSize;
-            m_StackLeft = stackSize;
-            m_HeapSize = heapSize;
-            m_localsHeapUsed = 0;
-            m_arraysHeapUsed = 0;
-            m_CompilerErrors = errors;
-            m_StateFileName = GetStateFileName(scriptBasePath, m_ItemID);
+            _Engine = engine;
+            _ScriptBasePath = scriptBasePath;
+            _StackSize = stackSize;
+            _StackLeft = stackSize;
+            _HeapSize = heapSize;
+            _localsHeapUsed = 0;
+            _arraysHeapUsed = 0;
+            _CompilerErrors = errors;
+            _StateFileName = GetStateFileName(scriptBasePath, _ItemID);
 
             // Not in any XMRInstQueue.
-            m_NextInst = this;
-            m_PrevInst = this;
+            _NextInst = this;
+            _PrevInst = this;
 
             // Set up list of API calls it has available.
             // This also gets the API modules ready to accept setup data, such as
@@ -99,23 +99,23 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(api != "LSL")
                     scriptApi = am.CreateApi(api);
                 else
-                    scriptApi = m_XMRLSLApi = new XMRLSL_Api();
+                    scriptApi = _XMRLSLApi = new XMRLSL_Api();
 
                 // Connect it up to the instance.
                 InitScriptApi(engine, api, scriptApi);
             }
 
-            m_XMRLSLApi.InitXMRLSLApi(this);
+            _XMRLSLApi.InitXMRLSLApi(this);
 
             // Get object loaded, compiling script and reading .state file as
             // necessary to restore the state.
             suspendOnCheckRunHold = true;
             InstantiateScript();
-            m_SourceCode = null;
-            if(m_ObjCode == null)
-                throw new ArgumentNullException("m_ObjCode");
-            if(m_ObjCode.scriptEventHandlerTable == null)
-                throw new ArgumentNullException("m_ObjCode.scriptEventHandlerTable");
+            _SourceCode = null;
+            if(_ObjCode == null)
+                throw new ArgumentNullException("_ObjCode");
+            if(_ObjCode.scriptEventHandlerTable == null)
+                throw new ArgumentNullException("_ObjCode.scriptEventHandlerTable");
 
             suspendOnCheckRunHold = false;
             suspendOnCheckRunTemp = false;
@@ -123,11 +123,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         private void InitScriptApi(Yengine engine, string api, IScriptApi scriptApi)
         {
-            // Set up m_ApiManager_<APINAME> = instance pointer.
-            engine.m_XMRInstanceApiCtxFieldInfos[api].SetValue(this, scriptApi);
+            // Set up _ApiManager_<APINAME> = instance pointer.
+            engine._XMRInstanceApiCtxFieldInfos[api].SetValue(this, scriptApi);
 
             // Initialize the API instance.
-            scriptApi.Initialize(m_Engine, m_Part, m_Item);
+            scriptApi.Initialize(_Engine, _Part, _Item);
             this.InitApi(api, scriptApi);
         }
 
@@ -144,23 +144,23 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // If source code string is empty, use the asset ID as the object file name.
             // Allow lines of // comments at the beginning (for such as engine selection).
             int i, j, len;
-            if(m_SourceCode == null)
-                m_SourceCode = string.Empty;
-            for(len = m_SourceCode.Length; len > 0; --len)
+            if(_SourceCode == null)
+                _SourceCode = string.Empty;
+            for(len = _SourceCode.Length; len > 0; --len)
             {
-                if(m_SourceCode[len - 1] > ' ')
+                if(_SourceCode[len - 1] > ' ')
                     break;
             }
             for(i = 0; i < len; i++)
             {
-                char c = m_SourceCode[i];
+                char c = _SourceCode[i];
                 if(c <= ' ')
                     continue;
                 if(c != '/')
                     break;
-                if(i + 1 >= len || m_SourceCode[i + 1] != '/')
+                if(i + 1 >= len || _SourceCode[i + 1] != '/')
                     break;
-                i = m_SourceCode.IndexOf('\n', i);
+                i = _SourceCode.IndexOf('\n', i);
                 if(i < 0)
                     i = len - 1;
             }
@@ -169,9 +169,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 // Source consists of nothing but // comments and whitespace,
                 // or we are being forced to use the asset-id as the key, to
                 // open an already existing object code file.
-                m_ScriptObjCodeKey = m_Item.AssetID.ToString();
+                _ScriptObjCodeKey = _Item.AssetID.ToString();
                 if(i >= len)
-                    m_SourceCode = "";
+                    _SourceCode = "";
             }
             else
             {
@@ -179,34 +179,34 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 // Use the same object code for identical source code
                 // regardless of asset ID, so we don't care if they
                 // copy scripts or not.
-                byte[] scbytes = System.Text.Encoding.UTF8.GetBytes(m_SourceCode);
+                byte[] scbytes = System.Text.Encoding.UTF8.GetBytes(_SourceCode);
                 StringBuilder sb = new StringBuilder((256 + 5) / 6);
                 using (System.Security.Cryptography.SHA256 sha = System.Security.Cryptography.SHA256.Create())
                     ByteArrayToSixbitStr(sb, sha.ComputeHash(scbytes));
-                m_ScriptObjCodeKey = sb.ToString();
+                _ScriptObjCodeKey = sb.ToString();
 
                 // But source code can be just a sixbit string itself
                 // that identifies an already existing object code file.
-                if(len - i == m_ScriptObjCodeKey.Length)
+                if(len - i == _ScriptObjCodeKey.Length)
                 {
                     for(j = len; --j >= i;)
                     {
-                        if(sixbit.IndexOf(m_SourceCode[j]) < 0)
+                        if(sixbit.IndexOf(_SourceCode[j]) < 0)
                             break;
                     }
                     if(j < i)
                     {
-                        m_ScriptObjCodeKey = m_SourceCode.Substring(i, len - i);
-                        m_SourceCode = "";
+                        _ScriptObjCodeKey = _SourceCode.Substring(i, len - i);
+                        _SourceCode = "";
                     }
                 }
             }
 
             // There may already be an ScriptObjCode struct in memory that
             // we can use.  If not, try to compile it.
-            lock(m_CompileLock)
+            lock(_CompileLock)
             {
-                if(!m_CompiledScriptObjCode.TryGetValue(m_ScriptObjCodeKey, out objCode) || m_ForceRecomp)
+                if(!_CompiledScriptObjCode.TryGetValue(_ScriptObjCodeKey, out objCode) || _ForceRecomp)
                 {
                     objCode = TryToCompile();
                     compiledIt = true;
@@ -220,13 +220,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                 if(compiledIt)
                 {
-                    m_CompiledScriptObjCode[m_ScriptObjCodeKey] = objCode;
+                    _CompiledScriptObjCode[_ScriptObjCodeKey] = objCode;
                     objCode.refCount = 0;
                 }
                 objCode.refCount++;
 
                 // Now set up to decrement ref count on dispose.
-                m_ObjCode = objCode;
+                _ObjCode = objCode;
             }
 
             try
@@ -274,15 +274,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         // If error, just throw exception
         private ScriptObjCode TryToCompile()
         {
-            m_CompilerErrors.Clear();
+            _CompilerErrors.Clear();
 
             // If object file exists, create ScriptObjCode directly from that.
             // Otherwise, compile the source to create object file then create
             // ScriptObjCode from that.
-            string assetID = m_Item.AssetID.ToString();
-            m_CameFrom = "asset://" + assetID;
+            string assetID = _Item.AssetID.ToString();
+            _CameFrom = "asset://" + assetID;
             ScriptObjCode objCode = Compile();
-            if(m_CompilerErrors.Count != 0)
+            if(_CompilerErrors.Count != 0)
                 throw new Exception("compilation errors");
 
             if(objCode == null)
@@ -296,12 +296,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         private string FetchSource(string cameFrom)
         {
-            m_log.Debug("[YEngine]: fetching source " + cameFrom);
+            _log.Debug("[YEngine]: fetching source " + cameFrom);
             if(!cameFrom.StartsWith("asset://"))
                 throw new Exception("unable to retrieve source from " + cameFrom);
 
             string assetID = cameFrom.Substring(8);
-            AssetBase asset = m_Engine.World.AssetService.Get(assetID);
+            AssetBase asset = _Engine.World.AssetService.Get(assetID);
             if(asset == null)
                 throw new Exception("source not found " + cameFrom);
 
@@ -319,23 +319,23 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private void LoadObjCode()
         {
             // Script must leave this much stack remaining on calls to CheckRun().
-            this.stackLimit = m_StackSize / 2;
+            this.stackLimit = _StackSize / 2;
 
             // This is how many total heap bytes script is allowed to use.
-            this.heapLimit = m_HeapSize;
+            this.heapLimit = _HeapSize;
 
             // Allocate global variable arrays.
-            this.glblVars.AllocVarArrays(m_ObjCode.glblSizes);
+            this.glblVars.AllocVarArrays(_ObjCode.glblSizes);
 
             // Script can handle these event codes.
-            m_HaveEventHandlers = new bool[m_ObjCode.scriptEventHandlerTable.GetLength(1)];
-            for(int i = m_ObjCode.scriptEventHandlerTable.GetLength(0); --i >= 0;)
+            _HaveEventHandlers = new bool[_ObjCode.scriptEventHandlerTable.GetLength(1)];
+            for(int i = _ObjCode.scriptEventHandlerTable.GetLength(0); --i >= 0;)
             {
-                for(int j = m_ObjCode.scriptEventHandlerTable.GetLength(1); --j >= 0;)
+                for(int j = _ObjCode.scriptEventHandlerTable.GetLength(1); --j >= 0;)
                 {
-                    if(m_ObjCode.scriptEventHandlerTable[i, j] != null)
+                    if(_ObjCode.scriptEventHandlerTable[i, j] != null)
                     {
-                        m_HaveEventHandlers[j] = true;
+                        _HaveEventHandlers[j] = true;
                     }
                 }
             }
@@ -354,9 +354,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // If no .state file exists, start from default state
             // Otherwise, read initial state from the .state file
 
-            if(!File.Exists(m_StateFileName))
+            if(!File.Exists(_StateFileName))
             {
-                m_Running = true;                  // event processing is enabled
+                _Running = true;                  // event processing is enabled
                 eventCode = ScriptEventCode.None;  // not processing any event
 
                 // default state_entry() must initialize global variables
@@ -372,7 +372,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 try
                 {
                     string xml;
-                    using (FileStream fs = File.Open(m_StateFileName,
+                    using (FileStream fs = File.Open(_StateFileName,
                                           FileMode.Open,
                                           FileAccess.Read))
                     {
@@ -386,13 +386,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 catch
                 {
-                    File.Delete(m_StateFileName);
+                    File.Delete(_StateFileName);
 
-                    m_Running = true;                  // event processing is enabled
+                    _Running = true;                  // event processing is enabled
                     eventCode = ScriptEventCode.None;  // not processing any event
 
                     // default state_entry() must initialize global variables
-                    glblVars.AllocVarArrays(m_ObjCode.glblSizes); // reset globals
+                    glblVars.AllocVarArrays(_ObjCode.glblSizes); // reset globals
                     doGblInit = true;
                     stateCode = 0;
 
@@ -403,18 +403,18 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
              // Post event(s) saying what caused the script to start.
-            if(m_PostOnRez)
+            if(_PostOnRez)
             {
                 PostEvent(new EventParams("on_rez",
-                          new object[] { m_StartParam },
+                          new object[] { _StartParam },
                           zeroDetectParams));
             }
 
-            switch(m_StateSource)
+            switch(_StateSource)
             {
                 case StateSource.AttachedRez:
                     PostEvent(new EventParams("attach",
-                              new object[] { m_Part.ParentGroup.AttachedAvatar.ToString() }, 
+                              new object[] { _Part.ParentGroup.AttachedAvatar.ToString() }, 
                               zeroDetectParams));
                     break;
 
@@ -454,15 +454,15 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(token != null)
             {
                 string srcloc = token.SrcLoc;
-                if(srcloc.StartsWith(m_CameFrom))
-                    srcloc = srcloc.Substring(m_CameFrom.Length);
+                if(srcloc.StartsWith(_CameFrom))
+                    srcloc = srcloc.Substring(_CameFrom.Length);
 
-                m_CompilerErrors.Add(srcloc + " Error: " + message);
+                _CompilerErrors.Add(srcloc + " Error: " + message);
             }
             else if(message != null)
-                m_CompilerErrors.Add("(0,0) Error: " + message);
+                _CompilerErrors.Add("(0,0) Error: " + message);
             else
-                m_CompilerErrors.Add("(0,0) Error compiling, see exception in log");
+                _CompilerErrors.Add("(0,0) Error compiling, see exception in log");
         }
 
         /**
@@ -490,7 +490,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             XmlElement XvariablesN = null;
             string sen = scriptStateN.GetAttribute("Engine");
-            if(sen == null || sen != m_Engine.ScriptEngineName)
+            if(sen == null || sen != _Engine.ScriptEngineName)
             {
                 XvariablesN = (XmlElement)scriptStateN.SelectSingleNode("Variables");
                 if(XvariablesN == null)
@@ -502,28 +502,28 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // AssetID is unique for the script source text so make sure the
             // state file was written for that source file
             string assetID = scriptStateN.GetAttribute("Asset");
-            if(assetID != m_Item.AssetID.ToString())
+            if(assetID != _Item.AssetID.ToString())
                 throw new Exception("<ScriptState> assetID mismatch");
 
             // Also match the sourceHash in case script was
             // loaded via 'xmroption fetchsource' and has changed
             string sourceHash = scriptStateN.GetAttribute("SourceHash");
-            if(sourceHash == null || sourceHash != m_ObjCode.sourceHash)
+            if(sourceHash == null || sourceHash != _ObjCode.sourceHash)
                 throw new Exception("<ScriptState> SourceHash mismatch");
 
             // Get various attributes
             XmlElement runningN = (XmlElement)scriptStateN.SelectSingleNode("Running");
-            m_Running = bool.Parse(runningN.InnerText);
+            _Running = bool.Parse(runningN.InnerText);
 
             XmlElement doGblInitN = (XmlElement)scriptStateN.SelectSingleNode("DoGblInit");
             doGblInit = bool.Parse(doGblInitN.InnerText);
 
-            if (m_XMRLSLApi != null)
+            if (_XMRLSLApi != null)
             {
                 XmlElement scpttimeN = (XmlElement)scriptStateN.SelectSingleNode("scrpTime");
                 if (scpttimeN != null && double.TryParse(scpttimeN.InnerText, out double t))
                 {
-                    m_XMRLSLApi.SetLSLTimer(Util.GetTimeStampMS() - t);
+                    _XMRLSLApi.SetLSLTimer(Util.GetTimeStampMS() - t);
                 }
             }
 
@@ -554,31 +554,31 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
             XmlElement permissionsN = (XmlElement)scriptStateN.SelectSingleNode("Permissions");
-            m_Item.PermsGranter = new UUID(permissionsN.GetAttribute("granter"));
-            m_Item.PermsMask = Convert.ToInt32(permissionsN.GetAttribute("mask"));
-            m_Part.Inventory.UpdateInventoryItem(m_Item, false, false);
+            _Item.PermsGranter = new UUID(permissionsN.GetAttribute("granter"));
+            _Item.PermsMask = Convert.ToInt32(permissionsN.GetAttribute("mask"));
+            _Part.Inventory.UpdateInventoryItem(_Item, false, false);
 
             // Restore event queues, preserving any events that queued
             // whilst we were restoring the state
-            lock (m_QueueLock)
+            lock (_QueueLock)
             {
-                m_DetectParams = detParams;
-                foreach(EventParams evt in m_EventQueue)
+                _DetectParams = detParams;
+                foreach(EventParams evt in _EventQueue)
                     eventQueue.AddLast(evt);
 
-                m_EventQueue = eventQueue;
-                for(int i = m_EventCounts.Length; --i >= 0;)
-                    m_EventCounts[i] = 0;
-                foreach(EventParams evt in m_EventQueue)
+                _EventQueue = eventQueue;
+                for(int i = _EventCounts.Length; --i >= 0;)
+                    _EventCounts[i] = 0;
+                foreach(EventParams evt in _EventQueue)
                 {
-                    if(m_eventCodeMap.TryGetValue(evt.EventName, out ScriptEventCode eventCode))
-                        m_EventCounts[(int)eventCode]++;
+                    if(_eventCodeMap.TryGetValue(evt.EventName, out ScriptEventCode eventCode))
+                        _EventCounts[(int)eventCode]++;
                 }
             }
 
             // Requeue timer and listeners (possibly queuing new events)
-            AsyncCommandManager.CreateFromData(m_Engine,
-                    m_LocalID, m_ItemID, m_Part.UUID,
+            AsyncCommandManager.CreateFromData(_Engine,
+                    _LocalID, _ItemID, _Part.UUID,
                     pluginData);
 
             MinEventDelay = minEventDelay;
@@ -612,7 +612,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             Dictionary<string, int> rotationNames = new Dictionary<string, int>();
             Dictionary<string, int> listNames = new Dictionary<string, int>();
 
-            int nn = m_ObjCode.globalVarNames.Count;
+            int nn = _ObjCode.globalVarNames.Count;
             int[] ints = null;
             double[] doubles = null;
             string[] strings = null;
@@ -622,35 +622,35 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             if (nn > 0)
             {
-                if (m_ObjCode.globalVarNames.ContainsKey("iarIntegers"))
+                if (_ObjCode.globalVarNames.ContainsKey("iarIntegers"))
                 {
-                    getvarNames(m_ObjCode.globalVarNames["iarIntegers"], intNames);
-                    ints = new int[m_ObjCode.globalVarNames["iarIntegers"].Count];
+                    getvarNames(_ObjCode.globalVarNames["iarIntegers"], intNames);
+                    ints = new int[_ObjCode.globalVarNames["iarIntegers"].Count];
                 }
-                if (m_ObjCode.globalVarNames.ContainsKey("iarFloats"))
+                if (_ObjCode.globalVarNames.ContainsKey("iarFloats"))
                 {
-                    getvarNames(m_ObjCode.globalVarNames["iarFloats"], doubleNames);
-                    doubles = new double[m_ObjCode.globalVarNames["iarFloats"].Count];
+                    getvarNames(_ObjCode.globalVarNames["iarFloats"], doubleNames);
+                    doubles = new double[_ObjCode.globalVarNames["iarFloats"].Count];
                 }
-                if (m_ObjCode.globalVarNames.ContainsKey("iarVectors"))
+                if (_ObjCode.globalVarNames.ContainsKey("iarVectors"))
                 {
-                    getvarNames(m_ObjCode.globalVarNames["iarVectors"], vectorNames);
-                    vectors = new LSL_Vector[m_ObjCode.globalVarNames["iarVectors"].Count];
+                    getvarNames(_ObjCode.globalVarNames["iarVectors"], vectorNames);
+                    vectors = new LSL_Vector[_ObjCode.globalVarNames["iarVectors"].Count];
                 }
-                if (m_ObjCode.globalVarNames.ContainsKey("iarRotations"))
+                if (_ObjCode.globalVarNames.ContainsKey("iarRotations"))
                 {
-                    getvarNames(m_ObjCode.globalVarNames["iarRotations"], rotationNames);
-                    rotations = new LSL_Rotation[m_ObjCode.globalVarNames["iarRotations"].Count];
+                    getvarNames(_ObjCode.globalVarNames["iarRotations"], rotationNames);
+                    rotations = new LSL_Rotation[_ObjCode.globalVarNames["iarRotations"].Count];
                 }
-                if (m_ObjCode.globalVarNames.ContainsKey("iarStrings"))
+                if (_ObjCode.globalVarNames.ContainsKey("iarStrings"))
                 {
-                    getvarNames(m_ObjCode.globalVarNames["iarStrings"], stringNames);
-                    strings = new string[m_ObjCode.globalVarNames["iarStrings"].Count];
+                    getvarNames(_ObjCode.globalVarNames["iarStrings"], stringNames);
+                    strings = new string[_ObjCode.globalVarNames["iarStrings"].Count];
                 }
-                if (m_ObjCode.globalVarNames.ContainsKey("iarLists"))
+                if (_ObjCode.globalVarNames.ContainsKey("iarLists"))
                 {
-                    getvarNames(m_ObjCode.globalVarNames["iarLists"], listNames);
-                    lists = new LSL_List[m_ObjCode.globalVarNames["iarLists"].Count];
+                    getvarNames(_ObjCode.globalVarNames["iarLists"], listNames);
+                    lists = new LSL_List[_ObjCode.globalVarNames["iarLists"].Count];
                 }
             }
 
@@ -878,7 +878,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             int k = 0;
             stateCode = 0;
-            foreach (string sn in m_ObjCode.stateNames)
+            foreach (string sn in _ObjCode.stateNames)
             {
                 if (stateName == sn)
                 {
@@ -888,14 +888,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 k++;
             }
             eventCode = ScriptEventCode.None;
-            m_Running = running;
+            _Running = running;
             doGblInit = false;
 
-            m_Item.PermsGranter = permsGranter;
-            m_Item.PermsMask = permsMask;
-            m_Part.Inventory.UpdateInventoryItem(m_Item, false, false);
+            _Item.PermsGranter = permsGranter;
+            _Item.PermsMask = permsMask;
+            _Part.Inventory.UpdateInventoryItem(_Item, false, false);
 
-            lock (m_RunLock)
+            lock (_RunLock)
             {
                 glblVars.iarIntegers = ints;
                 glblVars.iarFloats = doubles;
@@ -908,24 +908,24 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 CheckRunLockInvariants(true);
             }
 
-            lock (m_QueueLock)
+            lock (_QueueLock)
             {
-                m_DetectParams = null;
-                foreach (EventParams evt in m_EventQueue)
+                _DetectParams = null;
+                foreach (EventParams evt in _EventQueue)
                     eventQueue.AddLast(evt);
 
-                m_EventQueue = eventQueue;
-                for (int i = m_EventCounts.Length; --i >= 0;)
-                    m_EventCounts[i] = 0;
-                foreach (EventParams evt in m_EventQueue)
+                _EventQueue = eventQueue;
+                for (int i = _EventCounts.Length; --i >= 0;)
+                    _EventCounts[i] = 0;
+                foreach (EventParams evt in _EventQueue)
                 {
-                    if(m_eventCodeMap.TryGetValue(evt.EventName, out ScriptEventCode evtCode))
-                        m_EventCounts[(int)evtCode]++;
+                    if(_eventCodeMap.TryGetValue(evt.EventName, out ScriptEventCode evtCode))
+                        _EventCounts[(int)evtCode]++;
                 }
             }
 
-            AsyncCommandManager.CreateFromData(m_Engine,
-                     m_LocalID, m_ItemID, m_Part.UUID, pluginData);
+            AsyncCommandManager.CreateFromData(_Engine,
+                     _LocalID, _ItemID, _Part.UUID, pluginData);
 
             MinEventDelay = minEventDelay;
         }
@@ -1070,8 +1070,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 catch(Exception e)
                 {
-                    m_log.Warn("[YEngine]: RestoreDetectParams bad XML: " + detxml.ToString());
-                    m_log.Warn("[YEngine]: ... " + e.ToString());
+                    _log.Warn("[YEngine]: RestoreDetectParams bad XML: " + detxml.ToString());
+                    _log.Warn("[YEngine]: ... " + e.ToString());
                 }
             }
 
@@ -1151,12 +1151,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              * started again and this event lost.  If it restores this.eventCode =
              * None, the the script was idle.
              */
-            lock(m_RunLock)
+            lock(_RunLock)
             {
                 BinaryReader br = new BinaryReader(stream);
                 this.MigrateIn(br);
 
-                m_RunOnePhase = "MigrateInEventHandler finished";
+                _RunOnePhase = "MigrateInEventHandler finished";
                 CheckRunLockInvariants(true);
             }
         }

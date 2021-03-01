@@ -38,10 +38,7 @@ namespace OpenSim.Server.Handlers.Base
 
     public class ServiceConnector : IServiceConnector
     {
-        public virtual string ConfigURL
-        {
-            get { return string.Empty; }
-        }
+        public virtual string ConfigURL => string.Empty;
 
         public virtual string ConfigName
         {

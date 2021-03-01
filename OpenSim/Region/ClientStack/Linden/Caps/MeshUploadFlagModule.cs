@@ -45,7 +45,7 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "MeshUploadFlagModule")]
     public class MeshUploadFlagModule : INonSharedRegionModule
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace OpenSim.Region.ClientStack.Linden
         /// </summary>
         public bool Enabled { get; private set; }
 
-        private Scene m_scene;
+        private Scene _scene;
 
         #region ISharedRegionModule Members
 
@@ -80,8 +80,8 @@ namespace OpenSim.Region.ClientStack.Linden
             if (!Enabled)
                 return;
 
-            m_scene = s;
-            m_scene.EventManager.OnRegisterCaps += RegisterCaps;
+            _scene = s;
+            _scene.EventManager.OnRegisterCaps += RegisterCaps;
         }
 
         public void RemoveRegion(Scene s)
@@ -89,7 +89,7 @@ namespace OpenSim.Region.ClientStack.Linden
             if (!Enabled)
                 return;
 
-            m_scene.EventManager.OnRegisterCaps -= RegisterCaps;
+            _scene.EventManager.OnRegisterCaps -= RegisterCaps;
         }
 
         public void RegionLoaded(Scene s)
@@ -102,12 +102,9 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void Close() { }
 
-        public string Name { get { return "MeshUploadFlagModule"; } }
+        public string Name => "MeshUploadFlagModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -126,7 +123,7 @@ namespace OpenSim.Region.ClientStack.Linden
         //private void MeshUploadFlag(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, UUID agentID)
         private void MeshUploadFlag(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
-//            m_log.DebugFormat("[MESH UPLOAD FLAG MODULE]: MeshUploadFlag request");
+//            _log.DebugFormat("[MESH UPLOAD FLAG MODULE]: MeshUploadFlag request");
             if(httpRequest.HttpMethod != "GET")
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.NotFound;

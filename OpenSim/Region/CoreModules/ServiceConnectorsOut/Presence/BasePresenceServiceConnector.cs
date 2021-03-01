@@ -37,47 +37,44 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
 {
     public class BasePresenceServiceConnector : IPresenceService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected bool m_Enabled;
+        protected bool _Enabled;
 
-        protected PresenceDetector m_PresenceDetector;
+        protected PresenceDetector _PresenceDetector;
 
         /// <summary>
         /// Underlying presence service.  Do not use directly.
         /// </summary>
-        public IPresenceService m_PresenceService;
+        public IPresenceService _PresenceService;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            //            m_log.DebugFormat(
+            //            _log.DebugFormat(
             //                "[LOCAL PRESENCE CONNECTOR]: Registering IPresenceService to scene {0}", scene.RegionInfo.RegionName);
 
             scene.RegisterModuleInterface<IPresenceService>(this);
-            m_PresenceDetector.AddRegion(scene);
+            _PresenceDetector.AddRegion(scene);
 
-            m_log.InfoFormat("[BASE PRESENCE SERVICE CONNECTOR]: Enabled for region {0}", scene.Name);
+            _log.InfoFormat("[BASE PRESENCE SERVICE CONNECTOR]: Enabled for region {0}", scene.Name);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_PresenceDetector.RemoveRegion(scene);
+            _PresenceDetector.RemoveRegion(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
         }
@@ -94,28 +91,28 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
 
         public bool LoginAgent(string userID, UUID sessionID, UUID secureSessionID)
         {
-            m_log.Warn("[BASE PRESENCE SERVICE CONNECTOR]: LoginAgent connector not implemented at the simulators");
+            _log.Warn("[BASE PRESENCE SERVICE CONNECTOR]: LoginAgent connector not implemented at the simulators");
             return false;
         }
 
         public bool LogoutAgent(UUID sessionID)
         {
-            return m_PresenceService.LogoutAgent(sessionID);
+            return _PresenceService.LogoutAgent(sessionID);
         }
 
         public bool LogoutRegionAgents(UUID regionID)
         {
-            return m_PresenceService.LogoutRegionAgents(regionID);
+            return _PresenceService.LogoutRegionAgents(regionID);
         }
 
         public bool ReportAgent(UUID sessionID, UUID regionID)
         {
-            return m_PresenceService.ReportAgent(sessionID, regionID);
+            return _PresenceService.ReportAgent(sessionID, regionID);
         }
 
         public PresenceInfo GetAgent(UUID sessionID)
         {
-            return m_PresenceService.GetAgent(sessionID);
+            return _PresenceService.GetAgent(sessionID);
         }
 
         public PresenceInfo[] GetAgents(string[] userIDs)
@@ -124,7 +121,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
             if (userIDs.Length == 0)
                 return new PresenceInfo[0];
 
-            return m_PresenceService.GetAgents(userIDs);
+            return _PresenceService.GetAgents(userIDs);
         }
 
         #endregion

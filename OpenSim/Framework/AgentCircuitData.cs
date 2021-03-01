@@ -41,7 +41,7 @@ namespace OpenSim.Framework
     public class AgentCircuitData
     {
 // DEBUG ON
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 // DEBUG OFF
@@ -101,7 +101,7 @@ namespace OpenSim.Framework
         /// <summary>
         /// Agent's full name.
         /// </summary>
-        public string Name { get { return string.Format("{0} {1}", firstname, lastname); } }
+        public string Name => string.Format("{0} {1}", firstname, lastname);
 
         /// <summary>
         /// Random Unique GUID for this session.  Client gets this at login and it's
@@ -128,14 +128,14 @@ namespace OpenSim.Framework
         /// <summary>
         /// Viewer's version string as reported by the viewer at login
         /// </summary>
-        private string m_viewerInternal;
+        private string _viewerInternal;
 
         /// <summary>
         /// Viewer's version string
         /// </summary>
         public string Viewer
         {
-            set { m_viewerInternal = value; }
+            set => _viewerInternal = value;
 
             // Try to return consistent viewer string taking into account
             // that viewers have chaagned how version is reported
@@ -143,13 +143,13 @@ namespace OpenSim.Framework
             get
             {
                 // Old style version string contains viewer name followed by a space followed by a version number
-                if (m_viewerInternal == null || m_viewerInternal.Contains(" "))
+                if (_viewerInternal == null || _viewerInternal.Contains(" "))
                 {
-                    return m_viewerInternal;
+                    return _viewerInternal;
                 }
                 else // New style version contains no spaces, just version number
                 {
-                    return Channel + " " + m_viewerInternal;
+                    return Channel + " " + _viewerInternal;
                 }
             }
         }
@@ -336,7 +336,7 @@ namespace OpenSim.Framework
             if(args.TryGetValue("far", out tmpOSD))
                 startfar = (float)tmpOSD.AsReal();
 
-            //m_log.InfoFormat("[AGENTCIRCUITDATA]: agentid={0}, child={1}, startpos={2}", AgentID, child, startpos);
+            //_log.InfoFormat("[AGENTCIRCUITDATA]: agentid={0}, child={1}, startpos={2}", AgentID, child, startpos);
 
             try
             {
@@ -351,16 +351,16 @@ namespace OpenSim.Framework
                 if (args.TryGetValue("packed_appearance", out tmpOSD) && tmpOSD is OSDMap)
                 {
                     Appearance.Unpack((OSDMap)tmpOSD);
-//                    m_log.InfoFormat("[AGENTCIRCUITDATA] unpacked appearance");
+//                    _log.InfoFormat("[AGENTCIRCUITDATA] unpacked appearance");
                 }
                 else
                 {
-                    m_log.Warn("[AGENTCIRCUITDATA]: failed to find a valid packed_appearance");
+                    _log.Warn("[AGENTCIRCUITDATA]: failed to find a valid packed_appearance");
                 }
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[AGENTCIRCUITDATA] failed to unpack appearance; {0}",e.Message);
+                _log.ErrorFormat("[AGENTCIRCUITDATA] failed to unpack appearance; {0}",e.Message);
             }
 
             ServiceURLs = new Dictionary<string, object>();

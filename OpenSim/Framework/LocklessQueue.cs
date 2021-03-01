@@ -40,7 +40,7 @@ namespace OpenSim.Framework
         SingleLinkNode tail;
         int count;
 
-        public virtual int Count { get { return count; } }
+        public virtual int Count => count;
 
         public LocklessQueue()
         {

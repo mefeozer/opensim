@@ -110,7 +110,7 @@ DROP TABLE `diva_groups_notices`;
 INSERT INTO `os_groups_principals` SELECT * from `diva_groups_principals`;
 DROP TABLE `diva_groups_principals`;
 
-DELETE FROM `migrations` WHERE name='diva_im_Store';
+DELETE FROM `migrations` WHERE name='diva_i_Store';
 
 COMMIT;
 

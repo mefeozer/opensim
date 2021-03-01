@@ -41,20 +41,20 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class FetchInventory2Handler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IInventoryService m_inventoryService;
-        private readonly UUID m_agentID;
+        private readonly IInventoryService _inventoryService;
+        private readonly UUID _agentID;
 
         public FetchInventory2Handler(IInventoryService invService, UUID agentId)
         {
-            m_inventoryService = invService;
-            m_agentID = agentId;
+            _inventoryService = invService;
+            _agentID = agentId;
         }
 
         public string FetchInventoryRequest(string request, string path, string param, IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
-            //m_log.DebugFormat("[FETCH INVENTORY HANDLER]: Received FetchInventory capability request {0}", request);
+            //_log.DebugFormat("[FETCH INVENTORY HANDLER]: Received FetchInventory capability request {0}", request);
 
             OSDMap requestmap = (OSDMap)OSDParser.DeserializeLLSDXml(Utils.StringToBytes(request));
             OSDArray itemsRequested = (OSDArray)requestmap["items"];
@@ -64,29 +64,29 @@ namespace OpenSim.Capabilities.Handlers
 
             foreach (OSDMap osdItemId in itemsRequested)
             {
-                itemIDs[i++] = osdItemId["item_id"].AsUUID();
+                itemIDs[i++] = osdItemId["ite_id"].AsUUID();
             }
 
             InventoryItemBase[] items = null;
 
-            if (m_agentID != UUID.Zero)
+            if (_agentID != UUID.Zero)
             {
-                items = m_inventoryService.GetMultipleItems(m_agentID, itemIDs);
+                items = _inventoryService.GetMultipleItems(_agentID, itemIDs);
             }
             else
             {
                 items = new InventoryItemBase[itemsRequested.Count];
                 foreach (UUID id in itemIDs)
-                    items[i++] = m_inventoryService.GetItem(UUID.Zero, id);
+                    items[i++] = _inventoryService.GetItem(UUID.Zero, id);
             }
 
             osUTF8 lsl = LLSDxmlEncode2.Start(4096);
             LLSDxmlEncode2.AddMap(lsl);
 
-            if(m_agentID == UUID.Zero && items.Length > 0)
+            if(_agentID == UUID.Zero && items.Length > 0)
                 LLSDxmlEncode2.AddElem("agent_id", items[0].Owner, lsl);
             else
-                LLSDxmlEncode2.AddElem("agent_id", m_agentID, lsl);
+                LLSDxmlEncode2.AddElem("agent_id", _agentID, lsl);
 
             if(items == null || items.Length == 0)
             {
@@ -109,7 +109,7 @@ namespace OpenSim.Capabilities.Handlers
 
         public void FetchInventorySimpleRequest(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, OSDMap requestmap, ExpiringKey<UUID> BadRequests)
         {
-            //m_log.DebugFormat("[FETCH INVENTORY HANDLER]: Received FetchInventory capability request {0}", request);
+            //_log.DebugFormat("[FETCH INVENTORY HANDLER]: Received FetchInventory capability request {0}", request);
 
             if(BadRequests == null)
             {
@@ -123,7 +123,7 @@ namespace OpenSim.Capabilities.Handlers
             int i = 0;
             foreach (OSDMap osdItemId in itemsRequested)
             {
-                UUID id = osdItemId["item_id"].AsUUID();
+                UUID id = osdItemId["ite_id"].AsUUID();
                 if(!BadRequests.ContainsKey(id))
                     itemIDs[i++] = id;
             }
@@ -132,14 +132,14 @@ namespace OpenSim.Capabilities.Handlers
             try
             {
                 // badrequests still not filled
-                items = m_inventoryService.GetMultipleItems(m_agentID, itemIDs);
+                items = _inventoryService.GetMultipleItems(_agentID, itemIDs);
             }
             catch{ }
 
             osUTF8 lsl = LLSDxmlEncode2.Start(4096);
             LLSDxmlEncode2.AddMap(lsl);
 
-            LLSDxmlEncode2.AddElem("agent_id", m_agentID, lsl);
+            LLSDxmlEncode2.AddElem("agent_id", _agentID, lsl);
 
             if (items == null || items.Length == 0)
             {

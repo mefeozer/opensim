@@ -13,30 +13,21 @@ namespace OpenSim.Region.PhysicsModule.ubOde
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "ubODEPhysicsScene")]
     class ubOdeModule : INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly Dictionary<Scene, ODEScene> m_scenes = new Dictionary<Scene, ODEScene>();
-        private bool m_Enabled = false;
-        private IConfigSource m_config;
+        private static readonly Dictionary<Scene, ODEScene> _scenes = new Dictionary<Scene, ODEScene>();
+        private bool _Enabled = false;
+        private IConfigSource _config;
         private bool OSOdeLib;
 
 
        #region INonSharedRegionModule
 
-        public string Name
-        {
-            get { return "ubODE"; }
-        }
+        public string Name => "ubODE";
 
-        public string Version
-        {
-            get { return "1.0"; }
-        }
+        public string Version => "1.0";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -46,8 +37,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 string physics = config.GetString("physics", string.Empty);
                 if (physics == Name)
                 {
-                    m_config = source;
-                    m_Enabled = true;
+                    _config = source;
+                    _Enabled = true;
 
                     if (Util.IsWindows())
                         Util.LoadArchSpecificWindowsDll("ode.dll");
@@ -57,11 +48,11 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     string ode_config = SafeNativeMethods.GetConfiguration();
                     if (ode_config == null || ode_config == "" || !ode_config.Contains("ODE_OPENSIM"))
                     {
-                        m_log.Error("[ubODE] Native ode library version not supported");
-                        m_Enabled = false;
+                        _log.Error("[ubODE] Native ode library version not supported");
+                        _Enabled = false;
                         return;
                     }
-                    m_log.InfoFormat("[ubODE] ode library configuration: {0}", ode_config);
+                    _log.InfoFormat("[ubODE] ode library configuration: {0}", ode_config);
                     OSOdeLib = true;
                 }
             }
@@ -73,35 +64,35 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if(m_scenes.ContainsKey(scene)) // ???
+            if(_scenes.ContainsKey(scene)) // ???
                 return;
-            ODEScene newodescene = new ODEScene(scene, m_config, Name, Version, OSOdeLib);
-            m_scenes[scene] = newodescene;
+            ODEScene newodescene = new ODEScene(scene, _config, Name, Version, OSOdeLib);
+            _scenes[scene] = newodescene;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             // a odescene.dispose is called later directly by scene.cs
             // since it is seen as a module interface
 
-            if(m_scenes.ContainsKey(scene))
-                m_scenes.Remove(scene);
+            if(_scenes.ContainsKey(scene))
+                _scenes.Remove(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if(m_scenes.ContainsKey(scene))
+            if(_scenes.ContainsKey(scene))
             {
-                m_scenes[scene].RegionLoaded();
+                _scenes[scene].RegionLoaded();
             }
 
         }

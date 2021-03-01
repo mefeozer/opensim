@@ -120,7 +120,7 @@ namespace OpenSim.Framework
         //mCoefData(float w, float expt, float exps, float lin, float cons, float ani)
         public mCoefData mieconf = new mCoefData(0, 1f, -8.333333e-4f, 0, 0, 0.8f);
 
-        UUID bloom_id = new UUID("3c59f7fe-9dc8-47f9-8aaf-a9dd1fbc3bef");
+        UUID bloo_id = new UUID("3c59f7fe-9dc8-47f9-8aaf-a9dd1fbc3bef");
         UUID cloud_id = new UUID("1dc1368f-e8fe-f02d-a08d-9d9f11c1af6b");
         UUID halo_id = new UUID("12149143-f599-91a7-77ac-b52a3c0f59cd");
         UUID moon_id = new UUID("ec4b9f0b-d008-45c6-96a4-01dd947ac621");
@@ -156,7 +156,7 @@ namespace OpenSim.Framework
         public float ice_level = 0;
 
         public float moisture_level = 0;
-        public float sky_bottom_radius = 6360;
+        public float sky_botto_radius = 6360;
         public float sky_top_radius = 6420;
 
         public float sun_arc_radians = 0.00045f;
@@ -265,7 +265,7 @@ namespace OpenSim.Framework
             abscfg.Add(abscoefB.ToOSD());
             map["absorption_config"] = abscfg;
 
-            map["bloom_id"] = bloom_id;
+            map["bloo_id"] = bloo_id;
             map["cloud_color"] = cloud_color;
             map["cloud_id"] = cloud_id;
             map["cloud_pos_density1"] = cloud_pos_density1;
@@ -310,7 +310,7 @@ namespace OpenSim.Framework
             rayl.Add(rayleigh_config.ToOSD());
             map["rayleigh_config"] = rayl;
 
-            map["sky_bottom_radius"] = sky_bottom_radius;
+            map["sky_botto_radius"] = sky_botto_radius;
             map["sky_top_radius"] = sky_top_radius;
             map["star_brightness"] = star_brightness;
 
@@ -338,8 +338,8 @@ namespace OpenSim.Framework
                         abscoefA.FromOSD(tmpArray[1] as OSDMap);
                 }
             }
-            if (map.TryGetValue("bloom_id", out otmp))
-                bloom_id = otmp;
+            if (map.TryGetValue("bloo_id", out otmp))
+                bloo_id = otmp;
             if (map.TryGetValue("cloud_color", out otmp))
                 cloud_color = otmp;
             if (map.TryGetValue("cloud_id", out otmp))
@@ -422,8 +422,8 @@ namespace OpenSim.Framework
                     rayleigh_config.FromOSD(tmpArray[0] as OSDMap);
             }
 
-            if (map.TryGetValue("sky_bottom_radius", out otmp))
-                sky_bottom_radius = otmp;
+            if (map.TryGetValue("sky_botto_radius", out otmp))
+                sky_botto_radius = otmp;
             if (map.TryGetValue("sky_top_radius", out otmp))
                 sky_top_radius = otmp;
             if (map.TryGetValue("star_brightness", out otmp))
@@ -454,7 +454,7 @@ namespace OpenSim.Framework
 
         public void GatherAssets(Dictionary<UUID, sbyte> uuids)
         {
-            Util.AddToGatheredIds(uuids, bloom_id, (sbyte)AssetType.Texture);
+            Util.AddToGatheredIds(uuids, bloo_id, (sbyte)AssetType.Texture);
             Util.AddToGatheredIds(uuids, cloud_id, (sbyte)AssetType.Texture);
             Util.AddToGatheredIds(uuids, halo_id, (sbyte)AssetType.Texture);
             Util.AddToGatheredIds(uuids, moon_id, (sbyte)AssetType.Texture);

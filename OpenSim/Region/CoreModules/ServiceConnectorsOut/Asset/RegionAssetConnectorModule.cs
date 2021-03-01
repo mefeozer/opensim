@@ -45,39 +45,33 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "RegionAssetConnector")]
     public class RegionAssetConnector : ISharedRegionModule, IAssetService
     {
-        private static readonly ILog m_log = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType);
 
         private delegate void AssetRetrievedEx(AssetBase asset);
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
-        private Scene m_aScene;
+        private Scene _aScene;
 
-        private IAssetCache m_Cache;
-        private IAssetService m_localConnector;
-        private IAssetService m_HGConnector;
-        private AssetPermissions m_AssetPerms;
+        private IAssetCache _Cache;
+        private IAssetService _localConnector;
+        private IAssetService _HGConnector;
+        private AssetPermissions _AssetPerms;
 
         //const int MAXSENDRETRIESLEN = 30;
-        //private List<AssetBase>[] m_sendRetries;
-        //private List<string>[] m_sendCachedRetries;
-        //private System.Timers.Timer m_retryTimer;
+        //private List<AssetBase>[] _sendRetries;
+        //private List<string>[] _sendCachedRetries;
+        //private System.Timers.Timer _retryTimer;
 
-        //private int m_retryCounter;
-        //private bool m_inRetries;
+        //private int _retryCounter;
+        //private bool _inRetries;
 
-        private readonly Dictionary<string, List<AssetRetrievedEx>> m_AssetHandlers = new Dictionary<string, List<AssetRetrievedEx>>();
+        private readonly Dictionary<string, List<AssetRetrievedEx>> _AssetHandlers = new Dictionary<string, List<AssetRetrievedEx>>();
 
-        private ObjectJobEngine m_requestQueue;
+        private ObjectJobEngine _requestQueue;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RegionAssetConnector"; }
-        }
+        public string Name => "RegionAssetConnector";
 
         public RegionAssetConnector() {}
 
@@ -97,43 +91,43 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
                     IConfig assetConfig = source.Configs["AssetService"];
                     if (assetConfig == null)
                     {
-                        m_log.Error("[REGIONASSETCONNECTOR]: AssetService missing from configuration files");
+                        _log.Error("[REGIONASSETCONNECTOR]: AssetService missing from configuration files");
                         throw new Exception("Region asset connector init error");
                     }
 
                     string localGridConnector = assetConfig.GetString("LocalGridAssetService", string.Empty);
                     if(string.IsNullOrEmpty(localGridConnector))
                     {
-                        m_log.Error("[REGIONASSETCONNECTOR]: LocalGridAssetService missing from configuration files");
+                        _log.Error("[REGIONASSETCONNECTOR]: LocalGridAssetService missing from configuration files");
                         throw new Exception("Region asset connector init error");
                     }
 
                     object[] args = new object[] { source };
 
-                    m_localConnector = ServerUtils.LoadPlugin<IAssetService>(localGridConnector, args);
-                    if (m_localConnector == null)
+                    _localConnector = ServerUtils.LoadPlugin<IAssetService>(localGridConnector, args);
+                    if (_localConnector == null)
                     {
-                        m_log.Error("[REGIONASSETCONNECTOR]: Fail to load local asset service " + localGridConnector);
+                        _log.Error("[REGIONASSETCONNECTOR]: Fail to load local asset service " + localGridConnector);
                         throw new Exception("Region asset connector init error");
                     }
 
                     string HGConnector = assetConfig.GetString("HypergridAssetService", string.Empty);
                     if(!string.IsNullOrEmpty(HGConnector))
                     {
-                        m_HGConnector = ServerUtils.LoadPlugin<IAssetService>(HGConnector, args);
-                        if (m_HGConnector == null)
+                        _HGConnector = ServerUtils.LoadPlugin<IAssetService>(HGConnector, args);
+                        if (_HGConnector == null)
                         {
-                            m_log.Error("[REGIONASSETCONNECTOR]: Fail to load HG asset service " + HGConnector);
+                            _log.Error("[REGIONASSETCONNECTOR]: Fail to load HG asset service " + HGConnector);
                             throw new Exception("Region asset connector init error");
                         }
                         IConfig hgConfig = source.Configs["HGAssetService"];
                         if (hgConfig != null)
-                            m_AssetPerms = new AssetPermissions(hgConfig);
+                            _AssetPerms = new AssetPermissions(hgConfig);
                     }
 
-                    m_requestQueue = new ObjectJobEngine(AssetRequestProcessor, "GetAssetsWorkers", 2000, 2);
-                    m_Enabled = true;
-                    m_log.Info("[REGIONASSETCONNECTOR]: enabled");
+                    _requestQueue = new ObjectJobEngine(AssetRequestProcessor, "GetAssetsWorkers", 2000, 2);
+                    _Enabled = true;
+                    _log.Info("[REGIONASSETCONNECTOR]: enabled");
                 }
             }
         }
@@ -144,20 +138,20 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
 
         public void Close()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_requestQueue.Dispose();
-            m_requestQueue = null;
+            _requestQueue.Dispose();
+            _requestQueue = null;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_aScene = scene;
-            m_aScene.RegisterModuleInterface<IAssetService>(this);
+            _aScene = scene;
+            _aScene.RegisterModuleInterface<IAssetService>(this);
         }
 
         public void RemoveRegion(Scene scene)
@@ -166,30 +160,30 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (m_Cache == null)
+            if (_Cache == null)
             {
-                m_Cache = scene.RequestModuleInterface<IAssetCache>();
+                _Cache = scene.RequestModuleInterface<IAssetCache>();
 
-                if (!(m_Cache is ISharedRegionModule))
-                    m_Cache = null;
+                if (!(_Cache is ISharedRegionModule))
+                    _Cache = null;
             }
 
-            if(m_HGConnector == null)
+            if(_HGConnector == null)
             {
-                if (m_Cache != null)
-                    m_log.InfoFormat("[REGIONASSETCONNECTOR]: active with cache for region {0}", scene.RegionInfo.RegionName);
+                if (_Cache != null)
+                    _log.InfoFormat("[REGIONASSETCONNECTOR]: active with cache for region {0}", scene.RegionInfo.RegionName);
                 else
-                    m_log.InfoFormat("[REGIONASSETCONNECTOR]: active  without cache for region {0}", scene.RegionInfo.RegionName);
+                    _log.InfoFormat("[REGIONASSETCONNECTOR]: active  without cache for region {0}", scene.RegionInfo.RegionName);
             }
             else
             {
-                if (m_Cache != null)
-                    m_log.InfoFormat("[REGIONASSETCONNECTOR]: active with HG and cache for region {0}", scene.RegionInfo.RegionName);
+                if (_Cache != null)
+                    _log.InfoFormat("[REGIONASSETCONNECTOR]: active with HG and cache for region {0}", scene.RegionInfo.RegionName);
                 else
-                    m_log.InfoFormat("[REGIONASSETCONNECTOR]: active with HG and without cache for region {0}", scene.RegionInfo.RegionName);
+                    _log.InfoFormat("[REGIONASSETCONNECTOR]: active with HG and without cache for region {0}", scene.RegionInfo.RegionName);
             }
         }
 
@@ -202,23 +196,23 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
         public AssetBase GetCached(string id)
         {
             AssetBase asset = null;
-            if (m_Cache != null)
-                m_Cache.Get(id, out asset);
+            if (_Cache != null)
+                _Cache.Get(id, out asset);
             return asset;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private AssetBase GetFromLocal(string id)
         {
-            return m_localConnector.Get(id);
+            return _localConnector.Get(id);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private AssetBase GetFromForeign(string id, string ForeignAssetService)
         {
-            if (m_HGConnector == null || string.IsNullOrEmpty(ForeignAssetService))
+            if (_HGConnector == null || string.IsNullOrEmpty(ForeignAssetService))
                 return null;
-            return m_HGConnector.Get(id , ForeignAssetService, true);
+            return _HGConnector.Get(id , ForeignAssetService, true);
         }
 
         public AssetBase GetForeign(string id)
@@ -228,9 +222,9 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
                 return null;
 
             AssetBase asset = null;
-            if (m_Cache != null)
+            if (_Cache != null)
             {
-                 asset = m_Cache.GetCached(uuidstr);
+                 asset = _Cache.GetCached(uuidstr);
                 if(asset != null)
                     return asset;
             }
@@ -243,7 +237,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
 
         public AssetBase Get(string id)
         {
-            //m_log.DebugFormat("[HG ASSET CONNECTOR]: Get {0}", id);
+            //_log.DebugFormat("[HG ASSET CONNECTOR]: Get {0}", id);
             AssetBase asset = null;
             if (IsHG(id))
             {
@@ -251,27 +245,27 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
                 if (asset != null)
                 {
                     // Now store it locally, if allowed
-                    if (m_AssetPerms != null && !m_AssetPerms.AllowedImport(asset.Type))
+                    if (_AssetPerms != null && !_AssetPerms.AllowedImport(asset.Type))
                         return null;
                     Store(asset);
                 }
             }
             else
             {
-                if (m_Cache != null)
+                if (_Cache != null)
                 {
-                    if(!m_Cache.Get(id, out asset))
+                    if(!_Cache.Get(id, out asset))
                         return null;
                     if (asset != null)
                         return asset;
                 }
                 asset = GetFromLocal(id);
-                if(m_Cache != null)
+                if(_Cache != null)
                 {
                     if(asset == null)
-                        m_Cache.CacheNegative(id);
+                        _Cache.CacheNegative(id);
                     else
-                        m_Cache.Cache(asset);
+                        _Cache.Cache(asset);
                 }
             }
             return asset;
@@ -281,9 +275,9 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
         {
             // assumes id and ForeignAssetService are valid and resolved
             AssetBase asset = null;
-            if (m_Cache != null)
+            if (_Cache != null)
             {
-                asset = m_Cache.GetCached(id);
+                asset = _Cache.GetCached(id);
                 if (asset != null)
                     return asset;
             }
@@ -294,22 +288,22 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
                 asset = GetFromForeign(id, ForeignAssetService);
                 if (asset != null)
                 {
-                    if (m_AssetPerms != null && !m_AssetPerms.AllowedImport(asset.Type))
+                    if (_AssetPerms != null && !_AssetPerms.AllowedImport(asset.Type))
                     {
-                        if (m_Cache != null)
-                            m_Cache.CacheNegative(id);
+                        if (_Cache != null)
+                            _Cache.CacheNegative(id);
                         return null;
                     }
                     if(StoreOnLocalGrid)
                         Store(asset);
-                    else if (m_Cache != null)
-                        m_Cache.Cache(asset);
+                    else if (_Cache != null)
+                        _Cache.Cache(asset);
                 }
-                else if (m_Cache != null)
-                    m_Cache.CacheNegative(id);
+                else if (_Cache != null)
+                    _Cache.CacheNegative(id);
             }
-            else if (m_Cache != null)
-                m_Cache.Cache(asset);
+            else if (_Cache != null)
+                _Cache.Cache(asset);
 
             return asset;
         }
@@ -333,20 +327,20 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
         public virtual bool Get(string id, object sender, AssetRetrieved callBack)
         {
             AssetBase asset = null;
-            if (m_Cache != null)
+            if (_Cache != null)
             {
-                if (!m_Cache.Get(id, out asset))
+                if (!_Cache.Get(id, out asset))
                     return false;
             }
 
             if (asset == null)
             {
-                lock (m_AssetHandlers)
+                lock (_AssetHandlers)
                 {
                     AssetRetrievedEx handlerEx = new AssetRetrievedEx(delegate (AssetBase _asset) { callBack(id, sender, _asset); });
 
                     List<AssetRetrievedEx> handlers;
-                    if (m_AssetHandlers.TryGetValue(id, out handlers))
+                    if (_AssetHandlers.TryGetValue(id, out handlers))
                     {
                         // Someone else is already loading this asset. It will notify our handler when done.
                         handlers.Add(handlerEx);
@@ -356,8 +350,8 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
                     handlers = new List<AssetRetrievedEx>();
                     handlers.Add(handlerEx);
 
-                    m_AssetHandlers.Add(id, handlers);
-                    m_requestQueue.Enqueue(id);
+                    _AssetHandlers.Add(id, handlers);
+                    _requestQueue.Enqueue(id);
                 }
             }
             else
@@ -379,10 +373,10 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
             {
                 AssetBase a = Get(id);
                 List<AssetRetrievedEx> handlers;
-                lock (m_AssetHandlers)
+                lock (_AssetHandlers)
                 {
-                    handlers = m_AssetHandlers[id];
-                    m_AssetHandlers.Remove(id);
+                    handlers = _AssetHandlers[id];
+                    _AssetHandlers.Remove(id);
                 }
 
                 if (handlers != null)
@@ -413,9 +407,9 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
                     ++numHG;
             }
             if(numHG == 0)
-                return m_localConnector.AssetsExist(ids);
-            else if (m_HGConnector != null)
-                return m_HGConnector.AssetsExist(ids);
+                return _localConnector.AssetsExist(ids);
+            else if (_HGConnector != null)
+                return _HGConnector.AssetsExist(ids);
             return null;
         }
 
@@ -429,17 +423,17 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
                     return null;
 
                 id = StoreForeign(asset);
-                if (m_Cache != null)
+                if (_Cache != null)
                 {
                     if (!string.IsNullOrEmpty(id) && !id.Equals(stringUUIDZero))
-                        m_Cache.Cache(asset);
+                        _Cache.Cache(asset);
                 }
                 return id;
             }
 
-            if (m_Cache != null)
+            if (_Cache != null)
             {
-                 m_Cache.Cache(asset);
+                 _Cache.Cache(asset);
                 if (asset.Local || asset.Temporary)
                     return asset.ID;
             }
@@ -455,24 +449,24 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private string StoreForeign(AssetBase asset)
         {
-            if (m_HGConnector == null)
+            if (_HGConnector == null)
                 return string.Empty;
-            if (m_AssetPerms != null && !m_AssetPerms.AllowedExport(asset.Type))
+            if (_AssetPerms != null && !_AssetPerms.AllowedExport(asset.Type))
                 return string.Empty;
-            return m_HGConnector.Store(asset);
+            return _HGConnector.Store(asset);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private string StoreLocal(AssetBase asset)
         {
-            return m_localConnector.Store(asset);
+            return _localConnector.Store(asset);
         }
 
         public bool UpdateContent(string id, byte[] data)
         {
             if (IsHG(id))
                 return false;
-            return m_localConnector.UpdateContent(id, data);
+            return _localConnector.UpdateContent(id, data);
         }
 
         public bool Delete(string id)
@@ -480,7 +474,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Asset
             if (IsHG(id))
                 return false;
 
-            return m_localConnector.Delete(id);
+            return _localConnector.Delete(id);
         }
     }
 }

@@ -216,7 +216,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 {
                     RebuildScheduled = true;
                     // Queue to happen after all the other taint processing
-                    m_physicsScene.PostTaintObject("BSLinksetContraints.Refresh", requestor.LocalID, delegate()
+                    _physicsScene.PostTaintObject("BSLinksetContraints.Refresh", requestor.LocalID, delegate()
                     {
                         if (HasAnyChildren)
                         {
@@ -288,7 +288,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         DetailLog("{0},BSLinksetConstraint.RemoveDependencies,removeChildrenForRoot,rID={1},rBody={2}",
                                     child.LocalID, LinksetRoot.LocalID, LinksetRoot.PhysBody.AddrString);
 
-        lock (m_linksetActivityLock)
+        lock (_linksetActivityLock)
         {
             // Just undo all the constraints for this linkset. Rebuild at the end of the step.
             ret = PhysicallyUnlinkAllChildrenFromRoot(LinksetRoot);
@@ -306,7 +306,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         if (!HasChild(child))
         {
-            m_children.Add(child, new BSLinkInfoConstraint(child));
+            _children.Add(child, new BSLinkInfoConstraint(child));
 
             DetailLog("{0},BSLinksetConstraints.AddChildToLinkset,call,child={1}", LinksetRoot.LocalID, child.LocalID);
 
@@ -320,7 +320,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // Safe to call even if the child is not really in my linkset.
     protected override void RemoveChildFromLinkset(BSPrimLinkable child, bool inTaintTime)
     {
-        if (m_children.Remove(child))
+        if (_children.Remove(child))
         {
             BSPrimLinkable rootx = LinksetRoot; // capture the root and body as of now
             BSPrimLinkable childx = child;
@@ -330,7 +330,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                             rootx.LocalID, rootx.PhysBody.AddrString,
                             childx.LocalID, childx.PhysBody.AddrString);
 
-            m_physicsScene.TaintedObject(inTaintTime, childx.LocalID, "BSLinksetConstraints.RemoveChildFromLinkset", delegate()
+            _physicsScene.TaintedObject(inTaintTime, childx.LocalID, "BSLinksetConstraints.RemoveChildFromLinkset", delegate()
             {
                 PhysicallyUnlinkAChildFromRoot(rootx, childx);
             });
@@ -384,7 +384,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 // http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=4818
 
                 constrain = new BSConstraint6Dof(
-                                    m_physicsScene.World, rootPrim.PhysBody, linkInfo.member.PhysBody, midPoint, true, true );
+                                    _physicsScene.World, rootPrim.PhysBody, linkInfo.member.PhysBody, midPoint, true, true );
 
                 /* NOTE: below is an attempt to build constraint with full frame computation, etc.
                  *     Using the midpoint is easier since it lets the Bullet code manipulate the transforms
@@ -414,7 +414,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
                 break;
             case ConstraintType.D6_SPRING_CONSTRAINT_TYPE:
-                constrain = new BSConstraintSpring(m_physicsScene.World, rootPrim.PhysBody, linkInfo.member.PhysBody,
+                constrain = new BSConstraintSpring(_physicsScene.World, rootPrim.PhysBody, linkInfo.member.PhysBody,
                                 linkInfo.frameInAloc, linkInfo.frameInArot, linkInfo.frameInBloc, linkInfo.frameInBrot,
                                 linkInfo.useLinearReferenceFrameA,
                                 true /*disableCollisionsBetweenLinkedBodies*/);
@@ -431,7 +431,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         linkInfo.SetLinkParameters(constrain);
 
-        m_physicsScene.Constraints.AddConstraint(constrain);
+        _physicsScene.Constraints.AddConstraint(constrain);
 
         return constrain;
     }
@@ -457,10 +457,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         else
         {
             // Find the constraint for this link and get rid of it from the overall collection and from my list
-            if (m_physicsScene.Constraints.RemoveAndDestroyConstraint(rootPrim.PhysBody, childPrim.PhysBody))
+            if (_physicsScene.Constraints.RemoveAndDestroyConstraint(rootPrim.PhysBody, childPrim.PhysBody))
             {
                 // Make the child refresh its location
-                m_physicsScene.PE.PushUpdate(childPrim.PhysBody);
+                _physicsScene.PE.PushUpdate(childPrim.PhysBody);
                 ret = true;
             }
         }
@@ -475,7 +475,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         DetailLog("{0},BSLinksetConstraint.PhysicallyUnlinkAllChildren,taint", rootPrim.LocalID);
 
-        return m_physicsScene.Constraints.RemoveAndDestroyConstraint(rootPrim.PhysBody);
+        return _physicsScene.Constraints.RemoveAndDestroyConstraint(rootPrim.PhysBody);
     }
 
     // Call each of the constraints that make up this linkset and recompute the
@@ -510,7 +510,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 li.member.UpdatePhysicalMassProperties(linksetMass, true);
 
                 BSConstraint constrain;
-                if (!m_physicsScene.Constraints.TryGetConstraint(LinksetRoot.PhysBody, li.member.PhysBody, out constrain))
+                if (!_physicsScene.Constraints.TryGetConstraint(LinksetRoot.PhysBody, li.member.PhysBody, out constrain))
                 {
                     // If constraint doesn't exist yet, create it.
                     constrain = BuildConstraint(LinksetRoot, li);
@@ -552,7 +552,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                         {
                             DetailLog("{0},BSLinksetConstraint.ChangeLinkType,rootID={1},childID={2},type={3}",
                                                     LinksetRoot.LocalID, LinksetRoot.LocalID, child.LocalID, requestedType);
-                            m_physicsScene.TaintedObject(child.LocalID, "BSLinksetConstraint.PhysFunctChangeLinkType", delegate()
+                            _physicsScene.TaintedObject(child.LocalID, "BSLinksetConstraint.PhysFunctChangeLinkType", delegate()
                             {
                                 // Pick up all the constraints currently created.
                                 RemoveDependencies(child);
@@ -798,12 +798,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                 }
                                 catch (InvalidCastException e)
                                 {
-                                    m_physicsScene.Logger.WarnFormat("{0} value of wrong type in physSetLinksetParams: {1}, err={2}",
+                                    _physicsScene.Logger.WarnFormat("{0} value of wrong type in physSetLinksetParams: {1}, err={2}",
                                                         LogHeader, errMsg, e);
                                 }
                                 catch (Exception e)
                                 {
-                                    m_physicsScene.Logger.WarnFormat("{0} bad parameters in physSetLinksetParams: {1}", LogHeader, e);
+                                    _physicsScene.Logger.WarnFormat("{0} bad parameters in physSetLinksetParams: {1}", LogHeader, e);
                                 }
                             }
                         }

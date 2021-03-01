@@ -38,7 +38,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
     public class PhysicsJoint
     {
-        public virtual bool IsInPhysicsEngine { get { return false; } } // set internally to indicate if this joint has already been passed to the physics engine or is still pending
+        public virtual bool IsInPhysicsEngine => false; // set internally to indicate if this joint has already been passed to the physics engine or is still pending
         public PhysicsJointType Type;
         public string RawParams;
         public List<string> BodyNames = new List<string>();

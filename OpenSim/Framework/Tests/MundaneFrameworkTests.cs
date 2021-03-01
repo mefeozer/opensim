@@ -37,7 +37,7 @@ namespace OpenSim.Framework.Tests
     [TestFixture]
     public class MundaneFrameworkTests : OpenSimTestCase
     {
-        private bool m_RegionSettingsOnSaveEventFired;
+        private bool _RegionSettingsOnSaveEventFired;
 
         [Test]
         public void ChildAgentDataUpdate01()
@@ -147,12 +147,12 @@ namespace OpenSim.Framework.Tests
 //            string id = settings.LoadedCreationID;
 //            string time = settings.LoadedCreationTime;
 
-            Assert.That(m_RegionSettingsOnSaveEventFired, "RegionSettings Save Event didn't Fire");
+            Assert.That(_RegionSettingsOnSaveEventFired, "RegionSettings Save Event didn't Fire");
 
         }
         public void RegionSaveFired(RegionSettings settings)
         {
-            m_RegionSettingsOnSaveEventFired = true;
+            _RegionSettingsOnSaveEventFired = true;
         }
 
         [Test]

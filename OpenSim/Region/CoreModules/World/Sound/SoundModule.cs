@@ -41,10 +41,10 @@ namespace OpenSim.Region.CoreModules.World.Sound
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "SoundModule")]
     public class SoundModule : INonSharedRegionModule, ISoundModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(
+//        private static readonly ILog _log = LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
+        private Scene _scene;
 
         public enum SoundFlags: byte
         {
@@ -86,7 +86,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
 
         public void RemoveRegion(Scene scene)
         {
-            m_scene.EventManager.OnNewClient -= OnNewClient;
+            _scene.EventManager.OnNewClient -= OnNewClient;
         }
 
         public void RegionLoaded(Scene scene)
@@ -94,20 +94,17 @@ namespace OpenSim.Region.CoreModules.World.Sound
             if (!Enabled)
                 return;
 
-            m_scene = scene;
-            m_scene.EventManager.OnNewClient += OnNewClient;
+            _scene = scene;
+            _scene.EventManager.OnNewClient += OnNewClient;
 
-            m_scene.RegisterModuleInterface<ISoundModule>(this);
+            _scene.RegisterModuleInterface<ISoundModule>(this);
         }
 
         public void Close() { }
 
-        public Type ReplaceableInterface
-        {
-            get { return typeof(ISoundModule); }
-        }
+        public Type ReplaceableInterface => typeof(ISoundModule);
 
-        public string Name { get { return "Sound Module"; } }
+        public string Name => "Sound Module";
 
         #endregion
 
@@ -126,7 +123,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
             UUID soundID, UUID ownerID, UUID objectID, double gain, Vector3 position, byte flags)
         {
             SceneObjectPart part;
-            if (!m_scene.TryGetSceneObjectPart(objectID, out part))
+            if (!_scene.TryGetSceneObjectPart(objectID, out part))
                 return;
 
             if (part.SoundRadius == 0)
@@ -143,7 +140,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
             if (grp.IsAttachment)
             {
                 ScenePresence ssp = null;
-                if (!m_scene.TryGetScenePresence(grp.AttachedAvatar, out ssp))
+                if (!_scene.TryGetScenePresence(grp.AttachedAvatar, out ssp))
                     return;
 
                 if (grp.HasPrivateAttachmentPoint)
@@ -157,7 +154,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
                     return;
             }
 
-            m_scene.ForEachRootScenePresence(delegate(ScenePresence sp)
+            _scene.ForEachRootScenePresence(delegate(ScenePresence sp)
             {
                 sp.ControllingClient.SendPlayAttachedSound(soundID, objectID,
                         ownerID, (float)gain, flags);
@@ -170,9 +167,9 @@ namespace OpenSim.Region.CoreModules.World.Sound
             float radius;
             SceneObjectPart part;
             ScenePresence ssp = null;
-            if (!m_scene.TryGetSceneObjectPart(objectID, out part))
+            if (!_scene.TryGetSceneObjectPart(objectID, out part))
             {
-                if (!m_scene.TryGetScenePresence(ownerID, out ssp))
+                if (!_scene.TryGetScenePresence(ownerID, out ssp))
                     return;
                 if (!ssp.ParcelAllowThisAvatarSounds)
                     return;
@@ -185,7 +182,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
 
                 if(grp.IsAttachment)
                 {
-                    if(!m_scene.TryGetScenePresence(grp.AttachedAvatar, out ssp))
+                    if(!_scene.TryGetScenePresence(grp.AttachedAvatar, out ssp))
                         return;
 
                     if(!ssp.ParcelAllowThisAvatarSounds)
@@ -203,7 +200,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
             }
 
             radius *= radius;
-            m_scene.ForEachRootScenePresence(delegate(ScenePresence sp)
+            _scene.ForEachRootScenePresence(delegate(ScenePresence sp)
             {
                 if (Vector3.DistanceSquared(sp.AbsolutePosition, position) > radius) // Max audio distance
                     return;
@@ -216,27 +213,27 @@ namespace OpenSim.Region.CoreModules.World.Sound
 
         public virtual void StopSound(UUID objectID)
         {
-            SceneObjectPart m_host;
-            if (!m_scene.TryGetSceneObjectPart(objectID, out m_host))
+            SceneObjectPart _host;
+            if (!_scene.TryGetSceneObjectPart(objectID, out _host))
                 return;
 
-            StopSound(m_host);
+            StopSound(_host);
         }
 
-        private static void StopSound(SceneObjectPart m_host)
+        private static void StopSound(SceneObjectPart _host)
         {
-            m_host.Sound = UUID.Zero;
-            m_host.SoundFlags = (byte)SoundFlags.STOP;
-            m_host.SoundGain = 0;
-            m_host.ScheduleFullUpdate();
-            m_host.SendFullUpdateToAllClients();
+            _host.Sound = UUID.Zero;
+            _host.SoundFlags = (byte)SoundFlags.STOP;
+            _host.SoundGain = 0;
+            _host.ScheduleFullUpdate();
+            _host.SendFullUpdateToAllClients();
         }
 
         public virtual void PreloadSound(UUID objectID, UUID soundID)
         {
             SceneObjectPart part;
             if (soundID == UUID.Zero
-                    || !m_scene.TryGetSceneObjectPart(objectID, out part))
+                    || !_scene.TryGetSceneObjectPart(objectID, out part))
             {
                 return;
             }
@@ -249,7 +246,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
             }
 
             radius *= 4.0f * radius; // avatars and prims do move
-            m_scene.ForEachRootScenePresence(delegate(ScenePresence sp)
+            _scene.ForEachRootScenePresence(delegate(ScenePresence sp)
             {
                 if (Vector3.DistanceSquared(sp.AbsolutePosition, part.AbsolutePosition) < radius)
                     sp.ControllingClient.SendPreLoadSound(objectID, objectID, soundID);
@@ -267,8 +264,8 @@ namespace OpenSim.Region.CoreModules.World.Sound
         public void LoopSound(UUID objectID, UUID soundID,
                 double volume, bool isMaster, bool isSlave)
         {
-            SceneObjectPart m_host;
-            if (!m_scene.TryGetSceneObjectPart(objectID, out m_host))
+            SceneObjectPart _host;
+            if (!_scene.TryGetSceneObjectPart(objectID, out _host))
                 return;
 
             byte iflags = 1; // looping
@@ -277,17 +274,17 @@ namespace OpenSim.Region.CoreModules.World.Sound
             // TODO check viewer seems to accept both
             if (isSlave)
                 iflags |= (byte)SoundFlags.SYNC_SLAVE;
-            if (m_host.SoundQueueing)
+            if (_host.SoundQueueing)
                 iflags |= (byte)SoundFlags.QUEUE;
 
-            m_host.Sound = soundID;
-            m_host.SoundGain = volume;
-            m_host.SoundFlags = iflags;
-            if (m_host.SoundRadius == 0)
-                m_host.SoundRadius = MaxDistance;
+            _host.Sound = soundID;
+            _host.SoundGain = volume;
+            _host.SoundFlags = iflags;
+            if (_host.SoundRadius == 0)
+                _host.SoundRadius = MaxDistance;
 
-            m_host.ScheduleFullUpdate();
-            m_host.SendFullUpdateToAllClients();
+            _host.ScheduleFullUpdate();
+            _host.SendFullUpdateToAllClients();
         }
 
         public void SendSound(UUID objectID, UUID soundID, double volume,
@@ -298,7 +295,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
                 return;
 
             SceneObjectPart part;
-            if (!m_scene.TryGetSceneObjectPart(objectID, out part))
+            if (!_scene.TryGetSceneObjectPart(objectID, out part))
                 return;
 
             volume = Util.Clip((float)volume, 0, 1);
@@ -306,7 +303,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
             UUID parentID = part.ParentGroup.UUID;
 
             Vector3 position = part.AbsolutePosition; // region local
-            ulong regionHandle = m_scene.RegionInfo.RegionHandle;
+            ulong regionHandle = _scene.RegionInfo.RegionHandle;
 
             if(triggered)
                 TriggerSound(soundID, part.OwnerID, part.UUID, parentID, volume, position, regionHandle);
@@ -330,10 +327,10 @@ namespace OpenSim.Region.CoreModules.World.Sound
                 return;
 
             SceneObjectPart part;
-            if (!m_scene.TryGetSceneObjectPart(objectID, out part))
+            if (!_scene.TryGetSceneObjectPart(objectID, out part))
                 return;
 
-            m_scene.ForEachRootScenePresence(delegate(ScenePresence sp)
+            _scene.ForEachRootScenePresence(delegate(ScenePresence sp)
             {
                 double dis = Util.GetDistanceTo(sp.AbsolutePosition,
                         part.AbsolutePosition);
@@ -349,7 +346,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
 
                 sp.ControllingClient.SendTriggeredSound(sound, part.OwnerID,
                         part.UUID, part.ParentGroup.UUID,
-                        m_scene.RegionInfo.RegionHandle,
+                        _scene.RegionInfo.RegionHandle,
                         part.AbsolutePosition, (float)thisSpGain);
             });
         }
@@ -357,7 +354,7 @@ namespace OpenSim.Region.CoreModules.World.Sound
         public void SetSoundQueueing(UUID objectID, bool shouldQueue)
         {
             SceneObjectPart part;
-            if (!m_scene.TryGetSceneObjectPart(objectID, out part))
+            if (!_scene.TryGetSceneObjectPart(objectID, out part))
                 return;
 
             part.SoundQueueing = shouldQueue;

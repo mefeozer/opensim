@@ -45,12 +45,12 @@ namespace OpenSim.Region.CoreModules.Framework.Search
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "BasicSearchModule")]
     public class BasicSearchModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected bool m_Enabled;
-        protected List<Scene> m_Scenes = new List<Scene>();
+        protected bool _Enabled;
+        protected List<Scene> _Scenes = new List<Scene>();
 
-        private IGroupsModule m_GroupsService = null;
+        private IGroupsModule _GroupsService = null;
 
         private readonly ExpiringCache<string, List<UserAccount>> queryPeopleCache = new ExpiringCache<string, List<UserAccount>>();
         private readonly ExpiringCache<string, List<DirGroupsReplyData>> queryGroupCache = new ExpiringCache<string, List<DirGroupsReplyData>>();
@@ -62,31 +62,22 @@ namespace OpenSim.Region.CoreModules.Framework.Search
             string umanmod = config.Configs["Modules"].GetString("SearchModule", Name);
             if (umanmod == Name)
             {
-                m_Enabled = true;
-                m_log.DebugFormat("[BASIC SEARCH MODULE]: {0} is enabled", Name);
+                _Enabled = true;
+                _log.DebugFormat("[BASIC SEARCH MODULE]: {0} is enabled", Name);
             }
         }
 
-        public bool IsSharedModule
-        {
-            get { return true; }
-        }
+        public bool IsSharedModule => true;
 
-        public virtual string Name
-        {
-            get { return "BasicSearchModule"; }
-        }
+        public virtual string Name => "BasicSearchModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void AddRegion(Scene scene)
         {
-            if (m_Enabled)
+            if (_Enabled)
             {
-                m_Scenes.Add(scene);
+                _Scenes.Add(scene);
 
                 scene.EventManager.OnMakeRootAgent += new Action<ScenePresence>(EventManager_OnMakeRootAgent);
                 scene.EventManager.OnMakeChildAgent += new EventManager.OnMakeChildAgentDelegate(EventManager_OnMakeChildAgent);
@@ -95,9 +86,9 @@ namespace OpenSim.Region.CoreModules.Framework.Search
 
         public void RemoveRegion(Scene scene)
         {
-            if (m_Enabled)
+            if (_Enabled)
             {
-                m_Scenes.Remove(scene);
+                _Scenes.Remove(scene);
 
                 scene.EventManager.OnMakeRootAgent -= new Action<ScenePresence>(EventManager_OnMakeRootAgent);
                 scene.EventManager.OnMakeChildAgent -= new EventManager.OnMakeChildAgentDelegate(EventManager_OnMakeChildAgent);
@@ -106,16 +97,16 @@ namespace OpenSim.Region.CoreModules.Framework.Search
 
         public void RegionLoaded(Scene s)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (m_GroupsService == null)
+            if (_GroupsService == null)
             {
-                m_GroupsService = s.RequestModuleInterface<IGroupsModule>();
+                _GroupsService = s.RequestModuleInterface<IGroupsModule>();
 
                 // No Groups Service Connector, then group search won't work...
-                if (m_GroupsService == null)
-                    m_log.Warn("[BASIC SEARCH MODULE]: Could not get IGroupsModule");
+                if (_GroupsService == null)
+                    _log.Warn("[BASIC SEARCH MODULE]: Could not get IGroupsModule");
             }
         }
 
@@ -125,7 +116,7 @@ namespace OpenSim.Region.CoreModules.Framework.Search
 
         public void Close()
         {
-            m_Scenes.Clear();
+            _Scenes.Clear();
         }
 
         #endregion ISharedRegionModule
@@ -158,7 +149,7 @@ namespace OpenSim.Region.CoreModules.Framework.Search
 
                 List<UserAccount> accounts;
                 if (!queryPeopleCache.TryGetValue(queryText, out accounts))
-                    accounts = m_Scenes[0].UserAccountService.GetUserAccounts(m_Scenes[0].RegionInfo.ScopeID, queryText);
+                    accounts = _Scenes[0].UserAccountService.GetUserAccounts(_Scenes[0].RegionInfo.ScopeID, queryText);
 
                 queryPeopleCache.AddOrUpdate(queryText, accounts, 30.0);
 
@@ -204,9 +195,9 @@ namespace OpenSim.Region.CoreModules.Framework.Search
             }
             else if (((DirFindFlags)queryFlags & DirFindFlags.Groups) == DirFindFlags.Groups)
             {
-                if (m_GroupsService == null)
+                if (_GroupsService == null)
                 {
-                    m_log.Warn("[BASIC SEARCH MODULE]: Groups service is not available. Unable to search groups.");
+                    _log.Warn("[BASIC SEARCH MODULE]: Groups service is not available. Unable to search groups.");
                     remoteClient.SendAlertMessage("Groups search is not enabled");
                     return;
                 }
@@ -216,7 +207,7 @@ namespace OpenSim.Region.CoreModules.Framework.Search
 
                 List<DirGroupsReplyData> answer;
                 if (!queryGroupCache.TryGetValue(queryText, out answer))
-                    answer = m_GroupsService.FindGroups(remoteClient, queryText);
+                    answer = _GroupsService.FindGroups(remoteClient, queryText);
 
                 queryGroupCache.AddOrUpdate(queryText, answer, 30.0);
 

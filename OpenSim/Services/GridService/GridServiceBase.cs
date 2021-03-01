@@ -34,7 +34,7 @@ namespace OpenSim.Services.GridService
 {
     public class GridServiceBase : ServiceBase
     {
-        protected IRegionData m_Database = null;
+        protected IRegionData _Database = null;
 
         public GridServiceBase(IConfigSource config)
             : base(config)
@@ -72,8 +72,8 @@ namespace OpenSim.Services.GridService
             if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IRegionData>(dllName, new object[] { connString, realm });
-            if (m_Database == null)
+            _Database = LoadPlugin<IRegionData>(dllName, new object[] { connString, realm });
+            if (_Database == null)
                 throw new Exception("Could not find a storage interface in the given module");
 
         }

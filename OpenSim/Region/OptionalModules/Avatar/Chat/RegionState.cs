@@ -41,7 +41,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
     internal class RegionState
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // This computation is not the real region center if the region is larger than 256.
@@ -122,7 +122,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             scene.EventManager.OnMakeRootAgent += OnMakeRootAgent;
             scene.EventManager.OnMakeChildAgent += OnMakeChildAgent;
 
-            m_log.InfoFormat("[IRC-Region {0}] Initialization complete", Region);
+            _log.InfoFormat("[IRC-Region {0}] Initialization complete", Region);
 
         }
 
@@ -164,7 +164,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 {
                     if (enabled && cs.irc.Enabled && cs.irc.Connected && cs.ClientReporting)
                     {
-                        m_log.InfoFormat("[IRC-Region {0}]: {1} has left", Region, client.Name);
+                        _log.InfoFormat("[IRC-Region {0}]: {1} has left", Region, client.Name);
                         //Check if this person is excluded from IRC
                         if (!cs.ExcludeList.Contains(client.Name.ToLower()))
                         {
@@ -178,8 +178,8 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             }
             catch (Exception ex)
             {
-                m_log.ErrorFormat("[IRC-Region {0}]: ClientLoggedOut exception: {1}", Region, ex.Message);
-                m_log.Debug(ex);
+                _log.ErrorFormat("[IRC-Region {0}]: ClientLoggedOut exception: {1}", Region, ex.Message);
+                _log.Debug(ex);
             }
         }
 
@@ -198,7 +198,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     if (enabled && cs.irc.Enabled && cs.irc.Connected && cs.ClientReporting)
                     {
                         string clientName = string.Format("{0} {1}", presence.Firstname, presence.Lastname);
-                        m_log.DebugFormat("[IRC-Region {0}] {1} has left", Region, clientName);
+                        _log.DebugFormat("[IRC-Region {0}] {1} has left", Region, clientName);
                         cs.irc.PrivMsg(cs.NoticeMessageFormat, cs.irc.Nick, Region, string.Format("{0} has left", clientName));
                     }
                     client.OnLogout -= OnClientLoggedOut;
@@ -208,8 +208,8 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             }
             catch (Exception ex)
             {
-                m_log.ErrorFormat("[IRC-Region {0}]: MakeChildAgent exception: {1}", Region, ex.Message);
-                m_log.Debug(ex);
+                _log.ErrorFormat("[IRC-Region {0}]: MakeChildAgent exception: {1}", Region, ex.Message);
+                _log.Debug(ex);
             }
 
         }
@@ -231,7 +231,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                     if (enabled && cs.irc.Enabled && cs.irc.Connected && cs.ClientReporting)
                     {
                         string clientName = string.Format("{0} {1}", presence.Firstname, presence.Lastname);
-                        m_log.DebugFormat("[IRC-Region {0}] {1} has arrived", Region, clientName);
+                        _log.DebugFormat("[IRC-Region {0}] {1} has arrived", Region, clientName);
                         //Check if this person is excluded from IRC
                         if (!cs.ExcludeList.Contains(clientName.ToLower()))
                         {
@@ -245,8 +245,8 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             }
             catch (Exception ex)
             {
-                m_log.ErrorFormat("[IRC-Region {0}]: MakeRootAgent exception: {1}", Region, ex.Message);
-                m_log.Debug(ex);
+                _log.ErrorFormat("[IRC-Region {0}]: MakeRootAgent exception: {1}", Region, ex.Message);
+                _log.Debug(ex);
             }
         }
 
@@ -268,7 +268,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
             if (cs.CommandsEnabled && msg.Channel == cs.CommandChannel)
             {
 
-                m_log.DebugFormat("[IRC-Region {0}] command on channel {1}: {2}", Region, msg.Channel, msg.Message);
+                _log.DebugFormat("[IRC-Region {0}] command on channel {1}: {2}", Region, msg.Channel, msg.Message);
 
                 string[] messages = msg.Message.Split(' ');
                 string command = messages[0].ToLower();
@@ -341,7 +341,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                         // that evident.
 
                         default:
-                            m_log.DebugFormat("[IRC-Region {0}] Forwarding unrecognized command to IRC : {1}",
+                            _log.DebugFormat("[IRC-Region {0}] Forwarding unrecognized command to IRC : {1}",
                                             Region, msg.Message);
                             cs.irc.Send(msg.Message);
                             break;
@@ -349,9 +349,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 }
                 catch (Exception ex)
                 {
-                    m_log.WarnFormat("[IRC-Region {0}] error processing in-world command channel input: {1}",
+                    _log.WarnFormat("[IRC-Region {0}] error processing in-world command channel input: {1}",
                                     Region, ex.Message);
-                    m_log.Debug(ex);
+                    _log.Debug(ex);
                 }
 
                 return;
@@ -369,7 +369,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
             if (!cs.ValidInWorldChannels.Contains(msg.Channel))
             {
-                m_log.DebugFormat("[IRC-Region {0}] dropping message {1} on channel {2}", Region, msg, msg.Channel);
+                _log.DebugFormat("[IRC-Region {0}] dropping message {1} on channel {2}", Region, msg, msg.Channel);
                 return;
             }
 
@@ -384,11 +384,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
 
             if (!cs.irc.Connected)
             {
-                m_log.WarnFormat("[IRC-Region {0}] IRCConnector not connected: dropping message from {1}", Region, fromName);
+                _log.WarnFormat("[IRC-Region {0}] IRCConnector not connected: dropping message from {1}", Region, fromName);
                 return;
             }
 
-            m_log.DebugFormat("[IRC-Region {0}] heard on channel {1} : {2}", Region, msg.Channel, msg.Message);
+            _log.DebugFormat("[IRC-Region {0}] heard on channel {1} : {2}", Region, msg.Channel, msg.Message);
 
             if (null != avatar && cs.RelayChat && (msg.Channel == 0 || msg.Channel == DEBUG_CHANNEL))
             {
@@ -406,7 +406,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
                 Match m = cs.AccessPasswordRegex.Match(msg.Message);
                 if (null != m)
                 {
-                    m_log.DebugFormat("[IRC] relaying message from {0}: {1}", m.Groups["avatar"].ToString(),
+                    _log.DebugFormat("[IRC] relaying message from {0}: {1}", m.Groups["avatar"].ToString(),
                                       m.Groups["message"].ToString());
                     cs.irc.PrivMsg(cs.PrivateMessageFormat, m.Groups["avatar"].ToString(),
                                    scene.RegionInfo.RegionName, m.Groups["message"].ToString());
@@ -422,7 +422,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Chat
         {
             if (enabled)
             {
-                // m_log.DebugFormat("[IRC-OSCHAT] Region {0} being sent message", region.Region);
+                // _log.DebugFormat("[IRC-OSCHAT] Region {0} being sent message", region.Region);
                 msg.Scene = scene;
                 scene.EventManager.TriggerOnChatBroadcast(irc, msg);
             }

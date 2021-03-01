@@ -44,10 +44,10 @@ namespace OpenSim.Services.Connectors.Hypergrid
 {
     public class UserAgentServiceConnector : SimulationServiceConnector, IUserAgentService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURL;
-        private GridRegion m_Gatekeeper;
+        private string _ServerURL;
+        private GridRegion _Gatekeeper;
 
         public UserAgentServiceConnector(string url)
         {
@@ -62,7 +62,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
 
             if (string.IsNullOrWhiteSpace(serviceURI))
             {
-                m_log.Error("[USER AGENT CONNECTOR]: No Home URI named in configuration");
+                _log.Error("[USER AGENT CONNECTOR]: No Home URI named in configuration");
                 throw new Exception("UserAgent connector init error");
             }
 
@@ -82,13 +82,13 @@ namespace OpenSim.Services.Connectors.Hypergrid
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[USER AGENT CONNECTOR]: Malformed Uri {0}: {1}", url, e.Message);
+                _log.DebugFormat("[USER AGENT CONNECTOR]: Malformed Uri {0}: {1}", url, e.Message);
                 return false;
             }
 
-            m_ServerURL = url;
-            if (!m_ServerURL.EndsWith("/"))
-                m_ServerURL += "/";
+            _ServerURL = url;
+            if (!_ServerURL.EndsWith("/"))
+                _ServerURL += "/";
 
             return true;
         }
@@ -108,19 +108,19 @@ namespace OpenSim.Services.Connectors.Hypergrid
             if (destination == null)
             {
                 reason = "Destination is null";
-                m_log.Debug("[USER AGENT CONNECTOR]: Given destination is null");
+                _log.Debug("[USER AGENT CONNECTOR]: Given destination is null");
                 return false;
             }
 
             GridRegion home = new GridRegion()
             {
-                ServerURI = m_ServerURL,
+                ServerURI = _ServerURL,
                 RegionID = destination.RegionID,
                 RegionLocX = destination.RegionLocX,
                 RegionLocY = destination.RegionLocY
             };
 
-            m_Gatekeeper = gatekeeper;
+            _Gatekeeper = gatekeeper;
 
             //Console.WriteLine("   >>> LoginAgentToGrid <<< " + home.ServerURI);
 
@@ -138,9 +138,9 @@ namespace OpenSim.Services.Connectors.Hypergrid
         protected override void PackData(OSDMap args, GridRegion source, AgentCircuitData aCircuit, GridRegion destination, uint flags)
         {
             base.PackData(args, source, aCircuit, destination, flags);
-            args["gatekeeper_serveruri"] = OSD.FromString(m_Gatekeeper.ServerURI);
-            args["gatekeeper_host"] = OSD.FromString(m_Gatekeeper.ExternalHostName);
-            args["gatekeeper_port"] = OSD.FromString(m_Gatekeeper.HttpPort.ToString());
+            args["gatekeeper_serveruri"] = OSD.FromString(_Gatekeeper.ServerURI);
+            args["gatekeeper_host"] = OSD.FromString(_Gatekeeper.ExternalHostName);
+            args["gatekeeper_port"] = OSD.FromString(_Gatekeeper.HttpPort.ToString());
             args["destination_serveruri"] = OSD.FromString(destination.ServerURI);
         }
 
@@ -160,22 +160,22 @@ namespace OpenSim.Services.Connectors.Hypergrid
             XmlRpcResponse response = null;
             try
             {
-                response = request.Send(m_ServerURL, 10000);
+                response = request.Send(_ServerURL, 10000);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[USER AGENT CONNECTOR]: {0} call to {1} failed: {2}", methodName, m_ServerURL, e.Message);
+                _log.DebugFormat("[USER AGENT CONNECTOR]: {0} call to {1} failed: {2}", methodName, _ServerURL, e.Message);
                 throw;
             }
 
             if (response == null || response.IsFault)
             {
-                throw new Exception(string.Format("[USER AGENT CONNECTOR]: {0} call to {1} returned an error: {2}", methodName, m_ServerURL, response.FaultString));
+                throw new Exception(string.Format("[USER AGENT CONNECTOR]: {0} call to {1} returned an error: {2}", methodName, _ServerURL, response.FaultString));
             }
 
             if (!(response.Value is Hashtable))
             {
-                throw new Exception(string.Format("[USER AGENT CONNECTOR]: {0} call to {1} returned null", methodName, m_ServerURL));
+                throw new Exception(string.Format("[USER AGENT CONNECTOR]: {0} call to {1} returned null", methodName, _ServerURL));
             }
 
             return (Hashtable)response.Value; ;
@@ -197,36 +197,36 @@ namespace OpenSim.Services.Connectors.Hypergrid
             GridRegion region = new GridRegion();
 
             UUID.TryParse((string)hash["uuid"], out region.RegionID);
-            //m_log.Debug(">> HERE, uuid: " + region.RegionID);
+            //_log.Debug(">> HERE, uuid: " + region.RegionID);
             int n = 0;
             if (hash["x"] != null)
             {
                 int.TryParse((string)hash["x"], out n);
                 region.RegionLocX = n;
-                //m_log.Debug(">> HERE, x: " + region.RegionLocX);
+                //_log.Debug(">> HERE, x: " + region.RegionLocX);
             }
             if (hash["y"] != null)
             {
                 int.TryParse((string)hash["y"], out n);
                 region.RegionLocY = n;
-                //m_log.Debug(">> HERE, y: " + region.RegionLocY);
+                //_log.Debug(">> HERE, y: " + region.RegionLocY);
             }
             if (hash["size_x"] != null)
             {
                 int.TryParse((string)hash["size_x"], out n);
                 region.RegionSizeX = n;
-                //m_log.Debug(">> HERE, x: " + region.RegionLocX);
+                //_log.Debug(">> HERE, x: " + region.RegionLocX);
             }
             if (hash["size_y"] != null)
             {
                 int.TryParse((string)hash["size_y"], out n);
                 region.RegionSizeY = n;
-                //m_log.Debug(">> HERE, y: " + region.RegionLocY);
+                //_log.Debug(">> HERE, y: " + region.RegionLocY);
             }
             if (hash["region_name"] != null)
             {
                 region.RegionName = (string)hash["region_name"];
-                //m_log.Debug(">> HERE, name: " + region.RegionName);
+                //_log.Debug(">> HERE, name: " + region.RegionName);
             }
             if (hash["hostname"] != null)
                 region.ExternalHostName = (string)hash["hostname"];
@@ -334,30 +334,30 @@ namespace OpenSim.Services.Connectors.Hypergrid
             XmlRpcResponse response = null;
             try
             {
-                response = request.Send(m_ServerURL, 6000);
+                response = request.Send(_ServerURL, 6000);
             }
             catch
             {
-                m_log.DebugFormat("[USER AGENT CONNECTOR]: Unable to contact remote server {0} for StatusNotification", m_ServerURL);
+                _log.DebugFormat("[USER AGENT CONNECTOR]: Unable to contact remote server {0} for StatusNotification", _ServerURL);
 //                reason = "Exception: " + e.Message;
                 return friendsOnline;
             }
 
             if (response.IsFault)
             {
-                m_log.ErrorFormat("[USER AGENT CONNECTOR]: remote call to {0} for StatusNotification returned an error: {1}", m_ServerURL, response.FaultString);
+                _log.ErrorFormat("[USER AGENT CONNECTOR]: remote call to {0} for StatusNotification returned an error: {1}", _ServerURL, response.FaultString);
 //                reason = "XMLRPC Fault";
                 return friendsOnline;
             }
 
             hash = (Hashtable)response.Value;
             //foreach (Object o in hash)
-            //    m_log.Debug(">> " + ((DictionaryEntry)o).Key + ":" + ((DictionaryEntry)o).Value);
+            //    _log.Debug(">> " + ((DictionaryEntry)o).Key + ":" + ((DictionaryEntry)o).Value);
             try
             {
                 if (hash == null)
                 {
-                    m_log.ErrorFormat("[USER AGENT CONNECTOR]: GetOnlineFriends Got null response from {0}! THIS IS BAAAAD", m_ServerURL);
+                    _log.ErrorFormat("[USER AGENT CONNECTOR]: GetOnlineFriends Got null response from {0}! THIS IS BAAAAD", _ServerURL);
 //                    reason = "Internal error 1";
                     return friendsOnline;
                 }
@@ -376,7 +376,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             }
             catch
             {
-                m_log.ErrorFormat("[USER AGENT CONNECTOR]: Got exception on GetOnlineFriends response.");
+                _log.ErrorFormat("[USER AGENT CONNECTOR]: Got exception on GetOnlineFriends response.");
 //                reason = "Exception: " + e.Message;
             }
 
@@ -406,30 +406,30 @@ namespace OpenSim.Services.Connectors.Hypergrid
             XmlRpcResponse response = null;
             try
             {
-                response = request.Send(m_ServerURL, 10000);
+                response = request.Send(_ServerURL, 10000);
             }
             catch
             {
-                m_log.DebugFormat("[USER AGENT CONNECTOR]: Unable to contact remote server {0} for GetOnlineFriends", m_ServerURL);
+                _log.DebugFormat("[USER AGENT CONNECTOR]: Unable to contact remote server {0} for GetOnlineFriends", _ServerURL);
 //                reason = "Exception: " + e.Message;
                 return online;
             }
 
             if (response.IsFault)
             {
-                m_log.ErrorFormat("[USER AGENT CONNECTOR]: remote call to {0} for GetOnlineFriends returned an error: {1}", m_ServerURL, response.FaultString);
+                _log.ErrorFormat("[USER AGENT CONNECTOR]: remote call to {0} for GetOnlineFriends returned an error: {1}", _ServerURL, response.FaultString);
 //                reason = "XMLRPC Fault";
                 return online;
             }
 
             hash = (Hashtable)response.Value;
             //foreach (Object o in hash)
-            //    m_log.Debug(">> " + ((DictionaryEntry)o).Key + ":" + ((DictionaryEntry)o).Value);
+            //    _log.Debug(">> " + ((DictionaryEntry)o).Key + ":" + ((DictionaryEntry)o).Value);
             try
             {
                 if (hash == null)
                 {
-                    m_log.ErrorFormat("[USER AGENT CONNECTOR]: GetOnlineFriends Got null response from {0}! THIS IS BAAAAD", m_ServerURL);
+                    _log.ErrorFormat("[USER AGENT CONNECTOR]: GetOnlineFriends Got null response from {0}! THIS IS BAAAAD", _ServerURL);
 //                    reason = "Internal error 1";
                     return online;
                 }
@@ -448,7 +448,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             }
             catch
             {
-                m_log.ErrorFormat("[USER AGENT CONNECTOR]: Got exception on GetOnlineFriends response.");
+                _log.ErrorFormat("[USER AGENT CONNECTOR]: Got exception on GetOnlineFriends response.");
 //                reason = "Exception: " + e.Message;
             }
 
@@ -538,13 +538,13 @@ namespace OpenSim.Services.Connectors.Hypergrid
 
             if (!hash.ContainsKey("UUID"))
             {
-                throw new Exception(string.Format("[USER AGENT CONNECTOR]: get_uuid call to {0} didn't return a UUID", m_ServerURL));
+                throw new Exception(string.Format("[USER AGENT CONNECTOR]: get_uuid call to {0} didn't return a UUID", _ServerURL));
             }
 
             UUID uuid;
             if (!UUID.TryParse(hash["UUID"].ToString(), out uuid))
             {
-                throw new Exception(string.Format("[USER AGENT CONNECTOR]: get_uuid call to {0} returned an invalid UUID: {1}", m_ServerURL, hash["UUID"].ToString()));
+                throw new Exception(string.Format("[USER AGENT CONNECTOR]: get_uuid call to {0} returned an invalid UUID: {1}", _ServerURL, hash["UUID"].ToString()));
             }
 
             return uuid;
@@ -552,34 +552,34 @@ namespace OpenSim.Services.Connectors.Hypergrid
 
         private bool GetBoolResponse(XmlRpcRequest request, out string reason)
         {
-            //m_log.Debug("[USER AGENT CONNECTOR]: GetBoolResponse from/to " + m_ServerURL);
+            //_log.Debug("[USER AGENT CONNECTOR]: GetBoolResponse from/to " + _ServerURL);
             XmlRpcResponse response = null;
             try
             {
-                response = request.Send(m_ServerURL, 10000);
+                response = request.Send(_ServerURL, 10000);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[USER AGENT CONNECTOR]: Unable to contact remote server {0} for GetBoolResponse", m_ServerURL);
+                _log.DebugFormat("[USER AGENT CONNECTOR]: Unable to contact remote server {0} for GetBoolResponse", _ServerURL);
                 reason = "Exception: " + e.Message;
                 return false;
             }
 
             if (response.IsFault)
             {
-                m_log.ErrorFormat("[USER AGENT CONNECTOR]: remote call to {0} for GetBoolResponse returned an error: {1}", m_ServerURL, response.FaultString);
+                _log.ErrorFormat("[USER AGENT CONNECTOR]: remote call to {0} for GetBoolResponse returned an error: {1}", _ServerURL, response.FaultString);
                 reason = "XMLRPC Fault";
                 return false;
             }
 
             Hashtable hash = (Hashtable)response.Value;
             //foreach (Object o in hash)
-            //    m_log.Debug(">> " + ((DictionaryEntry)o).Key + ":" + ((DictionaryEntry)o).Value);
+            //    _log.Debug(">> " + ((DictionaryEntry)o).Key + ":" + ((DictionaryEntry)o).Value);
             try
             {
                 if (hash == null)
                 {
-                    m_log.ErrorFormat("[USER AGENT CONNECTOR]: Got null response from {0}! THIS IS BAAAAD", m_ServerURL);
+                    _log.ErrorFormat("[USER AGENT CONNECTOR]: Got null response from {0}! THIS IS BAAAAD", _ServerURL);
                     reason = "Internal error 1";
                     return false;
                 }
@@ -590,16 +590,16 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 else
                 {
                     reason = "Internal error 2";
-                    m_log.WarnFormat("[USER AGENT CONNECTOR]: response from {0} does not have expected key 'result'", m_ServerURL);
+                    _log.WarnFormat("[USER AGENT CONNECTOR]: response from {0} does not have expected key 'result'", _ServerURL);
                 }
 
                 return success;
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[USER AGENT CONNECTOR]: Got exception on GetBoolResponse response.");
+                _log.ErrorFormat("[USER AGENT CONNECTOR]: Got exception on GetBoolResponse response.");
                 if (hash.ContainsKey("result") && hash["result"] != null)
-                    m_log.ErrorFormat("Reply was ", (string)hash["result"]);
+                    _log.ErrorFormat("Reply was ", (string)hash["result"]);
                 reason = "Exception: " + e.Message;
                 return false;
             }

@@ -44,15 +44,15 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID AnimID
         {
-            get { return animID; }
-            set { animID = value; }
+            get => animID;
+            set => animID = value;
         }
 
         private int sequenceNum;
         public int SequenceNum
         {
-            get { return sequenceNum; }
-            set { sequenceNum = value; }
+            get => sequenceNum;
+            set => sequenceNum = value;
         }
 
         private UUID objectID;
@@ -62,8 +62,8 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID ObjectID
         {
-            get { return objectID; }
-            set { objectID = value; }
+            get => objectID;
+            set => objectID = value;
         }
 
         public Animation()

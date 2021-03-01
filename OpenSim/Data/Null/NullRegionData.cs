@@ -39,15 +39,15 @@ namespace OpenSim.Data.Null
         /// <summary>
         /// Should we use the static instance for all invocations?
         /// </summary>
-        private readonly bool m_useStaticInstance = true;
+        private readonly bool _useStaticInstance = true;
 
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, RegionData>();
+readonly Dictionary<UUID, RegionData> _regionData = new Dictionary<UUID, RegionData>();
 
         public NullRegionData(string connectionString, string realm)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[NULL REGION DATA]: Constructor got connectionString {0}, realm {1}", connectionString, realm);
 
             // The !static connection string is a hack so that regression tests can use this module without a high degree of fragility
@@ -56,7 +56,7 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
             // In standalone operation, we have to use only one instance of this class since the login service and
             // simulator have no other way of using a common data store.
             if (connectionString == "!static")
-                m_useStaticInstance = false;
+                _useStaticInstance = false;
             else if (Instance == null)
                 Instance = this;
         }
@@ -65,18 +65,18 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
         public RegionData GetSpecific(string regionName, UUID scopeID)
         {
-            if (m_useStaticInstance && Instance != this)
+            if (_useStaticInstance && Instance != this)
                 return Instance.GetSpecific(regionName, scopeID);
 
             string cleanName = regionName.ToLower();
             Matcher queryMatch;
             queryMatch = delegate (string s) { return s.Equals(cleanName); };
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                foreach (RegionData r in m_regionData.Values)
+                foreach (RegionData r in _regionData.Values)
                 {
-                    // m_log.DebugFormat("[NULL REGION DATA]: comparing {0} to {1}", cleanName, r.RegionName.ToLower());
+                    // _log.DebugFormat("[NULL REGION DATA]: comparing {0} to {1}", cleanName, r.RegionName.ToLower());
                     if (queryMatch(r.RegionName.ToLower()))
                         return r;
                 }
@@ -87,10 +87,10 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
         public List<RegionData> Get(string regionName, UUID scopeID)
         {
-            if (m_useStaticInstance && Instance != this)
+            if (_useStaticInstance && Instance != this)
                 return Instance.Get(regionName, scopeID);
 
-            // m_log.DebugFormat("[NULL REGION DATA]: Getting region {0}, scope {1}", regionName, scopeID);
+            // _log.DebugFormat("[NULL REGION DATA]: Getting region {0}, scope {1}", regionName, scopeID);
 
             string cleanName = regionName.ToLower();
 
@@ -130,11 +130,11 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
             // Find region data
             List<RegionData> ret = new List<RegionData>();
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                foreach (RegionData r in m_regionData.Values)
+                foreach (RegionData r in _regionData.Values)
                 {
-                    // m_log.DebugFormat("[NULL REGION DATA]: comparing {0} to {1}", cleanName, r.RegionName.ToLower());
+                    // _log.DebugFormat("[NULL REGION DATA]: comparing {0} to {1}", cleanName, r.RegionName.ToLower());
                     if (queryMatch(r.RegionName.ToLower()))
                         ret.Add(r);
                 }
@@ -148,14 +148,14 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
         public RegionData Get(int posX, int posY, UUID scopeID)
         {
-            if (m_useStaticInstance && Instance != this)
+            if (_useStaticInstance && Instance != this)
                 return Instance.Get(posX, posY, scopeID);
 
             RegionData ret = null;
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                foreach (RegionData r in m_regionData.Values)
+                foreach (RegionData r in _regionData.Values)
                 {
                     if (posX >= r.posX && posX < r.posX + r.sizeX
                         && posY >= r.posY && posY < r.posY + r.sizeY)
@@ -171,13 +171,13 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
         public RegionData Get(UUID regionID, UUID scopeID)
         {
-            if (m_useStaticInstance && Instance != this)
+            if (_useStaticInstance && Instance != this)
                 return Instance.Get(regionID, scopeID);
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                if (m_regionData.ContainsKey(regionID))
-                    return m_regionData[regionID];
+                if (_regionData.ContainsKey(regionID))
+                    return _regionData[regionID];
             }
 
             return null;
@@ -185,14 +185,14 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
         public List<RegionData> Get(int startX, int startY, int endX, int endY, UUID scopeID)
         {
-            if (m_useStaticInstance && Instance != this)
+            if (_useStaticInstance && Instance != this)
                 return Instance.Get(startX, startY, endX, endY, scopeID);
 
             List<RegionData> ret = new List<RegionData>();
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                foreach (RegionData r in m_regionData.Values)
+                foreach (RegionData r in _regionData.Values)
                 {
                     if (r.posX + r.sizeX > startX && r.posX <= endX
                          && r.posY + r.sizeX > startY && r.posY <= endY)
@@ -205,15 +205,15 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
         public bool Store(RegionData data)
         {
-            if (m_useStaticInstance && Instance != this)
+            if (_useStaticInstance && Instance != this)
                 return Instance.Store(data);
 
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[NULL REGION DATA]: Storing region {0} {1}, scope {2}", data.RegionName, data.RegionID, data.ScopeID);
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                m_regionData[data.RegionID] = data;
+                _regionData[data.RegionID] = data;
             }
 
             return true;
@@ -221,15 +221,15 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
         public bool SetDataItem(UUID regionID, string item, string value)
         {
-            if (m_useStaticInstance && Instance != this)
+            if (_useStaticInstance && Instance != this)
                 return Instance.SetDataItem(regionID, item, value);
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                if (!m_regionData.ContainsKey(regionID))
+                if (!_regionData.ContainsKey(regionID))
                     return false;
 
-                m_regionData[regionID].Data[item] = value;
+                _regionData[regionID].Data[item] = value;
             }
 
             return true;
@@ -237,17 +237,17 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
         public bool Delete(UUID regionID)
         {
-            if (m_useStaticInstance && Instance != this)
+            if (_useStaticInstance && Instance != this)
                 return Instance.Delete(regionID);
 
-//            m_log.DebugFormat("[NULL REGION DATA]: Deleting region {0}", regionID);
+//            _log.DebugFormat("[NULL REGION DATA]: Deleting region {0}", regionID);
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                if (!m_regionData.ContainsKey(regionID))
+                if (!_regionData.ContainsKey(regionID))
                     return false;
 
-                m_regionData.Remove(regionID);
+                _regionData.Remove(regionID);
             }
 
             return true;
@@ -283,9 +283,9 @@ readonly Dictionary<UUID, RegionData> m_regionData = new Dictionary<UUID, Region
 
             List<RegionData> ret = new List<RegionData>();
 
-            lock (m_regionData)
+            lock (_regionData)
             {
-                foreach (RegionData r in m_regionData.Values)
+                foreach (RegionData r in _regionData.Values)
                 {
                     if ((Convert.ToInt32(r.Data["flags"]) & regionFlags) != 0)
                         ret.Add(r);

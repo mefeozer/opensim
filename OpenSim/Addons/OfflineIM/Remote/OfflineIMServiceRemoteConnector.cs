@@ -41,16 +41,16 @@ namespace OpenSim.OfflineIM
 {
     public class OfflineIMServiceRemoteConnector : IOfflineIMService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_ServerURI = string.Empty;
-        private readonly IServiceAuth m_Auth;
-        private readonly object m_Lock = new object();
+        private readonly string _ServerURI = string.Empty;
+        private readonly IServiceAuth _Auth;
+        private readonly object _Lock = new object();
 
         public OfflineIMServiceRemoteConnector(string url)
         {
-            m_ServerURI = url;
-            m_log.DebugFormat("[OfflineIM.V2.RemoteConnector]: Offline IM server at {0}", m_ServerURI);
+            _ServerURI = url;
+            _log.DebugFormat("[OfflineIM.V2.RemoteConnector]: Offline IM server at {0}", _ServerURI);
         }
 
         public OfflineIMServiceRemoteConnector(IConfigSource config)
@@ -58,11 +58,11 @@ namespace OpenSim.OfflineIM
             IConfig cnf = config.Configs["Messaging"];
             if (cnf == null)
             {
-                m_log.WarnFormat("[OfflineIM.V2.RemoteConnector]: Missing Messaging configuration");
+                _log.WarnFormat("[OfflineIM.V2.RemoteConnector]: Missing Messaging configuration");
                 return;
             }
 
-            m_ServerURI = cnf.GetString("OfflineMessageURL", string.Empty);
+            _ServerURI = cnf.GetString("OfflineMessageURL", string.Empty);
 
             /// This is from BaseServiceConnector
             string authType = Util.GetConfigVarFromSections<string>(config, "AuthType", new string[] { "Network", "Messaging" }, "None");
@@ -70,12 +70,12 @@ namespace OpenSim.OfflineIM
             switch (authType)
             {
                 case "BasicHttpAuthentication":
-                    m_Auth = new BasicHttpAuthentication(config, "Messaging");
+                    _Auth = new BasicHttpAuthentication(config, "Messaging");
                     break;
             }
             ///
-            m_log.DebugFormat("[OfflineIM.V2.RemoteConnector]: Offline IM server at {0} with auth {1}",
-                m_ServerURI, m_Auth == null ? "None" : m_Auth.GetType().ToString());
+            _log.DebugFormat("[OfflineIM.V2.RemoteConnector]: Offline IM server at {0} with auth {1}",
+                _ServerURI, _Auth == null ? "None" : _Auth.GetType().ToString());
         }
 
         #region IOfflineIMService
@@ -97,7 +97,7 @@ namespace OpenSim.OfflineIM
             if (result == "NULL" || result.ToLower() == "false")
             {
                 string reason = ret.ContainsKey("REASON") ? ret["REASON"].ToString() : "Unknown error";
-                m_log.DebugFormat("[OfflineIM.V2.RemoteConnector]: GetMessages for {0} failed: {1}", principalID, reason);
+                _log.DebugFormat("[OfflineIM.V2.RemoteConnector]: GetMessages for {0} failed: {1}", principalID, reason);
                 return ims;
             }
 
@@ -151,11 +151,11 @@ namespace OpenSim.OfflineIM
             sendData["METHOD"] = method;
 
             string reply = string.Empty;
-            lock (m_Lock)
+            lock (_Lock)
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
-                         m_ServerURI + "/offlineim",
+                         _ServerURI + "/offlineim",
                          ServerUtils.BuildQueryString(sendData),
-                         m_Auth);
+                         _Auth);
 
             Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(
                     reply);

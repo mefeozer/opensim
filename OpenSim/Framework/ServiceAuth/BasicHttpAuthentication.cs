@@ -35,37 +35,34 @@ namespace OpenSim.Framework.ServiceAuth
 {
     public class BasicHttpAuthentication : IServiceAuth
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public string Name { get { return "BasicHttp"; } }
+        public string Name => "BasicHttp";
 
-        private readonly string m_Username;
-        private readonly string m_Password;
-        private readonly string m_CredentialsB64;
+        private readonly string _Username;
+        private readonly string _Password;
+        private readonly string _CredentialsB64;
 
 //        private string remove_me;
 
-        public string Credentials
-        {
-            get { return m_CredentialsB64; }
-        }
+        public string Credentials => _CredentialsB64;
 
         public BasicHttpAuthentication(IConfigSource config, string section)
         {
 //            remove_me = section;
-            m_Username = Util.GetConfigVarFromSections<string>(config, "HttpAuthUsername", new string[] { "Network", section }, string.Empty);
-            m_Password = Util.GetConfigVarFromSections<string>(config, "HttpAuthPassword", new string[] { "Network", section }, string.Empty);
-            string str = m_Username + ":" + m_Password;
+            _Username = Util.GetConfigVarFromSections<string>(config, "HttpAuthUsername", new string[] { "Network", section }, string.Empty);
+            _Password = Util.GetConfigVarFromSections<string>(config, "HttpAuthPassword", new string[] { "Network", section }, string.Empty);
+            string str = _Username + ":" + _Password;
             byte[] encData_byte = Util.UTF8.GetBytes(str);
 
-            m_CredentialsB64 = Convert.ToBase64String(encData_byte);
-//            m_log.DebugFormat("[HTTP BASIC AUTH]: {0} {1} [{2}]", m_Username, m_Password, section);
+            _CredentialsB64 = Convert.ToBase64String(encData_byte);
+//            _log.DebugFormat("[HTTP BASIC AUTH]: {0} {1} [{2}]", _Username, _Password, section);
         }
 
         public void AddAuthorization(NameValueCollection headers)
         {
-            //m_log.DebugFormat("[HTTP BASIC AUTH]: Adding authorization for {0}", remove_me);
-            headers["Authorization"] = "Basic " + m_CredentialsB64;
+            //_log.DebugFormat("[HTTP BASIC AUTH]: Adding authorization for {0}", remove_me);
+            headers["Authorization"] = "Basic " + _CredentialsB64;
         }
 
         public bool Authenticate(string data)
@@ -76,7 +73,7 @@ namespace OpenSim.Framework.ServiceAuth
                 string[] parts = recovered.Split(new char[] { ':' });
                 if (parts.Length >= 2)
                 {
-                    return m_Username.Equals(parts[0]) && m_Password.Equals(parts[1]);
+                    return _Username.Equals(parts[0]) && _Password.Equals(parts[1]);
                 }
             }
 
@@ -85,7 +82,7 @@ namespace OpenSim.Framework.ServiceAuth
 
         public bool Authenticate(NameValueCollection requestHeaders, AddHeaderDelegate d, out HttpStatusCode statusCode)
         {
-//            m_log.DebugFormat("[HTTP BASIC AUTH]: Authenticate in {0}", "BasicHttpAuthentication");
+//            _log.DebugFormat("[HTTP BASIC AUTH]: Authenticate in {0}", "BasicHttpAuthentication");
 
             string value = requestHeaders.Get("Authorization");
             if (value != null)

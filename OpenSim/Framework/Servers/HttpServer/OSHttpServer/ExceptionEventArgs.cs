@@ -21,9 +21,6 @@ namespace OSHttpServer
         /// <summary>
         /// caught exception
         /// </summary>
-        public Exception Exception
-        {
-            get { return _exception; }
-        }
+        public Exception Exception => _exception;
     }
 }

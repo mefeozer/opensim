@@ -42,16 +42,16 @@ namespace OpenSim.Server.Handlers.Login
 {
     public class LLLoginHandlers
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ILoginService m_LocalService;
-        private bool m_Proxy;
+        private readonly ILoginService _LocalService;
+        private bool _Proxy;
 
 
         public LLLoginHandlers(ILoginService service, bool hasProxy)
         {
-            m_LocalService = service;
-            m_Proxy = hasProxy;
+            _LocalService = service;
+            _Proxy = hasProxy;
         }
 
         public XmlRpcResponse HandleXMLRPCLogin(XmlRpcRequest request, IPEndPoint remoteClient)
@@ -97,7 +97,7 @@ namespace OpenSim.Server.Handlers.Login
                     else if (requestData.ContainsKey("web_login_key"))
                     {
                         passwd = "$1$" + requestData["web_login_key"].ToString();
-                        m_log.InfoFormat("[LOGIN]: XMLRPC Login Req key {0}", passwd);
+                        _log.InfoFormat("[LOGIN]: XMLRPC Login Req key {0}", passwd);
                     }
                     string startLocation = string.Empty;
                     UUID scopeID = UUID.Zero;
@@ -123,10 +123,10 @@ namespace OpenSim.Server.Handlers.Login
                     if (requestData.Contains("id0") && requestData["id0"] != null)
                         id0 = requestData["id0"].ToString();
 
-                    //m_log.InfoFormat("[LOGIN]: XMLRPC Login Requested for {0} {1}, starting in {2}, using {3}", first, last, startLocation, clientVersion);
+                    //_log.InfoFormat("[LOGIN]: XMLRPC Login Requested for {0} {1}, starting in {2}, using {3}", first, last, startLocation, clientVersion);
 
                     LoginResponse reply = null;
-                    reply = m_LocalService.Login(first, last, passwd, startLocation, scopeID, clientVersion, channel, mac, id0, remoteClient);
+                    reply = _LocalService.Login(first, last, passwd, startLocation, scopeID, clientVersion, channel, mac, id0, remoteClient);
 
                     XmlRpcResponse response = new XmlRpcResponse
                     {
@@ -168,9 +168,9 @@ namespace OpenSim.Server.Handlers.Login
                     string passwd = requestData["passwd"].ToString();
                     int level = int.Parse(requestData["level"].ToString());
 
-                    m_log.InfoFormat("[LOGIN]: XMLRPC Set Level to {2} Requested by {0} {1}", first, last, level);
+                    _log.InfoFormat("[LOGIN]: XMLRPC Set Level to {2} Requested by {0} {1}", first, last, level);
 
-                    Hashtable reply = m_LocalService.SetLevel(first, last, passwd, level, remoteClient);
+                    Hashtable reply = _LocalService.SetLevel(first, last, passwd, level, remoteClient);
 
                     XmlRpcResponse response = new XmlRpcResponse
                     {
@@ -209,10 +209,10 @@ namespace OpenSim.Server.Handlers.Login
                     if (map.ContainsKey("scope_id"))
                         scopeID = new UUID(map["scope_id"].AsString());
 
-                    m_log.Info("[LOGIN]: LLSD Login Requested for: '" + map["first"].AsString() + "' '" + map["last"].AsString() + "' / " + startLocation);
+                    _log.Info("[LOGIN]: LLSD Login Requested for: '" + map["first"].AsString() + "' '" + map["last"].AsString() + "' / " + startLocation);
 
                     LoginResponse reply = null;
-                    reply = m_LocalService.Login(map["first"].AsString(), map["last"].AsString(), map["passwd"].AsString(), startLocation, scopeID,
+                    reply = _LocalService.Login(map["first"].AsString(), map["last"].AsString(), map["passwd"].AsString(), startLocation, scopeID,
                         map["version"].AsString(), map["channel"].AsString(), map["mac"].AsString(), map["id0"].AsString(), remoteClient);
                     return reply.ToOSDMap();
 
@@ -255,7 +255,7 @@ namespace OpenSim.Server.Handlers.Login
                                            IPEndPoint endPoint =
                                                (sender as WebSocketHttpServerHandler).GetRemoteIPEndpoint();
                                            LoginResponse reply = null;
-                                           reply = m_LocalService.Login(first, last, passwd, start, scope, version,
+                                           reply = _LocalService.Login(first, last, passwd, start, scope, version,
                                                                         channel, mac, id0, endPoint);
                                            sock.SendMessage(OSDParser.SerializeJsonString(reply.ToOSDMap()));
 

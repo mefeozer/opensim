@@ -42,13 +42,13 @@ namespace pCampBot
         {
             Bot.Client.Self.Jump(false);
             Bot.Client.Self.Movement.Stop = true;
-            m_interruptEvent.WaitOne();
+            _interruptEvent.WaitOne();
             Bot.Client.Self.Movement.Stop = false;
         }
 
         public override void Interrupt()
         {
-            m_interruptEvent.Set();
+            _interruptEvent.Set();
         }
     }
 }

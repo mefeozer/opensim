@@ -40,10 +40,7 @@ namespace OpenSim.Region.UserStatistics
     {
         #region IStatsController Members
 
-        public string ReportName
-        {
-            get { return "Client"; }
-        }
+        public string ReportName => "Client";
 
         /// <summary>
         /// Return summar information in the form:
@@ -60,11 +57,11 @@ namespace OpenSim.Region.UserStatistics
             stats_default_page_values values = (stats_default_page_values) pModelResult["hdata"];
 
             OSDMap summaryInfo = new OpenMetaverse.StructuredData.OSDMap();
-            summaryInfo.Add("totalUsers", new OSDString(values.total_num_users.ToString()));
-            summaryInfo.Add("totalSessions", new OSDString(values.total_num_sessions.ToString()));
+            summaryInfo.Add("totalUsers", new OSDString(values.total_nu_users.ToString()));
+            summaryInfo.Add("totalSessions", new OSDString(values.total_nu_sessions.ToString()));
             summaryInfo.Add("averageClientFPS", new OSDString(values.avg_client_fps.ToString()));
-            summaryInfo.Add("averageClientMem", new OSDString(values.avg_client_mem_use.ToString()));
-            summaryInfo.Add("averageSimFPS", new OSDString(values.avg_sim_fps.ToString()));
+            summaryInfo.Add("averageClientMem", new OSDString(values.avg_client_me_use.ToString()));
+            summaryInfo.Add("averageSimFPS", new OSDString(values.avg_si_fps.ToString()));
             summaryInfo.Add("averagePingTime", new OSDString(values.avg_ping.ToString()));
             summaryInfo.Add("totalKBOut", new OSDString(values.total_kb_out.ToString()));
             summaryInfo.Add("totalKBIn", new OSDString(values.total_kb_in.ToString()));
@@ -101,7 +98,7 @@ namespace OpenSim.Region.UserStatistics
                 cmd.Dispose();
 
                 sql =
-                    "select client_version, count(*) as cnt, avg(avg_sim_fps) as simfps from stats_session_data group by client_version order by count(*) desc LIMIT 10;";
+                    "select client_version, count(*) as cnt, avg(avg_si_fps) as simfps from stats_session_data group by client_version order by count(*) desc LIMIT 10;";
 
                 cmd = new SqliteCommand(sql, dbConn);
                 sdr = cmd.ExecuteReader();
@@ -126,7 +123,7 @@ namespace OpenSim.Region.UserStatistics
                 if (totalregions > 1)
                 {
                     sql =
-                        "select region_id, client_version, count(*) as cnt, avg(avg_sim_fps) as simfps from stats_session_data group by region_id, client_version order by region_id, count(*) desc;";
+                        "select region_id, client_version, count(*) as cnt, avg(avg_si_fps) as simfps from stats_session_data group by region_id, client_version order by region_id, count(*) desc;";
                     cmd = new SqliteCommand(sql, dbConn);
 
                     sdr = cmd.ExecuteReader();
@@ -179,7 +176,7 @@ namespace OpenSim.Region.UserStatistics
             int totalclients = (int)pModelResult["Total"];
             Hashtable regionTotals = (Hashtable) pModelResult["RegionTotals"];
             List<ClientVersionData> cliRegData = (List<ClientVersionData>) pModelResult["ClientRegionData"];
-            List<Scene> m_scenes = (List<Scene>)pModelResult["Scenes"];
+            List<Scene> _scenes = (List<Scene>)pModelResult["Scenes"];
             Dictionary<string, IStatsController> reports = (Dictionary<string, IStatsController>)pModelResult["Reports"];
 
             const string STYLESHEET =
@@ -265,7 +262,7 @@ TD.align_top { vertical-align: top; }
                 {
                     HTMLUtil.TR_O(ref output, "");
                     HTMLUtil.TD_O(ref output, "content");
-                    output.Append(regionNamefromUUID(m_scenes, cvd.region_id));
+                    output.Append(regionNamefromUUID(_scenes, cvd.region_id));
                     HTMLUtil.TD_C(ref output);
                     HTMLUtil.TD_O(ref output, "content");
                     output.Append(cvd.version);

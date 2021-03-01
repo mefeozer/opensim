@@ -43,7 +43,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalUserAccountServicesConnector")]
     public class LocalUserAccountServicesConnector : ISharedRegionModule, IUserAccountService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -53,21 +53,15 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
         /// </summary>
         public IUserAccountService UserAccountService { get; private set; }
 
-        private UserAccountCache m_Cache;
+        private UserAccountCache _Cache;
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
         #region ISharedRegionModule
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LocalUserAccountServicesConnector"; }
-        }
+        public string Name => "LocalUserAccountServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -80,7 +74,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
                     IConfig userConfig = source.Configs["UserAccountService"];
                     if (userConfig == null)
                     {
-                        m_log.Error("[LOCAL USER ACCOUNT SERVICE CONNECTOR]: UserAccountService missing from OpenSim.ini");
+                        _log.Error("[LOCAL USER ACCOUNT SERVICE CONNECTOR]: UserAccountService missing from OpenSim.ini");
                         return;
                     }
 
@@ -88,7 +82,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
-                        m_log.Error("[LOCAL USER ACCOUNT SERVICE CONNECTOR]: No LocalServiceModule named in section UserService");
+                        _log.Error("[LOCAL USER ACCOUNT SERVICE CONNECTOR]: No LocalServiceModule named in section UserService");
                         return;
                     }
 
@@ -97,53 +91,53 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
 
                     if (UserAccountService == null)
                     {
-                        m_log.ErrorFormat(
+                        _log.ErrorFormat(
                             "[LOCAL USER ACCOUNT SERVICE CONNECTOR]: Cannot load user account service specified as {0}", serviceDll);
                         return;
                     }
-                    m_Enabled = true;
-                    m_Cache = new UserAccountCache();
+                    _Enabled = true;
+                    _Cache = new UserAccountCache();
 
-                    m_log.Info("[LOCAL USER ACCOUNT SERVICE CONNECTOR]: Local user connector enabled");
+                    _log.Info("[LOCAL USER ACCOUNT SERVICE CONNECTOR]: Local user connector enabled");
                 }
             }
         }
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void Close()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             // FIXME: Why do we bother setting this module and caching up if we just end up registering the inner
             // user account service?!
             scene.RegisterModuleInterface<IUserAccountService>(UserAccountService);
-            scene.RegisterModuleInterface<IUserAccountCacheModule>(m_Cache);
+            scene.RegisterModuleInterface<IUserAccountCacheModule>(_Cache);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_log.InfoFormat("[LOCAL USER ACCOUNT SERVICE CONNECTOR]: Enabled local user accounts for region {0}", scene.RegionInfo.RegionName);
+            _log.InfoFormat("[LOCAL USER ACCOUNT SERVICE CONNECTOR]: Enabled local user accounts for region {0}", scene.RegionInfo.RegionName);
         }
 
         #endregion
@@ -154,12 +148,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
         {
             bool inCache = false;
             UserAccount account;
-            account = m_Cache.Get(userID, out inCache);
+            account = _Cache.Get(userID, out inCache);
             if (inCache)
                 return account;
 
             account = UserAccountService.GetUserAccount(scopeID, userID);
-            m_Cache.Cache(userID, account);
+            _Cache.Cache(userID, account);
 
             return account;
         }
@@ -168,13 +162,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
         {
             bool inCache = false;
             UserAccount account;
-            account = m_Cache.Get(firstName + " " + lastName, out inCache);
+            account = _Cache.Get(firstName + " " + lastName, out inCache);
             if (inCache)
                 return account;
 
             account = UserAccountService.GetUserAccount(scopeID, firstName, lastName);
             if (account != null)
-                m_Cache.Cache(account.PrincipalID, account);
+                _Cache.Cache(account.PrincipalID, account);
 
             return account;
         }
@@ -197,7 +191,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
             {
                 if(UUID.TryParse(id, out uuid))
                 {
-                    account = m_Cache.Get(uuid, out inCache);
+                    account = _Cache.Get(uuid, out inCache);
                     if (inCache)
                         ret.Add(account);
                     else
@@ -216,7 +210,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
                     if(acc != null)
                     {
                         ret.Add(acc);
-                        m_Cache.Cache(acc.PrincipalID, acc);
+                        _Cache.Cache(acc.PrincipalID, acc);
                     }
                 }
             }
@@ -239,13 +233,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
         {
             bool ret = UserAccountService.StoreUserAccount(data);
             if (ret)
-                m_Cache.Cache(data.PrincipalID, data);
+                _Cache.Cache(data.PrincipalID, data);
             return ret;
         }
 
         public void InvalidateCache(UUID userID)
         {
-            m_Cache.Invalidate(userID);
+            _Cache.Invalidate(userID);
         }
 
         #endregion

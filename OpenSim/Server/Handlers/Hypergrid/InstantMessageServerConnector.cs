@@ -45,11 +45,11 @@ namespace OpenSim.Server.Handlers.Hypergrid
 {
     public class InstantMessageServerConnector : ServiceConnector
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IInstantMessage m_IMService;
+        private readonly IInstantMessage _IMService;
 
         public InstantMessageServerConnector(IConfigSource config, IHttpServer server) :
             this(config, server, (IInstantMessageSimConnector)null)
@@ -70,9 +70,9 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 string serviceDll = gridConfig.GetString("LocalServiceModule", string.Empty);
 
                 object[] args = new object[] { config, simConnector };
-                m_IMService = ServerUtils.LoadPlugin<IInstantMessage>(serviceDll, args);
+                _IMService = ServerUtils.LoadPlugin<IInstantMessage>(serviceDll, args);
             }
-            if (m_IMService == null)
+            if (_IMService == null)
                 throw new Exception("InstantMessage server connector cannot proceed because of missing service");
 
             server.AddXmlRPCHandler("grid_instant_message", ProcessInstantMessage, false);
@@ -81,7 +81,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
 
         public IInstantMessage GetService()
         {
-            return m_IMService;
+            return _IMService;
         }
 
         protected virtual XmlRpcResponse ProcessInstantMessage(XmlRpcRequest request, IPEndPoint remoteClient)
@@ -108,25 +108,25 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 float pos_x = 0;
                 float pos_y = 0;
                 float pos_z = 0;
-                //m_log.Info("Processing IM");
+                //_log.Info("Processing IM");
 
 
                 Hashtable requestData = (Hashtable)request.Params[0];
                 // Check if it's got all the data
-                if (requestData.ContainsKey("from_agent_id")
-                        && requestData.ContainsKey("to_agent_id") && requestData.ContainsKey("im_session_id")
-                        && requestData.ContainsKey("timestamp") && requestData.ContainsKey("from_agent_name")
+                if (requestData.ContainsKey("fro_agent_id")
+                        && requestData.ContainsKey("to_agent_id") && requestData.ContainsKey("i_session_id")
+                        && requestData.ContainsKey("timestamp") && requestData.ContainsKey("fro_agent_name")
                         && requestData.ContainsKey("message") && requestData.ContainsKey("dialog")
-                        && requestData.ContainsKey("from_group")
+                        && requestData.ContainsKey("fro_group")
                         && requestData.ContainsKey("offline") && requestData.ContainsKey("parent_estate_id")
                         && requestData.ContainsKey("position_x") && requestData.ContainsKey("position_y")
                         && requestData.ContainsKey("position_z") && requestData.ContainsKey("region_id")
                         && requestData.ContainsKey("binary_bucket"))
                 {
                     // Do the easy way of validating the UUIDs
-                    UUID.TryParse((string)requestData["from_agent_id"], out fromAgentID);
+                    UUID.TryParse((string)requestData["fro_agent_id"], out fromAgentID);
                     UUID.TryParse((string)requestData["to_agent_id"], out toAgentID);
-                    UUID.TryParse((string)requestData["im_session_id"], out imSessionID);
+                    UUID.TryParse((string)requestData["i_session_id"], out imSessionID);
                     UUID.TryParse((string)requestData["region_id"], out RegionID);
                     try
                     {
@@ -142,7 +142,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                     {
                     }
 
-                    fromAgentName = (string)requestData["from_agent_name"];
+                    fromAgentName = (string)requestData["fro_agent_name"];
                     message = (string)requestData["message"];
                     if (message == null)
                         message = string.Empty;
@@ -159,7 +159,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                         dialog = dialogdata[0];
                     }
 
-                    if ((string)requestData["from_group"] == "TRUE")
+                    if ((string)requestData["fro_group"] == "TRUE")
                         fromGroup = true;
 
                     string requestData2 = (string)requestData["offline"];
@@ -221,13 +221,13 @@ namespace OpenSim.Server.Handlers.Hypergrid
                         binaryBucket = binaryBucket
                     };
 
-                    successful = m_IMService.IncomingInstantMessage(gim);
+                    successful = _IMService.IncomingInstantMessage(gim);
 
                 }
             }
             catch (Exception e)
             {
-                m_log.Error("[INSTANT MESSAGE]: Caught unexpected exception:", e);
+                _log.Error("[INSTANT MESSAGE]: Caught unexpected exception:", e);
                 successful = false;
             }
 

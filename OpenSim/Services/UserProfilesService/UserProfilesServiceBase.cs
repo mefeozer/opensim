@@ -36,7 +36,7 @@ namespace OpenSim.Services.ProfilesService
 {
     public class UserProfilesServiceBase: ServiceBase
     {
-        static readonly ILog m_log =
+        static readonly ILog _log =
             LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -52,7 +52,7 @@ namespace OpenSim.Services.ProfilesService
         {
             if(string.IsNullOrEmpty(configName))
             {
-                m_log.WarnFormat("[PROFILES SERVICE]: Configuration section not given!");
+                _log.WarnFormat("[PROFILES SERVICE]: Configuration section not given!");
                 return;
             }
 

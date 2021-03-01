@@ -38,25 +38,19 @@ namespace OpenSim.Tests.Common
 {
     public class TestsAssetCache : ISharedRegionModule, IAssetCache
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled;
-        private MemoryCache m_Cache;
+        private bool _Enabled;
+        private MemoryCache _Cache;
 
-        public string Name
-        {
-            get { return "TestsAssetCache"; }
-        }
+        public string Name => "TestsAssetCache";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-            m_Cache = MemoryCache.Default;
-            m_Enabled = true;
+            _Cache = MemoryCache.Default;
+            _Enabled = true;
         }
 
         public void PostInitialise()
@@ -69,7 +63,7 @@ namespace OpenSim.Tests.Common
 
         public void AddRegion(Scene scene)
         {
-            if (m_Enabled)
+            if (_Enabled)
                 scene.RegisterModuleInterface<IAssetCache>(this);
         }
 
@@ -98,7 +92,7 @@ namespace OpenSim.Tests.Common
             if (asset != null)
             {
                 CacheItemPolicy policy = new CacheItemPolicy();
-                m_Cache.Set(asset.ID, asset, policy);
+                _Cache.Set(asset.ID, asset, policy);
             }
         }
 
@@ -109,18 +103,18 @@ namespace OpenSim.Tests.Common
 
         public bool Get(string id, out AssetBase asset)
         {
-            asset = (AssetBase)m_Cache.Get(id);
+            asset = (AssetBase)_Cache.Get(id);
             return true;
         }
 
         public AssetBase GetCached(string id)
         {
-            return (AssetBase)m_Cache.Get(id);
+            return (AssetBase)_Cache.Get(id);
         }
 
         public void Expire(string id)
         {
-            m_Cache.Remove(id);
+            _Cache.Remove(id);
         }
 
         public void Clear()

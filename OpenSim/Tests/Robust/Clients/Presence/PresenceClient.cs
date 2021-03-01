@@ -38,35 +38,35 @@ namespace Robust.Tests
         [Test]
         public void Presence_001()
         {
-            PresenceServicesConnector m_Connector = new PresenceServicesConnector(DemonServer.Address);
+            PresenceServicesConnector _Connector = new PresenceServicesConnector(DemonServer.Address);
 
             UUID user1 = UUID.Random();
             UUID session1 = UUID.Random();
             UUID region1 = UUID.Random();
 
-            bool success = m_Connector.LoginAgent(user1.ToString(), session1, UUID.Zero);
+            bool success = _Connector.LoginAgent(user1.ToString(), session1, UUID.Zero);
             Assert.AreEqual(success, true, "Failed to add user session");
 
-            PresenceInfo pinfo = m_Connector.GetAgent(session1);
+            PresenceInfo pinfo = _Connector.GetAgent(session1);
             Assert.AreNotEqual(pinfo, null, "Unable to retrieve session");
             Assert.AreEqual(pinfo.UserID, user1.ToString(), "Retrieved session does not match expected userID");
             Assert.AreNotEqual(pinfo.RegionID, region1, "Retrieved session is unexpectedly in region");
 
-            success = m_Connector.ReportAgent(session1, region1);
+            success = _Connector.ReportAgent(session1, region1);
             Assert.AreEqual(success, true, "Failed to report session in region 1");
 
-            pinfo = m_Connector.GetAgent(session1);
+            pinfo = _Connector.GetAgent(session1);
             Assert.AreNotEqual(pinfo, null, "Unable to session presence");
             Assert.AreEqual(pinfo.UserID, user1.ToString(), "Retrieved session does not match expected userID");
             Assert.AreEqual(pinfo.RegionID, region1, "Retrieved session is not in expected region");
 
-            success = m_Connector.LogoutAgent(session1);
+            success = _Connector.LogoutAgent(session1);
             Assert.AreEqual(success, true, "Failed to remove session");
 
-            pinfo = m_Connector.GetAgent(session1);
+            pinfo = _Connector.GetAgent(session1);
             Assert.AreEqual(pinfo, null, "Session is still there, even though it shouldn't");
 
-            success = m_Connector.ReportAgent(session1, UUID.Random());
+            success = _Connector.ReportAgent(session1, UUID.Random());
             Assert.AreEqual(success, false, "Remove non-existing session should fail");
         }
 

@@ -36,17 +36,14 @@ namespace OpenSim.Server.Handlers.Hypergrid
 {
     public class GatekeeperServiceInConnector : ServiceConnector
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //                LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IGatekeeperService m_GatekeeperService;
-        public IGatekeeperService GateKeeper
-        {
-            get { return m_GatekeeperService; }
-        }
+        private readonly IGatekeeperService _GatekeeperService;
+        public IGatekeeperService GateKeeper => _GatekeeperService;
 
-        readonly bool m_Proxy = false;
+        readonly bool _Proxy = false;
 
         public GatekeeperServiceInConnector(IConfigSource config, IHttpServer server, ISimulationService simService) :
                 base(config, server, string.Empty)
@@ -56,19 +53,19 @@ namespace OpenSim.Server.Handlers.Hypergrid
             {
                 string serviceDll = gridConfig.GetString("LocalServiceModule", string.Empty);
                 object[] args = new object[] { config, simService };
-                m_GatekeeperService = ServerUtils.LoadPlugin<IGatekeeperService>(serviceDll, args);
+                _GatekeeperService = ServerUtils.LoadPlugin<IGatekeeperService>(serviceDll, args);
 
             }
-            if (m_GatekeeperService == null)
+            if (_GatekeeperService == null)
                 throw new Exception("Gatekeeper server connector cannot proceed because of missing service");
 
-            m_Proxy = gridConfig.GetBoolean("HasProxy", false);
+            _Proxy = gridConfig.GetBoolean("HasProxy", false);
 
-            HypergridHandlers hghandlers = new HypergridHandlers(m_GatekeeperService);
+            HypergridHandlers hghandlers = new HypergridHandlers(_GatekeeperService);
             server.AddXmlRPCHandler("link_region", hghandlers.LinkRegionRequest, false);
             server.AddXmlRPCHandler("get_region", hghandlers.GetRegion, false);
 
-            server.AddSimpleStreamHandler(new GatekeeperAgentHandler(m_GatekeeperService, m_Proxy),true);
+            server.AddSimpleStreamHandler(new GatekeeperAgentHandler(_GatekeeperService, _Proxy),true);
         }
 
         public GatekeeperServiceInConnector(IConfigSource config, IHttpServer server, string configName)

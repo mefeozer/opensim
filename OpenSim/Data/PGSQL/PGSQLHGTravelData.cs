@@ -36,7 +36,7 @@ namespace OpenSim.Data.PGSQL
     /// </summary>
     public class PGSQLHGTravelData : PGSQLGenericTableHandler<HGTravelingData>, IHGTravelingData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public PGSQLHGTravelData(string connectionString, string realm) : base(connectionString, realm, "HGTravelStore") { }
 
@@ -64,7 +64,7 @@ namespace OpenSim.Data.PGSQL
         {
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
-                cmd.CommandText = string.Format(@"delete from {0} where ""TMStamp"" < CURRENT_DATE - INTERVAL '2 day'", m_Realm);
+                cmd.CommandText = string.Format(@"delete from {0} where ""TMStamp"" < CURRENT_DATE - INTERVAL '2 day'", _Realm);
 
                 ExecuteNonQuery(cmd);
             }

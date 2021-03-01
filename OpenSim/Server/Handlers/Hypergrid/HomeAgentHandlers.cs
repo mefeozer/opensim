@@ -40,17 +40,17 @@ namespace OpenSim.Server.Handlers.Hypergrid
 {
     public class HomeAgentHandler : AgentPostHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IUserAgentService m_UserAgentService;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly IUserAgentService _UserAgentService;
 
-        private readonly string m_LoginServerIP;
+        private readonly string _LoginServerIP;
 
         public HomeAgentHandler(IUserAgentService userAgentService, string loginServerIP, bool proxy) :
             base("/homeagent")
         {
-            m_UserAgentService = userAgentService;
-            m_LoginServerIP = loginServerIP;
-            m_Proxy = proxy;
+            _UserAgentService = userAgentService;
+            _LoginServerIP = loginServerIP;
+            _Proxy = proxy;
         }
 
         protected override AgentDestinationData CreateAgentDestinationData()
@@ -76,11 +76,11 @@ namespace OpenSim.Server.Handlers.Hypergrid
             }
             catch (InvalidCastException)
             {
-                m_log.ErrorFormat("[HOME AGENT HANDLER]: Bad cast in UnpackData");
+                _log.ErrorFormat("[HOME AGENT HANDLER]: Bad cast in UnpackData");
             }
 
             // Verify if this call came from the login server
-            if (remoteAddress == m_LoginServerIP)
+            if (remoteAddress == _LoginServerIP)
                 data.fromLogin = true;
 
         }
@@ -101,7 +101,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 return gatekeeper;
             }
             else
-                m_log.WarnFormat("[HOME AGENT HANDLER]: Wrong data type");
+                _log.WarnFormat("[HOME AGENT HANDLER]: Wrong data type");
 
             return null;
         }
@@ -110,7 +110,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
         protected override bool CreateAgent(GridRegion source, GridRegion gatekeeper, GridRegion destination,
             AgentCircuitData aCircuit, uint teleportFlags, bool fromLogin, EntityTransferContext ctx, out string reason)
         {
-            return m_UserAgentService.LoginAgentToGrid(source, aCircuit, gatekeeper, destination, fromLogin, out reason);
+            return _UserAgentService.LoginAgentToGrid(source, aCircuit, gatekeeper, destination, fromLogin, out reason);
         }
 
     }

@@ -42,9 +42,9 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "ObjectAdd")]
     public class ObjectAdd : INonSharedRegionModule
     {
-        // private static readonly ILog m_log =
+        // private static readonly ILog _log =
         //     LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private Scene m_scene;
+        private Scene _scene;
 
         #region INonSharedRegionModule Members
         public void Initialise(IConfigSource pSource)
@@ -53,16 +53,16 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
-            m_scene.EventManager.OnRegisterCaps += RegisterCaps;
+            _scene = scene;
+            _scene.EventManager.OnRegisterCaps += RegisterCaps;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (m_scene == scene)
+            if (_scene == scene)
             {
-                m_scene.EventManager.OnRegisterCaps -= RegisterCaps;
-                m_scene = null;
+                _scene.EventManager.OnRegisterCaps -= RegisterCaps;
+                _scene = null;
             }
         }
 
@@ -74,21 +74,15 @@ namespace OpenSim.Region.ClientStack.Linden
         {
         }
 
-        public string Name
-        {
-            get { return "ObjectAddModule"; }
-        }
+        public string Name => "ObjectAddModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
         public void RegisterCaps(UUID agentID, Caps caps)
         {
-            // m_log.InfoFormat("[OBJECTADD]: {0}", "/CAPS/OA/" + capuuid + "/");
+            // _log.InfoFormat("[OBJECTADD]: {0}", "/CAPS/OA/" + capuuid + "/");
 
             caps.RegisterSimpleHandler("ObjectAdd", new SimpleOSDMapHandler("POST", "/" + UUID.Random(),
                 delegate (IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, OSDMap map)
@@ -100,7 +94,7 @@ namespace OpenSim.Region.ClientStack.Linden
         public void ProcessAdd(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, OSDMap map, UUID avatarID)
         {
             httpResponse.KeepAlive = false;
-            if(!m_scene.TryGetScenePresence(avatarID, out ScenePresence sp))
+            if(!_scene.TryGetScenePresence(avatarID, out ScenePresence sp))
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.Gone;
                 return;
@@ -287,8 +281,8 @@ namespace OpenSim.Region.ClientStack.Linden
                 }
             }
 
-            Vector3 pos = m_scene.GetNewRezLocation(ray_start, ray_end, ray_target_id, rotation, bypass_raycast ? (byte)1 : (byte)0, ray_end_is_intersection ? (byte)1 : (byte)0, true, scale, false);
-            if (!m_scene.Permissions.CanRezObject(1, avatarID, pos))
+            Vector3 pos = _scene.GetNewRezLocation(ray_start, ray_end, ray_target_id, rotation, bypass_raycast ? (byte)1 : (byte)0, ray_end_is_intersection ? (byte)1 : (byte)0, true, scale, false);
+            if (!_scene.Permissions.CanRezObject(1, avatarID, pos))
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.Unauthorized;
                 return;
@@ -319,7 +313,7 @@ namespace OpenSim.Region.ClientStack.Linden
             pbs.State = (byte)state;
             pbs.LastAttachPoint = (byte)lastattach;
 
-            SceneObjectGroup obj = m_scene.AddNewPrim(avatarID, group_id, pos, rotation, pbs);
+            SceneObjectGroup obj = _scene.AddNewPrim(avatarID, group_id, pos, rotation, pbs);
 
             SceneObjectPart rootpart = obj.RootPart;
             rootpart.Shape = pbs;
@@ -332,7 +326,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
             obj.InvalidateDeepEffectivePerms();
 
-            m_scene.PhysicsScene.AddPhysicsActorTaint(rootpart.PhysActor);
+            _scene.PhysicsScene.AddPhysicsActorTaint(rootpart.PhysActor);
 
             httpResponse.StatusCode = (int)HttpStatusCode.OK;
             httpResponse.RawBuffer = Util.UTF8NBGetbytes(string.Format("<llsd><map><key>local_id</key>{0}</map></llsd>", ConvertUintToBytes(obj.LocalId)));

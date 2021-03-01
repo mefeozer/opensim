@@ -44,21 +44,18 @@ namespace OpenSim.Region.ClientStack.LindenCaps
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "ServerReleaseNotesModule")]
     class ServerReleaseNotesModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_enabled;
-        private string m_ServerReleaseNotesURL;
+        private bool _enabled;
+        private string _ServerReleaseNotesURL;
 
-        public string Name { get { return "ServerReleaseNotesModule"; } }
+        public string Name => "ServerReleaseNotesModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-            m_enabled = false; // whatever
+            _enabled = false; // whatever
             IConfig config = source.Configs["ClientStack.LindenCaps"];
             if (config == null)
                 return;
@@ -71,23 +68,23 @@ namespace OpenSim.Region.ClientStack.LindenCaps
             if (config == null)
                 return;
 
-            m_ServerReleaseNotesURL = config.GetString("ServerReleaseNotesURL", m_ServerReleaseNotesURL);
-            if (string.IsNullOrEmpty(m_ServerReleaseNotesURL))
+            _ServerReleaseNotesURL = config.GetString("ServerReleaseNotesURL", _ServerReleaseNotesURL);
+            if (string.IsNullOrEmpty(_ServerReleaseNotesURL))
                 return;
 
             Uri dummy;
-            if(!Uri.TryCreate(m_ServerReleaseNotesURL,UriKind.Absolute, out dummy))
+            if(!Uri.TryCreate(_ServerReleaseNotesURL,UriKind.Absolute, out dummy))
             {
-                m_log.Error("[Cap_ServerReleaseNotes]: Invalid ServerReleaseNotesURL. Cap Disabled");
+                _log.Error("[Cap_ServerReleaseNotes]: Invalid ServerReleaseNotesURL. Cap Disabled");
                 return;
             }
 
-            m_enabled = true;
+            _enabled = true;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
             scene.EventManager.OnRegisterCaps += RegisterCaps;
@@ -97,7 +94,7 @@ namespace OpenSim.Region.ClientStack.LindenCaps
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
             scene.EventManager.OnRegisterCaps -= RegisterCaps;
@@ -120,7 +117,7 @@ namespace OpenSim.Region.ClientStack.LindenCaps
         private void ProcessServerReleaseNotes(IOSHttpResponse httpResponse)
         {
             httpResponse.StatusCode = (int)HttpStatusCode.Moved;
-            httpResponse.AddHeader("Location", m_ServerReleaseNotesURL);
+            httpResponse.AddHeader("Location", _ServerReleaseNotesURL);
         }
     }
 }

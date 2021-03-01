@@ -35,54 +35,54 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 {
     public partial class ScriptBaseClass : MarshalByRefObject
     {
-        public ILS_Api m_LS_Functions;
+        public ILS_Api _LS_Functions;
 
         public void ApiTypeLS(IScriptApi api)
         {
             if (!(api is ILS_Api))
                 return;
 
-            m_LS_Functions = (ILS_Api)api;
+            _LS_Functions = (ILS_Api)api;
         }
 
         public LSL_List lsGetWindlightScene(LSL_List rules)
         {
-            return m_LS_Functions.lsGetWindlightScene(rules);
+            return _LS_Functions.lsGetWindlightScene(rules);
         }
 
         public int lsSetWindlightScene(LSL_List rules)
         {
-            return m_LS_Functions.lsSetWindlightScene(rules);
+            return _LS_Functions.lsSetWindlightScene(rules);
         }
 
         public int lsSetWindlightSceneTargeted(LSL_List rules, key target)
         {
-            return m_LS_Functions.lsSetWindlightSceneTargeted(rules, target);
+            return _LS_Functions.lsSetWindlightSceneTargeted(rules, target);
         }
 
         public void lsClearWindlightScene()
         {
-            m_LS_Functions.lsClearWindlightScene();
+            _LS_Functions.lsClearWindlightScene();
         }
 
         public LSL_List cmGetWindlightScene(LSL_List rules)
         {
-            return m_LS_Functions.lsGetWindlightScene(rules);
+            return _LS_Functions.lsGetWindlightScene(rules);
         }
 
         public int cmSetWindlightScene(LSL_List rules)
         {
-            return m_LS_Functions.lsSetWindlightScene(rules);
+            return _LS_Functions.lsSetWindlightScene(rules);
         }
 
         public int cmSetWindlightSceneTargeted(LSL_List rules, key target)
         {
-            return m_LS_Functions.lsSetWindlightSceneTargeted(rules, target);
+            return _LS_Functions.lsSetWindlightSceneTargeted(rules, target);
         }
 
         public void cmClearWindlightScene()
         {
-            m_LS_Functions.lsClearWindlightScene();
+            _LS_Functions.lsClearWindlightScene();
         }
     }
 }

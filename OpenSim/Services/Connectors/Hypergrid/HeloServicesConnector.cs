@@ -34,11 +34,11 @@ namespace OpenSim.Services.Connectors
 {
     public class HeloServicesConnector
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_ServerURI = string.Empty;
+        private readonly string _ServerURI = string.Empty;
 
         public HeloServicesConnector()
         {
@@ -54,7 +54,7 @@ namespace OpenSim.Services.Connectors
                 {
                     // Let's check if this is a valid URI, because it may not be
                     uri = new Uri(serverURI);
-                    m_ServerURI = serverURI.TrimEnd('/') + "/helo/";
+                    _ServerURI = serverURI.TrimEnd('/') + "/helo/";
                 }
                 else
                 {
@@ -63,33 +63,33 @@ namespace OpenSim.Services.Connectors
                     //
                     uri = new Uri(serverURI + "xxx");
                     if (string.IsNullOrEmpty(uri.Query))
-                        m_ServerURI = serverURI.TrimEnd('/') + "/helo/";
+                        _ServerURI = serverURI.TrimEnd('/') + "/helo/";
                     else
                     {
                         serverURI = serverURI + "xxx";
-                        m_ServerURI = serverURI.Replace(uri.Query, "");
-                        m_ServerURI = m_ServerURI.TrimEnd('/') + "/helo/";
+                        _ServerURI = serverURI.Replace(uri.Query, "");
+                        _ServerURI = _ServerURI.TrimEnd('/') + "/helo/";
                     }
                 }
 
             }
             catch (UriFormatException)
             {
-                m_log.WarnFormat("[HELO SERVICE]: Malformed URL {0}", serverURI);
+                _log.WarnFormat("[HELO SERVICE]: Malformed URL {0}", serverURI);
             }
         }
 
         public virtual string Helo()
         {
-            if (string.IsNullOrEmpty(m_ServerURI))
+            if (string.IsNullOrEmpty(_ServerURI))
             {
-                m_log.WarnFormat("[HELO SERVICE]: Unable to invoke HELO due to empty URL");
+                _log.WarnFormat("[HELO SERVICE]: Unable to invoke HELO due to empty URL");
                 return string.Empty;
             }
 
             try
             {
-                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(m_ServerURI);
+                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(_ServerURI);
                 // Eventually we need to switch to HEAD
                 /* req.Method = "HEAD"; */
 
@@ -102,7 +102,7 @@ namespace OpenSim.Services.Connectors
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[HELO SERVICE]: Unable to perform HELO request to {0}: {1}", m_ServerURI, e.Message);
+                _log.DebugFormat("[HELO SERVICE]: Unable to perform HELO request to {0}: {1}", _ServerURI, e.Message);
             }
 
             // fail

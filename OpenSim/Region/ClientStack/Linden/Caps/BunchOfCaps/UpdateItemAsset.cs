@@ -45,7 +45,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
         private void UpdateInventoryItemAsset(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, OSDMap map, byte atype, bool taskSript = false)
         {
-            m_log.Debug("[CAPS]: UpdateInventoryItemAsset Request in region: " + m_regionName + "\n");
+            _log.Debug("[CAPS]: UpdateInventoryItemAsset Request in region: " + _regionName + "\n");
 
             httpResponse.StatusCode = (int)HttpStatusCode.OK;
 
@@ -54,7 +54,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
             try
             {
-                if (map.TryGetValue("item_id", out OSD itmp))
+                if (map.TryGetValue("ite_id", out OSD itmp))
                     itemID = itmp;
                 if (map.TryGetValue("task_id", out OSD tmp))
                     objectID = tmp;
@@ -74,7 +74,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
             if (objectID != UUID.Zero)
             {
-                SceneObjectPart sop = m_Scene.GetSceneObjectPart(objectID);
+                SceneObjectPart sop = _Scene.GetSceneObjectPart(objectID);
                 if (sop == null)
                 {
                     LLSDAssetUploadError error = new LLSDAssetUploadError
@@ -86,7 +86,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     return;
                 }
 
-                if (!m_Scene.Permissions.CanEditObjectInventory(objectID, m_AgentID))
+                if (!_Scene.Permissions.CanEditObjectInventory(objectID, _AgentID))
                 {
                     LLSDAssetUploadError error = new LLSDAssetUploadError
                     {
@@ -100,17 +100,17 @@ namespace OpenSim.Region.ClientStack.Linden
 
             string uploaderPath = GetNewCapPath();
 
-            string protocol = m_HostCapsObj.SSLCaps ? "https://" : "http://";
-            string uploaderURL = protocol + m_HostCapsObj.HostName + ":" + m_HostCapsObj.Port.ToString() + uploaderPath;
+            string protocol = _HostCapsObj.SSLCaps ? "https://" : "http://";
+            string uploaderURL = protocol + _HostCapsObj.HostName + ":" + _HostCapsObj.Port.ToString() + uploaderPath;
             LLSDAssetUploadResponse uploadResponse = new LLSDAssetUploadResponse
             {
                 uploader = uploaderURL,
                 state = "upload"
             };
 
-            ItemUpdater uploader = new ItemUpdater(itemID, objectID, atype, uploaderPath, m_HostCapsObj.HttpListener, m_dumpAssetsToFile)
+            ItemUpdater uploader = new ItemUpdater(itemID, objectID, atype, uploaderPath, _HostCapsObj.HttpListener, _dumpAssetsToFile)
             {
-                m_remoteAdress = httpRequest.RemoteIPEndPoint.Address
+                _remoteAdress = httpRequest.RemoteIPEndPoint.Address
             };
 
             uploader.OnUpLoad += ItemUpdated;
@@ -120,9 +120,9 @@ namespace OpenSim.Region.ClientStack.Linden
                 MaxDataSize = 10000000 // change per asset type?
             };
 
-            m_HostCapsObj.HttpListener.AddSimpleStreamHandler(uploaderHandler);
+            _HostCapsObj.HttpListener.AddSimpleStreamHandler(uploaderHandler);
 
-            // m_log.InfoFormat("[CAPS]: UpdateAgentInventoryAsset response: {0}",
+            // _log.InfoFormat("[CAPS]: UpdateAgentInventoryAsset response: {0}",
             //                             LLSDHelpers.SerialiseLLSDReply(uploadResponse)));
 
             httpResponse.RawBuffer = Util.UTF8NBGetbytes(LLSDHelpers.SerialiseLLSDReply(uploadResponse));
@@ -138,7 +138,7 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             if (ItemUpdatedCall != null)
             {
-                return ItemUpdatedCall(m_HostCapsObj.AgentID, itemID, objectID, data);
+                return ItemUpdatedCall(_HostCapsObj.AgentID, itemID, objectID, data);
             }
             return UUID.Zero;
         }
@@ -155,8 +155,8 @@ namespace OpenSim.Region.ClientStack.Linden
 
             try
             {
-                //m_log.Debug("[CAPS]: ScriptTaskInventory Request in region: " + m_regionName);
-                //m_log.DebugFormat("[CAPS]: request: {0}, path: {1}, param: {2}", request, path, param);
+                //_log.Debug("[CAPS]: ScriptTaskInventory Request in region: " + _regionName);
+                //_log.DebugFormat("[CAPS]: request: {0}, path: {1}, param: {2}", request, path, param);
 
                 UUID itemID = UUID.Zero;
                 UUID objectID = UUID.Zero;
@@ -164,7 +164,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 OSD tmp;
                 try
                 {
-                    if (map.TryGetValue("item_id", out tmp))
+                    if (map.TryGetValue("ite_id", out tmp))
                         itemID = tmp;
                     if (map.TryGetValue("task_id", out tmp))
                         objectID = tmp;
@@ -184,7 +184,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     return;
                 }
 
-                SceneObjectPart sop = m_Scene.GetSceneObjectPart(objectID);
+                SceneObjectPart sop = _Scene.GetSceneObjectPart(objectID);
                 if (sop == null)
                 {
                     LLSDAssetUploadError error = new LLSDAssetUploadError
@@ -196,7 +196,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     return;
                 }
 
-                if (!m_Scene.Permissions.CanEditObjectInventory(objectID, m_AgentID))
+                if (!_Scene.Permissions.CanEditObjectInventory(objectID, _AgentID))
                 {
                     LLSDAssetUploadError error = new LLSDAssetUploadError
                     {
@@ -207,7 +207,7 @@ namespace OpenSim.Region.ClientStack.Linden
                     return;
                 }
 
-                if (!m_Scene.Permissions.CanEditScript(itemID, objectID, m_AgentID))
+                if (!_Scene.Permissions.CanEditScript(itemID, objectID, _AgentID))
                 {
                     LLSDAssetUploadError error = new LLSDAssetUploadError
                     {
@@ -219,8 +219,8 @@ namespace OpenSim.Region.ClientStack.Linden
                 }
 
                 string uploaderPath = GetNewCapPath();
-                string protocol = m_HostCapsObj.SSLCaps ? "https://" : "http://";
-                string uploaderURL = protocol + m_HostCapsObj.HostName + ":" + m_HostCapsObj.Port.ToString() + uploaderPath;
+                string protocol = _HostCapsObj.SSLCaps ? "https://" : "http://";
+                string uploaderURL = protocol + _HostCapsObj.HostName + ":" + _HostCapsObj.Port.ToString() + uploaderPath;
                 LLSDAssetUploadResponse uploadResponse = new LLSDAssetUploadResponse
                 {
                     uploader = uploaderURL,
@@ -228,7 +228,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 };
 
                 TaskInventoryScriptUpdater uploader = new TaskInventoryScriptUpdater(itemID, objectID, is_script_running,
-                        uploaderPath, m_HostCapsObj.HttpListener, httpRequest.RemoteIPEndPoint.Address, m_dumpAssetsToFile);
+                        uploaderPath, _HostCapsObj.HttpListener, httpRequest.RemoteIPEndPoint.Address, _dumpAssetsToFile);
                 uploader.OnUpLoad += TaskScriptUpdated;
 
                 var uploaderHandler = new SimpleBinaryHandler("POST", uploaderPath, uploader.process)
@@ -236,9 +236,9 @@ namespace OpenSim.Region.ClientStack.Linden
                     MaxDataSize = 10000000 // change per asset type?
                 };
 
-                m_HostCapsObj.HttpListener.AddSimpleStreamHandler(uploaderHandler);
+                _HostCapsObj.HttpListener.AddSimpleStreamHandler(uploaderHandler);
 
-                // m_log.InfoFormat("[CAPS]: " +
+                // _log.InfoFormat("[CAPS]: " +
                 //    "ScriptTaskInventory response: {0}",
                 //       LLSDHelpers.SerialiseLLSDReply(uploadResponse)));
 
@@ -246,7 +246,7 @@ namespace OpenSim.Region.ClientStack.Linden
             }
             catch (Exception e)
             {
-                m_log.Error("[UpdateScriptTaskInventory]: " + e.ToString());
+                _log.Error("[UpdateScriptTaskInventory]: " + e.ToString());
             }
         }
         /// <summary>
@@ -260,7 +260,7 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             if (TaskScriptUpdatedCall != null)
             {
-                ArrayList e = TaskScriptUpdatedCall(m_HostCapsObj.AgentID, itemID, primID, isScriptRunning, data);
+                ArrayList e = TaskScriptUpdatedCall(_HostCapsObj.AgentID, itemID, primID, isScriptRunning, data);
                 foreach (object item in e)
                     errors.Add(item);
             }
@@ -278,21 +278,21 @@ namespace OpenSim.Region.ClientStack.Linden
         public class ItemUpdater : ExpiringCapBase
         {
             public event UpdateItem OnUpLoad = null;
-            private readonly UUID m_inventoryItemID;
-            private readonly UUID m_objectID;
-            private readonly bool m_dumpAssetToFile;
-            public IPAddress m_remoteAdress;
-            private readonly byte m_assetType;
+            private readonly UUID _inventoryItemID;
+            private readonly UUID _objectID;
+            private readonly bool _dumpAssetToFile;
+            public IPAddress _remoteAdress;
+            private readonly byte _assetType;
 
             public ItemUpdater(UUID inventoryItem, UUID objectid, byte aType, string path, IHttpServer httpServer, bool dumpAssetToFile):
                 base(httpServer, path)
             {
-                m_dumpAssetToFile = dumpAssetToFile;
+                _dumpAssetToFile = dumpAssetToFile;
 
-                m_inventoryItemID = inventoryItem;
-                m_objectID = objectid;
-                m_httpListener = httpServer;
-                m_assetType = aType;
+                _inventoryItemID = inventoryItem;
+                _objectID = objectid;
+                _httpListener = httpServer;
+                _assetType = aType;
 
                 Start(30000);
             }
@@ -308,7 +308,7 @@ namespace OpenSim.Region.ClientStack.Linden
             {
                 Stop();
 
-                if (!request.RemoteIPEndPoint.Address.Equals(m_remoteAdress))
+                if (!request.RemoteIPEndPoint.Address.Equals(_remoteAdress))
                 {
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     return;
@@ -322,20 +322,20 @@ namespace OpenSim.Region.ClientStack.Linden
                     return;
                 }
 
-                if (!BunchOfCaps.ValidateAssetData(m_assetType, data))
+                if (!BunchOfCaps.ValidateAssetData(_assetType, data))
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     return;
                 }
 
-                UUID assetID = OnUpLoad(m_inventoryItemID, m_objectID, data);
+                UUID assetID = OnUpLoad(_inventoryItemID, _objectID, data);
 
                 if (assetID == UUID.Zero)
                 {
                     LLSDAssetUploadError uperror = new LLSDAssetUploadError
                     {
                         message = "Failed to update inventory item asset",
-                        identifier = m_inventoryItemID
+                        identifier = _inventoryItemID
                     };
                     res = LLSDHelpers.SerialiseLLSDReply(uperror);
                 }
@@ -344,13 +344,13 @@ namespace OpenSim.Region.ClientStack.Linden
                     LLSDAssetUploadComplete uploadComplete = new LLSDAssetUploadComplete
                     {
                         new_asset = assetID.ToString(),
-                        new_inventory_item = m_inventoryItemID,
+                        new_inventory_item = _inventoryItemID,
                         state = "complete"
                     };
                     res = LLSDHelpers.SerialiseLLSDReply(uploadComplete);
                 }
 
-                if (m_dumpAssetToFile)
+                if (_dumpAssetToFile)
                 {
                     Util.SaveAssetToFile("updateditem" + Util.RandomClass.Next(1, 1000) + ".dat", data);
                 }
@@ -367,21 +367,21 @@ namespace OpenSim.Region.ClientStack.Linden
         public class TaskInventoryScriptUpdater : ExpiringCapBase
         {
             public event UpdateTaskScript OnUpLoad;
-            private readonly UUID m_inventoryItemID;
-            private readonly UUID m_primID;
-            private readonly bool m_isScriptRunning;
-            private readonly bool m_dumpAssetToFile;
-            public IPAddress m_remoteAddress;
+            private readonly UUID _inventoryItemID;
+            private readonly UUID _primID;
+            private readonly bool _isScriptRunning;
+            private readonly bool _dumpAssetToFile;
+            public IPAddress _remoteAddress;
 
             public TaskInventoryScriptUpdater(UUID inventoryItemID, UUID primID, bool isScriptRunning,
                                                 string path, IHttpServer httpServer, IPAddress address,
                                                 bool dumpAssetToFile) : base(httpServer, path)
             {
-                m_dumpAssetToFile = dumpAssetToFile;
-                m_inventoryItemID = inventoryItemID;
-                m_primID = primID;
-                m_isScriptRunning = isScriptRunning;
-                m_remoteAddress = address;
+                _dumpAssetToFile = dumpAssetToFile;
+                _inventoryItemID = inventoryItemID;
+                _primID = primID;
+                _isScriptRunning = isScriptRunning;
+                _remoteAddress = address;
                 Start(30000);
             }
 
@@ -396,7 +396,7 @@ namespace OpenSim.Region.ClientStack.Linden
             {
                 Stop();
 
-                if (!request.RemoteIPEndPoint.Address.Equals(m_remoteAddress))
+                if (!request.RemoteIPEndPoint.Address.Equals(_remoteAddress))
                 {
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     return;
@@ -422,9 +422,9 @@ namespace OpenSim.Region.ClientStack.Linden
                     LLSDTaskScriptUploadComplete uploadComplete = new LLSDTaskScriptUploadComplete();
 
                     ArrayList errors = new ArrayList();
-                    OnUpLoad?.Invoke(m_inventoryItemID, m_primID, m_isScriptRunning, data, ref errors);
+                    OnUpLoad?.Invoke(_inventoryItemID, _primID, _isScriptRunning, data, ref errors);
 
-                    uploadComplete.new_asset = m_inventoryItemID;
+                    uploadComplete.new_asset = _inventoryItemID;
                     uploadComplete.compiled = errors.Count > 0 ? false : true;
                     uploadComplete.state = "complete";
                     uploadComplete.errors = new OpenSim.Framework.Capabilities.OSDArray
@@ -434,12 +434,12 @@ namespace OpenSim.Region.ClientStack.Linden
 
                     res = LLSDHelpers.SerialiseLLSDReply(uploadComplete);
 
-                    if (m_dumpAssetToFile)
+                    if (_dumpAssetToFile)
                     {
                         Util.SaveAssetToFile("updatedtaskscript" + Util.RandomClass.Next(1, 1000) + ".dat", data);
                     }
 
-                    // m_log.InfoFormat("[CAPS]: TaskInventoryScriptUpdater.uploaderCaps res: {0}", res);
+                    // _log.InfoFormat("[CAPS]: TaskInventoryScriptUpdater.uploaderCaps res: {0}", res);
                     response.RawBuffer = Util.UTF8NBGetbytes(res);
                 }
                 catch

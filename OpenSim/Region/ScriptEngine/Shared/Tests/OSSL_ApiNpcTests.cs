@@ -44,8 +44,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     [TestFixture]
     public class OSSL_NpcApiAppearanceTest : OpenSimTestCase
     {
-        protected Scene m_scene;
-        protected XEngine.XEngine m_engine;
+        protected Scene _scene;
+        protected XEngine.XEngine _engine;
 
         [SetUp]
         public override void SetUp()
@@ -64,13 +64,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             config.Set("AllowOSFunctions", "true");
             config.Set("OSFunctionThreatLevel", "Severe");
 
-            m_scene = new SceneHelpers().SetupScene();
+            _scene = new SceneHelpers().SetupScene();
             SceneHelpers.SetupSceneModules(
-                m_scene, initConfigSource, new AvatarFactoryModule(), new AttachmentsModule(), new NPCModule());
+                _scene, initConfigSource, new AvatarFactoryModule(), new AttachmentsModule(), new NPCModule());
 
-            m_engine = new XEngine.XEngine();
-            m_engine.Initialise(initConfigSource);
-            m_engine.AddRegion(m_scene);
+            _engine = new XEngine.XEngine();
+            _engine.Initialise(initConfigSource);
+            _engine.AddRegion(_scene);
         }
 
         /// <summary>
@@ -85,14 +85,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID userId = TestHelpers.ParseTail(0x1);
             float newHeight = 1.9f;
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, userId);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, userId);
             sp.Appearance.AvatarHeight = newHeight;
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, 0x10);
             SceneObjectPart part = so.RootPart;
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, part, null);
+            osslApi.Initialize(_engine, part, null);
 
             string notecardName = "appearanceNc";
             osslApi.osOwnerSaveAppearance(notecardName);
@@ -102,7 +102,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             Assert.That(npcRaw, Is.Not.Null);
 
             UUID npcId = new UUID(npcRaw);
-            ScenePresence npc = m_scene.GetScenePresence(npcId);
+            ScenePresence npc = _scene.GetScenePresence(npcId);
             Assert.That(npc, Is.Not.Null);
             Assert.That(npc.Appearance.AvatarHeight, Is.EqualTo(newHeight));
         }
@@ -115,10 +115,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID userId = TestHelpers.ParseTail(0x1);
 
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, 0x10);
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, so.RootPart, null);
+            osslApi.Initialize(_engine, so.RootPart, null);
 
             bool gotExpectedException = false;
             try
@@ -146,14 +146,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID userId = TestHelpers.ParseTail(0x1);
             float newHeight = 1.9f;
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, userId);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, userId);
             sp.Appearance.AvatarHeight = newHeight;
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, 0x10);
             SceneObjectPart part = so.RootPart;
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, part, null);
+            osslApi.Initialize(_engine, part, null);
 
             string notecardName = "appearanceNc";
             osslApi.osOwnerSaveAppearance(notecardName);
@@ -163,7 +163,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             Assert.That(npcRaw, Is.Not.Null);
 
             UUID npcId = new UUID(npcRaw);
-            ScenePresence npc = m_scene.GetScenePresence(npcId);
+            ScenePresence npc = _scene.GetScenePresence(npcId);
             Assert.That(npc, Is.Not.Null);
             Assert.That(npc.Appearance.AvatarHeight, Is.EqualTo(newHeight));
         }
@@ -181,14 +181,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             string firstAppearanceNcName = "appearanceNc1";
             string secondAppearanceNcName = "appearanceNc2";
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, userId);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, userId);
             sp.Appearance.AvatarHeight = firstHeight;
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, 0x10);
             SceneObjectPart part = so.RootPart;
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, part, null);
+            osslApi.Initialize(_engine, part, null);
 
             osslApi.osOwnerSaveAppearance(firstAppearanceNcName);
 
@@ -202,7 +202,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             osslApi.osNpcLoadAppearance(npcRaw, secondAppearanceNcName);
 
             UUID npcId = new UUID(npcRaw);
-            ScenePresence npc = m_scene.GetScenePresence(npcId);
+            ScenePresence npc = _scene.GetScenePresence(npcId);
             Assert.That(npc, Is.Not.Null);
             Assert.That(npc.Appearance.AvatarHeight, Is.EqualTo(secondHeight));
         }
@@ -219,14 +219,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             string firstAppearanceNcName = "appearanceNc1";
             string secondAppearanceNcName = "appearanceNc2";
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, userId);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, userId);
             sp.Appearance.AvatarHeight = firstHeight;
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, 0x10);
             SceneObjectPart part = so.RootPart;
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, part, null);
+            osslApi.Initialize(_engine, part, null);
 
             osslApi.osOwnerSaveAppearance(firstAppearanceNcName);
 
@@ -246,7 +246,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             Assert.That(gotExpectedException, Is.True);
 
             UUID npcId = new UUID(npcRaw);
-            ScenePresence npc = m_scene.GetScenePresence(npcId);
+            ScenePresence npc = _scene.GetScenePresence(npcId);
             Assert.That(npc, Is.Not.Null);
             Assert.That(npc.Appearance.AvatarHeight, Is.EqualTo(firstHeight));
         }
@@ -264,24 +264,24 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID otherUserId = TestHelpers.ParseTail(0x2);
             float newHeight = 1.9f;
 
-            SceneHelpers.AddScenePresence(m_scene, otherUserId);
+            SceneHelpers.AddScenePresence(_scene, otherUserId);
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, userId);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, userId);
             sp.Appearance.AvatarHeight = newHeight;
 
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, 0x10);
             SceneObjectPart part = so.RootPart;
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             SceneObjectGroup otherSo = SceneHelpers.CreateSceneObject(1, otherUserId, 0x20);
             SceneObjectPart otherPart = otherSo.RootPart;
-            m_scene.AddSceneObject(otherSo);
+            _scene.AddSceneObject(otherSo);
 
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, part, null);
+            osslApi.Initialize(_engine, part, null);
 
             OSSL_Api otherOsslApi = new OSSL_Api();
-            otherOsslApi.Initialize(m_engine, otherPart, null);
+            otherOsslApi.Initialize(_engine, otherPart, null);
 
             string notecardName = "appearanceNc";
             osslApi.osOwnerSaveAppearance(notecardName);
@@ -294,12 +294,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             // Should still be around
             UUID npcId = new UUID(npcRaw);
-            ScenePresence npc = m_scene.GetScenePresence(npcId);
+            ScenePresence npc = _scene.GetScenePresence(npcId);
             Assert.That(npc, Is.Not.Null);
 
             osslApi.osNpcRemove(npcRaw);
 
-            npc = m_scene.GetScenePresence(npcId);
+            npc = _scene.GetScenePresence(npcId);
 
             // Now the owner deleted it and it's gone
             Assert.That(npc, Is.Null);
@@ -318,14 +318,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID userId = TestHelpers.ParseTail(0x1);
             float newHeight = 1.9f;
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, userId);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, userId);
             sp.Appearance.AvatarHeight = newHeight;
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, 0x10);
             SceneObjectPart part = so.RootPart;
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             OSSL_Api osslApi = new OSSL_Api();
-            osslApi.Initialize(m_engine, part, null);
+            osslApi.Initialize(_engine, part, null);
 
             string notecardName = "appearanceNc";
             osslApi.osOwnerSaveAppearance(notecardName);
@@ -337,7 +337,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             osslApi.osNpcRemove(npcRaw);
 
             UUID npcId = new UUID(npcRaw);
-            ScenePresence npc = m_scene.GetScenePresence(npcId);
+            ScenePresence npc = _scene.GetScenePresence(npcId);
             Assert.That(npc, Is.Null);
         }
     }

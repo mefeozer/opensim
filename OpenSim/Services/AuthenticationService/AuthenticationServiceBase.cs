@@ -45,16 +45,16 @@ namespace OpenSim.Services.AuthenticationService
     //
     public class AuthenticationServiceBase : ServiceBase
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected IAuthenticationData m_Database;
-        protected IUserAccountService m_UserAccountService = null;
+        protected IAuthenticationData _Database;
+        protected IUserAccountService _UserAccountService = null;
 
         public AuthenticationServiceBase(IConfigSource config, IUserAccountService acct) : this(config)
         {
-            m_UserAccountService = acct;
+            _UserAccountService = acct;
         }
 
         public AuthenticationServiceBase(IConfigSource config) : base(config)
@@ -92,20 +92,20 @@ namespace OpenSim.Services.AuthenticationService
             if (string.IsNullOrEmpty(dllName) || string.IsNullOrEmpty(realm))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IAuthenticationData>(dllName,
+            _Database = LoadPlugin<IAuthenticationData>(dllName,
                     new object[] {connString, realm});
-            if (m_Database == null)
+            if (_Database == null)
                 throw new Exception(string.Format("Could not find a storage interface in module {0}", dllName));
         }
 
         public bool Verify(UUID principalID, string token, int lifetime)
         {
-            return m_Database.CheckToken(principalID, token, lifetime);
+            return _Database.CheckToken(principalID, token, lifetime);
         }
 
         public virtual bool Release(UUID principalID, string token)
         {
-            return m_Database.CheckToken(principalID, token, 0);
+            return _Database.CheckToken(principalID, token, 0);
         }
 
         public virtual bool SetPassword(UUID principalID, string password)
@@ -113,7 +113,7 @@ namespace OpenSim.Services.AuthenticationService
             string passwordSalt = Util.Md5Hash(UUID.Random().ToString());
             string md5PasswdHash = Util.Md5Hash(Util.Md5Hash(password) + ":" + passwordSalt);
 
-            AuthenticationData auth = m_Database.Get(principalID);
+            AuthenticationData auth = _Database.Get(principalID);
             if (auth == null)
             {
                 auth = new AuthenticationData
@@ -126,19 +126,19 @@ namespace OpenSim.Services.AuthenticationService
             }
             auth.Data["passwordHash"] = md5PasswdHash;
             auth.Data["passwordSalt"] = passwordSalt;
-            if (!m_Database.Store(auth))
+            if (!_Database.Store(auth))
             {
-                m_log.DebugFormat("[AUTHENTICATION DB]: Failed to store authentication data");
+                _log.DebugFormat("[AUTHENTICATION DB]: Failed to store authentication data");
                 return false;
             }
 
-            m_log.InfoFormat("[AUTHENTICATION DB]: Set password for principalID {0}", principalID);
+            _log.InfoFormat("[AUTHENTICATION DB]: Set password for principalID {0}", principalID);
             return true;
         }
 
         public virtual AuthInfo GetAuthInfo(UUID principalID)
         {
-            AuthenticationData data = m_Database.Get(principalID);
+            AuthenticationData data = _Database.Get(principalID);
 
             if (data == null)
             {
@@ -172,13 +172,13 @@ namespace OpenSim.Services.AuthenticationService
             auth.Data["passwordHash"] = info.PasswordHash;
             auth.Data["passwordSalt"] = info.PasswordSalt;
 
-            if (!m_Database.Store(auth))
+            if (!_Database.Store(auth))
             {
-                m_log.ErrorFormat("[AUTHENTICATION DB]: Failed to store authentication info.");
+                _log.ErrorFormat("[AUTHENTICATION DB]: Failed to store authentication info.");
                 return false;
             }
 
-            m_log.DebugFormat("[AUTHENTICATION DB]: Set authentication info for principalID {0}", info.PrincipalID);
+            _log.DebugFormat("[AUTHENTICATION DB]: Set authentication info for principalID {0}", info.PrincipalID);
             return true;
         }
 
@@ -186,7 +186,7 @@ namespace OpenSim.Services.AuthenticationService
         {
             UUID token = UUID.Random();
 
-            if (m_Database.SetToken(principalID, token.ToString(), lifetime))
+            if (_Database.SetToken(principalID, token.ToString(), lifetime))
                 return token.ToString();
 
             return string.Empty;

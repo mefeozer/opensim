@@ -34,7 +34,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 {
     public class Executor
     {
-        // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // this is not the right place for this
         // for now it must match similar enums duplicated on scritp engines
@@ -142,7 +142,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
         // this is not the right place for this
         // for now it must match similar enums duplicated on scritp engines
-        protected static readonly Dictionary<string, scriptEvents> m_eventFlagsMap = new Dictionary<string, scriptEvents>()
+        protected static readonly Dictionary<string, scriptEvents> _eventFlagsMap = new Dictionary<string, scriptEvents>()
         {
             {"attach", scriptEvents.attach},
             {"at_rot_target", scriptEvents.at_rot_target},
@@ -186,57 +186,57 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
         /// <summary>
         /// Contains the script to execute functions in.
         /// </summary>
-        protected IScript m_Script;
+        protected IScript _Script;
 
 
         // Cache functions by keeping a reference to them in a dictionary
         private readonly Dictionary<string, MethodInfo> Events = new Dictionary<string, MethodInfo>();
-        private readonly Dictionary<string, scriptEvents> m_stateEvents = new Dictionary<string, scriptEvents>();
+        private readonly Dictionary<string, scriptEvents> _stateEvents = new Dictionary<string, scriptEvents>();
 
         public Executor(IScript script)
         {
-            m_Script = script;
+            _Script = script;
         }
 
         public scriptEvents GetStateEventFlags(string state)
         {
-            //m_log.Debug("Get event flags for " + state);
+            //_log.Debug("Get event flags for " + state);
 
             // Check to see if we've already computed the flags for this state
             scriptEvents eventFlags = scriptEvents.None;
-            if (m_stateEvents.ContainsKey(state))
+            if (_stateEvents.ContainsKey(state))
             {
-                m_stateEvents.TryGetValue(state, out eventFlags);
+                _stateEvents.TryGetValue(state, out eventFlags);
                 return eventFlags;
             }
 
-            Type type=m_Script.GetType();
+            Type type=_Script.GetType();
 
             // Fill in the events for this state, cache the results in the map
-            foreach (KeyValuePair<string, scriptEvents> kvp in m_eventFlagsMap)
+            foreach (KeyValuePair<string, scriptEvents> kvp in _eventFlagsMap)
             {
                 string evname = state + "_event_" + kvp.Key;
-                //m_log.Debug("Trying event "+evname);
+                //_log.Debug("Trying event "+evname);
                 try
                 {
                     MethodInfo mi = type.GetMethod(evname);
                     if (mi != null)
                     {
-                        //m_log.Debug("Found handler for " + kvp.Key);
+                        //_log.Debug("Found handler for " + kvp.Key);
                         eventFlags |= kvp.Value;
                     }
                 }
                 catch(Exception)
                 {
-                    //m_log.Debug("Exeption in GetMethod:\n"+e.ToString());
+                    //_log.Debug("Exeption in GetMethod:\n"+e.ToString());
                 }
             }
 
             // Save the flags we just computed and return the result
             if (eventFlags != 0)
-                m_stateEvents.Add(state, eventFlags);
+                _stateEvents.Add(state, eventFlags);
 
-            //m_log.Debug("Returning {0:x}", eventFlags);
+            //_log.Debug("Returning {0:x}", eventFlags);
             return eventFlags;
         }
 
@@ -249,13 +249,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
             string EventName = state + "_event_" + FunctionName;
 
 //#if DEBUG
-            //m_log.Debug("ScriptEngine: Script event function name: " + EventName);
+            //_log.Debug("ScriptEngine: Script event function name: " + EventName);
 //#endif
 
             if (Events.ContainsKey(EventName) == false)
             {
                 // Not found, create
-                Type type = m_Script.GetType();
+                Type type = _Script.GetType();
                 try
                 {
                     MethodInfo mi = type.GetMethod(EventName);
@@ -263,7 +263,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
                 }
                 catch
                 {
-                    // m_log.Error("Event "+EventName+" not found.");
+                    // _log.Error("Event "+EventName+" not found.");
                     // Event name not found, cache it as not found
                     Events.Add(EventName, null);
                 }
@@ -275,18 +275,18 @@ namespace OpenSim.Region.ScriptEngine.Shared.ScriptBase
 
             if (ev == null) // No event by that name!
             {
-                //m_log.Debug("ScriptEngine Can not find any event named: \String.Empty + EventName + "\String.Empty);
+                //_log.Debug("ScriptEngine Can not find any event named: \String.Empty + EventName + "\String.Empty);
                 return;
             }
 
 //cfk 2-7-08 dont need this right now and the default Linux build has DEBUG defined
 #if DEBUG
-            //m_log.Debug("ScriptEngine: Executing function name: " + EventName);
+            //_log.Debug("ScriptEngine: Executing function name: " + EventName);
 #endif
             // Found
             try
             {
-                ev.Invoke(m_Script, args);
+                ev.Invoke(_Script, args);
             }
             catch (TargetInvocationException tie)
             {

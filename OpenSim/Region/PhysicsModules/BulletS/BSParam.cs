@@ -376,10 +376,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 s.Logger.ErrorFormat("{0} Could not find parameter parser for type '{1}'", LogHeader, genericType);
             }
         }
-        public override bool HasSetOnObject
-        {
-            get { return objectSet != null; }
-        }
+        public override bool HasSetOnObject => objectSet != null;
+
         public override void SetOnObject(BSScene s, BSPhysObject obj)
         {
             if (objectSet != null)
@@ -467,24 +465,24 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         new ParameterDefn<int>("MaxSubStep", "In simulation step, maximum number of substeps",
             10,
-            (s) => { return s.m_maxSubSteps; },
-            (s,v) => { s.m_maxSubSteps = (int)v; } ),
+            (s) => { return s._maxSubSteps; },
+            (s,v) => { s._maxSubSteps = (int)v; } ),
         new ParameterDefn<float>("FixedTimeStep", "In simulation step, seconds of one substep (1/60)",
             1f / 60f,
-            (s) => { return s.m_fixedTimeStep; },
-            (s,v) => { s.m_fixedTimeStep = v; } ),
+            (s) => { return s._fixedTimeStep; },
+            (s,v) => { s._fixedTimeStep = v; } ),
         new ParameterDefn<float>("NominalFrameRate", "The base frame rate we claim",
             55f,
             (s) => { return s.NominalFrameRate; },
             (s,v) => { s.NominalFrameRate = (int)v; } ),
         new ParameterDefn<int>("MaxCollisionsPerFrame", "Max collisions returned at end of each frame",
             2048,
-            (s) => { return s.m_maxCollisionsPerFrame; },
-            (s,v) => { s.m_maxCollisionsPerFrame = (int)v; } ),
+            (s) => { return s._maxCollisionsPerFrame; },
+            (s,v) => { s._maxCollisionsPerFrame = (int)v; } ),
         new ParameterDefn<int>("MaxUpdatesPerFrame", "Max updates returned at end of each frame",
             8000,
-            (s) => { return s.m_maxUpdatesPerFrame; },
-            (s,v) => { s.m_maxUpdatesPerFrame = (int)v; } ),
+            (s) => { return s._maxUpdatesPerFrame; },
+            (s,v) => { s._maxUpdatesPerFrame = (int)v; } ),
 
         new ParameterDefn<float>("MinObjectMass", "Minimum object mass (0.0001)",
             0.0001f,

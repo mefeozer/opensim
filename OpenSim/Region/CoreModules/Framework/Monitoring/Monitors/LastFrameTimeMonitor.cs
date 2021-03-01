@@ -32,11 +32,11 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Monitors
 {
     class LastFrameTimeMonitor : IMonitor
     {
-        private readonly Scene m_scene;
+        private readonly Scene _scene;
 
         public LastFrameTimeMonitor(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
         }
 
         #region Implementation of IMonitor
@@ -48,7 +48,7 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Monitors
 
         public double GetValue()
         {
-            return Environment.TickCount - m_scene.MonitorLastFrameTick;
+            return Environment.TickCount - _scene.MonitorLastFrameTick;
         }
 
         public string GetFriendlyName()

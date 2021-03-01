@@ -40,11 +40,11 @@ namespace OpenSim.Services.Connectors
 {
     public class LandServicesConnector : ILandService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected IGridService m_GridService = null;
+        protected IGridService _GridService = null;
 
         public LandServicesConnector()
         {
@@ -57,7 +57,7 @@ namespace OpenSim.Services.Connectors
 
         public virtual void Initialise(IGridService gridServices)
         {
-            m_GridService = gridServices;
+            _GridService = gridServices;
         }
 
         public virtual LandData GetLandData(UUID scopeID, ulong regionHandle, uint x, uint y, out byte regionAccess)
@@ -72,7 +72,7 @@ namespace OpenSim.Services.Connectors
                 uint xpos = 0, ypos = 0;
                 Util.RegionHandleToWorldLoc(regionHandle, out xpos, out ypos);
 
-                GridRegion info = m_GridService.GetRegionByPosition(scopeID, (int)xpos, (int)ypos);
+                GridRegion info = _GridService.GetRegionByPosition(scopeID, (int)xpos, (int)ypos);
                 if (info != null) // just to be sure
                 {
                     string targetHandlestr = info.RegionHandle.ToString();
@@ -92,7 +92,7 @@ namespace OpenSim.Services.Connectors
                     XmlRpcResponse response = request.Send(info.ServerURI, 10000);
                     if (response.IsFault)
                     {
-                        m_log.ErrorFormat("[LAND CONNECTOR]: remote call returned an error: {0}", response.FaultString);
+                        _log.ErrorFormat("[LAND CONNECTOR]: remote call returned an error: {0}", response.FaultString);
                     }
                     else
                     {
@@ -118,22 +118,22 @@ namespace OpenSim.Services.Connectors
                                 regionAccess = (byte)Convert.ToInt32((string)hash["RegionAccess"]);
                             if(hash["Dwell"] != null)
                                 landData.Dwell = Convert.ToSingle((string)hash["Dwell"]);
-                            //m_log.DebugFormat("[LAND CONNECTOR]: Got land data for parcel {0}", landData.Name);
+                            //_log.DebugFormat("[LAND CONNECTOR]: Got land data for parcel {0}", landData.Name);
                         }
                         catch (Exception e)
                         {
-                            m_log.ErrorFormat(
+                            _log.ErrorFormat(
                                 "[LAND CONNECTOR]: Got exception while parsing land-data: {0} {1}",
                                 e.Message, e.StackTrace);
                         }
                     }
                 }
                 else
-                    m_log.WarnFormat("[LAND CONNECTOR]: Couldn't find region with handle {0}", regionHandle);
+                    _log.WarnFormat("[LAND CONNECTOR]: Couldn't find region with handle {0}", regionHandle);
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[LAND CONNECTOR]: Couldn't contact region {0}: {1} {2}", regionHandle, e.Message, e.StackTrace);
             }
 

@@ -128,22 +128,22 @@ namespace OpenSim.Region.ScriptEngine.Shared
         public LSL_Types.Vector3 Velocity;
 
         private LSL_Types.Vector3 touchST;
-        public LSL_Types.Vector3 TouchST { get { return touchST; } }
+        public LSL_Types.Vector3 TouchST => touchST;
 
         private LSL_Types.Vector3 touchNormal;
-        public LSL_Types.Vector3 TouchNormal { get { return touchNormal; } }
+        public LSL_Types.Vector3 TouchNormal => touchNormal;
 
         private LSL_Types.Vector3 touchBinormal;
-        public LSL_Types.Vector3 TouchBinormal { get { return touchBinormal; } }
+        public LSL_Types.Vector3 TouchBinormal => touchBinormal;
 
         private LSL_Types.Vector3 touchPos;
-        public LSL_Types.Vector3 TouchPos { get { return touchPos; } }
+        public LSL_Types.Vector3 TouchPos => touchPos;
 
         private LSL_Types.Vector3 touchUV;
-        public LSL_Types.Vector3 TouchUV { get { return touchUV; } }
+        public LSL_Types.Vector3 TouchUV => touchUV;
 
         private int touchFace;
-        public int TouchFace { get { return touchFace; } }
+        public int TouchFace => touchFace;
 
         // This can be done in two places including the constructor
         // so be carefull what gets added here

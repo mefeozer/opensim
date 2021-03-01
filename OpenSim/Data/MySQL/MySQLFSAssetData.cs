@@ -38,10 +38,10 @@ namespace OpenSim.Data.MySQL
 {
     public class MySQLFSAssetData : IFSAssetDataPlugin
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected string m_ConnectionString;
-        protected string m_Table;
+        protected string _ConnectionString;
+        protected string _Table;
 
         /// <summary>
         /// Number of days that must pass before we update the access time on an asset when it has been fetched
@@ -49,26 +49,23 @@ namespace OpenSim.Data.MySQL
         /// </summary>
         private int DaysBetweenAccessTimeUpdates = 0;
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         #region IPlugin Members
 
-        public string Version { get { return "1.0.0.0"; } }
+        public string Version => "1.0.0.0";
 
         // Loads and initialises the MySQL storage plugin and checks for migrations
         public void Initialise(string connect, string realm, int UpdateAccessTime)
         {
-            m_ConnectionString = connect;
-            m_Table = realm;
+            _ConnectionString = connect;
+            _Table = realm;
 
             DaysBetweenAccessTimeUpdates = UpdateAccessTime;
 
             try
             {
-                using (MySqlConnection conn = new MySqlConnection(m_ConnectionString))
+                using (MySqlConnection conn = new MySqlConnection(_ConnectionString))
                 {
                     conn.Open();
                     Migration m = new Migration(conn, Assembly, "FSAssetStore");
@@ -78,7 +75,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (MySqlException e)
             {
-                m_log.ErrorFormat("[FSASSETS]: Can't connect to database: {0}", e.Message.ToString());
+                _log.ErrorFormat("[FSASSETS]: Can't connect to database: {0}", e.Message.ToString());
             }
         }
 
@@ -89,16 +86,13 @@ namespace OpenSim.Data.MySQL
 
         public void Dispose() { }
 
-        public string Name
-        {
-            get { return "MySQL FSAsset storage engine"; }
-        }
+        public string Name => "MySQL FSAsset storage engine";
 
         #endregion
 
         private bool ExecuteNonQuery(MySqlCommand cmd)
         {
-            using (MySqlConnection conn = new MySqlConnection(m_ConnectionString))
+            using (MySqlConnection conn = new MySqlConnection(_ConnectionString))
             {
                 try
                 {
@@ -106,7 +100,7 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (MySqlException e)
                 {
-                    m_log.ErrorFormat("[FSASSETS]: Database open failed with {0}", e.ToString());
+                    _log.ErrorFormat("[FSASSETS]: Database open failed with {0}", e.ToString());
                     return false;
                 }
 
@@ -119,7 +113,7 @@ namespace OpenSim.Data.MySQL
                 {
                     cmd.Connection = null;
                     conn.Close();
-                    m_log.ErrorFormat("[FSASSETS]: Query {0} failed with {1}", cmd.CommandText, e.ToString());
+                    _log.ErrorFormat("[FSASSETS]: Query {0} failed with {1}", cmd.CommandText, e.ToString());
                     return false;
                 }
                 conn.Close();
@@ -137,7 +131,7 @@ namespace OpenSim.Data.MySQL
 
             AssetMetadata meta = new AssetMetadata();
 
-            using (MySqlConnection conn = new MySqlConnection(m_ConnectionString))
+            using (MySqlConnection conn = new MySqlConnection(_ConnectionString))
             {
                 try
                 {
@@ -145,13 +139,13 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (MySqlException e)
                 {
-                    m_log.ErrorFormat("[FSASSETS]: Database open failed with {0}", e.ToString());
+                    _log.ErrorFormat("[FSASSETS]: Database open failed with {0}", e.ToString());
                     return null;
                 }
 
                 using (MySqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = string.Format("select id, name, description, type, hash, create_time, asset_flags, access_time from {0} where id = ?id", m_Table);
+                    cmd.CommandText = string.Format("select id, name, description, type, hash, create_time, asset_flags, access_time from {0} where id = ?id", _Table);
                     cmd.Parameters.AddWithValue("?id", id);
 
                     using (IDataReader reader = cmd.ExecuteReader())
@@ -188,7 +182,7 @@ namespace OpenSim.Data.MySQL
             if (DaysBetweenAccessTimeUpdates > 0 && (DateTime.UtcNow - Utils.UnixTimeToDateTime(AccessTime)).TotalDays < DaysBetweenAccessTimeUpdates)
                 return;
 
-            using (MySqlConnection conn = new MySqlConnection(m_ConnectionString))
+            using (MySqlConnection conn = new MySqlConnection(_ConnectionString))
             {
                 try
                 {
@@ -196,13 +190,13 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (MySqlException e)
                 {
-                    m_log.ErrorFormat("[FSASSETS]: Database open failed with {0}", e.ToString());
+                    _log.ErrorFormat("[FSASSETS]: Database open failed with {0}", e.ToString());
                     return;
                 }
 
                 using (MySqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = string.Format("UPDATE {0} SET `access_time` = UNIX_TIMESTAMP() WHERE `id` = ?id", m_Table);
+                    cmd.CommandText = string.Format("UPDATE {0} SET `access_time` = UNIX_TIMESTAMP() WHERE `id` = ?id", _Table);
                     cmd.Parameters.AddWithValue("?id", AssetID);
                     cmd.ExecuteNonQuery();
                 }
@@ -229,14 +223,14 @@ namespace OpenSim.Data.MySQL
 
                     if (existingAsset == null)
                     {
-                        cmd.CommandText = string.Format("insert into {0} (id, name, description, type, hash, asset_flags, create_time, access_time) values ( ?id, ?name, ?description, ?type, ?hash, ?asset_flags, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())", m_Table);
+                        cmd.CommandText = string.Format("insert into {0} (id, name, description, type, hash, asset_flags, create_time, access_time) values ( ?id, ?name, ?description, ?type, ?hash, ?asset_flags, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())", _Table);
 
                         ExecuteNonQuery(cmd);
 
                         return true;
                     }
 
-                    //cmd.CommandText = String.Format("update {0} set hash = ?hash, access_time = UNIX_TIMESTAMP() where id = ?id", m_Table);
+                    //cmd.CommandText = String.Format("update {0} set hash = ?hash, access_time = UNIX_TIMESTAMP() where id = ?id", _Table);
 
                     //ExecuteNonQuery(cmd);
 
@@ -250,8 +244,8 @@ namespace OpenSim.Data.MySQL
             }
             catch(Exception e)
             {
-                m_log.Error("[FSAssets] Failed to store asset with ID " + meta.ID);
-        m_log.Error(e.ToString());
+                _log.Error("[FSAssets] Failed to store asset with ID " + meta.ID);
+        _log.Error(e.ToString());
                 return false;
             }
         }
@@ -273,9 +267,9 @@ namespace OpenSim.Data.MySQL
             HashSet<UUID> exists = new HashSet<UUID>();
 
             string ids = "'" + string.Join("','", uuids) + "'";
-            string sql = string.Format("select id from {1} where id in ({0})", ids, m_Table);
+            string sql = string.Format("select id from {1} where id in ({0})", ids, _Table);
 
-            using (MySqlConnection conn = new MySqlConnection(m_ConnectionString))
+            using (MySqlConnection conn = new MySqlConnection(_ConnectionString))
             {
                 try
                 {
@@ -283,7 +277,7 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (MySqlException e)
                 {
-                    m_log.ErrorFormat("[FSASSETS]: Failed to open database: {0}", e.ToString());
+                    _log.ErrorFormat("[FSASSETS]: Failed to open database: {0}", e.ToString());
                     return results;
                 }
 
@@ -312,7 +306,7 @@ namespace OpenSim.Data.MySQL
         {
             int count = 0;
 
-            using (MySqlConnection conn = new MySqlConnection(m_ConnectionString))
+            using (MySqlConnection conn = new MySqlConnection(_ConnectionString))
             {
                 try
                 {
@@ -320,13 +314,13 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (MySqlException e)
                 {
-                    m_log.ErrorFormat("[FSASSETS]: Failed to open database: {0}", e.ToString());
+                    _log.ErrorFormat("[FSASSETS]: Failed to open database: {0}", e.ToString());
                     return 0;
                 }
 
                 using(MySqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = string.Format("select count(*) as count from {0}",m_Table);
+                    cmd.CommandText = string.Format("select count(*) as count from {0}",_Table);
 
                     using (IDataReader reader = cmd.ExecuteReader())
                     {
@@ -346,7 +340,7 @@ namespace OpenSim.Data.MySQL
             using(MySqlCommand cmd = new MySqlCommand())
             {
 
-                cmd.CommandText = string.Format("delete from {0} where id = ?id",m_Table);
+                cmd.CommandText = string.Format("delete from {0} where id = ?id",_Table);
 
                 cmd.Parameters.AddWithValue("?id", id);
 
@@ -368,7 +362,7 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (MySqlException e)
                 {
-                    m_log.ErrorFormat("[FSASSETS]: Can't connect to database: {0}",
+                    _log.ErrorFormat("[FSASSETS]: Can't connect to database: {0}",
                             e.Message.ToString());
 
                     return;

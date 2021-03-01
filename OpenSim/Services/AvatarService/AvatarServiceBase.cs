@@ -34,7 +34,7 @@ namespace OpenSim.Services.AvatarService
 {
     public class AvatarServiceBase : ServiceBase
     {
-        protected IAvatarData m_Database = null;
+        protected IAvatarData _Database = null;
 
         public AvatarServiceBase(IConfigSource config)
             : base(config)
@@ -72,8 +72,8 @@ namespace OpenSim.Services.AvatarService
             if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IAvatarData>(dllName, new object[] { connString, realm });
-            if (m_Database == null)
+            _Database = LoadPlugin<IAvatarData>(dllName, new object[] { connString, realm });
+            if (_Database == null)
                 throw new Exception("Could not find a storage interface in the given module " + dllName);
 
         }

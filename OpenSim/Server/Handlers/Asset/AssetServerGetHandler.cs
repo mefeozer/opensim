@@ -40,24 +40,24 @@ namespace OpenSim.Server.Handlers.Asset
 {
     public class AssetServerGetHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAssetService m_AssetService;
-        private readonly string m_RedirectURL;
+        private readonly IAssetService _AssetService;
+        private readonly string _RedirectURL;
 
         public AssetServerGetHandler(IAssetService service) :
                 base("GET", "/assets")
         {
-            m_AssetService = service;
+            _AssetService = service;
         }
 
         public AssetServerGetHandler(IAssetService service, IServiceAuth auth, string redirectURL) :
             base("GET", "/assets", auth)
         {
-            m_AssetService = service;
-            m_RedirectURL = redirectURL;
-            if (!m_RedirectURL.EndsWith("/"))
-                m_RedirectURL = m_RedirectURL.TrimEnd('/');
+            _AssetService = service;
+            _RedirectURL = redirectURL;
+            if (!_RedirectURL.EndsWith("/"))
+                _RedirectURL = _RedirectURL.TrimEnd('/');
         }
 
         protected override byte[] ProcessRequest(string path, Stream request,
@@ -78,7 +78,7 @@ namespace OpenSim.Server.Handlers.Asset
 
                 if (cmd == "data")
                 {
-                    result = m_AssetService.GetData(id);
+                    result = _AssetService.GetData(id);
                     if (result == null)
                     {
                         httpResponse.StatusCode = (int)HttpStatusCode.NotFound;
@@ -93,7 +93,7 @@ namespace OpenSim.Server.Handlers.Asset
                 }
                 else if (cmd == "metadata")
                 {
-                    AssetMetadata metadata = m_AssetService.GetMetadata(id);
+                    AssetMetadata metadata = _AssetService.GetMetadata(id);
 
                     if (metadata != null)
                     {
@@ -125,7 +125,7 @@ namespace OpenSim.Server.Handlers.Asset
                 // Get the entire asset (metadata + data)
 
                 id = p[0];
-                AssetBase asset = m_AssetService.Get(id);
+                AssetBase asset = _AssetService.Get(id);
 
                 if (asset != null)
                 {
@@ -151,15 +151,15 @@ namespace OpenSim.Server.Handlers.Asset
                 result = new byte[0];
             }
 
-            if (httpResponse.StatusCode == (int)HttpStatusCode.NotFound && !string.IsNullOrEmpty(m_RedirectURL) && !string.IsNullOrEmpty(id))
+            if (httpResponse.StatusCode == (int)HttpStatusCode.NotFound && !string.IsNullOrEmpty(_RedirectURL) && !string.IsNullOrEmpty(id))
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.Redirect;
-                string rurl = m_RedirectURL;
+                string rurl = _RedirectURL;
                 if (!path.StartsWith("/"))
                     rurl += "/";
                 rurl += path;
                 httpResponse.AddHeader("Location", rurl);
-                m_log.DebugFormat("[ASSET GET HANDLER]: Asset not found, redirecting to {0} ({1})", rurl, httpResponse.StatusCode);
+                _log.DebugFormat("[ASSET GET HANDLER]: Asset not found, redirecting to {0} ({1})", rurl, httpResponse.StatusCode);
             }
             return result;
         }

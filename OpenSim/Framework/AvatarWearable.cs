@@ -100,8 +100,8 @@ namespace OpenSim.Framework
         public static readonly UUID DEFAULT_TATTOO_ITEM = new UUID("c47e22bd-3021-4ba4-82aa-2b5cb34d35e1");
         public static readonly UUID DEFAULT_TATTOO_ASSET = new UUID("00000000-0000-2222-3333-100000001007");
 
-        protected Dictionary<UUID, UUID> m_items = new Dictionary<UUID, UUID>();
-        protected List<UUID> m_ids = new List<UUID>();
+        protected Dictionary<UUID, UUID> _items = new Dictionary<UUID, UUID>();
+        protected List<UUID> _ids = new List<UUID>();
 
         public AvatarWearable()
         {
@@ -121,11 +121,11 @@ namespace OpenSim.Framework
         {
             OSDArray wearlist = new OSDArray();
 
-            foreach (UUID id in m_ids)
+            foreach (UUID id in _ids)
             {
                 OSDMap weardata = new OSDMap();
                 weardata["item"] = OSD.FromUUID(id);
-                weardata["asset"] = OSD.FromUUID(m_items[id]);
+                weardata["asset"] = OSD.FromUUID(_items[id]);
                 wearlist.Add(weardata);
             }
 
@@ -144,25 +144,22 @@ namespace OpenSim.Framework
             }
         }
 
-        public int Count
-        {
-            get { return m_ids.Count; }
-        }
+        public int Count => _ids.Count;
 
         public void Add(UUID itemID, UUID assetID)
         {
             if (itemID == UUID.Zero)
                 return;
-            if (m_items.ContainsKey(itemID))
+            if (_items.ContainsKey(itemID))
             {
-                m_items[itemID] = assetID;
+                _items[itemID] = assetID;
                 return;
             }
-            if (m_ids.Count >= 5)
+            if (_ids.Count >= 5)
                 return;
 
-            m_ids.Add(itemID);
-            m_items[itemID] = assetID;
+            _ids.Add(itemID);
+            _items[itemID] = assetID;
         }
 
         public void Wear(WearableItem item)
@@ -178,16 +175,16 @@ namespace OpenSim.Framework
 
         public void Clear()
         {
-            m_ids.Clear();
-            m_items.Clear();
+            _ids.Clear();
+            _items.Clear();
         }
 
         public void RemoveItem(UUID itemID)
         {
-            if (m_items.ContainsKey(itemID))
+            if (_items.ContainsKey(itemID))
             {
-                m_ids.Remove(itemID);
-                m_items.Remove(itemID);
+                _ids.Remove(itemID);
+                _items.Remove(itemID);
             }
         }
 
@@ -195,7 +192,7 @@ namespace OpenSim.Framework
         {
             UUID itemID = UUID.Zero;
 
-            foreach (KeyValuePair<UUID, UUID> kvp in m_items)
+            foreach (KeyValuePair<UUID, UUID> kvp in _items)
             {
                 if (kvp.Value == assetID)
                 {
@@ -206,8 +203,8 @@ namespace OpenSim.Framework
 
             if (itemID != UUID.Zero)
             {
-                m_ids.Remove(itemID);
-                m_items.Remove(itemID);
+                _ids.Remove(itemID);
+                _items.Remove(itemID);
             }
         }
 
@@ -215,18 +212,18 @@ namespace OpenSim.Framework
         {
             get
             {
-                if (idx >= m_ids.Count || idx < 0)
+                if (idx >= _ids.Count || idx < 0)
                     return new WearableItem(UUID.Zero, UUID.Zero);
 
-                return new WearableItem(m_ids[idx], m_items[m_ids[idx]]);
+                return new WearableItem(_ids[idx], _items[_ids[idx]]);
             }
         }
 
         public UUID GetAsset(UUID itemID)
         {
-            if (!m_items.ContainsKey(itemID))
+            if (!_items.ContainsKey(itemID))
                 return UUID.Zero;
-            return m_items[itemID];
+            return _items[itemID];
         }
 
         public static AvatarWearable[] DefaultWearables

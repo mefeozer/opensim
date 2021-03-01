@@ -32,7 +32,7 @@ namespace OpenSim.Framework
 {
     public class RegistryCore : IRegistryCore
     {
-        protected Dictionary<Type, object> m_moduleInterfaces = new Dictionary<Type, object>();
+        protected Dictionary<Type, object> _moduleInterfaces = new Dictionary<Type, object>();
 
         /// <summary>
         /// Register an Module interface.
@@ -41,20 +41,20 @@ namespace OpenSim.Framework
         /// <param name="iface"></param>
         public void RegisterInterface<T>(T iface)
         {
-            lock (m_moduleInterfaces)
+            lock (_moduleInterfaces)
             {
-                if (!m_moduleInterfaces.ContainsKey(typeof(T)))
+                if (!_moduleInterfaces.ContainsKey(typeof(T)))
                 {
-                    m_moduleInterfaces.Add(typeof(T), iface);
+                    _moduleInterfaces.Add(typeof(T), iface);
                 }
             }
         }
 
         public bool TryGet<T>(out T iface)
         {
-            if (m_moduleInterfaces.ContainsKey(typeof(T)))
+            if (_moduleInterfaces.ContainsKey(typeof(T)))
             {
-                iface = (T)m_moduleInterfaces[typeof(T)];
+                iface = (T)_moduleInterfaces[typeof(T)];
                 return true;
             }
             iface = default(T);
@@ -63,7 +63,7 @@ namespace OpenSim.Framework
 
         public T Get<T>()
         {
-            return (T)m_moduleInterfaces[typeof(T)];
+            return (T)_moduleInterfaces[typeof(T)];
         }
 
         public void StackModuleInterface<M>(M mod)

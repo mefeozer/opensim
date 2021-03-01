@@ -44,8 +44,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     [TestFixture]
     public class LSL_ApiInventoryTests : OpenSimTestCase
     {
-        protected Scene m_scene;
-        protected XEngine.XEngine m_engine;
+        protected Scene _scene;
+        protected XEngine.XEngine _engine;
 
         [SetUp]
         public override void SetUp()
@@ -67,11 +67,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             config.Set("AllowOSFunctions", "true");
             config.Set("OSFunctionThreatLevel", "Severe");
 
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, initConfigSource, new object[] { new DefaultPermissionsModule() });
-            m_engine = new XEngine.XEngine();
-            m_engine.Initialise(initConfigSource);
-            m_engine.AddRegion(m_scene);
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, initConfigSource, new object[] { new DefaultPermissionsModule() });
+            _engine = new XEngine.XEngine();
+            _engine.Initialise(initConfigSource);
+            _engine.AddRegion(_scene);
         }
 
         /// <summary>
@@ -87,18 +87,18 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             string inventoryItemName = "item1";
 
             SceneObjectGroup so1 = SceneHelpers.CreateSceneObject(1, userId, "so1", 0x10);
-            m_scene.AddSceneObject(so1);
+            _scene.AddSceneObject(so1);
 
             // Create an object embedded inside the first
             UUID itemId = TestHelpers.ParseTail(0x20);
-            TaskInventoryHelpers.AddSceneObject(m_scene.AssetService, so1.RootPart, inventoryItemName, itemId, userId);
+            TaskInventoryHelpers.AddSceneObject(_scene.AssetService, so1.RootPart, inventoryItemName, itemId, userId);
 
             LSL_Api api = new LSL_Api();
-            api.Initialize(m_engine, so1.RootPart, null);
+            api.Initialize(_engine, so1.RootPart, null);
 
             // Create a second object
             SceneObjectGroup so2 = SceneHelpers.CreateSceneObject(1, userId, "so2", 0x100);
-            m_scene.AddSceneObject(so2);
+            _scene.AddSceneObject(so2);
 
             api.llGiveInventory(so2.UUID.ToString(), inventoryItemName);
 
@@ -125,19 +125,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             string inventoryItemName = "item1";
 
             SceneObjectGroup so1 = SceneHelpers.CreateSceneObject(1, user1Id, "so1", 0x10);
-            m_scene.AddSceneObject(so1);
+            _scene.AddSceneObject(so1);
             LSL_Api api = new LSL_Api();
-            api.Initialize(m_engine, so1.RootPart, null);
+            api.Initialize(_engine, so1.RootPart, null);
 
             // Create an object embedded inside the first
             UUID itemId = TestHelpers.ParseTail(0x20);
-            TaskInventoryHelpers.AddSceneObject(m_scene.AssetService, so1.RootPart, inventoryItemName, itemId, user1Id);
+            TaskInventoryHelpers.AddSceneObject(_scene.AssetService, so1.RootPart, inventoryItemName, itemId, user1Id);
 
             // Create a second object
             SceneObjectGroup so2 = SceneHelpers.CreateSceneObject(1, user2Id, "so2", 0x100);
-            m_scene.AddSceneObject(so2);
+            _scene.AddSceneObject(so2);
             LSL_Api api2 = new LSL_Api();
-            api2.Initialize(m_engine, so2.RootPart, null);
+            api2.Initialize(_engine, so2.RootPart, null);
 
             // *** Firstly, we test where llAllowInventoryDrop() has not been called. ***
             api.llGiveInventory(so2.UUID.ToString(), inventoryItemName);
@@ -182,21 +182,21 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             string inventoryItemName = "item1";
 
             SceneObjectGroup so1 = SceneHelpers.CreateSceneObject(1, user1Id, "so1", 0x10);
-            m_scene.AddSceneObject(so1);
+            _scene.AddSceneObject(so1);
             LSL_Api api = new LSL_Api();
-            api.Initialize(m_engine, so1.RootPart, null);
+            api.Initialize(_engine, so1.RootPart, null);
 
             // Create an object embedded inside the first
             UUID itemId = TestHelpers.ParseTail(0x20);
-            TaskInventoryHelpers.AddSceneObject(m_scene.AssetService, so1.RootPart, inventoryItemName, itemId, user1Id);
+            TaskInventoryHelpers.AddSceneObject(_scene.AssetService, so1.RootPart, inventoryItemName, itemId, user1Id);
 
-            UserAccountHelpers.CreateUserWithInventory(m_scene, user2Id);
+            UserAccountHelpers.CreateUserWithInventory(_scene, user2Id);
 
             api.llGiveInventory(user2Id.ToString(), inventoryItemName);
 
             InventoryItemBase receivedItem
                 = UserInventoryHelpers.GetInventoryItem(
-                    m_scene.InventoryService, user2Id, string.Format("Objects/{0}", inventoryItemName));
+                    _scene.InventoryService, user2Id, string.Format("Objects/{0}", inventoryItemName));
 
             Assert.IsNotNull(receivedItem);
         }
@@ -216,23 +216,23 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             string inventoryItemName = "item1";
 
             SceneObjectGroup so1 = SceneHelpers.CreateSceneObject(1, user1Id, "so1", 0x10);
-            m_scene.AddSceneObject(so1);
+            _scene.AddSceneObject(so1);
             LSL_Api api = new LSL_Api();
-            api.Initialize(m_engine, so1.RootPart, null);
+            api.Initialize(_engine, so1.RootPart, null);
 
             // Create an object embedded inside the first
             UUID itemId = TestHelpers.ParseTail(0x20);
             TaskInventoryItem tii
-                = TaskInventoryHelpers.AddSceneObject(m_scene.AssetService, so1.RootPart, inventoryItemName, itemId, user1Id);
+                = TaskInventoryHelpers.AddSceneObject(_scene.AssetService, so1.RootPart, inventoryItemName, itemId, user1Id);
             tii.NextPermissions &= ~(uint)PermissionMask.Modify;
 
-            UserAccountHelpers.CreateUserWithInventory(m_scene, user2Id);
+            UserAccountHelpers.CreateUserWithInventory(_scene, user2Id);
 
             api.llGiveInventory(user2Id.ToString(), inventoryItemName);
 
             InventoryItemBase receivedItem
                 = UserInventoryHelpers.GetInventoryItem(
-                    m_scene.InventoryService, user2Id, string.Format("Objects/{0}", inventoryItemName));
+                    _scene.InventoryService, user2Id, string.Format("Objects/{0}", inventoryItemName));
 
             Assert.IsNotNull(receivedItem);
             Assert.AreEqual(0, receivedItem.CurrentPermissions & (uint)PermissionMask.Modify);
@@ -247,14 +247,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             UUID user1Id = TestHelpers.ParseTail(0x1);
             UUID user2Id = TestHelpers.ParseTail(0x2);
 
-            SceneObjectGroup sourceSo = SceneHelpers.AddSceneObject(m_scene, "sourceSo", user1Id);
-            m_scene.AddSceneObject(sourceSo);
+            SceneObjectGroup sourceSo = SceneHelpers.AddSceneObject(_scene, "sourceSo", user1Id);
+            _scene.AddSceneObject(sourceSo);
             LSL_Api api = new LSL_Api();
-            api.Initialize(m_engine, sourceSo.RootPart, null);
-            TaskInventoryHelpers.AddScript(m_scene.AssetService, sourceSo.RootPart, "script", "Hello World");
+            api.Initialize(_engine, sourceSo.RootPart, null);
+            TaskInventoryHelpers.AddScript(_scene.AssetService, sourceSo.RootPart, "script", "Hello World");
 
-            SceneObjectGroup targetSo = SceneHelpers.AddSceneObject(m_scene, "targetSo", user1Id);
-            SceneObjectGroup otherOwnedTargetSo = SceneHelpers.AddSceneObject(m_scene, "otherOwnedTargetSo", user2Id);
+            SceneObjectGroup targetSo = SceneHelpers.AddSceneObject(_scene, "targetSo", user1Id);
+            SceneObjectGroup otherOwnedTargetSo = SceneHelpers.AddSceneObject(_scene, "otherOwnedTargetSo", user2Id);
 
             // Test that we cannot load a script when the target pin has never been set (i.e. it is zero)
             api.llRemoteLoadScriptPin(targetSo.UUID.ToString(), "script", 0, 0, 0);

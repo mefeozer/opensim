@@ -34,15 +34,15 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
     public class EstateTerrainXferHandler
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly AssetBase m_asset;
+        private readonly AssetBase _asset;
 
         public delegate void TerrainUploadComplete(string name, byte[] filedata, IClientAPI remoteClient);
         public event TerrainUploadComplete TerrainUploadDone;
 
-        //private string m_description = String.Empty;
-        //private string m_name = String.Empty;
+        //private string _description = String.Empty;
+        //private string _name = String.Empty;
         //private UUID TransactionID = UUID.Zero;
         private readonly sbyte type = 0;
 
@@ -50,7 +50,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
         public EstateTerrainXferHandler(IClientAPI pRemoteClient, string pClientFilename)
         {
-            m_asset = new AssetBase(UUID.Zero, pClientFilename, type, pRemoteClient.AgentId.ToString())
+            _asset = new AssetBase(UUID.Zero, pClientFilename, type, pRemoteClient.AgentId.ToString())
             {
                 Data = new byte[0],
                 Description = "empty",
@@ -59,15 +59,12 @@ namespace OpenSim.Region.CoreModules.World.Estate
             };
         }
 
-        public ulong XferID
-        {
-            get { return mXferID; }
-        }
+        public ulong XferID => mXferID;
 
         public void RequestStartXfer(IClientAPI pRemoteClient)
         {
             mXferID = Util.GetNextXferID();
-            pRemoteClient.SendXferRequest(mXferID, m_asset.Type, m_asset.FullID, 0, Utils.StringToBytes(m_asset.Name));
+            pRemoteClient.SendXferRequest(mXferID, _asset.Type, _asset.FullID, 0, Utils.StringToBytes(_asset.Name));
         }
 
         /// <summary>
@@ -83,18 +80,18 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
             lock (this)
             {
-                if (m_asset.Data.Length > 1)
+                if (_asset.Data.Length > 1)
                 {
-                    byte[] destinationArray = new byte[m_asset.Data.Length + data.Length];
-                    Array.Copy(m_asset.Data, 0, destinationArray, 0, m_asset.Data.Length);
-                    Array.Copy(data, 0, destinationArray, m_asset.Data.Length, data.Length);
-                    m_asset.Data = destinationArray;
+                    byte[] destinationArray = new byte[_asset.Data.Length + data.Length];
+                    Array.Copy(_asset.Data, 0, destinationArray, 0, _asset.Data.Length);
+                    Array.Copy(data, 0, destinationArray, _asset.Data.Length, data.Length);
+                    _asset.Data = destinationArray;
                 }
                 else
                 {
                     byte[] buffer2 = new byte[data.Length - 4];
                     Array.Copy(data, 4, buffer2, 0, data.Length - 4);
-                    m_asset.Data = buffer2;
+                    _asset.Data = buffer2;
                 }
 
                 remoteClient.SendConfirmXfer(xferID, packetID);
@@ -108,7 +105,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
         public void SendCompleteMessage(IClientAPI remoteClient)
         {
-            TerrainUploadDone?.Invoke(m_asset.Name, m_asset.Data, remoteClient);
+            TerrainUploadDone?.Invoke(_asset.Name, _asset.Data, remoteClient);
         }
     }
 }

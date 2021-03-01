@@ -39,14 +39,11 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalPresenceServicesConnector")]
     public class LocalPresenceServicesConnector : BasePresenceServiceConnector, ISharedRegionModule, IPresenceService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region ISharedRegionModule
 
-        public string Name
-        {
-            get { return "LocalPresenceServicesConnector"; }
-        }
+        public string Name => "LocalPresenceServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -59,7 +56,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
                     IConfig inventoryConfig = source.Configs["PresenceService"];
                     if (inventoryConfig == null)
                     {
-                        m_log.Error("[LOCAL PRESENCE CONNECTOR]: PresenceService missing from OpenSim.ini");
+                        _log.Error("[LOCAL PRESENCE CONNECTOR]: PresenceService missing from OpenSim.ini");
                         return;
                     }
 
@@ -67,28 +64,28 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
-                        m_log.Error("[LOCAL PRESENCE CONNECTOR]: No LocalServiceModule named in section PresenceService");
+                        _log.Error("[LOCAL PRESENCE CONNECTOR]: No LocalServiceModule named in section PresenceService");
                         return;
                     }
 
                     object[] args = new object[] { source };
-                    m_log.DebugFormat("[LOCAL PRESENCE CONNECTOR]: Service dll = {0}", serviceDll);
+                    _log.DebugFormat("[LOCAL PRESENCE CONNECTOR]: Service dll = {0}", serviceDll);
 
-                    m_PresenceService = ServerUtils.LoadPlugin<IPresenceService>(serviceDll, args);
+                    _PresenceService = ServerUtils.LoadPlugin<IPresenceService>(serviceDll, args);
 
-                    if (m_PresenceService == null)
+                    if (_PresenceService == null)
                     {
-                        m_log.Error("[LOCAL PRESENCE CONNECTOR]: Can't load presence service");
+                        _log.Error("[LOCAL PRESENCE CONNECTOR]: Can't load presence service");
                         //return;
                         throw new Exception("Unable to proceed. Please make sure your ini files in config-include are updated according to .example's");
                     }
 
                     //Init(source);
 
-                    m_PresenceDetector = new PresenceDetector(this);
+                    _PresenceDetector = new PresenceDetector(this);
 
-                    m_Enabled = true;
-                    m_log.Info("[LOCAL PRESENCE CONNECTOR]: Local presence connector enabled");
+                    _Enabled = true;
+                    _log.Info("[LOCAL PRESENCE CONNECTOR]: Local presence connector enabled");
                 }
             }
         }

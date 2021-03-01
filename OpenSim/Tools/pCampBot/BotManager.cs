@@ -55,7 +55,7 @@ namespace pCampBot
     /// </summary>
     public class BotManager
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public const int DefaultLoginDelay = 5000;
 
@@ -78,7 +78,7 @@ namespace pCampBot
         /// <summary>
         /// Command console
         /// </summary>
-        protected CommandConsole m_console;
+        protected CommandConsole _console;
 
         /// <summary>
         /// Controls whether bots start out sending agent updates on connection.
@@ -93,7 +93,7 @@ namespace pCampBot
         /// <summary>
         /// Created bots, whether active or inactive.
         /// </summary>
-        protected List<Bot> m_bots;
+        protected List<Bot> _bots;
 
         /// <summary>
         /// Random number generator.
@@ -113,47 +113,47 @@ namespace pCampBot
         /// <summary>
         /// First name for bots
         /// </summary>
-        private string m_firstName;
+        private string _firstName;
 
         /// <summary>
         /// Last name stem for bots
         /// </summary>
-        private string m_lastNameStem;
+        private string _lastNameStem;
 
         /// <summary>
         /// Password for bots
         /// </summary>
-        private string m_password;
+        private string _password;
 
         /// <summary>
         /// Login URI for bots.
         /// </summary>
-        private string m_loginUri;
+        private string _loginUri;
 
         /// <summary>
         /// Start location for bots.
         /// </summary>
-        private string m_startUri;
+        private string _startUri;
 
         /// <summary>
         /// Postfix bot number at which bot sequence starts.
         /// </summary>
-        private int m_fromBotNumber;
+        private int _fromBotNumber;
 
         /// <summary>
         /// Wear setting for bots.
         /// </summary>
-        private string m_wearSetting;
+        private string _wearSetting;
 
         /// <summary>
         /// Behaviour switches for bots.
         /// </summary>
-        private readonly HashSet<string> m_defaultBehaviourSwitches = new HashSet<string>();
+        private readonly HashSet<string> _defaultBehaviourSwitches = new HashSet<string>();
 
         /// <summary>
         /// Collects general information on this server (which reveals this to be a misnamed class).
         /// </summary>
-        private readonly ServerStatsCollector m_serverStatsCollector;
+        private readonly ServerStatsCollector _serverStatsCollector;
 
         /// <summary>
         /// Constructor Creates MainConsole.Instance to take commands and provide the place to write data
@@ -179,8 +179,8 @@ namespace pCampBot
             AssetsReceived = new Dictionary<UUID, bool>();
             RegionsKnown = new Dictionary<ulong, GridRegion>();
 
-            m_console = CreateConsole();
-            MainConsole.Instance = m_console;
+            _console = CreateConsole();
+            MainConsole.Instance = _console;
 
             // Make log4net see the console
             //
@@ -193,66 +193,66 @@ namespace pCampBot
                 if (appender.Name == "Console")
                 {
                     consoleAppender = (OpenSimAppender)appender;
-                    consoleAppender.Console = m_console;
+                    consoleAppender.Console = _console;
                     break;
                 }
             }
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "shutdown", "shutdown", "Shutdown bots and exit", HandleShutdown);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "quit", "quit", "Shutdown bots and exit", HandleShutdown);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "connect", "connect [<n>]", "Connect bots",
                 "If an <n> is given, then the first <n> disconnected bots by postfix number are connected.\n"
                     + "If no <n> is given, then all currently disconnected bots are connected.",
                 HandleConnect);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "disconnect", "disconnect [<n>]", "Disconnect bots",
                 "Disconnecting bots will interupt any bot connection process, including connection on startup.\n"
                     + "If an <n> is given, then the last <n> connected bots by postfix number are disconnected.\n"
                     + "If no <n> is given, then all currently connected bots are disconnected.",
                 HandleDisconnect);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "add behaviour", "add behaviour <abbreviated-name> [<bot-number>]",
                 "Add a behaviour to a bot",
                 "If no bot number is specified then behaviour is added to all bots.\n"
                     + "Can be performed on connected or disconnected bots.",
                 HandleAddBehaviour);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "remove behaviour", "remove behaviour <abbreviated-name> [<bot-number>]",
                 "Remove a behaviour from a bot",
                 "If no bot number is specified then behaviour is added to all bots.\n"
                     + "Can be performed on connected or disconnected bots.",
                 HandleRemoveBehaviour);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "sit", "sit", "Sit all bots on the ground.",
                 HandleSit);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "stand", "stand", "Stand all bots.",
                 HandleStand);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "set bots", "set bots <key> <value>", "Set a setting for all bots.", HandleSetBots);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "show regions", "show regions", "Show regions known to bots", HandleShowRegions);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "show bots", "show bots", "Shows the status of all bots.", HandleShowBotsStatus);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "show bot", "show bot <bot-number>",
                 "Shows the detailed status and settings of a particular bot.", HandleShowBotStatus);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Debug",
                 false,
                 "debug lludp packet",
@@ -262,18 +262,18 @@ namespace pCampBot
                 + "If level <= 0 then no received packets are logged.",
                 HandleDebugLludpPacketCommand);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Bots", false, "show status", "show status", "Shows pCampbot status.", HandleShowStatus);
 
-            m_bots = new List<Bot>();
+            _bots = new List<Bot>();
 
             Watchdog.Enabled = true;
-            StatsManager.RegisterConsoleCommands(m_console);
+            StatsManager.RegisterConsoleCommands(_console);
 
-            m_serverStatsCollector = new ServerStatsCollector();
-            m_serverStatsCollector.Initialise(null);
-            m_serverStatsCollector.Enabled = true;
-            m_serverStatsCollector.Start();
+            _serverStatsCollector = new ServerStatsCollector();
+            _serverStatsCollector.Initialise(null);
+            _serverStatsCollector.Enabled = true;
+            _serverStatsCollector.Start();
 
             BotConnectingState = BotManagerBotConnectingState.Ready;
         }
@@ -285,28 +285,28 @@ namespace pCampBot
         /// <param name="cs">The configuration for the bots to use</param>
         public void CreateBots(int botcount, IConfig startupConfig)
         {
-            m_firstName = startupConfig.GetString("firstname");
-            m_lastNameStem = startupConfig.GetString("lastname");
-            m_password = startupConfig.GetString("password");
-            m_loginUri = startupConfig.GetString("loginuri");
-            m_fromBotNumber = startupConfig.GetInt("from", 0);
-            m_wearSetting = startupConfig.GetString("wear", "no");
+            _firstName = startupConfig.GetString("firstname");
+            _lastNameStem = startupConfig.GetString("lastname");
+            _password = startupConfig.GetString("password");
+            _loginUri = startupConfig.GetString("loginuri");
+            _fromBotNumber = startupConfig.GetInt("from", 0);
+            _wearSetting = startupConfig.GetString("wear", "no");
 
-            m_startUri = ParseInputStartLocationToUri(startupConfig.GetString("start", "last"));
+            _startUri = ParseInputStartLocationToUri(startupConfig.GetString("start", "last"));
 
             Array.ForEach<string>(
-                startupConfig.GetString("behaviours", "p").Split(new char[] { ',' }), b => m_defaultBehaviourSwitches.Add(b));
+                startupConfig.GetString("behaviours", "p").Split(new char[] { ',' }), b => _defaultBehaviourSwitches.Add(b));
 
             for (int i = 0; i < botcount; i++)
             {
-                lock (m_bots)
+                lock (_bots)
                 {
-                    string lastName = string.Format("{0}{1}", m_lastNameStem, i + m_fromBotNumber);
+                    string lastName = string.Format("{0}{1}", _lastNameStem, i + _fromBotNumber);
 
                     CreateBot(
                         this,
-                        CreateBehavioursFromAbbreviatedNames(m_defaultBehaviourSwitches),
-                        m_firstName, lastName, m_password, m_loginUri, m_startUri, m_wearSetting);
+                        CreateBehavioursFromAbbreviatedNames(_defaultBehaviourSwitches),
+                        _firstName, lastName, _password, _loginUri, _startUri, _wearSetting);
                 }
             }
         }
@@ -381,23 +381,23 @@ namespace pCampBot
 
         private void ConnectBotsInternal(int botCount)
         {
-            m_log.InfoFormat(
+            _log.InfoFormat(
                 "[BOT MANAGER]: Starting {0} bots connecting to {1}, location {2}, named {3} {4}_<n>",
                 botCount,
-                m_loginUri,
-                m_startUri,
-                m_firstName,
-                m_lastNameStem);
+                _loginUri,
+                _startUri,
+                _firstName,
+                _lastNameStem);
 
-            m_log.DebugFormat("[BOT MANAGER]: Delay between logins is {0}ms", LoginDelay);
-            m_log.DebugFormat("[BOT MANAGER]: BotsSendAgentUpdates is {0}", InitBotSendAgentUpdates);
-            m_log.DebugFormat("[BOT MANAGER]: InitBotRequestObjectTextures is {0}", InitBotRequestObjectTextures);
+            _log.DebugFormat("[BOT MANAGER]: Delay between logins is {0}ms", LoginDelay);
+            _log.DebugFormat("[BOT MANAGER]: BotsSendAgentUpdates is {0}", InitBotSendAgentUpdates);
+            _log.DebugFormat("[BOT MANAGER]: InitBotRequestObjectTextures is {0}", InitBotRequestObjectTextures);
 
             List<Bot> botsToConnect = new List<Bot>();
 
-            lock (m_bots)
+            lock (_bots)
             {
-                foreach (Bot bot in m_bots)
+                foreach (Bot bot in _bots)
                 {
                     if (bot.ConnectionState == ConnectionState.Disconnected)
                         botsToConnect.Add(bot);
@@ -501,7 +501,7 @@ namespace pCampBot
             pb.OnConnected += handlebotEvent;
             pb.OnDisconnected += handlebotEvent;
 
-            m_bots.Add(pb);
+            _bots.Add(pb);
         }
 
         /// <summary>
@@ -515,13 +515,13 @@ namespace pCampBot
             {
                 case EventType.CONNECTED:
                 {
-                    m_log.Info("[" + callbot.FirstName + " " + callbot.LastName + "]: Connected");
+                    _log.Info("[" + callbot.FirstName + " " + callbot.LastName + "]: Connected");
                     break;
                 }
 
                 case EventType.DISCONNECTED:
                 {
-                    m_log.Info("[" + callbot.FirstName + " " + callbot.LastName + "]: Disconnected");
+                    _log.Info("[" + callbot.FirstName + " " + callbot.LastName + "]: Disconnected");
                     break;
                 }
             }
@@ -538,10 +538,10 @@ namespace pCampBot
 
         private void HandleConnect(string module, string[] cmd)
         {
-            lock (m_bots)
+            lock (_bots)
             {
                 int botsToConnect;
-                int disconnectedBots = m_bots.Count(b => b.ConnectionState == ConnectionState.Disconnected);
+                int disconnectedBots = _bots.Count(b => b.ConnectionState == ConnectionState.Disconnected);
 
                 if (cmd.Length == 1)
                 {
@@ -575,8 +575,8 @@ namespace pCampBot
 
             if (cmd.Length == 3)
             {
-                lock (m_bots)
-                    botsToEffect.AddRange(m_bots);
+                lock (_bots)
+                    botsToEffect.AddRange(_bots);
             }
             else
             {
@@ -630,8 +630,8 @@ namespace pCampBot
 
             if (cmd.Length == 3)
             {
-                lock (m_bots)
-                    botsToEffect.AddRange(m_bots);
+                lock (_bots)
+                    botsToEffect.AddRange(_bots);
             }
             else
             {
@@ -680,8 +680,8 @@ namespace pCampBot
             List<Bot> connectedBots;
             int botsToDisconnectCount;
 
-            lock (m_bots)
-                connectedBots = m_bots.FindAll(b => b.ConnectionState == ConnectionState.Connected);
+            lock (_bots)
+                connectedBots = _bots.FindAll(b => b.ConnectionState == ConnectionState.Connected);
 
             if (cmd.Length == 1)
             {
@@ -731,9 +731,9 @@ namespace pCampBot
 
         private void HandleSit(string module, string[] cmd)
         {
-            lock (m_bots)
+            lock (_bots)
             {
-                foreach (Bot bot in m_bots)
+                foreach (Bot bot in _bots)
                 {
                     if (bot.ConnectionState == ConnectionState.Connected)
                     {
@@ -746,9 +746,9 @@ namespace pCampBot
 
         private void HandleStand(string module, string[] cmd)
         {
-            lock (m_bots)
+            lock (_bots)
             {
-                foreach (Bot bot in m_bots)
+                foreach (Bot bot in _bots)
                 {
                     if (bot.ConnectionState == ConnectionState.Connected)
                     {
@@ -761,9 +761,9 @@ namespace pCampBot
 
         private void HandleShutdown(string module, string[] cmd)
         {
-            lock (m_bots)
+            lock (_bots)
             {
-                int connectedBots = m_bots.Count(b => b.ConnectionState == ConnectionState.Connected);
+                int connectedBots = _bots.Count(b => b.ConnectionState == ConnectionState.Connected);
 
                 if (connectedBots > 0)
                 {
@@ -774,7 +774,7 @@ namespace pCampBot
 
             MainConsole.Instance.Output("Shutting down");
 
-            m_serverStatsCollector.Close();
+            _serverStatsCollector.Close();
 
             Environment.Exit(0);
         }
@@ -794,8 +794,8 @@ namespace pCampBot
                 MainConsole.Instance.Output("Setting SEND_AGENT_UPDATES to {0} for all bots",
                     null, newSendAgentUpdatesSetting);
 
-                lock (m_bots)
-                    m_bots.ForEach(b => b.Client.Settings.SEND_AGENT_UPDATES = newSendAgentUpdatesSetting);
+                lock (_bots)
+                    _bots.ForEach(b => b.Client.Settings.SEND_AGENT_UPDATES = newSendAgentUpdatesSetting);
             }
             else
             {
@@ -821,8 +821,8 @@ namespace pCampBot
 
             Bot bot;
 
-            lock (m_bots)
-                bot = m_bots.FirstOrDefault(b => b.FirstName == botFirstName && b.LastName == botLastName);
+            lock (_bots)
+                bot = _bots.FirstOrDefault(b => b.FirstName == botFirstName && b.LastName == botLastName);
 
             if (bot == null)
             {
@@ -871,9 +871,9 @@ namespace pCampBot
             foreach (object o in Enum.GetValues(typeof(ConnectionState)))
                 totals[(ConnectionState)o] = 0;
 
-            lock (m_bots)
+            lock (_bots)
             {
-                foreach (Bot bot in m_bots)
+                foreach (Bot bot in _bots)
                 {
                     Simulator currentSim = bot.Client.Network.CurrentSim;
                     totals[bot.ConnectionState]++;
@@ -956,15 +956,15 @@ namespace pCampBot
 
             Bot bot;
 
-            lock (m_bots)
-                bot = m_bots.Find(b => b.Name == name);
+            lock (_bots)
+                bot = _bots.Find(b => b.Name == name);
 
             return bot;
         }
 
         private string GenerateBotNameFromNumber(int botNumber)
         {
-            return string.Format("{0} {1}{2}", m_firstName, m_lastNameStem, botNumber);
+            return string.Format("{0} {1}{2}", _firstName, _lastNameStem, botNumber);
         }
 
         internal void Grid_GridRegion(object o, GridRegionEventArgs args)
@@ -979,7 +979,7 @@ namespace pCampBot
                 }
                 else
                 {
-                    m_log.DebugFormat(
+                    _log.DebugFormat(
                         "[BOT MANAGER]: Adding {0} {1} to known regions", newRegion.Name, newRegion.RegionHandle);
                     RegionsKnown[newRegion.RegionHandle] = newRegion;
                 }

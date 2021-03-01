@@ -48,31 +48,31 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
     {
         public event OnIRCClientReadyDelegate OnIRCReady;
 
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly TcpClient m_client;
-        private readonly Scene m_scene;
+        private readonly TcpClient _client;
+        private readonly Scene _scene;
 
-        private readonly UUID m_agentID = UUID.Random();
+        private readonly UUID _agentID = UUID.Random();
 
         public ISceneAgent SceneAgent { get; set; }
 
-        public int PingTimeMS { get { return 0; } }
+        public int PingTimeMS => 0;
 
-        private string m_username;
-        private string m_nick;
+        private string _username;
+        private string _nick;
 
-        private bool m_hasNick = false;
-        private bool m_hasUser = false;
+        private bool _hasNick = false;
+        private bool _hasUser = false;
 
-        private bool m_connected = true;
+        private bool _connected = true;
 
         public List<uint> SelectedObjects {get; private set;}
 
         public IRCClientView(TcpClient client, Scene scene)
         {
-            m_client = client;
-            m_scene = scene;
+            _client = client;
+            _scene = scene;
 
             WorkManager.StartThread(InternalLoop, "IRCClientView");
         }
@@ -84,24 +84,22 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         private void SendCommand(string command)
         {
-            m_log.Info("[IRCd] Sending >>> " + command);
+            _log.Info("[IRCd] Sending >>> " + command);
 
             byte[] buf = Util.UTF8.GetBytes(command + Environment.NewLine);
 
-            m_client.GetStream().BeginWrite(buf, 0, buf.Length, SendComplete, null);
+            _client.GetStream().BeginWrite(buf, 0, buf.Length, SendComplete, null);
         }
 
         private void SendComplete(IAsyncResult result)
         {
-            m_log.Info("[IRCd] Send Complete.");
+            _log.Info("[IRCd] Send Complete.");
         }
 
-        private string IrcRegionName
-        {
+        private string IrcRegionName =>
             // I know &Channel is more technically correct, but people are used to seeing #Channel
             // Dont shoot me!
-            get { return "#" + m_scene.RegionInfo.RegionName.Replace(" ", "-"); }
-        }
+            "#" + _scene.RegionInfo.RegionName.Replace(" ", "-");
 
         private void InternalLoop()
         {
@@ -109,11 +107,11 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
             {
                 string strbuf = string.Empty;
 
-                while (m_connected && m_client.Connected)
+                while (_connected && _client.Connected)
                 {
                     byte[] buf = new byte[8]; // RFC1459 defines max message size as 512.
 
-                    int count = m_client.GetStream().Read(buf, 0, buf.Length);
+                    int count = _client.GetStream().Read(buf, 0, buf.Length);
                     string line = Util.UTF8.GetString(buf, 0, count);
 
                     strbuf += line;
@@ -124,7 +122,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
                         // Remove from buffer
                         strbuf = strbuf.Remove(0, message.Length);
 
-                        m_log.Info("[IRCd] Recieving <<< " + message);
+                        _log.Info("[IRCd] Recieving <<< " + message);
                         message = message.Trim();
 
                         // Extract command sequence
@@ -133,12 +131,12 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
                     }
                     else
                     {
-                        //m_log.Info("[IRCd] Recieved data, but not enough to make a message. BufLen is " + strbuf.Length +
+                        //_log.Info("[IRCd] Recieved data, but not enough to make a message. BufLen is " + strbuf.Length +
                         //           "[" + strbuf + "]");
                         if (strbuf.Length == 0)
                         {
-                            m_connected = false;
-                            m_log.Info("[IRCd] Buffer zero, closing...");
+                            _connected = false;
+                            _log.Info("[IRCd] Buffer zero, closing...");
                             if (OnDisconnectUser != null)
                                 OnDisconnectUser();
                         }
@@ -153,14 +151,14 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
                 if (OnDisconnectUser != null)
                     OnDisconnectUser();
 
-                m_log.Warn("[IRCd] Disconnected client.");
+                _log.Warn("[IRCd] Disconnected client.");
             }
             catch (SocketException)
             {
                 if (OnDisconnectUser != null)
                     OnDisconnectUser();
 
-                m_log.Warn("[IRCd] Disconnected client.");
+                _log.Warn("[IRCd] Disconnected client.");
             }
 
             Watchdog.RemoveThread();
@@ -168,7 +166,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         private void ProcessInMessage(string message, string command)
         {
-            m_log.Info("[IRCd] Processing [MSG:" + message + "] [COM:" + command + "]");
+            _log.Info("[IRCd] Processing [MSG:" + message + "] [COM:" + command + "]");
             if (command != null)
             {
                 switch (command)
@@ -223,10 +221,10 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
                     case "USERHOST":
                         string[] userhostArgs = ExtractParameters(message);
-                        if (userhostArgs[0] == ":" + m_nick)
+                        if (userhostArgs[0] == ":" + _nick)
                         {
-                            SendServerCommand("302 :" + m_nick + "=+" + m_nick + "@" +
-                                        ((IPEndPoint) m_client.Client.RemoteEndPoint).Address);
+                            SendServerCommand("302 :" + _nick + "=+" + _nick + "@" +
+                                        ((IPEndPoint) _client.Client.RemoteEndPoint).Address);
                         }
                         break;
                     case "NICK":
@@ -285,23 +283,23 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         private void IRC_Ready()
         {
-            if (m_hasUser && m_hasNick)
+            if (_hasUser && _hasNick)
             {
-                SendServerCommand("001 " + m_nick + " :Welcome to OpenSimulator IRCd");
-                SendServerCommand("002 " + m_nick + " :Running OpenSimVersion");
-                SendServerCommand("003 " + m_nick + " :This server was created over 9000 years ago");
-                SendServerCommand("004 " + m_nick + " :opensimirc r1 aoOirw abeiIklmnoOpqrstv");
-                SendServerCommand("251 " + m_nick + " :There are 0 users and 0 services on 1 servers");
-                SendServerCommand("252 " + m_nick + " 0 :operators online");
-                SendServerCommand("253 " + m_nick + " 0 :unknown connections");
-                SendServerCommand("254 " + m_nick + " 1 :channels formed");
-                SendServerCommand("255 " + m_nick + " :I have 1 users, 0 services  and 1 servers");
-                SendCommand(":" + m_nick + " MODE " + m_nick + " :+i");
-                SendCommand(":" + m_nick + " JOIN :" + IrcRegionName);
+                SendServerCommand("001 " + _nick + " :Welcome to OpenSimulator IRCd");
+                SendServerCommand("002 " + _nick + " :Running OpenSimVersion");
+                SendServerCommand("003 " + _nick + " :This server was created over 9000 years ago");
+                SendServerCommand("004 " + _nick + " :opensimirc r1 aoOirw abeiIklmnoOpqrstv");
+                SendServerCommand("251 " + _nick + " :There are 0 users and 0 services on 1 servers");
+                SendServerCommand("252 " + _nick + " 0 :operators online");
+                SendServerCommand("253 " + _nick + " 0 :unknown connections");
+                SendServerCommand("254 " + _nick + " 1 :channels formed");
+                SendServerCommand("255 " + _nick + " :I have 1 users, 0 services  and 1 servers");
+                SendCommand(":" + _nick + " MODE " + _nick + " :+i");
+                SendCommand(":" + _nick + " JOIN :" + IrcRegionName);
 
                 // Rename to 'Real Name'
-                SendCommand(":" + m_nick + " NICK :" + m_username.Replace(" ", ""));
-                m_nick = m_username.Replace(" ", "");
+                SendCommand(":" + _nick + " NICK :" + _username.Replace(" ", ""));
+                _nick = _username.Replace(" ", "");
 
                 IRC_SendReplyJoin();
                 IRC_SendChannelPrivmsg("System", "Welcome to OpenSimulator.");
@@ -321,7 +319,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         private void IRC_SendReplyModeChannel()
         {
-            SendServerCommand("324 " + m_nick + " " + IrcRegionName + " +n");
+            SendServerCommand("324 " + _nick + " " + IrcRegionName + " +n");
             //SendCommand(":" + IrcRegionName + " MODE +n");
         }
 
@@ -333,16 +331,16 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
             // TODO: unused: string servername = userArgs[2];
             string realname = userArgs[3].Replace(":", "");
 
-            m_username = realname;
-            m_hasUser = true;
+            _username = realname;
+            _hasUser = true;
         }
 
         private void IRC_ProcessNick(string message)
         {
             string[] nickArgs = ExtractParameters(message);
             string nickname = nickArgs[0].Replace(":","");
-            m_nick = nickname;
-            m_hasNick = true;
+            _nick = nickname;
+            _hasNick = true;
         }
 
         private void IRC_ProcessPing(string message)
@@ -366,7 +364,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
                         From = this.Name,
                         Message = privmsgArgs[1].Replace(":", ""),
                         Position = Vector3.Zero,
-                        Scene = m_scene,
+                        Scene = _scene,
                         SenderObject = null,
                         SenderUUID = this.AgentId,
                         Type = ChatTypeEnum.Say
@@ -383,28 +381,28 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         private void IRC_SendNamesReply()
         {
-            EntityBase[] users = m_scene.Entities.GetAllByType<ScenePresence>();
+            EntityBase[] users = _scene.Entities.GetAllByType<ScenePresence>();
             foreach (EntityBase user in users)
             {
-                SendServerCommand("353 " + m_nick + " = " + IrcRegionName + " :" + user.Name.Replace(" ", ""));
+                SendServerCommand("353 " + _nick + " = " + IrcRegionName + " :" + user.Name.Replace(" ", ""));
             }
             SendServerCommand("366 " + IrcRegionName + " :End of /NAMES list");
         }
 
         private void IRC_SendWhoReply()
         {
-            EntityBase[] users = m_scene.Entities.GetAllByType<ScenePresence>();
+            EntityBase[] users = _scene.Entities.GetAllByType<ScenePresence>();
             foreach (EntityBase user in users)
             {
                 /*SendServerCommand(String.Format("352 {0} {1} {2} {3} {4} {5} :0 {6}", IrcRegionName,
                                                 user.Name.Replace(" ", ""), "nohost.com", "opensimircd",
                                                 user.Name.Replace(" ", ""), 'H', user.Name));*/
 
-                SendServerCommand("352 " + m_nick + " " + IrcRegionName + " n=" + user.Name.Replace(" ", "") + " fakehost.com " + user.Name.Replace(" ", "") + " H " + ":0 " + user.Name);
+                SendServerCommand("352 " + _nick + " " + IrcRegionName + " n=" + user.Name.Replace(" ", "") + " fakehost.com " + user.Name.Replace(" ", "") + " H " + ":0 " + user.Name);
 
                 //SendServerCommand("352 " + IrcRegionName + " " + user.Name.Replace(" ", "") + " nohost.com irc.opensimulator " + user.Name.Replace(" ", "") + " H " + ":0 " + user.Name);
             }
-            SendServerCommand("315 " + m_nick + " " + IrcRegionName + " :End of /WHO list");
+            SendServerCommand("315 " + _nick + " " + IrcRegionName + " :End of /WHO list");
         }
 
         private void IRC_SendMOTD()
@@ -421,7 +419,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         private void IRC_SendReplyUsers()
         {
-            EntityBase[] users = m_scene.Entities.GetAllByType<ScenePresence>();
+            EntityBase[] users = _scene.Entities.GetAllByType<ScenePresence>();
 
             SendServerCommand("392 :UserID   Terminal  Host");
 
@@ -470,7 +468,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
             if (msgs.Length < 2)
             {
-                m_log.Warn("[IRCd] Dropped msg: " + msg);
+                _log.Warn("[IRCd] Dropped msg: " + msg);
                 return null;
             }
 
@@ -521,7 +519,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         public Vector3 StartPos
         {
-            get { return new Vector3(m_scene.RegionInfo.RegionSizeX * 0.5f, m_scene.RegionInfo.RegionSizeY * 0.5f, 50f); }
+            get => new Vector3(_scene.RegionInfo.RegionSizeX * 0.5f, _scene.RegionInfo.RegionSizeY * 0.5f, 50f);
             set { }
         }
 
@@ -538,55 +536,46 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
             return default(T);
         }
 
-        public UUID AgentId
-        {
-            get { return m_agentID; }
-        }
+        public UUID AgentId => _agentID;
 
-        public UUID ScopeId { get { return UUID.Zero; } }
+        public UUID ScopeId => UUID.Zero;
 
         public void Disconnect(string reason)
         {
             IRC_SendChannelPrivmsg("System", "You have been eaten by a grue. (" + reason + ")");
 
-            m_connected = false;
-            m_client.Close();
+            _connected = false;
+            _client.Close();
         }
 
         public void Disconnect()
         {
             IRC_SendChannelPrivmsg("System", "You have been eaten by a grue.");
 
-            m_connected = false;
-            m_client.Close();
+            _connected = false;
+            _client.Close();
             SceneAgent = null;
         }
 
-        public UUID SessionId
-        {
-            get { return m_agentID; }
-        }
+        public UUID SessionId => _agentID;
 
-        public UUID SecureSessionId
-        {
-            get { return m_agentID; }
-        }
+        public UUID SecureSessionId => _agentID;
 
         public UUID ActiveGroupId
         {
-            get { return UUID.Zero; }
+            get => UUID.Zero;
             set {}
         }
 
         public string ActiveGroupName
         {
-            get { return "IRCd User"; }
+            get => "IRCd User";
             set {}
         }
 
         public ulong ActiveGroupPowers
         {
-            get { return 0; }
+            get => 0;
             set {}
         }
 
@@ -611,7 +600,7 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
         {
             get
             {
-                string[] names = m_username.Split(' ');
+                string[] names = _username.Split(' ');
                 return names[0];
             }
         }
@@ -620,38 +609,32 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
         {
             get
             {
-                string[] names = m_username.Split(' ');
+                string[] names = _username.Split(' ');
                 if (names.Length > 1)
                     return names[1];
                 return names[0];
             }
         }
 
-        public IScene Scene
-        {
-            get { return m_scene; }
-        }
+        public IScene Scene => _scene;
 
         public int NextAnimationSequenceNumber
         {
-            get { return 0; }
+            get => 0;
             set { }
         }
 
-        public string Name
-        {
-            get { return m_username; }
-        }
+        public string Name => _username;
 
         public bool IsActive
         {
-            get { return true; }
+            get => true;
             set { if (!value) Disconnect("IsActive Disconnected?"); }
         }
 
         public bool IsLoggingOut
         {
-            get { return false; }
+            get => false;
             set { }
         }
 
@@ -660,15 +643,9 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
             set { }
         }
 
-        public uint CircuitCode
-        {
-            get { return (uint)Util.RandomClass.Next(0,int.MaxValue); }
-        }
+        public uint CircuitCode => (uint)Util.RandomClass.Next(0,int.MaxValue);
 
-        public IPEndPoint RemoteEndPoint
-        {
-            get { return (IPEndPoint)m_client.Client.RemoteEndPoint; }
-        }
+        public IPEndPoint RemoteEndPoint => (IPEndPoint)_client.Client.RemoteEndPoint;
 
 #pragma warning disable 67
         public event GenericMessage OnGenericMessage;
@@ -929,17 +906,17 @@ namespace OpenSim.Region.OptionalModules.Agent.InternetRelayClientView.Server
 
         public void Start()
         {
-            m_scene.AddNewAgent(this, PresenceType.User);
+            _scene.AddNewAgent(this, PresenceType.User);
 
             // Mimicking LLClientView which gets always set appearance from client.
             AvatarAppearance appearance;
-            m_scene.GetAvatarAppearance(this, out appearance);
+            _scene.GetAvatarAppearance(this, out appearance);
             OnSetAppearance(this, appearance.Texture, (byte[])appearance.VisualParams.Clone(),appearance.AvatarSize, new WearableCacheItem[0]);
         }
 
         public void SendRegionHandshake()
         {
-            m_log.Info("[IRCd ClientStack] Completing Handshake to Region");
+            _log.Info("[IRCd ClientStack] Completing Handshake to Region");
 
             if (OnRegionHandShakeReply != null)
             {

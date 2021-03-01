@@ -38,119 +38,119 @@ namespace OpenSim.Framework
         /// <summary>
         /// A UNIX Timestamp (seconds since epoch) for the users creation
         /// </summary>
-        private int m_created;
+        private int _created;
 
         /// <summary>
         /// The users last registered agent (filled in on the user server)
         /// </summary>
-        private UserAgentData m_currentAgent;
+        private UserAgentData _currentAgent;
 
         /// <summary>
         /// The first component of a users account name
         /// </summary>
-        private string m_firstname;
+        private string _firstname;
 
         /// <summary>
         /// The coordinates inside the region of the home location
         /// </summary>
-        private Vector3 m_homeLocation;
+        private Vector3 _homeLocation;
 
         /// <summary>
         /// Where the user will be looking when they rez.
         /// </summary>
-        private Vector3 m_homeLookAt;
+        private Vector3 _homeLookAt;
 
-        private uint m_homeRegionX;
-        private uint m_homeRegionY;
+        private uint _homeRegionX;
+        private uint _homeRegionY;
 
         /// <summary>
         /// The ID value for this user
         /// </summary>
-        private UUID m_id;
+        private UUID _id;
 
         /// <summary>
         /// A UNIX Timestamp for the users last login date / time
         /// </summary>
-        private int m_lastLogin;
+        private int _lastLogin;
 
         /// <summary>
         /// A salted hash containing the users password, in the format md5(md5(password) + ":" + salt)
         /// </summary>
         /// <remarks>This is double MD5'd because the client sends an unsalted MD5 to the loginserver</remarks>
-        private string m_passwordHash;
+        private string _passwordHash;
 
         /// <summary>
         /// The salt used for the users hash, should be 32 bytes or longer
         /// </summary>
-        private string m_passwordSalt;
+        private string _passwordSalt;
 
         /// <summary>
         /// The about text listed in a users profile.
         /// </summary>
-        private string m_profileAboutText = string.Empty;
+        private string _profileAboutText = string.Empty;
 
         /// <summary>
         /// A uint mask containing the "I can do" fields of the users profile
         /// </summary>
-        private uint m_profileCanDoMask;
+        private uint _profileCanDoMask;
 
         /// <summary>
         /// The profile image for the users first life tab
         /// </summary>
-        private UUID m_profileFirstImage;
+        private UUID _profileFirstImage;
 
         /// <summary>
         /// The first life about text listed in a users profile
         /// </summary>
-        private string m_profileFirstText = string.Empty;
+        private string _profileFirstText = string.Empty;
 
         /// <summary>
         /// The profile image for an avatar stored on the asset server
         /// </summary>
-        private UUID m_profileImage;
+        private UUID _profileImage;
 
         /// <summary>
         /// A uint mask containing the "I want to do" part of the users profile
         /// </summary>
-        private uint m_profileWantDoMask; // Profile window "I want to" mask
+        private uint _profileWantDoMask; // Profile window "I want to" mask
 
         /// <summary>
         /// The profile url for an avatar
         /// </summary>
-        private string m_profileUrl;
+        private string _profileUrl;
 
         /// <summary>
         /// The second component of a users account name
         /// </summary>
-        private string m_surname;
+        private string _surname;
 
         /// <summary>
         /// A valid email address for the account.  Useful for password reset requests.
         /// </summary>
-        private string m_email = string.Empty;
+        private string _email = string.Empty;
 
         /// <summary>
         /// A URI to the users asset server, used for foreigners and large grids.
         /// </summary>
-        private string m_userAssetUri = string.Empty;
+        private string _userAssetUri = string.Empty;
 
         /// <summary>
         /// A URI to the users inventory server, used for foreigners and large grids
         /// </summary>
-        private string m_userInventoryUri = string.Empty;
+        private string _userInventoryUri = string.Empty;
 
         /// <summary>
         /// The last used Web_login_key
         /// </summary>
-        private UUID m_webLoginKey;
+        private UUID _webLoginKey;
 
         // Data for estates and other goodies
         // to get away from per-machine configs a little
         //
-        private int m_userFlags;
-        private int m_godLevel;
-        private string m_customType;
-        private UUID m_partner;
+        private int _userFlags;
+        private int _godLevel;
+        private string _customType;
+        private UUID _partner;
 
         /// <summary>
         /// The regionhandle of the users preferred home region. If
@@ -159,24 +159,20 @@ namespace OpenSim.Framework
         /// </summary>
         public virtual ulong HomeRegion
         {
-            get
-            {
-                return Util.RegionWorldLocToHandle(Util.RegionToWorldLoc(m_homeRegionX), Util.RegionToWorldLoc(m_homeRegionY));
-                // return Utils.UIntsToLong( m_homeRegionX * (uint)Constants.RegionSize, m_homeRegionY * (uint)Constants.RegionSize);
-            }
-
+            get => Util.RegionWorldLocToHandle(Util.RegionToWorldLoc(_homeRegionX), Util.RegionToWorldLoc(_homeRegionY));
+            // return Utils.UIntsToLong( _homeRegionX * (uint)Constants.RegionSize, _homeRegionY * (uint)Constants.RegionSize);
             set
             {
                 uint regionWorldLocX, regionWorldLocY;
                 Util.RegionHandleToWorldLoc(value, out regionWorldLocX, out regionWorldLocY);
-                m_homeRegionX = Util.WorldToRegionLoc(regionWorldLocX);
-                m_homeRegionY = Util.WorldToRegionLoc(regionWorldLocY);
-                // m_homeRegionX = (uint) (value >> 40);
-                // m_homeRegionY = (((uint) (value)) >> 8);
+                _homeRegionX = Util.WorldToRegionLoc(regionWorldLocX);
+                _homeRegionY = Util.WorldToRegionLoc(regionWorldLocY);
+                // _homeRegionX = (uint) (value >> 40);
+                // _homeRegionY = (((uint) (value)) >> 8);
             }
         }
 
-        private UUID m_homeRegionId;
+        private UUID _homeRegionId;
         /// <summary>
         /// The regionID of the users home region. This is unique;
         /// even if the position of the region changes within the
@@ -184,218 +180,215 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID HomeRegionID
         {
-            get { return m_homeRegionId; }
-            set { m_homeRegionId = value; }
+            get => _homeRegionId;
+            set => _homeRegionId = value;
         }
 
         // Property wrappers
         public UUID ID
         {
-            get { return m_id; }
-            set { m_id = value; }
+            get => _id;
+            set => _id = value;
         }
 
         public UUID WebLoginKey
         {
-            get { return m_webLoginKey; }
-            set { m_webLoginKey = value; }
+            get => _webLoginKey;
+            set => _webLoginKey = value;
         }
 
         public string FirstName
         {
-            get { return m_firstname; }
-            set { m_firstname = value; }
+            get => _firstname;
+            set => _firstname = value;
         }
 
         public string SurName
         {
-            get { return m_surname; }
-            set { m_surname = value; }
+            get => _surname;
+            set => _surname = value;
         }
 
         /// <value>
         /// The concatentation of the various name components.
         /// </value>
-        public string Name
-        {
-            get { return string.Format("{0} {1}", m_firstname, m_surname); }
-        }
+        public string Name => string.Format("{0} {1}", _firstname, _surname);
 
         public string Email
         {
-            get { return m_email; }
-            set { m_email = value; }
+            get => _email;
+            set => _email = value;
         }
 
         public string PasswordHash
         {
-            get { return m_passwordHash; }
-            set { m_passwordHash = value; }
+            get => _passwordHash;
+            set => _passwordHash = value;
         }
 
         public string PasswordSalt
         {
-            get { return m_passwordSalt; }
-            set { m_passwordSalt = value; }
+            get => _passwordSalt;
+            set => _passwordSalt = value;
         }
 
         public uint HomeRegionX
         {
-            get { return m_homeRegionX; }
-            set { m_homeRegionX = value; }
+            get => _homeRegionX;
+            set => _homeRegionX = value;
         }
 
         public uint HomeRegionY
         {
-            get { return m_homeRegionY; }
-            set { m_homeRegionY = value; }
+            get => _homeRegionY;
+            set => _homeRegionY = value;
         }
 
         public Vector3 HomeLocation
         {
-            get { return m_homeLocation; }
-            set { m_homeLocation = value; }
+            get => _homeLocation;
+            set => _homeLocation = value;
         }
 
         // for handy serialization
         public float HomeLocationX
         {
-            get { return m_homeLocation.X; }
-            set { m_homeLocation.X = value; }
+            get => _homeLocation.X;
+            set => _homeLocation.X = value;
         }
 
         public float HomeLocationY
         {
-            get { return m_homeLocation.Y; }
-            set { m_homeLocation.Y = value; }
+            get => _homeLocation.Y;
+            set => _homeLocation.Y = value;
         }
 
         public float HomeLocationZ
         {
-            get { return m_homeLocation.Z; }
-            set { m_homeLocation.Z = value; }
+            get => _homeLocation.Z;
+            set => _homeLocation.Z = value;
         }
 
 
         public Vector3 HomeLookAt
         {
-            get { return m_homeLookAt; }
-            set { m_homeLookAt = value; }
+            get => _homeLookAt;
+            set => _homeLookAt = value;
         }
 
         // for handy serialization
         public float HomeLookAtX
         {
-            get { return m_homeLookAt.X; }
-            set { m_homeLookAt.X = value; }
+            get => _homeLookAt.X;
+            set => _homeLookAt.X = value;
         }
 
         public float HomeLookAtY
         {
-            get { return m_homeLookAt.Y; }
-            set { m_homeLookAt.Y = value; }
+            get => _homeLookAt.Y;
+            set => _homeLookAt.Y = value;
         }
 
         public float HomeLookAtZ
         {
-            get { return m_homeLookAt.Z; }
-            set { m_homeLookAt.Z = value; }
+            get => _homeLookAt.Z;
+            set => _homeLookAt.Z = value;
         }
 
         public int Created
         {
-            get { return m_created; }
-            set { m_created = value; }
+            get => _created;
+            set => _created = value;
         }
 
         public int LastLogin
         {
-            get { return m_lastLogin; }
-            set { m_lastLogin = value; }
+            get => _lastLogin;
+            set => _lastLogin = value;
         }
 
         public string UserInventoryURI
         {
-            get { return m_userInventoryUri; }
-            set { m_userInventoryUri = value; }
+            get => _userInventoryUri;
+            set => _userInventoryUri = value;
         }
 
         public string UserAssetURI
         {
-            get { return m_userAssetUri; }
-            set { m_userAssetUri = value; }
+            get => _userAssetUri;
+            set => _userAssetUri = value;
         }
 
         public uint CanDoMask
         {
-            get { return m_profileCanDoMask; }
-            set { m_profileCanDoMask = value; }
+            get => _profileCanDoMask;
+            set => _profileCanDoMask = value;
         }
 
         public uint WantDoMask
         {
-            get { return m_profileWantDoMask; }
-            set { m_profileWantDoMask = value; }
+            get => _profileWantDoMask;
+            set => _profileWantDoMask = value;
         }
 
         public string AboutText
         {
-            get { return m_profileAboutText; }
-            set { m_profileAboutText = value; }
+            get => _profileAboutText;
+            set => _profileAboutText = value;
         }
 
         public string FirstLifeAboutText
         {
-            get { return m_profileFirstText; }
-            set { m_profileFirstText = value; }
+            get => _profileFirstText;
+            set => _profileFirstText = value;
         }
 
         public string ProfileUrl
         {
-            get { return m_profileUrl; }
-            set { m_profileUrl = value; }
+            get => _profileUrl;
+            set => _profileUrl = value;
         }
 
         public UUID Image
         {
-            get { return m_profileImage; }
-            set { m_profileImage = value; }
+            get => _profileImage;
+            set => _profileImage = value;
         }
 
         public UUID FirstLifeImage
         {
-            get { return m_profileFirstImage; }
-            set { m_profileFirstImage = value; }
+            get => _profileFirstImage;
+            set => _profileFirstImage = value;
         }
 
         public UserAgentData CurrentAgent
         {
-            get { return m_currentAgent; }
-            set { m_currentAgent = value; }
+            get => _currentAgent;
+            set => _currentAgent = value;
         }
 
         public int UserFlags
         {
-            get { return m_userFlags; }
-            set { m_userFlags = value; }
+            get => _userFlags;
+            set => _userFlags = value;
         }
 
         public int GodLevel
         {
-            get { return m_godLevel; }
-            set { m_godLevel = value; }
+            get => _godLevel;
+            set => _godLevel = value;
         }
 
         public string CustomType
         {
-            get { return m_customType; }
-            set { m_customType = value; }
+            get => _customType;
+            set => _customType = value;
         }
 
         public UUID Partner
         {
-            get { return m_partner; }
-            set { m_partner = value; }
+            get => _partner;
+            set => _partner = value;
         }
     }
 }

@@ -32,22 +32,19 @@ namespace OpenSim.Region.Framework.Scenes
 {
     public abstract class EntityBase : ISceneEntity
     {
-        // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// The scene to which this entity belongs
         /// </summary>
-        protected Scene m_scene;
-        public Scene Scene
-        {
-            get { return m_scene; }
-        }
+        protected Scene _scene;
+        public Scene Scene => _scene;
 
-        protected UUID m_uuid;
+        protected UUID _uuid;
         public virtual UUID UUID
         {
-            get { return m_uuid; }
-            set { m_uuid = value; }
+            get => _uuid;
+            set => _uuid = value;
         }
 
         /// <summary>
@@ -56,25 +53,19 @@ namespace OpenSim.Region.Framework.Scenes
         public osUTF8 osUTF8Name;
         public virtual string Name
         {
-            get { return osUTF8Name == null ? string.Empty : osUTF8Name.ToString(); }
-            set { osUTF8Name = value == null? null : new osUTF8(value); }
+            get => osUTF8Name == null ? string.Empty : osUTF8Name.ToString();
+            set => osUTF8Name = value == null? null : new osUTF8(value);
         }
 
         /// <summary>
         /// id local to scene
         /// </summary>
-        protected uint m_localId;
+        protected uint _localId;
         public virtual uint LocalId
         {
-            get
-            {
-                return m_localId;
-            }
-            set
-            {
-                m_localId = value;
-                // m_log.DebugFormat("[ENTITY BASE]: Set part {0} to local id {1}", Name, m_localId);
-            }
+            get => _localId;
+            set => _localId = value;
+            // _log.DebugFormat("[ENTITY BASE]: Set part {0} to local id {1}", Name, _localId);
         }
 
         /// <summary>
@@ -85,27 +76,21 @@ namespace OpenSim.Region.Framework.Scenes
         /// <summary>
         /// Absolute position of this entity in a scene.
         /// </summary>
-        protected Vector3 m_pos;
+        protected Vector3 _pos;
         public virtual Vector3 AbsolutePosition
         {
-            get
-            {
-                return m_pos;
-            }
-            set
-            {
-                m_pos = value;
-            }
+            get => _pos;
+            set => _pos = value;
         }
 
         /// <summary>
         /// Current velocity of the entity.
         /// </summary>
-        protected Vector3 m_velocity;
+        protected Vector3 _velocity;
         public virtual Vector3 Velocity
         {
-            get { return m_velocity; }
-            set { m_velocity = value; }
+            get => _velocity;
+            set => _velocity = value;
         }
 
         /// <summary>

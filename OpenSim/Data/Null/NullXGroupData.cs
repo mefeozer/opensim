@@ -32,17 +32,17 @@ namespace OpenSim.Data.Null
 {
     public class NullXGroupData : IXGroupData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Dictionary<UUID, XGroup> m_groups = new Dictionary<UUID, XGroup>();
+        private readonly Dictionary<UUID, XGroup> _groups = new Dictionary<UUID, XGroup>();
 
         public NullXGroupData(string connectionString, string realm) {}
 
         public bool StoreGroup(XGroup group)
         {
-            lock (m_groups)
+            lock (_groups)
             {
-                m_groups[group.groupID] = group.Clone();
+                _groups[group.groupID] = group.Clone();
             }
 
             return true;
@@ -52,8 +52,8 @@ namespace OpenSim.Data.Null
         {
             XGroup group = null;
 
-            lock (m_groups)
-                m_groups.TryGetValue(groupID, out group);
+            lock (_groups)
+                _groups.TryGetValue(groupID, out group);
 
             return group;
         }
@@ -62,8 +62,8 @@ namespace OpenSim.Data.Null
         {
             Dictionary<UUID, XGroup> groupsClone = new Dictionary<UUID, XGroup>();
 
-            lock (m_groups)
-                foreach (XGroup group in m_groups.Values)
+            lock (_groups)
+                foreach (XGroup group in _groups.Values)
                     groupsClone[group.groupID] = group.Clone();
 
             return groupsClone;
@@ -71,8 +71,8 @@ namespace OpenSim.Data.Null
 
         public bool DeleteGroup(UUID groupID)
         {
-            lock (m_groups)
-                return m_groups.Remove(groupID);
+            lock (_groups)
+                return _groups.Remove(groupID);
         }
     }
 }

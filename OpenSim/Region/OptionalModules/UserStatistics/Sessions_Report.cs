@@ -38,10 +38,7 @@ namespace OpenSim.Region.UserStatistics
     {
         #region IStatsController Members
 
-        public string ReportName
-        {
-            get { return "Sessions"; }
-        }
+        public string ReportName => "Sessions";
 
         public Hashtable ProcessModel(Hashtable pParams)
         {

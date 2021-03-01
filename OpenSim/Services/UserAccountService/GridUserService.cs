@@ -41,16 +41,16 @@ namespace OpenSim.Services.UserAccountService
 {
     public class GridUserService : GridUserServiceBase, IGridUserService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static bool m_Initialized;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static bool _Initialized;
 
         public GridUserService(IConfigSource config) : base(config)
         {
-            m_log.Debug("[GRID USER SERVICE]: Starting user grid service");
+            _log.Debug("[GRID USER SERVICE]: Starting user grid service");
 
-            if (!m_Initialized)
+            if (!_Initialized)
             {
-                m_Initialized = true;
+                _Initialized = true;
 
                 MainConsole.Instance.Commands.AddCommand(
                     "Users", false,
@@ -79,7 +79,7 @@ namespace OpenSim.Services.UserAccountService
                 return;
             }
 
-            GridUserData[] data = m_Database.GetAll(cmdparams[3]);
+            GridUserData[] data = _Database.GetAll(cmdparams[3]);
 
             foreach (GridUserData gu in data)
             {
@@ -109,7 +109,7 @@ namespace OpenSim.Services.UserAccountService
 
             DateTime now = DateTime.UtcNow;
 
-            foreach (GridUserData gu in m_Database.GetAll(""))
+            foreach (GridUserData gu in _Database.GetAll(""))
             {
                 if (bool.Parse(gu.Data["Online"]))
                 {
@@ -134,7 +134,7 @@ namespace OpenSim.Services.UserAccountService
             if (cache.TryGetValue(userID, out GridUserData d))
                return d;
 
-            GridUserData[] ds = m_Database.GetAll(userID);
+            GridUserData[] ds = _Database.GetAll(userID);
             if (ds == null || ds.Length == 0)
             {
                 cache.Add(userID, null, 300000);
@@ -250,7 +250,7 @@ namespace OpenSim.Services.UserAccountService
 
         public GridUserInfo LoggedIn(string userID)
         {
-            m_log.DebugFormat("[GRID USER SERVICE]: User {0} is online", userID);
+            _log.DebugFormat("[GRID USER SERVICE]: User {0} is online", userID);
 
             GridUserData d = GetGridUserData(userID);
 
@@ -265,7 +265,7 @@ namespace OpenSim.Services.UserAccountService
             d.Data["Online"] = true.ToString();
             d.Data["Login"] = Util.UnixTimeSinceEpoch().ToString();
 
-            m_Database.Store(d);
+            _Database.Store(d);
             if (userID.Length >= 36)
                 cache.Add(userID.Substring(0, 36), d, 300000);
 
@@ -274,7 +274,7 @@ namespace OpenSim.Services.UserAccountService
 
         public bool LoggedOut(string userID, UUID sessionID, UUID regionID, Vector3 lastPosition, Vector3 lastLookAt)
         {
-            m_log.DebugFormat("[GRID USER SERVICE]: User {0} is offline", userID);
+            _log.DebugFormat("[GRID USER SERVICE]: User {0} is offline", userID);
 
             GridUserData d = GetGridUserData(userID);
 
@@ -292,7 +292,7 @@ namespace OpenSim.Services.UserAccountService
             d.Data["LastPosition"] = lastPosition.ToString();
             d.Data["LastLookAt"] = lastLookAt.ToString();
 
-            bool ret = m_Database.Store(d);
+            bool ret = _Database.Store(d);
             if (ret && userID.Length >= 36)
                 cache.Add(userID.Substring(0, 36), d, 300000);
             return ret;
@@ -314,7 +314,7 @@ namespace OpenSim.Services.UserAccountService
             d.Data["HomePosition"] = homePosition.ToString();
             d.Data["HomeLookAt"] = homeLookAt.ToString();
 
-            bool ret = m_Database.Store(d);
+            bool ret = _Database.Store(d);
             if (ret && userID.Length >= 36)
                 cache.Add(userID.Substring(0, 36), d, 300000);
             return ret;
@@ -322,7 +322,7 @@ namespace OpenSim.Services.UserAccountService
 
         public bool SetLastPosition(string userID, UUID sessionID, UUID regionID, Vector3 lastPosition, Vector3 lastLookAt)
         {
-//            m_log.DebugFormat("[GRID USER SERVICE]: SetLastPosition for {0}", userID);
+//            _log.DebugFormat("[GRID USER SERVICE]: SetLastPosition for {0}", userID);
 
             GridUserData d = GetGridUserData(userID);
 
@@ -338,7 +338,7 @@ namespace OpenSim.Services.UserAccountService
             d.Data["LastPosition"] = lastPosition.ToString();
             d.Data["LastLookAt"] = lastLookAt.ToString();
 
-            bool ret = m_Database.Store(d);
+            bool ret = _Database.Store(d);
             if (ret && userID.Length >= 36)
                 cache.Add(userID.Substring(0, 36), d, 300000);
             return ret;

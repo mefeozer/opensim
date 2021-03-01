@@ -40,17 +40,17 @@ namespace OpenSim.Data.MySQL
     /// </summary>
     public class MySQLInventoryData : IInventoryDataPlugin
     {
-        private static readonly ILog m_log
+        private static readonly ILog _log
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_connectionString;
-        private readonly object m_dbLock = new object();
+        private string _connectionString;
+        private readonly object _dbLock = new object();
 
-        public string Version { get { return "1.0.0.0"; } }
+        public string Version => "1.0.0.0";
 
         public void Initialise()
         {
-            m_log.Info("[MySQLInventoryData]: " + Name + " cannot be default-initialized!");
+            _log.Info("[MySQLInventoryData]: " + Name + " cannot be default-initialized!");
             throw new PluginNotInitialisedException (Name);
         }
 
@@ -67,12 +67,12 @@ namespace OpenSim.Data.MySQL
         /// <param name="connect">connect string</param>
         public void Initialise(string connect)
         {
-            m_connectionString = connect;
+            _connectionString = connect;
 
             // This actually does the roll forward assembly stuff
             Assembly assem = GetType().Assembly;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 Migration m = new Migration(dbcon, assem, "InventoryStore");
@@ -85,10 +85,7 @@ namespace OpenSim.Data.MySQL
         /// The name of this DB provider
         /// </summary>
         /// <returns>Name of DB provider</returns>
-        public string Name
-        {
-            get { return "MySQL Inventory Data Interface"; }
-        }
+        public string Name => "MySQL Inventory Data Interface";
 
         /// <summary>
         /// Closes this DB provider
@@ -108,11 +105,11 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
                     List<InventoryItemBase> items = new List<InventoryItemBase>();
 
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -139,7 +136,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
                 return null;
             }
         }
@@ -153,9 +150,9 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -180,7 +177,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
                 return null;
             }
         }
@@ -195,9 +192,9 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -232,7 +229,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
                 return null;
             }
         }
@@ -248,9 +245,9 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -273,7 +270,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
                 return null;
             }
         }
@@ -327,7 +324,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (MySqlException e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
             }
 
             return null;
@@ -342,9 +339,9 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -367,7 +364,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
             }
             return null;
         }
@@ -394,7 +391,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
             }
 
             return null;
@@ -410,9 +407,9 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -435,7 +432,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
                 return null;
             }
         }
@@ -461,19 +458,19 @@ namespace OpenSim.Data.MySQL
             if (item.Name.Length > 64)
             {
                 itemName = item.Name.Substring(0, 64);
-                m_log.Warn("[INVENTORY DB]: Name field truncated from " + item.Name.Length + " to " + itemName.Length + " characters on add item");
+                _log.Warn("[INVENTORY DB]: Name field truncated from " + item.Name.Length + " to " + itemName.Length + " characters on add item");
             }
 
             string itemDesc = item.Description;
             if (item.Description.Length > 128)
             {
                 itemDesc = item.Description.Substring(0, 128);
-                m_log.Warn("[INVENTORY DB]: Description field truncated from " + item.Description.Length + " to " + itemDesc.Length + " characters on add item");
+                _log.Warn("[INVENTORY DB]: Description field truncated from " + item.Description.Length + " to " + itemDesc.Length + " characters on add item");
             }
 
             try
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -501,7 +498,7 @@ namespace OpenSim.Data.MySQL
                         result.Parameters.AddWithValue("?groupOwned", item.GroupOwned);
                         result.Parameters.AddWithValue("?flags", item.Flags);
 
-                        lock (m_dbLock)
+                        lock (_dbLock)
                             result.ExecuteNonQuery();
 
                         result.Dispose();
@@ -511,7 +508,7 @@ namespace OpenSim.Data.MySQL
                     {
                         result.Parameters.AddWithValue("?folderID", item.Folder.ToString());
 
-                        lock (m_dbLock)
+                        lock (_dbLock)
                             result.ExecuteNonQuery();
                     }
                     dbcon.Close();
@@ -519,7 +516,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (MySqlException e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
             }
         }
 
@@ -540,7 +537,7 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -548,7 +545,7 @@ namespace OpenSim.Data.MySQL
                     {
                         cmd.Parameters.AddWithValue("?uuid", itemID.ToString());
 
-                        lock (m_dbLock)
+                        lock (_dbLock)
                             cmd.ExecuteNonQuery();
                     }
                     dbcon.Close();
@@ -556,7 +553,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (MySqlException e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
             }
         }
 
@@ -584,10 +581,10 @@ namespace OpenSim.Data.MySQL
             if (folderName.Length > 64)
             {
                 folderName = folderName.Substring(0, 64);
-                m_log.Warn("[INVENTORY DB]: Name field truncated from " + folder.Name.Length + " to " + folderName.Length + " characters on add folder");
+                _log.Warn("[INVENTORY DB]: Name field truncated from " + folder.Name.Length + " to " + folderName.Length + " characters on add folder");
             }
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -602,14 +599,14 @@ namespace OpenSim.Data.MySQL
 
                     try
                     {
-                        lock (m_dbLock)
+                        lock (_dbLock)
                         {
                             cmd.ExecuteNonQuery();
                         }
                     }
                     catch (Exception e)
                     {
-                        m_log.Error(e.ToString());
+                        _log.Error(e.ToString());
                     }
                 }
                 dbcon.Close();
@@ -635,7 +632,7 @@ namespace OpenSim.Data.MySQL
             string sql =
                 "UPDATE inventoryfolders SET parentFolderID=?parentFolderID WHERE folderID=?folderID";
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -646,14 +643,14 @@ namespace OpenSim.Data.MySQL
 
                     try
                     {
-                        lock (m_dbLock)
+                        lock (_dbLock)
                         {
                             cmd.ExecuteNonQuery();
                         }
                     }
                     catch (Exception e)
                     {
-                        m_log.Error(e.ToString());
+                        _log.Error(e.ToString());
                     }
                 }
                 dbcon.Close();
@@ -704,9 +701,9 @@ namespace OpenSim.Data.MySQL
                 List<InventoryFolderBase> parentFolder = new List<InventoryFolderBase>();
                 bool buildResultsFromHashTable = false;
 
-                lock (m_dbLock)
+                lock (_dbLock)
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -795,7 +792,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
                 return null;
             }
         }
@@ -808,7 +805,7 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -817,7 +814,7 @@ namespace OpenSim.Data.MySQL
                     {
                         cmd.Parameters.AddWithValue("?uuid", folderID.ToString());
 
-                        lock (m_dbLock)
+                        lock (_dbLock)
                             cmd.ExecuteNonQuery();
                     }
                     dbcon.Close();
@@ -825,7 +822,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (MySqlException e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
             }
         }
 
@@ -837,7 +834,7 @@ namespace OpenSim.Data.MySQL
         {
             try
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
 
@@ -845,7 +842,7 @@ namespace OpenSim.Data.MySQL
                     {
                         cmd.Parameters.AddWithValue("?uuid", folderID.ToString());
 
-                        lock (m_dbLock)
+                        lock (_dbLock)
                             cmd.ExecuteNonQuery();
                     }
                     dbcon.Close();
@@ -853,7 +850,7 @@ namespace OpenSim.Data.MySQL
             }
             catch (MySqlException e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
             }
         }
 
@@ -879,11 +876,11 @@ namespace OpenSim.Data.MySQL
 
         public List<InventoryItemBase> fetchActiveGestures(UUID avatarID)
         {
-            lock (m_dbLock)
+            lock (_dbLock)
             {
                 try
                 {
-                    using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                    using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                     {
                         dbcon.Open();
 
@@ -910,7 +907,7 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (Exception e)
                 {
-                    m_log.Error(e.Message, e);
+                    _log.Error(e.Message, e);
                     return null;
                 }
             }

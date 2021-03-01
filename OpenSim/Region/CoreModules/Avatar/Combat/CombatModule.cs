@@ -39,17 +39,17 @@ namespace OpenSim.Region.CoreModules.Avatar.Combat.CombatModule
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "CombatModule")]
     public class CombatModule : ISharedRegionModule
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Region UUIDS indexed by AgentID
         /// </summary>
-        //private Dictionary<UUID, UUID> m_rootAgents = new Dictionary<UUID, UUID>();
+        //private Dictionary<UUID, UUID> _rootAgents = new Dictionary<UUID, UUID>();
 
         /// <summary>
         /// Scenes by Region Handle
         /// </summary>
-        private readonly Dictionary<ulong, Scene> m_scenel = new Dictionary<ulong, Scene>();
+        private readonly Dictionary<ulong, Scene> _scenel = new Dictionary<ulong, Scene>();
 
         /// <summary>
         /// Startup
@@ -62,15 +62,15 @@ namespace OpenSim.Region.CoreModules.Avatar.Combat.CombatModule
 
         public void AddRegion(Scene scene)
         {
-            lock (m_scenel)
+            lock (_scenel)
             {
-                if (m_scenel.ContainsKey(scene.RegionInfo.RegionHandle))
+                if (_scenel.ContainsKey(scene.RegionInfo.RegionHandle))
                 {
-                    m_scenel[scene.RegionInfo.RegionHandle] = scene;
+                    _scenel[scene.RegionInfo.RegionHandle] = scene;
                 }
                 else
                 {
-                    m_scenel.Add(scene.RegionInfo.RegionHandle, scene);
+                    _scenel.Add(scene.RegionInfo.RegionHandle, scene);
                 }
             }
 
@@ -79,8 +79,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Combat.CombatModule
 
         public void RemoveRegion(Scene scene)
         {
-            if (m_scenel.ContainsKey(scene.RegionInfo.RegionHandle))
-                m_scenel.Remove(scene.RegionInfo.RegionHandle);
+            if (_scenel.ContainsKey(scene.RegionInfo.RegionHandle))
+                _scenel.Remove(scene.RegionInfo.RegionHandle);
 
             scene.EventManager.OnAvatarKilled -= KillAvatar;
         }
@@ -97,15 +97,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Combat.CombatModule
         {
         }
 
-        public string Name
-        {
-            get { return "CombatModule"; }
-        }
+        public string Name => "CombatModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
 
         private void KillAvatar(uint killerObjectLocalID, ScenePresence deadAvatar)

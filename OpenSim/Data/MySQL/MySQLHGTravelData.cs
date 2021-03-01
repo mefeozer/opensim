@@ -36,7 +36,7 @@ namespace OpenSim.Data.MySQL
     /// </summary>
     public class MySQLHGTravelData : MySQLGenericTableHandler<HGTravelingData>, IHGTravelingData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public MySQLHGTravelData(string connectionString, string realm) : base(connectionString, realm, "HGTravelStore") { }
 
@@ -64,7 +64,7 @@ namespace OpenSim.Data.MySQL
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = string.Format("delete from {0} where TMStamp < NOW() - INTERVAL 2 DAY", m_Realm);
+                cmd.CommandText = string.Format("delete from {0} where TMStamp < NOW() - INTERVAL 2 DAY", _Realm);
 
                 ExecuteNonQuery(cmd);
             }

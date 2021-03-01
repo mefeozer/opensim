@@ -42,7 +42,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
     /// </summary>
     public class CoalescedSceneObjectsSerializer
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Serialize coalesced objects to Xml
@@ -75,7 +75,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
                     List<SceneObjectGroup> coaObjects = coa.Objects;
 
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[COALESCED SCENE OBJECTS SERIALIZER]: Writing {0} objects for coalesced object",
 //                        coaObjects.Count);
 
@@ -93,7 +93,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                     {
                         SceneObjectGroup obj = coaObjects[i];
 
-//                        m_log.DebugFormat(
+//                        _log.DebugFormat(
 //                            "[COALESCED SCENE OBJECTS SERIALIZER]: Writing offset for object {0}, {1}",
 //                            i, obj.Name);
 
@@ -120,7 +120,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
         public static bool TryFromXml(string xml, out CoalescedSceneObjects coa)
         {
-            //            m_log.DebugFormat("[COALESCED SCENE OBJECTS SERIALIZER]: TryFromXml() deserializing {0}", xml);
+            //            _log.DebugFormat("[COALESCED SCENE OBJECTS SERIALIZER]: TryFromXml() deserializing {0}", xml);
 
             coa = null;
 
@@ -133,7 +133,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
                     if (reader.Name != "CoalescedObject")
                     {
-                        // m_log.DebugFormat(
+                        // _log.DebugFormat(
                         //     "[COALESCED SCENE OBJECTS SERIALIZER]: TryFromXml() root element was {0} so returning false",
                         //     reader.Name);
 
@@ -163,7 +163,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                     {
                         // XXX: Possibly we should fail outright here rather than continuing if a particular component of the
                         // coalesced object fails to load.
-                        m_log.WarnFormat(
+                        _log.WarnFormat(
                             "[COALESCED SCENE OBJECTS SERIALIZER]: Deserialization of xml for component {0} failed.  Continuing.",
                             i);
                     }
@@ -173,7 +173,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             }
             catch (Exception e)
             {
-                m_log.Error("[COALESCED SCENE OBJECTS SERIALIZER]: Deserialization of xml failed ", e);
+                _log.Error("[COALESCED SCENE OBJECTS SERIALIZER]: Deserialization of xml failed ", e);
                 Util.LogFailedXML("[COALESCED SCENE OBJECTS SERIALIZER]:", xml);
                 return false;
             }
@@ -183,7 +183,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
         public static bool TryFromXmlData(byte[] data, out CoalescedSceneObjects coa)
         {
-            // m_log.DebugFormat("[COALESCED SCENE OBJECTS SERIALIZER]: TryFromXml() deserializing {0}", xml);
+            // _log.DebugFormat("[COALESCED SCENE OBJECTS SERIALIZER]: TryFromXml() deserializing {0}", xml);
 
             coa = null;
             try
@@ -230,7 +230,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                     {
                         // XXX: Possibly we should fail outright here rather than continuing if a particular component of the
                         // coalesced object fails to load.
-                        m_log.WarnFormat(
+                        _log.WarnFormat(
                             "[COALESCED SCENE OBJECTS SERIALIZER]: Deserialization of xml for component {0} failed.  Continuing.",
                             i);
                     }
@@ -240,7 +240,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
             }
             catch (Exception e)
             {
-                m_log.Error("[COALESCED SCENE OBJECTS SERIALIZER]: Deserialization of binary xml failed ", e);
+                _log.Error("[COALESCED SCENE OBJECTS SERIALIZER]: Deserialization of binary xml failed ", e);
                 return false;
             }
 

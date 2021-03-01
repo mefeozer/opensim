@@ -41,16 +41,16 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "BunchOfCapsModule")]
     public class BunchOfCapsModule : INonSharedRegionModule
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_Scene;
+        private Scene _Scene;
 
         #region INonSharedRegionModule
 
-        public string Name { get { return "BunchOfCapsModule"; } }
+        public string Name => "BunchOfCapsModule";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -60,8 +60,8 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void AddRegion(Scene scene)
         {
-            m_Scene = scene;
-            m_Scene.EventManager.OnRegisterCaps += OnRegisterCaps;
+            _Scene = scene;
+            _Scene.EventManager.OnRegisterCaps += OnRegisterCaps;
         }
 
         public void RemoveRegion(Scene scene)
@@ -77,7 +77,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
         private void OnRegisterCaps(UUID agentID, Caps caps)
         {
-            new BunchOfCaps(m_Scene, agentID, caps);
+            new BunchOfCaps(_Scene, agentID, caps);
         }
 
     }

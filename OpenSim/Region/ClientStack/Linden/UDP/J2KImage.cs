@@ -53,7 +53,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// </remarks>
         private const int ASSET_REQUEST_TIMEOUT = 100000000;
 
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public uint LastSequence;
         public float Priority;
@@ -64,7 +64,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         public IAssetService AssetService;
         public UUID AgentID;
         public IInventoryAccessModule InventoryAccessModule;
-        private OpenJPEG.J2KLayerInfo[] m_layers;
+        private OpenJPEG.J2KLayerInfo[] _layers;
 
         /// <summary>
         /// Has this request decoded the asset data?
@@ -83,17 +83,17 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         public C5.IPriorityQueueHandle<J2KImage> PriorityQueueHandle;
 
-        private uint m_currentPacket;
-        private bool m_decodeRequested;
-        private bool m_assetRequested;
-        private bool m_sentInfo;
-        private uint m_stopPacket;
-        private byte[] m_asset;
-        private readonly LLImageManager m_imageManager;
+        private uint _currentPacket;
+        private bool _decodeRequested;
+        private bool _assetRequested;
+        private bool _sentInfo;
+        private uint _stopPacket;
+        private byte[] _asset;
+        private readonly LLImageManager _imageManager;
 
         public J2KImage(LLImageManager imageManager)
         {
-            m_imageManager = imageManager;
+            _imageManager = imageManager;
         }
 
         /// <summary>
@@ -108,32 +108,32 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         {
             packetsSent = 0;
 
-            if (m_currentPacket <= m_stopPacket)
+            if (_currentPacket <= _stopPacket)
             {
                 bool sendMore = true;
 
-                if (!m_sentInfo || m_currentPacket == 0)
+                if (!_sentInfo || _currentPacket == 0)
                 {
                     sendMore = !SendFirstPacket(client);
 
-                    m_sentInfo = true;
-                    ++m_currentPacket;
+                    _sentInfo = true;
+                    ++_currentPacket;
                     ++packetsSent;
                 }
-                if (m_currentPacket < 2)
+                if (_currentPacket < 2)
                 {
-                    m_currentPacket = 2;
+                    _currentPacket = 2;
                 }
 
-                while (sendMore && packetsSent < packetsToSend && m_currentPacket <= m_stopPacket)
+                while (sendMore && packetsSent < packetsToSend && _currentPacket <= _stopPacket)
                 {
                     sendMore = SendPacket(client);
-                    ++m_currentPacket;
+                    ++_currentPacket;
                     ++packetsSent;
                 }
             }
 
-            return m_currentPacket > m_stopPacket;
+            return _currentPacket > _stopPacket;
         }
 
         /// <summary>
@@ -145,13 +145,13 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         {
             if (!HasAsset)
             {
-                if (!m_assetRequested || DateTime.UtcNow.Ticks > AssetRequestTime + ASSET_REQUEST_TIMEOUT)
+                if (!_assetRequested || DateTime.UtcNow.Ticks > AssetRequestTime + ASSET_REQUEST_TIMEOUT)
                 {
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[J2KIMAGE]: Requesting asset {0} from request in packet {1}, already requested? {2}, due to timeout? {3}",
-//                        TextureID, LastSequence, m_assetRequested, DateTime.UtcNow.Ticks > AssetRequestTime + ASSET_REQUEST_TIMEOUT);
+//                        TextureID, LastSequence, _assetRequested, DateTime.UtcNow.Ticks > AssetRequestTime + ASSET_REQUEST_TIMEOUT);
 
-                    m_assetRequested = true;
+                    _assetRequested = true;
                     AssetRequestTime = DateTime.UtcNow.Ticks;
 
                     AssetService.Get(TextureID.ToString(), this, AssetReceived);
@@ -162,24 +162,24 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 if (!IsDecoded)
                 {
                     //We need to decode the requested image first
-                    if (!m_decodeRequested)
+                    if (!_decodeRequested)
                     {
                         //Request decode
-                        m_decodeRequested = true;
+                        _decodeRequested = true;
 
-//                        m_log.DebugFormat("[J2KIMAGE]: Requesting decode of asset {0}", TextureID);
+//                        _log.DebugFormat("[J2KIMAGE]: Requesting decode of asset {0}", TextureID);
 
                         // Do we have a jpeg decoder?
                         if (J2KDecoder != null)
                         {
-                            if (m_asset == null)
+                            if (_asset == null)
                             {
                                 J2KDecodedCallback(TextureID, new OpenJPEG.J2KLayerInfo[0]);
                             }
                             else
                             {
                                 // Send it off to the jpeg decoder
-                                J2KDecoder.BeginDecode(TextureID, m_asset, J2KDecodedCallback);
+                                J2KDecoder.BeginDecode(TextureID, _asset, J2KDecodedCallback);
                             }
                         }
                         else
@@ -191,52 +191,52 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 else
                 {
                     // Check for missing image asset data
-                    if (m_asset == null)
+                    if (_asset == null)
                     {
-                        //m_log.Warn("[J2KIMAGE]: RunUpdate() called with missing asset data (no missing image texture?). Canceling texture transfer");
-                        m_currentPacket = m_stopPacket;
+                        //_log.Warn("[J2KIMAGE]: RunUpdate() called with missing asset data (no missing image texture?). Canceling texture transfer");
+                        _currentPacket = _stopPacket;
                         return;
                     }
 
-                    if (DiscardLevel >= 0 || m_stopPacket == 0)
+                    if (DiscardLevel >= 0 || _stopPacket == 0)
                     {
                         // This shouldn't happen, but if it does, we really can't proceed
-                        if (m_layers == null)
+                        if (_layers == null)
                         {
-                            m_log.Warn("[J2KIMAGE]: RunUpdate() called with missing Layers. Canceling texture transfer");
-                            m_currentPacket = m_stopPacket;
+                            _log.Warn("[J2KIMAGE]: RunUpdate() called with missing Layers. Canceling texture transfer");
+                            _currentPacket = _stopPacket;
                             return;
                         }
 
-                        int maxDiscardLevel = Math.Max(0, m_layers.Length - 1);
+                        int maxDiscardLevel = Math.Max(0, _layers.Length - 1);
 
                         // Treat initial texture downloads with a DiscardLevel of -1 a request for the highest DiscardLevel
-                        if (DiscardLevel < 0 && m_stopPacket == 0)
+                        if (DiscardLevel < 0 && _stopPacket == 0)
                             DiscardLevel = (sbyte)maxDiscardLevel;
 
                         // Clamp at the highest discard level
                         DiscardLevel = (sbyte)Math.Min(DiscardLevel, maxDiscardLevel);
 
-                        //Calculate the m_stopPacket
-                        if (m_layers.Length > 0)
+                        //Calculate the _stopPacket
+                        if (_layers.Length > 0)
                         {
-                            m_stopPacket = (uint)GetPacketForBytePosition(m_layers[m_layers.Length - 1 - DiscardLevel].End);
+                            _stopPacket = (uint)GetPacketForBytePosition(_layers[_layers.Length - 1 - DiscardLevel].End);
                             //I don't know why, but the viewer seems to expect the final packet if the file
                             //is just one packet bigger.
-                            if (TexturePacketCount() == m_stopPacket + 1)
+                            if (TexturePacketCount() == _stopPacket + 1)
                             {
-                                m_stopPacket = TexturePacketCount();
+                                _stopPacket = TexturePacketCount();
                             }
                         }
                         else
                         {
-                            m_stopPacket = TexturePacketCount();
+                            _stopPacket = TexturePacketCount();
                         }
 
                         //Give them at least two packets, to play nice with some broken viewers (SL also behaves this way)
-                        if (m_stopPacket == 1 && m_layers[0].End > FIRST_PACKET_SIZE) m_stopPacket++;
+                        if (_stopPacket == 1 && _layers[0].End > FIRST_PACKET_SIZE) _stopPacket++;
 
-                        m_currentPacket = StartPacket;
+                        _currentPacket = StartPacket;
                     }
                 }
             }
@@ -247,17 +247,17 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             if (client == null)
                 return false;
 
-            if (m_asset == null)
+            if (_asset == null)
             {
-                m_log.Warn("[J2KIMAGE]: Sending ImageNotInDatabase for texture " + TextureID);
+                _log.Warn("[J2KIMAGE]: Sending ImageNotInDatabase for texture " + TextureID);
                 client.SendImageNotFound(TextureID);
                 return true;
             }
-            else if (m_asset.Length <= FIRST_PACKET_SIZE)
+            else if (_asset.Length <= FIRST_PACKET_SIZE)
             {
                 // We have less then one packet's worth of data
-                client.SendImageFirstPart(1, TextureID, (uint)m_asset.Length, m_asset, 2);
-                m_stopPacket = 0;
+                client.SendImageFirstPart(1, TextureID, (uint)_asset.Length, _asset, 2);
+                _stopPacket = 0;
                 return true;
             }
             else
@@ -265,14 +265,14 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 // This is going to be a multi-packet texture download
                 byte[] firstImageData = new byte[FIRST_PACKET_SIZE];
 
-                try { Buffer.BlockCopy(m_asset, 0, firstImageData, 0, FIRST_PACKET_SIZE); }
+                try { Buffer.BlockCopy(_asset, 0, firstImageData, 0, FIRST_PACKET_SIZE); }
                 catch (Exception)
                 {
-                    m_log.ErrorFormat("[J2KIMAGE]: Texture block copy for the first packet failed. textureid={0}, assetlength={1}", TextureID, m_asset.Length);
+                    _log.ErrorFormat("[J2KIMAGE]: Texture block copy for the first packet failed. textureid={0}, assetlength={1}", TextureID, _asset.Length);
                     return true;
                 }
 
-                client.SendImageFirstPart(TexturePacketCount(), TextureID, (uint)m_asset.Length, firstImageData, (byte)ImageCodec.J2C);
+                client.SendImageFirstPart(TexturePacketCount(), TextureID, (uint)_asset.Length, firstImageData, (byte)ImageCodec.J2C);
             }
             return false;
         }
@@ -283,17 +283,17 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 return false;
 
             bool complete = false;
-            int imagePacketSize = (int)m_currentPacket == TexturePacketCount() ? LastPacketSize() : IMAGE_PACKET_SIZE;
+            int imagePacketSize = (int)_currentPacket == TexturePacketCount() ? LastPacketSize() : IMAGE_PACKET_SIZE;
 
             try
             {
-                if (CurrentBytePosition() + IMAGE_PACKET_SIZE > m_asset.Length)
+                if (CurrentBytePosition() + IMAGE_PACKET_SIZE > _asset.Length)
                 {
                     imagePacketSize = LastPacketSize();
                     complete = true;
-                    if (CurrentBytePosition() + imagePacketSize > m_asset.Length)
+                    if (CurrentBytePosition() + imagePacketSize > _asset.Length)
                     {
-                        imagePacketSize = m_asset.Length - CurrentBytePosition();
+                        imagePacketSize = _asset.Length - CurrentBytePosition();
                         complete = true;
                     }
                 }
@@ -306,16 +306,16 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     byte[] imageData = new byte[imagePacketSize];
                     int currentPosition = CurrentBytePosition();
 
-                    try { Buffer.BlockCopy(m_asset, currentPosition, imageData, 0, imagePacketSize); }
+                    try { Buffer.BlockCopy(_asset, currentPosition, imageData, 0, imagePacketSize); }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat("[J2KIMAGE]: Texture block copy for the first packet failed. textureid={0}, assetlength={1}, currentposition={2}, imagepacketsize={3}, exception={4}",
-                            TextureID, m_asset.Length, currentPosition, imagePacketSize, e.Message);
+                        _log.ErrorFormat("[J2KIMAGE]: Texture block copy for the first packet failed. textureid={0}, assetlength={1}, currentposition={2}, imagepacketsize={3}, exception={4}",
+                            TextureID, _asset.Length, currentPosition, imagePacketSize, e.Message);
                         return false;
                     }
 
                     //Send the packet
-                    client.SendImageNextPart((ushort)(m_currentPacket - 1), TextureID, imageData);
+                    client.SendImageNextPart((ushort)(_currentPacket - 1), TextureID, imageData);
                 }
 
                 return !complete;
@@ -331,13 +331,13 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             if (!IsDecoded)
                 return 0;
 
-            if (m_asset == null)
+            if (_asset == null)
                 return 0;
 
-            if (m_asset.Length <= FIRST_PACKET_SIZE)
+            if (_asset.Length <= FIRST_PACKET_SIZE)
                 return 1;
 
-            return (ushort)((m_asset.Length - FIRST_PACKET_SIZE + IMAGE_PACKET_SIZE - 1) / IMAGE_PACKET_SIZE + 1);
+            return (ushort)((_asset.Length - FIRST_PACKET_SIZE + IMAGE_PACKET_SIZE - 1) / IMAGE_PACKET_SIZE + 1);
         }
 
         private int GetPacketForBytePosition(int bytePosition)
@@ -347,9 +347,9 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         private int LastPacketSize()
         {
-            if (m_currentPacket == 1)
-                return m_asset.Length;
-            int lastsize = (m_asset.Length - FIRST_PACKET_SIZE) % IMAGE_PACKET_SIZE;
+            if (_currentPacket == 1)
+                return _asset.Length;
+            int lastsize = (_asset.Length - FIRST_PACKET_SIZE) % IMAGE_PACKET_SIZE;
             //If the last packet size is zero, it's really cImagePacketSize, it sits on the boundary
             if (lastsize == 0)
             {
@@ -360,13 +360,13 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         private int CurrentBytePosition()
         {
-            if (m_currentPacket == 0)
+            if (_currentPacket == 0)
                 return 0;
 
-            if (m_currentPacket == 1)
+            if (_currentPacket == 1)
                 return FIRST_PACKET_SIZE;
 
-            int result = FIRST_PACKET_SIZE + ((int)m_currentPacket - 2) * IMAGE_PACKET_SIZE;
+            int result = FIRST_PACKET_SIZE + ((int)_currentPacket - 2) * IMAGE_PACKET_SIZE;
 
             if (result < 0)
                 result = FIRST_PACKET_SIZE;
@@ -376,7 +376,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         private void J2KDecodedCallback(UUID AssetId, OpenJPEG.J2KLayerInfo[] layers)
         {
-            m_layers = layers;
+            _layers = layers;
             IsDecoded = true;
             RunUpdate();
         }
@@ -387,19 +387,19 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             if (asset == null || asset.Data == null)
             {
-                if (m_imageManager.MissingImage != null)
+                if (_imageManager.MissingImage != null)
                 {
-                    m_asset = m_imageManager.MissingImage.Data;
+                    _asset = _imageManager.MissingImage.Data;
                 }
                 else
                 {
-                    m_asset = null;
+                    _asset = null;
                     IsDecoded = true;
                 }
             }
             else
             {
-                m_asset = asset.Data;
+                _asset = asset.Data;
             }
 
             RunUpdate();
@@ -407,7 +407,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         private void AssetReceived(string id, object sender, AssetBase asset)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[J2KIMAGE]: Received asset {0} ({1} bytes)", id, asset != null ? asset.Data.Length.ToString() : "n/a");
 
             UUID assetID = UUID.Zero;
@@ -430,7 +430,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     if (!assetServerURL.EndsWith("/") && !assetServerURL.EndsWith("="))
                         assetServerURL = assetServerURL + "/";
 
-//                    m_log.DebugFormat("[J2KIMAGE]: texture {0} not found in local asset storage. Trying user's storage.", assetServerURL + id);
+//                    _log.DebugFormat("[J2KIMAGE]: texture {0} not found in local asset storage. Trying user's storage.", assetServerURL + id);
                     AssetService.Get(assetServerURL + id, InventoryAccessModule, AssetReceived);
                     return;
                 }

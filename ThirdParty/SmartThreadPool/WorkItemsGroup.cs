@@ -110,7 +110,7 @@ namespace Amib.Threading.Internal
 
         public override int Concurrency
         {
-            get { return _concurrency; }
+            get => _concurrency;
             set
             {
                 Debug.Assert(value > 0);
@@ -124,10 +124,7 @@ namespace Amib.Threading.Internal
             }
         }
 
-        public override int WaitingCallbacks
-        {
-            get { return _workItemsQueue.Count; }
-        }
+        public override int WaitingCallbacks => _workItemsQueue.Count;
 
         public override object[] GetStates()
         {
@@ -147,10 +144,7 @@ namespace Amib.Threading.Internal
         /// <summary>
         /// WorkItemsGroup start information
         /// </summary>
-        public override WIGStartInfo WIGStartInfo
-        {
-            get { return _workItemsGroupStartInfo; }
-        }
+        public override WIGStartInfo WIGStartInfo => _workItemsGroupStartInfo;
 
         /// <summary>
         /// Start the Work Items Group if it was started suspended
@@ -194,8 +188,8 @@ namespace Amib.Threading.Internal
 
         public override event WorkItemsGroupIdleHandler OnIdle
         {
-            add { _onIdle += value; }
-            remove { _onIdle -= value; }
+            add => _onIdle += value;
+            remove => _onIdle -= value;
         }
 
         #endregion 

@@ -36,9 +36,9 @@ namespace OpenSim.Server.Handlers.Hypergrid
 {
     public class HGFriendsServerConnector : ServiceConnector
     {
-        private readonly IUserAgentService m_UserAgentService;
-        private readonly IHGFriendsService m_TheService;
-        private readonly string m_ConfigName = "HGFriendsService";
+        private readonly IUserAgentService _UserAgentService;
+        private readonly IHGFriendsService _TheService;
+        private readonly string _ConfigName = "HGFriendsService";
 
         // Called from Robust
         public HGFriendsServerConnector(IConfigSource config, IHttpServer server, string configName) :
@@ -52,26 +52,26 @@ namespace OpenSim.Server.Handlers.Hypergrid
             : base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            object[] args = new object[] { config, m_ConfigName, localConn };
+            object[] args = new object[] { config, _ConfigName, localConn };
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string theService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
             if (string.IsNullOrEmpty(theService))
                 throw new Exception("No LocalServiceModule in config file");
-            m_TheService = ServerUtils.LoadPlugin<IHGFriendsService>(theService, args);
+            _TheService = ServerUtils.LoadPlugin<IHGFriendsService>(theService, args);
 
             theService = serverConfig.GetString("UserAgentService", string.Empty);
             if (string.IsNullOrEmpty(theService))
-                throw new Exception("No UserAgentService in " + m_ConfigName);
-            m_UserAgentService = ServerUtils.LoadPlugin<IUserAgentService>(theService, new object[] { config, localConn });
+                throw new Exception("No UserAgentService in " + _ConfigName);
+            _UserAgentService = ServerUtils.LoadPlugin<IUserAgentService>(theService, new object[] { config, localConn });
 
-            server.AddStreamHandler(new HGFriendsServerPostHandler(m_TheService, m_UserAgentService, localConn));
+            server.AddStreamHandler(new HGFriendsServerPostHandler(_TheService, _UserAgentService, localConn));
         }
     }
 }

@@ -38,32 +38,32 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 {
     public class ShadedMapTileRenderer : IMapTileTerrainRenderer
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string LogHeader = "[SHADED MAPTILE RENDERER]";
 
-        private Scene m_scene;
-        private IConfigSource m_config;
-        private Color m_color_water;
+        private Scene _scene;
+        private IConfigSource _config;
+        private Color _color_water;
 
         public void Initialise(Scene scene, IConfigSource config)
         {
-            m_scene = scene;
-            m_config = config;
+            _scene = scene;
+            _config = config;
 
             string[] configSections = new string[] { "Map", "Startup" };
-            m_color_water = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(m_config, "MapColorWater", configSections, "#1D475F"));
+            _color_water = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(_config, "MapColorWater", configSections, "#1D475F"));
         }
 
         public void TerrainToBitmap(Bitmap mapbmp)
         {
-            m_log.DebugFormat("{0} Generating Maptile Step 1: Terrain", LogHeader);
+            _log.DebugFormat("{0} Generating Maptile Step 1: Terrain", LogHeader);
             int tc = Environment.TickCount;
 
-            ITerrainChannel hm = m_scene.Heightmap;
+            ITerrainChannel hm = _scene.Heightmap;
 
             if (mapbmp.Width != hm.Width || mapbmp.Height != hm.Height)
             {
-                m_log.ErrorFormat("{0} TerrainToBitmap. Passed bitmap wrong dimensions. passed=<{1},{2}>, size=<{3},{4}>",
+                _log.ErrorFormat("{0} TerrainToBitmap. Passed bitmap wrong dimensions. passed=<{1},{2}>, size=<{3},{4}>",
                     LogHeader, mapbmp.Width, mapbmp.Height, hm.Width, hm.Height);
             }
 
@@ -85,7 +85,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                 }
             }
 
-            float waterHeight = (float)m_scene.RegionInfo.RegionSettings.WaterHeight;
+            float waterHeight = (float)_scene.RegionInfo.RegionSettings.WaterHeight;
 
             for (int x = 0; x < hm.Width; x++)
             {
@@ -159,7 +159,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                                 }
                                 catch (OverflowException)
                                 {
-                                    m_log.Debug("[MAPTILE]: Shadow failed at value: " + hfdiff.ToString());
+                                    _log.Debug("[MAPTILE]: Shadow failed at value: " + hfdiff.ToString());
                                     ShadowDebugContinue = false;
                                 }
 
@@ -209,7 +209,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                         {
                             if (!terraincorruptedwarningsaid)
                             {
-                                m_log.WarnFormat("[SHADED MAP TILE RENDERER]: Your terrain is corrupted in region {0}, it might take a few minutes to generate the map image depending on the corruption level", m_scene.RegionInfo.RegionName);
+                                _log.WarnFormat("[SHADED MAP TILE RENDERER]: Your terrain is corrupted in region {0}, it might take a few minutes to generate the map image depending on the corruption level", _scene.RegionInfo.RegionName);
                                 terraincorruptedwarningsaid = true;
                             }
                             color = Color.Black;
@@ -233,13 +233,13 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
                         try
                         {
-                            mapbmp.SetPixel(x, yr, m_color_water);
+                            mapbmp.SetPixel(x, yr, _color_water);
                         }
                         catch (ArgumentException)
                         {
                             if (!terraincorruptedwarningsaid)
                             {
-                                m_log.WarnFormat("[SHADED MAP TILE RENDERER]: Your terrain is corrupted in region {0}, it might take a few minutes to generate the map image depending on the corruption level", m_scene.RegionInfo.RegionName);
+                                _log.WarnFormat("[SHADED MAP TILE RENDERER]: Your terrain is corrupted in region {0}, it might take a few minutes to generate the map image depending on the corruption level", _scene.RegionInfo.RegionName);
                                 terraincorruptedwarningsaid = true;
                             }
                             Color black = Color.Black;
@@ -249,7 +249,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                 }
             }
 
-            m_log.Debug("[SHADED MAP TILE RENDERER]: Generating Maptile Step 1: Done in " + (Environment.TickCount - tc) + " ms");
+            _log.Debug("[SHADED MAP TILE RENDERER]: Generating Maptile Step 1: Done in " + (Environment.TickCount - tc) + " ms");
         }
     }
 }

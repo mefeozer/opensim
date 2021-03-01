@@ -41,13 +41,13 @@ namespace OpenSim.Region.Framework.Scenes
 
     public class Prioritizer
     {
-        private static readonly ILog m_log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Scene m_scene;
+        private readonly Scene _scene;
 
         public Prioritizer(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace OpenSim.Region.Framework.Scenes
             // If entity is null we have a serious problem
             if (entity == null)
             {
-                m_log.WarnFormat("[PRIORITIZER] attempt to prioritize null entity");
+                _log.WarnFormat("[PRIORITIZER] attempt to prioritize null entity");
                 throw new InvalidOperationException("Prioritization entity not defined");
             }
 
@@ -67,7 +67,7 @@ namespace OpenSim.Region.Framework.Scenes
                 return 0;
 
             int priority;
-            switch (m_scene.UpdatePrioritizationScheme)
+            switch (_scene.UpdatePrioritizationScheme)
             {
                 case UpdatePrioritizationSchemes.SimpleAngularDistance:
                     priority = GetPriorityByAngularDistance(client, entity);
@@ -86,7 +86,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             int pqueue = 2; // keep compiler happy
 
-            ScenePresence presence = m_scene.GetScenePresence(client.AgentId);
+            ScenePresence presence = _scene.GetScenePresence(client.AgentId);
             if (presence != null)
             {
                 // All avatars other than our own go into pqueue 1
@@ -123,14 +123,14 @@ namespace OpenSim.Region.Framework.Scenes
         private int ComputeDistancePriority(IClientAPI client, ISceneEntity entity, bool useFrontBack)
         {
             // Get this agent's position
-            ScenePresence presence = m_scene.GetScenePresence(client.AgentId);
+            ScenePresence presence = _scene.GetScenePresence(client.AgentId);
             if (presence == null)
             {
                 // this shouldn't happen, it basically means that we are prioritizing
                 // updates to send to a client that doesn't have a presence in the scene
                 // seems like there's race condition here...
 
-                // m_log.WarnFormat("[PRIORITIZER] attempt to use agent {0} not in the scene",client.AgentId);
+                // _log.WarnFormat("[PRIORITIZER] attempt to use agent {0} not in the scene",client.AgentId);
                 // throw new InvalidOperationException("Prioritization agent not defined");
                 return PriorityQueue.NumberOfQueues - 1;
             }
@@ -193,7 +193,7 @@ namespace OpenSim.Region.Framework.Scenes
 
         private int GetPriorityByAngularDistance(IClientAPI client, ISceneEntity entity)
         {
-            ScenePresence presence = m_scene.GetScenePresence(client.AgentId);
+            ScenePresence presence = _scene.GetScenePresence(client.AgentId);
             if (presence == null)
                 return PriorityQueue.NumberOfQueues - 1;
 

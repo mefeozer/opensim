@@ -42,7 +42,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
     /// </summary>
     public class DearchiveScenesInfo
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// One region in the archive.
@@ -89,20 +89,20 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <summary>
         /// Maps (Region directory -> region)
         /// </summary>
-        protected Dictionary<string, RegionInfo> m_directory2region = new Dictionary<string, RegionInfo>();
+        protected Dictionary<string, RegionInfo> _directory2region = new Dictionary<string, RegionInfo>();
 
         /// <summary>
         /// Maps (UUID of the scene in the simulator where the region will be loaded -> region)
         /// </summary>
-        protected Dictionary<UUID, RegionInfo> m_newId2region = new Dictionary<UUID, RegionInfo>();
+        protected Dictionary<UUID, RegionInfo> _newId2region = new Dictionary<UUID, RegionInfo>();
 
         public int LoadedCreationDateTime { get; set; }
         public string DefaultOriginalID { get; set; }
 
         // These variables are used while reading the archive control file
-        protected int? m_curY = null;
-        protected int? m_curX = null;
-        protected RegionInfo m_curRegion;
+        protected int? _curY = null;
+        protected int? _curX = null;
+        protected RegionInfo _curRegion;
 
 
         public DearchiveScenesInfo()
@@ -115,40 +115,40 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
         public void StartRow()
         {
-            m_curY = m_curY == null ? 0 : m_curY + 1;
-            m_curX = null;
+            _curY = _curY == null ? 0 : _curY + 1;
+            _curX = null;
         }
 
         public void StartRegion()
         {
-            m_curX = m_curX == null ? 0 : m_curX + 1;
+            _curX = _curX == null ? 0 : _curX + 1;
            // Note: this doesn't mean we have a real region in this location; this could just be a "hole"
         }
 
         public void SetRegionOriginalID(string id)
         {
-            m_curRegion = new RegionInfo();
-            int x = (int)(m_curX == null ? 0 : m_curX);
-            int y = (int)(m_curY == null ? 0 : m_curY);
+            _curRegion = new RegionInfo();
+            int x = (int)(_curX == null ? 0 : _curX);
+            int y = (int)(_curY == null ? 0 : _curY);
 
-            m_curRegion.Location = new Point(x, y);
-            m_curRegion.OriginalID = id;
-            // 'curRegion' will be saved in 'm_directory2region' when SetRegionDir() is called
+            _curRegion.Location = new Point(x, y);
+            _curRegion.OriginalID = id;
+            // 'curRegion' will be saved in '_directory2region' when SetRegionDir() is called
         }
 
         public void SetRegionDirectory(string directory)
         {
-            if(m_curRegion != null)
+            if(_curRegion != null)
             {
-                m_curRegion.Directory = directory;
-                m_directory2region[directory] = m_curRegion;
+                _curRegion.Directory = directory;
+                _directory2region[directory] = _curRegion;
             }
         }
 
         public void SetRegionSize(Vector3 size)
         {
-            if(m_curRegion != null)
-                m_curRegion.RegionSize = size;
+            if(_curRegion != null)
+                _curRegion.RegionSize = size;
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <param name="simulatorScenes">All the scenes in the simulator</param>
         public void SetSimulatorScenes(Scene rootScene, ArchiveScenesGroup simulatorScenes)
         {
-            foreach (RegionInfo archivedRegion in m_directory2region.Values)
+            foreach (RegionInfo archivedRegion in _directory2region.Values)
             {
                 Point location = new Point((int)rootScene.RegionInfo.RegionLocX,
                             (int)rootScene.RegionInfo.RegionLocY);
@@ -174,11 +174,11 @@ namespace OpenSim.Region.CoreModules.World.Archiver
                 if (simulatorScenes.TryGetScene(location, out scene))
                 {
                     archivedRegion.Scene = scene;
-                    m_newId2region[scene.RegionInfo.RegionID] = archivedRegion;
+                    _newId2region[scene.RegionInfo.RegionID] = archivedRegion;
                 }
                 else
                 {
-                    m_log.WarnFormat("[ARCHIVER]: Not loading archived region {0} because there's no existing region at location {1},{2}",
+                    _log.WarnFormat("[ARCHIVER]: Not loading archived region {0} because there's no existing region at location {1},{2}",
                         archivedRegion.Directory, location.X, location.Y);
                 }
             }
@@ -200,8 +200,8 @@ namespace OpenSim.Region.CoreModules.World.Archiver
 
             if (!MultiRegionFormat)
             {
-                if (m_newId2region.Count > 0)
-                    scene = m_newId2region.First().Value.Scene;
+                if (_newId2region.Count > 0)
+                    scene = _newId2region.First().Value.Scene;
                 return true;
             }
 
@@ -215,7 +215,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
             relativePath = parts[2];
 
             RegionInfo region;
-            if (m_directory2region.TryGetValue(regionDirectory, out region))
+            if (_directory2region.TryGetValue(regionDirectory, out region))
             {
                 scene = region.Scene;
                 return scene != null;
@@ -235,7 +235,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         public string GetOriginalRegionID(UUID newID)
         {
             RegionInfo region;
-            if (m_newId2region.TryGetValue(newID, out region))
+            if (_newId2region.TryGetValue(newID, out region))
                 return region.OriginalID;
             else
                 return DefaultOriginalID;
@@ -247,12 +247,12 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         /// <returns></returns>
         public List<UUID> GetLoadedScenes()
         {
-            return m_newId2region.Keys.ToList();
+            return _newId2region.Keys.ToList();
         }
 
         public int GetScenesCount()
         {
-            return m_directory2region.Count;
+            return _directory2region.Count;
         }
     }
 }

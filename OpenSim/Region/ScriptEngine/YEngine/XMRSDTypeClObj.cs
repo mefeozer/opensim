@@ -76,7 +76,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private void Construct(XMRInstAbstract inst, int classindex)
         {
             Delegate[] thisMid = null;
-            TokenDeclSDTypeClass clas = (TokenDeclSDTypeClass)inst.m_ObjCode.sdObjTypesIndx[classindex];
+            TokenDeclSDTypeClass clas = (TokenDeclSDTypeClass)inst._ObjCode.sdObjTypesIndx[classindex];
 
             xmrInst = inst;
             sdtcClass = clas;
@@ -192,7 +192,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 /*
                  * This is the target class, ie, what we are hoping the object can cast to.
                  */
-                TokenDeclSDTypeClass tc = (TokenDeclSDTypeClass)ci.xmrInst.m_ObjCode.sdObjTypesIndx[classindex];
+                TokenDeclSDTypeClass tc = (TokenDeclSDTypeClass)ci.xmrInst._ObjCode.sdObjTypesIndx[classindex];
 
                 /*
                  * Step from the object's actual class rootward.

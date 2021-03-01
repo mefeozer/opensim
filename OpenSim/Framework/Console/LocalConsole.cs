@@ -42,24 +42,24 @@ namespace OpenSim.Framework.Console
     /// </summary>
     public class LocalConsole : CommandConsole
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly string m_historyPath;
-        private readonly bool m_historyEnable;
-        private readonly bool m_historytimestamps;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly string _historyPath;
+        private readonly bool _historyEnable;
+        private readonly bool _historytimestamps;
 
-        // private readonly object m_syncRoot = new object();
+        // private readonly object _syncRoot = new object();
         private const string LOGLEVEL_NONE = "(none)";
 
         // Used to extract categories for colourization.
-        private readonly Regex m_categoryRegex
+        private readonly Regex _categoryRegex
             = new Regex(
                 @"^(?<Front>.*?)\[(?<Category>[^\]]+)\]:?(?<End>.*)", RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private int m_cursorYPosition = -1;
-        private int m_cursorXPosition = 0;
-        private readonly StringBuilder m_commandLine = new StringBuilder();
-        private bool m_echo = true;
-        private readonly List<string> m_history = new List<string>();
+        private int _cursorYPosition = -1;
+        private int _cursorXPosition = 0;
+        private readonly StringBuilder _commandLine = new StringBuilder();
+        private bool _echo = true;
+        private readonly List<string> _history = new List<string>();
 
         private static readonly ConsoleColor[] Colors = {
             // the dark colors don't seem to be visible on some black background terminals like putty :(
@@ -88,24 +88,24 @@ namespace OpenSim.Framework.Console
 
             if (startupConfig == null) return;
 
-            m_historyEnable = startupConfig.GetBoolean("ConsoleHistoryFileEnabled", false);
-            if (!m_historyEnable)
+            _historyEnable = startupConfig.GetBoolean("ConsoleHistoryFileEnabled", false);
+            if (!_historyEnable)
             {
-                m_log.Info("[LOCAL CONSOLE]: Persistent command line history from file is Disabled");
+                _log.Info("[LOCAL CONSOLE]: Persistent command line history from file is Disabled");
                 return;
             }
 
-            string m_historyFile = startupConfig.GetString("ConsoleHistoryFile", "OpenSimConsoleHistory.txt");
-            int m_historySize = startupConfig.GetInt("ConsoleHistoryFileLines", 100);
-            m_historyPath = Path.GetFullPath(Path.Combine(Util.configDir(), m_historyFile));
-            m_historytimestamps = startupConfig.GetBoolean("ConsoleHistoryTimeStamp", false);
-            m_log.InfoFormat("[LOCAL CONSOLE]: Persistent command line history is Enabled, up to {0} lines from file {1} {2} timestamps",
-                m_historySize, m_historyPath, m_historytimestamps?"with":"without");
+            string _historyFile = startupConfig.GetString("ConsoleHistoryFile", "OpenSimConsoleHistory.txt");
+            int _historySize = startupConfig.GetInt("ConsoleHistoryFileLines", 100);
+            _historyPath = Path.GetFullPath(Path.Combine(Util.configDir(), _historyFile));
+            _historytimestamps = startupConfig.GetBoolean("ConsoleHistoryTimeStamp", false);
+            _log.InfoFormat("[LOCAL CONSOLE]: Persistent command line history is Enabled, up to {0} lines from file {1} {2} timestamps",
+                _historySize, _historyPath, _historytimestamps?"with":"without");
 
-            if (File.Exists(m_historyPath))
+            if (File.Exists(_historyPath))
             {
                 List<string> originallines = new List<string>();
-                using (StreamReader history_file = new StreamReader(m_historyPath))
+                using (StreamReader history_file = new StreamReader(_historyPath))
                 {
                     string line;
                     while ((line = history_file.ReadLine()) != null)
@@ -122,19 +122,19 @@ namespace OpenSim.Framework.Console
                                    line = line.Substring(indx + 4);
                             }
                         }
-                        m_history.Add(line);
+                        _history.Add(line);
                     }
                 }
 
-                if (m_history.Count > m_historySize)
+                if (_history.Count > _historySize)
                 {
-                    while (m_history.Count > m_historySize)
+                    while (_history.Count > _historySize)
                     {
-                        m_history.RemoveAt(0);
+                        _history.RemoveAt(0);
                         originallines.RemoveAt(0);
                     }
 
-                    using (StreamWriter history_file = new StreamWriter(m_historyPath))
+                    using (StreamWriter history_file = new StreamWriter(_historyPath))
                     {
                         foreach (string line in originallines)
                         {
@@ -142,12 +142,12 @@ namespace OpenSim.Framework.Console
                         }
                     }
                 }
-                m_log.InfoFormat("[LOCAL CONSOLE]: Read {0} lines of command line history from file {1}", m_history.Count, m_historyPath);
+                _log.InfoFormat("[LOCAL CONSOLE]: Read {0} lines of command line history from file {1}", _history.Count, _historyPath);
             }
             else
             {
-                m_log.InfoFormat("[LOCAL CONSOLE]: Creating new empty command line history file {0}", m_historyPath);
-                File.Create(m_historyPath).Dispose();
+                _log.InfoFormat("[LOCAL CONSOLE]: Creating new empty command line history file {0}", _historyPath);
+                File.Create(_historyPath).Dispose();
             }
 
             System.Console.TreatControlCAsInput = true;
@@ -155,15 +155,15 @@ namespace OpenSim.Framework.Console
 
         private void AddToHistory(string text)
         {
-            while (m_history.Count >= 100)
-                m_history.RemoveAt(0);
+            while (_history.Count >= 100)
+                _history.RemoveAt(0);
 
-            m_history.Add(text);
-            if (m_historyEnable)
+            _history.Add(text);
+            if (_historyEnable)
             {
-                if (m_historytimestamps)
+                if (_historytimestamps)
                     text = string.Format("[{0} {1}]:> {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), text);
-                File.AppendAllText(m_historyPath, text + Environment.NewLine);
+                File.AppendAllText(_historyPath, text + Environment.NewLine);
             }
         }
 
@@ -266,30 +266,30 @@ namespace OpenSim.Framework.Console
 
         private void Show()
         {
-            lock (m_commandLine)
+            lock (_commandLine)
             {
-                if (m_cursorYPosition == -1 || System.Console.BufferWidth == 0)
+                if (_cursorYPosition == -1 || System.Console.BufferWidth == 0)
                     return;
 
-                int xc = prompt.Length + m_cursorXPosition;
+                int xc = prompt.Length + _cursorXPosition;
                 int new_x = xc % System.Console.BufferWidth;
-                int new_y = m_cursorYPosition + xc / System.Console.BufferWidth;
-                int end_y = m_cursorYPosition + (m_commandLine.Length + prompt.Length) / System.Console.BufferWidth;
+                int new_y = _cursorYPosition + xc / System.Console.BufferWidth;
+                int end_y = _cursorYPosition + (_commandLine.Length + prompt.Length) / System.Console.BufferWidth;
 
                 if (end_y >= System.Console.BufferHeight) // wrap
                 {
-                    m_cursorYPosition--;
+                    _cursorYPosition--;
                     new_y--;
                     SetCursorLeft(0);
                     SetCursorTop(System.Console.BufferHeight - 1);
                     System.Console.WriteLine(" ");
                 }
 
-                m_cursorYPosition = SetCursorTop(m_cursorYPosition);
+                _cursorYPosition = SetCursorTop(_cursorYPosition);
                 SetCursorLeft(0);
 
-                if (m_echo)
-                    System.Console.Write("{0}{1}", prompt, m_commandLine);
+                if (_echo)
+                    System.Console.Write("{0}{1}", prompt, _commandLine);
                 else
                     System.Console.Write("{0}", prompt);
 
@@ -300,20 +300,20 @@ namespace OpenSim.Framework.Console
 
         public override void LockOutput()
         {
-            Monitor.Enter(m_commandLine);
+            Monitor.Enter(_commandLine);
             try
             {
-                if (m_cursorYPosition != -1)
+                if (_cursorYPosition != -1)
                 {
-                    m_cursorYPosition = SetCursorTop(m_cursorYPosition);
+                    _cursorYPosition = SetCursorTop(_cursorYPosition);
                     System.Console.CursorLeft = 0;
 
-                    int count = m_commandLine.Length + prompt.Length;
+                    int count = _commandLine.Length + prompt.Length;
 
                     while (count-- > 0)
                         System.Console.Write(" ");
 
-                    m_cursorYPosition = SetCursorTop(m_cursorYPosition);
+                    _cursorYPosition = SetCursorTop(_cursorYPosition);
                     SetCursorLeft(0);
                 }
             }
@@ -324,12 +324,12 @@ namespace OpenSim.Framework.Console
 
         public override void UnlockOutput()
         {
-            if (m_cursorYPosition != -1)
+            if (_cursorYPosition != -1)
             {
-                m_cursorYPosition = System.Console.CursorTop;
+                _cursorYPosition = System.Console.CursorTop;
                 Show();
             }
-            Monitor.Exit(m_commandLine);
+            Monitor.Exit(_commandLine);
         }
 
         private void WriteColorText(ConsoleColor color, string sender)
@@ -362,7 +362,7 @@ namespace OpenSim.Framework.Console
 
             if (level != null)
             {
-                MatchCollection matches = m_categoryRegex.Matches(text);
+                MatchCollection matches = _categoryRegex.Matches(text);
 
                 if (matches.Count == 1)
                 {
@@ -423,28 +423,28 @@ namespace OpenSim.Framework.Console
 
             FireOnOutput(text);
 
-            lock (m_commandLine)
+            lock (_commandLine)
             {
-                if (m_cursorYPosition == -1)
+                if (_cursorYPosition == -1)
                 {
                     WriteLocalText(text, level);
                     return;
                 }
 
-                m_cursorYPosition = SetCursorTop(m_cursorYPosition);
+                _cursorYPosition = SetCursorTop(_cursorYPosition);
                 SetCursorLeft(0);
 
-                int count = m_commandLine.Length + prompt.Length;
+                int count = _commandLine.Length + prompt.Length;
 
                 while (count-- > 0)
                     System.Console.Write(" ");
 
-                m_cursorYPosition = SetCursorTop(m_cursorYPosition);
+                _cursorYPosition = SetCursorTop(_cursorYPosition);
                 SetCursorLeft(0);
 
                 WriteLocalText(text, level);
 
-                m_cursorYPosition = System.Console.CursorTop;
+                _cursorYPosition = System.Console.CursorTop;
 
                 Show();
             }
@@ -452,9 +452,9 @@ namespace OpenSim.Framework.Console
 
         private bool ContextHelp()
         {
-            string[] words = Parser.Parse(m_commandLine.ToString());
+            string[] words = Parser.Parse(_commandLine.ToString());
 
-            bool trailingSpace = m_commandLine.ToString().EndsWith(" ");
+            bool trailingSpace = _commandLine.ToString().EndsWith(" ");
 
             // Allow ? through while typing a URI
             //
@@ -473,18 +473,18 @@ namespace OpenSim.Framework.Console
 
         public override string ReadLine(string p, bool isCommand, bool e)
         {
-            m_cursorXPosition = 0;
+            _cursorXPosition = 0;
             prompt = p;
-            m_echo = e;
-            int historyLine = m_history.Count;
+            _echo = e;
+            int historyLine = _history.Count;
 
             SetCursorLeft(0); // Needed for mono
             System.Console.Write(" "); // Needed for mono
 
-            lock (m_commandLine)
+            lock (_commandLine)
             {
-                m_cursorYPosition = System.Console.CursorTop;
-                m_commandLine.Remove(0, m_commandLine.Length);
+                _cursorYPosition = System.Console.CursorTop;
+                _commandLine.Remove(0, _commandLine.Length);
             }
 
             while (true)
@@ -503,7 +503,7 @@ namespace OpenSim.Framework.Console
 
                 if (!char.IsControl(enteredChar))
                 {
-                    if (m_cursorXPosition >= 318)
+                    if (_cursorXPosition >= 318)
                         continue;
 
                     if (enteredChar == '?' && isCommand)
@@ -512,97 +512,97 @@ namespace OpenSim.Framework.Console
                             continue;
                     }
 
-                    m_commandLine.Insert(m_cursorXPosition, enteredChar);
-                    m_cursorXPosition++;
+                    _commandLine.Insert(_cursorXPosition, enteredChar);
+                    _cursorXPosition++;
                 }
                 else
                 {
                     switch (key.Key)
                     {
                     case ConsoleKey.Backspace:
-                        if (m_cursorXPosition == 0)
+                        if (_cursorXPosition == 0)
                             break;
-                        m_commandLine.Remove(m_cursorXPosition-1, 1);
-                        m_cursorXPosition--;
+                        _commandLine.Remove(_cursorXPosition-1, 1);
+                        _cursorXPosition--;
 
                         SetCursorLeft(0);
-                        m_cursorYPosition = SetCursorTop(m_cursorYPosition);
+                        _cursorYPosition = SetCursorTop(_cursorYPosition);
 
-                        if (m_echo)
-                            System.Console.Write("{0}{1} ", prompt, m_commandLine);
+                        if (_echo)
+                            System.Console.Write("{0}{1} ", prompt, _commandLine);
                         else
                             System.Console.Write("{0}", prompt);
 
                         break;
                     case ConsoleKey.Delete:
-                        if (m_cursorXPosition == m_commandLine.Length)
+                        if (_cursorXPosition == _commandLine.Length)
                             break;
 
-                        m_commandLine.Remove(m_cursorXPosition, 1);
+                        _commandLine.Remove(_cursorXPosition, 1);
 
                         SetCursorLeft(0);
-                        m_cursorYPosition = SetCursorTop(m_cursorYPosition);
+                        _cursorYPosition = SetCursorTop(_cursorYPosition);
 
-                        if (m_echo)
-                            System.Console.Write("{0}{1} ", prompt, m_commandLine);
+                        if (_echo)
+                            System.Console.Write("{0}{1} ", prompt, _commandLine);
                         else
                             System.Console.Write("{0}", prompt);
 
                         break;
                     case ConsoleKey.End:
-                        m_cursorXPosition = m_commandLine.Length;
+                        _cursorXPosition = _commandLine.Length;
                         break;
                     case ConsoleKey.Home:
-                        m_cursorXPosition = 0;
+                        _cursorXPosition = 0;
                         break;
                     case ConsoleKey.UpArrow:
                         if (historyLine < 1)
                             break;
                         historyLine--;
                         LockOutput();
-                        m_commandLine.Remove(0, m_commandLine.Length);
-                        m_commandLine.Append(m_history[historyLine]);
-                        m_cursorXPosition = m_commandLine.Length;
+                        _commandLine.Remove(0, _commandLine.Length);
+                        _commandLine.Append(_history[historyLine]);
+                        _cursorXPosition = _commandLine.Length;
                         UnlockOutput();
                         break;
                     case ConsoleKey.DownArrow:
-                        if (historyLine >= m_history.Count)
+                        if (historyLine >= _history.Count)
                             break;
                         historyLine++;
                         LockOutput();
-                        if (historyLine == m_history.Count)
+                        if (historyLine == _history.Count)
                         {
-                            m_commandLine.Remove(0, m_commandLine.Length);
+                            _commandLine.Remove(0, _commandLine.Length);
                         }
                         else
                         {
-                            m_commandLine.Remove(0, m_commandLine.Length);
-                            m_commandLine.Append(m_history[historyLine]);
+                            _commandLine.Remove(0, _commandLine.Length);
+                            _commandLine.Append(_history[historyLine]);
                         }
-                        m_cursorXPosition = m_commandLine.Length;
+                        _cursorXPosition = _commandLine.Length;
                         UnlockOutput();
                         break;
                     case ConsoleKey.LeftArrow:
-                        if (m_cursorXPosition > 0)
-                            m_cursorXPosition--;
+                        if (_cursorXPosition > 0)
+                            _cursorXPosition--;
                         break;
                     case ConsoleKey.RightArrow:
-                        if (m_cursorXPosition < m_commandLine.Length)
-                            m_cursorXPosition++;
+                        if (_cursorXPosition < _commandLine.Length)
+                            _cursorXPosition++;
                         break;
                     case ConsoleKey.Enter:
                         SetCursorLeft(0);
-                        m_cursorYPosition = SetCursorTop(m_cursorYPosition);
+                        _cursorYPosition = SetCursorTop(_cursorYPosition);
 
                         System.Console.WriteLine();
                         //Show();
 
-                        lock (m_commandLine)
+                        lock (_commandLine)
                         {
-                            m_cursorYPosition = -1;
+                            _cursorYPosition = -1;
                         }
 
-                        string commandLine = m_commandLine.ToString();
+                        string commandLine = _commandLine.ToString();
 
                         if (isCommand)
                         {
@@ -623,7 +623,7 @@ namespace OpenSim.Framework.Console
                         }
 
                         // If we're not echoing to screen (e.g. a password) then we probably don't want it in history
-                        if (m_echo && commandLine != "")
+                        if (_echo && commandLine != "")
                             AddToHistory(commandLine);
 
                         return commandLine;

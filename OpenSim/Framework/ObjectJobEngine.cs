@@ -26,8 +26,8 @@
  */
 
 // A pool of jobs or workitems with same method (callback) but diferent argument (as object) to run in main threadpool
-// can have up to m_concurrency number of execution threads
-// it will hold each thread up to m_threadsHoldtime ms waiting for more work, before releasing it back to the pool.
+// can have up to _concurrency number of execution threads
+// it will hold each thread up to _threadsHoldtime ms waiting for more work, before releasing it back to the pool.
 
 using System;
 using System.Collections.Concurrent;
@@ -39,35 +39,35 @@ namespace OpenSim.Framework
 {
     public class ObjectJobEngine : IDisposable
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly object m_mainLock = new object();
-        private readonly string m_name;
-        private readonly int m_threadsHoldtime;
-        private readonly int m_concurrency = 1;
+        private readonly object _mainLock = new object();
+        private readonly string _name;
+        private readonly int _threadsHoldtime;
+        private readonly int _concurrency = 1;
 
-        private BlockingCollection<object> m_jobQueue;
-        private CancellationTokenSource m_cancelSource;
-        private WaitCallback m_callback;
-        private int m_numberThreads = 0;
-        private bool m_isRunning;
+        private BlockingCollection<object> _jobQueue;
+        private CancellationTokenSource _cancelSource;
+        private WaitCallback _callback;
+        private int _numberThreads = 0;
+        private bool _isRunning;
 
         public ObjectJobEngine(WaitCallback callback, string name, int threadsHoldtime = 1000, int concurrency = 1)
         {
-            m_name = name;
-            m_threadsHoldtime = threadsHoldtime;
+            _name = name;
+            _threadsHoldtime = threadsHoldtime;
 
             if (concurrency < 1)
-                m_concurrency = 1;
+                _concurrency = 1;
             else
-                m_concurrency = concurrency;
+                _concurrency = concurrency;
 
             if (callback !=  null)
             {
-                m_callback = callback;
-                m_jobQueue = new BlockingCollection<object>();
-                m_cancelSource = new CancellationTokenSource();
-                m_isRunning = true;
+                _callback = callback;
+                _jobQueue = new BlockingCollection<object>();
+                _cancelSource = new CancellationTokenSource();
+                _isRunning = true;
             }
         }
 
@@ -84,48 +84,48 @@ namespace OpenSim.Framework
 
         private void Dispose(bool disposing)
         {
-            lock(m_mainLock)
+            lock(_mainLock)
             {
-                if (!m_isRunning)
+                if (!_isRunning)
                     return;
-                m_isRunning = false;
+                _isRunning = false;
 
-                m_cancelSource.Cancel();
+                _cancelSource.Cancel();
             }
 
-            if (m_numberThreads > 0)
+            if (_numberThreads > 0)
             {
                 int cntr = 100;
-                while (m_numberThreads > 0 && --cntr > 0)
+                while (_numberThreads > 0 && --cntr > 0)
                     Thread.Yield();
             }
 
-            if (m_jobQueue != null)
+            if (_jobQueue != null)
             {
-                m_jobQueue.Dispose();
-                m_jobQueue = null;
+                _jobQueue.Dispose();
+                _jobQueue = null;
             }
-            if (m_cancelSource != null)
+            if (_cancelSource != null)
             {
-                m_cancelSource.Dispose();
-                m_cancelSource = null;
+                _cancelSource.Dispose();
+                _cancelSource = null;
             }
-            m_callback = null;
+            _callback = null;
         }
 
         /// <summary>
         /// Number of jobs waiting to be processed.
         /// </summary>
-        public int Count { get { return m_jobQueue == null ? 0 : m_jobQueue.Count; } }
+        public int Count => _jobQueue == null ? 0 : _jobQueue.Count;
 
         public void Cancel()
         {
-            if (!m_isRunning || m_jobQueue == null || m_jobQueue.Count == 0)
+            if (!_isRunning || _jobQueue == null || _jobQueue.Count == 0)
                 return;
             try
             {
-                while(m_jobQueue.TryTake(out object dummy));
-                m_cancelSource.Cancel();
+                while(_jobQueue.TryTake(out object dummy));
+                _cancelSource.Cancel();
             }
             catch { }
         }
@@ -138,17 +138,17 @@ namespace OpenSim.Framework
         /// </param>
         public bool Enqueue(object o)
         {
-            if (!m_isRunning)
+            if (!_isRunning)
                 return false;
 
-            m_jobQueue?.Add(o);
+            _jobQueue?.Add(o);
 
-            lock (m_mainLock)
+            lock (_mainLock)
             {
-                if (m_numberThreads < m_concurrency && m_numberThreads < m_jobQueue.Count)
+                if (_numberThreads < _concurrency && _numberThreads < _jobQueue.Count)
                 {
-                    Util.FireAndForget(ProcessRequests, null, m_name, false);
-                    ++m_numberThreads;
+                    Util.FireAndForget(ProcessRequests, null, _name, false);
+                    ++_numberThreads;
                 }
             }
             return true;
@@ -157,11 +157,11 @@ namespace OpenSim.Framework
         private void ProcessRequests(object o)
         {
             object obj;
-            while (m_isRunning)
+            while (_isRunning)
             {
                 try
                 {
-                    if(!m_jobQueue.TryTake(out obj, m_threadsHoldtime, m_cancelSource.Token))
+                    if(!_jobQueue.TryTake(out obj, _threadsHoldtime, _cancelSource.Token))
                         break;
                 }
                 catch
@@ -169,21 +169,21 @@ namespace OpenSim.Framework
                     break;
                 }
 
-                if(!m_isRunning || m_callback == null)
+                if(!_isRunning || _callback == null)
                     break;
                 try
                 {
-                    m_callback.Invoke(obj);
+                    _callback.Invoke(obj);
                     obj = null;
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat(
-                        "[ObjectJob {0}]: Job failed, continuing.  Exception {1}",m_name, e);
+                    _log.ErrorFormat(
+                        "[ObjectJob {0}]: Job failed, continuing.  Exception {1}",_name, e);
                 }
             }
-            lock (m_mainLock)
-                --m_numberThreads;
+            lock (_mainLock)
+                --_numberThreads;
         }
     }
 }

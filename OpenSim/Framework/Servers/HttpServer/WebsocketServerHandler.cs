@@ -208,8 +208,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public int MaxPayloadSize
         {
-            get { return _maxPayloadBytes; }
-            set { _maxPayloadBytes = value; }
+            get => _maxPayloadBytes;
+            set => _maxPayloadBytes = value;
         }
 
         /// <summary>
@@ -218,8 +218,8 @@ namespace OpenSim.Framework.Servers.HttpServer
         /// </summary>
         public int InitialMsgTimeout
         {
-            get { return _initialMsgTimeout; }
-            set { _initialMsgTimeout = value; }
+            get => _initialMsgTimeout;
+            set => _initialMsgTimeout = value;
         }
 
         /// <summary>

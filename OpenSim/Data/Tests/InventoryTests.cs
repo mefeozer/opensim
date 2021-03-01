@@ -82,7 +82,7 @@ namespace OpenSim.Data.Tests
         {
             ClearDB();
             db = (IInventoryDataPlugin)service;
-            db.Initialise(m_connStr);
+            db.Initialise(_connStr);
         }
 
         private void ClearDB()

@@ -47,23 +47,23 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "MessageTransferModule")]
     public class MessageTransferModule : ISharedRegionModule, IMessageTransferModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
-        protected string m_MessageKey = string.Empty;
-        protected List<Scene> m_Scenes = new List<Scene>();
-        protected Dictionary<UUID, UUID> m_UserRegionMap = new Dictionary<UUID, UUID>();
+        private bool _Enabled = false;
+        protected string _MessageKey = string.Empty;
+        protected List<Scene> _Scenes = new List<Scene>();
+        protected Dictionary<UUID, UUID> _UserRegionMap = new Dictionary<UUID, UUID>();
 
         public event UndeliveredMessage OnUndeliveredMessage;
 
-        private IPresenceService m_PresenceService;
+        private IPresenceService _PresenceService;
         protected IPresenceService PresenceService
         {
             get
             {
-                if (m_PresenceService == null)
-                    m_PresenceService = m_Scenes[0].RequestModuleInterface<IPresenceService>();
-                return m_PresenceService;
+                if (_PresenceService == null)
+                    _PresenceService = _Scenes[0].RequestModuleInterface<IPresenceService>();
+                return _PresenceService;
             }
         }
 
@@ -78,28 +78,28 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     return;
                 }
 
-                m_MessageKey = cnf.GetString("MessageKey", string.Empty);
+                _MessageKey = cnf.GetString("MessageKey", string.Empty);
             }
-            m_log.Debug("[MESSAGE TRANSFER]: Module enabled");
-            m_Enabled = true;
+            _log.Debug("[MESSAGE TRANSFER]: Module enabled");
+            _Enabled = true;
         }
 
         public virtual void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            lock (m_Scenes)
+            lock (_Scenes)
             {
-                m_log.Debug("[MESSAGE TRANSFER]: Message transfer module active");
+                _log.Debug("[MESSAGE TRANSFER]: Message transfer module active");
                 scene.RegisterModuleInterface<IMessageTransferModule>(this);
-                m_Scenes.Add(scene);
+                _Scenes.Add(scene);
             }
         }
 
         public virtual void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             MainServer.Instance.AddXmlRPCHandler(
@@ -112,12 +112,12 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         public virtual void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            lock (m_Scenes)
+            lock (_Scenes)
             {
-                m_Scenes.Remove(scene);
+                _Scenes.Remove(scene);
             }
         }
 
@@ -125,15 +125,9 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
         {
         }
 
-        public virtual string Name
-        {
-            get { return "MessageTransferModule"; }
-        }
+        public virtual string Name => "MessageTransferModule";
 
-        public virtual Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public virtual Type ReplaceableInterface => null;
 
         public virtual void SendInstantMessage(GridInstantMessage im, MessageResultNotification result)
         {
@@ -145,7 +139,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             IClientAPI client = null;
 
             // Try root avatar only first
-            foreach (Scene scene in m_Scenes)
+            foreach (Scene scene in _Scenes)
             {
                 ScenePresence sp = scene.GetScenePresence(toAgentID);
                 if (sp != null && !sp.IsDeleted && sp.ControllingClient.IsActive)
@@ -164,7 +158,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             if(client != null)
             {
                 // Local message
-//                    m_log.DebugFormat("[INSTANT MESSAGE]: Delivering IM to root agent {0} {1}", sp.Name, toAgentID);
+//                    _log.DebugFormat("[INSTANT MESSAGE]: Delivering IM to root agent {0} {1}", sp.Name, toAgentID);
 
                 client.SendInstantMessage(im);
 
@@ -172,7 +166,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 result(true);
                 return;
             }
-//            m_log.DebugFormat("[INSTANT MESSAGE]: Delivering IM to {0} via XMLRPC", im.toAgentID);
+//            _log.DebugFormat("[INSTANT MESSAGE]: Delivering IM to {0} via XMLRPC", im.toAgentID);
 
             SendGridInstantMessageViaXMLRPC(im, result);
         }
@@ -194,7 +188,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 return;
             }
 
-            //m_log.DebugFormat("[INSTANT MESSAGE]: Undeliverable");
+            //_log.DebugFormat("[INSTANT MESSAGE]: Undeliverable");
             result(false);
         }
 
@@ -230,21 +224,21 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 float pos_x = 0;
                 float pos_y = 0;
                 float pos_z = 0;
-                //m_log.Info("Processing IM");
+                //_log.Info("Processing IM");
 
                 Hashtable requestData = (Hashtable)request.Params[0];
                 // Check if it's got all the data
-                if (requestData.ContainsKey("from_agent_id")
-                        && requestData.ContainsKey("to_agent_id") && requestData.ContainsKey("im_session_id")
-                        && requestData.ContainsKey("timestamp") && requestData.ContainsKey("from_agent_name")
+                if (requestData.ContainsKey("fro_agent_id")
+                        && requestData.ContainsKey("to_agent_id") && requestData.ContainsKey("i_session_id")
+                        && requestData.ContainsKey("timestamp") && requestData.ContainsKey("fro_agent_name")
                         && requestData.ContainsKey("message") && requestData.ContainsKey("dialog")
-                        && requestData.ContainsKey("from_group")
+                        && requestData.ContainsKey("fro_group")
                         && requestData.ContainsKey("offline") && requestData.ContainsKey("parent_estate_id")
                         && requestData.ContainsKey("position_x") && requestData.ContainsKey("position_y")
                         && requestData.ContainsKey("position_z") && requestData.ContainsKey("region_id")
                         && requestData.ContainsKey("binary_bucket"))
                 {
-                    if (!string.IsNullOrEmpty(m_MessageKey))
+                    if (!string.IsNullOrEmpty(_MessageKey))
                     {
                         XmlRpcResponse error_resp = new XmlRpcResponse();
                         Hashtable error_respdata = new Hashtable();
@@ -253,14 +247,14 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
                         if (!requestData.Contains("message_key"))
                             return error_resp;
-                        if (m_MessageKey != (string)requestData["message_key"])
+                        if (_MessageKey != (string)requestData["message_key"])
                             return error_resp;
                     }
 
                     // Do the easy way of validating the UUIDs
-                    UUID.TryParse((string)requestData["from_agent_id"], out fromAgentID);
+                    UUID.TryParse((string)requestData["fro_agent_id"], out fromAgentID);
                     UUID.TryParse((string)requestData["to_agent_id"], out toAgentID);
-                    UUID.TryParse((string)requestData["im_session_id"], out imSessionID);
+                    UUID.TryParse((string)requestData["i_session_id"], out imSessionID);
                     UUID.TryParse((string)requestData["region_id"], out RegionID);
 
                     try
@@ -277,7 +271,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     {
                     }
 
-                    fromAgentName = (string)requestData["from_agent_name"];
+                    fromAgentName = (string)requestData["fro_agent_name"];
                     message = (string)requestData["message"];
                     if (message == null)
                         message = string.Empty;
@@ -294,7 +288,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                         dialog = dialogdata[0];
                     }
 
-                    if ((string)requestData["from_group"] == "TRUE")
+                    if ((string)requestData["fro_group"] == "TRUE")
                         fromGroup = true;
 
                     string requestData2 = (string)requestData["offline"];
@@ -393,7 +387,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     };
 
                     // Trigger the Instant message in the scene.
-                    foreach (Scene scene in m_Scenes)
+                    foreach (Scene scene in _Scenes)
                     {
                         ScenePresence sp = scene.GetScenePresence(toAgentID);
                         if (sp != null && !sp.IsChildAgent)
@@ -411,13 +405,13 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                         // a chance to pick it up. We raise that in a random
                         // scene, since the groups module is shared.
                         //
-                        m_Scenes[0].EventManager.TriggerUnhandledInstantMessage(gim);
+                        _Scenes[0].EventManager.TriggerUnhandledInstantMessage(gim);
                     }
                 }
             }
             catch (Exception e)
             {
-                m_log.Error("[INSTANT MESSAGE]: Caught unexpected exception:", e);
+                _log.Error("[INSTANT MESSAGE]: Caught unexpected exception:", e);
                 successful = false;
             }
 
@@ -460,7 +454,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     pendingInstantMessages.Enqueue(gim);
                 } else {
                     ++ numInstantMessageThreads;
-                    //m_log.DebugFormat("[SendGridInstantMessageViaXMLRPC]: ++numInstantMessageThreads={0}", numInstantMessageThreads);
+                    //_log.DebugFormat("[SendGridInstantMessageViaXMLRPC]: ++numInstantMessageThreads={0}", numInstantMessageThreads);
                     GridInstantMessageDelegate d = SendGridInstantMessageViaXMLRPCAsyncMain;
                     d.BeginInvoke(im, result, GridInstantMessageCompleted, d);
                 }
@@ -489,7 +483,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 try {
                     SendGridInstantMessageViaXMLRPCAsync(im, result, UUID.Zero);
                 } catch (Exception e) {
-                    m_log.Error("[SendGridInstantMessageViaXMLRPC]: exception " + e.Message);
+                    _log.Error("[SendGridInstantMessageViaXMLRPC]: exception " + e.Message);
                 }
                 lock (pendingInstantMessages) {
                     if (pendingInstantMessages.Count > 0) {
@@ -499,7 +493,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     } else {
                         gim = null;
                         -- numInstantMessageThreads;
-                        //m_log.DebugFormat("[SendGridInstantMessageViaXMLRPC]: --numInstantMessageThreads={0}", numInstantMessageThreads);
+                        //_log.DebugFormat("[SendGridInstantMessageViaXMLRPC]: --numInstantMessageThreads={0}", numInstantMessageThreads);
                     }
                 }
             } while (gim != null);
@@ -512,13 +506,13 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             PresenceInfo upd = null;
             bool lookupAgent = false;
 
-            lock (m_UserRegionMap)
+            lock (_UserRegionMap)
             {
-                if (m_UserRegionMap.ContainsKey(toAgentID))
+                if (_UserRegionMap.ContainsKey(toAgentID))
                 {
                     upd = new PresenceInfo
                     {
-                        RegionID = m_UserRegionMap[toAgentID]
+                        RegionID = _UserRegionMap[toAgentID]
                     };
 
                     // We need to compare the current regionhandle with the previous region handle
@@ -559,14 +553,14 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     //
                     if (upd.RegionID == prevRegionID)
                     {
-                        // m_log.Error("[GRID INSTANT MESSAGE]: Unable to deliver an instant message");
+                        // _log.Error("[GRID INSTANT MESSAGE]: Unable to deliver an instant message");
                         HandleUndeliverableMessage(im, result);
                         return;
                     }
                 }
                 else
                 {
-                    // m_log.Error("[GRID INSTANT MESSAGE]: Unable to deliver an instant message");
+                    // _log.Error("[GRID INSTANT MESSAGE]: Unable to deliver an instant message");
                     HandleUndeliverableMessage(im, result);
                     return;
                 }
@@ -574,7 +568,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
             if (upd != null)
             {
-                GridRegion reginfo = m_Scenes[0].GridService.GetRegionByUUID(UUID.Zero,
+                GridRegion reginfo = _Scenes[0].GridService.GetRegionByUUID(UUID.Zero,
                     upd.RegionID);
                 if (reginfo != null)
                 {
@@ -587,15 +581,15 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     if (imresult)
                     {
                         // IM delivery successful, so store the Agent's location in our local cache.
-                        lock (m_UserRegionMap)
+                        lock (_UserRegionMap)
                         {
-                            if (m_UserRegionMap.ContainsKey(toAgentID))
+                            if (_UserRegionMap.ContainsKey(toAgentID))
                             {
-                                m_UserRegionMap[toAgentID] = upd.RegionID;
+                                _UserRegionMap[toAgentID] = upd.RegionID;
                             }
                             else
                             {
-                                m_UserRegionMap.Add(toAgentID, upd.RegionID);
+                                _UserRegionMap.Add(toAgentID, upd.RegionID);
                             }
                         }
                         result(true);
@@ -615,7 +609,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 }
                 else
                 {
-                    m_log.WarnFormat("[GRID INSTANT MESSAGE]: Unable to find region {0}", upd.RegionID);
+                    _log.WarnFormat("[GRID INSTANT MESSAGE]: Unable to find region {0}", upd.RegionID);
                     HandleUndeliverableMessage(im, result);
                 }
             }
@@ -661,7 +655,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             }
             catch (WebException e)
             {
-                m_log.ErrorFormat("[GRID INSTANT MESSAGE]: Error sending message to {0} the host didn't respond " + e.ToString(), reginfo.ServerURI.ToString());
+                _log.ErrorFormat("[GRID INSTANT MESSAGE]: Error sending message to {0} the host didn't respond " + e.ToString(), reginfo.ServerURI.ToString());
             }
 
             return false;
@@ -677,9 +671,9 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 //        {
 //            ulong returnhandle = 0;
 //
-//            lock (m_Scenes)
+//            lock (_Scenes)
 //            {
-//                foreach (Scene sn in m_Scenes)
+//                foreach (Scene sn in _Scenes)
 //                {
 //                    if (sn.RegionInfo.RegionID == regionID)
 //                    {
@@ -699,21 +693,21 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
         protected virtual Hashtable ConvertGridInstantMessageToXMLRPC(GridInstantMessage msg)
         {
             Hashtable gim = new Hashtable();
-            gim["from_agent_id"] = msg.fromAgentID.ToString();
+            gim["fro_agent_id"] = msg.fromAgentID.ToString();
             // Kept for compatibility
-            gim["from_agent_session"] = UUID.Zero.ToString();
+            gim["fro_agent_session"] = UUID.Zero.ToString();
             gim["to_agent_id"] = msg.toAgentID.ToString();
-            gim["im_session_id"] = msg.imSessionID.ToString();
+            gim["i_session_id"] = msg.imSessionID.ToString();
             gim["timestamp"] = msg.timestamp.ToString();
-            gim["from_agent_name"] = msg.fromAgentName;
+            gim["fro_agent_name"] = msg.fromAgentName;
             gim["message"] = msg.message;
             byte[] dialogdata = new byte[1];dialogdata[0] = msg.dialog;
             gim["dialog"] = Convert.ToBase64String(dialogdata,Base64FormattingOptions.None);
 
             if (msg.fromGroup)
-                gim["from_group"] = "TRUE";
+                gim["fro_group"] = "TRUE";
             else
-                gim["from_group"] = "FALSE";
+                gim["fro_group"] = "FALSE";
             byte[] offlinedata = new byte[1]; offlinedata[0] = msg.offline;
             gim["offline"] = Convert.ToBase64String(offlinedata, Base64FormattingOptions.None);
             gim["parent_estate_id"] = msg.ParentEstateID.ToString();
@@ -722,8 +716,8 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             gim["position_z"] = msg.Position.Z.ToString();
             gim["region_id"] = new UUID(msg.RegionID).ToString();
             gim["binary_bucket"] = Convert.ToBase64String(msg.binaryBucket,Base64FormattingOptions.None);
-            if (!string.IsNullOrEmpty(m_MessageKey))
-                gim["message_key"] = m_MessageKey;
+            if (!string.IsNullOrEmpty(_MessageKey))
+                gim["message_key"] = _MessageKey;
             return gim;
         }
     }

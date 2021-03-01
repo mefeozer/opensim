@@ -154,13 +154,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             return true;
         }
 
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public int Count => count;
 
         /**
          * @brief If this is not a local variable frame, just return the frame as is.
@@ -390,13 +384,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
 
             // IEnumerator
-            public object Current
-            {
-                get
-                {
-                    return ((TDVEntry)typedicEnum.Current).var;
-                }
-            }
+            public object Current => ((TDVEntry)typedicEnum.Current).var;
         }
     }
 }

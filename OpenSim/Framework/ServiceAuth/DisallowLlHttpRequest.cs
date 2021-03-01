@@ -32,7 +32,7 @@ namespace OpenSim.Framework.ServiceAuth
 {
     public class DisallowLlHttpRequest : IServiceAuth
     {
-        public string Name { get { return "DisallowllHTTPRequest"; } }
+        public string Name => "DisallowllHTTPRequest";
 
         public void AddAuthorization(NameValueCollection headers) {}
 

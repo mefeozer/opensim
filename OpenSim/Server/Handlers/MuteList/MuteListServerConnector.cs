@@ -37,15 +37,15 @@ namespace OpenSim.Server.Handlers.GridUser
 {
     public class MuteListServiceConnector : ServiceConnector
     {
-        private readonly IMuteListService m_MuteListService;
-        private readonly string m_ConfigName = "MuteListService";
+        private readonly IMuteListService _MuteListService;
+        private readonly string _ConfigName = "MuteListService";
 
         public MuteListServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string service = serverConfig.GetString("LocalServiceModule", string.Empty);
 
@@ -53,11 +53,11 @@ namespace OpenSim.Server.Handlers.GridUser
                 throw new Exception("LocalServiceModule not present in MuteListService config file MuteListService section");
 
             object[] args = new object[] { config };
-            m_MuteListService = ServerUtils.LoadPlugin<IMuteListService>(service, args);
+            _MuteListService = ServerUtils.LoadPlugin<IMuteListService>(service, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
-            server.AddStreamHandler(new MuteListServerPostHandler(m_MuteListService, auth));
+            server.AddStreamHandler(new MuteListServerPostHandler(_MuteListService, auth));
         }
     }
 }

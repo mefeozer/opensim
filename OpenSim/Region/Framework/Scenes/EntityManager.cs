@@ -34,44 +34,41 @@ namespace OpenSim.Region.Framework.Scenes
 {
     public class EntityManager
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly DoubleDictionaryThreadAbortSafe<UUID, uint, EntityBase> m_entities
+        private readonly DoubleDictionaryThreadAbortSafe<UUID, uint, EntityBase> _entities
             = new DoubleDictionaryThreadAbortSafe<UUID, uint, EntityBase>();
 
-        public int Count
-        {
-            get { return m_entities.Count; }
-        }
+        public int Count => _entities.Count;
 
         public void Add(EntityBase entity)
         {
-            m_entities.Add(entity.UUID, entity.LocalId, entity);
+            _entities.Add(entity.UUID, entity.LocalId, entity);
         }
 
         public void Clear()
         {
-            m_entities.Clear();
+            _entities.Clear();
         }
 
         public bool ContainsKey(UUID id)
         {
-            return m_entities.ContainsKey(id);
+            return _entities.ContainsKey(id);
         }
 
         public bool ContainsKey(uint localID)
         {
-            return m_entities.ContainsKey(localID);
+            return _entities.ContainsKey(localID);
         }
 
         public bool Remove(uint localID)
         {
-            return m_entities.Remove(localID);
+            return _entities.Remove(localID);
         }
 
         public bool Remove(UUID id)
         {
-            return m_entities.Remove(id);
+            return _entities.Remove(id);
         }
 
         public EntityBase[] GetAllByType<T>()
@@ -91,17 +88,17 @@ namespace OpenSim.Region.Framework.Scenes
 
         public EntityBase[] GetEntities()
         {
-            return m_entities.GetArray();
+            return _entities.GetArray();
         }
 
         public void ForEach(Action<EntityBase> action)
         {
-            m_entities.ForEach(action);
+            _entities.ForEach(action);
         }
 
         public EntityBase Find(Predicate<EntityBase> predicate)
         {
-            return m_entities.FindValue(predicate);
+            return _entities.FindValue(predicate);
         }
 
         public EntityBase this[UUID id]
@@ -109,13 +106,10 @@ namespace OpenSim.Region.Framework.Scenes
             get
             {
                 EntityBase entity;
-                m_entities.TryGetValue(id, out entity);
+                _entities.TryGetValue(id, out entity);
                 return entity;
             }
-            set
-            {
-                Add(value);
-            }
+            set => Add(value);
         }
 
         public EntityBase this[uint localID]
@@ -123,23 +117,20 @@ namespace OpenSim.Region.Framework.Scenes
             get
             {
                 EntityBase entity;
-                m_entities.TryGetValue(localID, out entity);
+                _entities.TryGetValue(localID, out entity);
                 return entity;
             }
-            set
-            {
-                Add(value);
-            }
+            set => Add(value);
         }
 
         public bool TryGetValue(UUID key, out EntityBase obj)
         {
-            return m_entities.TryGetValue(key, out obj);
+            return _entities.TryGetValue(key, out obj);
         }
 
         public bool TryGetValue(uint key, out EntityBase obj)
         {
-            return m_entities.TryGetValue(key, out obj);
+            return _entities.TryGetValue(key, out obj);
         }
     }
 }

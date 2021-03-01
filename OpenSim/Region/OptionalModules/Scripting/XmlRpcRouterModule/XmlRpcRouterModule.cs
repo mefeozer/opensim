@@ -38,9 +38,9 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcRouterModule
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "XmlRpcRouter")]
     public class XmlRpcRouter : INonSharedRegionModule, IXmlRpcRouter
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled;
+        private bool _Enabled;
 
         #region INonSharedRegionModule
 
@@ -52,12 +52,12 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcRouterModule
 
             if (startupConfig.GetString("XmlRpcRouterModule",
                     "XmlRpcRouterModule") == "XmlRpcRouterModule")
-                m_Enabled = true;
+                _Enabled = true;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IXmlRpcRouter>(this);
@@ -69,7 +69,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcRouterModule
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.UnregisterModuleInterface<IXmlRpcRouter>(this);
@@ -79,21 +79,15 @@ namespace OpenSim.Region.OptionalModules.Scripting.XmlRpcRouterModule
         {
         }
 
-        public string Name
-        {
-            get { return "XmlRpcRouterModule"; }
-        }
+        public string Name => "XmlRpcRouterModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
         public void RegisterNewReceiver(IScriptModule scriptEngine, UUID channel, UUID objectID, UUID itemID, string uri)
         {
-            if (m_Enabled)
+            if (_Enabled)
             {
                 scriptEngine.PostScriptEvent(itemID, "xmlrpc_uri", new object[] { uri });
             }

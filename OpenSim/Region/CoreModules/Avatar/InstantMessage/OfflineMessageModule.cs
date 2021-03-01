@@ -47,15 +47,15 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "OfflineMessageModule")]
     public class OfflineMessageModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool enabled = true;
-        private bool m_UseNewAvnCode = false;
-        private readonly List<Scene> m_SceneList = new List<Scene>();
-        private string m_RestURL = string.Empty;
-        IMessageTransferModule m_TransferModule = null;
-        private bool m_ForwardOfflineGroupMessages = true;
-        private readonly Dictionary<IClientAPI, List<UUID>> m_repliesSent= new Dictionary<IClientAPI, List<UUID>>();
+        private bool _UseNewAvnCode = false;
+        private readonly List<Scene> _SceneList = new List<Scene>();
+        private string _RestURL = string.Empty;
+        IMessageTransferModule _TransferModule = null;
+        private bool _ForwardOfflineGroupMessages = true;
+        private readonly Dictionary<IClientAPI, List<UUID>> _repliesSent= new Dictionary<IClientAPI, List<UUID>>();
 
         public void Initialise(IConfigSource config)
         {
@@ -72,16 +72,16 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 return;
             }
 
-            m_RestURL = cnf.GetString("OfflineMessageURL", "");
-            if (m_RestURL == "")
+            _RestURL = cnf.GetString("OfflineMessageURL", "");
+            if (_RestURL == "")
             {
-                m_log.Error("[OFFLINE MESSAGING] Module was enabled, but no URL is given, disabling");
+                _log.Error("[OFFLINE MESSAGING] Module was enabled, but no URL is given, disabling");
                 enabled = false;
                 return;
             }
 
-            m_ForwardOfflineGroupMessages = cnf.GetBoolean("ForwardOfflineGroupMessages", m_ForwardOfflineGroupMessages);
-            m_UseNewAvnCode = cnf.GetBoolean("UseNewAvnCode", m_UseNewAvnCode);
+            _ForwardOfflineGroupMessages = cnf.GetBoolean("ForwardOfflineGroupMessages", _ForwardOfflineGroupMessages);
+            _UseNewAvnCode = cnf.GetBoolean("UseNewAvnCode", _UseNewAvnCode);
         }
 
         public void AddRegion(Scene scene)
@@ -89,9 +89,9 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             if (!enabled)
                 return;
 
-            lock (m_SceneList)
+            lock (_SceneList)
             {
-                m_SceneList.Add(scene);
+                _SceneList.Add(scene);
 
                 scene.EventManager.OnNewClient += OnNewClient;
             }
@@ -102,19 +102,19 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             if (!enabled)
                 return;
 
-            if (m_TransferModule == null)
+            if (_TransferModule == null)
             {
-                m_TransferModule = scene.RequestModuleInterface<IMessageTransferModule>();
-                if (m_TransferModule == null)
+                _TransferModule = scene.RequestModuleInterface<IMessageTransferModule>();
+                if (_TransferModule == null)
                 {
                     scene.EventManager.OnNewClient -= OnNewClient;
 
                     enabled = false;
-                    m_SceneList.Clear();
+                    _SceneList.Clear();
 
-                    m_log.Error("[OFFLINE MESSAGING] No message transfer module is enabled. Diabling offline messages");
+                    _log.Error("[OFFLINE MESSAGING] No message transfer module is enabled. Diabling offline messages");
                 }
-                m_TransferModule.OnUndeliveredMessage += UndeliveredMessage;
+                _TransferModule.OnUndeliveredMessage += UndeliveredMessage;
             }
         }
 
@@ -123,9 +123,9 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             if (!enabled)
                 return;
 
-            lock (m_SceneList)
+            lock (_SceneList)
             {
-                m_SceneList.Remove(scene);
+                _SceneList.Remove(scene);
             }
         }
 
@@ -134,18 +134,12 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             if (!enabled)
                 return;
 
-            m_log.Debug("[OFFLINE MESSAGING] Offline messages enabled");
+            _log.Debug("[OFFLINE MESSAGING] Offline messages enabled");
         }
 
-        public string Name
-        {
-            get { return "OfflineMessageModule"; }
-        }
+        public string Name => "OfflineMessageModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Close()
         {
@@ -153,7 +147,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         private Scene FindScene(UUID agentID)
         {
-            foreach (Scene s in m_SceneList)
+            foreach (Scene s in _SceneList)
             {
                 ScenePresence presence = s.GetScenePresence(agentID);
                 if (presence != null && !presence.IsChildAgent)
@@ -164,7 +158,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         private IClientAPI FindClient(UUID agentID)
         {
-            foreach (Scene s in m_SceneList)
+            foreach (Scene s in _SceneList)
             {
                 ScenePresence presence = s.GetScenePresence(agentID);
                 if (presence != null && !presence.IsChildAgent)
@@ -181,22 +175,22 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         public void OnClientLoggedOut(IClientAPI client)
         {
-            m_repliesSent.Remove(client);
+            _repliesSent.Remove(client);
         }
 
         private void RetrieveInstantMessages(IClientAPI client)
         {
-            if (string.IsNullOrEmpty(m_RestURL))
+            if (string.IsNullOrEmpty(_RestURL))
             {
                 return;
             }
             else
             {
-                m_log.DebugFormat("[OFFLINE MESSAGING]: Retrieving stored messages for {0}", client.AgentId);
+                _log.DebugFormat("[OFFLINE MESSAGING]: Retrieving stored messages for {0}", client.AgentId);
 
                 List<GridInstantMessage> msglist
                     = SynchronousRestObjectRequester.MakeRequest<UUID, List<GridInstantMessage>>(
-                        "POST", m_RestURL + "/RetrieveMessages/", client.AgentId);
+                        "POST", _RestURL + "/RetrieveMessages/", client.AgentId);
 
                 if (msglist != null)
                 {
@@ -237,22 +231,22 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 return;
             }
 
-            if (!m_ForwardOfflineGroupMessages)
+            if (!_ForwardOfflineGroupMessages)
             {
                 if (im.dialog == (byte)InstantMessageDialog.GroupNotice ||
                     im.dialog == (byte)InstantMessageDialog.GroupInvitation)
                     return;
             }
 
-            if(m_UseNewAvnCode)
+            if(_UseNewAvnCode)
             {
                 Scene scene = FindScene(new UUID(im.fromAgentID));
                 if (scene == null)
-                    scene = m_SceneList[0];
+                    scene = _SceneList[0];
 
                 UUID scopeID = scene.RegionInfo.ScopeID;
                 SendReply reply = SynchronousRestObjectRequester.MakeRequest<GridInstantMessage, SendReply>(
-                    "POST", m_RestURL+"/SaveMessage/?scope=" + scopeID.ToString(), im, 20000);
+                    "POST", _RestURL+"/SaveMessage/?scope=" + scopeID.ToString(), im, 20000);
 
                 if (im.dialog == (byte)InstantMessageDialog.MessageFromAgent)
                 {
@@ -270,13 +264,13 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                         case 0: // Normal
                             break;
                         case 1: // Only once per user
-                           if (m_repliesSent.ContainsKey(client) && m_repliesSent[client].Contains(new UUID(im.toAgentID)))
+                           if (_repliesSent.ContainsKey(client) && _repliesSent[client].Contains(new UUID(im.toAgentID)))
                                 sendReply = false;
                             else
                             {
-                                if (!m_repliesSent.ContainsKey(client))
-                                    m_repliesSent[client] = new List<UUID>();
-                                m_repliesSent[client].Add(new UUID(im.toAgentID));
+                                if (!_repliesSent.ContainsKey(client))
+                                    _repliesSent[client] = new List<UUID>();
+                                _repliesSent[client].Add(new UUID(im.toAgentID));
                             }
                             break;
                     }
@@ -295,7 +289,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             else
             {
                 bool success = SynchronousRestObjectRequester.MakeRequest<GridInstantMessage, bool>(
-                    "POST", m_RestURL+"/SaveMessage/", im, 20000);
+                    "POST", _RestURL+"/SaveMessage/", im, 20000);
 
                 if (im.dialog == (byte)InstantMessageDialog.MessageFromAgent)
                 {

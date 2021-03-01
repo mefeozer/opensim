@@ -210,10 +210,7 @@ public abstract class BSPhysObject : PhysicsActor
 
     public override float Density
     {
-        get
-        {
-            return base.Density;
-        }
+        get => base.Density;
         set
         {
             DetailLog("{0},BSPhysObject.Density,set,den={1}", LocalID, value);
@@ -260,7 +257,7 @@ public abstract class BSPhysObject : PhysicsActor
     // PhysicsActor.Velocity
     public override OMV.Vector3 Velocity
     {
-        get { return RawVelocity;  }
+        get => RawVelocity;
         set
         {
             // This sets the velocity now. BSCharacter will override to clear target velocity
@@ -282,13 +279,11 @@ public abstract class BSPhysObject : PhysicsActor
     }
 
     public override OMV.Vector3 RotationalVelocity {
-        get {
-            return RawRotationalVelocity;
-        }
+        get => RawRotationalVelocity;
         set {
             RawRotationalVelocity = value;
             Util.ClampV(RawRotationalVelocity, BSParam.MaxAngularVelocity);
-            // m_log.DebugFormat("{0}: RotationalVelocity={1}", LogHeader, _rotationalVelocity);
+            // _log.DebugFormat("{0}: RotationalVelocity={1}", LogHeader, _rotationalVelocity);
             PhysScene.TaintedObject(LocalID, TypeName + ".setRotationalVelocity", delegate()
             {
                 ForceRotationalVelocity = RawRotationalVelocity;
@@ -296,9 +291,7 @@ public abstract class BSPhysObject : PhysicsActor
         }
     }
     public OMV.Vector3 ForceRotationalVelocity {
-        get {
-            return RawRotationalVelocity;
-        }
+        get => RawRotationalVelocity;
         set {
             RawRotationalVelocity = Util.ClampV(value, BSParam.MaxAngularVelocity);
             if (PhysBody.HasPhysicalBody)
@@ -317,22 +310,24 @@ public abstract class BSPhysObject : PhysicsActor
 
     public override bool PIDActive
     {
-        get { return MoveToTargetActive; }
-        set { MoveToTargetActive = value; }
+        get => MoveToTargetActive;
+        set => MoveToTargetActive = value;
     }
 
-    public override OMV.Vector3 PIDTarget { set { MoveToTargetTarget = value; } }
-    public override float PIDTau { set { MoveToTargetTau = value; } }
+    public override OMV.Vector3 PIDTarget { set => MoveToTargetTarget = value; }
+    public override float PIDTau { set => MoveToTargetTau = value; }
 
     public bool MoveToTargetActive { get; set; }
     public OMV.Vector3 MoveToTargetTarget { get; set; }
     public float MoveToTargetTau { get; set; }
 
     // Used for llSetHoverHeight and maybe vehicle height. Hover Height will override MoveTo target's Z
-    public override bool PIDHoverActive {get {return HoverActive;}  set { HoverActive = value; } }
-    public override float PIDHoverHeight { set { HoverHeight = value; } }
-    public override PIDHoverType PIDHoverType { set { HoverType = value; } }
-    public override float PIDHoverTau { set { HoverTau = value; } }
+    public override bool PIDHoverActive {get => HoverActive;
+        set => HoverActive = value;
+    }
+    public override float PIDHoverHeight { set => HoverHeight = value; }
+    public override PIDHoverType PIDHoverType { set => HoverType = value; }
+    public override float PIDHoverTau { set => HoverTau = value; }
 
     public bool HoverActive { get; set; }
     public float HoverHeight { get;  set; }
@@ -465,7 +460,7 @@ public abstract class BSPhysObject : PhysicsActor
     protected long CollisionAccumulation { get; set; }
 
     public override bool IsColliding {
-        get { return CollidingStep == PhysScene.SimulationStep; }
+        get => CollidingStep == PhysScene.SimulationStep;
         set {
             if (value)
                 CollidingStep = PhysScene.SimulationStep;
@@ -480,11 +475,11 @@ public abstract class BSPhysObject : PhysicsActor
     //    the complex body that this prim is the root of.
     public virtual bool HasSomeCollision
     {
-        get { return IsColliding; }
-        set { IsColliding = value; }
+        get => IsColliding;
+        set => IsColliding = value;
     }
     public override bool CollidingGround {
-        get { return CollidingGroundStep == PhysScene.SimulationStep; }
+        get => CollidingGroundStep == PhysScene.SimulationStep;
         set
         {
             if (value)
@@ -494,7 +489,7 @@ public abstract class BSPhysObject : PhysicsActor
         }
     }
     public override bool CollidingObj {
-        get { return CollidingObjectStep == PhysScene.SimulationStep; }
+        get => CollidingObjectStep == PhysScene.SimulationStep;
         set {
             if (value)
                 CollidingObjectStep = PhysScene.SimulationStep;

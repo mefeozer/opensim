@@ -44,19 +44,13 @@ namespace OpenSim.Tests.Common
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule")]
     public class MockGroupsServicesConnector : ISharedRegionModule, IGroupsServicesConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        readonly IXGroupData m_data = new NullXGroupData(null, null);
+        readonly IXGroupData _data = new NullXGroupData(null, null);
 
-        public string Name
-        {
-            get { return "MockGroupsServicesConnector"; }
-        }
+        public string Name => "MockGroupsServicesConnector";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource config)
         {
@@ -68,7 +62,7 @@ namespace OpenSim.Tests.Common
 
         public void AddRegion(Scene scene)
         {
-            m_log.DebugFormat("[MOCK GROUPS SERVICES CONNECTOR]: Adding to region {0}", scene.RegionInfo.RegionName);
+            _log.DebugFormat("[MOCK GROUPS SERVICES CONNECTOR]: Adding to region {0}", scene.RegionInfo.RegionName);
             scene.RegisterModuleInterface<IGroupsServicesConnector>(this);
         }
 
@@ -105,14 +99,14 @@ namespace OpenSim.Tests.Common
                 ownersPowers = (ulong)XmlRpcGroupsServicesConnectorModule.DefaultOwnerPowers
             };
 
-            if (m_data.StoreGroup(group))
+            if (_data.StoreGroup(group))
             {
-                m_log.DebugFormat("[MOCK GROUPS SERVICES CONNECTOR]: Created group {0} {1}", group.name, group.groupID);
+                _log.DebugFormat("[MOCK GROUPS SERVICES CONNECTOR]: Created group {0} {1}", group.name, group.groupID);
                 return group.groupID;
             }
             else
             {
-                m_log.ErrorFormat("[MOCK GROUPS SERVICES CONNECTOR]: Failed to create group {0}", name);
+                _log.ErrorFormat("[MOCK GROUPS SERVICES CONNECTOR]: Failed to create group {0}", name);
                 return UUID.Zero;
             }
         }
@@ -139,18 +133,18 @@ namespace OpenSim.Tests.Common
 
         private XGroup GetXGroup(UUID groupID, string name)
         {
-            XGroup group = m_data.GetGroup(groupID);
+            XGroup group = _data.GetGroup(groupID);
 
 
             if (group == null)
-                m_log.DebugFormat("[MOCK GROUPS SERVICES CONNECTOR]: No group found with ID {0}", groupID);
+                _log.DebugFormat("[MOCK GROUPS SERVICES CONNECTOR]: No group found with ID {0}", groupID);
 
             return group;
         }
 
         public GroupRecord GetGroupRecord(UUID requestingAgentID, UUID groupID, string groupName)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[MOCK GROUPS SERVICES CONNECTOR]: Processing GetGroupRecord() for groupID {0}, name {1}",
                 groupID, groupName);
 
@@ -192,7 +186,7 @@ namespace OpenSim.Tests.Common
 
         public void SetAgentGroupInfo(UUID requestingAgentID, UUID agentID, UUID groupID, bool acceptNotices, bool listInProfile)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[MOCK GROUPS SERVICES CONNECTOR]: SetAgentGroupInfo, requestingAgentID {0}, agentID {1}, groupID {2}, acceptNotices {3}, listInProfile {4}",
                 requestingAgentID, agentID, groupID, acceptNotices, listInProfile);
 
@@ -208,7 +202,7 @@ namespace OpenSim.Tests.Common
             xgm.acceptNotices = acceptNotices;
             xgm.listInProfile = listInProfile;
 
-            m_data.StoreGroup(group);
+            _data.StoreGroup(group);
         }
 
         public void AddAgentToGroupInvite(UUID requestingAgentID, UUID inviteID, UUID groupID, UUID roleID, UUID agentID)
@@ -226,7 +220,7 @@ namespace OpenSim.Tests.Common
 
         public void AddAgentToGroup(UUID requestingAgentID, UUID agentID, UUID groupID, UUID roleID)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[MOCK GROUPS SERVICES CONNECTOR]: AddAgentToGroup, requestingAgentID {0}, agentID {1}, groupID {2}, roleID {3}",
                 requestingAgentID, agentID, groupID, roleID);
 
@@ -244,7 +238,7 @@ namespace OpenSim.Tests.Common
 
             group.members[agentID] = groupMember;
 
-            m_data.StoreGroup(group);
+            _data.StoreGroup(group);
         }
 
         public void RemoveAgentFromGroup(UUID requestingAgentID, UUID AgentID, UUID GroupID)
@@ -291,7 +285,7 @@ namespace OpenSim.Tests.Common
 
         public List<GroupMembersData> GetGroupMembers(UUID requestingAgentID, UUID groupID)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[MOCK GROUPS SERVICES CONNECTOR]: GetGroupMembers, requestingAgentID {0}, groupID {1}",
                 requestingAgentID, groupID);
 
@@ -352,12 +346,12 @@ namespace OpenSim.Tests.Common
 
         public GroupNoticeInfo GetGroupNotice(UUID requestingAgentID, UUID noticeID)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[MOCK GROUPS SERVICES CONNECTOR]: GetGroupNotices, requestingAgentID {0}, noticeID {1}",
                 requestingAgentID, noticeID);
 
             // Yes, not an efficient way to do it.
-            Dictionary<UUID, XGroup> groups = m_data.GetGroups();
+            Dictionary<UUID, XGroup> groups = _data.GetGroups();
 
             foreach (XGroup group in groups.Values)
             {
@@ -387,7 +381,7 @@ namespace OpenSim.Tests.Common
 
         public void AddGroupNotice(UUID requestingAgentID, UUID groupID, UUID noticeID, string fromName, string subject, string message, byte[] binaryBucket)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[MOCK GROUPS SERVICES CONNECTOR]: AddGroupNotice, requestingAgentID {0}, groupID {1}, noticeID {2}, fromName {3}, subject {4}, message {5}, binaryBucket.Length {6}",
                 requestingAgentID, groupID, noticeID, fromName, subject, message, binaryBucket.Length);
 
@@ -411,7 +405,7 @@ namespace OpenSim.Tests.Common
 
             group.notices[noticeID] = groupNotice;
 
-            m_data.StoreGroup(group);
+            _data.StoreGroup(group);
         }
 
         public void ResetAgentGroupChatSessions(UUID agentID)

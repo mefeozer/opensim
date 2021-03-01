@@ -587,15 +587,15 @@ namespace OpenSim.Region.CoreModules.World.Serialiser.Tests
             <OtherParts />
         </SceneObjectGroup>";
 
-        protected Scene m_scene;
-        protected SerialiserModule m_serialiserModule;
+        protected Scene _scene;
+        protected SerialiserModule _serialiserModule;
 
         [TestFixtureSetUp]
         public void Init()
         {
-            m_serialiserModule = new SerialiserModule();
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, m_serialiserModule);
+            _serialiserModule = new SerialiserModule();
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, _serialiserModule);
         }
 
         [Test]
@@ -715,7 +715,7 @@ namespace OpenSim.Region.CoreModules.World.Serialiser.Tests
             SceneObjectGroup so = new SceneObjectGroup(rp);
 
             // Need to add the object to the scene so that the request to get script state succeeds
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             string xml = SceneObjectSerializer.ToOriginalXmlFormat(so);
 
@@ -780,7 +780,7 @@ namespace OpenSim.Region.CoreModules.World.Serialiser.Tests
             TestHelpers.InMethod();
             //log4net.Config.XmlConfigurator.Configure();
 
-            SceneObjectGroup so = m_serialiserModule.DeserializeGroupFromXml2(ObjectWithNoPartsXml2);
+            SceneObjectGroup so = _serialiserModule.DeserializeGroupFromXml2(ObjectWithNoPartsXml2);
             SceneObjectPart rootPart = so.RootPart;
 
             Assert.That(rootPart.UUID, Is.EqualTo(new UUID("9be68fdd-f740-4a0f-9675-dfbbb536b946")));
@@ -826,11 +826,11 @@ namespace OpenSim.Region.CoreModules.World.Serialiser.Tests
             SceneObjectGroup so = new SceneObjectGroup(rp);
 
             // Need to add the object to the scene so that the request to get script state succeeds
-            m_scene.AddSceneObject(so);
+            _scene.AddSceneObject(so);
 
             Dictionary<string, object> options = new Dictionary<string, object>();
             options["old-guids"] = true;
-            string xml2 = m_serialiserModule.SerializeGroupToXml2(so, options);
+            string xml2 = _serialiserModule.SerializeGroupToXml2(so, options);
 
             XmlReader xtr = new XmlReader(new StringReader(xml2));
             xtr.ReadStartElement("SceneObjectGroup");

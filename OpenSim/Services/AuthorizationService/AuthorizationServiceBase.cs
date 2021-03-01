@@ -34,7 +34,7 @@ namespace OpenSim.Services.AuthorizationService
 {
     public class AuthorizationServiceBase : ServiceBase
     {
-        protected IAssetDataPlugin m_Database = null;
+        protected IAssetDataPlugin _Database = null;
 
         public AuthorizationServiceBase(IConfigSource config) : base(config)
         {
@@ -69,11 +69,11 @@ namespace OpenSim.Services.AuthorizationService
             if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IAssetDataPlugin>(dllName);
-            if (m_Database == null)
+            _Database = LoadPlugin<IAssetDataPlugin>(dllName);
+            if (_Database == null)
                 throw new Exception("Could not find a storage interface in the given module");
 
-            m_Database.Initialise(connString);
+            _Database.Initialise(connString);
 
         }
     }

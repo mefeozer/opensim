@@ -39,7 +39,7 @@ namespace OpenSim.Framework.Servers.HttpServer
     /// </remarks>
     public abstract class BaseStreamHandler : BaseRequestHandler, IStreamedRequestHandler
     {
-        protected IServiceAuth m_Auth;
+        protected IServiceAuth _Auth;
 
         protected BaseStreamHandler(string httpMethod, string path) : this(httpMethod, path, null, null) { }
 
@@ -49,7 +49,7 @@ namespace OpenSim.Framework.Servers.HttpServer
         protected BaseStreamHandler(string httpMethod, string path, IServiceAuth auth)
             : base(httpMethod, path, null, null)
         {
-            m_Auth = auth;
+            _Auth = auth;
         }
 
         public virtual byte[] Handle(
@@ -57,11 +57,11 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             RequestsReceived++;
 
-            if (m_Auth != null)
+            if (_Auth != null)
             {
                 HttpStatusCode statusCode;
 
-                if (!m_Auth.Authenticate(httpRequest.Headers, httpResponse.AddHeader, out statusCode))
+                if (!_Auth.Authenticate(httpRequest.Headers, httpResponse.AddHeader, out statusCode))
                 {
                     httpResponse.StatusCode = (int)statusCode;
                     httpResponse.ContentType = "text/plain";

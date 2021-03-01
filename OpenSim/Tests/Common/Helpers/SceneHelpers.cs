@@ -61,19 +61,19 @@ namespace OpenSim.Tests.Common
 
         public ISimulationDataService SimDataService { get; }
 
-        private readonly AgentCircuitManager m_acm = new AgentCircuitManager();
-        private readonly IEstateDataService m_estateDataService = null;
+        private readonly AgentCircuitManager _acm = new AgentCircuitManager();
+        private readonly IEstateDataService _estateDataService = null;
 
-        private readonly LocalAssetServicesConnector m_assetService;
-        private readonly LocalAuthenticationServicesConnector m_authenticationService;
-        private readonly LocalInventoryServicesConnector m_inventoryService;
-        private readonly RegionGridServicesConnector m_gridService;
-        private readonly LocalUserAccountServicesConnector m_userAccountService;
-        private readonly LocalPresenceServicesConnector m_presenceService;
+        private readonly LocalAssetServicesConnector _assetService;
+        private readonly LocalAuthenticationServicesConnector _authenticationService;
+        private readonly LocalInventoryServicesConnector _inventoryService;
+        private readonly RegionGridServicesConnector _gridService;
+        private readonly LocalUserAccountServicesConnector _userAccountService;
+        private readonly LocalPresenceServicesConnector _presenceService;
 
-        private readonly TestsAssetCache m_cache;
+        private readonly TestsAssetCache _cache;
 
-        private readonly PhysicsScene m_physicsScene;
+        private readonly PhysicsScene _physicsScene;
 
         public SceneHelpers() : this(null) {}
 
@@ -81,21 +81,21 @@ namespace OpenSim.Tests.Common
         {
             SceneManager = new SceneManager();
 
-            m_assetService          = StartAssetService(cache);
-            m_authenticationService = StartAuthenticationService();
-            m_inventoryService      = StartInventoryService();
-            m_gridService           = StartGridService();
-            m_userAccountService    = StartUserAccountService();
-            m_presenceService       = StartPresenceService();
+            _assetService          = StartAssetService(cache);
+            _authenticationService = StartAuthenticationService();
+            _inventoryService      = StartInventoryService();
+            _gridService           = StartGridService();
+            _userAccountService    = StartUserAccountService();
+            _presenceService       = StartPresenceService();
 
-            m_inventoryService.PostInitialise();
-            m_assetService.PostInitialise();
-            m_userAccountService.PostInitialise();
-            m_presenceService.PostInitialise();
+            _inventoryService.PostInitialise();
+            _assetService.PostInitialise();
+            _userAccountService.PostInitialise();
+            _presenceService.PostInitialise();
 
-            m_cache = cache;
+            _cache = cache;
 
-            m_physicsScene = StartPhysicsScene();
+            _physicsScene = StartPhysicsScene();
 
             SimDataService
                 = OpenSim.Server.Base.ServerUtils.LoadPlugin<ISimulationDataService>("OpenSim.Tests.Common.dll", null);
@@ -153,7 +153,7 @@ namespace OpenSim.Tests.Common
 
 
             TestScene testScene = new TestScene(
-                regInfo, m_acm, SimDataService, m_estateDataService, configSource, null);
+                regInfo, _acm, SimDataService, _estateDataService, configSource, null);
 
             testScene.RegionInfo.EstateSettings = new EstateSettings
             {
@@ -165,41 +165,41 @@ namespace OpenSim.Tests.Common
             godsModule.AddRegion(testScene);
 
             // Add scene to physics
-            ((INonSharedRegionModule)m_physicsScene).AddRegion(testScene);
-            ((INonSharedRegionModule)m_physicsScene).RegionLoaded(testScene);
+            ((INonSharedRegionModule)_physicsScene).AddRegion(testScene);
+            ((INonSharedRegionModule)_physicsScene).RegionLoaded(testScene);
 
             // Add scene to services
-            m_assetService.AddRegion(testScene);
+            _assetService.AddRegion(testScene);
 
-            if (m_cache != null)
+            if (_cache != null)
             {
-                m_cache.AddRegion(testScene);
-                m_cache.RegionLoaded(testScene);
-                testScene.AddRegionModule(m_cache.Name, m_cache);
+                _cache.AddRegion(testScene);
+                _cache.RegionLoaded(testScene);
+                testScene.AddRegionModule(_cache.Name, _cache);
             }
 
-            m_assetService.RegionLoaded(testScene);
-            testScene.AddRegionModule(m_assetService.Name, m_assetService);
+            _assetService.RegionLoaded(testScene);
+            testScene.AddRegionModule(_assetService.Name, _assetService);
 
-            m_authenticationService.AddRegion(testScene);
-            m_authenticationService.RegionLoaded(testScene);
-            testScene.AddRegionModule(m_authenticationService.Name, m_authenticationService);
+            _authenticationService.AddRegion(testScene);
+            _authenticationService.RegionLoaded(testScene);
+            testScene.AddRegionModule(_authenticationService.Name, _authenticationService);
 
-            m_inventoryService.AddRegion(testScene);
-            m_inventoryService.RegionLoaded(testScene);
-            testScene.AddRegionModule(m_inventoryService.Name, m_inventoryService);
+            _inventoryService.AddRegion(testScene);
+            _inventoryService.RegionLoaded(testScene);
+            testScene.AddRegionModule(_inventoryService.Name, _inventoryService);
 
-            m_gridService.AddRegion(testScene);
-            m_gridService.RegionLoaded(testScene);
-            testScene.AddRegionModule(m_gridService.Name, m_gridService);
+            _gridService.AddRegion(testScene);
+            _gridService.RegionLoaded(testScene);
+            testScene.AddRegionModule(_gridService.Name, _gridService);
 
-            m_userAccountService.AddRegion(testScene);
-            m_userAccountService.RegionLoaded(testScene);
-            testScene.AddRegionModule(m_userAccountService.Name, m_userAccountService);
+            _userAccountService.AddRegion(testScene);
+            _userAccountService.RegionLoaded(testScene);
+            testScene.AddRegionModule(_userAccountService.Name, _userAccountService);
 
-            m_presenceService.AddRegion(testScene);
-            m_presenceService.RegionLoaded(testScene);
-            testScene.AddRegionModule(m_presenceService.Name, m_presenceService);
+            _presenceService.AddRegion(testScene);
+            _presenceService.RegionLoaded(testScene);
+            testScene.AddRegionModule(_presenceService.Name, _presenceService);
 
             testScene.SetModuleInterfaces();
 
@@ -555,7 +555,7 @@ namespace OpenSim.Tests.Common
             // We need to punch through to the underlying service because scene will not, correctly, let us call it
             // through it's reference to the LPSC
             LocalPresenceServicesConnector lpsc = (LocalPresenceServicesConnector)scene.PresenceService;
-            lpsc.m_PresenceService.LoginAgent(agentData.AgentID.ToString(), agentData.SessionID, agentData.SecureSessionID);
+            lpsc._PresenceService.LoginAgent(agentData.AgentID.ToString(), agentData.SessionID, agentData.SecureSessionID);
 
             // Stages 1 & 2
             ScenePresence sp = IntroduceClientToScene(scene, client, agentData, TeleportFlags.ViaLogin);

@@ -42,10 +42,10 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "MapSearchModule")]
     public class MapSearchModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        IGridService m_gridservice = null;
-        UUID m_stupidScope = UUID.Zero;
+        IGridService _gridservice = null;
+        UUID _stupidScope = UUID.Zero;
 
         #region ISharedRegionModule Members
         public void Initialise(IConfigSource source)
@@ -59,10 +59,10 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
 
         public void RegionLoaded(Scene scene)
         {
-            if (m_gridservice == null)
+            if (_gridservice == null)
             {
-                m_gridservice = scene.GridService;
-                m_stupidScope = scene.RegionInfo.ScopeID;
+                _gridservice = scene.GridService;
+                _stupidScope = scene.RegionInfo.ScopeID;
             }
         }
 
@@ -77,18 +77,12 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
 
         public void Close()
         {
-            m_gridservice = null;
+            _gridservice = null;
         }
 
-        public string Name
-        {
-            get { return "MapSearchModule"; }
-        }
+        public string Name => "MapSearchModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -99,7 +93,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
 
         private void OnMapNameRequestHandler(IClientAPI remoteClient, string mapName, uint flags)
         {
-            if (m_gridservice == null)
+            if (_gridservice == null)
                 return;
 
             try
@@ -117,18 +111,18 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                     return;
                 }
 
-                //m_log.DebugFormat("MAP NAME=({0})", mapName);
+                //_log.DebugFormat("MAP NAME=({0})", mapName);
                 string mapNameOrig = mapName;
                 int indx = mapName.IndexOfAny(new char[] {'.', '!','+','|',':','%'});
                 bool needOriginalName = indx >= 0;
 
                 // try to fetch from GridServer
-                List<GridRegion> regionInfos = m_gridservice.GetRegionsByName(m_stupidScope, mapName, 20);
+                List<GridRegion> regionInfos = _gridservice.GetRegionsByName(_stupidScope, mapName, 20);
 
                 if (!remoteClient.IsActive)
                     return;
 
-                //m_log.DebugFormat("[MAPSEARCHMODULE]: search {0} returned {1} regions", mapName, regionInfos.Count);
+                //_log.DebugFormat("[MAPSEARCHMODULE]: search {0} returned {1} regions", mapName, regionInfos.Count);
 
                 MapBlockData data;
                 if (regionInfos != null && regionInfos.Count > 0)

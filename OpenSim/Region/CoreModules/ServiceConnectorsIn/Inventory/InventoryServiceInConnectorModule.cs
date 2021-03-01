@@ -41,24 +41,24 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Inventory
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "InventoryServiceInConnectorModule")]
     public class InventoryServiceInConnectorModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static bool m_Enabled = false;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static bool _Enabled = false;
 
-        private IConfigSource m_Config;
-        bool m_Registered = false;
+        private IConfigSource _Config;
+        bool _Registered = false;
 
         #region Region Module interface
 
         public void Initialise(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
             IConfig moduleConfig = config.Configs["Modules"];
             if (moduleConfig != null)
             {
-                m_Enabled = moduleConfig.GetBoolean("InventoryServiceInConnector", false);
-                if (m_Enabled)
+                _Enabled = moduleConfig.GetBoolean("InventoryServiceInConnector", false);
+                if (_Enabled)
                 {
-                    m_log.Info("[INVENTORY IN CONNECTOR]: Inventory Service In Connector enabled");
+                    _log.Info("[INVENTORY IN CONNECTOR]: Inventory Service In Connector enabled");
                 }
             }
         }
@@ -71,28 +71,22 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Inventory
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RegionInventoryService"; }
-        }
+        public string Name => "RegionInventoryService";
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (!m_Registered)
+            if (!_Registered)
             {
-                m_Registered = true;
+                _Registered = true;
 
-                m_log.Info("[RegionInventoryService]: Starting...");
+                _log.Info("[RegionInventoryService]: Starting...");
 
-                object[] args = new object[] { m_Config, MainServer.Instance, "HGInventoryService" };
+                object[] args = new object[] { _Config, MainServer.Instance, "HGInventoryService" };
 
                 ServerUtils.LoadPlugin<IServiceConnector>("OpenSim.Server.Handlers.dll:XInventoryInConnector", args);
             }

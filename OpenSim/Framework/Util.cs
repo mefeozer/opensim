@@ -141,7 +141,7 @@ namespace OpenSim.Framework
     /// </summary>
     public static class Util
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Log-level for the thread pool:
@@ -164,7 +164,7 @@ namespace OpenSim.Framework
             LogOverloads = true;
             TimeStampClockPeriod = 1.0D/ (double)Stopwatch.Frequency;
             TimeStampClockPeriodMS = 1e3 * TimeStampClockPeriod;
-            m_log.InfoFormat("[UTIL] TimeStamp clock with period of {0}ms", Math.Round(TimeStampClockPeriodMS,6,MidpointRounding.AwayFromZero));
+            _log.InfoFormat("[UTIL] TimeStamp clock with period of {0}ms", Math.Round(TimeStampClockPeriodMS,6,MidpointRounding.AwayFromZero));
         }
 
         private static uint nextXferID = 5000;
@@ -178,10 +178,10 @@ namespace OpenSim.Framework
         /// <summary>
         /// Thread pool used for Util.FireAndForget if FireAndForgetMethod.SmartThreadPool is used
         /// </summary>
-        private static SmartThreadPool m_ThreadPool;
+        private static SmartThreadPool _ThreadPool;
 
         // Watchdog timer that aborts threads that have timed-out
-        private static Timer m_threadPoolWatchdog;
+        private static Timer _threadPoolWatchdog;
 
         // Unix-epoch starts at January 1st 1970, 00:00:00 UTC. And all our times in the server are (or at least should be) in UTC.
         public static readonly DateTime UnixEpoch =
@@ -195,10 +195,7 @@ namespace OpenSim.Framework
         public static FireAndForgetMethod DefaultFireAndForgetMethod = FireAndForgetMethod.SmartThreadPool;
         public static FireAndForgetMethod FireAndForgetMethod = DefaultFireAndForgetMethod;
 
-        public static bool IsPlatformMono
-        {
-            get { return Type.GetType("Mono.Runtime") != null; }
-        }
+        public static bool IsPlatformMono => Type.GetType("Mono.Runtime") != null;
 
         /// <summary>
         /// Gets the name of the directory where the current running executable
@@ -381,10 +378,7 @@ namespace OpenSim.Framework
             }
         }
 
-        public static Random RandomClass
-        {
-            get { return randomClass; }
-        }
+        public static Random RandomClass => randomClass;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static ulong UIntsToLong(uint X, uint Y)
@@ -1030,11 +1024,11 @@ namespace OpenSim.Framework
             else
                 nativeLibraryPath = Path.Combine(Path.Combine(path, "lib32"), libraryName);
 
-            m_log.DebugFormat("[UTIL]: Loading native Windows library at {0}", nativeLibraryPath);
+            _log.DebugFormat("[UTIL]: Loading native Windows library at {0}", nativeLibraryPath);
 
             if (Util.LoadLibrary(nativeLibraryPath) == IntPtr.Zero)
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[UTIL]: Couldn't find native Windows library at {0}", nativeLibraryPath);
                 return false;
             }
@@ -1790,7 +1784,7 @@ namespace OpenSim.Framework
                 else if (typeof(T) == typeof(float))
                     val = cnf.GetFloat(varname, (float)val);
                 else
-                    m_log.ErrorFormat("[UTIL]: Unhandled type {0}", typeof(T));
+                    _log.ErrorFormat("[UTIL]: Unhandled type {0}", typeof(T));
             }
 
             return (T)val;
@@ -1900,7 +1894,7 @@ namespace OpenSim.Framework
             IConfig cnf = config.Configs["Startup"];
             if (cnf == null)
             {
-                m_log.WarnFormat("[UTILS]: Startup section doesn't exist");
+                _log.WarnFormat("[UTILS]: Startup section doesn't exist");
                 return false;
             }
 
@@ -1921,7 +1915,7 @@ namespace OpenSim.Framework
                 }
                 catch (Exception e)
                 {
-                    m_log.WarnFormat("[UTILS]: Exception copying configuration file {0} to {1}: {2}", configFile, exampleConfigFile, e.Message);
+                    _log.WarnFormat("[UTILS]: Exception copying configuration file {0} to {1}: {2}", configFile, exampleConfigFile, e.Message);
                     return false;
                 }
             }
@@ -2027,7 +2021,7 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
             }
             finally
             {
@@ -2054,7 +2048,7 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
             }
             finally
             {
@@ -2448,13 +2442,13 @@ namespace OpenSim.Framework
                 else
                 {
                     // uh?
-                    m_log.Debug("[UTILS]: Got OSD of unexpected type " + buffer.Type.ToString());
+                    _log.Debug("[UTILS]: Got OSD of unexpected type " + buffer.Type.ToString());
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                m_log.Debug("[UTILS]: exception on GetOSDMap " + ex.Message);
+                _log.Debug("[UTILS]: exception on GetOSDMap " + ex.Message);
                 return null;
             }
         }
@@ -2885,9 +2879,9 @@ namespace OpenSim.Framework
             if (minThreads > maxThreads || minThreads < 2)
                 throw new ArgumentOutOfRangeException("minThreads", "minThreads must be greater than 2 and less than or equal to maxThreads");
 
-            if (m_ThreadPool != null)
+            if (_ThreadPool != null)
             {
-                m_log.Warn("SmartThreadPool is already initialized.  Ignoring request.");
+                _log.Warn("SmartThreadPool is already initialized.  Ignoring request.");
                 return;
             }
 
@@ -2900,8 +2894,8 @@ namespace OpenSim.Framework
                 SuppressFlow = true
             };
 
-            m_ThreadPool = new SmartThreadPool(startInfo);
-            m_threadPoolWatchdog = new Timer(ThreadPoolWatchdog, null, 0, 1000);
+            _ThreadPool = new SmartThreadPool(startInfo);
+            _threadPoolWatchdog = new Timer(ThreadPoolWatchdog, null, 0, 1000);
         }
 
         public static int FireAndForgetCount()
@@ -2915,7 +2909,7 @@ namespace OpenSim.Framework
                     ThreadPool.GetAvailableThreads(out workerThreads, out iocpThreads);
                     return workerThreads;
                 case FireAndForgetMethod.SmartThreadPool:
-                    return m_ThreadPool.MaxThreads - m_ThreadPool.InUseThreads;
+                    return _ThreadPool.MaxThreads - _ThreadPool.InUseThreads;
                 case FireAndForgetMethod.Thread:
                 {
                     using(Process p = System.Diagnostics.Process.GetCurrentProcess())
@@ -3006,8 +3000,8 @@ namespace OpenSim.Framework
         private static long numRunningThreadFuncs = 0;
         private static long numTotalThreadFuncsCalled = 0;
 
-        public static long TotalQueuedFireAndForgetCalls { get { return numQueuedThreadFuncs; } }
-        public static long TotalRunningFireAndForgetCalls { get { return numRunningThreadFuncs; } }
+        public static long TotalQueuedFireAndForgetCalls => numQueuedThreadFuncs;
+        public static long TotalRunningFireAndForgetCalls => numRunningThreadFuncs;
 
         // Maps (ThreadFunc number -> Thread)
         private static readonly ConcurrentDictionary<long, ThreadInfo> activeThreads = new ConcurrentDictionary<long, ThreadInfo>();
@@ -3024,33 +3018,33 @@ namespace OpenSim.Framework
                 ThreadInfo t = entry.Value;
                 if (t.DoTimeout && t.Running && !t.Aborted && t.Elapsed() >= THREAD_TIMEOUT)
                 {
-                    m_log.WarnFormat("Timeout in threadfunc {0} ({1}) {2}", t.ThreadFuncNum, t.Thread.Name, t.GetStackTrace());
+                    _log.WarnFormat("Timeout in threadfunc {0} ({1}) {2}", t.ThreadFuncNum, t.Thread.Name, t.GetStackTrace());
                     t.Abort();
 
                     activeThreads.TryRemove(entry.Key, out ThreadInfo dummy);
 
                     // It's possible that the thread won't abort. To make sure the thread pool isn't
                     // depleted, increase the pool size.
-//                    m_ThreadPool.MaxThreads++;
+//                    _ThreadPool.MaxThreads++;
                 }
             }
         }
 
-        public static long TotalFireAndForgetCallsMade { get { return numTotalThreadFuncsCalled; } }
+        public static long TotalFireAndForgetCallsMade => numTotalThreadFuncsCalled;
 
         public static Dictionary<string, int> GetFireAndForgetCallsMade()
         {
-            return new Dictionary<string, int>(m_fireAndForgetCallsMade);
+            return new Dictionary<string, int>(_fireAndForgetCallsMade);
         }
 
-        private static readonly Dictionary<string, int> m_fireAndForgetCallsMade = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> _fireAndForgetCallsMade = new Dictionary<string, int>();
 
         public static Dictionary<string, int> GetFireAndForgetCallsInProgress()
         {
-            return new Dictionary<string, int>(m_fireAndForgetCallsInProgress);
+            return new Dictionary<string, int>(_fireAndForgetCallsInProgress);
         }
 
-        private static readonly Dictionary<string, int> m_fireAndForgetCallsInProgress = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> _fireAndForgetCallsInProgress = new Dictionary<string, int>();
 
         public static void FireAndForget(System.Threading.WaitCallback callback)
         {
@@ -3097,7 +3091,7 @@ namespace OpenSim.Framework
                     try
                     {
                         if (loggingEnabled  && threadInfo.LogThread)
-                            m_log.DebugFormat("Run threadfunc {0} (Queued {1}, Running {2})", threadFuncNum, numQueued1, numRunning1);
+                            _log.DebugFormat("Run threadfunc {0} (Queued {1}, Running {2})", threadFuncNum, numQueued1, numRunning1);
 
                         Culture.SetCurrentCulture();
                         callback(o);
@@ -3107,14 +3101,14 @@ namespace OpenSim.Framework
                     }
                     catch (Exception e)
                     {
-                        m_log.Error(string.Format("[UTIL]: Util STP threadfunc {0} terminated with error ", threadFuncNum), e);
+                        _log.Error(string.Format("[UTIL]: Util STP threadfunc {0} terminated with error ", threadFuncNum), e);
                     }
                     finally
                     {
                         Interlocked.Decrement(ref numRunningThreadFuncs);
                         activeThreads.TryRemove(threadFuncNum, out ThreadInfo dummy);
                         if (loggingEnabled && threadInfo.LogThread)
-                            m_log.DebugFormat("Exit threadfunc {0} ({1})", threadFuncNum, FormatDuration(threadInfo.Elapsed()));
+                            _log.DebugFormat("Exit threadfunc {0} ({1})", threadFuncNum, FormatDuration(threadInfo.Elapsed()));
                         callback = null;
                         o = null;
                         threadInfo = null;
@@ -3137,9 +3131,9 @@ namespace OpenSim.Framework
                         ThreadPool.UnsafeQueueUserWorkItem(realCallback, obj);
                         break;
                     case FireAndForgetMethod.SmartThreadPool:
-                        if (m_ThreadPool == null)
+                        if (_ThreadPool == null)
                             InitThreadPool(2, 15);
-                        threadInfo.WorkItem = m_ThreadPool.QueueWorkItem(realCallback, obj);
+                        threadInfo.WorkItem = _ThreadPool.QueueWorkItem(realCallback, obj);
                         break;
                     case FireAndForgetMethod.Thread:
                         Thread thread = new Thread(delegate(object o) { realCallback(o); realCallback = null;});
@@ -3317,31 +3311,31 @@ namespace OpenSim.Framework
         /// </returns>
         public static STPInfo GetSmartThreadPoolInfo()
         {
-            if (m_ThreadPool == null)
+            if (_ThreadPool == null)
                 return null;
 
             STPInfo stpi = new STPInfo()
             {
-                Name = m_ThreadPool.Name,
-                STPStartInfo = m_ThreadPool.STPStartInfo,
-                IsIdle = m_ThreadPool.IsIdle,
-                IsShuttingDown = m_ThreadPool.IsShuttingdown,
-                MaxThreads = m_ThreadPool.MaxThreads,
-                MinThreads = m_ThreadPool.MinThreads,
-                InUseThreads = m_ThreadPool.InUseThreads,
-                ActiveThreads = m_ThreadPool.ActiveThreads,
-                WaitingCallbacks = m_ThreadPool.WaitingCallbacks,
-                MaxConcurrentWorkItems = m_ThreadPool.Concurrency
+                Name = _ThreadPool.Name,
+                STPStartInfo = _ThreadPool.STPStartInfo,
+                IsIdle = _ThreadPool.IsIdle,
+                IsShuttingDown = _ThreadPool.IsShuttingdown,
+                MaxThreads = _ThreadPool.MaxThreads,
+                MinThreads = _ThreadPool.MinThreads,
+                InUseThreads = _ThreadPool.InUseThreads,
+                ActiveThreads = _ThreadPool.ActiveThreads,
+                WaitingCallbacks = _ThreadPool.WaitingCallbacks,
+                MaxConcurrentWorkItems = _ThreadPool.Concurrency
             };
             return stpi;
         }
 
         public static void StopThreadPool()
         {
-            if (m_ThreadPool == null)
+            if (_ThreadPool == null)
                 return;
-            SmartThreadPool pool = m_ThreadPool;
-            m_ThreadPool = null;
+            SmartThreadPool pool = _ThreadPool;
+            _ThreadPool = null;
 
             try { pool.Shutdown(); } catch {}          
         }
@@ -3505,7 +3499,7 @@ namespace OpenSim.Framework
         /// </summary>
         public static void PrintCallStack()
         {
-            PrintCallStack(m_log.DebugFormat);
+            PrintCallStack(_log.DebugFormat);
         }
 
         public delegate void DebugPrinter(string msg, params object[] parm);
@@ -3541,7 +3535,7 @@ namespace OpenSim.Framework
                 }
                 catch (Exception e)
                 {
-                    m_log.WarnFormat("[UTIL]: Exception parsing XFF header {0}: {1}", xff, e.Message);
+                    _log.WarnFormat("[UTIL]: Exception parsing XFF header {0}: {1}", xff, e.Message);
                 }
             }
 
@@ -3560,7 +3554,7 @@ namespace OpenSim.Framework
                 }
                 catch (Exception e)
                 {
-                    m_log.WarnFormat("[UTIL]: exception in GetCallerIP: {0}", e.Message);
+                    _log.WarnFormat("[UTIL]: exception in GetCallerIP: {0}", e.Message);
                 }
             }
             return string.Empty;
@@ -3941,7 +3935,7 @@ namespace OpenSim.Framework
                 }
             }
 
-            m_log.ErrorFormat("{0} Failed XML ({1} bytes) = {2}", message, length, xml);
+            _log.ErrorFormat("{0} Failed XML ({1} bytes) = {2}", message, length, xml);
         }
 
         /// <summary>
@@ -3990,11 +3984,11 @@ namespace OpenSim.Framework
 /*  don't like this code
     public class DoubleQueue<T> where T:class
     {
-        private Queue<T> m_lowQueue = new Queue<T>();
-        private Queue<T> m_highQueue = new Queue<T>();
+        private Queue<T> _lowQueue = new Queue<T>();
+        private Queue<T> _highQueue = new Queue<T>();
 
-        private object m_syncRoot = new object();
-        private Semaphore m_s = new Semaphore(0, 1);
+        private object _syncRoot = new object();
+        private Semaphore _s = new Semaphore(0, 1);
 
         public DoubleQueue()
         {
@@ -4004,33 +3998,33 @@ namespace OpenSim.Framework
         {
             get
             {
-                lock (m_syncRoot)
-                    return m_highQueue.Count + m_lowQueue.Count;
+                lock (_syncRoot)
+                    return _highQueue.Count + _lowQueue.Count;
             }
         }
 
         public virtual void Enqueue(T data)
         {
-            Enqueue(m_lowQueue, data);
+            Enqueue(_lowQueue, data);
         }
 
         public virtual void EnqueueLow(T data)
         {
-            Enqueue(m_lowQueue, data);
+            Enqueue(_lowQueue, data);
         }
 
         public virtual void EnqueueHigh(T data)
         {
-            Enqueue(m_highQueue, data);
+            Enqueue(_highQueue, data);
         }
 
         private void Enqueue(Queue<T> q, T data)
         {
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
                 q.Enqueue(data);
-                m_s.WaitOne(0);
-                m_s.Release();
+                _s.WaitOne(0);
+                _s.Release();
             }
         }
 
@@ -4061,22 +4055,22 @@ namespace OpenSim.Framework
 
         public bool Dequeue(TimeSpan wait, ref T res)
         {
-            if (!m_s.WaitOne(wait))
+            if (!_s.WaitOne(wait))
                 return false;
 
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
-                if (m_highQueue.Count > 0)
-                    res = m_highQueue.Dequeue();
-                else if (m_lowQueue.Count > 0)
-                    res = m_lowQueue.Dequeue();
+                if (_highQueue.Count > 0)
+                    res = _highQueue.Dequeue();
+                else if (_lowQueue.Count > 0)
+                    res = _lowQueue.Dequeue();
 
-                if (m_highQueue.Count == 0 && m_lowQueue.Count == 0)
+                if (_highQueue.Count == 0 && _lowQueue.Count == 0)
                     return true;
 
                 try
                 {
-                    m_s.Release();
+                    _s.Release();
                 }
                 catch
                 {
@@ -4089,13 +4083,13 @@ namespace OpenSim.Framework
         public virtual void Clear()
         {
 
-            lock (m_syncRoot)
+            lock (_syncRoot)
             {
                 // Make sure sem count is 0
-                m_s.WaitOne(0);
+                _s.WaitOne(0);
 
-                m_lowQueue.Clear();
-                m_highQueue.Clear();
+                _lowQueue.Clear();
+                _highQueue.Clear();
             }
         }
     }

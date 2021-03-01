@@ -102,7 +102,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// Number of joints defined in the animation
         /// Don't use this..  use joints.Length
         /// </summary>
-        private readonly uint m_jointCount;
+        private readonly uint _jointCount;
 
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             EaseInTime = 0;
             EaseOutTime = 0;
             HandPose = 1;
-            m_jointCount = 0;
+            _jointCount = 0;
 
             Joints = new binBVHJoint[1];
             Joints[0] = new binBVHJoint
@@ -217,7 +217,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 EaseOutTime = Utils.BytesToFloat(BinBVHUtil.EndianSwap(animationdata, i, 4), 0); i += 4;
                 HandPose = Utils.BytesToUInt(BinBVHUtil.EndianSwap(animationdata, i, 4)); i += 4; // Handpose?
 
-                m_jointCount = Utils.BytesToUInt(animationdata, i); i += 4; // Get Joint count
+                _jointCount = Utils.BytesToUInt(animationdata, i); i += 4; // Get Joint count
             }
             else
             {
@@ -228,13 +228,13 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 EaseOutTime = Utils.BytesToFloat(animationdata, i); i += 4;
                 HandPose = Utils.BytesToUInt(animationdata, i); i += 4; // Handpose?
 
-                m_jointCount = Utils.BytesToUInt(animationdata, i); i += 4; // Get Joint count
+                _jointCount = Utils.BytesToUInt(animationdata, i); i += 4; // Get Joint count
             }
-            Joints = new binBVHJoint[m_jointCount];
+            Joints = new binBVHJoint[_jointCount];
 
             // deserialize the number of joints in the animation.
             // Joints are variable length blocks of binary data consisting of joint data and keyframes
-            for (int iter = 0; iter < m_jointCount; iter++)
+            for (int iter = 0; iter < _jointCount; iter++)
             {
                 binBVHJoint joint = readJoint(animationdata, ref i);
                 Joints[iter] = joint;
@@ -413,7 +413,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
             */
 
-            binBVHJointKey[] m_keys = new binBVHJointKey[keycount];
+            binBVHJointKey[] _keys = new binBVHJointKey[keycount];
             for (int j = 0; j < keycount; j++)
             {
                 binBVHJointKey pJKey = new binBVHJointKey
@@ -426,9 +426,9 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 z = Utils.BytesUInt16ToFloat(data, i, min, max); i += 2;
 
                 pJKey.key_element = new Vector3(x, y, z);
-                m_keys[j] = pJKey;
+                _keys[j] = pJKey;
             }
-            return m_keys;
+            return _keys;
         }
 
 
@@ -529,7 +529,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         public static ushort FloatToUInt16(float val, float lower, float upper)
         {
             ushort uival = 0;
-            //m_parentGroup.GetTimeDilation() * (float)ushort.MaxValue
+            //_parentGroup.GetTimeDilation() * (float)ushort.MaxValue
             //0-1
 
 //            float difference = upper - lower;

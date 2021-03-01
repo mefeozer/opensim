@@ -55,18 +55,18 @@ namespace OpenSim.Region.Framework.Scenes
 
     internal class ScenePresenceStateMachine
     {
-        private readonly ScenePresence m_sp;
-        private ScenePresenceState m_state;
+        private readonly ScenePresence _sp;
+        private ScenePresenceState _state;
 
         internal ScenePresenceStateMachine(ScenePresence sp)
         {
-            m_sp = sp;
-            m_state = ScenePresenceState.Running;
+            _sp = sp;
+            _state = ScenePresenceState.Running;
         }
 
         internal ScenePresenceState GetState()
         {
-            return m_state;
+            return _state;
         }
 
         /// <summary>
@@ -82,18 +82,18 @@ namespace OpenSim.Region.Framework.Scenes
 
             lock (this)
             {
-                if (newState == m_state)
+                if (newState == _state)
                     return;
-                else if (newState == ScenePresenceState.Running && m_state == ScenePresenceState.PreRemove)
+                else if (newState == ScenePresenceState.Running && _state == ScenePresenceState.PreRemove)
                     transitionOkay = true;
-                else if (newState == ScenePresenceState.PreRemove && m_state == ScenePresenceState.Running)
+                else if (newState == ScenePresenceState.PreRemove && _state == ScenePresenceState.Running)
                     transitionOkay = true;
                 else if (newState == ScenePresenceState.Removing)
                 {
-                    if (m_state == ScenePresenceState.Running || m_state == ScenePresenceState.PreRemove)
+                    if (_state == ScenePresenceState.Running || _state == ScenePresenceState.PreRemove)
                         transitionOkay = true;
                 }
-                else if (newState == ScenePresenceState.Removed && m_state == ScenePresenceState.Removing)
+                else if (newState == ScenePresenceState.Removed && _state == ScenePresenceState.Removing)
                     transitionOkay = true;
             }
 
@@ -102,11 +102,11 @@ namespace OpenSim.Region.Framework.Scenes
                 throw new Exception(
                     string.Format(
                         "Scene presence {0} is not allowed to move from state {1} to new state {2} in {3}",
-                        m_sp.Name, m_state, newState, m_sp.Scene.Name));
+                        _sp.Name, _state, newState, _sp.Scene.Name));
             }
             else
             {
-                m_state = newState;
+                _state = newState;
             }
         }
     }

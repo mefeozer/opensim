@@ -38,8 +38,8 @@ namespace OpenSim.Region.CoreModules.Asset.Tests
     [TestFixture]
     public class FlotsamAssetCacheTests : OpenSimTestCase
     {
-        protected TestScene m_scene;
-        protected FlotsamAssetCache m_cache;
+        protected TestScene _scene;
+        protected FlotsamAssetCache _cache;
 
         [SetUp]
         public override void SetUp()
@@ -54,9 +54,9 @@ namespace OpenSim.Region.CoreModules.Asset.Tests
             config.Configs["AssetCache"].Set("FileCacheEnabled", "false");
             config.Configs["AssetCache"].Set("MemoryCacheEnabled", "true");
 
-            m_cache = new FlotsamAssetCache();
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, config, m_cache);
+            _cache = new FlotsamAssetCache();
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, config, _cache);
         }
 
         [Test]
@@ -69,13 +69,13 @@ namespace OpenSim.Region.CoreModules.Asset.Tests
             asset.ID = TestHelpers.ParseTail(0x1).ToString();
 
             // Check we don't get anything before the asset is put in the cache
-            AssetBase retrievedAsset = m_cache.Get(asset.ID.ToString());
+            AssetBase retrievedAsset = _cache.Get(asset.ID.ToString());
             Assert.That(retrievedAsset, Is.Null);
 
-            m_cache.Store(asset);
+            _cache.Store(asset);
 
             // Check that asset is now in cache
-            retrievedAsset = m_cache.Get(asset.ID.ToString());
+            retrievedAsset = _cache.Get(asset.ID.ToString());
             Assert.That(retrievedAsset, Is.Not.Null);
             Assert.That(retrievedAsset.ID, Is.EqualTo(asset.ID));
         }
@@ -89,11 +89,11 @@ namespace OpenSim.Region.CoreModules.Asset.Tests
             AssetBase asset = AssetHelpers.CreateNotecardAsset();
             asset.ID = TestHelpers.ParseTail(0x2).ToString();
 
-            m_cache.Store(asset);
+            _cache.Store(asset);
 
-            m_cache.Expire(asset.ID);
+            _cache.Expire(asset.ID);
 
-            AssetBase retrievedAsset = m_cache.Get(asset.ID.ToString());
+            AssetBase retrievedAsset = _cache.Get(asset.ID.ToString());
             Assert.That(retrievedAsset, Is.Null);
         }
 
@@ -106,11 +106,11 @@ namespace OpenSim.Region.CoreModules.Asset.Tests
             AssetBase asset = AssetHelpers.CreateNotecardAsset();
             asset.ID = TestHelpers.ParseTail(0x2).ToString();
 
-            m_cache.Store(asset);
+            _cache.Store(asset);
 
-            m_cache.Clear();
+            _cache.Clear();
 
-            AssetBase retrievedAsset = m_cache.Get(asset.ID.ToString());
+            AssetBase retrievedAsset = _cache.Get(asset.ID.ToString());
             Assert.That(retrievedAsset, Is.Null);
         }
     }

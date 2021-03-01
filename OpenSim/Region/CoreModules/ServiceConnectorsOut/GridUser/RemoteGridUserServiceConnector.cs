@@ -43,10 +43,10 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "RemoteGridUserServicesConnector")]
     public class RemoteGridUserServicesConnector : ISharedRegionModule, IGridUserService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int KEEPTIME = 30; // 30 secs
-        private readonly ExpiringCacheOS<string, GridUserInfo> m_Infos = new ExpiringCacheOS<string, GridUserInfo>(10000);
+        private readonly ExpiringCacheOS<string, GridUserInfo> _Infos = new ExpiringCacheOS<string, GridUserInfo>(10000);
 
         ~RemoteGridUserServicesConnector()
         {
@@ -65,27 +65,21 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
             if (!disposed)
             {
                 disposed = true;
-                m_Infos.Dispose();
+                _Infos.Dispose();
             }
         }
 
 
         #region ISharedRegionModule
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
-        private ActivityDetector m_ActivityDetector;
-        private IGridUserService m_RemoteConnector;
+        private ActivityDetector _ActivityDetector;
+        private IGridUserService _RemoteConnector;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RemoteGridUserServicesConnector"; }
-        }
+        public string Name => "RemoteGridUserServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -95,13 +89,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
                 string name = moduleConfig.GetString("GridUserServices", "");
                 if (name == Name)
                 {
-                    m_RemoteConnector = new GridUserServicesConnector(source);
+                    _RemoteConnector = new GridUserServicesConnector(source);
 
-                    m_Enabled = true;
+                    _Enabled = true;
 
-                    m_ActivityDetector = new ActivityDetector(this);
+                    _ActivityDetector = new ActivityDetector(this);
 
-                    m_log.Info("[REMOTE GRID USER CONNECTOR]: Remote grid user enabled");
+                    _log.Info("[REMOTE GRID USER CONNECTOR]: Remote grid user enabled");
                 }
             }
         }
@@ -116,27 +110,27 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IGridUserService>(this);
-            m_ActivityDetector.AddRegion(scene);
+            _ActivityDetector.AddRegion(scene);
 
-            m_log.InfoFormat("[REMOTE GRID USER CONNECTOR]: Enabled remote grid user for region {0}", scene.RegionInfo.RegionName);
+            _log.InfoFormat("[REMOTE GRID USER CONNECTOR]: Enabled remote grid user for region {0}", scene.RegionInfo.RegionName);
 
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_ActivityDetector.RemoveRegion(scene);
+            _ActivityDetector.RemoveRegion(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
         }
@@ -147,21 +141,21 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
 
         public GridUserInfo LoggedIn(string userID)
         {
-            m_log.Warn("[REMOTE GRID USER CONNECTOR]: LoggedIn not implemented at the simulators");
+            _log.Warn("[REMOTE GRID USER CONNECTOR]: LoggedIn not implemented at the simulators");
             return null;
         }
 
         public bool LoggedOut(string userID, UUID sessionID, UUID region, Vector3 position, Vector3 lookat)
         {
-            m_Infos.Remove(userID);
-            return m_RemoteConnector.LoggedOut(userID, sessionID, region, position, lookat);
+            _Infos.Remove(userID);
+            return _RemoteConnector.LoggedOut(userID, sessionID, region, position, lookat);
         }
 
         public bool SetHome(string userID, UUID regionID, Vector3 position, Vector3 lookAt)
         {
-            if (m_RemoteConnector.SetHome(userID, regionID, position, lookAt))
+            if (_RemoteConnector.SetHome(userID, regionID, position, lookAt))
             {
-                if (m_Infos.TryGetValue(userID, KEEPTIME * 1000, out GridUserInfo info))
+                if (_Infos.TryGetValue(userID, KEEPTIME * 1000, out GridUserInfo info))
                 {
                     info.HomeRegionID = regionID;
                     info.HomePosition = position;
@@ -174,9 +168,9 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
 
         public bool SetLastPosition(string userID, UUID sessionID, UUID regionID, Vector3 position, Vector3 lookAt)
         {
-            if (m_RemoteConnector.SetLastPosition(userID, sessionID, regionID, position, lookAt))
+            if (_RemoteConnector.SetLastPosition(userID, sessionID, regionID, position, lookAt))
             {
-                if (m_Infos.TryGetValue(userID, KEEPTIME * 1000, out GridUserInfo info))
+                if (_Infos.TryGetValue(userID, KEEPTIME * 1000, out GridUserInfo info))
                 {
                     info.LastRegionID = regionID;
                     info.LastPosition = position;
@@ -190,18 +184,18 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.GridUser
 
         public GridUserInfo GetGridUserInfo(string userID)
         {
-            if (m_Infos.TryGetValue(userID, KEEPTIME * 1000, out GridUserInfo info))
+            if (_Infos.TryGetValue(userID, KEEPTIME * 1000, out GridUserInfo info))
                 return info;
 
-            info = m_RemoteConnector.GetGridUserInfo(userID);
-            m_Infos.AddOrUpdate(userID, info, KEEPTIME);
+            info = _RemoteConnector.GetGridUserInfo(userID);
+            _Infos.AddOrUpdate(userID, info, KEEPTIME);
 
             return info;
         }
 
         public GridUserInfo[] GetGridUserInfo(string[] userID)
         {
-            return m_RemoteConnector.GetGridUserInfo(userID);
+            return _RemoteConnector.GetGridUserInfo(userID);
         }
 
         #endregion

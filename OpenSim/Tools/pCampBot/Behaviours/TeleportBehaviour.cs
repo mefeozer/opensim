@@ -39,7 +39,7 @@ namespace pCampBot
     /// </summary>
     public class TeleportBehaviour : AbstractBehaviour
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public TeleportBehaviour()
         {
@@ -56,7 +56,7 @@ namespace pCampBot
             {
                 if (Bot.Manager.RegionsKnown.Count == 0)
                 {
-                    m_log.DebugFormat(
+                    _log.DebugFormat(
                         "[TELEPORT BEHAVIOUR]: Ignoring teleport action for {0} since no regions are known yet", Bot.Name);
                     return;
                 }
@@ -68,7 +68,7 @@ namespace pCampBot
             GridRegion destRegion = knownRegions[rng.Next(knownRegions.Length)];
             Vector3 destPosition = new Vector3(rng.Next(255), rng.Next(255), 50);
 
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[TELEPORT BEHAVIOUR]: Teleporting {0} from {1} {2} to {3} {4}",
                 Bot.Name, sourceRegion.Name, Bot.Client.Self.SimPosition, destRegion.Name, destPosition);
 

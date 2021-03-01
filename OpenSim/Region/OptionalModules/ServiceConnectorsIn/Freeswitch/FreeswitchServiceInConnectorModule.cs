@@ -39,24 +39,24 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Freeswitch
 {
     public class FreeswitchServiceInConnectorModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static bool m_Enabled = false;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static bool _Enabled = false;
 
-        private IConfigSource m_Config;
-        bool m_Registered = false;
+        private IConfigSource _Config;
+        bool _Registered = false;
 
         #region Region Module interface
 
         public void Initialise(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
             IConfig moduleConfig = config.Configs["Modules"];
             if (moduleConfig != null)
             {
-                m_Enabled = moduleConfig.GetBoolean("FreeswitchServiceInConnector", false);
-                if (m_Enabled)
+                _Enabled = moduleConfig.GetBoolean("FreeswitchServiceInConnector", false);
+                if (_Enabled)
                 {
-                    m_log.Info("[FREESWITCH IN CONNECTOR]: FreeswitchServiceInConnector enabled");
+                    _log.Info("[FREESWITCH IN CONNECTOR]: FreeswitchServiceInConnector enabled");
                 }
 
             }
@@ -70,28 +70,22 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Freeswitch
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RegionFreeswitchService"; }
-        }
+        public string Name => "RegionFreeswitchService";
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (!m_Registered)
+            if (!_Registered)
             {
-                m_Registered = true;
+                _Registered = true;
 
-                m_log.Info("[RegionFreeswitchService]: Starting...");
+                _log.Info("[RegionFreeswitchService]: Starting...");
 
-                object[] args = new object[] { m_Config, MainServer.Instance };
+                object[] args = new object[] { _Config, MainServer.Instance };
 
                 ServerUtils.LoadPlugin<IServiceConnector>("OpenSim.Server.Handlers.dll:FreeswitchServerConnector", args);
             }

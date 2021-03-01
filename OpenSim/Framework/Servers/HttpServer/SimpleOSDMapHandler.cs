@@ -40,55 +40,55 @@ namespace OpenSim.Framework.Servers.HttpServer
     /// </remarks>
     public class SimpleOSDMapHandler : SimpleBaseRequestHandler, ISimpleStreamHandler
     {
-        protected string m_httMethod;
-        protected IServiceAuth m_Auth;
-        protected SimpleOSDMapMethod m_processRequest;
+        protected string _httMethod;
+        protected IServiceAuth _Auth;
+        protected SimpleOSDMapMethod _processRequest;
 
         public SimpleOSDMapHandler(string httpmethod, string path) : base(path)
         {
-            m_httMethod = httpmethod.ToUpper();
+            _httMethod = httpmethod.ToUpper();
         }
         public SimpleOSDMapHandler(string httpmethod, string path, string name) : base(path, name)
         {
-            m_httMethod = httpmethod.ToUpper();
+            _httMethod = httpmethod.ToUpper();
         }
         public SimpleOSDMapHandler(string httpmethod, string path, SimpleOSDMapMethod processRequest) : base(path)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_processRequest = processRequest;
+            _httMethod = httpmethod.ToUpper();
+            _processRequest = processRequest;
         }
         public SimpleOSDMapHandler(string httpmethod, string path, SimpleOSDMapMethod processRequest, string name) : base(path, name)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_processRequest = processRequest;
+            _httMethod = httpmethod.ToUpper();
+            _processRequest = processRequest;
         }
 
         public SimpleOSDMapHandler(string httpmethod, string path, IServiceAuth auth) : base(path)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_Auth = auth;
+            _httMethod = httpmethod.ToUpper();
+            _Auth = auth;
         }
 
         public SimpleOSDMapHandler(string httpmethod, string path, IServiceAuth auth, SimpleOSDMapMethod processRequest)
             : base(path)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_Auth = auth;
-            m_processRequest = processRequest;
+            _httMethod = httpmethod.ToUpper();
+            _Auth = auth;
+            _processRequest = processRequest;
         }
 
         public SimpleOSDMapHandler(string httpmethod, string path, IServiceAuth auth, SimpleOSDMapMethod processRequest, string name)
             : base(path, name)
         {
-            m_httMethod = httpmethod.ToUpper();
-            m_Auth = auth;
-            m_processRequest = processRequest;
+            _httMethod = httpmethod.ToUpper();
+            _Auth = auth;
+            _processRequest = processRequest;
         }
 
         public virtual void Handle(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
             RequestsReceived++;
-            if(httpRequest.HttpMethod != m_httMethod)
+            if(httpRequest.HttpMethod != _httMethod)
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.NotFound;
                 return;
@@ -109,9 +109,9 @@ namespace OpenSim.Framework.Servers.HttpServer
                 return;
             }
 
-            if (m_Auth != null)
+            if (_Auth != null)
             {
-                if (!m_Auth.Authenticate(httpRequest.Headers, httpResponse.AddHeader, out HttpStatusCode statusCode))
+                if (!_Auth.Authenticate(httpRequest.Headers, httpResponse.AddHeader, out HttpStatusCode statusCode))
                 {
                     httpResponse.StatusCode = (int)statusCode;
                     return;
@@ -119,8 +119,8 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
             try
             {
-                if(m_processRequest != null)
-                    m_processRequest(httpRequest, httpResponse, args);
+                if(_processRequest != null)
+                    _processRequest(httpRequest, httpResponse, args);
                 else
                     ProcessRequest(httpRequest, httpResponse, args);
             }

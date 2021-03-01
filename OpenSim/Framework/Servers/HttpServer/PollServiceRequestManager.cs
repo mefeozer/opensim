@@ -37,30 +37,30 @@ namespace OpenSim.Framework.Servers.HttpServer
 {
     public class PollServiceRequestManager
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ConcurrentQueue<PollServiceHttpRequest> m_retryRequests = new ConcurrentQueue<PollServiceHttpRequest>();
+        private readonly ConcurrentQueue<PollServiceHttpRequest> _retryRequests = new ConcurrentQueue<PollServiceHttpRequest>();
 
-        private readonly int m_WorkerThreadCount = 0;
-        private ObjectJobEngine m_workerPool;
-        private Thread m_retrysThread;
+        private readonly int _WorkerThreadCount = 0;
+        private ObjectJobEngine _workerPool;
+        private Thread _retrysThread;
 
-        private bool m_running = false;
+        private bool _running = false;
 
         public PollServiceRequestManager(
             bool performResponsesAsync, uint pWorkerThreadCount, int pTimeout)
         {
-            m_WorkerThreadCount = (int)pWorkerThreadCount;
+            _WorkerThreadCount = (int)pWorkerThreadCount;
         }
 
         public void Start()
         {
-            if(m_running)
+            if(_running)
                 return;
-            m_running = true;
-            m_workerPool = new ObjectJobEngine(PoolWorkerJob, "PollServiceWorker", 4000, m_WorkerThreadCount);
+            _running = true;
+            _workerPool = new ObjectJobEngine(PoolWorkerJob, "PollServiceWorker", 4000, _WorkerThreadCount);
 
-            m_retrysThread = WorkManager.StartThread(
+            _retrysThread = WorkManager.StartThread(
                 CheckRetries,
                 string.Format("PollServiceWatcherThread"),
                 ThreadPriority.Normal,
@@ -72,40 +72,40 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         private void ReQueueEvent(PollServiceHttpRequest req)
         {
-            if (m_running)
-                m_retryRequests.Enqueue(req);
+            if (_running)
+                _retryRequests.Enqueue(req);
         }
 
         public void Enqueue(PollServiceHttpRequest req)
         {
-            if(m_running)
-                m_workerPool.Enqueue(req);
+            if(_running)
+                _workerPool.Enqueue(req);
         }
 
         private void CheckRetries()
         {
             PollServiceHttpRequest preq;
-            while (m_running)
+            while (_running)
             {
                 Thread.Sleep(100);
                 Watchdog.UpdateThread();
-                while (m_running && m_retryRequests.TryDequeue(out preq))
-                    m_workerPool.Enqueue(preq);
+                while (_running && _retryRequests.TryDequeue(out preq))
+                    _workerPool.Enqueue(preq);
             }
         }
 
         public void Stop()
         {
-            if(!m_running)
+            if(!_running)
                 return;
 
-            m_running = false;
+            _running = false;
 
             Thread.Sleep(100); // let the world move
 
             try
             {
-                while (m_retryRequests.TryDequeue(out PollServiceHttpRequest req))
+                while (_retryRequests.TryDequeue(out PollServiceHttpRequest req))
                     req.DoHTTPstop();
             }
             catch
@@ -113,11 +113,11 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
 
             int count = 10;
-            while(-- count > 0 && m_workerPool.Count > 0)
+            while(-- count > 0 && _workerPool.Count > 0)
                 Thread.Sleep(100);
 
-            m_workerPool.Dispose();
-            m_workerPool = null;
+            _workerPool.Dispose();
+            _workerPool = null;
         }
 
         // work threads
@@ -135,7 +135,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                     return;
                 }
 
-                if(!m_running)
+                if(!_running)
                 {
                     req.DoHTTPstop();
                     return;
@@ -174,7 +174,7 @@ namespace OpenSim.Framework.Servers.HttpServer
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("Exception in poll service thread: " + e.ToString());
+                _log.ErrorFormat("Exception in poll service thread: " + e.ToString());
             }
         }
     }

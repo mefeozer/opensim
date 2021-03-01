@@ -46,10 +46,7 @@ namespace OpenSim
             Extended
         }
 
-        public static string Version
-        {
-            get { return GetVersionString(VersionNumber, VERSION_FLAVOUR); }
-        }
+        public static string Version => GetVersionString(VersionNumber, VERSION_FLAVOUR);
 
         public static string GetVersionString(string versionNumber, Flavour flavour)
         {

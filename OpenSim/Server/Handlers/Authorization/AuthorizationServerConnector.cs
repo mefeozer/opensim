@@ -36,17 +36,17 @@ namespace OpenSim.Server.Handlers.Authorization
 {
     public class AuthorizationServerConnector : ServiceConnector
     {
-        private readonly IAuthorizationService m_AuthorizationService;
-        private readonly string m_ConfigName = "AuthorizationService";
+        private readonly IAuthorizationService _AuthorizationService;
+        private readonly string _ConfigName = "AuthorizationService";
 
         public AuthorizationServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
-            IConfig serverConfig = config.Configs[m_ConfigName];
+                _ConfigName = configName;
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string authorizationService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -55,10 +55,10 @@ namespace OpenSim.Server.Handlers.Authorization
                 throw new Exception("No AuthorizationService in config file");
 
             object[] args = new object[] { config };
-            m_AuthorizationService =
+            _AuthorizationService =
                     ServerUtils.LoadPlugin<IAuthorizationService>(authorizationService, args);
 
-            server.AddStreamHandler(new AuthorizationServerPostHandler(m_AuthorizationService));
+            server.AddStreamHandler(new AuthorizationServerPostHandler(_AuthorizationService));
         }
     }
 }

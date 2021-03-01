@@ -50,20 +50,20 @@ namespace OpenSim.Region.Framework.Scenes
     /// </summary>
     public class AsyncSceneObjectGroupDeleter
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         /// <value>
         /// Is the deleter currently enabled?
         /// </value>
         public bool Enabled;
-        private readonly Scene m_scene;
+        private readonly Scene _scene;
 
-        static private readonly ConcurrentQueue<DeleteToInventoryHolder> m_inventoryDeletes = new ConcurrentQueue<DeleteToInventoryHolder>();
-        static private readonly object m_threadLock = new object();
-        static private bool m_running;
+        static private readonly ConcurrentQueue<DeleteToInventoryHolder> _inventoryDeletes = new ConcurrentQueue<DeleteToInventoryHolder>();
+        static private readonly object _threadLock = new object();
+        static private bool _running;
 
         public AsyncSceneObjectGroupDeleter(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace OpenSim.Region.Framework.Scenes
                 permissionToDelete = permissionToDelete
             };
 
-            m_inventoryDeletes.Enqueue(dtis);
+            _inventoryDeletes.Enqueue(dtis);
 
             if (permissionToDelete)
             {
@@ -90,22 +90,22 @@ namespace OpenSim.Region.Framework.Scenes
                     g.DeleteGroupFromScene(false);
             }
 
-            if(Monitor.TryEnter(m_threadLock))
+            if(Monitor.TryEnter(_threadLock))
             {
-                if(!m_running)
+                if(!_running)
                 {
                     if(Enabled)
                     {
-                        m_running = true;
+                        _running = true;
                         Util.FireAndForget(x => InventoryDeQueueAndDelete());
                     }
                     else
                     {
-                        m_running = true;
+                        _running = true;
                         InventoryDeQueueAndDelete();
                     }
                 }
-                Monitor.Exit(m_threadLock);
+                Monitor.Exit(_threadLock);
             }
         }
 
@@ -115,16 +115,16 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns></returns>
         public void InventoryDeQueueAndDelete()
         {
-            lock (m_threadLock)
+            lock (_threadLock)
             {
-                IInventoryAccessModule invAccess = m_scene.RequestModuleInterface<IInventoryAccessModule>();
+                IInventoryAccessModule invAccess = _scene.RequestModuleInterface<IInventoryAccessModule>();
                 if (invAccess == null)
                     return;
 
                 int count = 0;
-                while (m_inventoryDeletes.TryDequeue(out DeleteToInventoryHolder x))
+                while (_inventoryDeletes.TryDequeue(out DeleteToInventoryHolder x))
                 {
-                    //  m_log.DebugFormat(
+                    //  _log.DebugFormat(
                     //  "[ASYNC DELETER]: Sending object to user's inventory, action {1}, count {2}, {0} item(s) remaining.",
                     //  left, x.action, x.objectGroups.Count);
                     try
@@ -133,7 +133,7 @@ namespace OpenSim.Region.Framework.Scenes
                         if (x.permissionToDelete)
                         {
                             foreach (SceneObjectGroup g in x.objectGroups)
-                                m_scene.DeleteSceneObject(g, true);
+                                _scene.DeleteSceneObject(g, true);
                         }
 
                         count += x.objectGroups.Count;
@@ -146,12 +146,12 @@ namespace OpenSim.Region.Framework.Scenes
                     catch
                     // catch (Exception e)
                     {
-                        //m_log.ErrorFormat(
+                        //_log.ErrorFormat(
                         //    "[ASYNC OBJECT DELETER]: Exception background sending object: {0}{1}", e.Message, e.StackTrace);
                     }
                 }
-                // m_log.Debug("[ASYNC DELETER]: No objects left in inventory send queue.");
-                m_running = false;
+                // _log.Debug("[ASYNC DELETER]: No objects left in inventory send queue.");
+                _running = false;
             }
         }
     }

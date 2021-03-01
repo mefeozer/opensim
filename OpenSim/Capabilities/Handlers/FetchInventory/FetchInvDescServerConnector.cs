@@ -39,19 +39,19 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class FetchInvDescServerConnector : ServiceConnector
     {
-        private readonly IInventoryService m_InventoryService;
-        private readonly ILibraryService m_LibraryService;
-        private readonly string m_ConfigName = "CapsService";
+        private readonly IInventoryService _InventoryService;
+        private readonly ILibraryService _LibraryService;
+        private readonly string _ConfigName = "CapsService";
 
         public FetchInvDescServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string invService = serverConfig.GetString("InventoryService", string.Empty);
 
@@ -59,23 +59,23 @@ namespace OpenSim.Capabilities.Handlers
                 throw new Exception("No InventoryService in config file");
 
             object[] args = new object[] { config };
-            m_InventoryService =
+            _InventoryService =
                     ServerUtils.LoadPlugin<IInventoryService>(invService, args);
 
-            if (m_InventoryService == null)
-                throw new Exception(string.Format("Failed to load InventoryService from {0}; config is {1}", invService, m_ConfigName));
+            if (_InventoryService == null)
+                throw new Exception(string.Format("Failed to load InventoryService from {0}; config is {1}", invService, _ConfigName));
 
             string libService = serverConfig.GetString("LibraryService", string.Empty);
-            m_LibraryService =
+            _LibraryService =
                     ServerUtils.LoadPlugin<ILibraryService>(libService, args);
 
-            ExpiringKey<UUID> m_badRequests = new ExpiringKey<UUID>(30000);
+            ExpiringKey<UUID> _badRequests = new ExpiringKey<UUID>(30000);
 
-            FetchInvDescHandler webFetchHandler = new FetchInvDescHandler(m_InventoryService, m_LibraryService, null);
+            FetchInvDescHandler webFetchHandler = new FetchInvDescHandler(_InventoryService, _LibraryService, null);
             ISimpleStreamHandler reqHandler
                 = new SimpleStreamHandler("/CAPS/WebFetchInvDesc/", delegate(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
                 { 
-                    webFetchHandler.FetchInventoryDescendentsRequest(httpRequest, httpResponse, m_badRequests);
+                    webFetchHandler.FetchInventoryDescendentsRequest(httpRequest, httpResponse, _badRequests);
                 });
 
             server.AddSimpleStreamHandler(reqHandler);

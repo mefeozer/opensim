@@ -35,7 +35,7 @@ namespace OpenSim.Framework.Console
 {
     public class Commands : ICommands
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Encapsulates a command that can be invoked from the console
@@ -89,7 +89,7 @@ namespace OpenSim.Framework.Console
         /// <summary>
         /// Commands organized by module
         /// </summary>
-        private readonly Dictionary<string, List<CommandInfo>> m_modulesCommands = new Dictionary<string, List<CommandInfo>>();
+        private readonly Dictionary<string, List<CommandInfo>> _modulesCommands = new Dictionary<string, List<CommandInfo>>();
 
         /// <summary>
         /// Get help for the given help string
@@ -135,9 +135,9 @@ namespace OpenSim.Framework.Console
         {
             List<string> help = new List<string>();
 
-            lock (m_modulesCommands)
+            lock (_modulesCommands)
             {
-                foreach (List<CommandInfo> commands in m_modulesCommands.Values)
+                foreach (List<CommandInfo> commands in _modulesCommands.Values)
                 {
                     var ourHelpText = commands.ConvertAll(c => string.Format("{0} - {1}", c.help_text, c.long_help));
                     help.AddRange(ourHelpText);
@@ -174,7 +174,7 @@ namespace OpenSim.Framework.Console
                 if (!dict.ContainsKey(helpPart))
                     break;
 
-                //m_log.Debug("Found {0}", helpParts[0]);
+                //_log.Debug("Found {0}", helpParts[0]);
 
                 if (dict[helpPart] is Dictionary<string, object>)
                     dict = (Dictionary<string, object>)dict[helpPart];
@@ -213,14 +213,14 @@ namespace OpenSim.Framework.Console
         /// <returns>true if there was the module existed, false otherwise.</returns>
         private bool TryCollectModuleHelp(string moduleName, List<string> helpText)
         {
-            lock (m_modulesCommands)
+            lock (_modulesCommands)
             {
-                foreach (string key in m_modulesCommands.Keys)
+                foreach (string key in _modulesCommands.Keys)
                 {
                     // Allow topic help requests to succeed whether they are upper or lowercase.
                     if (moduleName.ToLower() == key.ToLower())
                     {
-                        List<CommandInfo> commands = m_modulesCommands[key];
+                        List<CommandInfo> commands = _modulesCommands[key];
                         var ourHelpText = commands.ConvertAll(c => string.Format("{0} - {1}", c.help_text, c.long_help));
                         ourHelpText.Sort();
                         helpText.AddRange(ourHelpText);
@@ -235,9 +235,9 @@ namespace OpenSim.Framework.Console
 
         private List<string> CollectModulesHelp(Dictionary<string, object> dict)
         {
-            lock (m_modulesCommands)
+            lock (_modulesCommands)
             {
-                List<string> helpText = new List<string>(m_modulesCommands.Keys);
+                List<string> helpText = new List<string>(_modulesCommands.Keys);
                 helpText.Sort();
                 return helpText;
             }
@@ -334,20 +334,20 @@ namespace OpenSim.Framework.Console
             current[string.Empty] = info;
 
             // Now add command to modules dictionary
-            lock (m_modulesCommands)
+            lock (_modulesCommands)
             {
                 List<CommandInfo> commands;
-                if (m_modulesCommands.ContainsKey(module))
+                if (_modulesCommands.ContainsKey(module))
                 {
-                    commands = m_modulesCommands[module];
+                    commands = _modulesCommands[module];
                 }
                 else
                 {
                     commands = new List<CommandInfo>();
-                    m_modulesCommands[module] = commands;
+                    _modulesCommands[module] = commands;
                 }
 
-//                m_log.DebugFormat("[COMMAND CONSOLE]: Adding to category {0} command {1}", module, command);
+//                _log.DebugFormat("[COMMAND CONSOLE]: Adding to category {0} command {1}", module, command);
                 commands.Add(info);
             }
         }
@@ -715,7 +715,7 @@ namespace OpenSim.Framework.Console
     /// </summary>
     public class CommandConsole : ConsoleBase, ICommandConsole
     {
-        //        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public event OnOutputDelegate OnOutput;
         public static event OnCntrCCelegate OnCntrC;

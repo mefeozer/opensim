@@ -54,9 +54,9 @@ namespace OpenSim.Framework
 
         public const string DefaultTexture = "89556747-24cb-43ed-920b-47caed15465f";
 
-        public static readonly string m_MrOpenSimIDString = "11111111-1111-0000-0000-000100bba000";
-        public static readonly UUID m_MrOpenSimID = new UUID(m_MrOpenSimIDString);
-        public static readonly DateTime m_MrOpenSimBorn = new DateTime(2007, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static readonly string _MrOpenSimIDString = "11111111-1111-0000-0000-000100bba000";
+        public static readonly UUID _MrOpenSimID = new UUID(_MrOpenSimIDString);
+        public static readonly DateTime _MrOpenSimBorn = new DateTime(2007, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public static readonly string servicesAgentIDString = "6571e388-6218-4574-87db-f9379718315e";
         public static readonly UUID servicesGodAgentID = new UUID(servicesAgentIDString);

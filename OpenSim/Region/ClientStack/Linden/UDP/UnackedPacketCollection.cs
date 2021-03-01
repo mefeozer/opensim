@@ -62,34 +62,34 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             }
         }
 
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>Holds the actual unacked packet data, sorted by sequence number</summary>
-        private readonly SortedDictionary<uint, OutgoingPacket> m_packets = new SortedDictionary<uint, OutgoingPacket>();
+        private readonly SortedDictionary<uint, OutgoingPacket> _packets = new SortedDictionary<uint, OutgoingPacket>();
         /// <summary>Holds packets that need to be added to the unacknowledged list</summary>
-        private LocklessQueue<OutgoingPacket> m_pendingAdds = new LocklessQueue<OutgoingPacket>();
+        private LocklessQueue<OutgoingPacket> _pendingAdds = new LocklessQueue<OutgoingPacket>();
         /// <summary>Holds information about pending acknowledgements</summary>
-        private LocklessQueue<PendingAck> m_pendingAcknowledgements = new LocklessQueue<PendingAck>();
+        private LocklessQueue<PendingAck> _pendingAcknowledgements = new LocklessQueue<PendingAck>();
         /// <summary>Holds information about pending removals</summary>
-        private LocklessQueue<uint> m_pendingRemoves = new LocklessQueue<uint>();
-        private uint m_older;
+        private LocklessQueue<uint> _pendingRemoves = new LocklessQueue<uint>();
+        private uint _older;
         public void Clear()
         {
-            m_packets.Clear();
-            m_pendingAdds = null;
-            m_pendingAcknowledgements = null;
-            m_pendingRemoves = null;
-            m_older = 0;
+            _packets.Clear();
+            _pendingAdds = null;
+            _pendingAcknowledgements = null;
+            _pendingRemoves = null;
+            _older = 0;
         }
 
         public int Count()
         {
-            return m_packets.Count + m_pendingAdds.Count - m_pendingAcknowledgements.Count - m_pendingRemoves.Count;
+            return _packets.Count + _pendingAdds.Count - _pendingAcknowledgements.Count - _pendingRemoves.Count;
         }
 
         public uint Oldest()
         {
-            return m_older;
+            return _older;
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// it only queues it so it can be added in a thread-safe way later</remarks>
         public void Add(OutgoingPacket packet)
         {
-            m_pendingAdds.Enqueue(packet);
+            _pendingAdds.Enqueue(packet);
             Interlocked.Add(ref packet.Client.UnackedBytes, packet.Buffer.DataLength);
         }
 
@@ -119,7 +119,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// queues the ack so it can be handled in a thread-safe way later</remarks>
         public void Acknowledge(uint sequenceNumber, int currentTime, bool fromResend)
         {
-            m_pendingAcknowledgements.Enqueue(new PendingAck(sequenceNumber, currentTime, fromResend));
+            _pendingAcknowledgements.Enqueue(new PendingAck(sequenceNumber, currentTime, fromResend));
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// so it can be handled in a thread safe way later</remarks>
         public void Remove(uint sequenceNumber)
         {
-            m_pendingRemoves.Enqueue(sequenceNumber);
+            _pendingRemoves.Enqueue(sequenceNumber);
         }
 
         /// <summary>
@@ -158,11 +158,11 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
             List<OutgoingPacket> expiredPackets = null;
             bool doolder = true;
-            if (m_packets.Count > 0)
+            if (_packets.Count > 0)
             {
                 int now = Environment.TickCount & int.MaxValue;
 
-                foreach (OutgoingPacket packet in m_packets.Values)
+                foreach (OutgoingPacket packet in _packets.Values)
                 {
                     if(packet.Buffer == null)
                     {
@@ -172,7 +172,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
                     if(doolder)
                     {
-                        m_older = packet.SequenceNumber;
+                        _older = packet.SequenceNumber;
                         doolder = false;
                     }
 
@@ -202,18 +202,18 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             }
 
             // if (expiredPackets != null)
-            //     m_log.DebugFormat("[UNACKED PACKET COLLECTION]: Found {0} expired packets on timeout of {1}", expiredPackets.Count, timeoutMS);
+            //     _log.DebugFormat("[UNACKED PACKET COLLECTION]: Found {0} expired packets on timeout of {1}", expiredPackets.Count, timeoutMS);
 
             return expiredPackets;
         }
 
         private void ProcessQueues()
         {
-            while (m_pendingRemoves.TryDequeue(out uint pendingRemove))
+            while (_pendingRemoves.TryDequeue(out uint pendingRemove))
             {
-                if (m_packets.TryGetValue(pendingRemove, out OutgoingPacket removedPacket))
+                if (_packets.TryGetValue(pendingRemove, out OutgoingPacket removedPacket))
                 {
-                    m_packets.Remove(pendingRemove);
+                    _packets.Remove(pendingRemove);
                     if (removedPacket != null && removedPacket.Buffer != null)
                     {
                         // Update stats
@@ -226,19 +226,19 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             }
 
             // Process all the pending adds
-            while (m_pendingAdds.TryDequeue(out OutgoingPacket pendingAdd))
+            while (_pendingAdds.TryDequeue(out OutgoingPacket pendingAdd))
             {
                 if (pendingAdd != null)
-                    m_packets[pendingAdd.SequenceNumber] = pendingAdd;
+                    _packets[pendingAdd.SequenceNumber] = pendingAdd;
             }
 
             // Process all the pending removes, including updating statistics and round-trip times
-            while (m_pendingAcknowledgements.TryDequeue(out PendingAck pendingAcknowledgement))
+            while (_pendingAcknowledgements.TryDequeue(out PendingAck pendingAcknowledgement))
             {
-                //m_log.DebugFormat("[UNACKED PACKET COLLECTION]: Processing ack {0}", pendingAcknowledgement.SequenceNumber);
-                if (m_packets.TryGetValue(pendingAcknowledgement.SequenceNumber, out OutgoingPacket ackedPacket))
+                //_log.DebugFormat("[UNACKED PACKET COLLECTION]: Processing ack {0}", pendingAcknowledgement.SequenceNumber);
+                if (_packets.TryGetValue(pendingAcknowledgement.SequenceNumber, out OutgoingPacket ackedPacket))
                 {
-                    m_packets.Remove(pendingAcknowledgement.SequenceNumber);
+                    _packets.Remove(pendingAcknowledgement.SequenceNumber);
                     if (ackedPacket != null)
                     {
                         // Update stats

@@ -44,13 +44,13 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "EstateAcessCapModule")]
     public class EstateAccessCapModule : INonSharedRegionModule
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
-        private bool m_Enabled = false;
-        private string m_capUrl;
-        //IEstateModule m_EstateModule;
+        private Scene _scene;
+        private bool _Enabled = false;
+        private string _capUrl;
+        //IEstateModule _EstateModule;
 
         #region INonSharedRegionModule Members
 
@@ -60,46 +60,46 @@ namespace OpenSim.Region.ClientStack.Linden
             if (config == null)
                 return;
 
-            m_capUrl = config.GetString("Cap_EstateAccess", string.Empty);
-            if (!string.IsNullOrEmpty(m_capUrl) && m_capUrl.Equals("localhost"))
-                m_Enabled = true;
+            _capUrl = config.GetString("Cap_EstateAccess", string.Empty);
+            if (!string.IsNullOrEmpty(_capUrl) && _capUrl.Equals("localhost"))
+                _Enabled = true;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_scene = scene;
+            _scene = scene;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (m_scene == scene)
+            if (_scene == scene)
             {
-                m_scene.EventManager.OnRegisterCaps -= RegisterCaps;
-                m_scene = null;
+                _scene.EventManager.OnRegisterCaps -= RegisterCaps;
+                _scene = null;
             }
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             if (scene.RegionInfo == null || scene.RegionInfo.EstateSettings == null)
             {
-                m_Enabled = false;
+                _Enabled = false;
                 return;
             }
 
-            IEstateModule m_EstateModule = scene.RequestModuleInterface<IEstateModule>();
-            if(m_EstateModule == null)
+            IEstateModule _EstateModule = scene.RequestModuleInterface<IEstateModule>();
+            if(_EstateModule == null)
             {
-                m_Enabled = false;
+                _Enabled = false;
                 return;
             }
 
@@ -110,15 +110,9 @@ namespace OpenSim.Region.ClientStack.Linden
         {
         }
 
-        public string Name
-        {
-            get { return "EstateAccessCapModule"; }
-        }
+        public string Name => "EstateAccessCapModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -141,19 +135,19 @@ namespace OpenSim.Region.ClientStack.Linden
             }
 
             ScenePresence avatar;
-            if (!m_scene.TryGetScenePresence(AgentId, out avatar) || m_scene.RegionInfo == null || m_scene.RegionInfo.EstateSettings == null)
+            if (!_scene.TryGetScenePresence(AgentId, out avatar) || _scene.RegionInfo == null || _scene.RegionInfo.EstateSettings == null)
             {
                 response.StatusCode = (int)HttpStatusCode.Gone;
                 return;
             }
 
-            if (!m_scene.Permissions.CanIssueEstateCommand(AgentId, false))
+            if (!_scene.Permissions.CanIssueEstateCommand(AgentId, false))
             {
                 response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 return;
             }
 
-            EstateSettings regionSettings = m_scene.RegionInfo.EstateSettings;
+            EstateSettings regionSettings = _scene.RegionInfo.EstateSettings;
             UUID[] managers = regionSettings.EstateManagers;
             UUID[] allowed = regionSettings.EstateAccess;
             UUID[] groups = regionSettings.EstateGroups;

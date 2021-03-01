@@ -43,25 +43,22 @@ namespace OpenSim.Region.CoreModules.World.Estate
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "XEstate")]
     public class EstateModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected List<Scene> m_Scenes = new List<Scene>();
-        protected bool m_InInfoUpdate = false;
+        protected List<Scene> _Scenes = new List<Scene>();
+        protected bool _InInfoUpdate = false;
         private string token = "7db8eh2gvgg45jj";
-        protected bool m_enabled = false;
+        protected bool _enabled = false;
 
         public bool InInfoUpdate
         {
-            get { return m_InInfoUpdate; }
-            set { m_InInfoUpdate = value; }
+            get => _InInfoUpdate;
+            set => _InInfoUpdate = value;
         }
 
-        public List<Scene> Scenes
-        {
-            get { return m_Scenes; }
-        }
+        public List<Scene> Scenes => _Scenes;
 
-        protected EstateConnector m_EstateConnector;
+        protected EstateConnector _EstateConnector;
 
         public void Initialise(IConfigSource config)
         {
@@ -71,7 +68,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
             if (estateConfig != null)
             {
                 if (estateConfig.GetString("EstateCommunicationsHandler", Name) == Name)
-                    m_enabled = true;
+                    _enabled = true;
                 else
                     return;
 
@@ -81,10 +78,10 @@ namespace OpenSim.Region.CoreModules.World.Estate
             }
             else
             {
-                m_enabled = true;
+                _enabled = true;
             }
 
-            m_EstateConnector = new EstateConnector(this, token, port);
+            _EstateConnector = new EstateConnector(this, token, port);
 
             if(port == 0)
                  port = MainServer.Instance.Port;
@@ -104,16 +101,16 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
         public void AddRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            lock (m_Scenes)
-                m_Scenes.Add(scene);
+            lock (_Scenes)
+                _Scenes.Add(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
             IEstateModule em = scene.RequestModuleInterface<IEstateModule>();
@@ -127,22 +124,16 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            lock (m_Scenes)
-                m_Scenes.Remove(scene);
+            lock (_Scenes)
+                _Scenes.Remove(scene);
         }
 
-        public string Name
-        {
-            get { return "EstateModule"; }
-        }
+        public string Name => "EstateModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         private Scene FindScene(UUID RegionID)
         {
@@ -161,8 +152,8 @@ namespace OpenSim.Region.CoreModules.World.Estate
             if (s == null)
                 return;
 
-            if (!m_InInfoUpdate)
-                m_EstateConnector.SendUpdateCovenant(s.RegionInfo.EstateSettings.EstateID, s.RegionInfo.RegionSettings.Covenant);
+            if (!_InInfoUpdate)
+                _EstateConnector.SendUpdateCovenant(s.RegionInfo.EstateSettings.EstateID, s.RegionInfo.RegionSettings.Covenant);
         }
 
         private void OnEstateInfoChange(UUID RegionID)
@@ -171,8 +162,8 @@ namespace OpenSim.Region.CoreModules.World.Estate
             if (s == null)
                 return;
 
-            if (!m_InInfoUpdate)
-                m_EstateConnector.SendUpdateEstate(s.RegionInfo.EstateSettings.EstateID);
+            if (!_InInfoUpdate)
+                _EstateConnector.SendUpdateEstate(s.RegionInfo.EstateSettings.EstateID);
         }
 
         private void OnEstateMessage(UUID RegionID, UUID FromID, string FromName, string Message)
@@ -196,8 +187,8 @@ namespace OpenSim.Region.CoreModules.World.Estate
                     }
                 }
             }
-            if (!m_InInfoUpdate)
-                m_EstateConnector.SendEstateMessage(estateID, FromID, FromName, Message);
+            if (!_InInfoUpdate)
+                _EstateConnector.SendEstateMessage(estateID, FromID, FromName, Message);
         }
 
         private void OnEstateTeleportOneUserHomeRequest(IClientAPI client, UUID invoice, UUID senderID, UUID prey, bool kick)
@@ -241,7 +232,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
                 }
             }
 
-            m_EstateConnector.SendTeleportHomeOneUser(estateID, prey);
+            _EstateConnector.SendTeleportHomeOneUser(estateID, prey);
         }
 
         private void OnEstateTeleportAllUsersHomeRequest(IClientAPI client, UUID invoice, UUID senderID)
@@ -276,7 +267,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
                     });
             }
 
-            m_EstateConnector.SendTeleportHomeAllUsers(estateID);
+            _EstateConnector.SendTeleportHomeAllUsers(estateID);
         }
     }
 }

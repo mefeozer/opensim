@@ -44,22 +44,22 @@ namespace OpenSim
         /// <summary>
         /// Text Console Logger
         /// </summary>
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// Save Crashes in the bin/crashes folder.  Configurable with m_crashDir
+        /// Save Crashes in the bin/crashes folder.  Configurable with _crashDir
         /// </summary>
-        public static bool m_saveCrashDumps = false;
+        public static bool _saveCrashDumps = false;
 
         /// <summary>
         /// Directory to save crash reports to.  Relative to bin/
         /// </summary>
-        public static string m_crashDir = "crashes";
+        public static string _crashDir = "crashes";
 
         /// <summary>
         /// Instance of the OpenSim class.  This could be OpenSim or OpenSimBackground depending on the configuration
         /// </summary>
-        protected static OpenSimBase m_sim = null;
+        protected static OpenSimBase _sim = null;
 
         //could move our main function into OpenSimMain and kill this class
         public static void Main(string[] args)
@@ -75,19 +75,19 @@ namespace OpenSim
             ArgvConfigSource configSource = new ArgvConfigSource(args);
             ConfigureLogger(configSource);
 
-            m_log.InfoFormat(
+            _log.InfoFormat(
                 "[OPENSIM MAIN]: System Locale is {0}", System.Threading.Thread.CurrentThread.CurrentCulture);
             if (!Util.IsWindows())
             {
                 string monoThreadsPerCpu = Environment.GetEnvironmentVariable("MONO_THREADS_PER_CPU");
-                m_log.InfoFormat(
+                _log.InfoFormat(
                     "[OPENSIM MAIN]: Environment variable MONO_THREADS_PER_CPU is {0}", monoThreadsPerCpu ?? "unset");
             }
 
             SetThreadCounts();
             LogEnvironmentSupport();
 
-            m_log.InfoFormat("Default culture changed to {0}", Culture.GetDefaultCurrentCulture().DisplayName);
+            _log.InfoFormat("Default culture changed to {0}", Culture.GetDefaultCurrentCulture().DisplayName);
 
             AddConfigSourceAliases(configSource);
             AddConfigSourceSwitches(configSource);
@@ -99,21 +99,21 @@ namespace OpenSim
             bool background = configSource.Configs["Startup"].GetBoolean("background", false);
 
             // Check if we're saving crashes
-            m_saveCrashDumps = configSource.Configs["Startup"].GetBoolean("save_crashes", false);
+            _saveCrashDumps = configSource.Configs["Startup"].GetBoolean("save_crashes", false);
 
             // load Crash directory config
-            m_crashDir = configSource.Configs["Startup"].GetString("crash_dir", m_crashDir);
+            _crashDir = configSource.Configs["Startup"].GetString("crash_dir", _crashDir);
 
             if (background)
             {
-                m_sim = new OpenSimBackground(configSource);
-                m_sim.Startup();
+                _sim = new OpenSimBackground(configSource);
+                _sim.Startup();
             }
             else
             {
-                m_sim = new OpenSim(configSource);
+                _sim = new OpenSim(configSource);
 
-                m_sim.Startup();
+                _sim.Startup();
 
                 while (true)
                 {
@@ -124,7 +124,7 @@ namespace OpenSim
                     }
                     catch (Exception e)
                     {
-                        m_log.ErrorFormat("Command error: {0}", e);
+                        _log.ErrorFormat("Command error: {0}", e);
                     }
                 }
             }
@@ -148,13 +148,13 @@ namespace OpenSim
             if (!string.IsNullOrEmpty(logConfigFile))
             {
                 XmlConfigurator.Configure(new FileInfo(logConfigFile));
-                m_log.InfoFormat("[OPENSIM MAIN]: configured log4net using \"{0}\" as configuration file",
+                _log.InfoFormat("[OPENSIM MAIN]: configured log4net using \"{0}\" as configuration file",
                                  logConfigFile);
             }
             else
             {
                 XmlConfigurator.Configure();
-                m_log.Info("[OPENSIM MAIN]: configured log4net using default OpenSim.exe.config");
+                _log.Info("[OPENSIM MAIN]: configured log4net using default OpenSim.exe.config");
             }
         }
 
@@ -165,11 +165,11 @@ namespace OpenSim
             string supported = string.Empty;
             if (Util.IsEnvironmentSupported(ref supported))
             {
-                m_log.Info("[OPENSIM MAIN]: Environment is supported by OpenSimulator.");
+                _log.Info("[OPENSIM MAIN]: Environment is supported by OpenSimulator.");
             }
             else
             {
-                m_log.Warn("[OPENSIM MAIN]: Environment is not supported by OpenSimulator (" + supported + ")\n");
+                _log.Warn("[OPENSIM MAIN]: Environment is not supported by OpenSimulator (" + supported + ")\n");
             }
         }
 
@@ -199,12 +199,12 @@ namespace OpenSim
         private static void SetThreadCounts()
         {
             System.Threading.ThreadPool.GetMinThreads(out int currentMinWorkerThreads, out int currentMinIocpThreads);
-            m_log.InfoFormat(
+            _log.InfoFormat(
                 "[OPENSIM MAIN]: Runtime gave us {0} min worker threads and {1} min IOCP threads",
                 currentMinWorkerThreads, currentMinIocpThreads);
 
             System.Threading.ThreadPool.GetMaxThreads(out int workerThreads, out int iocpThreads);
-            m_log.InfoFormat("[OPENSIM MAIN]: Runtime gave us {0} max worker threads and {1} max IOCP threads", workerThreads, iocpThreads);
+            _log.InfoFormat("[OPENSIM MAIN]: Runtime gave us {0} max worker threads and {1} max IOCP threads", workerThreads, iocpThreads);
 
 
             // Verify the Threadpool allocates or uses enough worker and IO completion threads
@@ -218,14 +218,14 @@ namespace OpenSim
             if (workerThreads < workerThreadsMin)
             {
                 workerThreads = workerThreadsMin;
-                m_log.InfoFormat("[OPENSIM MAIN]: Bumping up max worker threads to {0}", workerThreads);
+                _log.InfoFormat("[OPENSIM MAIN]: Bumping up max worker threads to {0}", workerThreads);
             }
 
             int workerThreadsMax = 1000; // may need further adjustment to match other CLR
             if (workerThreads > workerThreadsMax)
             {
                 workerThreads = workerThreadsMax;
-                m_log.InfoFormat("[OPENSIM MAIN]: Limiting max worker threads to {0}", workerThreads);
+                _log.InfoFormat("[OPENSIM MAIN]: Limiting max worker threads to {0}", workerThreads);
             }
 
 
@@ -235,7 +235,7 @@ namespace OpenSim
             if (iocpThreads < iocpThreadsMin)
             {
                 iocpThreads = iocpThreadsMin;
-                m_log.InfoFormat("[OPENSIM MAIN]: Bumping up max IOCP threads to {0}", iocpThreads);
+                _log.InfoFormat("[OPENSIM MAIN]: Bumping up max IOCP threads to {0}", iocpThreads);
             }
 
             int iocpThreadsMax = 2000; // may need further adjustment to match other CLR
@@ -243,18 +243,18 @@ namespace OpenSim
             if (iocpThreads > iocpThreadsMax)
             {
                 iocpThreads = iocpThreadsMax;
-                m_log.InfoFormat("[OPENSIM MAIN]: Limiting max IOCP completion threads to {0}", iocpThreads);
+                _log.InfoFormat("[OPENSIM MAIN]: Limiting max IOCP completion threads to {0}", iocpThreads);
             }
             // set the resulting worker and IO completion thread counts back to ThreadPool
             if (System.Threading.ThreadPool.SetMaxThreads(workerThreads, iocpThreads))
             {
-                m_log.InfoFormat(
+                _log.InfoFormat(
                     "[OPENSIM MAIN]: Threadpool set to {0} max worker threads and {1} max IOCP threads",
                     workerThreads, iocpThreads);
             }
             else
             {
-                m_log.Warn("[OPENSIM MAIN]: Threadpool reconfiguration failed, runtime defaults still in effect.");
+                _log.Warn("[OPENSIM MAIN]: Threadpool reconfiguration failed, runtime defaults still in effect.");
             }
         }
 
@@ -291,28 +291,28 @@ namespace OpenSim
             msg += Environment.NewLine;
             msg += "Application is terminating: " + e.IsTerminating.ToString() + Environment.NewLine;
 
-            m_log.ErrorFormat("[APPLICATION]: {0}", msg);
+            _log.ErrorFormat("[APPLICATION]: {0}", msg);
 
-            if (m_saveCrashDumps)
+            if (_saveCrashDumps)
             {
                 // Log exception to disk
                 try
                 {
-                    if (!Directory.Exists(m_crashDir))
+                    if (!Directory.Exists(_crashDir))
                     {
-                        Directory.CreateDirectory(m_crashDir);
+                        Directory.CreateDirectory(_crashDir);
                     }
                     string log = Util.GetUniqueFilename(ex.GetType() + ".txt");
-                    using (StreamWriter m_crashLog = new StreamWriter(Path.Combine(m_crashDir, log)))
+                    using (StreamWriter _crashLog = new StreamWriter(Path.Combine(_crashDir, log)))
                     {
-                        m_crashLog.WriteLine(msg);
+                        _crashLog.WriteLine(msg);
                     }
 
-                    File.Copy("OpenSim.ini", Path.Combine(m_crashDir, log + "_OpenSim.ini"), true);
+                    File.Copy("OpenSim.ini", Path.Combine(_crashDir, log + "_OpenSim.ini"), true);
                 }
                 catch (Exception e2)
                 {
-                    m_log.ErrorFormat("[CRASH LOGGER CRASHED]: {0}", e2);
+                    _log.ErrorFormat("[CRASH LOGGER CRASHED]: {0}", e2);
                 }
             }
 

@@ -41,17 +41,17 @@ namespace OpenSim.Region.ScriptEngine.XEngine.Tests
     [TestFixture]
     public class XEngineBasicTests : OpenSimTestCase
     {
-        private TestScene m_scene;
-        private XEngine m_xEngine;
-        private readonly AutoResetEvent m_chatEvent = new AutoResetEvent(false);
-        private OSChatMessage m_osChatMessageReceived;
+        private TestScene _scene;
+        private XEngine _xEngine;
+        private readonly AutoResetEvent _chatEvent = new AutoResetEvent(false);
+        private OSChatMessage _osChatMessageReceived;
 
         [TestFixtureSetUp]
         public void Init()
         {
             //AppDomain.CurrentDomain.SetData("APPBASE", Environment.CurrentDirectory + "/bin");
 //            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
-            m_xEngine = new XEngine();
+            _xEngine = new XEngine();
 
             IniConfigSource configSource = new IniConfigSource();
 
@@ -66,9 +66,9 @@ namespace OpenSim.Region.ScriptEngine.XEngine.Tests
             // to AssemblyResolver.OnAssemblyResolve fails.
             xEngineConfig.Set("AppDomainLoading", "false");
 
-            m_scene = new SceneHelpers().SetupScene("My Test", UUID.Random(), 1000, 1000, configSource);
-            SceneHelpers.SetupSceneModules(m_scene, configSource, m_xEngine);
-            m_scene.StartScripts();
+            _scene = new SceneHelpers().SetupScene("My Test", UUID.Random(), 1000, 1000, configSource);
+            SceneHelpers.SetupSceneModules(_scene, configSource, _xEngine);
+            _scene.StartScripts();
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine.Tests
             string itemName = "TestStartScript() Item";
 
             SceneObjectGroup so = SceneHelpers.CreateSceneObject(1, userId, "TestStartScriptPart_", 0x100);
-            m_scene.AddNewSceneObject(so, true);
+            _scene.AddNewSceneObject(so, true);
 
             InventoryItemBase itemTemplate = new InventoryItemBase
             {
@@ -100,19 +100,19 @@ namespace OpenSim.Region.ScriptEngine.XEngine.Tests
                 InvType = (int)InventoryType.LSL
             };
 
-            m_scene.EventManager.OnChatFromWorld += OnChatFromWorld;
+            _scene.EventManager.OnChatFromWorld += OnChatFromWorld;
 
-            SceneObjectPart partWhereRezzed = m_scene.RezNewScript(userId, itemTemplate);
+            SceneObjectPart partWhereRezzed = _scene.RezNewScript(userId, itemTemplate);
 
-            m_chatEvent.WaitOne(60000);
+            _chatEvent.WaitOne(60000);
 
-            Assert.That(m_osChatMessageReceived, Is.Not.Null, "No chat message received in TestStartScript()");
-            Assert.That(m_osChatMessageReceived.Message, Is.EqualTo("Script running"));
+            Assert.That(_osChatMessageReceived, Is.Not.Null, "No chat message received in TestStartScript()");
+            Assert.That(_osChatMessageReceived.Message, Is.EqualTo("Script running"));
 
             bool running;
             TaskInventoryItem scriptItem = partWhereRezzed.Inventory.GetInventoryItem(itemName);
             Assert.That(
-                SceneObjectPartInventory.TryGetScriptInstanceRunning(m_scene, scriptItem, out running), Is.True);
+                SceneObjectPartInventory.TryGetScriptInstanceRunning(_scene, scriptItem, out running), Is.True);
             Assert.That(running, Is.True);
         }
 
@@ -120,8 +120,8 @@ namespace OpenSim.Region.ScriptEngine.XEngine.Tests
         {
 //            Console.WriteLine("Got chat [{0}]", oscm.Message);
 
-            m_osChatMessageReceived = oscm;
-            m_chatEvent.Set();
+            _osChatMessageReceived = oscm;
+            _chatEvent.Set();
         }
     }
 }

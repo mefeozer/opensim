@@ -38,10 +38,10 @@ namespace pCampBot
     /// </summary>
     public class InventoryDownloadBehaviour : AbstractBehaviour
     {
-        private bool m_initialized;
-        private int m_Requests = 2;
-        private readonly Stopwatch m_StopWatch = new Stopwatch();
-        private readonly List<UUID> m_processed = new List<UUID>();
+        private bool _initialized;
+        private int _Requests = 2;
+        private readonly Stopwatch _StopWatch = new Stopwatch();
+        private readonly List<UUID> _processed = new List<UUID>();
 
         public InventoryDownloadBehaviour()
         {
@@ -51,20 +51,20 @@ namespace pCampBot
 
         public override void Action()
         {
-            if (!m_initialized)
+            if (!_initialized)
             {
-                m_initialized = true;
+                _initialized = true;
                 Bot.Client.Settings.HTTP_INVENTORY = true;
                 Bot.Client.Settings.FETCH_MISSING_INVENTORY = true;
                 Bot.Client.Inventory.FolderUpdated += Inventory_FolderUpdated;
                 Console.WriteLine("Lib owner is " + Bot.Client.Inventory.Store.LibraryRootNode.Data.OwnerID);
-                m_StopWatch.Start();
+                _StopWatch.Start();
                 Bot.Client.Inventory.RequestFolderContents(Bot.Client.Inventory.Store.RootFolder.UUID, Bot.Client.Self.AgentID, true, true, InventorySortOrder.ByDate);
                 Bot.Client.Inventory.RequestFolderContents(Bot.Client.Inventory.Store.LibraryRootNode.Data.UUID, Bot.Client.Inventory.Store.LibraryRootNode.Data.OwnerID, true, true, InventorySortOrder.ByDate);
             }
 
             Thread.Sleep(1000);
-            Console.WriteLine("Total items: " + Bot.Client.Inventory.Store.Items.Count + "; Total requests: " + m_Requests + "; Time: " + m_StopWatch.Elapsed);
+            Console.WriteLine("Total items: " + Bot.Client.Inventory.Store.Items.Count + "; Total requests: " + _Requests + "; Time: " + _StopWatch.Elapsed);
 
         }
 
@@ -74,18 +74,18 @@ namespace pCampBot
             {
                 //Console.WriteLine("Folder " + e.FolderID + " updated");
                 bool fetch = false;
-                lock (m_processed)
+                lock (_processed)
                 {
-                    if (!m_processed.Contains(e.FolderID))
+                    if (!_processed.Contains(e.FolderID))
                     {
-                        m_processed.Add(e.FolderID);
+                        _processed.Add(e.FolderID);
                         fetch = true;
                     }
                 }
 
                 if (fetch)
                 {
-                    List<InventoryFolder> m_foldersToFetch = new List<InventoryFolder>();
+                    List<InventoryFolder> _foldersToFetch = new List<InventoryFolder>();
                     foreach (InventoryBase item in Bot.Client.Inventory.Store.GetContents(e.FolderID))
                     {
                         if (item is InventoryFolder)
@@ -94,20 +94,20 @@ namespace pCampBot
                             {
                                 OwnerID = item.OwnerID
                             };
-                            m_foldersToFetch.Add(f);
+                            _foldersToFetch.Add(f);
                         }
                     }
-                    if (m_foldersToFetch.Count > 0)
+                    if (_foldersToFetch.Count > 0)
                     {
-                        m_Requests += 1;
-                        Bot.Client.Inventory.RequestFolderContentsCap(m_foldersToFetch, Bot.Client.Network.CurrentSim.Caps.CapabilityURI("FetchInventoryDescendents2"), true, true, InventorySortOrder.ByDate);
+                        _Requests += 1;
+                        Bot.Client.Inventory.RequestFolderContentsCap(_foldersToFetch, Bot.Client.Network.CurrentSim.Caps.CapabilityURI("FetchInventoryDescendents2"), true, true, InventorySortOrder.ByDate);
                     }
                 }
 
                 if (Bot.Client.Inventory.Store.Items.Count >= 15739)
                 {
-                    m_StopWatch.Stop();
-                    Console.WriteLine("Stop! Total items: " + Bot.Client.Inventory.Store.Items.Count + "; Total requests: " + m_Requests + "; Time: " + m_StopWatch.Elapsed);
+                    _StopWatch.Stop();
+                    Console.WriteLine("Stop! Total items: " + Bot.Client.Inventory.Store.Items.Count + "; Total requests: " + _Requests + "; Time: " + _StopWatch.Elapsed);
                 }
             }
 
@@ -115,7 +115,7 @@ namespace pCampBot
 
         public override void Interrupt()
         {
-            m_interruptEvent.Set();
+            _interruptEvent.Set();
         }
     }
 }

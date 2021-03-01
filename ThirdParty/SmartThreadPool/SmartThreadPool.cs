@@ -314,14 +314,8 @@ namespace Amib.Threading
         /// </summary>
         internal static ThreadEntry CurrentThreadEntry
         {
-            get
-            {
-                return _threadEntry;
-            }
-            set
-            {
-                _threadEntry = value;
-            }
+            get => _threadEntry;
+            set => _threadEntry = value;
         }
         #endregion
 
@@ -1222,8 +1216,8 @@ namespace Amib.Threading
         /// </summary>
         public event ThreadInitializationHandler OnThreadInitialization
         {
-            add { _onThreadInitialization += value; }
-            remove { _onThreadInitialization -= value; }
+            add => _onThreadInitialization += value;
+            remove => _onThreadInitialization -= value;
         }
 
         /// <summary>
@@ -1232,8 +1226,8 @@ namespace Amib.Threading
         /// </summary>
         public event ThreadTerminationHandler OnThreadTermination
         {
-            add { _onThreadTermination += value; }
-            remove { _onThreadTermination -= value; }
+            add => _onThreadTermination += value;
+            remove => _onThreadTermination -= value;
         }
 
 
@@ -1332,13 +1326,7 @@ namespace Amib.Threading
         /// The work item should sample this value in order to know if it
         /// needs to quit before its completion.
         /// </summary>
-        public static bool IsWorkItemCanceled
-        {
-            get
-            {
-                return CurrentThreadEntry.CurrentWorkItem.IsCanceled;
-            }
-        }
+        public static bool IsWorkItemCanceled => CurrentThreadEntry.CurrentWorkItem.IsCanceled;
 
         /// <summary>
         /// Checks if the work item has been cancelled, and if yes then abort the thread.
@@ -1355,27 +1343,15 @@ namespace Amib.Threading
         /// <summary>
         /// Thread Pool start information (readonly)
         /// </summary>
-        public STPStartInfo STPStartInfo
-        {
-            get
-            {
-                return _stpStartInfo.AsReadOnly();
-            }
-        }
+        public STPStartInfo STPStartInfo => _stpStartInfo.AsReadOnly();
 
-        public bool IsShuttingdown
-        {
-            get { return _shutdown; }
-        }
+        public bool IsShuttingdown => _shutdown;
 
         /// <summary>
         /// Return the local calculated performance counters
         /// Available only if STPStartInfo.EnableLocalPerformanceCounters is true.
         /// </summary>
-        public ISTPPerformanceCountersReader PerformanceCountersReader
-        {
-            get { return (ISTPPerformanceCountersReader)_localPCs; }
-        }
+        public ISTPPerformanceCountersReader PerformanceCountersReader => (ISTPPerformanceCountersReader)_localPCs;
 
         #endregion
 
@@ -1432,8 +1408,8 @@ namespace Amib.Threading
         /// </summary>
         public override int Concurrency
         {
-            get { return MaxThreads; }
-            set { MaxThreads = value; }
+            get => MaxThreads;
+            set => MaxThreads = value;
         }
 
         /// <summary>
@@ -1461,10 +1437,7 @@ namespace Amib.Threading
         /// <summary>
         /// WorkItemsGroup start information (readonly)
         /// </summary>
-        public override WIGStartInfo WIGStartInfo
-        {
-            get { return _stpStartInfo.AsReadOnly(); }
-        }
+        public override WIGStartInfo WIGStartInfo => _stpStartInfo.AsReadOnly();
 
         /// <summary>
         /// Start the thread pool if it was started suspended.

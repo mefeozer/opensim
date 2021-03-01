@@ -43,17 +43,14 @@ namespace OpenSim.Region.UserStatistics
 
         #region IStatsController Members
 
-        public string ReportName
-        {
-            get { return ""; }
-        }
+        public string ReportName => "";
 
         public Hashtable ProcessModel(Hashtable pParams)
         {
-            List<Scene> m_scene = (List<Scene>)pParams["Scenes"];
+            List<Scene> _scene = (List<Scene>)pParams["Scenes"];
 
             Hashtable nh = new Hashtable();
-            nh.Add("hdata", m_scene);
+            nh.Add("hdata", _scene);
 
             return nh;
         }

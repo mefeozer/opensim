@@ -43,7 +43,7 @@ namespace OpenSim.Framework.Console
     //
     public class RemoteConsole : CommandConsole
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Connection specific data, indexed by a session ID
         // we create when a client connects.
@@ -93,20 +93,20 @@ namespace OpenSim.Framework.Console
         // Data that is relevant to all connections
 
         // The scrollback buffer
-        protected List<ScrollbackEntry> m_Scrollback = new List<ScrollbackEntry>();
+        protected List<ScrollbackEntry> _Scrollback = new List<ScrollbackEntry>();
 
         // Monotonously incrementing line number. This may eventually
         // wrap. No provision is made for that case because 64 bits
         // is a long, long time.
-        protected long m_lineNumber = 0;
+        protected long _lineNumber = 0;
 
         // These two variables allow us to send the correct
         // information about the prompt status to the client,
         // irrespective of what may have run off the top of the
         // scrollback buffer;
-        protected bool m_expectingInput = false;
-        protected bool m_expectingCommand = true;
-        protected string m_lastPromptUsed;
+        protected bool _expectingInput = false;
+        protected bool _expectingCommand = true;
+        protected string _lastPromptUsed;
 
         // This is the list of things received from clients.
         // Note: Race conditions can happen. If a client sends
@@ -115,29 +115,29 @@ namespace OpenSim.Framework.Console
         // commands this is largely correct. For other prompts,
         // YMMV.
         // TODO: Find a better way to fix this
-        protected List<string> m_InputData = new List<string>();
+        protected List<string> _InputData = new List<string>();
 
         // Event to allow ReadLine to wait synchronously even though
         // everthing else is asynchronous here.
-        protected ManualResetEvent m_DataEvent = new ManualResetEvent(false);
+        protected ManualResetEvent _DataEvent = new ManualResetEvent(false);
 
         // The list of sessions we maintain. Unlike other console types,
         // multiple users on the same console are explicitly allowed.
-        protected Dictionary<UUID, ConsoleConnection> m_Connections =
+        protected Dictionary<UUID, ConsoleConnection> _Connections =
                 new Dictionary<UUID, ConsoleConnection>();
 
         // Timer to control expiration of sessions that have been
         // disconnected.
-        protected System.Timers.Timer m_expireTimer = new System.Timers.Timer(5000);
+        protected System.Timers.Timer _expireTimer = new System.Timers.Timer(5000);
 
         // The less interesting stuff that makes the actual server
         // work.
-        protected IHttpServer m_Server = null;
-        protected IConfigSource m_Config = null;
+        protected IHttpServer _Server = null;
+        protected IConfigSource _Config = null;
 
-        protected string m_UserName = string.Empty;
-        protected string m_Password = string.Empty;
-        protected string m_AllowedOrigin = string.Empty;
+        protected string _UserName = string.Empty;
+        protected string _Password = string.Empty;
+        protected string _AllowedOrigin = string.Empty;
 
 
         public RemoteConsole(string defaultPrompt) : base(defaultPrompt)
@@ -145,46 +145,46 @@ namespace OpenSim.Framework.Console
             // There is something wrong with this architecture.
             // A prompt is sent on every single input, so why have this?
             // TODO: Investigate and fix.
-            m_lastPromptUsed = defaultPrompt;
+            _lastPromptUsed = defaultPrompt;
 
             // Start expiration of sesssions.
-            m_expireTimer.Elapsed += DoExpire;
-            m_expireTimer.Start();
+            _expireTimer.Elapsed += DoExpire;
+            _expireTimer.Start();
         }
 
         public override void ReadConfig(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
 
             // We're pulling this from the 'Network' section for legacy
             // compatibility. However, this is so essentially insecure
             // that TLS and client certs should be used instead of
             // a username / password.
-            IConfig netConfig = m_Config.Configs["Network"];
+            IConfig netConfig = _Config.Configs["Network"];
 
             if (netConfig == null)
                 return;
 
             // Get the username and password.
-            m_UserName = netConfig.GetString("ConsoleUser", string.Empty);
-            m_Password = netConfig.GetString("ConsolePass", string.Empty);
+            _UserName = netConfig.GetString("ConsoleUser", string.Empty);
+            _Password = netConfig.GetString("ConsolePass", string.Empty);
 
             // Woefully underdocumented, this is what makes javascript
             // console clients work. Set to "*" for anywhere or (better)
             // to specific addresses.
-            m_AllowedOrigin = netConfig.GetString("ConsoleAllowedOrigin", string.Empty);
+            _AllowedOrigin = netConfig.GetString("ConsoleAllowedOrigin", string.Empty);
         }
 
         public void SetServer(IHttpServer server)
         {
             // This is called by the framework to give us the server
             // instance (means: port) to work with.
-            m_Server = server;
+            _Server = server;
 
             // Add our handlers
-            m_Server.AddHTTPHandler("/StartSession/", HandleHttpStartSession);
-            m_Server.AddHTTPHandler("/CloseSession/", HandleHttpCloseSession);
-            m_Server.AddHTTPHandler("/SessionCommand/", HandleHttpSessionCommand);
+            _Server.AddHTTPHandler("/StartSession/", HandleHttpStartSession);
+            _Server.AddHTTPHandler("/CloseSession/", HandleHttpCloseSession);
+            _Server.AddHTTPHandler("/SessionCommand/", HandleHttpSessionCommand);
         }
 
         public override void Output(string format)
@@ -229,12 +229,12 @@ namespace OpenSim.Framework.Console
 
             // Increment the line number. It was 0 and they start at 1
             // so we need to pre-increment.
-            m_lineNumber++;
+            _lineNumber++;
 
             // Create and populate the new entry.
             ScrollbackEntry newEntry = new ScrollbackEntry
             {
-                lineNumber = m_lineNumber,
+                lineNumber = _lineNumber,
                 text = text,
                 level = level,
                 isPrompt = isPrompt,
@@ -244,14 +244,14 @@ namespace OpenSim.Framework.Console
 
             // Add a line to the scrollback. In some cases, that may not
             // actually be a line of text.
-            lock (m_Scrollback)
+            lock (_Scrollback)
             {
                 // Prune the scrollback to the length se send as connect
                 // burst to give the user some context.
-                while (m_Scrollback.Count >= 1000)
-                    m_Scrollback.RemoveAt(0);
+                while (_Scrollback.Count >= 1000)
+                    _Scrollback.RemoveAt(0);
 
-                m_Scrollback.Add(newEntry);
+                _Scrollback.Add(newEntry);
             }
 
             // Let the rest of the system know we have output something.
@@ -269,44 +269,44 @@ namespace OpenSim.Framework.Console
             // not worth upgrading.
             if (isCommand)
             {
-                m_expectingInput = true;
-                m_expectingCommand = true;
+                _expectingInput = true;
+                _expectingCommand = true;
                 Output(p, string.Empty, true, true, false);
-                m_lastPromptUsed = p;
+                _lastPromptUsed = p;
             }
             else
             {
-                m_expectingInput = true;
+                _expectingInput = true;
                 Output(p, string.Empty, true, false, false);
             }
 
 
             // Here is where we wait for the user to input something.
-            m_DataEvent.WaitOne();
+            _DataEvent.WaitOne();
 
             string cmdinput;
 
             // Check for empty input. Read input if not empty.
-            lock (m_InputData)
+            lock (_InputData)
             {
-                if (m_InputData.Count == 0)
+                if (_InputData.Count == 0)
                 {
-                    m_DataEvent.Reset();
-                    m_expectingInput = false;
-                    m_expectingCommand = false;
+                    _DataEvent.Reset();
+                    _expectingInput = false;
+                    _expectingCommand = false;
 
                     return "";
                 }
 
-                cmdinput = m_InputData[0];
-                m_InputData.RemoveAt(0);
-                if (m_InputData.Count == 0)
-                    m_DataEvent.Reset();
+                cmdinput = _InputData[0];
+                _InputData.RemoveAt(0);
+                if (_InputData.Count == 0)
+                    _DataEvent.Reset();
 
             }
 
-            m_expectingInput = false;
-            m_expectingCommand = false;
+            _expectingInput = false;
+            _expectingCommand = false;
 
             // Echo to all the other users what we have done. This
             // will also go to ourselves.
@@ -340,22 +340,22 @@ namespace OpenSim.Framework.Console
         // Very simplistic static access control header.
         protected Hashtable CheckOrigin(Hashtable result)
         {
-            if (!string.IsNullOrEmpty(m_AllowedOrigin))
-                result["access_control_allow_origin"] = m_AllowedOrigin;
+            if (!string.IsNullOrEmpty(_AllowedOrigin))
+                result["access_control_allow_origin"] = _AllowedOrigin;
 
             return result;
         }
 
         /* TODO: Figure out how PollServiceHTTPHandler can access the request headers
-         * in order to use m_AllowedOrigin as a regular expression
+         * in order to use _AllowedOrigin as a regular expression
         protected Hashtable CheckOrigin(Hashtable headers, Hashtable result)
         {
-            if (!string.IsNullOrEmpty(m_AllowedOrigin))
+            if (!string.IsNullOrEmpty(_AllowedOrigin))
             {
                 if (headers.ContainsKey("origin"))
                 {
                     string origin = headers["origin"].ToString();
-                    if (Regex.IsMatch(origin, m_AllowedOrigin))
+                    if (Regex.IsMatch(origin, _AllowedOrigin))
                         result["access_control_allow_origin"] = origin;
                 }
             }
@@ -370,10 +370,10 @@ namespace OpenSim.Framework.Console
             // Remove them.
             List<UUID> expired = new List<UUID>();
 
-            lock (m_Connections)
+            lock (_Connections)
             {
                 // Mark the expired ones
-                foreach (KeyValuePair<UUID, ConsoleConnection> kvp in m_Connections)
+                foreach (KeyValuePair<UUID, ConsoleConnection> kvp in _Connections)
                 {
                     if (System.Environment.TickCount - kvp.Value.last > 500000)
                         expired.Add(kvp.Key);
@@ -382,7 +382,7 @@ namespace OpenSim.Framework.Console
                 // Delete them
                 foreach (UUID id in expired)
                 {
-                    m_Connections.Remove(id);
+                    _Connections.Remove(id);
                     CloseConnection(id);
                 }
             }
@@ -400,14 +400,14 @@ namespace OpenSim.Framework.Console
             reply["content_type"] = "text/plain";
 
             // Check user name and password
-            if (string.IsNullOrEmpty(m_UserName))
+            if (string.IsNullOrEmpty(_UserName))
                 return reply;
 
             if (post["USER"] == null || post["PASS"] == null)
                 return reply;
 
-            if (m_UserName != post["USER"].ToString() ||
-                m_Password != post["PASS"].ToString())
+            if (_UserName != post["USER"].ToString() ||
+                _Password != post["PASS"].ToString())
             {
                 return reply;
             }
@@ -423,15 +423,15 @@ namespace OpenSim.Framework.Console
             UUID sessionID = UUID.Random();
 
             // Add connection to list.
-            lock (m_Connections)
+            lock (_Connections)
             {
-                m_Connections[sessionID] = c;
+                _Connections[sessionID] = c;
             }
 
             // This call is a CAP. The URL is the authentication.
             string uri = "/ReadResponses/" + sessionID.ToString();
 
-            m_Server.AddPollServiceHTTPHandler(new PollServiceEventArgs(null, uri, HasEvents, GetEvents, NoEvents, null, sessionID,25000)); // 25 secs timeout
+            _Server.AddPollServiceHTTPHandler(new PollServiceEventArgs(null, uri, HasEvents, GetEvents, NoEvents, null, sessionID,25000)); // 25 secs timeout
 
             // Our reply is an XML document.
             // TODO: Change this to Linq.Xml
@@ -451,7 +451,7 @@ namespace OpenSim.Framework.Console
             rootElement.AppendChild(id);
 
             XmlElement prompt = xmldoc.CreateElement("", "Prompt", "");
-            prompt.AppendChild(xmldoc.CreateTextNode(m_lastPromptUsed));
+            prompt.AppendChild(xmldoc.CreateTextNode(_lastPromptUsed));
 
             rootElement.AppendChild(prompt);
 
@@ -483,11 +483,11 @@ namespace OpenSim.Framework.Console
             if (!UUID.TryParse(post["ID"].ToString(), out id))
                 return reply;
 
-            lock (m_Connections)
+            lock (_Connections)
             {
-                if (m_Connections.ContainsKey(id))
+                if (_Connections.ContainsKey(id))
                 {
-                    m_Connections.Remove(id);
+                    _Connections.Remove(id);
                     CloseConnection(id);
                 }
             }
@@ -534,9 +534,9 @@ namespace OpenSim.Framework.Console
                 return reply;
 
             // Find the connection for that ID.
-            lock (m_Connections)
+            lock (_Connections)
             {
-                if (!m_Connections.ContainsKey(id))
+                if (!_Connections.ContainsKey(id))
                     return reply;
             }
 
@@ -545,10 +545,10 @@ namespace OpenSim.Framework.Console
                 return reply;
 
             // Place the input data in the buffer.
-            lock (m_InputData)
+            lock (_InputData)
             {
-                m_DataEvent.Set();
-                m_InputData.Add(post["COMMAND"].ToString());
+                _DataEvent.Set();
+                _InputData.Add(post["COMMAND"].ToString());
             }
 
             // Create the XML reply document.
@@ -607,7 +607,7 @@ namespace OpenSim.Framework.Console
             {
                 string uri = "/ReadResponses/" + id.ToString() + "/";
 
-                m_Server.RemovePollServiceHTTPHandler("", uri);
+                _Server.RemovePollServiceHTTPHandler("", uri);
             }
             catch (Exception)
             {
@@ -620,14 +620,14 @@ namespace OpenSim.Framework.Console
         {
             ConsoleConnection c = null;
 
-            lock (m_Connections)
+            lock (_Connections)
             {
-                if (!m_Connections.ContainsKey(sessionID))
+                if (!_Connections.ContainsKey(sessionID))
                     return false;
-                c = m_Connections[sessionID];
+                c = _Connections[sessionID];
             }
             c.last = System.Environment.TickCount;
-            if (c.lastLineSeen < m_lineNumber)
+            if (c.lastLineSeen < _lineNumber)
                 return true;
             return false;
         }
@@ -638,16 +638,16 @@ namespace OpenSim.Framework.Console
             // Find the connection that goes with this client.
             ConsoleConnection c = null;
 
-            lock (m_Connections)
+            lock (_Connections)
             {
-                if (!m_Connections.ContainsKey(sessionID))
+                if (!_Connections.ContainsKey(sessionID))
                     return NoEvents(RequestID, UUID.Zero);
-                c = m_Connections[sessionID];
+                c = _Connections[sessionID];
             }
 
             // If we have nothing to send, send the no events response.
             c.last = System.Environment.TickCount;
-            if (c.lastLineSeen >= m_lineNumber)
+            if (c.lastLineSeen >= _lineNumber)
                 return NoEvents(RequestID, UUID.Zero);
 
             Hashtable result = new Hashtable();
@@ -667,16 +667,16 @@ namespace OpenSim.Framework.Console
             //    Output("+++" + DefaultPrompt);
             //}
 
-            lock (m_Scrollback)
+            lock (_Scrollback)
             {
-                long startLine = m_lineNumber - m_Scrollback.Count;
+                long startLine = _lineNumber - _Scrollback.Count;
                 long sendStart = startLine;
                 if (sendStart < c.lastLineSeen)
                     sendStart = c.lastLineSeen;
 
-                for (long i = sendStart ; i < m_lineNumber ; i++)
+                for (long i = sendStart ; i < _lineNumber ; i++)
                 {
-                    ScrollbackEntry e = m_Scrollback[(int)(i - startLine)];
+                    ScrollbackEntry e = _Scrollback[(int)(i - startLine)];
 
                     XmlElement res = xmldoc.CreateElement("", "Line", "");
                     res.SetAttribute("Number", e.lineNumber.ToString());
@@ -689,11 +689,11 @@ namespace OpenSim.Framework.Console
                         res.SetAttribute("Command", e.isCommand ? "true" : "false");
                         res.SetAttribute("Input", e.isInput ? "true" : "false");
                     }
-                    else if (i == m_lineNumber - 1) // Last line for a new connection
+                    else if (i == _lineNumber - 1) // Last line for a new connection
                     {
-                        res.SetAttribute("Prompt", m_expectingInput ? "true" : "false");
-                        res.SetAttribute("Command", m_expectingCommand ? "true" : "false");
-                        res.SetAttribute("Input", !m_expectingInput ? "true" : "false");
+                        res.SetAttribute("Prompt", _expectingInput ? "true" : "false");
+                        res.SetAttribute("Command", _expectingCommand ? "true" : "false");
+                        res.SetAttribute("Input", !_expectingInput ? "true" : "false");
                     }
                     else
                     {
@@ -706,7 +706,7 @@ namespace OpenSim.Framework.Console
                 }
             }
 
-            c.lastLineSeen = m_lineNumber;
+            c.lastLineSeen = _lineNumber;
             c.newConnection = false;
 
             xmldoc.AppendChild(rootElement);

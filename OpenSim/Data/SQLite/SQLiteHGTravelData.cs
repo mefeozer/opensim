@@ -36,7 +36,7 @@ namespace OpenSim.Data.SQLite
     /// </summary>
     public class SQLiteHGTravelData : SQLiteGenericTableHandler<HGTravelingData>, IHGTravelingData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public SQLiteHGTravelData(string connectionString, string realm)
             : base(connectionString, realm, "HGTravelStore") {}
@@ -65,7 +65,7 @@ namespace OpenSim.Data.SQLite
         {
             using (SqliteCommand cmd = new SqliteCommand())
             {
-                cmd.CommandText = string.Format("delete from {0} where TMStamp < datetime('now', '-2 day') ", m_Realm);
+                cmd.CommandText = string.Format("delete from {0} where TMStamp < datetime('now', '-2 day') ", _Realm);
 
                 DoQuery(cmd);
             }

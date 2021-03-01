@@ -35,7 +35,7 @@ namespace OpenSim.Framework.Capabilities
         public UUID parent_id;
 
         public UUID asset_id;
-        public UUID item_id;
+        public UUID ite_id;
         public LLSDPermissions permissions;
         public int type;
         public int inv_type;

@@ -33,8 +33,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 {
     public sealed class LLUDPZeroEncoder
     {
-        private readonly byte[] m_tmp = new byte[16];
-        private byte[] m_dest;
+        private readonly byte[] _tmp = new byte[16];
+        private byte[] _dest;
         private int zerocount;
         private int pos;
 
@@ -44,44 +44,26 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         public LLUDPZeroEncoder(byte[] data)
         {
-            m_dest = data;
+            _dest = data;
             zerocount = 0;
         }
 
         public byte[] Data
         {
-            get
-            {
-                return m_dest;
-            }
-            set
-            {
-                m_dest = value;
-            }
+            get => _dest;
+            set => _dest = value;
         }
 
         public int ZeroCount
         {
-            get
-            {
-                return zerocount;
-            }
-            set
-            {
-                zerocount = value;
-            }
+            get => zerocount;
+            set => zerocount = value;
         }
 
         public int Position
         {
-            get
-            {
-                return pos;
-            }
-            set
-            {
-                pos = value;
-            }
+            get => pos;
+            set => pos = value;
         }
 
         public unsafe void AddZeros(int len)
@@ -89,8 +71,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             zerocount += len;
             while (zerocount > 255)
             {
-                m_dest[pos++] = 0x00;
-                m_dest[pos++] = 0xff;
+                _dest[pos++] = 0x00;
+                _dest[pos++] = 0xff;
                 zerocount -= 256;
             }
         }
@@ -99,8 +81,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         {
             if(zerocount > 0)
             {
-                m_dest[pos++] = 0x00;
-                m_dest[pos++] = (byte)zerocount;
+                _dest[pos++] = 0x00;
+                _dest[pos++] = (byte)zerocount;
             }
             return pos;
         }
@@ -114,8 +96,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     zerocount++;
                     if (zerocount == 0)
                     {
-                        m_dest[pos++] = 0x00;
-                        m_dest[pos++] = 0xff;
+                        _dest[pos++] = 0x00;
+                        _dest[pos++] = 0xff;
                         zerocount++;
                     }
                 }
@@ -123,12 +105,12 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 {
                     if (zerocount != 0)
                     {
-                        m_dest[pos++] = 0x00;
-                        m_dest[pos++] = (byte)zerocount;
+                        _dest[pos++] = 0x00;
+                        _dest[pos++] = (byte)zerocount;
                         zerocount = 0;
                     }
 
-                    m_dest[pos++] = src[i];
+                    _dest[pos++] = src[i];
                 }
             }
         }
@@ -142,8 +124,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     zerocount++;
                     if (zerocount == 0)
                     {
-                        m_dest[pos++] = 0x00;
-                        m_dest[pos++] = 0xff;
+                        _dest[pos++] = 0x00;
+                        _dest[pos++] = 0xff;
                         zerocount++;
                     }
                 }
@@ -151,12 +133,12 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 {
                     if (zerocount != 0)
                     {
-                        m_dest[pos++] = 0x00;
-                        m_dest[pos++] = (byte)zerocount;
+                        _dest[pos++] = 0x00;
+                        _dest[pos++] = (byte)zerocount;
                         zerocount = 0;
                     }
 
-                    m_dest[pos++] = src[i];
+                    _dest[pos++] = src[i];
                 }
             }
         }
@@ -168,8 +150,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 zerocount++;
                 if (zerocount == 0)
                 {
-                    m_dest[pos++] = 0x00;
-                    m_dest[pos++] = 0xff;
+                    _dest[pos++] = 0x00;
+                    _dest[pos++] = 0xff;
                     zerocount++;
                 }
             }
@@ -177,12 +159,12 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             {
                 if (zerocount != 0)
                 {
-                    m_dest[pos++] = 0x00;
-                    m_dest[pos++] = (byte)zerocount;
+                    _dest[pos++] = 0x00;
+                    _dest[pos++] = (byte)zerocount;
                     zerocount = 0;
                 }
 
-                m_dest[pos++] = v;
+                _dest[pos++] = v;
             }
         }
 
@@ -192,8 +174,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(2);
             else
             {
-                Utils.Int16ToBytes(v, m_tmp, 0);
-                AddBytes(m_tmp, 2);
+                Utils.Int16ToBytes(v, _tmp, 0);
+                AddBytes(_tmp, 2);
             }
         }
 
@@ -203,8 +185,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(2);
             else
             {
-                Utils.UInt16ToBytes(v, m_tmp, 0);
-                AddBytes(m_tmp, 2);
+                Utils.UInt16ToBytes(v, _tmp, 0);
+                AddBytes(_tmp, 2);
             }
         }
 
@@ -214,8 +196,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(4);
             else
             {
-                Utils.IntToBytesSafepos(v, m_tmp, 0);
-                AddBytes(m_tmp, 4);
+                Utils.IntToBytesSafepos(v, _tmp, 0);
+                AddBytes(_tmp, 4);
             }
         }
 
@@ -225,15 +207,15 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(4);
             else
             {
-                Utils.UIntToBytesSafepos(v, m_tmp, 0);
-                AddBytes(m_tmp, 4);
+                Utils.UIntToBytesSafepos(v, _tmp, 0);
+                AddBytes(_tmp, 4);
             }
         }
 
         public void AddFloatToUInt16(float v, float range)
         {
-            Utils.FloatToUInt16Bytes(v, range, m_tmp, 0);
-            AddBytes(m_tmp, 2);
+            Utils.FloatToUInt16Bytes(v, range, _tmp, 0);
+            AddBytes(_tmp, 2);
         }
 
         public void AddFloat(float v)
@@ -242,8 +224,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(4);
             else
             {
-                Utils.FloatToBytesSafepos(v, m_tmp, 0);
-                AddBytes(m_tmp, 4);
+                Utils.FloatToBytesSafepos(v, _tmp, 0);
+                AddBytes(_tmp, 4);
             }
         }
 
@@ -253,8 +235,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(8);
             else
             {
-                Utils.Int64ToBytesSafepos(v, m_tmp, 0);
-                AddBytes(m_tmp, 8);
+                Utils.Int64ToBytesSafepos(v, _tmp, 0);
+                AddBytes(_tmp, 8);
             }
         }
 
@@ -264,8 +246,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(8);
             else
             {
-                Utils.UInt64ToBytesSafepos(v, m_tmp, 0);
-                AddBytes(m_tmp, 8);
+                Utils.UInt64ToBytesSafepos(v, _tmp, 0);
+                AddBytes(_tmp, 8);
             }
         }
 
@@ -275,8 +257,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(12);
             else
             {
-                v.ToBytes(m_tmp, 0);
-                AddBytes(m_tmp, 12);
+                v.ToBytes(_tmp, 0);
+                AddBytes(_tmp, 12);
             }
         }
 
@@ -286,21 +268,21 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 AddZeros(16);
             else
             {
-                v.ToBytes(m_tmp, 0);
-                AddBytes(m_tmp, 16);
+                v.ToBytes(_tmp, 0);
+                AddBytes(_tmp, 16);
             }
         }
 
         public void AddNormQuat(Quaternion v)
         {
-            v.ToBytes(m_tmp, 0);
-            AddBytes(m_tmp, 12);
+            v.ToBytes(_tmp, 0);
+            AddBytes(_tmp, 12);
         }
 
         public void AddUUID(UUID v)
         {
-            v.ToBytes(m_tmp, 0);
-            AddBytes(m_tmp, 16);
+            v.ToBytes(_tmp, 0);
+            AddBytes(_tmp, 16);
         }
 
         // maxlen <= 255 and includes null termination byte

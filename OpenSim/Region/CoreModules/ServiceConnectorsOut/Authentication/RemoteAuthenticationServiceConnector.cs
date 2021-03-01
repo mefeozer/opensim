@@ -41,21 +41,15 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authentication
     public class RemoteAuthenticationServicesConnector : AuthenticationServicesConnector,
             ISharedRegionModule, IAuthenticationService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RemoteAuthenticationServicesConnector"; }
-        }
+        public string Name => "RemoteAuthenticationServicesConnector";
 
         public override void Initialise(IConfigSource source)
         {
@@ -68,34 +62,34 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authentication
                     IConfig userConfig = source.Configs["AuthenticationService"];
                     if (userConfig == null)
                     {
-                        m_log.Error("[AUTH CONNECTOR]: AuthenticationService missing from OpenSim.ini");
+                        _log.Error("[AUTH CONNECTOR]: AuthenticationService missing from OpenSim.ini");
                         return;
                     }
 
-                    m_Enabled = true;
+                    _Enabled = true;
 
                     base.Initialise(source);
 
-                    m_log.Info("[AUTH CONNECTOR]: Remote Authentication enabled");
+                    _log.Info("[AUTH CONNECTOR]: Remote Authentication enabled");
                 }
             }
         }
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void Close()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IAuthenticationService>(this);
@@ -103,13 +97,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authentication
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
     }

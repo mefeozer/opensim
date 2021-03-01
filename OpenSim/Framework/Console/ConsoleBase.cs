@@ -32,11 +32,11 @@ namespace OpenSim.Framework.Console
 {
     public class ConsoleLevel
     {
-        public string m_string;
+        public string _string;
 
         ConsoleLevel(string v)
         {
-            m_string = v;
+            _string = v;
         }
 
         static public implicit operator ConsoleLevel(string s)
@@ -46,19 +46,19 @@ namespace OpenSim.Framework.Console
 
         public static string ToString(ConsoleLevel s)
         {
-            return s.m_string;
+            return s._string;
         }
 
         public override string ToString()
         {
-            return m_string;
+            return _string;
         }
     }
 
 
     public class ConsoleBase : IConsole
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         protected string prompt = "# ";
 

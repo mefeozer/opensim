@@ -43,19 +43,16 @@ namespace OpenSim.Server.Handlers.Hypergrid
 {
     public class UserAgentServerConnector : ServiceConnector
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //                LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IUserAgentService m_HomeUsersService;
-        public IUserAgentService HomeUsersService
-        {
-            get { return m_HomeUsersService; }
-        }
+        private readonly IUserAgentService _HomeUsersService;
+        public IUserAgentService HomeUsersService => _HomeUsersService;
 
-        private readonly string[] m_AuthorizedCallers;
+        private readonly string[] _AuthorizedCallers;
 
-        private readonly bool m_VerifyCallers = false;
+        private readonly bool _VerifyCallers = false;
 
         public UserAgentServerConnector(IConfigSource config, IHttpServer server) :
             this(config, server, (IFriendsSimConnector)null)
@@ -76,18 +73,18 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 string serviceDll = gridConfig.GetString("LocalServiceModule", string.Empty);
 
                 object[] args = new object[] { config, friendsConnector };
-                m_HomeUsersService = ServerUtils.LoadPlugin<IUserAgentService>(serviceDll, args);
+                _HomeUsersService = ServerUtils.LoadPlugin<IUserAgentService>(serviceDll, args);
             }
-            if (m_HomeUsersService == null)
+            if (_HomeUsersService == null)
                 throw new Exception("UserAgent server connector cannot proceed because of missing service");
 
             string loginServerIP = gridConfig.GetString("LoginServerIP", "127.0.0.1");
             bool proxy = gridConfig.GetBoolean("HasProxy", false);
 
-            m_VerifyCallers = gridConfig.GetBoolean("VerifyCallers", false);
+            _VerifyCallers = gridConfig.GetBoolean("VerifyCallers", false);
             string csv = gridConfig.GetString("AuthorizedCallers", "127.0.0.1");
             csv = csv.Replace(" ", "");
-            m_AuthorizedCallers = csv.Split(',');
+            _AuthorizedCallers = csv.Split(',');
 
             server.AddXmlRPCHandler("agent_is_coming_home", AgentIsComingHome, false);
             server.AddXmlRPCHandler("get_home_region", GetHomeRegion, false);
@@ -106,7 +103,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             server.AddXmlRPCHandler("get_uui", GetUUI, false);
             server.AddXmlRPCHandler("get_uuid", GetUUID, false);
 
-            server.AddSimpleStreamHandler(new HomeAgentHandler(m_HomeUsersService, loginServerIP, proxy), true);
+            server.AddSimpleStreamHandler(new HomeAgentHandler(_HomeUsersService, loginServerIP, proxy), true);
         }
 
         public XmlRpcResponse GetHomeRegion(XmlRpcRequest request, IPEndPoint remoteClient)
@@ -119,7 +116,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             UUID.TryParse(userID_str, out userID);
 
             Vector3 position = Vector3.UnitY, lookAt = Vector3.UnitY;
-            GridRegion regInfo = m_HomeUsersService.GetHomeRegion(userID, out position, out lookAt);
+            GridRegion regInfo = _HomeUsersService.GetHomeRegion(userID, out position, out lookAt);
 
             Hashtable hash = new Hashtable();
             if (regInfo == null)
@@ -158,7 +155,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             UUID.TryParse(sessionID_str, out sessionID);
             string gridName = (string)requestData["externalName"];
 
-            bool success = m_HomeUsersService.IsAgentComingHome(sessionID, gridName);
+            bool success = _HomeUsersService.IsAgentComingHome(sessionID, gridName);
 
             Hashtable hash = new Hashtable();
             hash["result"] = success.ToString();
@@ -180,7 +177,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             UUID.TryParse(sessionID_str, out sessionID);
             string token = (string)requestData["token"];
 
-            bool success = m_HomeUsersService.VerifyAgent(sessionID, token);
+            bool success = _HomeUsersService.VerifyAgent(sessionID, token);
 
             Hashtable hash = new Hashtable();
             hash["result"] = success.ToString();
@@ -202,7 +199,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             UUID.TryParse(sessionID_str, out sessionID);
             string token = (string)requestData["token"];
 
-            bool success = m_HomeUsersService.VerifyClient(sessionID, token);
+            bool success = _HomeUsersService.VerifyClient(sessionID, token);
 
             Hashtable hash = new Hashtable();
             hash["result"] = success.ToString();
@@ -226,7 +223,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             UUID userID = UUID.Zero;
             UUID.TryParse(userID_str, out userID);
 
-            m_HomeUsersService.LogoutAgent(userID, sessionID);
+            _HomeUsersService.LogoutAgent(userID, sessionID);
 
             Hashtable hash = new Hashtable();
             hash["result"] = "true";
@@ -262,7 +259,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 bool.TryParse(requestData["online"].ToString(), out online);
 
                 // let's spawn a thread for this, because it may take a long time...
-                List<UUID> friendsOnline = m_HomeUsersService.StatusNotification(ids, userID, online);
+                List<UUID> friendsOnline = _HomeUsersService.StatusNotification(ids, userID, online);
                 if (friendsOnline.Count > 0)
                 {
                     int i = 0;
@@ -305,7 +302,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                         ids.Add(requestData[key].ToString());
                 }
 
-                //List<UUID> online = m_HomeUsersService.GetOnlineFriends(userID, ids);
+                //List<UUID> online = _HomeUsersService.GetOnlineFriends(userID, ids);
                 //if (online.Count > 0)
                 //{
                 //    int i = 0;
@@ -339,8 +336,8 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 UUID userID = UUID.Zero;
                 UUID.TryParse(userID_str, out userID);
 
-                //int userFlags = m_HomeUsersService.GetUserFlags(userID);
-                Dictionary<string,object> userInfo = m_HomeUsersService.GetUserInfo(userID);
+                //int userFlags = _HomeUsersService.GetUserFlags(userID);
+                Dictionary<string,object> userInfo = _HomeUsersService.GetUserInfo(userID);
                 if (userInfo.Count > 0)
                 {
                     foreach (KeyValuePair<string, object> kvp in userInfo)
@@ -374,7 +371,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 UUID userID = UUID.Zero;
                 UUID.TryParse(userID_str, out userID);
 
-                Dictionary<string, object> serverURLs = m_HomeUsersService.GetServerURLs(userID);
+                Dictionary<string, object> serverURLs = _HomeUsersService.GetServerURLs(userID);
                 if (serverURLs.Count > 0)
                 {
                     foreach (KeyValuePair<string, object> kvp in serverURLs)
@@ -404,10 +401,10 @@ namespace OpenSim.Server.Handlers.Hypergrid
             Hashtable hash = new Hashtable();
 
             bool authorized = true;
-            if (m_VerifyCallers)
+            if (_VerifyCallers)
             {
                 authorized = false;
-                foreach (string s in m_AuthorizedCallers)
+                foreach (string s in _AuthorizedCallers)
                     if (s == remoteClient.Address.ToString())
                     {
                         authorized = true;
@@ -426,7 +423,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                     UUID userID = UUID.Zero;
                     UUID.TryParse(userID_str, out userID);
 
-                    string url = m_HomeUsersService.LocateUser(userID);
+                    string url = _HomeUsersService.LocateUser(userID);
                     if (!string.IsNullOrEmpty(url))
                         hash["URL"] = url;
                     else
@@ -464,7 +461,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 string tuserID_str = (string)requestData["targetUserID"];
                 UUID targetUserID = UUID.Zero;
                 UUID.TryParse(tuserID_str, out targetUserID);
-                string uui = m_HomeUsersService.GetUUI(userID, targetUserID);
+                string uui = _HomeUsersService.GetUUI(userID, targetUserID);
                 if (!string.IsNullOrEmpty(uui))
                     hash["UUI"] = uui;
                 else
@@ -495,7 +492,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
             {
                 string first = (string)requestData["first"];
                 string last = (string)requestData["last"];
-                UUID uuid = m_HomeUsersService.GetUUID(first, last);
+                UUID uuid = _HomeUsersService.GetUUID(first, last);
                 hash["UUID"] = uuid.ToString();
             }
 

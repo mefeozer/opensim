@@ -32,9 +32,9 @@ namespace OpenSim.Data.Null
 {
     public class NullFriendsData : IFriendsData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly List<FriendsData> m_Data = new List<FriendsData>();
+        private static readonly List<FriendsData> _Data = new List<FriendsData>();
 
         public NullFriendsData(string connectionString, string realm)
         {
@@ -48,8 +48,8 @@ namespace OpenSim.Data.Null
         /// </remarks>
         public static void Clear()
         {
-            lock (m_Data)
-                m_Data.Clear();
+            lock (_Data)
+                _Data.Clear();
         }
 
         public FriendsData[] GetFriends(UUID principalID)
@@ -66,9 +66,9 @@ namespace OpenSim.Data.Null
         /// <returns></returns>
         public FriendsData[] GetFriends(string userID)
         {
-            lock (m_Data)
+            lock (_Data)
             {
-                List<FriendsData> lst = m_Data.FindAll(fdata =>
+                List<FriendsData> lst = _Data.FindAll(fdata =>
                 {
                     return fdata.PrincipalID == userID.ToString();
                 });
@@ -77,16 +77,16 @@ namespace OpenSim.Data.Null
                 {
                     lst.ForEach(f =>
                     {
-                        FriendsData f2 = m_Data.Find(candidateF2 => f.Friend == candidateF2.PrincipalID);
+                        FriendsData f2 = _Data.Find(candidateF2 => f.Friend == candidateF2.PrincipalID);
                         if (f2 != null)
                             f.Data["TheirFlags"] = f2.Data["Flags"];
 
-    //                    m_log.DebugFormat(
+    //                    _log.DebugFormat(
     //                        "[NULL FRIENDS DATA]: Got {0} {1} {2} for {3}",
     //                        f.Friend, f.Data["Flags"], f2 != null ? f.Data["TheirFlags"] : "not found!", f.PrincipalID);
                     });
 
-    //                m_log.DebugFormat("[NULL FRIENDS DATA]: Got {0} friends for {1}", lst.Count, userID);
+    //                _log.DebugFormat("[NULL FRIENDS DATA]: Got {0} friends for {1}", lst.Count, userID);
 
                     return lst.ToArray();
                 }
@@ -100,11 +100,11 @@ namespace OpenSim.Data.Null
             if (data == null)
                 return false;
 
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[NULL FRIENDS DATA]: Storing {0} {1} {2}", data.PrincipalID, data.Friend, data.Data["Flags"]);
 
-            lock (m_Data)
-                m_Data.Add(data);
+            lock (_Data)
+                _Data.Add(data);
 
             return true;
         }
@@ -116,19 +116,19 @@ namespace OpenSim.Data.Null
 
         public bool Delete(string userID, string friendID)
         {
-            lock (m_Data)
+            lock (_Data)
             {
-                List<FriendsData> lst = m_Data.FindAll(delegate(FriendsData fdata) { return fdata.PrincipalID == userID.ToString(); });
+                List<FriendsData> lst = _Data.FindAll(delegate(FriendsData fdata) { return fdata.PrincipalID == userID.ToString(); });
                 if (lst != null)
                 {
                     FriendsData friend = lst.Find(delegate(FriendsData fdata) { return fdata.Friend == friendID; });
                     if (friendID != null)
                     {
-    //                    m_log.DebugFormat(
+    //                    _log.DebugFormat(
     //                        "[NULL FRIENDS DATA]: Deleting friend {0} {1} for {2}",
     //                        friend.Friend, friend.Data["Flags"], friend.PrincipalID);
 
-                        m_Data.Remove(friend);
+                        _Data.Remove(friend);
                         return true;
                     }
                 }

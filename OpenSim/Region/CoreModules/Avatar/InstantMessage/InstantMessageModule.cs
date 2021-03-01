@@ -40,19 +40,19 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "InstantMessageModule")]
     public class InstantMessageModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(
+        private static readonly ILog _log = LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <value>
         /// Is this module enabled?
         /// </value>
-        protected bool m_enabled = false;
+        protected bool _enabled = false;
 
-        protected readonly List<Scene> m_scenes = new List<Scene>();
+        protected readonly List<Scene> _scenes = new List<Scene>();
 
         #region Region Module interface
 
-        protected IMessageTransferModule m_TransferModule = null;
+        protected IMessageTransferModule _TransferModule = null;
 
         public virtual void Initialise(IConfigSource config)
         {
@@ -64,35 +64,35 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                     return;
             }
 
-            m_enabled = true;
+            _enabled = true;
         }
 
         public virtual void AddRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            lock (m_scenes)
-                m_scenes.Add(scene);
+            lock (_scenes)
+                _scenes.Add(scene);
         }
 
         public virtual void RegionLoaded(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            if (m_TransferModule == null)
+            if (_TransferModule == null)
             {
-                m_TransferModule = scene.RequestModuleInterface<IMessageTransferModule>();
+                _TransferModule = scene.RequestModuleInterface<IMessageTransferModule>();
 
-                if (m_TransferModule == null)
+                if (_TransferModule == null)
                 {
-                    m_log.Error("[INSTANT MESSAGE]: No message transfer module, IM will not work!");
+                    _log.Error("[INSTANT MESSAGE]: No message transfer module, IM will not work!");
                     scene.EventManager.OnNewClient -= OnClientConnect;
                     scene.EventManager.OnIncomingInstantMessage -= OnGridInstantMessage;
 
-                    m_scenes.Clear();
-                    m_enabled = false;
+                    _scenes.Clear();
+                    _enabled = false;
                 }
             }
             scene.EventManager.OnNewClient += OnClientConnect;
@@ -101,12 +101,12 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         public virtual void RemoveRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                m_scenes.Remove(scene);
+                _scenes.Remove(scene);
             }
         }
 
@@ -123,15 +123,9 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
         {
         }
 
-        public virtual string Name
-        {
-            get { return "InstantMessageModule"; }
-        }
+        public virtual string Name => "InstantMessageModule";
 
-        public virtual Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public virtual Type ReplaceableInterface => null;
 
         #endregion
 /*
@@ -167,7 +161,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             //}
             //catch
             //{
-            //    //m_log.Info("[OFFLINE MESSAGING]: No PST timezone found on this machine. Saving with local timestamp.");
+            //    //_log.Info("[OFFLINE MESSAGING]: No PST timezone found on this machine. Saving with local timestamp.");
             //}
 
             //// And make it look local again to fool the unix time util
@@ -180,9 +174,9 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
             if (im.offline == 0)
                 im.timestamp = (uint)Util.UnixTimeSinceEpoch();
 
-            if (m_TransferModule != null)
+            if (_TransferModule != null)
             {
-                m_TransferModule.SendInstantMessage(im,
+                _TransferModule.SendInstantMessage(im,
                     delegate(bool success)
                     {
                         if (dialog == (uint)InstantMessageDialog.StartTyping ||

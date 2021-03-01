@@ -40,10 +40,10 @@ namespace OpenSim.Data.PGSQL
     {
         private const string _migrationStore = "EstateStore";
 
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private PGSQLManager _Database;
-        private string m_connectionString;
+        private string _connectionString;
         private FieldInfo[] _Fields;
         private readonly Dictionary<string, FieldInfo> _FieldMap = new Dictionary<string, FieldInfo>();
 
@@ -58,10 +58,7 @@ namespace OpenSim.Data.PGSQL
             Initialise(connectionString);
         }
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         /// <summary>
         /// Initialises the estatedata class.
@@ -71,12 +68,12 @@ namespace OpenSim.Data.PGSQL
         {
             if (!string.IsNullOrEmpty(connectionString))
             {
-                m_connectionString = connectionString;
+                _connectionString = connectionString;
                 _Database = new PGSQLManager(connectionString);
             }
 
             //Migration settings
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 Migration m = new Migration(conn, GetType().Assembly, "EstateStore");
@@ -91,7 +88,7 @@ namespace OpenSim.Data.PGSQL
 
             foreach (FieldInfo f in _Fields)
             {
-                if (f.Name.Substring(0, 2) == "m_")
+                if (f.Name.Substring(0, 2) == "_")
                     _FieldMap[f.Name.Substring(2)] = f;
             }
         }
@@ -110,7 +107,7 @@ namespace OpenSim.Data.PGSQL
                          " where estate_settings.\"EstateID\" is not null and \"RegionID\" = :RegionID";
 
             bool insertEstate = false;
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("RegionID", regionID));
@@ -203,7 +200,7 @@ namespace OpenSim.Data.PGSQL
 
             string sql = string.Format("insert into estate_settings (\"{0}\") values ( :{1} )", string.Join("\",\"", names.ToArray()), string.Join(", :", names.ToArray()));
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand insertCommand = new NpgsqlCommand(sql, conn))
             {
                 insertCommand.CommandText = sql;
@@ -255,7 +252,7 @@ namespace OpenSim.Data.PGSQL
             sql = sql.Remove(sql.LastIndexOf(","));
             sql += " WHERE \"EstateID\" = :EstateID";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 foreach (string name in names)
@@ -278,10 +275,7 @@ namespace OpenSim.Data.PGSQL
 
         #region Private methods
 
-        private string[] FieldList
-        {
-            get { return new List<string>(_FieldMap.Keys).ToArray(); }
-        }
+        private string[] FieldList => new List<string>(_FieldMap.Keys).ToArray();
 
         private void LoadBanList(EstateSettings es)
         {
@@ -289,7 +283,7 @@ namespace OpenSim.Data.PGSQL
 
             string sql = "select * from estateban where \"EstateID\" = :EstateID";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 NpgsqlParameter idParameter = new NpgsqlParameter("EstateID", DbType.Int32)
@@ -322,7 +316,7 @@ namespace OpenSim.Data.PGSQL
 
             string sql = string.Format("select uuid from {0} where \"EstateID\" = :EstateID", table);
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("EstateID", estateID));
@@ -342,7 +336,7 @@ namespace OpenSim.Data.PGSQL
         private void SaveBanList(EstateSettings es)
         {
             //Delete first
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (NpgsqlCommand cmd = conn.CreateCommand())
@@ -369,7 +363,7 @@ namespace OpenSim.Data.PGSQL
 
         private void SaveUUIDList(uint estateID, string table, UUID[] data)
         {
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (NpgsqlCommand cmd = conn.CreateCommand())
@@ -393,7 +387,7 @@ namespace OpenSim.Data.PGSQL
         {
             EstateSettings es = new EstateSettings();
             string sql = "select estate_settings.\"" + string.Join("\",estate_settings.\"", FieldList) + "\" from estate_settings where \"EstateID\" = :EstateID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
@@ -463,7 +457,7 @@ namespace OpenSim.Data.PGSQL
         {
             List<int> result = new List<int>();
             string sql = "select \"EstateID\" from estate_settings where lower(\"EstateName\") = lower(:EstateName)";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
@@ -488,7 +482,7 @@ namespace OpenSim.Data.PGSQL
         {
             List<int> result = new List<int>();
             string sql = "select \"EstateID\" from estate_settings";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
@@ -511,7 +505,7 @@ namespace OpenSim.Data.PGSQL
         {
             List<int> result = new List<int>();
             string sql = "select \"EstateID\" from estate_settings where \"EstateOwner\" = :EstateOwner";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
@@ -536,7 +530,7 @@ namespace OpenSim.Data.PGSQL
         {
             string deleteSQL = "delete from estate_map where \"RegionID\" = :RegionID";
             string insertSQL = "insert into estate_map values (:RegionID, :EstateID)";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
 
@@ -570,7 +564,7 @@ namespace OpenSim.Data.PGSQL
                 }
                 catch (Exception ex)
                 {
-                    m_log.Error("[REGION DB]: LinkRegion failed: " + ex.Message);
+                    _log.Error("[REGION DB]: LinkRegion failed: " + ex.Message);
                     transaction.Rollback();
                 }
             }
@@ -581,7 +575,7 @@ namespace OpenSim.Data.PGSQL
         {
             List<UUID> result = new List<UUID>();
             string sql = "select \"RegionID\" from estate_map where \"EstateID\" = :EstateID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))

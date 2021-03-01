@@ -48,30 +48,30 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
     [Serializable]
     public class LS_Api : MarshalByRefObject, ILS_Api, IScriptApi
     {
-        internal IScriptEngine m_ScriptEngine;
-        internal SceneObjectPart m_host;
-        internal bool m_LSFunctionsEnabled = false;
-        internal IScriptModuleComms m_comms = null;
-        internal IConfig m_osslconfig;
-        internal IEnvironmentModule m_environment = null;
+        internal IScriptEngine _ScriptEngine;
+        internal SceneObjectPart _host;
+        internal bool _LSFunctionsEnabled = false;
+        internal IScriptModuleComms _comms = null;
+        internal IConfig _osslconfig;
+        internal IEnvironmentModule _environment = null;
 
         public void Initialize(IScriptEngine scriptEngine, SceneObjectPart host, TaskInventoryItem item)
         {
-            m_ScriptEngine = scriptEngine;
-            m_host = host;
+            _ScriptEngine = scriptEngine;
+            _host = host;
 
-            m_osslconfig = m_ScriptEngine.ConfigSource.Configs["OSSL"];
-            if(m_osslconfig == null)
-                m_osslconfig = m_ScriptEngine.Config;
+            _osslconfig = _ScriptEngine.ConfigSource.Configs["OSSL"];
+            if(_osslconfig == null)
+                _osslconfig = _ScriptEngine.Config;
 
-            if (m_osslconfig.GetBoolean("AllowLightShareFunctions", false))
-                m_LSFunctionsEnabled = true;
+            if (_osslconfig.GetBoolean("AllowLightShareFunctions", false))
+                _LSFunctionsEnabled = true;
 
-            m_comms = m_ScriptEngine.World.RequestModuleInterface<IScriptModuleComms>();
-            if (m_comms == null)
-                m_LSFunctionsEnabled = false;
+            _comms = _ScriptEngine.World.RequestModuleInterface<IScriptModuleComms>();
+            if (_comms == null)
+                _LSFunctionsEnabled = false;
 
-            m_environment = m_ScriptEngine.World.RequestModuleInterface<IEnvironmentModule>();
+            _environment = _ScriptEngine.World.RequestModuleInterface<IEnvironmentModule>();
         }
 
         public override object InitializeLifetimeService()
@@ -87,10 +87,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             return lease;
         }
 
-        public Scene World
-        {
-            get { return m_ScriptEngine.World; }
-        }
+        public Scene World => _ScriptEngine.World;
 
         /// <summary>
         /// Dumps an error message on the debug console.
@@ -101,10 +98,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 message = message.Substring(0, 1023);
 
             World.SimChat(Utils.StringToBytes(message),
-                          ChatTypeEnum.Shout, ScriptBaseClass.DEBUG_CHANNEL, m_host.ParentGroup.RootPart.AbsolutePosition, m_host.Name, m_host.UUID, true);
+                          ChatTypeEnum.Shout, ScriptBaseClass.DEBUG_CHANNEL, _host.ParentGroup.RootPart.AbsolutePosition, _host.Name, _host.UUID, true);
 
-            IWorldComm wComm = m_ScriptEngine.World.RequestModuleInterface<IWorldComm>();
-            wComm.DeliverMessage(ChatTypeEnum.Shout, ScriptBaseClass.DEBUG_CHANNEL, m_host.Name, m_host.UUID, message);
+            IWorldComm wComm = _ScriptEngine.World.RequestModuleInterface<IWorldComm>();
+            wComm.DeliverMessage(ChatTypeEnum.Shout, ScriptBaseClass.DEBUG_CHANNEL, _host.Name, _host.UUID, message);
         }
 
         /// <summary>
@@ -113,15 +110,15 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         /// <returns>List of windlight parameters</returns>
         public LSL_List lsGetWindlightScene(LSL_List rules)
         {
-            if (!m_LSFunctionsEnabled || m_environment == null)
+            if (!_LSFunctionsEnabled || _environment == null)
             {
                 LSShoutError("LightShare functions are not enabled.");
                 return new LSL_List();
             }
 
-            m_host.AddScriptLPS(1);
+            _host.AddScriptLPS(1);
 
-            RegionLightShareData wl = m_environment.ToLightShare();
+            RegionLightShareData wl = _environment.ToLightShare();
 
             LSL_List values = new LSL_List();
             int idx = 0;
@@ -259,7 +256,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
         private RegionLightShareData getWindlightProfileFromRules(LSL_List rules)
         {
-            RegionLightShareData wl = m_environment.ToLightShare();
+            RegionLightShareData wl = _environment.ToLightShare();
 
             int idx = 0;
             while (idx < rules.Length)
@@ -566,7 +563,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                         idx++;
                         try
                         {
-                            wl.normalMapTexture = new UUID(rules.GetLSLStringItem(idx).m_string);
+                            wl.normalMapTexture = new UUID(rules.GetLSLStringItem(idx)._string);
                         }
                         catch (ArgumentException)
                         {
@@ -710,17 +707,17 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
         /// <returns>success: true or false</returns>
         public int lsSetWindlightScene(LSL_List rules)
         {
-            if (!m_LSFunctionsEnabled || m_environment == null)
+            if (!_LSFunctionsEnabled || _environment == null)
             {
                 LSShoutError("LightShare functions are not enabled.");
                 return 0;
             }
 
-            m_host.AddScriptLPS(1);
+            _host.AddScriptLPS(1);
 
-            if (!World.RegionInfo.EstateSettings.IsEstateManagerOrOwner(m_host.OwnerID))
+            if (!World.RegionInfo.EstateSettings.IsEstateManagerOrOwner(_host.OwnerID))
             {
-                ScenePresence sp = World.GetScenePresence(m_host.OwnerID);
+                ScenePresence sp = World.GetScenePresence(_host.OwnerID);
 
                 if (sp == null || !sp.IsViewerUIGod)
                 {
@@ -732,7 +729,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             try
             {
                 RegionLightShareData wl = getWindlightProfileFromRules(rules);
-                m_environment.FromLightShare(wl);
+                _environment.FromLightShare(wl);
             }
             catch(InvalidCastException e)
             {
@@ -745,17 +742,17 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
         public void lsClearWindlightScene()
         {
-            if (!m_LSFunctionsEnabled || m_environment == null)
+            if (!_LSFunctionsEnabled || _environment == null)
             {
                 LSShoutError("LightShare functions are not enabled.");
                 return;
             }
 
-            m_host.AddScriptLPS(1);
+            _host.AddScriptLPS(1);
 
-            if (!World.RegionInfo.EstateSettings.IsEstateManagerOrOwner(m_host.OwnerID))
+            if (!World.RegionInfo.EstateSettings.IsEstateManagerOrOwner(_host.OwnerID))
             {
-                ScenePresence sp = World.GetScenePresence(m_host.OwnerID);
+                ScenePresence sp = World.GetScenePresence(_host.OwnerID);
 
                 if (sp == null || !sp.IsViewerUIGod)
                 {
@@ -764,7 +761,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 }
             }
 
-            m_environment.ResetEnvironmentSettings(m_host.ParentGroup.Scene.RegionInfo.RegionID);
+            _environment.ResetEnvironmentSettings(_host.ParentGroup.Scene.RegionInfo.RegionID);
         }
 
         /// <summary>
@@ -778,15 +775,15 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             return 0;
 
             /* disabled code until we add force a WL into a single user
-            if (!m_LSFunctionsEnabled)
+            if (!_LSFunctionsEnabled)
             {
                 LSShoutError("LightShare functions are not enabled.");
                 return 0;
             }
 
-            if (!World.RegionInfo.EstateSettings.IsEstateManagerOrOwner(m_host.OwnerID))
+            if (!World.RegionInfo.EstateSettings.IsEstateManagerOrOwner(_host.OwnerID))
             {
-                ScenePresence sp = World.GetScenePresence(m_host.OwnerID);
+                ScenePresence sp = World.GetScenePresence(_host.OwnerID);
 
                 if (sp == null || !sp.IsViewerUIGod)
                 {
@@ -796,9 +793,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
             }
 
             int success = 0;
-            m_host.AddScriptLPS(1);
+            _host.AddScriptLPS(1);
 
-            if (m_environment != null)
+            if (_environment != null)
             {
                 RegionLightShareData wl;
                 try
@@ -810,7 +807,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                     LSShoutError(e.Message);
                     return 0;
                 }
-                World.EventManager.TriggerOnSendNewWindlightProfileTargeted(wl, new UUID(target.m_string));
+                World.EventManager.TriggerOnSendNewWindlightProfileTargeted(wl, new UUID(target._string));
                 success = 1;
             }
             else

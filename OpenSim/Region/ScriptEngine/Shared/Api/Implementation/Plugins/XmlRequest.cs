@@ -34,19 +34,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 {
     public class XmlRequest
     {
-        public AsyncCommandManager m_CmdManager;
+        public AsyncCommandManager _CmdManager;
 
         public XmlRequest(AsyncCommandManager CmdManager)
         {
-            m_CmdManager = CmdManager;
+            _CmdManager = CmdManager;
         }
 
         public void CheckXMLRPCRequests()
         {
-            if (m_CmdManager.m_ScriptEngine.World == null)
+            if (_CmdManager._ScriptEngine.World == null)
                 return;
 
-            IXMLRPC xmlrpc = m_CmdManager.m_ScriptEngine.World.RequestModuleInterface<IXMLRPC>();
+            IXMLRPC xmlrpc = _CmdManager._ScriptEngine.World.RequestModuleInterface<IXMLRPC>();
 
             if (xmlrpc != null)
             {
@@ -69,7 +69,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                         new LSL_Types.LSLString(rInfo.GetStrVal())
                     };
 
-                    foreach (IScriptEngine e in m_CmdManager.ScriptEngines)
+                    foreach (IScriptEngine e in _CmdManager.ScriptEngines)
                     {
                         if (e.PostScriptEvent(
                                 rInfo.GetItemID(), new EventParams(
@@ -98,7 +98,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                         new LSL_Types.LSLString(srdInfo.Sdata)
                     };
 
-                    foreach (IScriptEngine e in m_CmdManager.ScriptEngines)
+                    foreach (IScriptEngine e in _CmdManager.ScriptEngines)
                     {
                         if (e.PostScriptEvent(
                                 srdInfo.ItemID, new EventParams(

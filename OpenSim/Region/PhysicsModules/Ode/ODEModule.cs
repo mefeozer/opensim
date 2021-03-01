@@ -12,28 +12,19 @@ namespace OpenSim.Region.PhysicsModule.ODE
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "ODEPhysicsScene")]
     public class OdeModule : INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
-        private IConfigSource m_config;
-        private OdeScene  m_scene;
+        private bool _Enabled = false;
+        private IConfigSource _config;
+        private OdeScene  _scene;
 
        #region INonSharedRegionModule
 
-        public string Name
-        {
-            get { return "OpenDynamicsEngine"; }
-        }
+        public string Name => "OpenDynamicsEngine";
 
-        public string Version
-        {
-            get { return "1.0"; }
-        }
+        public string Version => "1.0";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -43,8 +34,8 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 string physics = config.GetString("physics", string.Empty);
                 if (physics == Name)
                 {
-                    m_config = source;
-                    m_Enabled = true;
+                    _config = source;
+                    _Enabled = true;
                 }
             }
         }
@@ -55,7 +46,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             if (Util.IsWindows())
@@ -65,24 +56,24 @@ namespace OpenSim.Region.PhysicsModule.ODE
             // http://opensimulator.org/mantis/view.php?id=2750).
             SafeNativeMethods.InitODE();
 
-            m_scene = new OdeScene(scene, m_config, Name, Version);
+            _scene = new OdeScene(scene, _config, Name, Version);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled || m_scene == null)
+            if (!_Enabled || _scene == null)
                 return;
 
-            m_scene.Dispose();
-            m_scene = null;
+            _scene.Dispose();
+            _scene = null;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled || m_scene == null)
+            if (!_Enabled || _scene == null)
                 return;
 
-            m_scene.RegionLoaded();
+            _scene.RegionLoaded();
         }
         #endregion
     }

@@ -120,306 +120,306 @@ namespace OpenSim.Framework
                 OnSave(this);
         }
 
-        private UUID m_RegionUUID = UUID.Zero;
+        private UUID _RegionUUID = UUID.Zero;
         public UUID RegionUUID
         {
-            get { return m_RegionUUID; }
-            set { m_RegionUUID = value; }
+            get => _RegionUUID;
+            set => _RegionUUID = value;
         }
 
         public UUID CacheID { get; set; } = UUID.Random();
 
-        private bool m_BlockTerraform = false;
+        private bool _BlockTerraform = false;
         public bool BlockTerraform
         {
-            get { return m_BlockTerraform; }
-            set { m_BlockTerraform = value; }
+            get => _BlockTerraform;
+            set => _BlockTerraform = value;
         }
 
-        private bool m_BlockFly = false;
+        private bool _BlockFly = false;
         public bool BlockFly
         {
-            get { return m_BlockFly; }
-            set { m_BlockFly = value; }
+            get => _BlockFly;
+            set => _BlockFly = value;
         }
 
-        private bool m_AllowDamage = false;
+        private bool _AllowDamage = false;
         public bool AllowDamage
         {
-            get { return m_AllowDamage; }
-            set { m_AllowDamage = value; }
+            get => _AllowDamage;
+            set => _AllowDamage = value;
         }
 
-        private bool m_RestrictPushing = false;
+        private bool _RestrictPushing = false;
         public bool RestrictPushing
         {
-            get { return m_RestrictPushing; }
-            set { m_RestrictPushing = value; }
+            get => _RestrictPushing;
+            set => _RestrictPushing = value;
         }
 
-        private bool m_AllowLandResell = true;
+        private bool _AllowLandResell = true;
         public bool AllowLandResell
         {
-            get { return m_AllowLandResell; }
-            set { m_AllowLandResell = value; }
+            get => _AllowLandResell;
+            set => _AllowLandResell = value;
         }
 
-        private bool m_AllowLandJoinDivide = true;
+        private bool _AllowLandJoinDivide = true;
         public bool AllowLandJoinDivide
         {
-            get { return m_AllowLandJoinDivide; }
-            set { m_AllowLandJoinDivide = value; }
+            get => _AllowLandJoinDivide;
+            set => _AllowLandJoinDivide = value;
         }
 
-        private bool m_BlockShowInSearch = false;
+        private bool _BlockShowInSearch = false;
         public bool BlockShowInSearch
         {
-            get { return m_BlockShowInSearch; }
-            set { m_BlockShowInSearch = value; }
+            get => _BlockShowInSearch;
+            set => _BlockShowInSearch = value;
         }
 
-        private int m_AgentLimit = 40;
+        private int _AgentLimit = 40;
         public int AgentLimit
         {
-            get { return m_AgentLimit; }
-            set { m_AgentLimit = value; }
+            get => _AgentLimit;
+            set => _AgentLimit = value;
         }
 
-        private double m_ObjectBonus = 1.0;
+        private double _ObjectBonus = 1.0;
         public double ObjectBonus
         {
-            get { return m_ObjectBonus; }
-            set { m_ObjectBonus = value; }
+            get => _ObjectBonus;
+            set => _ObjectBonus = value;
         }
 
-        private int m_Maturity = 0;
+        private int _Maturity = 0;
         public int Maturity
         {
-            get { return m_Maturity; }
-            set { m_Maturity = value; }
+            get => _Maturity;
+            set => _Maturity = value;
         }
 
-        private bool m_DisableScripts = false;
+        private bool _DisableScripts = false;
         public bool DisableScripts
         {
-            get { return m_DisableScripts; }
-            set { m_DisableScripts = value; }
+            get => _DisableScripts;
+            set => _DisableScripts = value;
         }
 
-        private bool m_DisableCollisions = false;
+        private bool _DisableCollisions = false;
         public bool DisableCollisions
         {
-            get { return m_DisableCollisions; }
-            set { m_DisableCollisions = value; }
+            get => _DisableCollisions;
+            set => _DisableCollisions = value;
         }
 
-        private bool m_DisablePhysics = false;
+        private bool _DisablePhysics = false;
         public bool DisablePhysics
         {
-            get { return m_DisablePhysics; }
-            set { m_DisablePhysics = value; }
+            get => _DisablePhysics;
+            set => _DisablePhysics = value;
         }
 
-        private UUID m_TerrainTexture1 = UUID.Zero;
+        private UUID _TerrainTexture1 = UUID.Zero;
 
         public UUID TerrainTexture1
         {
-            get { return m_TerrainTexture1; }
+            get => _TerrainTexture1;
             set
             {
                 if (value == UUID.Zero)
-                    m_TerrainTexture1 = DEFAULT_TERRAIN_TEXTURE_1;
+                    _TerrainTexture1 = DEFAULT_TERRAIN_TEXTURE_1;
                 else
-                    m_TerrainTexture1 = value;
+                    _TerrainTexture1 = value;
             }
         }
 
-        private UUID m_TerrainTexture2 = UUID.Zero;
+        private UUID _TerrainTexture2 = UUID.Zero;
 
         public UUID TerrainTexture2
         {
-            get { return m_TerrainTexture2; }
+            get => _TerrainTexture2;
             set
             {
                 if (value == UUID.Zero)
-                    m_TerrainTexture2 = DEFAULT_TERRAIN_TEXTURE_2;
+                    _TerrainTexture2 = DEFAULT_TERRAIN_TEXTURE_2;
                 else
-                    m_TerrainTexture2 = value;
+                    _TerrainTexture2 = value;
             }
         }
 
-        private UUID m_TerrainTexture3 = UUID.Zero;
+        private UUID _TerrainTexture3 = UUID.Zero;
 
         public UUID TerrainTexture3
         {
-            get { return m_TerrainTexture3; }
+            get => _TerrainTexture3;
             set
             {
                 if (value == UUID.Zero)
-                    m_TerrainTexture3 = DEFAULT_TERRAIN_TEXTURE_3;
+                    _TerrainTexture3 = DEFAULT_TERRAIN_TEXTURE_3;
                 else
-                    m_TerrainTexture3 = value;
+                    _TerrainTexture3 = value;
             }
         }
 
-        private UUID m_TerrainTexture4 = UUID.Zero;
+        private UUID _TerrainTexture4 = UUID.Zero;
 
         public UUID TerrainTexture4
         {
-            get { return m_TerrainTexture4; }
+            get => _TerrainTexture4;
             set
             {
                 if (value == UUID.Zero)
-                    m_TerrainTexture4 = DEFAULT_TERRAIN_TEXTURE_4;
+                    _TerrainTexture4 = DEFAULT_TERRAIN_TEXTURE_4;
                 else
-                    m_TerrainTexture4 = value;
+                    _TerrainTexture4 = value;
             }
         }
 
-        private double m_Elevation1NW = 10;
+        private double _Elevation1NW = 10;
         public double Elevation1NW
         {
-            get { return m_Elevation1NW; }
-            set { m_Elevation1NW = value; }
+            get => _Elevation1NW;
+            set => _Elevation1NW = value;
         }
 
-        private double m_Elevation2NW = 60;
+        private double _Elevation2NW = 60;
         public double Elevation2NW
         {
-            get { return m_Elevation2NW; }
-            set { m_Elevation2NW = value; }
+            get => _Elevation2NW;
+            set => _Elevation2NW = value;
         }
 
-        private double m_Elevation1NE = 10;
+        private double _Elevation1NE = 10;
         public double Elevation1NE
         {
-            get { return m_Elevation1NE; }
-            set { m_Elevation1NE = value; }
+            get => _Elevation1NE;
+            set => _Elevation1NE = value;
         }
 
-        private double m_Elevation2NE = 60;
+        private double _Elevation2NE = 60;
         public double Elevation2NE
         {
-            get { return m_Elevation2NE; }
-            set { m_Elevation2NE = value; }
+            get => _Elevation2NE;
+            set => _Elevation2NE = value;
         }
 
-        private double m_Elevation1SE = 10;
+        private double _Elevation1SE = 10;
         public double Elevation1SE
         {
-            get { return m_Elevation1SE; }
-            set { m_Elevation1SE = value; }
+            get => _Elevation1SE;
+            set => _Elevation1SE = value;
         }
 
-        private double m_Elevation2SE = 60;
+        private double _Elevation2SE = 60;
         public double Elevation2SE
         {
-            get { return m_Elevation2SE; }
-            set { m_Elevation2SE = value; }
+            get => _Elevation2SE;
+            set => _Elevation2SE = value;
         }
 
-        private double m_Elevation1SW = 10;
+        private double _Elevation1SW = 10;
         public double Elevation1SW
         {
-            get { return m_Elevation1SW; }
-            set { m_Elevation1SW = value; }
+            get => _Elevation1SW;
+            set => _Elevation1SW = value;
         }
 
-        private double m_Elevation2SW = 60;
+        private double _Elevation2SW = 60;
         public double Elevation2SW
         {
-            get { return m_Elevation2SW; }
-            set { m_Elevation2SW = value; }
+            get => _Elevation2SW;
+            set => _Elevation2SW = value;
         }
 
-        private double m_WaterHeight = 20;
+        private double _WaterHeight = 20;
         public double WaterHeight
         {
-            get { return m_WaterHeight; }
-            set { m_WaterHeight = value; }
+            get => _WaterHeight;
+            set => _WaterHeight = value;
         }
 
-        private double m_TerrainRaiseLimit = 100;
+        private double _TerrainRaiseLimit = 100;
         public double TerrainRaiseLimit
         {
-            get { return m_TerrainRaiseLimit; }
-            set { m_TerrainRaiseLimit = value; }
+            get => _TerrainRaiseLimit;
+            set => _TerrainRaiseLimit = value;
         }
 
-        private double m_TerrainLowerLimit = -100;
+        private double _TerrainLowerLimit = -100;
         public double TerrainLowerLimit
         {
-            get { return m_TerrainLowerLimit; }
-            set { m_TerrainLowerLimit = value; }
+            get => _TerrainLowerLimit;
+            set => _TerrainLowerLimit = value;
         }
 
-        private bool m_UseEstateSun = true;
+        private bool _UseEstateSun = true;
         public bool UseEstateSun
         {
-            get { return m_UseEstateSun; }
-            set { m_UseEstateSun = value; }
+            get => _UseEstateSun;
+            set => _UseEstateSun = value;
         }
 
-        private bool m_Sandbox = false;
+        private bool _Sandbox = false;
         public bool Sandbox
         {
-            get { return m_Sandbox; }
-            set { m_Sandbox = value; }
+            get => _Sandbox;
+            set => _Sandbox = value;
         }
 
         public Vector3 SunVector
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { }
         }
 
-        private UUID m_ParcelImageID;
+        private UUID _ParcelImageID;
         public UUID ParcelImageID
         {
-            get { return m_ParcelImageID; }
-            set { m_ParcelImageID = value; }
+            get => _ParcelImageID;
+            set => _ParcelImageID = value;
         }
 
-        private UUID m_TerrainImageID;
+        private UUID _TerrainImageID;
         public UUID TerrainImageID
         {
-            get { return m_TerrainImageID; }
-            set { m_TerrainImageID = value; }
+            get => _TerrainImageID;
+            set => _TerrainImageID = value;
         }
 
         public bool FixedSun
         {
-            get { return false; }
+            get => false;
             set { }
         }
 
         public double SunPosition
         {
-            get { return 0; }
+            get => 0;
             set { }
         }
 
-        private UUID m_Covenant = UUID.Zero;
+        private UUID _Covenant = UUID.Zero;
 
         public UUID Covenant
         {
-            get { return m_Covenant; }
-            set { m_Covenant = value; }
+            get => _Covenant;
+            set => _Covenant = value;
         }
 
-        private int m_CovenantChanged = 0;
+        private int _CovenantChanged = 0;
 
         public int CovenantChangedDateTime
         {
-            get { return m_CovenantChanged; }
-            set { m_CovenantChanged = value; }
+            get => _CovenantChanged;
+            set => _CovenantChanged = value;
         }
 
-        private int m_LoadedCreationDateTime;
+        private int _LoadedCreationDateTime;
         public int LoadedCreationDateTime
         {
-            get { return m_LoadedCreationDateTime; }
-            set { m_LoadedCreationDateTime = value; }
+            get => _LoadedCreationDateTime;
+            set => _LoadedCreationDateTime = value;
         }
 
         public string LoadedCreationDate
@@ -442,33 +442,33 @@ namespace OpenSim.Framework
             }
         }
 
-        private string m_LoadedCreationID;
+        private string _LoadedCreationID;
         public string LoadedCreationID
         {
-            get { return m_LoadedCreationID; }
-            set { m_LoadedCreationID = value; }
+            get => _LoadedCreationID;
+            set => _LoadedCreationID = value;
         }
 
-        private bool m_GodBlockSearch = false;
+        private bool _GodBlockSearch = false;
         public bool GodBlockSearch
         {
-            get { return m_GodBlockSearch; }
-            set { m_GodBlockSearch = value; }
+            get => _GodBlockSearch;
+            set => _GodBlockSearch = value;
         }
 
-        private bool m_Casino = false;
+        private bool _Casino = false;
         public bool Casino
         {
-            get { return m_Casino; }
-            set { m_Casino = value; }
+            get => _Casino;
+            set => _Casino = value;
         }
 
         // Telehub support
-        private bool m_TelehubEnabled = false;
+        private bool _TelehubEnabled = false;
         public bool HasTelehub
         {
-            get { return m_TelehubEnabled; }
-            set { m_TelehubEnabled = value; }
+            get => _TelehubEnabled;
+            set => _TelehubEnabled = value;
         }
 
         /// <summary>

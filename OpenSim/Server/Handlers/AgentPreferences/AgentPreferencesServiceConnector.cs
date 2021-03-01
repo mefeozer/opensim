@@ -38,15 +38,15 @@ namespace OpenSim.Server.Handlers.AgentPreferences
 {
     public class AgentPreferencesServiceConnector : ServiceConnector
     {
-        private readonly IAgentPreferencesService m_AgentPreferencesService;
-        private readonly string m_ConfigName = "AgentPreferencesService";
+        private readonly IAgentPreferencesService _AgentPreferencesService;
+        private readonly string _ConfigName = "AgentPreferencesService";
 
         public AgentPreferencesServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string service = serverConfig.GetString("LocalServiceModule", string.Empty);
 
@@ -54,11 +54,11 @@ namespace OpenSim.Server.Handlers.AgentPreferences
                 throw new Exception("No LocalServiceModule in config file");
 
             object[] args = new object[] { config };
-            m_AgentPreferencesService = ServerUtils.LoadPlugin<IAgentPreferencesService>(service, args);
+            _AgentPreferencesService = ServerUtils.LoadPlugin<IAgentPreferencesService>(service, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName); ;
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName); ;
 
-            server.AddStreamHandler(new AgentPreferencesServerPostHandler(m_AgentPreferencesService, auth));
+            server.AddStreamHandler(new AgentPreferencesServerPostHandler(_AgentPreferencesService, auth));
         }
     }
 }

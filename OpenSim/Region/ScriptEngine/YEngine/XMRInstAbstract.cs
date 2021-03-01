@@ -390,9 +390,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public bool suspendOnCheckRunHold;  // suspend script execution until explicitly set false
         public bool suspendOnCheckRunTemp;  // suspend script execution for single step only
         public int stackLimit;              // stack must have at least this many bytes free on entry to functions
-        public int m_StackLeft;             // total number of stack bytes yet to be used (init to stacksize)
+        public int _StackLeft;             // total number of stack bytes yet to be used (init to stacksize)
 
-        public ScriptObjCode m_ObjCode;     // script object code this instance was created from
+        public ScriptObjCode _ObjCode;     // script object code this instance was created from
 
         public object[] ehArgs;             // event handler argument array
         public bool doGblInit = true;       // default state_entry() needs to initialize global variables
@@ -454,43 +454,43 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         \**************************************************/
 
         protected int heapLimit;
-        public int m_localsHeapUsed;
-        public int m_arraysHeapUsed;
+        public int _localsHeapUsed;
+        public int _arraysHeapUsed;
 
         public virtual int UpdateLocalsHeapUse(int olduse, int newuse)
         {
-            int newtotal = Interlocked.Add(ref m_localsHeapUsed, newuse - olduse);
+            int newtotal = Interlocked.Add(ref _localsHeapUsed, newuse - olduse);
             if (newtotal + glblVars.arraysHeapUse > heapLimit)
-                throw new OutOfHeapException(m_arraysHeapUsed + newtotal + olduse - newuse, newtotal, heapLimit);
+                throw new OutOfHeapException(_arraysHeapUsed + newtotal + olduse - newuse, newtotal, heapLimit);
             return newuse;
         }
         // not in use
         public virtual int UpdateArraysHeapUse(int olduse, int newuse)
         {
-            //int newtotal = Interlocked.Add(ref m_arraysheapUsed, newuse - olduse);
+            //int newtotal = Interlocked.Add(ref _arraysheapUsed, newuse - olduse);
             if(newuse + glblVars.arraysHeapUse > heapLimit)
-                throw new OutOfHeapException(m_arraysHeapUsed + newuse + olduse - newuse, newuse, heapLimit);
+                throw new OutOfHeapException(_arraysHeapUsed + newuse + olduse - newuse, newuse, heapLimit);
             return newuse;
         }
 
         public virtual void AddLocalsHeapUse(int delta)
         {
-            Interlocked.Add(ref m_localsHeapUsed, delta);
+            Interlocked.Add(ref _localsHeapUsed, delta);
         }
 
         public virtual void AddArraysHeapUse(int delta)
         {
-            Interlocked.Add(ref m_arraysHeapUsed, delta);
+            Interlocked.Add(ref _arraysHeapUsed, delta);
         }
 
         public int xmrHeapLeft()
         {
-            return heapLimit - m_localsHeapUsed - glblVars.arraysHeapUse;
+            return heapLimit - _localsHeapUsed - glblVars.arraysHeapUse;
         }
 
         public int xmrHeapUsed()
         {
-            return m_localsHeapUsed + glblVars.arraysHeapUse;
+            return _localsHeapUsed + glblVars.arraysHeapUse;
         }
 
         /**
@@ -516,7 +516,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     // Process event given by 'stateCode' and 'eventCode'.
                     // The event handler should call CheckRun() as often as convenient.
                     int newState = this.stateCode;
-                    seh = this.m_ObjCode.scriptEventHandlerTable[newState, (int)this.eventCode];
+                    seh = this._ObjCode.scriptEventHandlerTable[newState, (int)this.eventCode];
                     if(seh != null)
                     {
                         try
@@ -545,7 +545,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
                 // Call old state's state_exit() handler.
                 this.eventCode = ScriptEventCode.state_exit;
-                seh = this.m_ObjCode.scriptEventHandlerTable[this.stateCode, (int)ScriptEventCode.state_exit];
+                seh = this._ObjCode.scriptEventHandlerTable[this.stateCode, (int)ScriptEventCode.state_exit];
                 if(seh != null)
                 {
                     try
@@ -588,7 +588,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public void CheckRunStack()
         {
-            if(m_StackLeft < stackLimit)
+            if(_StackLeft < stackLimit)
                 throw new OutOfStackException();
 
             CheckRunQuick();
@@ -772,7 +772,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(o is Delegate)
             {
                 string os;
-                if(m_ObjCode.sdDelTypes.TryGetValue(ot, out os))
+                if(_ObjCode.sdDelTypes.TryGetValue(ot, out os))
                     return os;
             }
 
@@ -791,7 +791,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             object[] data = ev.Data;
             int evc = (int)(ev.GetLSLIntegerItem(0).value & 0xFFFFFFFF);
-            ScriptEventHandler seh = m_ObjCode.scriptEventHandlerTable[stateCode, evc];
+            ScriptEventHandler seh = _ObjCode.scriptEventHandlerTable[stateCode, evc];
             if(seh != null)
             {
                 int nargs = data.Length - 1;
@@ -901,8 +901,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public Delegate GetScriptMethodDelegate(string name, string sig, object targ)
         {
-            DynamicMethod dm = m_ObjCode.dynamicMethods[name];
-            TokenDeclSDTypeDelegate dt = (TokenDeclSDTypeDelegate)m_ObjCode.sdObjTypesName[sig];
+            DynamicMethod dm = _ObjCode.dynamicMethods[name];
+            TokenDeclSDTypeDelegate dt = (TokenDeclSDTypeDelegate)_ObjCode.sdObjTypesName[sig];
             return dm.CreateDelegate(dt.GetSysType(), targ);
         }
 
@@ -916,7 +916,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
          */
         public static object XMRSDTypeCatchTryCastToSDType(object thrown, XMRInstAbstract inst, int sdtypeindex)
         {
-            TokenDeclSDType sdType = inst.m_ObjCode.sdObjTypesIndx[sdtypeindex];
+            TokenDeclSDType sdType = inst._ObjCode.sdObjTypesIndx[sdtypeindex];
 
             // If it is a script-defined interface object, convert to the original XMRSDTypeClObj.
             if(thrown is Delegate[])
@@ -1142,7 +1142,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 else if(obj is LSL_Integer)
                     obj = ((LSL_Integer)obj).value;
                 else if(obj is LSL_String)
-                    obj = ((LSL_String)obj).m_string;
+                    obj = ((LSL_String)obj)._string;
                 dstarr.SetValue(obj, i + dststart);
             }
         }
@@ -1299,7 +1299,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 string funcName = stline.Substring(0, endFuncName);
                 KeyValuePair<int, ScriptSrcLoc>[] srcLocs;
-                if(m_ObjCode.scriptSrcLocss.TryGetValue(funcName, out srcLocs))
+                if(_ObjCode.scriptSrcLocss.TryGetValue(funcName, out srcLocs))
                 {
                     stline = stline.Substring(0, endFuncName) + stline.Substring(pastCloseParen);
                     kwin = stline.IndexOf(" in ");
@@ -1509,7 +1509,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 mow.Write((byte)Ser.LSLKEY);
                 LSL_Key key = (LSL_Key)graph;
-                SendObjValue(key.m_string);  // m_string can be null
+                SendObjValue(key._string);  // _string can be null
                 return;
             }
             if(graph is LSL_Rotation)
@@ -1525,7 +1525,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 mow.Write((byte)Ser.LSLSTR);
                 LSL_String str = (LSL_String)graph;
-                SendObjValue(str.m_string);  // m_string can be null
+                SendObjValue(str._string);  // _string can be null
                 return;
             }
             if(graph is LSL_Vector)
@@ -1647,7 +1647,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 mow.Write((byte)Ser.DELEGATE);
                 mow.Write(del.Method.Name);
                 Type delType = del.GetType();
-                foreach(KeyValuePair<string, TokenDeclSDType> kvp in m_ObjCode.sdObjTypesName)
+                foreach(KeyValuePair<string, TokenDeclSDType> kvp in _ObjCode.sdObjTypesName)
                 {
                     TokenDeclSDType sdt = kvp.Value;
                     if(sdt is TokenDeclSDTypeDelegate)

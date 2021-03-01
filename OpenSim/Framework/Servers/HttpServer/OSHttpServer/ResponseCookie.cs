@@ -95,7 +95,7 @@ namespace OSHttpServer
         /// </summary>
         public DateTime Expires
         {
-            get { return _expires; }
+            get => _expires;
             set
             {
                 _expires = value;
@@ -108,7 +108,7 @@ namespace OSHttpServer
         /// </summary>
         public string Path
         {
-            get { return _path; }
+            get => _path;
             set
             {
                 if (!string.IsNullOrEmpty(value))

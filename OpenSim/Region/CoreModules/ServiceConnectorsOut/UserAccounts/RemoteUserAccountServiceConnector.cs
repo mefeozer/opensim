@@ -45,22 +45,16 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
     public class RemoteUserAccountServicesConnector : UserAccountServicesConnector,
             ISharedRegionModule, IUserAccountService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
-        private UserAccountCache m_Cache;
+        private bool _Enabled = false;
+        private UserAccountCache _Cache;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "RemoteUserAccountServicesConnector"; }
-        }
+        public string Name => "RemoteUserAccountServicesConnector";
 
         public override void Initialise(IConfigSource source)
         {
@@ -73,52 +67,52 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
                     IConfig userConfig = source.Configs["UserAccountService"];
                     if (userConfig == null)
                     {
-                        m_log.Error("[USER CONNECTOR]: UserAccountService missing from OpenSim.ini");
+                        _log.Error("[USER CONNECTOR]: UserAccountService missing from OpenSim.ini");
                         return;
                     }
 
-                    m_Enabled = true;
+                    _Enabled = true;
 
                     base.Initialise(source);
-                    m_Cache = new UserAccountCache();
+                    _Cache = new UserAccountCache();
 
-                    m_log.Info("[USER CONNECTOR]: Remote users enabled");
+                    _log.Info("[USER CONNECTOR]: Remote users enabled");
                 }
             }
         }
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void Close()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IUserAccountService>(this);
-            scene.RegisterModuleInterface<IUserAccountCacheModule>(m_Cache);
+            scene.RegisterModuleInterface<IUserAccountCacheModule>(_Cache);
 
             scene.EventManager.OnNewClient += OnNewClient;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
@@ -127,7 +121,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
         // flags, title, etc. And country, don't forget country!
         private void OnNewClient(IClientAPI client)
         {
-            m_Cache.Remove(client.Name);
+            _Cache.Remove(client.Name);
         }
 
         #region Overwritten methods from IUserAccountService
@@ -136,12 +130,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
         {
             bool inCache = false;
             UserAccount account;
-            account = m_Cache.Get(userID, out inCache);
+            account = _Cache.Get(userID, out inCache);
             if (inCache)
                 return account;
 
             account = base.GetUserAccount(scopeID, userID);
-            m_Cache.Cache(userID, account);
+            _Cache.Cache(userID, account);
 
             return account;
         }
@@ -150,13 +144,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
         {
             bool inCache = false;
             UserAccount account;
-            account = m_Cache.Get(firstName + " " + lastName, out inCache);
+            account = _Cache.Get(firstName + " " + lastName, out inCache);
             if (inCache)
                 return account;
 
             account = base.GetUserAccount(scopeID, firstName, lastName);
             if (account != null)
-                m_Cache.Cache(account.PrincipalID, account);
+                _Cache.Cache(account.PrincipalID, account);
 
             return account;
         }
@@ -174,7 +168,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
             {
                 if(UUID.TryParse(id, out uuid))
                 {
-                    account = m_Cache.Get(uuid, out inCache);
+                    account = _Cache.Get(uuid, out inCache);
                     if (inCache)
                         accs.Add(account);
                     else
@@ -192,7 +186,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.UserAccounts
                         if(acc != null)
                         {
                             accs.Add(acc);
-                            m_Cache.Cache(acc.PrincipalID, acc);
+                            _Cache.Cache(acc.PrincipalID, acc);
                         }
                     }
                 }

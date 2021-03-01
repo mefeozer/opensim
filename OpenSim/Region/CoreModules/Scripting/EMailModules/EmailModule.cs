@@ -46,74 +46,74 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
         //
         // Log
         //
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //
         // Module vars
         //
-        private IConfigSource m_Config;
-        private string m_HostName = string.Empty;
-        //private string m_RegionName = string.Empty;
+        private IConfigSource _Config;
+        private string _HostName = string.Empty;
+        //private string _RegionName = string.Empty;
         private string SMTP_SERVER_HOSTNAME = string.Empty;
         private int SMTP_SERVER_PORT = 25;
         private string SMTP_SERVER_LOGIN = string.Empty;
         private string SMTP_SERVER_PASSWORD = string.Empty;
 
-        private readonly int m_MaxQueueSize = 50; // maximum size of an object mail queue
-        private readonly Dictionary<UUID, List<Email>> m_MailQueues = new Dictionary<UUID, List<Email>>();
-        private readonly Dictionary<UUID, DateTime> m_LastGetEmailCall = new Dictionary<UUID, DateTime>();
-        private readonly TimeSpan m_QueueTimeout = new TimeSpan(2, 0, 0); // 2 hours without llGetNextEmail drops the queue
-        private string m_InterObjectHostname = "lsl.opensim.local";
+        private readonly int _MaxQueueSize = 50; // maximum size of an object mail queue
+        private readonly Dictionary<UUID, List<Email>> _MailQueues = new Dictionary<UUID, List<Email>>();
+        private readonly Dictionary<UUID, DateTime> _LastGetEmailCall = new Dictionary<UUID, DateTime>();
+        private readonly TimeSpan _QueueTimeout = new TimeSpan(2, 0, 0); // 2 hours without llGetNextEmail drops the queue
+        private string _InterObjectHostname = "lsl.opensim.local";
 
-        private int m_MaxEmailSize = 4096;  // largest email allowed by default, as per lsl docs.
+        private int _MaxEmailSize = 4096;  // largest email allowed by default, as per lsl docs.
 
         // Scenes by Region Handle
-        private readonly Dictionary<ulong, Scene> m_Scenes =
+        private readonly Dictionary<ulong, Scene> _Scenes =
             new Dictionary<ulong, Scene>();
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
         #region ISharedRegionModule
 
         public void Initialise(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
             IConfig SMTPConfig;
 
             //FIXME: RegionName is correct??
-            //m_RegionName = scene.RegionInfo.RegionName;
+            //_RegionName = scene.RegionInfo.RegionName;
 
-            IConfig startupConfig = m_Config.Configs["Startup"];
+            IConfig startupConfig = _Config.Configs["Startup"];
 
-            m_Enabled = startupConfig.GetString("emailmodule", "DefaultEmailModule") == "DefaultEmailModule";
+            _Enabled = startupConfig.GetString("emailmodule", "DefaultEmailModule") == "DefaultEmailModule";
 
             //Load SMTP SERVER config
             try
             {
-                if ((SMTPConfig = m_Config.Configs["SMTP"]) == null)
+                if ((SMTPConfig = _Config.Configs["SMTP"]) == null)
                 {
-                    m_Enabled = false;
+                    _Enabled = false;
                     return;
                 }
 
                 if (!SMTPConfig.GetBoolean("enabled", false))
                 {
-                    m_Enabled = false;
+                    _Enabled = false;
                     return;
                 }
 
-                m_HostName = SMTPConfig.GetString("host_domain_header_from", m_HostName);
-                m_InterObjectHostname = SMTPConfig.GetString("internal_object_host", m_InterObjectHostname);
+                _HostName = SMTPConfig.GetString("host_domain_header_from", _HostName);
+                _InterObjectHostname = SMTPConfig.GetString("internal_object_host", _InterObjectHostname);
                 SMTP_SERVER_HOSTNAME = SMTPConfig.GetString("SMTP_SERVER_HOSTNAME", SMTP_SERVER_HOSTNAME);
                 SMTP_SERVER_PORT = SMTPConfig.GetInt("SMTP_SERVER_PORT", SMTP_SERVER_PORT);
                 SMTP_SERVER_LOGIN = SMTPConfig.GetString("SMTP_SERVER_LOGIN", SMTP_SERVER_LOGIN);
                 SMTP_SERVER_PASSWORD = SMTPConfig.GetString("SMTP_SERVER_PASSWORD", SMTP_SERVER_PASSWORD);
-                m_MaxEmailSize = SMTPConfig.GetInt("email_max_size", m_MaxEmailSize);
+                _MaxEmailSize = SMTPConfig.GetInt("email_max_size", _MaxEmailSize);
             }
             catch (Exception e)
             {
-                m_log.Error("[EMAIL]: DefaultEmailModule not configured: " + e.Message);
-                m_Enabled = false;
+                _log.Error("[EMAIL]: DefaultEmailModule not configured: " + e.Message);
+                _Enabled = false;
                 return;
             }
 
@@ -121,27 +121,27 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
         // It's a go!
-            lock (m_Scenes)
+            lock (_Scenes)
             {
                 // Claim the interface slot
                 scene.RegisterModuleInterface<IEmailModule>(this);
 
                 // Add to scene list
-                if (m_Scenes.ContainsKey(scene.RegionInfo.RegionHandle))
+                if (_Scenes.ContainsKey(scene.RegionInfo.RegionHandle))
                 {
-                    m_Scenes[scene.RegionInfo.RegionHandle] = scene;
+                    _Scenes[scene.RegionInfo.RegionHandle] = scene;
                 }
                 else
                 {
-                    m_Scenes.Add(scene.RegionInfo.RegionHandle, scene);
+                    _Scenes.Add(scene.RegionInfo.RegionHandle, scene);
                 }
             }
 
-            m_log.Info("[EMAIL]: Activated DefaultEmailModule");
+            _log.Info("[EMAIL]: Activated DefaultEmailModule");
         }
 
         public void RemoveRegion(Scene scene)
@@ -156,15 +156,9 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
         {
         }
 
-        public string Name
-        {
-            get { return "DefaultEmailModule"; }
-        }
+        public string Name => "DefaultEmailModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void RegionLoaded(Scene scene)
         {
@@ -178,19 +172,19 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
             // not yet called GetNextEmail should have no queue, and emails to them
             // should be silently dropped.
 
-            lock (m_MailQueues)
+            lock (_MailQueues)
             {
-                if (m_MailQueues.ContainsKey(to))
+                if (_MailQueues.ContainsKey(to))
                 {
-                    if (m_MailQueues[to].Count >= m_MaxQueueSize)
+                    if (_MailQueues[to].Count >= _MaxQueueSize)
                     {
                         // fail silently
                         return;
                     }
 
-                    lock (m_MailQueues[to])
+                    lock (_MailQueues[to])
                     {
-                        m_MailQueues[to].Add(email);
+                        _MailQueues[to].Add(email);
                     }
                 }
             }
@@ -204,9 +198,9 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
 
         private SceneObjectPart findPrim(UUID objectID, out string ObjectRegionName)
         {
-            lock (m_Scenes)
+            lock (_Scenes)
             {
-                foreach (Scene s in m_Scenes.Values)
+                foreach (Scene s in _Scenes.Values)
                 {
                     SceneObjectPart part = s.GetSceneObjectPart(objectID);
                     if (part != null)
@@ -226,11 +220,11 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
         private bool resolveNamePositionRegionName(UUID objectID, out string ObjectName, out string ObjectAbsolutePosition, out string ObjectRegionName)
         {
             ObjectName = ObjectAbsolutePosition = ObjectRegionName = string.Empty;
-            string m_ObjectRegionName;
+            string _ObjectRegionName;
             int objectLocX;
             int objectLocY;
             int objectLocZ;
-            SceneObjectPart part = findPrim(objectID, out m_ObjectRegionName);
+            SceneObjectPart part = findPrim(objectID, out _ObjectRegionName);
             if (part != null)
             {
                 objectLocX = (int)part.AbsolutePosition.X;
@@ -238,7 +232,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
                 objectLocZ = (int)part.AbsolutePosition.Z;
                 ObjectAbsolutePosition = "(" + objectLocX + ", " + objectLocY + ", " + objectLocZ + ")";
                 ObjectName = part.Name;
-                ObjectRegionName = m_ObjectRegionName;
+                ObjectRegionName = _ObjectRegionName;
                 return true;
             }
             return false;
@@ -267,12 +261,12 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
             bool isEMailStrictMatch = EMailreStrict.IsMatch(address);
             if (!isEMailStrictMatch)
             {
-                m_log.Error("[EMAIL]: REGEX Problem in EMail Address: "+address);
+                _log.Error("[EMAIL]: REGEX Problem in EMail Address: "+address);
                 return;
             }
-            if (subject.Length + body.Length > m_MaxEmailSize)
+            if (subject.Length + body.Length > _MaxEmailSize)
             {
-                m_log.Error("[EMAIL]: subject + body larger than limit of " + m_MaxEmailSize + " bytes");
+                _log.Error("[EMAIL]: subject + body larger than limit of " + _MaxEmailSize + " bytes");
                 return;
             }
 
@@ -283,7 +277,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
             if (!resolveNamePositionRegionName(objectID, out LastObjectName, out LastObjectPosition, out LastObjectRegionName))
                 return;
 
-            if (!address.EndsWith(m_InterObjectHostname))
+            if (!address.EndsWith(_InterObjectHostname))
             {
                 // regular email, send it out
                 try
@@ -292,7 +286,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
                     EmailMessage emailMessage = new EmailMessage
                     {
                         //From
-                        FromAddress = new EmailAddress(objectID.ToString() + "@" + m_HostName)
+                        FromAddress = new EmailAddress(objectID.ToString() + "@" + _HostName)
                     };
                     //To - Only One
                     emailMessage.AddToAddress(new EmailAddress(address));
@@ -319,11 +313,11 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
                     emailMessage.Send(smtpServer);
 
                     //Log
-                    m_log.Info("[EMAIL]: EMail sent to: " + address + " from object: " + objectID.ToString() + "@" + m_HostName);
+                    _log.Info("[EMAIL]: EMail sent to: " + address + " from object: " + objectID.ToString() + "@" + _HostName);
                 }
                 catch (Exception e)
                 {
-                    m_log.Error("[EMAIL]: DefaultEmailModule Exception: " + e.Message);
+                    _log.Error("[EMAIL]: DefaultEmailModule Exception: " + e.Message);
                 }
             }
             else
@@ -333,7 +327,7 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
                 {
                     time = ((int)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds).ToString(),
                     subject = subject,
-                    sender = objectID.ToString() + "@" + m_InterObjectHostname,
+                    sender = objectID.ToString() + "@" + _InterObjectHostname,
                     message = "Object-Name: " + LastObjectName +
                               "\nRegion: " + LastObjectRegionName + "\nLocal-Position: " +
                               LastObjectPosition + "\n\n" + body
@@ -366,21 +360,21 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
         {
             List<Email> queue = null;
 
-            lock (m_LastGetEmailCall)
+            lock (_LastGetEmailCall)
             {
-                if (m_LastGetEmailCall.ContainsKey(objectID))
+                if (_LastGetEmailCall.ContainsKey(objectID))
                 {
-                    m_LastGetEmailCall.Remove(objectID);
+                    _LastGetEmailCall.Remove(objectID);
                 }
 
-                m_LastGetEmailCall.Add(objectID, DateTime.Now);
+                _LastGetEmailCall.Add(objectID, DateTime.Now);
 
                 // Hopefully this isn't too time consuming.  If it is, we can always push it into a worker thread.
                 DateTime now = DateTime.Now;
                 List<UUID> removal = new List<UUID>();
-                foreach (UUID uuid in m_LastGetEmailCall.Keys)
+                foreach (UUID uuid in _LastGetEmailCall.Keys)
                 {
-                    if (now - m_LastGetEmailCall[uuid] > m_QueueTimeout)
+                    if (now - _LastGetEmailCall[uuid] > _QueueTimeout)
                     {
                         removal.Add(uuid);
                     }
@@ -388,19 +382,19 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
 
                 foreach (UUID remove in removal)
                 {
-                    m_LastGetEmailCall.Remove(remove);
-                    lock (m_MailQueues)
+                    _LastGetEmailCall.Remove(remove);
+                    lock (_MailQueues)
                     {
-                        m_MailQueues.Remove(remove);
+                        _MailQueues.Remove(remove);
                     }
                 }
             }
 
-            lock (m_MailQueues)
+            lock (_MailQueues)
             {
-                if (m_MailQueues.ContainsKey(objectID))
+                if (_MailQueues.ContainsKey(objectID))
                 {
-                    queue = m_MailQueues[objectID];
+                    queue = _MailQueues[objectID];
                 }
             }
 
@@ -433,9 +427,9 @@ namespace OpenSim.Region.CoreModules.Scripting.EmailModules
             }
             else
             {
-                lock (m_MailQueues)
+                lock (_MailQueues)
                 {
-                    m_MailQueues.Add(objectID, new List<Email>());
+                    _MailQueues.Add(objectID, new List<Email>());
                 }
             }
 

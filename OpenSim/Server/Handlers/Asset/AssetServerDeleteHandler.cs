@@ -49,27 +49,27 @@ namespace OpenSim.Server.Handlers.Asset
 
     public class AssetServerDeleteHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAssetService m_AssetService;
+        private readonly IAssetService _AssetService;
 
         /// <summary>
         /// Asset types that can be deleted remotely.
         /// </summary>
-        private readonly AllowedRemoteDeleteTypes m_allowedTypes;
+        private readonly AllowedRemoteDeleteTypes _allowedTypes;
 
         public AssetServerDeleteHandler(IAssetService service, AllowedRemoteDeleteTypes allowedTypes) :
                 base("DELETE", "/assets")
         {
-            m_AssetService = service;
-            m_allowedTypes = allowedTypes;
+            _AssetService = service;
+            _allowedTypes = allowedTypes;
         }
 
         public AssetServerDeleteHandler(IAssetService service, AllowedRemoteDeleteTypes allowedTypes, IServiceAuth auth) :
             base("DELETE", "/assets", auth)
         {
-            m_AssetService = service;
-            m_allowedTypes = allowedTypes;
+            _AssetService = service;
+            _allowedTypes = allowedTypes;
         }
         protected override byte[] ProcessRequest(string path, Stream request,
                 IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
@@ -80,23 +80,23 @@ namespace OpenSim.Server.Handlers.Asset
 
             if (p.Length > 0)
             {
-                if (m_allowedTypes != AllowedRemoteDeleteTypes.None)
+                if (_allowedTypes != AllowedRemoteDeleteTypes.None)
                 {
                     string assetID = p[0];
 
-                    AssetBase asset = m_AssetService.Get(assetID);
+                    AssetBase asset = _AssetService.Get(assetID);
                     if (asset != null)
                     {
-                        if (m_allowedTypes == AllowedRemoteDeleteTypes.All
+                        if (_allowedTypes == AllowedRemoteDeleteTypes.All
                             || (int)(asset.Flags & AssetFlags.Maptile) != 0)
                         {
-                            result = m_AssetService.Delete(assetID);
+                            result = _AssetService.Delete(assetID);
                         }
                         else
                         {
-                            m_log.DebugFormat(
+                            _log.DebugFormat(
                                 "[ASSET SERVER DELETE HANDLER]: Request to delete asset {0}, but type is {1} and allowed remote delete types are {2}",
-                                assetID, (AssetFlags)asset.Flags, m_allowedTypes);
+                                assetID, (AssetFlags)asset.Flags, _allowedTypes);
                         }
                     }
                 }

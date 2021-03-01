@@ -40,14 +40,14 @@ namespace OpenSim.Server.Handlers.Inventory
 {
     public class InventoryServerMoveItemsHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IInventoryService m_InventoryService;
+        private readonly IInventoryService _InventoryService;
 
         public InventoryServerMoveItemsHandler(IInventoryService service) :
                 base("PUT", "/inventory")
         {
-            m_InventoryService = service;
+            _InventoryService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream request,
@@ -63,10 +63,10 @@ namespace OpenSim.Server.Handlers.Inventory
             {
                 UUID ownerID = UUID.Zero;
                 UUID.TryParse(p[0], out ownerID);
-                result = m_InventoryService.MoveItems(ownerID, items);
+                result = _InventoryService.MoveItems(ownerID, items);
             }
             else
-                m_log.WarnFormat("[MOVEITEMS HANDLER]: ownerID not provided in request. Unable to serve.");
+                _log.WarnFormat("[MOVEITEMS HANDLER]: ownerID not provided in request. Unable to serve.");
 
             xs = new XmlSerializer(typeof(bool));
             return ServerUtils.SerializeResult(xs, result);

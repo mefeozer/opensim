@@ -328,7 +328,7 @@ namespace OpenSim.Framework.Monitoring
                 strOut = request["callback"].ToString() + "(" + strOut + ");";
             }
 
-            // m_log.DebugFormat("{0} StatFetch: uri={1}, cat={2}, cont={3}, stat={4}, resp={5}",
+            // _log.DebugFormat("{0} StatFetch: uri={1}, cat={2}, cont={3}, stat={4}, resp={5}",
             //                         LogHeader, regpath, pCategoryName, pContainerName, pStatName, strOut);
 
             responsedata["int_response_code"] = response_code;

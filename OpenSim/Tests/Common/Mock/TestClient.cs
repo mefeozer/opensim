@@ -42,11 +42,11 @@ namespace OpenSim.Tests.Common
 {
     public class TestClient : IClientAPI, IClientCore
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         readonly EventWaitHandle wh = new EventWaitHandle (false, EventResetMode.AutoReset, "Crossing");
 
-        private readonly Scene m_scene;
+        private readonly Scene _scene;
 
         // Properties so that we can get at received data for test purposes
         public List<uint> ReceivedKills { get; }
@@ -350,7 +350,7 @@ namespace OpenSim.Tests.Common
         /// <value>
         /// This agent's UUID
         /// </value>
-        private readonly UUID m_agentId;
+        private readonly UUID _agentId;
 
         public ISceneAgent SceneAgent { get; set; }
 
@@ -365,43 +365,31 @@ namespace OpenSim.Tests.Common
 
         public virtual Vector3 StartPos
         {
-            get { return startPos; }
+            get => startPos;
             set { }
         }
 
         public float StartFar { get; set; }
 
-        public virtual UUID AgentId
-        {
-            get { return m_agentId; }
-        }
+        public virtual UUID AgentId => _agentId;
 
         public UUID SessionId { get; set; }
 
         public UUID SecureSessionId { get; set; }
 
-        public virtual string FirstName
-        {
-            get { return m_firstName; }
-        }
-        private readonly string m_firstName;
+        public virtual string FirstName => _firstName;
+        private readonly string _firstName;
 
-        public virtual string LastName
-        {
-            get { return m_lastName; }
-        }
-        private readonly string m_lastName;
+        public virtual string LastName => _lastName;
+        private readonly string _lastName;
 
-        public virtual string Name
-        {
-            get { return FirstName + " " + LastName; }
-        }
+        public virtual string Name => FirstName + " " + LastName;
 
-        public int PingTimeMS { get { return 0; } }
+        public int PingTimeMS => 0;
 
         public bool IsActive
         {
-            get { return true; }
+            get => true;
             set { }
         }
 
@@ -409,19 +397,19 @@ namespace OpenSim.Tests.Common
 
         public UUID ActiveGroupId
         {
-            get { return UUID.Zero; }
+            get => UUID.Zero;
             set { }
         }
 
         public string ActiveGroupName
         {
-            get { return string.Empty; }
+            get => string.Empty;
             set { }
         }
 
         public ulong ActiveGroupPowers
         {
-            get { return 0; }
+            get => 0;
             set { }
         }
 
@@ -444,37 +432,28 @@ namespace OpenSim.Tests.Common
 
         public virtual int NextAnimationSequenceNumber
         {
-            get { return 1; }
+            get => 1;
             set { }
         }
 
-        public IScene Scene
-        {
-            get { return m_scene; }
-        }
+        public IScene Scene => _scene;
 
-        public UUID ScopeId
-        {
-            get { return UUID.Zero; }
-        }
+        public UUID ScopeId => UUID.Zero;
 
         public bool SendLogoutPacketWhenClosing
         {
             set { }
         }
 
-        private uint m_circuitCode;
+        private uint _circuitCode;
 
         public uint CircuitCode
         {
-            get { return m_circuitCode; }
-            set { m_circuitCode = value; }
+            get => _circuitCode;
+            set => _circuitCode = value;
         }
 
-        public IPEndPoint RemoteEndPoint
-        {
-            get { return new IPEndPoint(IPAddress.Loopback, (ushort)m_circuitCode); }
-        }
+        public IPEndPoint RemoteEndPoint => new IPEndPoint(IPAddress.Loopback, (ushort)_circuitCode);
 
         public List<uint> SelectedObjects {get; private set;}
 
@@ -486,11 +465,11 @@ namespace OpenSim.Tests.Common
         /// <param name="sceneManager"></param>
         public TestClient(AgentCircuitData agentData, Scene scene)
         {
-            m_agentId = agentData.AgentID;
-            m_firstName = agentData.firstname;
-            m_lastName = agentData.lastname;
-            m_circuitCode = agentData.circuitcode;
-            m_scene = scene;
+            _agentId = agentData.AgentID;
+            _firstName = agentData.firstname;
+            _lastName = agentData.lastname;
+            _circuitCode = agentData.circuitcode;
+            _scene = scene;
             SessionId = agentData.SessionID;
             SecureSessionId = agentData.SecureSessionID;
             CapsSeedUrl = agentData.CapsPath;
@@ -683,17 +662,17 @@ namespace OpenSim.Tests.Common
                 AgentID = AgentId,
                 SessionID = SessionId,
                 SecureSessionID = UUID.Zero,
-                circuitcode = m_circuitCode,
+                circuitcode = _circuitCode,
                 child = false,
-                firstname = m_firstName,
-                lastname = m_lastName
+                firstname = _firstName,
+                lastname = _lastName
             };
 
-            ICapabilitiesModule capsModule = m_scene.RequestModuleInterface<ICapabilitiesModule>();
+            ICapabilitiesModule capsModule = _scene.RequestModuleInterface<ICapabilitiesModule>();
             if (capsModule != null)
             {
-                agentData.CapsPath = capsModule.GetCapsPath(m_agentId);
-                agentData.ChildrenCapSeeds = new Dictionary<ulong, string>(capsModule.GetChildrenSeeds(m_agentId));
+                agentData.CapsPath = capsModule.GetCapsPath(_agentId);
+                agentData.ChildrenCapSeeds = new Dictionary<ulong, string>(capsModule.GetChildrenSeeds(_agentId));
             }
 
             return agentData;
@@ -709,8 +688,8 @@ namespace OpenSim.Tests.Common
             ulong regionHandle, byte simAccess, IPEndPoint regionExternalEndPoint,
             uint locationID, uint flags, string capsURL)
         {
-            m_log.DebugFormat(
-                "[TEST CLIENT]: Received SendRegionTeleport for {0} {1} on {2}", m_firstName, m_lastName, m_scene.Name);
+            _log.DebugFormat(
+                "[TEST CLIENT]: Received SendRegionTeleport for {0} {1} on {2}", _firstName, _lastName, _scene.Name);
 
             CapsSeedUrl = capsURL;
 
@@ -721,9 +700,9 @@ namespace OpenSim.Tests.Common
 
         public virtual void SendTeleportFailed(string reason)
         {
-            m_log.DebugFormat(
+            _log.DebugFormat(
                 "[TEST CLIENT]: Teleport failed for {0} {1} on {2} with reason {3}",
-                m_firstName, m_lastName, m_scene.Name, reason);
+                _firstName, _lastName, _scene.Name, reason);
         }
 
         public virtual void CrossRegion(ulong newRegionHandle, Vector3 pos, Vector3 lookAt,
@@ -1046,7 +1025,7 @@ namespace OpenSim.Tests.Common
             if (OnConnectionClosed != null)
                 OnConnectionClosed(this);
 
-            m_scene.RemoveClient(AgentId, true);
+            _scene.RemoveClient(AgentId, true);
         }
 
         public void Start()

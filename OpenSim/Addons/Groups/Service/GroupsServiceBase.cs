@@ -34,8 +34,8 @@ namespace OpenSim.Groups
 {
     public class GroupsServiceBase : ServiceBase
     {
-        protected IGroupsData m_Database = null;
-        protected IGridUserData m_GridUserService = null;
+        protected IGroupsData _Database = null;
+        protected IGridUserData _GridUserService = null;
 
         public GroupsServiceBase(IConfigSource config, string cName)
             : base(config)
@@ -75,8 +75,8 @@ namespace OpenSim.Groups
             if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IGroupsData>(dllName, new object[] { connString, realm });
-            if (m_Database == null)
+            _Database = LoadPlugin<IGroupsData>(dllName, new object[] { connString, realm });
+            if (_Database == null)
                 throw new Exception("Could not find a storage interface in the given module " + dllName);
 
             //
@@ -90,8 +90,8 @@ namespace OpenSim.Groups
                 usersRealm = usersConfig.GetString("Realm", usersRealm);
             }
 
-            m_GridUserService = LoadPlugin<IGridUserData>(dllName, new object[] { connString, usersRealm });
-            if (m_GridUserService == null)
+            _GridUserService = LoadPlugin<IGridUserData>(dllName, new object[] { connString, usersRealm });
+            if (_GridUserService == null)
                 throw new Exception("Could not find a storage inferface for the given users module " + dllName);
         }
     }

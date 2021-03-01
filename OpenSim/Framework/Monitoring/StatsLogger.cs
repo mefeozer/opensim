@@ -38,10 +38,10 @@ namespace OpenSim.Framework.Monitoring
     /// </summary>
     public static class StatsLogger
     {
-        private static readonly ILog m_statsLog = LogManager.GetLogger("special.StatsLogger");
+        private static readonly ILog _statsLog = LogManager.GetLogger("special.StatsLogger");
 
-        private static Timer m_loggingTimer;
-        private static readonly int m_statsLogIntervalMs = 5000;
+        private static Timer _loggingTimer;
+        private static readonly int _statsLogIntervalMs = 5000;
 
         public static void RegisterConsoleCommands(ICommandConsole console)
         {
@@ -77,7 +77,7 @@ namespace OpenSim.Framework.Monitoring
             if (cmd[2] == "start")
             {
                 Start();
-                con.Output("Now recording all stats to file every {0}ms", m_statsLogIntervalMs);
+                con.Output("Now recording all stats to file every {0}ms", _statsLogIntervalMs);
             }
             else if (cmd[2] == "stop")
             {
@@ -109,31 +109,31 @@ namespace OpenSim.Framework.Monitoring
 
         public static void Start()
         {
-            if (m_loggingTimer != null)
+            if (_loggingTimer != null)
                 Stop();
 
-            m_loggingTimer = new Timer(m_statsLogIntervalMs)
+            _loggingTimer = new Timer(_statsLogIntervalMs)
             {
                 AutoReset = false
             };
-            m_loggingTimer.Elapsed += Log;
-            m_loggingTimer.Start();
+            _loggingTimer.Elapsed += Log;
+            _loggingTimer.Start();
         }
 
         public static void Stop()
         {
-            if (m_loggingTimer != null)
+            if (_loggingTimer != null)
             {
-                m_loggingTimer.Stop();
+                _loggingTimer.Stop();
             }
         }
 
         private static void Log(object sender, ElapsedEventArgs e)
         {
             foreach (string line in GetReport())
-                m_statsLog.Info(line);
+                _statsLog.Info(line);
 
-            m_loggingTimer.Start();
+            _loggingTimer.Start();
         }
 
         private static List<string> GetReport()

@@ -45,15 +45,15 @@ namespace OpenSim.Region.CoreModules.World.Estate
 {
     public class EstateSimpleRequestHandler :SimpleStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected EstateModule m_EstateModule;
-        protected object m_RequestLock = new object();
+        protected EstateModule _EstateModule;
+        protected object _RequestLock = new object();
         private readonly string token;
 
         public EstateSimpleRequestHandler(EstateModule fmodule, string _token) : base("/estate")
         {
-            m_EstateModule = fmodule;
+            _EstateModule = fmodule;
             token = _token;
         }
 
@@ -68,7 +68,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
             httpResponse.StatusCode = (int)HttpStatusCode.OK;
 
-            // m_log.DebugFormat("[XESTATE HANDLER]: query String: {0}", body);
+            // _log.DebugFormat("[XESTATE HANDLER]: query String: {0}", body);
 
             try
             {
@@ -77,7 +77,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
                     body = sr.ReadToEnd();
 
                 body = body.Trim();
-                lock (m_RequestLock)
+                lock (_RequestLock)
                 {
                     Dictionary<string, object> request = ServerUtils.ParseQueryString(body);
 
@@ -110,7 +110,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
                     try
                     {
-                        m_EstateModule.InInfoUpdate = false;
+                        _EstateModule.InInfoUpdate = false;
                         switch (method)
                         {
                             case "update_covenant":
@@ -132,13 +132,13 @@ namespace OpenSim.Region.CoreModules.World.Estate
                     }
                     finally
                     {
-                        m_EstateModule.InInfoUpdate = false;
+                        _EstateModule.InInfoUpdate = false;
                     }
                 }
             }
             catch (Exception e)
             {
-                m_log.Debug("[XESTATE]: Exception {0}" + e.ToString());
+                _log.Debug("[XESTATE]: Exception {0}" + e.ToString());
             }
 
             httpResponse.RawBuffer = FailureResult();
@@ -155,7 +155,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
             if (!int.TryParse(request["EstateID"].ToString(), out EstateID))
                 return FailureResult();
 
-            foreach (Scene s in m_EstateModule.Scenes)
+            foreach (Scene s in _EstateModule.Scenes)
             {
                 if (s.RegionInfo.EstateSettings.EstateID == EstateID)
                 {
@@ -189,7 +189,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
             if (!int.TryParse(request["EstateID"].ToString(), out EstateID))
                 return FailureResult();
 
-            foreach (Scene s in m_EstateModule.Scenes)
+            foreach (Scene s in _EstateModule.Scenes)
             {
                 if (s.RegionInfo.EstateSettings.EstateID == EstateID)
                 {
@@ -229,7 +229,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
             FromName = request["FromName"].ToString();
             Message = request["Message"].ToString();
 
-            foreach (Scene s in m_EstateModule.Scenes)
+            foreach (Scene s in _EstateModule.Scenes)
             {
                 if (s.RegionInfo.EstateSettings.EstateID == EstateID)
                 {
@@ -260,7 +260,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
             if (!int.TryParse(request["EstateID"].ToString(), out EstateID))
                 return FailureResult();
 
-            foreach (Scene s in m_EstateModule.Scenes)
+            foreach (Scene s in _EstateModule.Scenes)
             {
                 if (s.RegionInfo.EstateSettings.EstateID == (uint)EstateID)
                     s.RegionInfo.RegionSettings.Covenant = CovenantID;
@@ -278,7 +278,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
             if (!int.TryParse(request["EstateID"].ToString(), out EstateID))
                 return FailureResult();
 
-            foreach (Scene s in m_EstateModule.Scenes)
+            foreach (Scene s in _EstateModule.Scenes)
             {
                 if (s.RegionInfo.EstateSettings.EstateID == (uint)EstateID)
                     s.ReloadEstateData();

@@ -47,22 +47,22 @@ namespace OpenSim.Services.GridService
 {
     public class HypergridLinker : IHypergridLinker
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static uint m_autoMappingX = 0;
-        private static uint m_autoMappingY = 0;
-        private static bool m_enableAutoMapping = false;
+        private static uint _autoMappingX = 0;
+        private static uint _autoMappingY = 0;
+        private static bool _enableAutoMapping = false;
 
-        protected IRegionData m_Database;
-        protected GridService m_GridService;
-        protected IAssetService m_AssetService;
-        protected GatekeeperServiceConnector m_GatekeeperConnector;
+        protected IRegionData _Database;
+        protected GridService _GridService;
+        protected IAssetService _AssetService;
+        protected GatekeeperServiceConnector _GatekeeperConnector;
 
-        protected UUID m_ScopeID = UUID.Zero;
-//        protected bool m_Check4096 = true;
-        protected string m_MapTileDirectory = string.Empty;
+        protected UUID _ScopeID = UUID.Zero;
+//        protected bool _Check4096 = true;
+        protected string _MapTileDirectory = string.Empty;
 
-        protected GridInfo m_ThisGridInfo;
+        protected GridInfo _ThisGridInfo;
 
         public HypergridLinker(IConfigSource config, GridService gridService, IRegionData db)
         {
@@ -73,45 +73,45 @@ namespace OpenSim.Services.GridService
             if (!gridConfig.GetBoolean("HypergridLinker", false))
                 return;
 
-            m_Database = db;
-            m_GridService = gridService;
-            m_log.DebugFormat("[HYPERGRID LINKER]: Starting with db {0}", db.GetType());
+            _Database = db;
+            _GridService = gridService;
+            _log.DebugFormat("[HYPERGRID LINKER]: Starting with db {0}", db.GetType());
 
             string assetService = gridConfig.GetString("AssetService", string.Empty);
 
             object[] args = new object[] { config };
 
             if (!string.IsNullOrEmpty(assetService))
-                m_AssetService = ServerUtils.LoadPlugin<IAssetService>(assetService, args);
+                _AssetService = ServerUtils.LoadPlugin<IAssetService>(assetService, args);
 
             string scope = gridConfig.GetString("ScopeID", string.Empty);
             if (!string.IsNullOrEmpty(scope))
-                UUID.TryParse(scope, out m_ScopeID);
+                UUID.TryParse(scope, out _ScopeID);
 
-            //m_Check4096 = gridConfig.GetBoolean("Check4096", true);
+            //_Check4096 = gridConfig.GetBoolean("Check4096", true);
 
-            m_MapTileDirectory = gridConfig.GetString("MapTileDirectory", "maptiles");
+            _MapTileDirectory = gridConfig.GetString("MapTileDirectory", "maptiles");
 
-            m_ThisGridInfo = new GridInfo(config);
-            if(!m_ThisGridInfo.HasHGConfig)
+            _ThisGridInfo = new GridInfo(config);
+            if(!_ThisGridInfo.HasHGConfig)
                 throw new Exception("missing HyperGrid configuration");
 
-            m_log.DebugFormat("[HYPERGRID LINKER]: Local Gatekeeper: {0}", m_ThisGridInfo.GateKeeperURL);
+            _log.DebugFormat("[HYPERGRID LINKER]: Local Gatekeeper: {0}", _ThisGridInfo.GateKeeperURL);
 
-            m_GatekeeperConnector = new GatekeeperServiceConnector(m_AssetService);
+            _GatekeeperConnector = new GatekeeperServiceConnector(_AssetService);
 
-            m_log.Debug("[HYPERGRID LINKER]: Loaded all services...");
+            _log.Debug("[HYPERGRID LINKER]: Loaded all services...");
 
-            if (!string.IsNullOrEmpty(m_MapTileDirectory))
+            if (!string.IsNullOrEmpty(_MapTileDirectory))
             {
                 try
                 {
-                    Directory.CreateDirectory(m_MapTileDirectory);
+                    Directory.CreateDirectory(_MapTileDirectory);
                 }
                 catch (Exception e)
                 {
-                    m_log.WarnFormat("[HYPERGRID LINKER]: Could not create map tile storage directory {0}: {1}", m_MapTileDirectory, e);
-                    m_MapTileDirectory = string.Empty;
+                    _log.WarnFormat("[HYPERGRID LINKER]: Could not create map tile storage directory {0}: {1}", _MapTileDirectory, e);
+                    _MapTileDirectory = string.Empty;
                 }
             }
 
@@ -151,7 +151,7 @@ namespace OpenSim.Services.GridService
 
             if (rurl.IsLocalGrid)
             {
-                m_log.InfoFormat("[HYPERGRID LINKER]: Cannot hyperlink to regions on the same grid");
+                _log.InfoFormat("[HYPERGRID LINKER]: Cannot hyperlink to regions on the same grid");
                 return null;
             }
 
@@ -164,15 +164,15 @@ namespace OpenSim.Services.GridService
         private static readonly IPEndPoint dummyIP = new IPEndPoint(0,0);
         private bool TryCreateLinkImpl(UUID scopeID, int xloc, int yloc, RegionURI rurl, UUID ownerID, out GridRegion regInfo)
         {
-            m_log.InfoFormat("[HYPERGRID LINKER]: Link to {0} {1}, in <{2},{3}>",
+            _log.InfoFormat("[HYPERGRID LINKER]: Link to {0} {1}, in <{2},{3}>",
                 rurl.HostUrl, rurl.RegionName, Util.WorldToRegionLoc((uint)xloc), Util.WorldToRegionLoc((uint)yloc));
 
 
             // Check for free coordinates
-            GridRegion region = m_GridService.GetRegionByPosition(scopeID, xloc, yloc);
+            GridRegion region = _GridService.GetRegionByPosition(scopeID, xloc, yloc);
             if (region != null)
             {
-                m_log.WarnFormat("[HYPERGRID LINKER]: Coordinates <{0},{1}> are already occupied by region {2} with uuid {3}",
+                _log.WarnFormat("[HYPERGRID LINKER]: Coordinates <{0},{1}> are already occupied by region {2} with uuid {3}",
                     Util.WorldToRegionLoc((uint)xloc), Util.WorldToRegionLoc((uint)yloc),
                     region.RegionName, region.RegionID);
                 regInfo = null;
@@ -200,19 +200,19 @@ namespace OpenSim.Services.GridService
             string imageURL = string.Empty;
             int sizeX = (int)Constants.RegionSize;
             int sizeY = (int)Constants.RegionSize;
-            if (!m_GatekeeperConnector.LinkRegion(regInfo, out regionID, out handle, out externalName, out imageURL, out string reason, out sizeX, out sizeY))
+            if (!_GatekeeperConnector.LinkRegion(regInfo, out regionID, out handle, out externalName, out imageURL, out string reason, out sizeX, out sizeY))
                 return false;
 
             if (regionID == UUID.Zero)
             {
-                m_log.Warn("[HYPERGRID LINKER]: Unable to link region: " + reason);
+                _log.Warn("[HYPERGRID LINKER]: Unable to link region: " + reason);
                 return false;
             }
 
-            region = m_GridService.GetRegionByUUID(scopeID, regionID);
+            region = _GridService.GetRegionByUUID(scopeID, regionID);
             if (region != null)
             {
-                m_log.DebugFormat("[HYPERGRID LINKER]: Region already exists in coordinates <{0},{1}>",
+                _log.DebugFormat("[HYPERGRID LINKER]: Region already exists in coordinates <{0},{1}>",
                     Util.WorldToRegionLoc((uint)region.RegionLocX), Util.WorldToRegionLoc((uint)region.RegionLocY));
                 regInfo = region;
                 return true;
@@ -227,7 +227,7 @@ namespace OpenSim.Services.GridService
             else
                 regInfo.RegionName = externalName;
 
-            m_log.DebugFormat("[HYPERGRID LINKER]: naming linked region {0}, handle {1}", regInfo.RegionName, handle.ToString());
+            _log.DebugFormat("[HYPERGRID LINKER]: naming linked region {0}, handle {1}", regInfo.RegionName, handle.ToString());
 
             // Get the map image
             regInfo.TerrainImage = GetMapImage(regionID, imageURL);
@@ -236,7 +236,7 @@ namespace OpenSim.Services.GridService
             regInfo.RegionSecret = handle.ToString();
 
             AddHyperlinkRegion(regInfo, handle);
-            m_log.InfoFormat("[HYPERGRID LINKER]: Successfully linked to region {0} at <{1},{2}> with image {3}",
+            _log.InfoFormat("[HYPERGRID LINKER]: Successfully linked to region {0} at <{1},{2}> with image {3}",
                 regInfo.RegionName, Util.WorldToRegionLoc((uint)regInfo.RegionLocX), Util.WorldToRegionLoc((uint)regInfo.RegionLocY), regInfo.TerrainImage);
             return true;
         }
@@ -251,7 +251,7 @@ namespace OpenSim.Services.GridService
 
         public bool IsLocalGrid(string UriHost)
         {
-           return m_ThisGridInfo.IsLocalGrid(UriHost) == 1;
+           return _ThisGridInfo.IsLocalGrid(UriHost) == 1;
         }
 
         public GridRegion TryLinkRegionToCoords(UUID scopeID, string mapName, int xloc, int yloc, UUID ownerID, out string reason)
@@ -292,7 +292,7 @@ namespace OpenSim.Services.GridService
 
         private bool TryCreateLinkImpl(UUID scopeID, int xloc, int yloc, string remoteRegionName, uint externalPort, string externalHostName, string serverURI, UUID ownerID, out GridRegion regInfo, out string reason)
         {
-            m_log.InfoFormat("[HYPERGRID LINKER]: Link to {0} {1}, in <{2},{3}>",
+            _log.InfoFormat("[HYPERGRID LINKER]: Link to {0} {1}, in <{2},{3}>",
                 serverURI == null ? externalHostName + ":" + externalPort : serverURI,
                 remoteRegionName, Util.WorldToRegionLoc((uint)xloc), Util.WorldToRegionLoc((uint)yloc));
 
@@ -330,16 +330,16 @@ namespace OpenSim.Services.GridService
 
             if(IsLocalGrid(regInfo.ServerURI))
             {
-                m_log.InfoFormat("[HYPERGRID LINKER]: Cannot hyperlink to regions on the same grid");
+                _log.InfoFormat("[HYPERGRID LINKER]: Cannot hyperlink to regions on the same grid");
                 reason = "Cannot hyperlink to regions on the same grid";
                 return false;
             }
 
             // Check for free coordinates
-            GridRegion region = m_GridService.GetRegionByPosition(regInfo.ScopeID, regInfo.RegionLocX, regInfo.RegionLocY);
+            GridRegion region = _GridService.GetRegionByPosition(regInfo.ScopeID, regInfo.RegionLocX, regInfo.RegionLocY);
             if (region != null)
             {
-                m_log.WarnFormat("[HYPERGRID LINKER]: Coordinates <{0},{1}> are already occupied by region {2} with uuid {3}",
+                _log.WarnFormat("[HYPERGRID LINKER]: Coordinates <{0},{1}> are already occupied by region {2} with uuid {3}",
                     Util.WorldToRegionLoc((uint)regInfo.RegionLocX), Util.WorldToRegionLoc((uint)regInfo.RegionLocY),
                     region.RegionName, region.RegionID);
                 reason = "Coordinates are already in use";
@@ -352,7 +352,7 @@ namespace OpenSim.Services.GridService
             }
             catch (Exception e)
             {
-                m_log.Warn("[HYPERGRID LINKER]: Wrong format for link-region: " + e.Message);
+                _log.Warn("[HYPERGRID LINKER]: Wrong format for link-region: " + e.Message);
                 reason = "Internal error";
                 return false;
             }
@@ -364,20 +364,20 @@ namespace OpenSim.Services.GridService
             string imageURL = string.Empty;
             int sizeX = (int)Constants.RegionSize;
             int sizeY = (int)Constants.RegionSize;
-            if (!m_GatekeeperConnector.LinkRegion(regInfo, out regionID, out handle, out externalName, out imageURL, out reason, out sizeX, out sizeY))
+            if (!_GatekeeperConnector.LinkRegion(regInfo, out regionID, out handle, out externalName, out imageURL, out reason, out sizeX, out sizeY))
                 return false;
 
             if (regionID == UUID.Zero)
             {
-                m_log.Warn("[HYPERGRID LINKER]: Unable to link region");
+                _log.Warn("[HYPERGRID LINKER]: Unable to link region");
                 reason = "Remote region could not be found";
                 return false;
             }
 
-            region = m_GridService.GetRegionByUUID(scopeID, regionID);
+            region = _GridService.GetRegionByUUID(scopeID, regionID);
             if (region != null)
             {
-                m_log.DebugFormat("[HYPERGRID LINKER]: Region already exists in coordinates <{0},{1}>",
+                _log.DebugFormat("[HYPERGRID LINKER]: Region already exists in coordinates <{0},{1}>",
                     Util.WorldToRegionLoc((uint)region.RegionLocX), Util.WorldToRegionLoc((uint)region.RegionLocY));
                 regInfo = region;
                 return true;
@@ -388,11 +388,11 @@ namespace OpenSim.Services.GridService
             // done here) and it also hypergrid teleports that are within range (possibly because the source grid
             // itself has regions that are very far apart).
 //            uint x, y;
-//            if (m_Check4096 && !Check4096(handle, out x, out y))
+//            if (_Check4096 && !Check4096(handle, out x, out y))
 //            {
 //                //RemoveHyperlinkRegion(regInfo.RegionID);
 //                reason = "Region is too far (" + x + ", " + y + ")";
-//                m_log.Info("[HYPERGRID LINKER]: Unable to link, region is too far (" + x + ", " + y + ")");
+//                _log.Info("[HYPERGRID LINKER]: Unable to link, region is too far (" + x + ", " + y + ")");
 //                //return false;
 //            }
 
@@ -405,7 +405,7 @@ namespace OpenSim.Services.GridService
              else
                 regInfo.RegionName = externalName;
 
-            m_log.DebugFormat("[HYPERGRID LINKER]: naming linked region {0}, handle {1}", regInfo.RegionName, handle.ToString());
+            _log.DebugFormat("[HYPERGRID LINKER]: naming linked region {0}, handle {1}", regInfo.RegionName, handle.ToString());
 
             // Get the map image
             regInfo.TerrainImage = GetMapImage(regionID, imageURL);
@@ -414,17 +414,17 @@ namespace OpenSim.Services.GridService
             regInfo.RegionSecret = handle.ToString();
 
             AddHyperlinkRegion(regInfo, handle);
-            m_log.InfoFormat("[HYPERGRID LINKER]: Successfully linked to region {0} at <{1},{2}> with image {3}",
+            _log.InfoFormat("[HYPERGRID LINKER]: Successfully linked to region {0} at <{1},{2}> with image {3}",
                 regInfo.RegionName, Util.WorldToRegionLoc((uint)regInfo.RegionLocX), Util.WorldToRegionLoc((uint)regInfo.RegionLocY), regInfo.TerrainImage);
             return true;
         }
 
         public bool TryUnlinkRegion(string mapName)
         {
-            m_log.DebugFormat("[HYPERGRID LINKER]: Request to unlink {0}", mapName);
+            _log.DebugFormat("[HYPERGRID LINKER]: Request to unlink {0}", mapName);
             GridRegion regInfo = null;
 
-            List<RegionData> regions = m_Database.Get(Util.EscapeForLike(mapName), m_ScopeID);
+            List<RegionData> regions = _Database.Get(Util.EscapeForLike(mapName), _ScopeID);
             if (regions != null && regions.Count > 0)
             {
                 OpenSim.Framework.RegionFlags rflags = (OpenSim.Framework.RegionFlags)Convert.ToInt32(regions[0].Data["flags"]);
@@ -433,7 +433,7 @@ namespace OpenSim.Services.GridService
                     regInfo = new GridRegion
                     {
                         RegionID = regions[0].RegionID,
-                        ScopeID = m_ScopeID
+                        ScopeID = _ScopeID
                     };
                 }
             }
@@ -445,7 +445,7 @@ namespace OpenSim.Services.GridService
             }
             else
             {
-                m_log.InfoFormat("[HYPERGRID LINKER]: Region {0} not found", mapName);
+                _log.InfoFormat("[HYPERGRID LINKER]: Region {0} not found", mapName);
                 return false;
             }
         }
@@ -479,7 +479,7 @@ namespace OpenSim.Services.GridService
 //                ymax = int.MaxValue;
 //
 //            // Check for any regions that are within the possible teleport range to the linked region
-//            List<GridRegion> regions = m_GridService.GetRegionRange(m_ScopeID, (int)xmin, (int)xmax, (int)ymin, (int)ymax);
+//            List<GridRegion> regions = _GridService.GetRegionRange(_ScopeID, (int)xmin, (int)xmax, (int)ymin, (int)ymax);
 //            if (regions.Count == 0)
 //            {
 //                return false;
@@ -487,7 +487,7 @@ namespace OpenSim.Services.GridService
 //            else
 //            {
 //                // Check for regions which are not linked regions
-//                List<GridRegion> hyperlinks = m_GridService.GetHyperlinks(m_ScopeID);
+//                List<GridRegion> hyperlinks = _GridService.GetHyperlinks(_ScopeID);
 //                IEnumerable<GridRegion> availableRegions = regions.Except(hyperlinks);
 //                if (availableRegions.Count() == 0)
 //                    return false;
@@ -498,21 +498,21 @@ namespace OpenSim.Services.GridService
 
         private void AddHyperlinkRegion(GridRegion regionInfo, ulong regionHandle)
         {
-            RegionData rdata = m_GridService.RegionInfo2RegionData(regionInfo);
+            RegionData rdata = _GridService.RegionInfo2RegionData(regionInfo);
             int flags = (int)OpenSim.Framework.RegionFlags.Hyperlink + (int)OpenSim.Framework.RegionFlags.NoDirectLogin + (int)OpenSim.Framework.RegionFlags.RegionOnline;
             rdata.Data["flags"] = flags.ToString();
 
-            m_Database.Store(rdata);
+            _Database.Store(rdata);
         }
 
         private void RemoveHyperlinkRegion(UUID regionID)
         {
-            m_Database.Delete(regionID);
+            _Database.Delete(regionID);
         }
 
         public UUID GetMapImage(UUID regionID, string imageURL)
         {
-            return m_GatekeeperConnector.GetMapImage(regionID, imageURL, m_MapTileDirectory);
+            return _GatekeeperConnector.GetMapImage(regionID, imageURL, _MapTileDirectory);
         }
         #endregion
 
@@ -526,7 +526,7 @@ namespace OpenSim.Services.GridService
                 MainConsole.Instance.Output("Syntax: show hyperlinks");
                 return;
             }
-            List<RegionData> regions = m_Database.GetHyperlinks(UUID.Zero);
+            List<RegionData> regions = _Database.GetHyperlinks(UUID.Zero);
             if (regions == null || regions.Count < 1)
             {
                 MainConsole.Instance.Output("No hyperlinks");
@@ -591,15 +591,15 @@ namespace OpenSim.Services.GridService
                 {
                     try
                     {
-                        m_autoMappingX = Convert.ToUInt32(cmdparams[0]);
-                        m_autoMappingY = Convert.ToUInt32(cmdparams[1]);
-                        m_enableAutoMapping = true;
+                        _autoMappingX = Convert.ToUInt32(cmdparams[0]);
+                        _autoMappingY = Convert.ToUInt32(cmdparams[1]);
+                        _enableAutoMapping = true;
                     }
                     catch (Exception)
                     {
-                        m_autoMappingX = 0;
-                        m_autoMappingY = 0;
-                        m_enableAutoMapping = false;
+                        _autoMappingX = 0;
+                        _autoMappingY = 0;
+                        _enableAutoMapping = false;
                     }
                 }
             }
@@ -738,7 +738,7 @@ namespace OpenSim.Services.GridService
             }
             catch (Exception e)
             {
-                m_log.Error(e.ToString());
+                _log.Error(e.ToString());
             }
         }
 
@@ -758,10 +758,10 @@ namespace OpenSim.Services.GridService
             realXLoc = Convert.ToUInt32(config.GetString("real-xloc", "0"));
             realYLoc = Convert.ToUInt32(config.GetString("real-yloc", "0"));
 
-            if (m_enableAutoMapping)
+            if (_enableAutoMapping)
             {
-                xloc = xloc % 100 + m_autoMappingX;
-                yloc = yloc % 100 + m_autoMappingY;
+                xloc = xloc % 100 + _autoMappingX;
+                yloc = yloc % 100 + _autoMappingY;
             }
 
             if (realXLoc == 0 && realYLoc == 0 ||

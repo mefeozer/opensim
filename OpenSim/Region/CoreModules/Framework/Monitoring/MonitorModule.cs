@@ -51,7 +51,7 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
         /// </summary>
         public bool Enabled { get; private set; }
 
-        private Scene m_scene;
+        private Scene _scene;
 
         /// <summary>
         /// These are monitors where we know the static details in advance.
@@ -60,10 +60,10 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
         /// Dynamic monitors also exist (we don't know any of the details of what stats we get back here)
         /// but these are currently hardcoded.
         /// </remarks>
-        private readonly List<IMonitor> m_staticMonitors = new List<IMonitor>();
+        private readonly List<IMonitor> _staticMonitors = new List<IMonitor>();
 
-        private readonly List<IAlert> m_alerts = new List<IAlert>();
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly List<IAlert> _alerts = new List<IAlert>();
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public MonitorModule()
         {
@@ -89,16 +89,16 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
             if (!Enabled)
                 return;
 
-            m_scene = scene;
+            _scene = scene;
 
-            m_scene.AddCommand("General", this, "monitor report",
+            _scene.AddCommand("General", this, "monitor report",
                                "monitor report",
                                "Returns a variety of statistics about the current region and/or simulator",
                                DebugMonitors);
 
-            MainServer.Instance.AddSimpleStreamHandler(new SimpleStreamHandler("/monitorstats/" + m_scene.RegionInfo.RegionID, StatsPage));
+            MainServer.Instance.AddSimpleStreamHandler(new SimpleStreamHandler("/monitorstats/" + _scene.RegionInfo.RegionID, StatsPage));
             MainServer.Instance.AddSimpleStreamHandler(new SimpleStreamHandler(
-                "/monitorstats/" + Uri.EscapeDataString(m_scene.RegionInfo.RegionName), StatsPage));
+                "/monitorstats/" + Uri.EscapeDataString(_scene.RegionInfo.RegionName), StatsPage));
 
             AddMonitors();
             RegisterStatsManagerRegionStatistics();
@@ -109,204 +109,198 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
             if (!Enabled)
                 return;
 
-            MainServer.Instance.RemoveHTTPHandler("GET", "/monitorstats/" + m_scene.RegionInfo.RegionID);
-            MainServer.Instance.RemoveHTTPHandler("GET", "/monitorstats/" + Uri.EscapeDataString(m_scene.RegionInfo.RegionName));
+            MainServer.Instance.RemoveHTTPHandler("GET", "/monitorstats/" + _scene.RegionInfo.RegionID);
+            MainServer.Instance.RemoveHTTPHandler("GET", "/monitorstats/" + Uri.EscapeDataString(_scene.RegionInfo.RegionName));
 
             UnRegisterStatsManagerRegionStatistics();
 
-            m_scene = null;
+            _scene = null;
         }
 
         public void Close()
         {
         }
 
-        public string Name
-        {
-            get { return "Region Health Monitoring Module"; }
-        }
+        public string Name => "Region Health Monitoring Module";
 
         public void RegionLoaded(Scene scene)
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
         public void AddMonitors()
         {
-            m_staticMonitors.Add(new AgentCountMonitor(m_scene));
-            m_staticMonitors.Add(new ChildAgentCountMonitor(m_scene));
-            m_staticMonitors.Add(new GCMemoryMonitor());
-            m_staticMonitors.Add(new ObjectCountMonitor(m_scene));
-            m_staticMonitors.Add(new PhysicsFrameMonitor(m_scene));
-            m_staticMonitors.Add(new PhysicsUpdateFrameMonitor(m_scene));
-            m_staticMonitors.Add(new PWSMemoryMonitor());
-            m_staticMonitors.Add(new ThreadCountMonitor());
-            m_staticMonitors.Add(new TotalFrameMonitor(m_scene));
-            m_staticMonitors.Add(new EventFrameMonitor(m_scene));
-            m_staticMonitors.Add(new LandFrameMonitor(m_scene));
-            m_staticMonitors.Add(new LastFrameTimeMonitor(m_scene));
+            _staticMonitors.Add(new AgentCountMonitor(_scene));
+            _staticMonitors.Add(new ChildAgentCountMonitor(_scene));
+            _staticMonitors.Add(new GCMemoryMonitor());
+            _staticMonitors.Add(new ObjectCountMonitor(_scene));
+            _staticMonitors.Add(new PhysicsFrameMonitor(_scene));
+            _staticMonitors.Add(new PhysicsUpdateFrameMonitor(_scene));
+            _staticMonitors.Add(new PWSMemoryMonitor());
+            _staticMonitors.Add(new ThreadCountMonitor());
+            _staticMonitors.Add(new TotalFrameMonitor(_scene));
+            _staticMonitors.Add(new EventFrameMonitor(_scene));
+            _staticMonitors.Add(new LandFrameMonitor(_scene));
+            _staticMonitors.Add(new LastFrameTimeMonitor(_scene));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "TimeDilationMonitor",
                     "Time Dilation",
                     m => m.Scene.StatsReporter.LastReportedSimStats[0],
                     m => m.GetValue().ToString()));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "SimFPSMonitor",
                     "Sim FPS",
                     m => m.Scene.StatsReporter.LastReportedSimStats[1],
                     m => string.Format("{0}", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "PhysicsFPSMonitor",
                     "Physics FPS",
                     m => m.Scene.StatsReporter.LastReportedSimStats[2],
                     m => string.Format("{0}", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "AgentUpdatesPerSecondMonitor",
                     "Agent Updates",
                     m => m.Scene.StatsReporter.LastReportedSimStats[3],
                     m => string.Format("{0} per second", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "ActiveObjectCountMonitor",
                     "Active Objects",
                     m => m.Scene.StatsReporter.LastReportedSimStats[7],
                     m => string.Format("{0}", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "ActiveScriptsMonitor",
                     "Active Scripts",
                     m => m.Scene.StatsReporter.LastReportedSimStats[19],
                     m => string.Format("{0}", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "ScriptEventsPerSecondMonitor",
                     "Script Events",
                     m => m.Scene.StatsReporter.LastReportedSimStats[23],
                     m => string.Format("{0} per second", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "InPacketsPerSecondMonitor",
                     "In Packets",
                     m => m.Scene.StatsReporter.LastReportedSimStats[13],
                     m => string.Format("{0} per second", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "OutPacketsPerSecondMonitor",
                     "Out Packets",
                     m => m.Scene.StatsReporter.LastReportedSimStats[14],
                     m => string.Format("{0} per second", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "UnackedBytesMonitor",
                     "Unacked Bytes",
                     m => m.Scene.StatsReporter.LastReportedSimStats[15],
                     m => string.Format("{0}", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "PendingDownloadsMonitor",
                     "Pending Downloads",
                     m => m.Scene.StatsReporter.LastReportedSimStats[17],
                     m => string.Format("{0}", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "PendingUploadsMonitor",
                     "Pending Uploads",
                     m => m.Scene.StatsReporter.LastReportedSimStats[18],
                     m => string.Format("{0}", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "TotalFrameTimeMonitor",
                     "Total Frame Time",
                     m => m.Scene.StatsReporter.LastReportedSimStats[8],
                     m => string.Format("{0} ms", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "NetFrameTimeMonitor",
                     "Net Frame Time",
                     m => m.Scene.StatsReporter.LastReportedSimStats[9],
                     m => string.Format("{0} ms", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "PhysicsFrameTimeMonitor",
                     "Physics Frame Time",
                     m => m.Scene.StatsReporter.LastReportedSimStats[10],
                     m => string.Format("{0} ms", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "SimulationFrameTimeMonitor",
                     "Simulation Frame Time",
                     m => m.Scene.StatsReporter.LastReportedSimStats[12],
                     m => string.Format("{0} ms", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "AgentFrameTimeMonitor",
                     "Agent Frame Time",
                     m => m.Scene.StatsReporter.LastReportedSimStats[16],
                     m => string.Format("{0} ms", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "ImagesFrameTimeMonitor",
                     "Images Frame Time",
                     m => m.Scene.StatsReporter.LastReportedSimStats[11],
                     m => string.Format("{0} ms", m.GetValue())));
 
-            m_staticMonitors.Add(
+            _staticMonitors.Add(
                 new GenericMonitor(
-                    m_scene,
+                    _scene,
                     "SpareFrameTimeMonitor",
                     "Spare Frame Time",
                     m => m.Scene.StatsReporter.LastReportedSimStats[38],
                     m => string.Format("{0} ms", m.GetValue())));
 
-            m_alerts.Add(new DeadlockAlert(m_staticMonitors.Find(x => x is LastFrameTimeMonitor) as LastFrameTimeMonitor));
+            _alerts.Add(new DeadlockAlert(_staticMonitors.Find(x => x is LastFrameTimeMonitor) as LastFrameTimeMonitor));
 
-            foreach (IAlert alert in m_alerts)
+            foreach (IAlert alert in _alerts)
             {
                 alert.OnTriggerAlert += OnTriggerAlert;
             }
@@ -314,24 +308,24 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
 
         public void DebugMonitors(string module, string[] args)
         {
-            foreach (IMonitor monitor in m_staticMonitors)
+            foreach (IMonitor monitor in _staticMonitors)
             {
                 MainConsole.Instance.Output(
                     "[MONITOR MODULE]: {0} reports {1} = {2}",
-                    m_scene.RegionInfo.RegionName, monitor.GetFriendlyName(), monitor.GetFriendlyValue());
+                    _scene.RegionInfo.RegionName, monitor.GetFriendlyName(), monitor.GetFriendlyValue());
             }
 
-            foreach (KeyValuePair<string, float> tuple in m_scene.StatsReporter.GetExtraSimStats())
+            foreach (KeyValuePair<string, float> tuple in _scene.StatsReporter.GetExtraSimStats())
             {
                 MainConsole.Instance.Output(
                     "[MONITOR MODULE]: {0} reports {1} = {2}",
-                    m_scene.RegionInfo.RegionName, tuple.Key, tuple.Value);
+                    _scene.RegionInfo.RegionName, tuple.Key, tuple.Value);
             }
         }
 
         public void TestAlerts()
         {
-            foreach (IAlert alert in m_alerts)
+            foreach (IAlert alert in _alerts)
             {
                 alert.Test();
             }
@@ -349,7 +343,7 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
             // eg url/?monitor=Monitor.Name
             if (request.QueryAsDictionary.TryGetValue("monitor", out string monID))
             {
-                foreach (IMonitor monitor in m_staticMonitors)
+                foreach (IMonitor monitor in _staticMonitors)
                 {
                     string elemName = monitor.ToString();
                     if (elemName.StartsWith(monitor.GetType().Namespace))
@@ -372,14 +366,14 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
             }
 
             string xml = "<data>";
-            foreach (IMonitor monitor in m_staticMonitors)
+            foreach (IMonitor monitor in _staticMonitors)
             {
                 string elemName = monitor.GetName();
                 xml += "<" + elemName + ">" + monitor.GetValue().ToString() + "</" + elemName + ">";
-//                m_log.DebugFormat("[MONITOR MODULE]: {0} = {1}", elemName, monitor.GetValue());
+//                _log.DebugFormat("[MONITOR MODULE]: {0} = {1}", elemName, monitor.GetValue());
             }
 
-            foreach (KeyValuePair<string, float> tuple in m_scene.StatsReporter.GetExtraSimStats())
+            foreach (KeyValuePair<string, float> tuple in _scene.StatsReporter.GetExtraSimStats())
             {
                 xml += "<" + tuple.Key + ">" + tuple.Value + "</" + tuple.Key + ">";
             }
@@ -393,36 +387,36 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring
 
         void OnTriggerAlert(System.Type reporter, string reason, bool fatal)
         {
-            m_log.Error("[Monitor] " + reporter.Name + " for " + m_scene.RegionInfo.RegionName + " reports " + reason + " (Fatal: " + fatal + ")");
+            _log.Error("[Monitor] " + reporter.Name + " for " + _scene.RegionInfo.RegionName + " reports " + reason + " (Fatal: " + fatal + ")");
         }
 
         private readonly List<Stat> registeredStats = new List<Stat>();
         private void MakeStat(string pName, string pUnitName, Action<Stat> act)
         {
-            Stat tempStat = new Stat(pName, pName, pName, pUnitName, "scene", m_scene.RegionInfo.RegionName, StatType.Pull, act, StatVerbosity.Info);
+            Stat tempStat = new Stat(pName, pName, pName, pUnitName, "scene", _scene.RegionInfo.RegionName, StatType.Pull, act, StatVerbosity.Info);
             StatsManager.RegisterStat(tempStat);
             registeredStats.Add(tempStat);
         }
         private void RegisterStatsManagerRegionStatistics()
         {
-            MakeStat("RootAgents", "avatars", (s) => { s.Value = m_scene.SceneGraph.GetRootAgentCount(); });
-            MakeStat("ChildAgents", "avatars", (s) => { s.Value = m_scene.SceneGraph.GetChildAgentCount(); });
-            MakeStat("TotalPrims", "objects", (s) => { s.Value = m_scene.SceneGraph.GetTotalObjectsCount(); });
-            MakeStat("ActivePrims", "objects", (s) => { s.Value = m_scene.SceneGraph.GetActiveObjectsCount(); });
-            MakeStat("ActiveScripts", "scripts", (s) => { s.Value = m_scene.SceneGraph.GetActiveScriptsCount(); });
+            MakeStat("RootAgents", "avatars", (s) => { s.Value = _scene.SceneGraph.GetRootAgentCount(); });
+            MakeStat("ChildAgents", "avatars", (s) => { s.Value = _scene.SceneGraph.GetChildAgentCount(); });
+            MakeStat("TotalPrims", "objects", (s) => { s.Value = _scene.SceneGraph.GetTotalObjectsCount(); });
+            MakeStat("ActivePrims", "objects", (s) => { s.Value = _scene.SceneGraph.GetActiveObjectsCount(); });
+            MakeStat("ActiveScripts", "scripts", (s) => { s.Value = _scene.SceneGraph.GetActiveScriptsCount(); });
 
-            MakeStat("TimeDilation", "sec/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[0]; });
-            MakeStat("SimFPS", "fps", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[1]; });
-            MakeStat("PhysicsFPS", "fps", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[2]; });
-            MakeStat("AgentUpdates", "updates/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[3]; });
-            MakeStat("FrameTime", "ms/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[8]; });
-            MakeStat("NetTime", "ms/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[9]; });
-            MakeStat("OtherTime", "ms/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[12]; });
-            MakeStat("PhysicsTime", "ms/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[10]; });
-            MakeStat("AgentTime", "ms/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[16]; });
-            MakeStat("ImageTime", "ms/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[11]; });
-            MakeStat("ScriptLines", "lines/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[20]; });
-            MakeStat("SimSpareMS", "ms/sec", (s) => { s.Value = m_scene.StatsReporter.LastReportedSimStats[21]; });
+            MakeStat("TimeDilation", "sec/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[0]; });
+            MakeStat("SimFPS", "fps", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[1]; });
+            MakeStat("PhysicsFPS", "fps", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[2]; });
+            MakeStat("AgentUpdates", "updates/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[3]; });
+            MakeStat("FrameTime", "ms/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[8]; });
+            MakeStat("NetTime", "ms/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[9]; });
+            MakeStat("OtherTime", "ms/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[12]; });
+            MakeStat("PhysicsTime", "ms/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[10]; });
+            MakeStat("AgentTime", "ms/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[16]; });
+            MakeStat("ImageTime", "ms/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[11]; });
+            MakeStat("ScriptLines", "lines/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[20]; });
+            MakeStat("SimSpareMS", "ms/sec", (s) => { s.Value = _scene.StatsReporter.LastReportedSimStats[21]; });
         }
 
         private void UnRegisterStatsManagerRegionStatistics()

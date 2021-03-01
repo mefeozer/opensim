@@ -32,39 +32,36 @@ namespace OpenSim.Region.Framework.Scenes.Types
 {
     public class UpdateQueue
     {
-        private readonly Queue<SceneObjectPart> m_queue;
+        private readonly Queue<SceneObjectPart> _queue;
 
-        private readonly Dictionary<UUID, bool> m_ids;
+        private readonly Dictionary<UUID, bool> _ids;
 
-        private readonly object m_syncObject = new object();
+        private readonly object _syncObject = new object();
 
-        public int Count
-        {
-            get { return m_queue.Count; }
-        }
+        public int Count => _queue.Count;
 
         public UpdateQueue()
         {
-            m_queue = new Queue<SceneObjectPart>();
-            m_ids = new Dictionary<UUID, bool>();
+            _queue = new Queue<SceneObjectPart>();
+            _ids = new Dictionary<UUID, bool>();
         }
 
         public void Clear()
         {
-            lock (m_syncObject)
+            lock (_syncObject)
             {
-                m_ids.Clear();
-                m_queue.Clear();
+                _ids.Clear();
+                _queue.Clear();
             }
         }
 
         public void Enqueue(SceneObjectPart part)
         {
-            lock (m_syncObject)
+            lock (_syncObject)
             {
-                if (!m_ids.ContainsKey(part.UUID)) {
-                    m_ids.Add(part.UUID, true);
-                    m_queue.Enqueue(part);
+                if (!_ids.ContainsKey(part.UUID)) {
+                    _ids.Add(part.UUID, true);
+                    _queue.Enqueue(part);
                 }
             }
         }
@@ -72,12 +69,12 @@ namespace OpenSim.Region.Framework.Scenes.Types
         public SceneObjectPart Dequeue()
         {
             SceneObjectPart part = null;
-            lock (m_syncObject)
+            lock (_syncObject)
             {
-                if (m_queue.Count > 0)
+                if (_queue.Count > 0)
                 {
-                    part = m_queue.Dequeue();
-                    m_ids.Remove(part.UUID);
+                    part = _queue.Dequeue();
+                    _ids.Remove(part.UUID);
                 }
             }
 

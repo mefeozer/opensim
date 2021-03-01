@@ -41,54 +41,39 @@ namespace OpenSim.Framework
         /// </value>
         public int InvType
         {
-            get
-            {
-                return m_invType;
-            }
+            get => _invType;
 
-            set
-            {
-                m_invType = value;
-            }
+            set => _invType = value;
         }
-        protected int m_invType;
+        protected int _invType;
 
         /// <value>
         /// The folder this item is contained in
         /// </value>
         public UUID Folder
         {
-            get
-            {
-                return m_folder;
-            }
+            get => _folder;
 
-            set
-            {
-                m_folder = value;
-            }
+            set => _folder = value;
         }
-        protected UUID m_folder;
+        protected UUID _folder;
 
         /// <value>
         /// The creator of this item
         /// </value>
         public string CreatorId
         {
-            get
-            {
-                return m_creatorId;
-            }
+            get => _creatorId;
 
             set
             {
-                m_creatorId = value;
+                _creatorId = value;
 
-                if (m_creatorId == null || !UUID.TryParse(m_creatorId, out m_creatorIdAsUuid))
-                    m_creatorIdAsUuid = UUID.Zero;
+                if (_creatorId == null || !UUID.TryParse(_creatorId, out _creatorIdAsUuid))
+                    _creatorIdAsUuid = UUID.Zero;
             }
         }
-        protected string m_creatorId;
+        protected string _creatorId;
 
         /// <value>
         /// The CreatorId expressed as a UUID.
@@ -97,25 +82,25 @@ namespace OpenSim.Framework
         {
             get
             {
-                if (UUID.Zero == m_creatorIdAsUuid)
+                if (UUID.Zero == _creatorIdAsUuid)
                 {
-                    UUID.TryParse(CreatorId, out m_creatorIdAsUuid);
+                    UUID.TryParse(CreatorId, out _creatorIdAsUuid);
                 }
 
-                return m_creatorIdAsUuid;
+                return _creatorIdAsUuid;
             }
         }
-        protected UUID m_creatorIdAsUuid = UUID.Zero;
+        protected UUID _creatorIdAsUuid = UUID.Zero;
 
         /// <summary>
         /// Extended creator information of the form <profile url>;<name>
         /// </summary>
         public string CreatorData // = <profile url>;<name>
         {
-            get { return m_creatorData; }
-            set { m_creatorData = value; }
+            get => _creatorData;
+            set => _creatorData = value;
         }
-        protected string m_creatorData = string.Empty;
+        protected string _creatorData = string.Empty;
 
         /// <summary>
         /// Used by the DB layer to retrieve / store the entire user identification.
@@ -126,35 +111,35 @@ namespace OpenSim.Framework
         {
             get
             {
-                if (!string.IsNullOrEmpty(m_creatorData))
-                    return m_creatorId + ';' + m_creatorData;
+                if (!string.IsNullOrEmpty(_creatorData))
+                    return _creatorId + ';' + _creatorData;
                 else
-                    return m_creatorId;
+                    return _creatorId;
             }
             set
             {
                 if (value == null || value != null && string.IsNullOrEmpty(value))
                 {
-                    m_creatorData = string.Empty;
+                    _creatorData = string.Empty;
                     return;
                 }
 
                 if (!value.Contains(";")) // plain UUID
                 {
-                    m_creatorId = value;
+                    _creatorId = value;
                 }
                 else // <uuid>[;<endpoint>[;name]]
                 {
                     string name = "Unknown User";
                     string[] parts = value.Split(';');
                     if (parts.Length >= 1)
-                        m_creatorId = parts[0];
+                        _creatorId = parts[0];
                     if (parts.Length >= 2)
-                        m_creatorData = parts[1];
+                        _creatorData = parts[1];
                     if (parts.Length >= 3)
                         name = parts[2];
 
-                    m_creatorData += ';' + name;
+                    _creatorData += ';' + name;
                 }
             }
         }
@@ -166,8 +151,8 @@ namespace OpenSim.Framework
         public osUTF8 UTF8Description;
         public string Description
         {
-            get { return UTF8Description == null ? string.Empty : UTF8Description.ToString();}
-            set { UTF8Description = string.IsNullOrWhiteSpace(value) ? null : new osUTF8(value);}
+            get => UTF8Description == null ? string.Empty : UTF8Description.ToString();
+            set => UTF8Description = string.IsNullOrWhiteSpace(value) ? null : new osUTF8(value);
         }
 
         /// <value>
@@ -175,221 +160,143 @@ namespace OpenSim.Framework
         /// </value>
         public uint NextPermissions
         {
-            get
-            {
-                return m_nextPermissions;
-            }
+            get => _nextPermissions;
 
-            set
-            {
-                m_nextPermissions = value;
-            }
+            set => _nextPermissions = value;
         }
-        protected uint m_nextPermissions;
+        protected uint _nextPermissions;
 
         /// <value>
         /// A mask containing permissions for the current owner (cannot be enforced)
         /// </value>
         public uint CurrentPermissions
         {
-            get
-            {
-                return m_currentPermissions;
-            }
+            get => _currentPermissions;
 
-            set
-            {
-                m_currentPermissions = value;
-            }
+            set => _currentPermissions = value;
         }
-        protected uint m_currentPermissions;
+        protected uint _currentPermissions;
 
         /// <value>
         ///
         /// </value>
         public uint BasePermissions
         {
-            get
-            {
-                return m_basePermissions;
-            }
+            get => _basePermissions;
 
-            set
-            {
-                m_basePermissions = value;
-            }
+            set => _basePermissions = value;
         }
-        protected uint m_basePermissions;
+        protected uint _basePermissions;
 
         /// <value>
         ///
         /// </value>
         public uint EveryOnePermissions
         {
-            get
-            {
-                return m_everyonePermissions;
-            }
+            get => _everyonePermissions;
 
-            set
-            {
-                m_everyonePermissions = value;
-            }
+            set => _everyonePermissions = value;
         }
-        protected uint m_everyonePermissions;
+        protected uint _everyonePermissions;
 
         /// <value>
         ///
         /// </value>
         public uint GroupPermissions
         {
-            get
-            {
-                return m_groupPermissions;
-            }
+            get => _groupPermissions;
 
-            set
-            {
-                m_groupPermissions = value;
-            }
+            set => _groupPermissions = value;
         }
-        protected uint m_groupPermissions;
+        protected uint _groupPermissions;
 
         /// <value>
         /// This is an enumerated value determining the type of asset (eg Notecard, Sound, Object, etc)
         /// </value>
         public int AssetType
         {
-            get
-            {
-                return m_assetType;
-            }
+            get => _assetType;
 
-            set
-            {
-                m_assetType = value;
-            }
+            set => _assetType = value;
         }
-        protected int m_assetType;
+        protected int _assetType;
 
         /// <value>
         /// The UUID of the associated asset on the asset server
         /// </value>
         public UUID AssetID
         {
-            get
-            {
-                return m_assetID;
-            }
+            get => _assetID;
 
-            set
-            {
-                m_assetID = value;
-            }
+            set => _assetID = value;
         }
-        protected UUID m_assetID;
+        protected UUID _assetID;
 
         /// <value>
         ///
         /// </value>
         public UUID GroupID
         {
-            get
-            {
-                return m_groupID;
-            }
+            get => _groupID;
 
-            set
-            {
-                m_groupID = value;
-            }
+            set => _groupID = value;
         }
-        protected UUID m_groupID;
+        protected UUID _groupID;
 
         /// <value>
         ///
         /// </value>
         public bool GroupOwned
         {
-            get
-            {
-                return m_groupOwned;
-            }
+            get => _groupOwned;
 
-            set
-            {
-                m_groupOwned = value;
-            }
+            set => _groupOwned = value;
         }
-        protected bool m_groupOwned;
+        protected bool _groupOwned;
 
         /// <value>
         ///
         /// </value>
         public int SalePrice
         {
-            get
-            {
-                return m_salePrice;
-            }
+            get => _salePrice;
 
-            set
-            {
-                m_salePrice = value;
-            }
+            set => _salePrice = value;
         }
-        protected int m_salePrice;
+        protected int _salePrice;
 
         /// <value>
         ///
         /// </value>
         public byte SaleType
         {
-            get
-            {
-                return m_saleType;
-            }
+            get => _saleType;
 
-            set
-            {
-                m_saleType = value;
-            }
+            set => _saleType = value;
         }
-        protected byte m_saleType;
+        protected byte _saleType;
 
         /// <value>
         ///
         /// </value>
         public uint Flags
         {
-            get
-            {
-                return m_flags;
-            }
+            get => _flags;
 
-            set
-            {
-                m_flags = value;
-            }
+            set => _flags = value;
         }
-        protected uint m_flags;
+        protected uint _flags;
 
         /// <value>
         ///
         /// </value>
         public int CreationDate
         {
-            get
-            {
-                return m_creationDate;
-            }
+            get => _creationDate;
 
-            set
-            {
-                m_creationDate = value;
-            }
+            set => _creationDate = value;
         }
-        protected int m_creationDate = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+        protected int _creationDate = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
 
         public InventoryItemBase()
         {
@@ -414,13 +321,13 @@ namespace OpenSim.Framework
         public void ToLLSDxml(osUTF8 lsl, uint flagsMask = 0xffffffff)
         {
             LLSDxmlEncode2.AddMap(lsl);
-                LLSDxmlEncode2.AddElem_parent_id(Folder, lsl);
+                LLSDxmlEncode2.AddEle_parent_id(Folder, lsl);
                 LLSDxmlEncode2.AddElem("asset_id", AssetID, lsl);
-                LLSDxmlEncode2.AddElem("item_id", ID, lsl);
+                LLSDxmlEncode2.AddElem("ite_id", ID, lsl);
 
                 LLSDxmlEncode2.AddMap("permissions",lsl);
                     LLSDxmlEncode2.AddElem("creator_id", CreatorIdAsUuid, lsl);
-                    LLSDxmlEncode2.AddElem_owner_id( Owner, lsl);
+                    LLSDxmlEncode2.AddEle_owner_id( Owner, lsl);
                     LLSDxmlEncode2.AddElem("group_id", GroupID, lsl);
                     LLSDxmlEncode2.AddElem("base_mask", (int)CurrentPermissions, lsl);
                     LLSDxmlEncode2.AddElem("owner_mask", (int)CurrentPermissions, lsl);
@@ -439,7 +346,7 @@ namespace OpenSim.Framework
                     LLSDxmlEncode2.AddElem("sale_type", SaleType, lsl);
                 LLSDxmlEncode2.AddEndMap(lsl);
 
-                LLSDxmlEncode2.AddElem_name(Name, lsl);
+                LLSDxmlEncode2.AddEle_name(Name, lsl);
                 LLSDxmlEncode2.AddElem("desc", Description, lsl);
                 LLSDxmlEncode2.AddElem("created_at", CreationDate, lsl);
 

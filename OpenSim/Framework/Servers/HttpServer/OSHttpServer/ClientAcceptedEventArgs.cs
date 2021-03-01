@@ -26,18 +26,12 @@ namespace OSHttpServer
         /// <summary>
         /// Accepted socket.
         /// </summary>
-        public Socket Socket
-        {
-            get { return _socket; }
-        }
+        public Socket Socket => _socket;
 
         /// <summary>
         /// Client should be revoked.
         /// </summary>
-        public bool Revoked
-        {
-            get { return _revoke; }
-        }
+        public bool Revoked => _revoke;
 
         /// <summary>
         /// Client may not be handled.

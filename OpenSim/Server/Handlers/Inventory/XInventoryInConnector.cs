@@ -44,22 +44,22 @@ namespace OpenSim.Server.Handlers.Inventory
 {
     public class XInventoryInConnector : ServiceConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IInventoryService m_InventoryService;
-        private readonly string m_ConfigName = "InventoryService";
+        private readonly IInventoryService _InventoryService;
+        private readonly string _ConfigName = "InventoryService";
 
         public XInventoryInConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            m_log.DebugFormat("[XInventoryInConnector]: Starting with config name {0}", m_ConfigName);
+            _log.DebugFormat("[XInventoryInConnector]: Starting with config name {0}", _ConfigName);
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string inventoryService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -67,26 +67,26 @@ namespace OpenSim.Server.Handlers.Inventory
             if (string.IsNullOrEmpty(inventoryService))
                 throw new Exception("No InventoryService in config file");
 
-            object[] args = new object[] { config, m_ConfigName };
-            m_InventoryService =
+            object[] args = new object[] { config, _ConfigName };
+            _InventoryService =
                     ServerUtils.LoadPlugin<IInventoryService>(inventoryService, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
-            server.AddStreamHandler(new XInventoryConnectorPostHandler(m_InventoryService, auth));
+            server.AddStreamHandler(new XInventoryConnectorPostHandler(_InventoryService, auth));
         }
     }
 
     public class XInventoryConnectorPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IInventoryService m_InventoryService;
+        private readonly IInventoryService _InventoryService;
 
         public XInventoryConnectorPostHandler(IInventoryService service, IServiceAuth auth) :
                 base("POST", "/xinventory", auth)
         {
-            m_InventoryService = service;
+            _InventoryService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -97,7 +97,7 @@ namespace OpenSim.Server.Handlers.Inventory
                 body = sr.ReadToEnd();
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
 
             try
             {
@@ -155,11 +155,11 @@ namespace OpenSim.Server.Handlers.Inventory
                     case "GETASSETPERMISSIONS":
                         return HandleGetAssetPermissions(request);
                 }
-                m_log.DebugFormat("[XINVENTORY HANDLER]: unknown method request: {0}", method);
+                _log.DebugFormat("[XINVENTORY HANDLER]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.Error(string.Format("[XINVENTORY HANDLER]: Exception {0} ", e.Message), e);
+                _log.Error(string.Format("[XINVENTORY HANDLER]: Exception {0} ", e.Message), e);
             }
 
             return FailureResult();
@@ -204,14 +204,14 @@ namespace OpenSim.Server.Handlers.Inventory
             if (!request.ContainsKey("PRINCIPAL"))
                 return FailureResult();
 
-            if (m_InventoryService.CreateUserInventory(new UUID(request["PRINCIPAL"].ToString())))
+            if (_InventoryService.CreateUserInventory(new UUID(request["PRINCIPAL"].ToString())))
                 result["RESULT"] = "True";
             else
                 result["RESULT"] = "False";
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -223,7 +223,7 @@ namespace OpenSim.Server.Handlers.Inventory
                 return FailureResult();
 
 
-            List<InventoryFolderBase> folders = m_InventoryService.GetInventorySkeleton(new UUID(request["PRINCIPAL"].ToString()));
+            List<InventoryFolderBase> folders = _InventoryService.GetInventorySkeleton(new UUID(request["PRINCIPAL"].ToString()));
 
             Dictionary<string, object> sfolders = new Dictionary<string, object>();
             if (folders != null)
@@ -239,7 +239,7 @@ namespace OpenSim.Server.Handlers.Inventory
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -249,13 +249,13 @@ namespace OpenSim.Server.Handlers.Inventory
 
             UUID principal = UUID.Zero;
             UUID.TryParse(request["PRINCIPAL"].ToString(), out principal);
-            InventoryFolderBase rfolder = m_InventoryService.GetRootFolder(principal);
+            InventoryFolderBase rfolder = _InventoryService.GetRootFolder(principal);
             if (rfolder != null)
                 result["folder"] = EncodeFolder(rfolder);
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -266,13 +266,13 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID.TryParse(request["PRINCIPAL"].ToString(), out principal);
             int type = 0;
             int.TryParse(request["TYPE"].ToString(), out type);
-            InventoryFolderBase folder = m_InventoryService.GetFolderForType(principal, (FolderType)type);
+            InventoryFolderBase folder = _InventoryService.GetFolderForType(principal, (FolderType)type);
             if (folder != null)
                 result["folder"] = EncodeFolder(folder);
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -284,7 +284,7 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID folderID = UUID.Zero;
             UUID.TryParse(request["FOLDER"].ToString(), out folderID);
 
-            InventoryCollection icoll = m_InventoryService.GetFolderContent(principal, folderID);
+            InventoryCollection icoll = _InventoryService.GetFolderContent(principal, folderID);
             if (icoll != null)
             {
                 result["FID"] = icoll.FolderID.ToString();
@@ -306,7 +306,7 @@ namespace OpenSim.Server.Handlers.Inventory
                     Dictionary<string, object> items = new Dictionary<string, object>();
                     foreach (InventoryItemBase it in icoll.Items)
                     {
-                        items["item_" + i.ToString()] = EncodeItem(it);
+                        items["ite_" + i.ToString()] = EncodeItem(it);
                         i++;
                     }
                     result["ITEMS"] = items;
@@ -315,7 +315,7 @@ namespace OpenSim.Server.Handlers.Inventory
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -340,7 +340,7 @@ namespace OpenSim.Server.Handlers.Inventory
             }
 
             count = 0;
-            InventoryCollection[] icollList = m_InventoryService.GetMultipleFoldersContent(principal, fids);
+            InventoryCollection[] icollList = _InventoryService.GetMultipleFoldersContent(principal, fids);
             if (icollList != null && icollList.Length > 0)
             {
                 foreach (InventoryCollection icoll in icollList)
@@ -366,20 +366,20 @@ namespace OpenSim.Server.Handlers.Inventory
                         Dictionary<string, object> items = new Dictionary<string, object>();
                         foreach (InventoryItemBase it in icoll.Items)
                         {
-                            items["item_" + i.ToString()] = EncodeItem(it);
+                            items["ite_" + i.ToString()] = EncodeItem(it);
                             i++;
                         }
                         result["ITEMS"] = items;
                     }
 
                     resultSet["F_" + fids[count++]] = result;
-                    //m_log.DebugFormat("[XXX]: Sending {0} {1}", fids[count-1], icoll.FolderID);
+                    //_log.DebugFormat("[XXX]: Sending {0} {1}", fids[count-1], icoll.FolderID);
                 }
             }
 
             string xmlString = ServerUtils.BuildXmlResponse(resultSet);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -391,7 +391,7 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID folderID = UUID.Zero;
             UUID.TryParse(request["FOLDER"].ToString(), out folderID);
 
-            List<InventoryItemBase> items = m_InventoryService.GetFolderItems(principal, folderID);
+            List<InventoryItemBase> items = _InventoryService.GetFolderItems(principal, folderID);
             Dictionary<string, object> sitems = new Dictionary<string, object>();
 
             if (items != null)
@@ -399,7 +399,7 @@ namespace OpenSim.Server.Handlers.Inventory
                 int i = 0;
                 foreach (InventoryItemBase item in items)
                 {
-                    sitems["item_" + i.ToString()] = EncodeItem(item);
+                    sitems["ite_" + i.ToString()] = EncodeItem(item);
                     i++;
                 }
             }
@@ -407,7 +407,7 @@ namespace OpenSim.Server.Handlers.Inventory
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -415,7 +415,7 @@ namespace OpenSim.Server.Handlers.Inventory
         {
             InventoryFolderBase folder = BuildFolder(request);
 
-            if (m_InventoryService.AddFolder(folder))
+            if (_InventoryService.AddFolder(folder))
                 return SuccessResult();
             else
                 return FailureResult();
@@ -425,7 +425,7 @@ namespace OpenSim.Server.Handlers.Inventory
         {
             InventoryFolderBase folder = BuildFolder(request);
 
-            if (m_InventoryService.UpdateFolder(folder))
+            if (_InventoryService.UpdateFolder(folder))
                 return SuccessResult();
             else
                 return FailureResult();
@@ -441,7 +441,7 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID.TryParse(request["PRINCIPAL"].ToString(), out principal);
 
             InventoryFolderBase folder = new InventoryFolderBase(folderID, "", principal, parentID);
-            if (m_InventoryService.MoveFolder(folder))
+            if (_InventoryService.MoveFolder(folder))
                 return SuccessResult();
             else
                 return FailureResult();
@@ -461,7 +461,7 @@ namespace OpenSim.Server.Handlers.Inventory
                     uuids.Add(u);
             }
 
-            if (m_InventoryService.DeleteFolders(principal, uuids))
+            if (_InventoryService.DeleteFolders(principal, uuids))
                 return SuccessResult();
             else
                 return
@@ -474,7 +474,7 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID.TryParse(request["ID"].ToString(), out folderID);
 
             InventoryFolderBase folder = new InventoryFolderBase(folderID);
-            if (m_InventoryService.PurgeFolder(folder))
+            if (_InventoryService.PurgeFolder(folder))
                 return SuccessResult();
             else
                 return FailureResult();
@@ -484,7 +484,7 @@ namespace OpenSim.Server.Handlers.Inventory
         {
             InventoryItemBase item = BuildItem(request);
 
-            if (m_InventoryService.AddItem(item))
+            if (_InventoryService.AddItem(item))
                 return SuccessResult();
             else
                 return FailureResult();
@@ -494,7 +494,7 @@ namespace OpenSim.Server.Handlers.Inventory
         {
             InventoryItemBase item = BuildItem(request);
 
-            if (m_InventoryService.UpdateItem(item))
+            if (_InventoryService.UpdateItem(item))
                 return SuccessResult();
             else
                 return FailureResult();
@@ -530,11 +530,11 @@ namespace OpenSim.Server.Handlers.Inventory
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[XINVENTORY IN CONNECTOR]: Exception in HandleMoveItems: {0}", e.Message);
+                _log.DebugFormat("[XINVENTORY IN CONNECTOR]: Exception in HandleMoveItems: {0}", e.Message);
                 return FailureResult();
             }
 
-            if (m_InventoryService.MoveItems(principal, items))
+            if (_InventoryService.MoveItems(principal, items))
                 return SuccessResult();
             else
                 return FailureResult();
@@ -553,7 +553,7 @@ namespace OpenSim.Server.Handlers.Inventory
                     uuids.Add(u);
             }
 
-            if (m_InventoryService.DeleteItems(principal, uuids))
+            if (_InventoryService.DeleteItems(principal, uuids))
                 return SuccessResult();
             else
                 return
@@ -569,13 +569,13 @@ namespace OpenSim.Server.Handlers.Inventory
             if (request.ContainsKey("PRINCIPAL"))
                 UUID.TryParse(request["PRINCIPAL"].ToString(), out user);
 
-            InventoryItemBase item = m_InventoryService.GetItem(user, id);
+            InventoryItemBase item = _InventoryService.GetItem(user, id);
             if (item != null)
                 result["item"] = EncodeItem(item);
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -599,17 +599,17 @@ namespace OpenSim.Server.Handlers.Inventory
                 i += 1;
             }
 
-            InventoryItemBase[] itemsList = m_InventoryService.GetMultipleItems(principal, fids);
+            InventoryItemBase[] itemsList = _InventoryService.GetMultipleItems(principal, fids);
             if (itemsList != null && itemsList.Length > 0)
             {
                 count = 0;
                 foreach (InventoryItemBase item in itemsList)
-                    resultSet["item_" + count++] = item == null ? (object)"NULL" : EncodeItem(item);
+                    resultSet["ite_" + count++] = item == null ? (object)"NULL" : EncodeItem(item);
             }
 
             string xmlString = ServerUtils.BuildXmlResponse(resultSet);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -622,13 +622,13 @@ namespace OpenSim.Server.Handlers.Inventory
             if (request.ContainsKey("PRINCIPAL"))
                 UUID.TryParse(request["PRINCIPAL"].ToString(), out user);
 
-            InventoryFolderBase folder = m_InventoryService.GetFolder(user, id);
+            InventoryFolderBase folder = _InventoryService.GetFolder(user, id);
             if (folder != null)
                 result["folder"] = EncodeFolder(folder);
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -638,14 +638,14 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID principal = UUID.Zero;
             UUID.TryParse(request["PRINCIPAL"].ToString(), out principal);
 
-            List<InventoryItemBase> gestures = m_InventoryService.GetActiveGestures(principal);
+            List<InventoryItemBase> gestures = _InventoryService.GetActiveGestures(principal);
             Dictionary<string, object> items = new Dictionary<string, object>();
             if (gestures != null)
             {
                 int i = 0;
                 foreach (InventoryItemBase item in gestures)
                 {
-                    items["item_" + i.ToString()] = EncodeItem(item);
+                    items["ite_" + i.ToString()] = EncodeItem(item);
                     i++;
                 }
             }
@@ -653,7 +653,7 @@ namespace OpenSim.Server.Handlers.Inventory
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -665,12 +665,12 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID assetID = UUID.Zero;
             UUID.TryParse(request["ASSET"].ToString(), out assetID);
 
-            int perms = m_InventoryService.GetAssetPermissions(principal, assetID);
+            int perms = _InventoryService.GetAssetPermissions(principal, assetID);
 
             result["RESULT"] = perms.ToString();
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 

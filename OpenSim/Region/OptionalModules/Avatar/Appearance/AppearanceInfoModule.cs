@@ -45,50 +45,50 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "AppearanceInfoModule")]
     public class AppearanceInfoModule : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<Scene> m_scenes = new List<Scene>();
+        private readonly List<Scene> _scenes = new List<Scene>();
 
-//        private IAvatarFactoryModule m_avatarFactory;
+//        private IAvatarFactoryModule _avatarFactory;
 
-        public string Name { get { return "Appearance Information Module"; } }
+        public string Name => "Appearance Information Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[APPEARANCE INFO MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[APPEARANCE INFO MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[APPEARANCE INFO MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[APPEARANCE INFO MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[APPEARANCE INFO MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[APPEARANCE INFO MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[APPEARANCE INFO MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[APPEARANCE INFO MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[APPEARANCE INFO MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[APPEARANCE INFO MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
 
-            lock (m_scenes)
-                m_scenes.Remove(scene);
+            lock (_scenes)
+                _scenes.Remove(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[APPEARANCE INFO MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[APPEARANCE INFO MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
 
-            lock (m_scenes)
-                m_scenes.Add(scene);
+            lock (_scenes)
+                _scenes.Add(scene);
 
             scene.AddCommand(
                 "Users", this, "show appearance",
@@ -165,9 +165,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
                 optionalTargetLastName = cmd[3];
             }
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes)
+                foreach (Scene scene in _scenes)
                 {
                     if (targetNameSupplied)
                     {
@@ -217,9 +217,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
                 optionalTargetLastName = cmd[3];
             }
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes)
+                foreach (Scene scene in _scenes)
                 {
                     if (targetNameSupplied)
                     {
@@ -253,9 +253,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
             string firstname = cmd[2];
             string lastname = cmd[3];
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes)
+                foreach (Scene scene in _scenes)
                 {
                     ScenePresence sp = scene.GetScenePresence(firstname, lastname);
                     if (sp != null && !sp.IsChildAgent)
@@ -287,9 +287,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
 
             HashSet<ScenePresence> matchedAvatars = new HashSet<ScenePresence>();
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes)
+                foreach (Scene scene in _scenes)
                 {
                     scene.ForEachRootScenePresence(
                         sp =>
@@ -340,9 +340,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
 
             if (targetNameSupplied)
             {
-                lock (m_scenes)
+                lock (_scenes)
                 {
-                    foreach (Scene scene in m_scenes)
+                    foreach (Scene scene in _scenes)
                     {
                         ScenePresence sp = scene.GetScenePresence(optionalTargetFirstName, optionalTargetLastName);
                         if (sp != null && !sp.IsChildAgent)
@@ -356,9 +356,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
                 cdt.AddColumn("Name", ConsoleDisplayUtil.UserNameSize);
                 cdt.AddColumn("Wearables", 2);
 
-                lock (m_scenes)
+                lock (_scenes)
                 {
-                    foreach (Scene scene in m_scenes)
+                    foreach (Scene scene in _scenes)
                     {
                         scene.ForEachRootScenePresence(
                             sp =>
@@ -392,11 +392,11 @@ namespace OpenSim.Region.OptionalModules.Avatar.Appearance
             string lastname = cmd[3];
 
             StringBuilder sb = new StringBuilder();
-            UuidGatherer uuidGatherer = new UuidGatherer(m_scenes[0].AssetService);
+            UuidGatherer uuidGatherer = new UuidGatherer(_scenes[0].AssetService);
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes)
+                foreach (Scene scene in _scenes)
                 {
                     ScenePresence sp = scene.GetScenePresence(firstname, lastname);
                     if (sp != null && !sp.IsChildAgent)

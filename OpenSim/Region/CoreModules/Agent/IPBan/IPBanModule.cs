@@ -41,7 +41,7 @@ namespace OpenSim.Region.CoreModules.Agent.IPBan
     {
         #region Implementation of ISharedRegionModule
 
-        private readonly List<string> m_bans = new List<string>();
+        private readonly List<string> _bans = new List<string>();
 
         public void Initialise(IConfigSource source)
         {
@@ -49,16 +49,16 @@ namespace OpenSim.Region.CoreModules.Agent.IPBan
 
         public void AddRegion(Scene scene)
         {
-            new SceneBanner(scene, m_bans);
+            new SceneBanner(scene, _bans);
 
-            lock (m_bans)
+            lock (_bans)
             {
                 foreach (EstateBan ban in scene.RegionInfo.EstateSettings.EstateBans)
                 {
                     if (!string.IsNullOrEmpty(ban.BannedHostIPMask))
-                        m_bans.Add(ban.BannedHostIPMask);
+                        _bans.Add(ban.BannedHostIPMask);
                     if (!string.IsNullOrEmpty(ban.BannedHostNameMask))
-                        m_bans.Add(ban.BannedHostNameMask);
+                        _bans.Add(ban.BannedHostNameMask);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace OpenSim.Region.CoreModules.Agent.IPBan
                 string[] bans = File.ReadAllLines("bans.txt");
                 foreach (string ban in bans)
                 {
-                    m_bans.Add(ban);
+                    _bans.Add(ban);
                 }
             }
         }
@@ -88,15 +88,9 @@ namespace OpenSim.Region.CoreModules.Agent.IPBan
 
         }
 
-        public string Name
-        {
-            get { return "IPBanModule"; }
-        }
+        public string Name => "IPBanModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -115,7 +109,7 @@ namespace OpenSim.Region.CoreModules.Agent.IPBan
         /// <param name="host">See summary for explanation of parameter</param>
         public void Ban(string host)
         {
-            m_bans.Add(host);
+            _bans.Add(host);
         }
     }
 }

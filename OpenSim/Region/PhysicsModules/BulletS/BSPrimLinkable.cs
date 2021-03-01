@@ -103,7 +103,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // When simulator changes position, this might be moving a child of the linkset.
     public override OMV.Vector3 Position
     {
-        get { return base.Position; }
+        get => base.Position;
         set
         {
             base.Position = value;
@@ -117,7 +117,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // When simulator changes orientation, this might be moving a child of the linkset.
     public override OMV.Quaternion Orientation
     {
-        get { return base.Orientation; }
+        get => base.Orientation;
         set
         {
             base.Orientation = value;
@@ -128,20 +128,11 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         }
     }
 
-    public override float TotalMass
-    {
-        get { return Linkset.LinksetMass; }
-    }
+    public override float TotalMass => Linkset.LinksetMass;
 
-    public override OMV.Vector3 CenterOfMass
-    {
-        get { return Linkset.CenterOfMass; }
-    }
+    public override OMV.Vector3 CenterOfMass => Linkset.CenterOfMass;
 
-    public override OMV.Vector3 GeometricCenter
-    {
-        get { return Linkset.GeometricCenter; }
-    }
+    public override OMV.Vector3 GeometricCenter => Linkset.GeometricCenter;
 
     // Refresh the linkset structure and parameters when the prim's physical parameters are changed.
     public override void UpdatePhysicalParameters()
@@ -218,10 +209,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public long SomeCollisionSimulationStep = 0;
     public override bool HasSomeCollision
     {
-        get
-        {
-            return SomeCollisionSimulationStep == PhysScene.SimulationStep || base.IsColliding;
-        }
+        get => SomeCollisionSimulationStep == PhysScene.SimulationStep || base.IsColliding;
         set
         {
             if (value)

@@ -49,7 +49,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public override int PhysicsActorType
         {
-            get { return (int) ActorTypes.Agent; }
+            get => (int) ActorTypes.Agent;
             set { return; }
         }
 
@@ -57,7 +57,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public override bool SetAlwaysRun
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
@@ -78,7 +78,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public override float Buoyancy
         {
-            get { return 0f; }
+            get => 0f;
             set { return; }
         }
 
@@ -89,13 +89,13 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public override bool IsPhysical
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool ThrottleUpdates
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
@@ -105,26 +105,23 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public override bool CollidingGround
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool CollidingObj
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
-        public override bool Stopped
-        {
-            get { return false; }
-        }
+        public override bool Stopped => false;
 
         public override Vector3 Position { get; set; }
 
         public override Vector3 Size
         {
-            get { return _size; }
+            get => _size;
             set {
                   _size = value;
                   _size.Z = _size.Z / 2.0f;
@@ -137,20 +134,17 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
             set {}
         }
 
-        public override float Mass
-        {
-            get { return 0f; }
-        }
+        public override float Mass => 0f;
 
         public override Vector3 Force
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
         public override int VehicleType
         {
-            get { return 0; }
+            get => 0;
             set { return; }
         }
 
@@ -179,27 +173,21 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         }
 
-        public override Vector3 CenterOfMass
-        {
-            get { return Vector3.Zero; }
-        }
+        public override Vector3 CenterOfMass => Vector3.Zero;
 
-        public override Vector3 GeometricCenter
-        {
-            get { return Vector3.Zero; }
-        }
+        public override Vector3 GeometricCenter => Vector3.Zero;
 
         public override Vector3 Velocity { get; set; }
 
         public override Vector3 Torque
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
         public override float CollisionScore
         {
-            get { return 0f; }
+            get => 0f;
             set { }
         }
 
@@ -209,7 +197,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public override bool Kinematic
         {
-            get { return true; }
+            get => true;
             set { }
         }
 
@@ -248,7 +236,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public override bool PIDActive
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
@@ -264,7 +252,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public override bool PIDHoverActive
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 

@@ -45,36 +45,36 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 public class ShapeInfoInfo
 {
     public int Vertices { get; set; }
-    private int m_hullCount;
-    private int[] m_verticesPerHull;
+    private int _hullCount;
+    private int[] _verticesPerHull;
     public ShapeInfoInfo()
     {
         Vertices = 0;
-        m_hullCount = 0;
-        m_verticesPerHull = null;
+        _hullCount = 0;
+        _verticesPerHull = null;
     }
     public int HullCount
     {
         set
         {
-            m_hullCount = value;
-            m_verticesPerHull = new int[m_hullCount];
-            Array.Clear(m_verticesPerHull, 0, m_hullCount);
+            _hullCount = value;
+            _verticesPerHull = new int[_hullCount];
+            Array.Clear(_verticesPerHull, 0, _hullCount);
         }
-        get { return m_hullCount; }
+        get => _hullCount;
     }
     public void SetVerticesPerHull(int hullNum, int vertices)
     {
-        if (m_verticesPerHull != null && hullNum < m_verticesPerHull.Length)
+        if (_verticesPerHull != null && hullNum < _verticesPerHull.Length)
         {
-            m_verticesPerHull[hullNum] = vertices;
+            _verticesPerHull[hullNum] = vertices;
         }
     }
     public int GetVerticesPerHull(int hullNum)
     {
-        if (m_verticesPerHull != null && hullNum < m_verticesPerHull.Length)
+        if (_verticesPerHull != null && hullNum < _verticesPerHull.Length)
         {
-            return m_verticesPerHull[hullNum];
+            return _verticesPerHull[hullNum];
         }
         return 0;
     }
@@ -702,7 +702,7 @@ public class BSShapeHull : BSShape
         }
     }
 
-    List<ConvexResult> m_hulls;
+    List<ConvexResult> _hulls;
     private BulletShape CreatePhysicalHull(BSScene physicsScene, BSPhysObject prim, ulong newHullKey,
                                             PrimitiveBaseShape pbs, OMV.Vector3 size, float lod)
     {
@@ -849,7 +849,7 @@ public class BSShapeHull : BSShape
             }
 
             // setup and do convex hull conversion
-            m_hulls = new List<ConvexResult>();
+            _hulls = new List<ConvexResult>();
                 DecompDesc dcomp = new DecompDesc
                 {
                     mIndices = convIndices,
@@ -865,7 +865,7 @@ public class BSShapeHull : BSShape
             convexBuilder.process(dcomp);
 
             physicsScene.DetailLog("{0},BSShapeCollection.CreatePhysicalHull,key={1},inVert={2},inInd={3},split={4},hulls={5}",
-                                BSScene.DetailLogZero, newHullKey, indices.GetLength(0), vertices.Count, maxDepthSplit, m_hulls.Count);
+                                BSScene.DetailLogZero, newHullKey, indices.GetLength(0), vertices.Count, maxDepthSplit, _hulls.Count);
 
             // Convert the vertices and indices for passing to unmanaged.
             // The hull information is passed as a large floating point array.
@@ -887,9 +887,9 @@ public class BSShapeHull : BSShape
             // TODO: is is very inefficient. Someday change the convex hull generator to return
             //   data structures that do not need to be converted in order to pass to Bullet.
             //   And maybe put the values directly into pinned memory rather than marshaling.
-            int hullCount = m_hulls.Count;
+            int hullCount = _hulls.Count;
             int totalVertices = 1;          // include one for the count of the hulls
-            foreach (ConvexResult cr in m_hulls)
+            foreach (ConvexResult cr in _hulls)
             {
                 totalVertices += 4;                         // add four for the vertex count and centroid
                 totalVertices += cr.HullIndices.Count * 3;  // we pass just triangles
@@ -898,7 +898,7 @@ public class BSShapeHull : BSShape
 
             convHulls[0] = (float)hullCount;
             int jj = 1;
-            foreach (ConvexResult cr in m_hulls)
+            foreach (ConvexResult cr in _hulls)
             {
                 // copy vertices for index access
                 float3[] verts = new float3[cr.HullVertices.Count];
@@ -930,7 +930,7 @@ public class BSShapeHull : BSShape
     // Just add it to our collection of hulls for this shape.
     private void HullReturn(ConvexResult result)
     {
-        m_hulls.Add(result);
+        _hulls.Add(result);
         return;
     }
     // Loop through all the known hulls and return the description based on the physical address.

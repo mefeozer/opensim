@@ -33,26 +33,26 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 {
     public class HttpRequest
     {
-        public AsyncCommandManager m_CmdManager;
+        public AsyncCommandManager _CmdManager;
 
         public HttpRequest(AsyncCommandManager CmdManager)
         {
-            m_CmdManager = CmdManager;
+            _CmdManager = CmdManager;
         }
 
         public void CheckHttpRequests()
         {
-            if (m_CmdManager.m_ScriptEngine.World == null)
+            if (_CmdManager._ScriptEngine.World == null)
                 return;
 
-            IHttpRequestModule iHttpReq = m_CmdManager.m_ScriptEngine.World.RequestModuleInterface<IHttpRequestModule>();
+            IHttpRequestModule iHttpReq = _CmdManager._ScriptEngine.World.RequestModuleInterface<IHttpRequestModule>();
             if(iHttpReq == null)
                 return;
 
             HttpRequestClass httpInfo = (HttpRequestClass)iHttpReq.GetNextCompletedRequest();
             while (httpInfo != null)
             {
-                //m_log.Debug("[AsyncLSL]:" + httpInfo.response_body + httpInfo.status);
+                //_log.Debug("[AsyncLSL]:" + httpInfo.response_body + httpInfo.status);
 
                 // Deliver data to prim's remote_data handler
                 //
@@ -69,7 +69,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                     new LSL_Types.LSLString(httpInfo.ResponseBody)
                 };
 
-                foreach (IScriptEngine e in m_CmdManager.ScriptEngines)
+                foreach (IScriptEngine e in _CmdManager.ScriptEngines)
                 {
                     if (e.PostObjectEvent(httpInfo.LocalID,
                             new EventParams("http_response",

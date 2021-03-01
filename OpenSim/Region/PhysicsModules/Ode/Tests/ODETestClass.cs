@@ -40,7 +40,7 @@ namespace OpenSim.Region.PhysicsModule.ODE.Tests
     [TestFixture]
     public class ODETestClass : OpenSimTestCase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //private OpenSim.Region.PhysicsModule.ODE.OdePlugin cbt;
         private PhysicsScene pScene;
@@ -113,7 +113,7 @@ namespace OpenSim.Region.PhysicsModule.ODE.Tests
             OdePrim oprim = (OdePrim)prim;
             OdeScene pscene = (OdeScene)pScene;
 
-            Assert.That(oprim.m_taintadd);
+            Assert.That(oprim._taintadd);
 
             prim.LocalID = 5;
 
@@ -121,30 +121,30 @@ namespace OpenSim.Region.PhysicsModule.ODE.Tests
             {
                 pScene.Simulate(0.133f);
 
-                Assert.That(oprim.prim_geom != (IntPtr)0);
+                Assert.That(oprim.pri_geom != (IntPtr)0);
 
-                Assert.That(oprim.m_targetSpace != (IntPtr)0);
+                Assert.That(oprim._targetSpace != (IntPtr)0);
 
-                //Assert.That(oprim.m_targetSpace == pscene.space);
-                m_log.Info("TargetSpace: " + oprim.m_targetSpace + " - SceneMainSpace: " + pscene.space);
+                //Assert.That(oprim._targetSpace == pscene.space);
+                _log.Info("TargetSpace: " + oprim._targetSpace + " - SceneMainSpace: " + pscene.space);
 
-                Assert.That(!oprim.m_taintadd);
-                m_log.Info("Prim Position (" + oprim.LocalID + "): " + prim.Position);
+                Assert.That(!oprim._taintadd);
+                _log.Info("Prim Position (" + oprim.LocalID + "): " + prim.Position);
 
                 // Make sure we're above the ground
                 //Assert.That(prim.Position.Z > 20f);
-                //m_log.Info("PrimCollisionScore (" + oprim.m_localID + "): " + oprim.m_collisionscore);
+                //_log.Info("PrimCollisionScore (" + oprim._localID + "): " + oprim._collisionscore);
 
                 // Make sure we've got a Body
                 Assert.That(oprim.Body != (IntPtr)0);
-                //m_log.Info(
+                //_log.Info(
             }
 
             // Make sure we're not somewhere above the ground
             Assert.That(prim.Position.Z < 21.5f);
 
             pScene.RemovePrim(prim);
-            Assert.That(oprim.m_taintremove);
+            Assert.That(oprim._taintremove);
             pScene.Simulate(0.133f);
             Assert.That(oprim.Body == (IntPtr)0);
         }

@@ -14,8 +14,8 @@ namespace OSHttpServer
     /// </summary>
     public class HttpContextFactory : IHttpContextFactory
     {
-        private readonly ConcurrentDictionary<int, HttpClientContext> m_activeContexts = new ConcurrentDictionary<int, HttpClientContext>();
-        private readonly ILogWriter m_logWriter;
+        private readonly ConcurrentDictionary<int, HttpClientContext> _activeContexts = new ConcurrentDictionary<int, HttpClientContext>();
+        private readonly ILogWriter _logWriter;
 
         /// <summary>
         /// A request have been received from one of the contexts.
@@ -30,7 +30,7 @@ namespace OSHttpServer
         /// <param name="factory">Used to create a request parser.</param>
         public HttpContextFactory(ILogWriter writer)
         {
-            m_logWriter = writer;
+            _logWriter = writer;
             ContextTimeoutManager.Start();
         }
 
@@ -43,12 +43,12 @@ namespace OSHttpServer
         /// <returns>A context.</returns>
         protected HttpClientContext CreateContext(bool isSecured, IPEndPoint endPoint, Stream stream, Socket sock)
         {
-            var context = new HttpClientContext(isSecured, endPoint, stream, m_logWriter, sock);
+            var context = new HttpClientContext(isSecured, endPoint, stream, _logWriter, sock);
             context.Disconnected += OnFreeContext;
             context.RequestReceived += OnRequestReceived;
 
             ContextTimeoutManager.StartMonitoringContext(context);
-            m_activeContexts[context.contextID] = context;
+            _activeContexts[context.contextID] = context;
             context.Start();
             return context;
         }
@@ -64,7 +64,7 @@ namespace OSHttpServer
             if (imp == null || imp.contextID < 0)
                 return;
 
-            m_activeContexts.TryRemove(imp.contextID, out HttpClientContext dummy);
+            _activeContexts.TryRemove(imp.contextID, out HttpClientContext dummy);
             imp.Close();
         }
 
@@ -103,7 +103,7 @@ namespace OSHttpServer
             }
             catch (Exception e)
             {
-                m_logWriter.Write(this, LogPrio.Error, e.Message);
+                _logWriter.Write(this, LogPrio.Error, e.Message);
                 sslStream.Close();
                 return null;
             }

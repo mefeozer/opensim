@@ -36,25 +36,25 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
     [TestFixture]
     public class VectorRenderModuleTests : OpenSimTestCase
     {
-        Scene m_scene;
-        DynamicTextureModule m_dtm;
-        VectorRenderModule m_vrm;
+        Scene _scene;
+        DynamicTextureModule _dtm;
+        VectorRenderModule _vrm;
 
         private void SetupScene(bool reuseTextures)
         {
             
             TestsAssetCache cache = new TestsAssetCache();
-            m_scene = new SceneHelpers(cache).SetupScene();
+            _scene = new SceneHelpers(cache).SetupScene();
 
-            m_dtm = new DynamicTextureModule
+            _dtm = new DynamicTextureModule
             {
                 ReuseTextures = reuseTextures
             };
-            //            m_dtm.ReuseLowDataTextures = reuseTextures;
+            //            _dtm.ReuseLowDataTextures = reuseTextures;
 
-            m_vrm = new VectorRenderModule();
+            _vrm = new VectorRenderModule();
 
-            SceneHelpers.SetupSceneModules(m_scene, m_dtm, m_vrm);
+            SceneHelpers.SetupSceneModules(_scene, _dtm, _vrm);
         }
 
         [Test]
@@ -63,13 +63,13 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
             TestHelpers.InMethod();
 
             SetupScene(false);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
             UUID originalTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World;",
                 "");
 
@@ -84,21 +84,21 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
             string dtText = "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World;";
 
             SetupScene(false);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
             UUID firstDynamicTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
@@ -113,21 +113,21 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
             string dtText = "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World;";
 
             SetupScene(false);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
             UUID firstDynamicTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "alpha:250");
 
@@ -143,21 +143,21 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
                 = "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World; Image http://0.0.0.0/shouldnotexist.png";
 
             SetupScene(false);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
             UUID firstDynamicTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
@@ -170,13 +170,13 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
             TestHelpers.InMethod();
 
             SetupScene(true);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
             UUID originalTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World;",
                 "");
 
@@ -192,21 +192,21 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
             string dtText = "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World;";
 
             SetupScene(true);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
             UUID firstDynamicTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
@@ -230,21 +230,21 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
             string dtText = "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World;";
 
             SetupScene(true);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "1024");
 
             UUID firstDynamicTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "1024");
 
@@ -259,21 +259,21 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
             string dtText = "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World;";
 
             SetupScene(true);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
             UUID firstDynamicTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "alpha:250");
 
@@ -289,21 +289,21 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender.Tests
                 = "PenColour BLACK; MoveTo 40,220; FontSize 32; Text Hello World; Image http://0.0.0.0/shouldnotexist.png";
 
             SetupScene(true);
-            SceneObjectGroup so = SceneHelpers.AddSceneObject(m_scene);
+            SceneObjectGroup so = SceneHelpers.AddSceneObject(_scene);
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 
             UUID firstDynamicTextureID = so.RootPart.Shape.Textures.GetFace(0).TextureID;
 
-            m_dtm.AddDynamicTextureData(
-                m_scene.RegionInfo.RegionID,
+            _dtm.AddDynamicTextureData(
+                _scene.RegionInfo.RegionID,
                 so.UUID,
-                m_vrm.GetContentType(),
+                _vrm.GetContentType(),
                 dtText,
                 "");
 

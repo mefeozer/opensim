@@ -39,49 +39,49 @@ namespace OpenSim.Framework.Servers.HttpServer
     /// </remarks>
     public class SimpleStreamHandler : SimpleBaseRequestHandler, ISimpleStreamHandler
     {
-        protected IServiceAuth m_Auth;
-        protected SimpleStreamMethod m_processRequest;
+        protected IServiceAuth _Auth;
+        protected SimpleStreamMethod _processRequest;
 
         public SimpleStreamHandler(string path) : base(path) { }
         public SimpleStreamHandler(string path, string name) : base(path, name) { }
 
         public SimpleStreamHandler(string path, SimpleStreamMethod processRequest) : base(path)
         {
-            m_processRequest = processRequest;
+            _processRequest = processRequest;
         }
         public SimpleStreamHandler(string path, SimpleStreamMethod processRequest, string name) : base(path, name)
         {
-            m_processRequest = processRequest;
+            _processRequest = processRequest;
         }
 
         public SimpleStreamHandler(string path, IServiceAuth auth) : base(path)
         {
-            m_Auth = auth;
+            _Auth = auth;
         }
 
         public SimpleStreamHandler(string path, IServiceAuth auth, SimpleStreamMethod processRequest)
             : base(path)
         {
-            m_Auth = auth;
-            m_processRequest = processRequest;
+            _Auth = auth;
+            _processRequest = processRequest;
         }
 
         public SimpleStreamHandler(string path, IServiceAuth auth, SimpleStreamMethod processRequest, string name)
             : base(path, name)
         {
-            m_Auth = auth;
-            m_processRequest = processRequest;
+            _Auth = auth;
+            _processRequest = processRequest;
         }
 
         public virtual void Handle(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
             RequestsReceived++;
 
-            if (m_Auth != null)
+            if (_Auth != null)
             {
                 HttpStatusCode statusCode;
 
-                if (!m_Auth.Authenticate(httpRequest.Headers, httpResponse.AddHeader, out statusCode))
+                if (!_Auth.Authenticate(httpRequest.Headers, httpResponse.AddHeader, out statusCode))
                 {
                     httpResponse.StatusCode = (int)statusCode;
                     return;
@@ -90,8 +90,8 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             try
             {
-                if (m_processRequest != null)
-                    m_processRequest(httpRequest, httpResponse);
+                if (_processRequest != null)
+                    _processRequest(httpRequest, httpResponse);
                 else
                     ProcessRequest(httpRequest, httpResponse);
             }

@@ -38,9 +38,9 @@ namespace OpenSim.Data.PGSQL
 {
     public class UserProfilesData : IProfilesData
     {
-        static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected PGSQLManager m_database;
+        protected PGSQLManager _database;
 
         #region Properites
         string ConnectionString
@@ -48,10 +48,7 @@ namespace OpenSim.Data.PGSQL
             get;
         }
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         #endregion Properties
 
@@ -70,7 +67,7 @@ namespace OpenSim.Data.PGSQL
 
                 Migration m = new Migration(dbcon, Assembly, "UserProfiles");
                 m.Update();
-                m_database = new PGSQLManager(ConnectionString);
+                _database = new PGSQLManager(ConnectionString);
             }
         }
         #endregion Member Functions
@@ -95,7 +92,7 @@ namespace OpenSim.Data.PGSQL
                 dbcon.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                 {
-                    cmd.Parameters.Add(m_database.CreateParameter("Id", creatorId));
+                    cmd.Parameters.Add(_database.CreateParameter("Id", creatorId));
                     using (NpgsqlDataReader reader = cmd.ExecuteReader(CommandBehavior.Default))
                     {
                         if (reader.HasRows)
@@ -113,7 +110,7 @@ namespace OpenSim.Data.PGSQL
                                 }
                                 catch (Exception e)
                                 {
-                                    m_log.Error("[PROFILES_DATA]: UserAccount exception ", e);
+                                    _log.Error("[PROFILES_DATA]: UserAccount exception ", e);
                                 }
 
                                 n.Add("classifieduuid", OSD.FromUUID(Id));
@@ -184,21 +181,21 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("ClassifiedId", ad.ClassifiedId));
-                        cmd.Parameters.Add(m_database.CreateParameter("CreatorId", ad.CreatorId));
-                        cmd.Parameters.Add(m_database.CreateParameter("CreatedDate", (int)ad.CreationDate));
-                        cmd.Parameters.Add(m_database.CreateParameter("ExpirationDate", (int)ad.ExpirationDate));
-                        cmd.Parameters.Add(m_database.CreateParameter("Category", ad.Category.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("Name", ad.Name.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("Description", ad.Description.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("ParcelId", ad.ParcelId));
-                        cmd.Parameters.Add(m_database.CreateParameter("ParentEstate", (int)ad.ParentEstate));
-                        cmd.Parameters.Add(m_database.CreateParameter("SnapshotId", ad.SnapshotId));
-                        cmd.Parameters.Add(m_database.CreateParameter("SimName", ad.SimName.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("GlobalPos", ad.GlobalPos.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("ParcelName", ad.ParcelName.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("Flags", (int)Convert.ToInt32(ad.Flags)));
-                        cmd.Parameters.Add(m_database.CreateParameter("ListingPrice", (int)Convert.ToInt32(ad.Price)));
+                        cmd.Parameters.Add(_database.CreateParameter("ClassifiedId", ad.ClassifiedId));
+                        cmd.Parameters.Add(_database.CreateParameter("CreatorId", ad.CreatorId));
+                        cmd.Parameters.Add(_database.CreateParameter("CreatedDate", (int)ad.CreationDate));
+                        cmd.Parameters.Add(_database.CreateParameter("ExpirationDate", (int)ad.ExpirationDate));
+                        cmd.Parameters.Add(_database.CreateParameter("Category", ad.Category.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("Name", ad.Name.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("Description", ad.Description.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("ParcelId", ad.ParcelId));
+                        cmd.Parameters.Add(_database.CreateParameter("ParentEstate", (int)ad.ParentEstate));
+                        cmd.Parameters.Add(_database.CreateParameter("SnapshotId", ad.SnapshotId));
+                        cmd.Parameters.Add(_database.CreateParameter("SimName", ad.SimName.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("GlobalPos", ad.GlobalPos.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("ParcelName", ad.ParcelName.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("Flags", (int)Convert.ToInt32(ad.Flags)));
+                        cmd.Parameters.Add(_database.CreateParameter("ListingPrice", (int)Convert.ToInt32(ad.Price)));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -206,7 +203,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: ClassifiedsUpdate exception ", e);
+                _log.Error("[PROFILES_DATA]: ClassifiedsUpdate exception ", e);
                 result = e.Message;
                 return false;
             }
@@ -228,14 +225,14 @@ namespace OpenSim.Data.PGSQL
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("ClassifiedId", recordId));
+                        cmd.Parameters.Add(_database.CreateParameter("ClassifiedId", recordId));
                         cmd.ExecuteNonQuery();
                     }
                 }
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: DeleteClassifiedRecord exception ", e);
+                _log.Error("[PROFILES_DATA]: DeleteClassifiedRecord exception ", e);
                 return false;
             }
 
@@ -256,7 +253,7 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("AdId", ad.ClassifiedId));
+                        cmd.Parameters.Add(_database.CreateParameter("AdId", ad.ClassifiedId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -284,7 +281,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: GetClassifiedInfo exception ", e);
+                _log.Error("[PROFILES_DATA]: GetClassifiedInfo exception ", e);
             }
 
             return true;
@@ -318,7 +315,7 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("Id", avatarId));
+                        cmd.Parameters.Add(_database.CreateParameter("Id", avatarId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -339,7 +336,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: GetAvatarPicks exception ", e);
+                _log.Error("[PROFILES_DATA]: GetAvatarPicks exception ", e);
             }
 
             return data;
@@ -361,8 +358,8 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("CreatorId", avatarId));
-                        cmd.Parameters.Add(m_database.CreateParameter("PickId", pickId));
+                        cmd.Parameters.Add(_database.CreateParameter("CreatorId", avatarId));
+                        cmd.Parameters.Add(_database.CreateParameter("PickId", pickId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -396,7 +393,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: GetPickInfo exception ", e);
+                _log.Error("[PROFILES_DATA]: GetPickInfo exception ", e);
             }
 
             return pick;
@@ -429,19 +426,19 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("PickId", pick.PickId));
-                        cmd.Parameters.Add(m_database.CreateParameter("CreatorId", pick.CreatorId));
-                        cmd.Parameters.Add(m_database.CreateParameter("TopPick", pick.TopPick));
-                        cmd.Parameters.Add(m_database.CreateParameter("ParcelId", pick.ParcelId));
-                        cmd.Parameters.Add(m_database.CreateParameter("Name", pick.Name));
-                        cmd.Parameters.Add(m_database.CreateParameter("Desc", pick.Desc));
-                        cmd.Parameters.Add(m_database.CreateParameter("SnapshotId", pick.SnapshotId));
-                        cmd.Parameters.Add(m_database.CreateParameter("User", pick.ParcelName));
-                        cmd.Parameters.Add(m_database.CreateParameter("Original", pick.OriginalName));
-                        cmd.Parameters.Add(m_database.CreateParameter("SimName", pick.SimName));
-                        cmd.Parameters.Add(m_database.CreateParameter("GlobalPos", pick.GlobalPos));
-                        cmd.Parameters.Add(m_database.CreateParameter("SortOrder", pick.SortOrder));
-                        cmd.Parameters.Add(m_database.CreateParameter("Enabled", pick.Enabled));
+                        cmd.Parameters.Add(_database.CreateParameter("PickId", pick.PickId));
+                        cmd.Parameters.Add(_database.CreateParameter("CreatorId", pick.CreatorId));
+                        cmd.Parameters.Add(_database.CreateParameter("TopPick", pick.TopPick));
+                        cmd.Parameters.Add(_database.CreateParameter("ParcelId", pick.ParcelId));
+                        cmd.Parameters.Add(_database.CreateParameter("Name", pick.Name));
+                        cmd.Parameters.Add(_database.CreateParameter("Desc", pick.Desc));
+                        cmd.Parameters.Add(_database.CreateParameter("SnapshotId", pick.SnapshotId));
+                        cmd.Parameters.Add(_database.CreateParameter("User", pick.ParcelName));
+                        cmd.Parameters.Add(_database.CreateParameter("Original", pick.OriginalName));
+                        cmd.Parameters.Add(_database.CreateParameter("SimName", pick.SimName));
+                        cmd.Parameters.Add(_database.CreateParameter("GlobalPos", pick.GlobalPos));
+                        cmd.Parameters.Add(_database.CreateParameter("SortOrder", pick.SortOrder));
+                        cmd.Parameters.Add(_database.CreateParameter("Enabled", pick.Enabled));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -449,7 +446,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: UpdateAvatarNotes exception ", e);
+                _log.Error("[PROFILES_DATA]: UpdateAvatarNotes exception ", e);
                 return false;
             }
 
@@ -471,7 +468,7 @@ namespace OpenSim.Data.PGSQL
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("PickId", pickId));
+                        cmd.Parameters.Add(_database.CreateParameter("PickId", pickId));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -479,7 +476,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: DeleteUserPickRecord exception ", e);
+                _log.Error("[PROFILES_DATA]: DeleteUserPickRecord exception ", e);
                 return false;
             }
 
@@ -506,8 +503,8 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("Id", notes.UserId));
-                        cmd.Parameters.Add(m_database.CreateParameter("TargetId", notes.TargetId));
+                        cmd.Parameters.Add(_database.CreateParameter("Id", notes.UserId));
+                        cmd.Parameters.Add(_database.CreateParameter("TargetId", notes.TargetId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                         {
@@ -522,7 +519,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: GetAvatarNotes exception ", e);
+                _log.Error("[PROFILES_DATA]: GetAvatarNotes exception ", e);
             }
 
             return true;
@@ -561,10 +558,10 @@ namespace OpenSim.Data.PGSQL
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
                         if (!remove)
-                            cmd.Parameters.Add(m_database.CreateParameter("Notes", note.Notes));
+                            cmd.Parameters.Add(_database.CreateParameter("Notes", note.Notes));
 
-                        cmd.Parameters.Add(m_database.CreateParameter("TargetId", note.TargetId));
-                        cmd.Parameters.Add(m_database.CreateParameter("UserId", note.UserId));
+                        cmd.Parameters.Add(_database.CreateParameter("TargetId", note.TargetId));
+                        cmd.Parameters.Add(_database.CreateParameter("UserId", note.UserId));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -572,7 +569,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: UpdateAvatarNotes exception ", e);
+                _log.Error("[PROFILES_DATA]: UpdateAvatarNotes exception ", e);
                 return false;
             }
 
@@ -597,13 +594,13 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("Id", props.UserId));
+                        cmd.Parameters.Add(_database.CreateParameter("Id", props.UserId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                         {
                             if (reader.HasRows)
                             {
-                                // m_log.DebugFormat("[PROFILES_DATA]" +
+                                // _log.DebugFormat("[PROFILES_DATA]" +
                                 //                  ": Getting data for {0}.", props.UserId);
                                 reader.Read();
                                 props.WebUrl = (string)reader["profileURL"].ToString();
@@ -620,7 +617,7 @@ namespace OpenSim.Data.PGSQL
                             }
                             else
                             {
-                                //m_log.DebugFormat("[PROFILES_DATA]" +
+                                //_log.DebugFormat("[PROFILES_DATA]" +
                                 //                 ": No data for {0}", props.UserId);
 
                                 props.WebUrl = string.Empty;
@@ -672,23 +669,23 @@ namespace OpenSim.Data.PGSQL
 
                                 using (NpgsqlCommand put = new NpgsqlCommand(query, dbcon))
                                 {
-                                    //m_log.DebugFormat("[PROFILES_DATA]" +
+                                    //_log.DebugFormat("[PROFILES_DATA]" +
                                     //                  ": Adding new data for {0}", props.UserId);
 
-                                    put.Parameters.Add(m_database.CreateParameter("userId", props.UserId));
-                                    put.Parameters.Add(m_database.CreateParameter("profilePartner", props.PartnerId));
-                                    put.Parameters.Add(m_database.CreateParameter("profileAllowPublish", props.PublishProfile));
-                                    put.Parameters.Add(m_database.CreateParameter("profileMaturePublish", props.PublishMature));
-                                    put.Parameters.Add(m_database.CreateParameter("profileURL", props.WebUrl));
-                                    put.Parameters.Add(m_database.CreateParameter("profileWantToMask", props.WantToMask));
-                                    put.Parameters.Add(m_database.CreateParameter("profileWantToText", props.WantToText));
-                                    put.Parameters.Add(m_database.CreateParameter("profileSkillsMask", props.SkillsMask));
-                                    put.Parameters.Add(m_database.CreateParameter("profileSkillsText", props.SkillsText));
-                                    put.Parameters.Add(m_database.CreateParameter("profileLanguages", props.Language));
-                                    put.Parameters.Add(m_database.CreateParameter("profileImage", props.ImageId));
-                                    put.Parameters.Add(m_database.CreateParameter("profileAboutText", props.AboutText));
-                                    put.Parameters.Add(m_database.CreateParameter("profileFirstImage", props.FirstLifeImageId));
-                                    put.Parameters.Add(m_database.CreateParameter("profileFirstText", props.FirstLifeText));
+                                    put.Parameters.Add(_database.CreateParameter("userId", props.UserId));
+                                    put.Parameters.Add(_database.CreateParameter("profilePartner", props.PartnerId));
+                                    put.Parameters.Add(_database.CreateParameter("profileAllowPublish", props.PublishProfile));
+                                    put.Parameters.Add(_database.CreateParameter("profileMaturePublish", props.PublishMature));
+                                    put.Parameters.Add(_database.CreateParameter("profileURL", props.WebUrl));
+                                    put.Parameters.Add(_database.CreateParameter("profileWantToMask", props.WantToMask));
+                                    put.Parameters.Add(_database.CreateParameter("profileWantToText", props.WantToText));
+                                    put.Parameters.Add(_database.CreateParameter("profileSkillsMask", props.SkillsMask));
+                                    put.Parameters.Add(_database.CreateParameter("profileSkillsText", props.SkillsText));
+                                    put.Parameters.Add(_database.CreateParameter("profileLanguages", props.Language));
+                                    put.Parameters.Add(_database.CreateParameter("profileImage", props.ImageId));
+                                    put.Parameters.Add(_database.CreateParameter("profileAboutText", props.AboutText));
+                                    put.Parameters.Add(_database.CreateParameter("profileFirstImage", props.FirstLifeImageId));
+                                    put.Parameters.Add(_database.CreateParameter("profileFirstText", props.FirstLifeText));
 
                                     put.ExecuteNonQuery();
                                 }
@@ -699,7 +696,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: GetAvatarProperties exception ", e);
+                _log.Error("[PROFILES_DATA]: GetAvatarProperties exception ", e);
                 result = e.Message;
                 return false;
             }
@@ -726,12 +723,12 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("profileURL", props.WebUrl));
-                        cmd.Parameters.Add(m_database.CreateParameter("image", props.ImageId));
-                        cmd.Parameters.Add(m_database.CreateParameter("abouttext", props.AboutText));
-                        cmd.Parameters.Add(m_database.CreateParameter("firstlifeimage", props.FirstLifeImageId));
-                        cmd.Parameters.Add(m_database.CreateParameter("firstlifetext", props.FirstLifeText));
-                        cmd.Parameters.Add(m_database.CreateParameter("uuid", props.UserId));
+                        cmd.Parameters.Add(_database.CreateParameter("profileURL", props.WebUrl));
+                        cmd.Parameters.Add(_database.CreateParameter("image", props.ImageId));
+                        cmd.Parameters.Add(_database.CreateParameter("abouttext", props.AboutText));
+                        cmd.Parameters.Add(_database.CreateParameter("firstlifeimage", props.FirstLifeImageId));
+                        cmd.Parameters.Add(_database.CreateParameter("firstlifetext", props.FirstLifeText));
+                        cmd.Parameters.Add(_database.CreateParameter("uuid", props.UserId));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -739,7 +736,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: AgentPropertiesUpdate exception ", e);
+                _log.Error("[PROFILES_DATA]: AgentPropertiesUpdate exception ", e);
                 return false;
             }
 
@@ -769,12 +766,12 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("WantMask", up.WantToMask));
-                        cmd.Parameters.Add(m_database.CreateParameter("WantText", up.WantToText));
-                        cmd.Parameters.Add(m_database.CreateParameter("SkillsMask", up.SkillsMask));
-                        cmd.Parameters.Add(m_database.CreateParameter("SkillsText", up.SkillsText));
-                        cmd.Parameters.Add(m_database.CreateParameter("Languages", up.Language));
-                        cmd.Parameters.Add(m_database.CreateParameter("uuid", up.UserId));
+                        cmd.Parameters.Add(_database.CreateParameter("WantMask", up.WantToMask));
+                        cmd.Parameters.Add(_database.CreateParameter("WantText", up.WantToText));
+                        cmd.Parameters.Add(_database.CreateParameter("SkillsMask", up.SkillsMask));
+                        cmd.Parameters.Add(_database.CreateParameter("SkillsText", up.SkillsText));
+                        cmd.Parameters.Add(_database.CreateParameter("Languages", up.Language));
+                        cmd.Parameters.Add(_database.CreateParameter("uuid", up.UserId));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -782,7 +779,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: UpdateAvatarInterests exception ", e);
+                _log.Error("[PROFILES_DATA]: UpdateAvatarInterests exception ", e);
                 result = e.Message;
                 return false;
             }
@@ -805,7 +802,7 @@ namespace OpenSim.Data.PGSQL
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(string.Format(query, "\"classifieds\""), dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("Id", avatarId));
+                        cmd.Parameters.Add(_database.CreateParameter("Id", avatarId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                         {
@@ -824,7 +821,7 @@ namespace OpenSim.Data.PGSQL
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(string.Format(query, "\"userpicks\""), dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("Id", avatarId));
+                        cmd.Parameters.Add(_database.CreateParameter("Id", avatarId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                         {
@@ -845,7 +842,7 @@ namespace OpenSim.Data.PGSQL
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("Id", avatarId));
+                        cmd.Parameters.Add(_database.CreateParameter("Id", avatarId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                         {
@@ -863,7 +860,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: GetUserImageAssets exception ", e);
+                _log.Error("[PROFILES_DATA]: GetUserImageAssets exception ", e);
             }
 
             return data;
@@ -888,7 +885,7 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("Id", pref.UserId));
+                        cmd.Parameters.Add(_database.CreateParameter("Id", pref.UserId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -903,7 +900,7 @@ namespace OpenSim.Data.PGSQL
                             {
                                 using (NpgsqlCommand put = new NpgsqlCommand(query, dbcon))
                                 {
-                                    put.Parameters.Add(m_database.CreateParameter("Id", pref.UserId));
+                                    put.Parameters.Add(_database.CreateParameter("Id", pref.UserId));
                                     query = "INSERT INTO usersettings VALUES ";
                                     query += "(:Id,'false','false', '')";
 
@@ -916,7 +913,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: GetUserPreferences exception ", e);
+                _log.Error("[PROFILES_DATA]: GetUserPreferences exception ", e);
                 result = e.Message;
             }
 
@@ -940,10 +937,10 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("ImViaEmail", pref.IMViaEmail));
-                        cmd.Parameters.Add(m_database.CreateParameter("Visible", pref.Visible));
-                        cmd.Parameters.Add(m_database.CreateParameter("EMail", pref.EMail.ToString().ToLower()));
-                        cmd.Parameters.Add(m_database.CreateParameter("uuid", pref.UserId));
+                        cmd.Parameters.Add(_database.CreateParameter("ImViaEmail", pref.IMViaEmail));
+                        cmd.Parameters.Add(_database.CreateParameter("Visible", pref.Visible));
+                        cmd.Parameters.Add(_database.CreateParameter("EMail", pref.EMail.ToString().ToLower()));
+                        cmd.Parameters.Add(_database.CreateParameter("uuid", pref.UserId));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -951,7 +948,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: UpdateUserPreferences exception ", e);
+                _log.Error("[PROFILES_DATA]: UpdateUserPreferences exception ", e);
                 result = e.Message;
                 return false;
             }
@@ -978,8 +975,8 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("Id", props.UserId));
-                        cmd.Parameters.Add(m_database.CreateParameter("TagId", props.TagId));
+                        cmd.Parameters.Add(_database.CreateParameter("Id", props.UserId));
+                        cmd.Parameters.Add(_database.CreateParameter("TagId", props.TagId));
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                         {
@@ -999,10 +996,10 @@ namespace OpenSim.Data.PGSQL
 
                                 using (NpgsqlCommand put = new NpgsqlCommand(query, dbcon))
                                 {
-                                    put.Parameters.Add(m_database.CreateParameter("UserId", props.UserId));
-                                    put.Parameters.Add(m_database.CreateParameter("TagId", props.TagId));
-                                    put.Parameters.Add(m_database.CreateParameter("DataKey", props.DataKey.ToString()));
-                                    put.Parameters.Add(m_database.CreateParameter("DataVal", props.DataVal.ToString()));
+                                    put.Parameters.Add(_database.CreateParameter("UserId", props.UserId));
+                                    put.Parameters.Add(_database.CreateParameter("TagId", props.TagId));
+                                    put.Parameters.Add(_database.CreateParameter("DataKey", props.DataKey.ToString()));
+                                    put.Parameters.Add(_database.CreateParameter("DataVal", props.DataVal.ToString()));
 
                                     put.ExecuteNonQuery();
                                 }
@@ -1013,7 +1010,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: GetUserAppData exception ", e);
+                _log.Error("[PROFILES_DATA]: GetUserAppData exception ", e);
                 result = e.Message;
                 return false;
             }
@@ -1039,10 +1036,10 @@ namespace OpenSim.Data.PGSQL
                     dbcon.Open();
                     using (NpgsqlCommand cmd = new NpgsqlCommand(query, dbcon))
                     {
-                        cmd.Parameters.Add(m_database.CreateParameter("UserId", props.UserId.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("TagId", props.TagId.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("DataKey", props.DataKey.ToString()));
-                        cmd.Parameters.Add(m_database.CreateParameter("DataVal", props.DataKey.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("UserId", props.UserId.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("TagId", props.TagId.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("DataKey", props.DataKey.ToString()));
+                        cmd.Parameters.Add(_database.CreateParameter("DataVal", props.DataKey.ToString()));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -1050,7 +1047,7 @@ namespace OpenSim.Data.PGSQL
             }
             catch (Exception e)
             {
-                m_log.Error("[PROFILES_DATA]: SetUserData exception ", e);
+                _log.Error("[PROFILES_DATA]: SetUserData exception ", e);
                 return false;
             }
 

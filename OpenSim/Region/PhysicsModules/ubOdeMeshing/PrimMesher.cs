@@ -1241,14 +1241,11 @@ namespace PrimMesher
 
         public bool HasProfileCut
         {
-            get { return hasProfileCut; }
-            set { hasProfileCut = value; }
+            get => hasProfileCut;
+            set => hasProfileCut = value;
         }
 
-        public bool HasHollow
-        {
-            get { return hasHollow; }
-        }
+        public bool HasHollow => hasHollow;
 
         /// <summary>
         /// Constructs a PrimMesh object and creates the profile for extrusion.

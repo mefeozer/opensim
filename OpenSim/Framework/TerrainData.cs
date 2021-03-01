@@ -66,15 +66,15 @@ namespace OpenSim.Framework
 
     public class TerrainData
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string LogHeader = "[TERRAIN DATA]";
 
-        private float[,] m_heightmap;
+        private float[,] _heightmap;
         // Remember subregions of the heightmap that has changed.
 
-        private readonly BitArray m_taint;
-        private readonly int m_taintSizeX;
-        private readonly int m_taintSizeY;
+        private readonly BitArray _taint;
+        private readonly int _taintSizeX;
+        private readonly int _taintSizeY;
 
         // legacy CompressionFactor
         public float CompressionFactor { get; private set; }
@@ -98,37 +98,37 @@ namespace OpenSim.Framework
 
         public float this[int x, int y]
         {
-            get { return m_heightmap[x, y]; }
+            get => _heightmap[x, y];
             set
             {
-                if (m_heightmap[x, y] != value)
+                if (_heightmap[x, y] != value)
                 {
-                    m_heightmap[x, y] = value;
+                    _heightmap[x, y] = value;
                     int yy = y / Constants.TerrainPatchSize;
-                    m_taint[x / Constants.TerrainPatchSize + yy * m_taintSizeX] = true;
+                    _taint[x / Constants.TerrainPatchSize + yy * _taintSizeX] = true;
                 }
             }
         }
 
         public float this[int x, int y, int z]
         {
-            get { return this[x, y]; }
-            set { this[x, y] = value; }
+            get => this[x, y];
+            set => this[x, y] = value;
         }
 
         public void ClearTaint()
         {
-            m_taint.SetAll(false);
+            _taint.SetAll(false);
         }
 
         public void TaintAllTerrain()
         {
-            m_taint.SetAll(true);
+            _taint.SetAll(true);
         }
 
         private void SetAllTaint(bool setting)
         {
-            m_taint.SetAll(setting);
+            _taint.SetAll(setting);
         }
 
         public void ClearLand()
@@ -140,7 +140,7 @@ namespace OpenSim.Framework
         {
             for (int xx = 0; xx < SizeX; xx++)
                 for (int yy = 0; yy < SizeY; yy++)
-                    m_heightmap[xx, yy] = pHeight;
+                    _heightmap[xx, yy] = pHeight;
         }
 
         // Return 'true' of the patch that contains these region coordinates has been modified.
@@ -150,10 +150,10 @@ namespace OpenSim.Framework
         public bool IsTaintedAt(int xx, int yy, bool clearOnTest)
         {
             yy /= Constants.TerrainPatchSize;
-            int indx = xx / Constants.TerrainPatchSize + yy * m_taintSizeX;
-            bool ret = m_taint[indx];
+            int indx = xx / Constants.TerrainPatchSize + yy * _taintSizeX;
+            bool ret = _taint[indx];
             if (ret && clearOnTest)
-                m_taint[indx] = false;
+                _taint[indx] = false;
             return ret;
         }
 
@@ -161,40 +161,40 @@ namespace OpenSim.Framework
         public bool IsTaintedAt(int xx, int yy)
         {
             yy /= Constants.TerrainPatchSize;
-            return m_taint[xx / Constants.TerrainPatchSize + yy * m_taintSizeX];
+            return _taint[xx / Constants.TerrainPatchSize + yy * _taintSizeX];
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public bool IsTaintedAtPatch(int xx, int yy, bool clearOnTest)
         {
-            int indx = xx + yy * m_taintSizeX;
-            bool ret = m_taint[indx];
+            int indx = xx + yy * _taintSizeX;
+            bool ret = _taint[indx];
             if (ret && clearOnTest)
-                m_taint[indx] = false;
+                _taint[indx] = false;
             return ret;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public bool IsTaintedAtPatch(int xx, int yy)
         {
-            return m_taint[xx + yy * m_taintSizeX];
+            return _taint[xx + yy * _taintSizeX];
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public bool IsTaintedAtPatch(int indx, bool clearOnTest)
         {
-            bool ret = m_taint[indx];
+            bool ret = _taint[indx];
             if (ret && clearOnTest)
-                m_taint[indx] = false;
+                _taint[indx] = false;
             return ret;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public bool IsTaintedAtPatchWithClear(int indx)
         {
-            if(m_taint[indx])
+            if(_taint[indx])
             {
-                m_taint[indx] = false;
+                _taint[indx] = false;
                 return true;
             }
             return false;
@@ -203,7 +203,7 @@ namespace OpenSim.Framework
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public bool IsTaintedAtPatch(int indx)
         {
-            return m_taint[indx];
+            return _taint[indx];
         }
         // TerrainData.GetDatabaseBlob
         // The user wants something to store in the database.
@@ -222,7 +222,7 @@ namespace OpenSim.Framework
             int ind = 0;
             for (int xx = 0; xx < SizeX; xx++)
                 for (int yy = 0; yy < SizeY; yy++)
-                    newMap[ind++] = m_heightmap[xx, yy];
+                    newMap[ind++] = _heightmap[xx, yy];
 
             return newMap;
         }
@@ -231,7 +231,7 @@ namespace OpenSim.Framework
         {
             TerrainData ret = new TerrainData(SizeX, SizeY, SizeZ)
             {
-                m_heightmap = (float[,])this.m_heightmap.Clone()
+                _heightmap = (float[,])this._heightmap.Clone()
             };
             return ret;
         }
@@ -245,7 +245,7 @@ namespace OpenSim.Framework
             for (int jj = 0; jj < SizeY; jj++)
                 for (int ii = 0; ii < SizeX; ii++)
                 {
-                    heights[idx++] = m_heightmap[ii, jj];
+                    heights[idx++] = _heightmap[ii, jj];
                 }
 
             return heights;
@@ -256,7 +256,7 @@ namespace OpenSim.Framework
             double[,] ret = new double[SizeX, SizeY];
             for (int xx = 0; xx < SizeX; xx++)
                 for (int yy = 0; yy < SizeY; yy++)
-                    ret[xx, yy] = (double)m_heightmap[xx, yy];
+                    ret[xx, yy] = (double)_heightmap[xx, yy];
 
             return ret;
         }
@@ -266,12 +266,12 @@ namespace OpenSim.Framework
             zmax = float.MinValue;
             zmin = float.MaxValue;
 
-            int stride = m_heightmap.GetLength(1);
+            int stride = _heightmap.GetLength(1);
 
             int startx = px * 16 * stride;
             int endx = (px + 1) * 16 * stride;
             int starty = py * 16;
-            fixed (float* map = m_heightmap)
+            fixed (float* map = _heightmap)
             {
                 for (int i = startx; i < endx; i += stride)
                 {
@@ -289,12 +289,12 @@ namespace OpenSim.Framework
         public unsafe void GetPatchBlock(float* block, int px, int py, float sub, float premult)
         {
             int k = 0;
-            int stride = m_heightmap.GetLength(1);
+            int stride = _heightmap.GetLength(1);
 
             int startX = px * 16 * stride;
             int endX = (px + 1) * 16 * stride;
             int startY = py * 16;
-            fixed(float* map = m_heightmap)
+            fixed(float* map = _heightmap)
             {
                 for (int y = startY; y < startY + 16; y++)
                 {
@@ -348,24 +348,24 @@ namespace OpenSim.Framework
         {
             SizeX = pTerrain.GetLength(0);
             SizeY = pTerrain.GetLength(1);
-            m_taintSizeX = SizeX / Constants.TerrainPatchSize;
-            m_taintSizeY = SizeY / Constants.TerrainPatchSize;
+            _taintSizeX = SizeX / Constants.TerrainPatchSize;
+            _taintSizeY = SizeY / Constants.TerrainPatchSize;
 
             SizeZ = (int)Constants.RegionHeight;
             CompressionFactor = 100.0f;
 
-            m_heightmap = new float[SizeX, SizeY];
+            _heightmap = new float[SizeX, SizeY];
             for (int ii = 0; ii < SizeX; ii++)
             {
                 for (int jj = 0; jj < SizeY; jj++)
                 {
-                    m_heightmap[ii, jj] = (float)pTerrain[ii, jj];
+                    _heightmap[ii, jj] = (float)pTerrain[ii, jj];
 
                 }
             }
-            // m_log.DebugFormat("{0} new by doubles. sizeX={1}, sizeY={2}, sizeZ={3}", LogHeader, SizeX, SizeY, SizeZ);
+            // _log.DebugFormat("{0} new by doubles. sizeX={1}, sizeY={2}, sizeZ={3}", LogHeader, SizeX, SizeY, SizeZ);
 
-            m_taint = new BitArray(m_taintSizeX * m_taintSizeY, false);
+            _taint = new BitArray(_taintSizeX * _taintSizeY, false);
         }
 
         // Create underlying structures but don't initialize the heightmap assuming the caller will immediately do that
@@ -374,13 +374,13 @@ namespace OpenSim.Framework
             SizeX = pX;
             SizeY = pY;
             SizeZ = pZ;
-            m_taintSizeX = SizeX / Constants.TerrainPatchSize;
-            m_taintSizeY = SizeY / Constants.TerrainPatchSize;
+            _taintSizeX = SizeX / Constants.TerrainPatchSize;
+            _taintSizeY = SizeY / Constants.TerrainPatchSize;
             CompressionFactor = 100.0f;
-            m_heightmap = new float[SizeX, SizeY];
-            m_taint = new BitArray(m_taintSizeX * m_taintSizeY, false);
+            _heightmap = new float[SizeX, SizeY];
+            _taint = new BitArray(_taintSizeX * _taintSizeY, false);
 
-            // m_log.DebugFormat("{0} new by dimensions. sizeX={1}, sizeY={2}, sizeZ={3}", LogHeader, SizeX, SizeY, SizeZ);
+            // _log.DebugFormat("{0} new by dimensions. sizeX={1}, sizeY={2}, sizeZ={3}", LogHeader, SizeX, SizeY, SizeZ);
             ClearLand(0f);
         }
 
@@ -391,8 +391,8 @@ namespace OpenSim.Framework
             int ind = 0;
             for (int xx = 0; xx < SizeX; xx++)
                 for (int yy = 0; yy < SizeY; yy++)
-                    m_heightmap[xx, yy] = cmap[ind++];
-            // m_log.DebugFormat("{0} new by compressed map. sizeX={1}, sizeY={2}, sizeZ={3}", LogHeader, SizeX, SizeY, SizeZ);
+                    _heightmap[xx, yy] = cmap[ind++];
+            // _log.DebugFormat("{0} new by compressed map. sizeX={1}, sizeY={2}, sizeZ={3}", LogHeader, SizeX, SizeY, SizeZ);
         }
 
         // Create a heighmap from a database blob
@@ -403,20 +403,20 @@ namespace OpenSim.Framework
             {
                 case DBTerrainRevision.Variable2DGzip:
                     FromCompressedTerrainSerializationV2DGZip(pBlob);
-                    m_log.DebugFormat("{0} HeightmapTerrainData create from Variable2DGzip serialization. Size=<{1},{2}>", LogHeader, SizeX, SizeY);
+                    _log.DebugFormat("{0} HeightmapTerrainData create from Variable2DGzip serialization. Size=<{1},{2}>", LogHeader, SizeX, SizeY);
                     break;
 
                 case DBTerrainRevision.Variable2D:
                     FromCompressedTerrainSerializationV2D(pBlob);
-                    m_log.DebugFormat("{0} HeightmapTerrainData create from Variable2D serialization. Size=<{1},{2}>", LogHeader, SizeX, SizeY);
+                    _log.DebugFormat("{0} HeightmapTerrainData create from Variable2D serialization. Size=<{1},{2}>", LogHeader, SizeX, SizeY);
                     break;
                 case DBTerrainRevision.Compressed2D:
                     FromCompressedTerrainSerialization2D(pBlob);
-                    m_log.DebugFormat("{0} HeightmapTerrainData create from Compressed2D serialization. Size=<{1},{2}>", LogHeader, SizeX, SizeY);
+                    _log.DebugFormat("{0} HeightmapTerrainData create from Compressed2D serialization. Size=<{1},{2}>", LogHeader, SizeX, SizeY);
                     break;
                 default:
                     FromLegacyTerrainSerialization(pBlob);
-                    m_log.DebugFormat("{0} HeightmapTerrainData create from legacy serialization. Size=<{1},{2}>", LogHeader, SizeX, SizeY);
+                    _log.DebugFormat("{0} HeightmapTerrainData create from legacy serialization. Size=<{1},{2}>", LogHeader, SizeX, SizeY);
                     break;
             }
         }
@@ -465,7 +465,7 @@ namespace OpenSim.Framework
                                 float val = (float)br.ReadDouble();
 
                                 if (xx < SizeX && yy < SizeY)
-                                    m_heightmap[xx, yy] = val;
+                                    _heightmap[xx, yy] = val;
                             }
                         }
                     }
@@ -499,7 +499,7 @@ namespace OpenSim.Framework
                             for (int xx = 0; xx < SizeX; xx++)
                             {
                                 // reduce to 1cm resolution
-                                float val = (float)Math.Round(m_heightmap[xx, yy],2,MidpointRounding.ToEven);
+                                float val = (float)Math.Round(_heightmap[xx, yy],2,MidpointRounding.ToEven);
                                 bw.Write(val);
                             }
                     }
@@ -508,7 +508,7 @@ namespace OpenSim.Framework
             }
             catch {}
 
-            m_log.DebugFormat("{0} V2D {1} bytes", LogHeader, ret.Length);
+            _log.DebugFormat("{0} V2D {1} bytes", LogHeader, ret.Length);
 
             return ret;
         }
@@ -528,8 +528,8 @@ namespace OpenSim.Framework
                         for (int yy = 0; yy < SizeY; yy++)
                             for (int xx = 0; xx < SizeX; xx++)
                             {
-                                //bw.Write((float)m_heightmap[xx, yy]);
-                                bw.Write((float)Math.Round(m_heightmap[xx, yy], 3, MidpointRounding.AwayFromZero));
+                                //bw.Write((float)_heightmap[xx, yy]);
+                                bw.Write((float)Math.Round(_heightmap[xx, yy], 3, MidpointRounding.AwayFromZero));
                             }
 
                         bw.Flush();
@@ -549,7 +549,7 @@ namespace OpenSim.Framework
             }
             catch {}
 
-            m_log.DebugFormat("{0} V2DGzip {1} bytes", LogHeader, ret.Length);
+            _log.DebugFormat("{0} V2DGzip {1} bytes", LogHeader, ret.Length);
             return ret;
         }
 
@@ -583,13 +583,13 @@ namespace OpenSim.Framework
                         {
                             float val = FromCompressedHeight(br.ReadInt16());
                             if (xx < SizeX && yy < SizeY)
-                                m_heightmap[xx, yy] = val;
+                                _heightmap[xx, yy] = val;
                         }
                     }
                 }
                 ClearTaint();
 
-                m_log.DebugFormat("{0} Read (compressed2D) heightmap. Heightmap size=<{1},{2}>. Region size=<{3},{4}>. CompFact={5}",
+                _log.DebugFormat("{0} Read (compressed2D) heightmap. Heightmap size=<{1},{2}>. Region size=<{3},{4}>. CompFact={5}",
                                 LogHeader, hmSizeX, hmSizeY, SizeX, SizeY, hmCompressionFactor);
             }
         }
@@ -620,7 +620,7 @@ namespace OpenSim.Framework
                             {
                                 float val = br.ReadSingle();
                                 if (xx < SizeX && yy < SizeY)
-                                    m_heightmap[xx, yy] = val;
+                                    _heightmap[xx, yy] = val;
                             }
                         }
                     }
@@ -629,13 +629,13 @@ namespace OpenSim.Framework
             catch (Exception e)
             {
                 ClearTaint();
-                m_log.ErrorFormat("{0} 2D error: {1} - terrain may be damaged",
+                _log.ErrorFormat("{0} 2D error: {1} - terrain may be damaged",
                                 LogHeader, e.Message);
                 return;
             }
             ClearTaint();
 
-            m_log.DebugFormat("{0} V2D Heightmap size=<{1},{2}>. Region size=<{3},{4}>",
+            _log.DebugFormat("{0} V2D Heightmap size=<{1},{2}>. Region size=<{3},{4}>",
                             LogHeader, hmSizeX, hmSizeY, SizeX, SizeY);
 
         }
@@ -643,7 +643,7 @@ namespace OpenSim.Framework
         // as above but Gzip compressed
         public void FromCompressedTerrainSerializationV2DGZip(byte[] pBlob)
         {
-            m_log.InfoFormat("{0} VD2Gzip {1} bytes input",
+            _log.InfoFormat("{0} VD2Gzip {1} bytes input",
                             LogHeader, pBlob.Length);
 
             int hmSizeX, hmSizeY;
@@ -677,7 +677,7 @@ namespace OpenSim.Framework
                             {
                                 float val = br.ReadSingle();
                                 if (xx < SizeX && yy < SizeY)
-                                    m_heightmap[xx, yy] = val;
+                                    _heightmap[xx, yy] = val;
                             }
                         }
                     }
@@ -686,13 +686,13 @@ namespace OpenSim.Framework
             catch( Exception e)
             {
                 ClearTaint();
-                m_log.ErrorFormat("{0} V2DGzip error: {1} - terrain may be damaged",
+                _log.ErrorFormat("{0} V2DGzip error: {1} - terrain may be damaged",
                                 LogHeader, e.Message);
                 return;
             }
 
             ClearTaint();
-            m_log.DebugFormat("{0} V2DGzip. Heightmap size=<{1},{2}>. Region size=<{3},{4}>",
+            _log.DebugFormat("{0} V2DGzip. Heightmap size=<{1},{2}>. Region size=<{3},{4}>",
                             LogHeader, hmSizeX, hmSizeY, SizeX, SizeY);
 
         }

@@ -93,7 +93,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             SceneObjectGroup retrievedSo = scene.GetSceneObjectGroup(so.UUID);
             SceneObjectPart[] retrievedParts = retrievedSo.Parts;
 
-            //m_log.Debug("retrievedPart : {0}", retrievedPart);
+            //_log.Debug("retrievedPart : {0}", retrievedPart);
             // If the parts have the same UUID then we will consider them as one and the same
             Assert.That(retrievedSo.PrimCount, Is.EqualTo(partsToTestCount));
 
@@ -132,7 +132,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
 
             SceneObjectPart retrievedPart = scene.GetSceneObjectPart(objUuid);
 
-            //m_log.Debug("retrievedPart : {0}", retrievedPart);
+            //_log.Debug("retrievedPart : {0}", retrievedPart);
             // If the parts have the same UUID then we will consider them as one and the same
             Assert.That(retrievedPart.Name, Is.EqualTo(obj1Name));
             Assert.That(retrievedPart.UUID, Is.EqualTo(objUuid));

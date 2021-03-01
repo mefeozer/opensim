@@ -39,11 +39,11 @@ namespace OpenSim.Services.Connectors
 {
     public class GridUserServicesConnector : BaseServiceConnector, IGridUserService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
+        private string _ServerURI = string.Empty;
 
         public GridUserServicesConnector()
         {
@@ -51,7 +51,7 @@ namespace OpenSim.Services.Connectors
 
         public GridUserServicesConnector(string serverURI)
         {
-            m_ServerURI = serverURI.TrimEnd('/');
+            _ServerURI = serverURI.TrimEnd('/');
         }
 
         public GridUserServicesConnector(IConfigSource source)
@@ -64,7 +64,7 @@ namespace OpenSim.Services.Connectors
             IConfig gridConfig = source.Configs["GridUserService"];
             if (gridConfig == null)
             {
-                m_log.Error("[GRID USER CONNECTOR]: GridUserService missing from OpenSim.ini");
+                _log.Error("[GRID USER CONNECTOR]: GridUserService missing from OpenSim.ini");
                 throw new Exception("GridUser connector init error");
             }
 
@@ -72,18 +72,18 @@ namespace OpenSim.Services.Connectors
 
             if (string.IsNullOrWhiteSpace(serviceURI))
             {
-                m_log.Error("[GRIDUSER CONNECTOR]: GridUserServerURI not found section GridUserService");
+                _log.Error("[GRIDUSER CONNECTOR]: GridUserServerURI not found section GridUserService");
                 throw new Exception("GridUser connector init error");
             }
 
             OSHHTPHost tmp = new OSHHTPHost(serviceURI, true);
             if (!tmp.IsResolvedHost)
             {
-                m_log.ErrorFormat("[GRIDUSER CONNECTOR]: {0}", tmp.IsValidHost ? "Could not resolve GridUserServerURI" : "GridUserServerURI is a invalid host");
+                _log.ErrorFormat("[GRIDUSER CONNECTOR]: {0}", tmp.IsValidHost ? "Could not resolve GridUserServerURI" : "GridUserServerURI is a invalid host");
                 throw new Exception("User account connector init error");
             }
 
-            m_ServerURI = tmp.URI;
+            _ServerURI = tmp.URI;
 
             base.Initialise(source, "GridUserService");
         }
@@ -162,14 +162,14 @@ namespace OpenSim.Services.Connectors
             sendData["LookAt"] = lookAt.ToString();
 
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/griduser";
-            // m_log.DebugFormat("[GRID USER CONNECTOR]: queryString = {0}", reqString);
+            string uri = _ServerURI + "/griduser";
+            // _log.DebugFormat("[GRID USER CONNECTOR]: queryString = {0}", reqString);
             try
             {
                 string reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
                         reqString,
-                        m_Auth);
+                        _Auth);
                 if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -182,15 +182,15 @@ namespace OpenSim.Services.Connectors
                             return false;
                     }
                     else
-                        m_log.DebugFormat("[GRID USER CONNECTOR]: SetPosition reply data does not contain result field");
+                        _log.DebugFormat("[GRID USER CONNECTOR]: SetPosition reply data does not contain result field");
 
                 }
                 else
-                    m_log.DebugFormat("[GRID USER CONNECTOR]: SetPosition received empty reply");
+                    _log.DebugFormat("[GRID USER CONNECTOR]: SetPosition received empty reply");
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID USER CONNECTOR]: Exception when contacting grid user server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID USER CONNECTOR]: Exception when contacting grid user server at {0}: {1}", uri, e.Message);
             }
 
             return false;
@@ -199,14 +199,14 @@ namespace OpenSim.Services.Connectors
         protected GridUserInfo Get(Dictionary<string, object> sendData)
         {
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/griduser";
-            // m_log.DebugFormat("[GRID USER CONNECTOR]: queryString = {0}", reqString);
+            string uri = _ServerURI + "/griduser";
+            // _log.DebugFormat("[GRID USER CONNECTOR]: queryString = {0}", reqString);
             try
             {
                 string reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
                         reqString,
-                        m_Auth);
+                        _Auth);
                 if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -222,11 +222,11 @@ namespace OpenSim.Services.Connectors
 
                 }
                 else
-                    m_log.DebugFormat("[GRID USER CONNECTOR]: Get received empty reply");
+                    _log.DebugFormat("[GRID USER CONNECTOR]: Get received empty reply");
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID USER CONNECTOR]: Exception when contacting grid user server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID USER CONNECTOR]: Exception when contacting grid user server at {0}: {1}", uri, e.Message);
             }
 
             return null;
@@ -245,23 +245,23 @@ namespace OpenSim.Services.Connectors
 
             string reply = string.Empty;
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/griduser";
-            //m_log.DebugFormat("[PRESENCE CONNECTOR]: queryString = {0}", reqString);
+            string uri = _ServerURI + "/griduser";
+            //_log.DebugFormat("[PRESENCE CONNECTOR]: queryString = {0}", reqString);
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
                         reqString,
-                        m_Auth);
+                        _Auth);
                 if (reply == null || reply != null && string.IsNullOrEmpty(reply))
                 {
-                    m_log.DebugFormat("[GRID USER CONNECTOR]: GetGridUserInfo received null or empty reply");
+                    _log.DebugFormat("[GRID USER CONNECTOR]: GetGridUserInfo received null or empty reply");
                     return null;
                 }
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID USER CONNECTOR]: Exception when contacting grid user server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID USER CONNECTOR]: Exception when contacting grid user server at {0}: {1}", uri, e.Message);
             }
 
             List<GridUserInfo> rinfos = new List<GridUserInfo>();
@@ -277,7 +277,7 @@ namespace OpenSim.Services.Connectors
                 }
 
                 Dictionary<string, object>.ValueCollection pinfosList = replyData.Values;
-                //m_log.DebugFormat("[PRESENCE CONNECTOR]: GetAgents returned {0} elements", pinfosList.Count);
+                //_log.DebugFormat("[PRESENCE CONNECTOR]: GetAgents returned {0} elements", pinfosList.Count);
                 foreach (object griduser in pinfosList)
                 {
                     if (griduser is Dictionary<string, object>)
@@ -286,12 +286,12 @@ namespace OpenSim.Services.Connectors
                         rinfos.Add(pinfo);
                     }
                     else
-                        m_log.DebugFormat("[GRID USER CONNECTOR]: GetGridUserInfo received invalid response type {0}",
+                        _log.DebugFormat("[GRID USER CONNECTOR]: GetGridUserInfo received invalid response type {0}",
                             griduser.GetType());
                 }
             }
             else
-                m_log.DebugFormat("[GRID USER CONNECTOR]: GetGridUserInfo received null response");
+                _log.DebugFormat("[GRID USER CONNECTOR]: GetGridUserInfo received null response");
 
             return rinfos.ToArray();
         }

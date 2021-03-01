@@ -40,24 +40,24 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Grid
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "GridInfoServiceInConnectorModule")]
     public class GridInfoServiceInConnectorModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static bool m_Enabled = false;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static bool _Enabled = false;
 
-        private IConfigSource m_Config;
-        bool m_Registered = false;
+        private IConfigSource _Config;
+        bool _Registered = false;
 
         #region Region Module interface
 
         public void Initialise(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
             IConfig moduleConfig = config.Configs["Modules"];
             if (moduleConfig != null)
             {
-                m_Enabled = moduleConfig.GetBoolean("GridInfoServiceInConnector", false);
-                if (m_Enabled)
+                _Enabled = moduleConfig.GetBoolean("GridInfoServiceInConnector", false);
+                if (_Enabled)
                 {
-                    m_log.Info("[GRIDINFO IN CONNECTOR]: GridInfo Service In Connector enabled");
+                    _log.Info("[GRIDINFO IN CONNECTOR]: GridInfo Service In Connector enabled");
                 }
 
             }
@@ -72,40 +72,34 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Grid
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "GridInfoService"; }
-        }
+        public string Name => "GridInfoService";
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (!m_Registered)
+            if (!_Registered)
             {
-                m_Registered = true;
+                _Registered = true;
 
-                m_log.Info("[GridInfo]: Starting...");
+                _log.Info("[GridInfo]: Starting...");
 
-                new GridInfoServerInConnector(m_Config, MainServer.Instance, "GridInfoService");
+                new GridInfoServerInConnector(_Config, MainServer.Instance, "GridInfoService");
             }
 
         }

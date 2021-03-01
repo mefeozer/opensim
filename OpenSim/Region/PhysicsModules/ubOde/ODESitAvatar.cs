@@ -36,13 +36,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
     /// </summary>
     public class ODESitAvatar
     {
-        private readonly ODEScene m_scene;
-        private ODERayCastRequestManager m_raymanager;
+        private readonly ODEScene _scene;
+        private ODERayCastRequestManager _raymanager;
 
         public ODESitAvatar(ODEScene pScene, ODERayCastRequestManager raymanager)
         {
-            m_scene = pScene;
-            m_raymanager = raymanager;
+            _scene = pScene;
+            _raymanager = raymanager;
         }
 
         private static Vector3 SitAjust = new Vector3(0, 0, 0.4f);
@@ -64,13 +64,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         public void Sit(PhysicsActor actor, Vector3 avPos, Vector3 avCameraPosition, Vector3 offset, Vector3 avOffset, SitAvatarCallback PhysicsSitResponse)
         {
-            if (!m_scene.haveActor(actor) || !(actor is OdePrim) || ((OdePrim)actor).prim_geom == IntPtr.Zero)
+            if (!_scene.haveActor(actor) || !(actor is OdePrim) || ((OdePrim)actor).pri_geom == IntPtr.Zero)
             {
                 PhysicsSitResponse(-1, actor.LocalID, offset, Quaternion.Identity);
                 return;
             }
 
-            IntPtr geom = ((OdePrim)actor).prim_geom;
+            IntPtr geom = ((OdePrim)actor).pri_geom;
 
             Vector3 geopos = SafeNativeMethods.GeomGetPositionOMV(geom);
             Quaternion geomOri = SafeNativeMethods.GeomGetQuaternionOMV(geom);
@@ -98,7 +98,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             raylen += 30f; // focal point may be far
             List<ContactResult> rayResults;
 
-            rayResults = m_scene.RaycastActor(actor, avCameraPosition, rayDir, raylen, 1, RaySitFlags);
+            rayResults = _scene.RaycastActor(actor, avCameraPosition, rayDir, raylen, 1, RaySitFlags);
             if (rayResults.Count == 0)
             {
 /* if this fundamental ray failed, then just fail so user can try another spot and not be sitted far on a big prim
@@ -202,7 +202,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     rayDir.Z = 1.0f - norm.Z * norm.Z;
                     rayDir.Normalize();
 
-                    rayResults = m_scene.RaycastActor(actor, pivot, rayDir, rayDist, 1, RayFilterFlags.AllPrims);
+                    rayResults = _scene.RaycastActor(actor, pivot, rayDir, rayDist, 1, RayFilterFlags.AllPrims);
                     if (rayResults.Count == 0)
                         break;
 
@@ -255,7 +255,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                         rayDir.Z = (-toCamX * norm.X - toCamY * norm.Y) / norm.Z;
                         rayDir.Normalize();
 
-                        rayResults = m_scene.RaycastActor(actor, pivot, rayDir, rayDist, 1, RayFilterFlags.AllPrims);
+                        rayResults = _scene.RaycastActor(actor, pivot, rayDir, rayDist, 1, RayFilterFlags.AllPrims);
                         if (rayResults.Count == 0)
                             break;
 

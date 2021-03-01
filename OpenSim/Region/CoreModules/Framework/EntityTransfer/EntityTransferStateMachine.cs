@@ -66,7 +66,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
     /// </summary>
     public class EntityTransferStateMachine
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string LogHeader = "[ENTITY TRANSFER STATE MACHINE]";
 
         /// <summary>
@@ -75,13 +75,13 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         /// </summary>
         public bool EnableWaitForAgentArrivedAtDestination { get; set; }
 
-        private readonly EntityTransferModule m_mod;
+        private readonly EntityTransferModule _mod;
 
-        private readonly Dictionary<UUID, AgentTransferState> m_agentsInTransit = new Dictionary<UUID, AgentTransferState>();
+        private readonly Dictionary<UUID, AgentTransferState> _agentsInTransit = new Dictionary<UUID, AgentTransferState>();
 
         public EntityTransferStateMachine(EntityTransferModule module)
         {
-            m_mod = module;
+            _mod = module;
         }
 
         /// <summary>
@@ -91,12 +91,12 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         /// <returns>true if the agent was not already in transit, false if it was</returns>
         internal bool SetInTransit(UUID id)
         {
-//            m_log.DebugFormat("{0} SetInTransit. agent={1}, newState=Preparing", LogHeader, id);
-            lock (m_agentsInTransit)
+//            _log.DebugFormat("{0} SetInTransit. agent={1}, newState=Preparing", LogHeader, id);
+            lock (_agentsInTransit)
             {
-                if (!m_agentsInTransit.ContainsKey(id))
+                if (!_agentsInTransit.ContainsKey(id))
                 {
-                    m_agentsInTransit[id] = AgentTransferState.Preparing;
+                    _agentsInTransit[id] = AgentTransferState.Preparing;
                     return true;
                 }
             }
@@ -113,7 +113,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         /// <exception cref='Exception'>Illegal transitions will throw an Exception</exception>
         internal bool UpdateInTransit(UUID id, AgentTransferState newState)
         {
- //           m_log.DebugFormat("{0} UpdateInTransit. agent={1}, newState={2}", LogHeader, id, newState);
+ //           _log.DebugFormat("{0} UpdateInTransit. agent={1}, newState={2}", LogHeader, id, newState);
 
             bool transitionOkay = false;
 
@@ -125,21 +125,21 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
             AgentTransferState? oldState = null;
 
-            lock (m_agentsInTransit)
+            lock (_agentsInTransit)
             {
                 // Illegal to try and update an agent that's not actually in transit.
-                if (!m_agentsInTransit.ContainsKey(id))
+                if (!_agentsInTransit.ContainsKey(id))
                 {
                     if (newState != AgentTransferState.Cancelling && newState != AgentTransferState.Aborting)
                         failureMessage = string.Format(
                                 "Agent with ID {0} is not registered as in transit in {1}",
-                                id, m_mod.Scene.RegionInfo.RegionName);
+                                id, _mod.Scene.RegionInfo.RegionName);
                     else
                         failIfNotOkay = false;
                 }
                 else
                 {
-                    oldState = m_agentsInTransit[id];
+                    oldState = _agentsInTransit[id];
 
                     if (newState == AgentTransferState.Aborting)
                     {
@@ -174,32 +174,32 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                         failureMessage
                             = string.Format(
                                 "Agent with ID {0} is not allowed to move from old transit state {1} to new state {2} in {3}",
-                                id, oldState, newState, m_mod.Scene.RegionInfo.RegionName);
+                                id, oldState, newState, _mod.Scene.RegionInfo.RegionName);
                 }
 
                 if (transitionOkay)
                 {
-                    m_agentsInTransit[id] = newState;
+                    _agentsInTransit[id] = newState;
 
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[ENTITY TRANSFER STATE MACHINE]: Changed agent with id {0} from state {1} to {2} in {3}",
-//                        id, oldState, newState, m_mod.Scene.Name);
+//                        id, oldState, newState, _mod.Scene.Name);
                 }
                 else if (failIfNotOkay)
                 {
-                    m_log.DebugFormat("{0} UpdateInTransit. Throwing transition failure = {1}", LogHeader, failureMessage);
+                    _log.DebugFormat("{0} UpdateInTransit. Throwing transition failure = {1}", LogHeader, failureMessage);
                     throw new Exception(failureMessage);
                 }
 //                else
 //                {
 //                    if (oldState != null)
-//                        m_log.DebugFormat(
+//                        _log.DebugFormat(
 //                            "[ENTITY TRANSFER STATE MACHINE]: Ignored change of agent with id {0} from state {1} to {2} in {3}",
-//                            id, oldState, newState, m_mod.Scene.Name);
+//                            id, oldState, newState, _mod.Scene.Name);
 //                    else
-//                        m_log.DebugFormat(
+//                        _log.DebugFormat(
 //                            "[ENTITY TRANSFER STATE MACHINE]: Ignored change of agent with id {0} to state {1} in {2} since agent not in transit",
-//                            id, newState, m_mod.Scene.Name);
+//                            id, newState, _mod.Scene.Name);
 //                }
             }
 
@@ -215,12 +215,12 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         /// </param>
         internal AgentTransferState? GetAgentTransferState(UUID id)
         {
-            lock (m_agentsInTransit)
+            lock (_agentsInTransit)
             {
-                if (!m_agentsInTransit.ContainsKey(id))
+                if (!_agentsInTransit.ContainsKey(id))
                     return null;
                 else
-                    return m_agentsInTransit[id];
+                    return _agentsInTransit[id];
             }
         }
 
@@ -231,48 +231,48 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
         /// <returns>true if the agent was flagged as being teleported when this method was called, false otherwise</returns>
         internal bool ResetFromTransit(UUID id)
         {
-            lock (m_agentsInTransit)
+            lock (_agentsInTransit)
             {
-                if (m_agentsInTransit.ContainsKey(id))
+                if (_agentsInTransit.ContainsKey(id))
                 {
-                    AgentTransferState state = m_agentsInTransit[id];
+                    AgentTransferState state = _agentsInTransit[id];
 
 //                    if (state == AgentTransferState.Transferring || state == AgentTransferState.ReceivedAtDestination)
 //                    {
                         // FIXME: For now, we allow exit from any state since a thrown exception in teleport is now guranteed
                         // to be handled properly - ResetFromTransit() could be invoked at any step along the process
-//                        m_log.WarnFormat(
+//                        _log.WarnFormat(
 //                            "[ENTITY TRANSFER STATE MACHINE]: Agent with ID {0} should not exit directly from state {1}, should go to {2} state first in {3}",
-//                            id, state, AgentTransferState.CleaningUp, m_mod.Scene.RegionInfo.RegionName);
+//                            id, state, AgentTransferState.CleaningUp, _mod.Scene.RegionInfo.RegionName);
 
 //                        throw new Exception(
 //                            "Agent with ID {0} cannot exit directly from state {1}, it must go to {2} state first",
 //                            state, AgentTransferState.CleaningUp);
 //                    }
 
-                    m_agentsInTransit.Remove(id);
+                    _agentsInTransit.Remove(id);
 
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[ENTITY TRANSFER STATE MACHINE]: Agent {0} cleared from transit in {1}",
-//                        id, m_mod.Scene.RegionInfo.RegionName);
+//                        id, _mod.Scene.RegionInfo.RegionName);
 
                     return true;
                 }
             }
 
-//            m_log.WarnFormat(
+//            _log.WarnFormat(
 //                "[ENTITY TRANSFER STATE MACHINE]: Agent {0} requested to clear from transit in {1} but was already cleared",
-//                id, m_mod.Scene.RegionInfo.RegionName);
+//                id, _mod.Scene.RegionInfo.RegionName);
 
             return false;
         }
 
         internal bool WaitForAgentArrivedAtDestination(UUID id)
         {
-            if (!m_mod.WaitForAgentArrivedAtDestination)
+            if (!_mod.WaitForAgentArrivedAtDestination)
                 return true;
 
-            lock (m_agentsInTransit)
+            lock (_agentsInTransit)
             {
                 AgentTransferState? currentState = GetAgentTransferState(id);
 
@@ -280,13 +280,13 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                     throw new Exception(
                         string.Format(
                             "Asked to wait for destination callback for agent with ID {0} in {1} but agent is not in transit",
-                            id, m_mod.Scene.RegionInfo.RegionName));
+                            id, _mod.Scene.RegionInfo.RegionName));
 
                 if (currentState != AgentTransferState.Transferring && currentState != AgentTransferState.ReceivedAtDestination)
                     throw new Exception(
                         string.Format(
                             "Asked to wait for destination callback for agent with ID {0} in {1} but agent is in state {2}",
-                            id, m_mod.Scene.RegionInfo.RegionName, currentState));
+                            id, _mod.Scene.RegionInfo.RegionName, currentState));
             }
 
             int count = 400;
@@ -296,13 +296,13 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
             while (count-- > 0)
             {
-                lock (m_agentsInTransit)
+                lock (_agentsInTransit)
                 {
-                    if (m_agentsInTransit[id] == AgentTransferState.ReceivedAtDestination)
+                    if (_agentsInTransit[id] == AgentTransferState.ReceivedAtDestination)
                         break;
                 }
 
-//                m_log.Debug("  >>> Waiting... " + count);
+//                _log.Debug("  >>> Waiting... " + count);
                 Thread.Sleep(100);
             }
 
@@ -311,36 +311,36 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
 
         internal void SetAgentArrivedAtDestination(UUID id)
         {
-            lock (m_agentsInTransit)
+            lock (_agentsInTransit)
             {
-                if (!m_agentsInTransit.ContainsKey(id))
+                if (!_agentsInTransit.ContainsKey(id))
                 {
-                    m_log.WarnFormat(
+                    _log.WarnFormat(
                         "[ENTITY TRANSFER STATE MACHINE]: Region {0} received notification of arrival in destination of agent {1} but no teleport request is active",
-                        m_mod.Scene.RegionInfo.RegionName, id);
+                        _mod.Scene.RegionInfo.RegionName, id);
 
                     return;
                 }
 
-                AgentTransferState currentState = m_agentsInTransit[id];
+                AgentTransferState currentState = _agentsInTransit[id];
 
                 if (currentState == AgentTransferState.ReceivedAtDestination)
                 {
                     // An anomoly but don't make this an outright failure - destination region could be overzealous in sending notification.
-                    m_log.WarnFormat(
+                    _log.WarnFormat(
                         "[ENTITY TRANSFER STATE MACHINE]: Region {0} received notification of arrival in destination of agent {1} but notification has already previously been received",
-                        m_mod.Scene.RegionInfo.RegionName, id);
+                        _mod.Scene.RegionInfo.RegionName, id);
                 }
                 else if (currentState != AgentTransferState.Transferring)
                 {
-                    m_log.ErrorFormat(
+                    _log.ErrorFormat(
                         "[ENTITY TRANSFER STATE MACHINE]: Region {0} received notification of arrival in destination of agent {1} but agent is in state {2}",
-                        m_mod.Scene.RegionInfo.RegionName, id, currentState);
+                        _mod.Scene.RegionInfo.RegionName, id, currentState);
 
                     return;
                 }
 
-                m_agentsInTransit[id] = AgentTransferState.ReceivedAtDestination;
+                _agentsInTransit[id] = AgentTransferState.ReceivedAtDestination;
             }
         }
     }

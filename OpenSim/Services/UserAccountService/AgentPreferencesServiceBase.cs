@@ -34,7 +34,7 @@ namespace OpenSim.Services.UserAccountService
 {
     public class AgentPreferencesServiceBase: ServiceBase
     {
-        protected IAgentPreferencesData m_Database = null;
+        protected IAgentPreferencesData _Database = null;
 
         public AgentPreferencesServiceBase(IConfigSource config) : base(config)
         {
@@ -62,9 +62,9 @@ namespace OpenSim.Services.UserAccountService
 
             realm = userConfig.GetString("Realm", realm);
 
-            m_Database = LoadPlugin<IAgentPreferencesData>(dllName, new object[] {connString, realm});
+            _Database = LoadPlugin<IAgentPreferencesData>(dllName, new object[] {connString, realm});
 
-            if (m_Database == null)
+            if (_Database == null)
                 throw new Exception("Could not find a storage interface in the given module");
         }
     }

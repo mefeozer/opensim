@@ -41,7 +41,7 @@ namespace OpenSim.Data.SQLite
     /// </summary>
     public class SQLiteFramework
     {
-        protected object m_lockObject = new object();
+        protected object _lockObject = new object();
 
         protected SQLiteFramework(string connectionString)
         {

@@ -100,10 +100,10 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public ModelCost(Scene scene)
         {
-            PrimScaleMin = scene.m_minNonphys;
-            NonPhysicalPrimScaleMax = scene.m_maxNonphys;
-            PhysicalPrimScaleMax = scene.m_maxPhys;
-            ObjectLinkedPartsMax = scene.m_linksetCapacity;
+            PrimScaleMin = scene._minNonphys;
+            NonPhysicalPrimScaleMax = scene._maxNonphys;
+            PhysicalPrimScaleMax = scene._maxPhys;
+            ObjectLinkedPartsMax = scene._linksetCapacity;
         }
 
         public void Econfig(IConfig EconomyConfig)
@@ -460,9 +460,9 @@ namespace OpenSim.Region.ClientStack.Linden
 
             bool haveprev = true;
 
-            if (map.ContainsKey("medium_lod"))
+            if (map.ContainsKey("mediu_lod"))
             {
-                tmpmap = (OSDMap)map["medium_lod"];
+                tmpmap = (OSDMap)map["mediu_lod"];
                 if (tmpmap.ContainsKey("size"))
                     medlod_size = tmpmap["size"].AsInteger();
                 else

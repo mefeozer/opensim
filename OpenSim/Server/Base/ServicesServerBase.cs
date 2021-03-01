@@ -44,24 +44,24 @@ namespace OpenSim.Server.Base
     {
         // Logger
         //
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Command line args
         //
-        protected string[] m_Arguments;
+        protected string[] _Arguments;
 
-        protected string m_configDirectory = ".";
+        protected string _configDirectory = ".";
 
         // Run flag
         //
-        private bool m_Running = true;
+        private bool _Running = true;
 
         // Handle all the automagical stuff
         //
         public ServicesServerBase(string prompt, string[] args) : base()
         {
             // Save raw arguments
-            m_Arguments = args;
+            _Arguments = args;
 
             // Read command line
             ArgvConfigSource argvConfig = new ArgvConfigSource(args);
@@ -125,7 +125,7 @@ namespace OpenSim.Server.Base
 
             if (startupConfig != null)
             {
-                m_configDirectory = startupConfig.GetString("ConfigDirectory", m_configDirectory);
+                _configDirectory = startupConfig.GetString("ConfigDirectory", _configDirectory);
 
                 prompt = startupConfig.GetString("Prompt", prompt);
             }
@@ -147,7 +147,7 @@ namespace OpenSim.Server.Base
                 MainConsole.Instance = new LocalConsole(prompt, startupConfig);
 
             MainConsole.Instance.ReadConfig(Config);
-            m_console = MainConsole.Instance;
+            _console = MainConsole.Instance;
 
             if (logConfig != null)
             {
@@ -175,10 +175,7 @@ namespace OpenSim.Server.Base
             Initialise();
         }
 
-        public bool Running
-        {
-            get { return m_Running; }
-        }
+        public bool Running => _Running;
 
         private bool DoneShutdown = false;
 
@@ -187,7 +184,7 @@ namespace OpenSim.Server.Base
             Watchdog.Enabled = true;
             MemoryWatchdog.Enabled = true;
 
-            while (m_Running)
+            while (_Running)
             {
                 try
                 {
@@ -195,7 +192,7 @@ namespace OpenSim.Server.Base
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat("Command error: {0}", e);
+                    _log.ErrorFormat("Command error: {0}", e);
                 }
             }
 
@@ -214,10 +211,10 @@ namespace OpenSim.Server.Base
 
         protected override void ShutdownSpecific()
         {
-            if(!m_Running)
+            if(!_Running)
                 return;
-            m_Running = false;
-            m_log.Info("[CONSOLE] Quitting");
+            _Running = false;
+            _log.Info("[CONSOLE] Quitting");
 
             base.ShutdownSpecific();
 
@@ -273,7 +270,7 @@ namespace OpenSim.Server.Base
                         }
                         else
                         {
-                            string basepath = Path.GetFullPath(m_configDirectory);
+                            string basepath = Path.GetFullPath(_configDirectory);
                             // Resolve relative paths with wildcards
                             string chunkWithoutWildcards = file;
                             string chunkWithWildcards = string.Empty;

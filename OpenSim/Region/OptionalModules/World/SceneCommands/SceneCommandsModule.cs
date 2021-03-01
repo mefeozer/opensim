@@ -42,46 +42,46 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "SceneCommandsModule")]
     public class SceneCommandsModule : ISceneCommandsModule, INonSharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
+        private Scene _scene;
 
-        public string Name { get { return "Scene Commands Module"; } }
+        public string Name => "Scene Commands Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[SCENE COMMANDS MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[SCENE COMMANDS MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[SCENE COMMANDS MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[SCENE COMMANDS MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[SCENE COMMANDS MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[SCENE COMMANDS MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[SCENE COMMANDS MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[SCENE COMMANDS MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
 
-            m_scene = scene;
+            _scene = scene;
 
-            m_scene.RegisterModuleInterface<ISceneCommandsModule>(this);
+            _scene.RegisterModuleInterface<ISceneCommandsModule>(this);
         }
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[SCENE COMMANDS MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[SCENE COMMANDS MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[ATTACHMENTS COMMAND MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ATTACHMENTS COMMAND MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
 
             scene.AddCommand(
                 "Debug", this, "debug scene get",
@@ -116,7 +116,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
         {
             if (args.Length == 3)
             {
-                if (MainConsole.Instance.ConsoleScene != m_scene && MainConsole.Instance.ConsoleScene != null)
+                if (MainConsole.Instance.ConsoleScene != _scene && MainConsole.Instance.ConsoleScene != null)
                     return;
 
                 OutputSceneDebugOptions();
@@ -130,15 +130,15 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
         private void OutputSceneDebugOptions()
         {
             ConsoleDisplayList cdl = new ConsoleDisplayList();
-            cdl.AddRow("active", m_scene.Active);
-            cdl.AddRow("animations", m_scene.DebugAnimations);
-            cdl.AddRow("pbackup", m_scene.PeriodicBackup);
-            cdl.AddRow("physics", m_scene.PhysicsEnabled);
-            cdl.AddRow("scripting", m_scene.ScriptsEnabled);
-            cdl.AddRow("teleport", m_scene.DebugTeleporting);
-            cdl.AddRow("updates", m_scene.DebugUpdates);
+            cdl.AddRow("active", _scene.Active);
+            cdl.AddRow("animations", _scene.DebugAnimations);
+            cdl.AddRow("pbackup", _scene.PeriodicBackup);
+            cdl.AddRow("physics", _scene.PhysicsEnabled);
+            cdl.AddRow("scripting", _scene.ScriptsEnabled);
+            cdl.AddRow("teleport", _scene.DebugTeleporting);
+            cdl.AddRow("updates", _scene.DebugUpdates);
 
-            MainConsole.Instance.Output("Scene {0} options:", m_scene.Name);
+            MainConsole.Instance.Output("Scene {0} options:", _scene.Name);
             MainConsole.Instance.Output(cdl.ToString());
         }
 
@@ -146,14 +146,14 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
         {
             if (args.Length == 5)
             {
-                if (MainConsole.Instance.ConsoleScene != m_scene && MainConsole.Instance.ConsoleScene != null)
+                if (MainConsole.Instance.ConsoleScene != _scene && MainConsole.Instance.ConsoleScene != null)
                     return;
 
                 string key = args[3];
                 string value = args[4];
                 SetSceneDebugOptions(new Dictionary<string, string>() { { key, value } });
 
-                MainConsole.Instance.Output("Set {0} debug scene {1} = {2}", m_scene.Name, key, value);
+                MainConsole.Instance.Output("Set {0} debug scene {1} = {2}", _scene.Name, key, value);
             }
             else
             {
@@ -168,7 +168,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
                 bool active;
 
                 if (bool.TryParse(options["active"], out active))
-                    m_scene.Active = active;
+                    _scene.Active = active;
             }
 
             if (options.ContainsKey("animations"))
@@ -176,7 +176,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
                 bool active;
 
                 if (bool.TryParse(options["animations"], out active))
-                    m_scene.DebugAnimations = active;
+                    _scene.DebugAnimations = active;
             }
 
             if (options.ContainsKey("pbackup"))
@@ -184,21 +184,21 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
                 bool active;
 
                 if (bool.TryParse(options["pbackup"], out active))
-                    m_scene.PeriodicBackup = active;
+                    _scene.PeriodicBackup = active;
             }
 
             if (options.ContainsKey("scripting"))
             {
                 bool enableScripts = true;
                 if (bool.TryParse(options["scripting"], out enableScripts))
-                    m_scene.ScriptsEnabled = enableScripts;
+                    _scene.ScriptsEnabled = enableScripts;
             }
 
             if (options.ContainsKey("physics"))
             {
                 bool enablePhysics;
                 if (bool.TryParse(options["physics"], out enablePhysics))
-                    m_scene.PhysicsEnabled = enablePhysics;
+                    _scene.PhysicsEnabled = enablePhysics;
             }
 
 //            if (options.ContainsKey("collisions"))
@@ -211,7 +211,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
             {
                 bool enableTeleportDebugging;
                 if (bool.TryParse(options["teleport"], out enableTeleportDebugging))
-                    m_scene.DebugTeleporting = enableTeleportDebugging;
+                    _scene.DebugTeleporting = enableTeleportDebugging;
             }
 
             if (options.ContainsKey("updates"))
@@ -219,7 +219,7 @@ namespace OpenSim.Region.OptionalModules.Avatar.Attachments
                 bool enableUpdateDebugging;
                 if (bool.TryParse(options["updates"], out enableUpdateDebugging))
                 {
-                    m_scene.DebugUpdates = enableUpdateDebugging;
+                    _scene.DebugUpdates = enableUpdateDebugging;
                 }
             }
         }

@@ -60,7 +60,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private static readonly ConstructorInfo vectorConstrucorStringInfo = typeof(LSL_Vector).GetConstructor(new Type[] { typeof(string) });
         private static readonly FieldInfo lslFloatValueFieldInfo = typeof(LSL_Float).GetField("value");
         private static readonly FieldInfo lslIntegerValueFieldInfo = typeof(LSL_Integer).GetField("value");
-        private static readonly FieldInfo lslStringValueFieldInfo = typeof(LSL_String).GetField("m_string");
+        private static readonly FieldInfo lslStringValueFieldInfo = typeof(LSL_String).GetField("_string");
         private static readonly FieldInfo sdtcITableFieldInfo = typeof(XMRSDTypeClObj).GetField("sdtcITable");
         private static readonly MethodInfo boolToListMethodInfo = typeof(TypeCast).GetMethod("BoolToList", new Type[] { typeof(bool) });
         private static readonly MethodInfo boolToStringMethodInfo = typeof(TypeCast).GetMethod("BoolToString", new Type[] { typeof(bool) });
@@ -195,13 +195,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public ScriptMyILGen _ilGen;
 
             // IScriptCodeGen
-            public ScriptMyILGen ilGen
-            {
-                get
-                {
-                    return _ilGen;
-                }
-            }
+            public ScriptMyILGen ilGen => _ilGen;
+
             public void ErrorMsg(Token token, string message)
             {
                 ok = false;
@@ -218,13 +213,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private struct MIGIAF: ScriptMyILGen
         {
             // ScriptMyILGen
-            public string methName
-            {
-                get
-                {
-                    return null;
-                }
-            }
+            public string methName => null;
+
             public ScriptMyLocal DeclareLocal(Type type, string name)
             {
                 return null;
@@ -878,7 +868,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public static double ObjectToFloat(object x)
         {
             if(x is LSL_String)
-                return double.Parse(((LSL_String)x).m_string);
+                return double.Parse(((LSL_String)x)._string);
             if(x is string)
                 return double.Parse((string)x);
             if(x is LSL_Float)
@@ -893,7 +883,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public static int ObjectToInteger(object x)
         {
             if(x is LSL_String)
-                return int.Parse(((LSL_String)x).m_string);
+                return int.Parse(((LSL_String)x)._string);
             if(x is string)
                 return int.Parse((string)x);
             if(x is LSL_Integer)
@@ -909,7 +899,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public static LSL_Rotation ObjectToRotation(object x)
         {
             if(x is LSL_String)
-                return new LSL_Rotation(((LSL_String)x).m_string);
+                return new LSL_Rotation(((LSL_String)x)._string);
             if(x is string)
                 return new LSL_Rotation((string)x);
             return (LSL_Rotation)x;
@@ -918,7 +908,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public static LSL_Vector ObjectToVector(object x)
         {
             if(x is LSL_String)
-                return new LSL_Vector(((LSL_String)x).m_string);
+                return new LSL_Vector(((LSL_String)x)._string);
             if(x is string)
                 return new LSL_Vector((string)x);
             return (LSL_Vector)x;

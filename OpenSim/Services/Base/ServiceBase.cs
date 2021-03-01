@@ -36,7 +36,7 @@ namespace OpenSim.Services.Base
 {
     public class ServiceBase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public T LoadPlugin<T>(string dllName) where T:class
         {
@@ -72,11 +72,11 @@ namespace OpenSim.Services.Base
             {
                 Assembly pluginAssembly = Assembly.LoadFrom(dllName);
 
-//                m_log.DebugFormat("[SERVICE BASE]: Found assembly {0}", dllName);
+//                _log.DebugFormat("[SERVICE BASE]: Found assembly {0}", dllName);
 
                 foreach (Type pluginType in pluginAssembly.GetTypes())
                 {
-//                    m_log.DebugFormat("[SERVICE BASE]: Found type {0}", pluginType);
+//                    _log.DebugFormat("[SERVICE BASE]: Found type {0}", pluginType);
 
                     if (pluginType.IsPublic)
                     {
@@ -105,7 +105,7 @@ namespace OpenSim.Services.Base
                 foreach (object arg in args)
                     strArgs.Add(arg.ToString());
 
-                m_log.Error(
+                _log.Error(
                     string.Format(
                         "[SERVICE BASE]: Failed to load plugin {0} from {1} with args {2}",
                         interfaceName, dllName, string.Join(", ", strArgs.ToArray())), e);

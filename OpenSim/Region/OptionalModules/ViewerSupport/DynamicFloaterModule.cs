@@ -42,21 +42,15 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "DynamicFloater")]
     public class DynamicFloaterModule : INonSharedRegionModule, IDynamicFloaterModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
+        private Scene _scene;
 
-        private readonly Dictionary<UUID, Dictionary<int, FloaterData>> m_floaters = new Dictionary<UUID, Dictionary<int, FloaterData>>();
+        private readonly Dictionary<UUID, Dictionary<int, FloaterData>> _floaters = new Dictionary<UUID, Dictionary<int, FloaterData>>();
 
-        public string Name
-        {
-            get { return "DynamicFloaterModule"; }
-        }
+        public string Name => "DynamicFloaterModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource config)
         {
@@ -68,10 +62,10 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
             scene.EventManager.OnNewClient += OnNewClient;
             scene.EventManager.OnClientClosed += OnClientClosed;
-            m_scene.RegisterModuleInterface<IDynamicFloaterModule>(this);
+            _scene.RegisterModuleInterface<IDynamicFloaterModule>(this);
         }
 
         public void RegionLoaded(Scene scene)
@@ -89,7 +83,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         private void OnClientClosed(UUID agentID, Scene scene)
         {
-            m_floaters.Remove(agentID);
+            _floaters.Remove(agentID);
         }
 
         private void SendToClient(ScenePresence sp, string msg)
@@ -106,17 +100,17 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         public void DoUserFloater(UUID agentID, FloaterData dialogData, string configuration)
         {
-            ScenePresence sp = m_scene.GetScenePresence(agentID);
+            ScenePresence sp = _scene.GetScenePresence(agentID);
             if (sp == null || sp.IsChildAgent)
                 return;
 
-            if (!m_floaters.ContainsKey(agentID))
-                m_floaters[agentID] = new Dictionary<int, FloaterData>();
+            if (!_floaters.ContainsKey(agentID))
+                _floaters[agentID] = new Dictionary<int, FloaterData>();
 
-            if (m_floaters[agentID].ContainsKey(dialogData.Channel))
+            if (_floaters[agentID].ContainsKey(dialogData.Channel))
                 return;
 
-            m_floaters[agentID].Add(dialogData.Channel, dialogData);
+            _floaters[agentID].Add(dialogData.Channel, dialogData);
 
             string xml;
             if (dialogData.XmlText != null && !string.IsNullOrEmpty(dialogData.XmlText))
@@ -161,22 +155,22 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             if (msg.Sender == null)
                 return;
 
-            //m_log.DebugFormat("chan {0} msg {1}", msg.Channel, msg.Message);
+            //_log.DebugFormat("chan {0} msg {1}", msg.Channel, msg.Message);
 
             IClientAPI client = msg.Sender;
 
-            if (!m_floaters.ContainsKey(client.AgentId))
+            if (!_floaters.ContainsKey(client.AgentId))
                 return;
 
             string[] parts = msg.Message.Split(new char[] {':'});
             if (parts.Length == 0)
                 return;
 
-            ScenePresence sp = m_scene.GetScenePresence(client.AgentId);
+            ScenePresence sp = _scene.GetScenePresence(client.AgentId);
             if (sp == null || sp.IsChildAgent)
                 return;
 
-            Dictionary<int, FloaterData> d = m_floaters[client.AgentId];
+            Dictionary<int, FloaterData> d = _floaters[client.AgentId];
 
             // Work around a viewer bug - VALUE from any
             // dialog can appear on this channel and needs to
@@ -189,7 +183,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                     {
                         if(dd.Handler(client, dd, parts))
                         {
-                            m_floaters[client.AgentId].Remove(dd.Channel);
+                            _floaters[client.AgentId].Remove(dd.Channel);
                             SendToClient(sp, string.Format("># floater {0} destroy", dd.FloaterName));
                             break;
                         }
@@ -207,14 +201,14 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             {
                 if (parts[1] == "cancel" || parts[1] == data.FloaterName)
                 {
-                    m_floaters[client.AgentId].Remove(data.Channel);
+                    _floaters[client.AgentId].Remove(data.Channel);
                     SendToClient(sp, string.Format("># floater {0} destroy", data.FloaterName));
                 }
             }
 
             if (data.Handler != null && data.Handler(client, data, parts))
             {
-                m_floaters[client.AgentId].Remove(data.Channel);
+                _floaters[client.AgentId].Remove(data.Channel);
                 SendToClient(sp, string.Format("># floater {0} destroy", data.FloaterName));
             }
         }

@@ -45,7 +45,7 @@ namespace OpenSim.Tests.Common
 
         public IConfig Config { get; private set; }
 
-        private Scene m_scene;
+        private Scene _scene;
 
         /// <summary>
         /// Expose posted events to tests.
@@ -76,9 +76,9 @@ namespace OpenSim.Tests.Common
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
 
-            m_scene.StackModuleInterface<IScriptModule>(this);
+            _scene.StackModuleInterface<IScriptModule>(this);
         }
 
         public void RemoveRegion(Scene scene)
@@ -89,10 +89,10 @@ namespace OpenSim.Tests.Common
         {
         }
 
-        public string Name { get { return "Mock Script Engine"; } }
-        public string ScriptEngineName { get { return Name; } }
+        public string Name => "Mock Script Engine";
+        public string ScriptEngineName => Name;
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
 #pragma warning disable 0067
         public event ScriptRemoved OnScriptRemoved;
@@ -145,12 +145,12 @@ namespace OpenSim.Tests.Common
 
         public bool PostObjectEvent(uint localID, EventParams evParams)
         {
-            return PostObjectEvent(m_scene.GetSceneObjectPart(localID), evParams);
+            return PostObjectEvent(_scene.GetSceneObjectPart(localID), evParams);
         }
 
         public bool PostObjectEvent(UUID itemID, string name, object[] args)
         {
-            return PostObjectEvent(m_scene.GetSceneObjectPart(itemID), new EventParams(name, args, null));
+            return PostObjectEvent(_scene.GetSceneObjectPart(itemID), new EventParams(name, args, null));
         }
 
         private bool PostObjectEvent(SceneObjectPart part, EventParams evParams)
@@ -256,19 +256,19 @@ namespace OpenSim.Tests.Common
             throw new System.NotImplementedException ();
         }
 
-        public Scene World { get { return m_scene; } }
+        public Scene World => _scene;
 
-        public IScriptModule ScriptModule { get { return this; } }
+        public IScriptModule ScriptModule => this;
 
-        public string ScriptEnginePath { get { throw new System.NotImplementedException (); }}
+        public string ScriptEnginePath => throw new System.NotImplementedException ();
 
-        public string ScriptClassName { get { throw new System.NotImplementedException (); } }
+        public string ScriptClassName => throw new System.NotImplementedException ();
 
-        public string ScriptBaseClassName { get { throw new System.NotImplementedException (); } }
+        public string ScriptBaseClassName => throw new System.NotImplementedException ();
 
-        public string[] ScriptReferencedAssemblies { get { throw new System.NotImplementedException (); } }
+        public string[] ScriptReferencedAssemblies => throw new System.NotImplementedException ();
 
-        public ParameterInfo[] ScriptBaseClassParameters { get { throw new System.NotImplementedException (); } }
+        public ParameterInfo[] ScriptBaseClassParameters => throw new System.NotImplementedException ();
 
         public void ClearPostedEvents()
         {

@@ -40,34 +40,34 @@ namespace OpenSim.Framework.Serialization.External
     /// </summary>
     public class UserInventoryItemSerializer
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly Dictionary<string, Action<InventoryItemBase, XmlReader>> m_InventoryItemXmlProcessors
+        private static readonly Dictionary<string, Action<InventoryItemBase, XmlReader>> _InventoryItemXmlProcessors
             = new Dictionary<string, Action<InventoryItemBase, XmlReader>>();
 
         #region InventoryItemBase Processor initialization
         static UserInventoryItemSerializer()
         {
-            m_InventoryItemXmlProcessors.Add("Name", ProcessName);
-            m_InventoryItemXmlProcessors.Add("ID", ProcessID);
-            m_InventoryItemXmlProcessors.Add("InvType", ProcessInvType);
-            m_InventoryItemXmlProcessors.Add("CreatorUUID", ProcessCreatorUUID);
-            m_InventoryItemXmlProcessors.Add("CreatorID", ProcessCreatorID);
-            m_InventoryItemXmlProcessors.Add("CreatorData", ProcessCreatorData);
-            m_InventoryItemXmlProcessors.Add("CreationDate", ProcessCreationDate);
-            m_InventoryItemXmlProcessors.Add("Owner", ProcessOwner);
-            m_InventoryItemXmlProcessors.Add("Description", ProcessDescription);
-            m_InventoryItemXmlProcessors.Add("AssetType", ProcessAssetType);
-            m_InventoryItemXmlProcessors.Add("AssetID", ProcessAssetID);
-            m_InventoryItemXmlProcessors.Add("SaleType", ProcessSaleType);
-            m_InventoryItemXmlProcessors.Add("SalePrice", ProcessSalePrice);
-            m_InventoryItemXmlProcessors.Add("BasePermissions", ProcessBasePermissions);
-            m_InventoryItemXmlProcessors.Add("CurrentPermissions", ProcessCurrentPermissions);
-            m_InventoryItemXmlProcessors.Add("EveryOnePermissions", ProcessEveryOnePermissions);
-            m_InventoryItemXmlProcessors.Add("NextPermissions", ProcessNextPermissions);
-            m_InventoryItemXmlProcessors.Add("Flags", ProcessFlags);
-            m_InventoryItemXmlProcessors.Add("GroupID", ProcessGroupID);
-            m_InventoryItemXmlProcessors.Add("GroupOwned", ProcessGroupOwned);
+            _InventoryItemXmlProcessors.Add("Name", ProcessName);
+            _InventoryItemXmlProcessors.Add("ID", ProcessID);
+            _InventoryItemXmlProcessors.Add("InvType", ProcessInvType);
+            _InventoryItemXmlProcessors.Add("CreatorUUID", ProcessCreatorUUID);
+            _InventoryItemXmlProcessors.Add("CreatorID", ProcessCreatorID);
+            _InventoryItemXmlProcessors.Add("CreatorData", ProcessCreatorData);
+            _InventoryItemXmlProcessors.Add("CreationDate", ProcessCreationDate);
+            _InventoryItemXmlProcessors.Add("Owner", ProcessOwner);
+            _InventoryItemXmlProcessors.Add("Description", ProcessDescription);
+            _InventoryItemXmlProcessors.Add("AssetType", ProcessAssetType);
+            _InventoryItemXmlProcessors.Add("AssetID", ProcessAssetID);
+            _InventoryItemXmlProcessors.Add("SaleType", ProcessSaleType);
+            _InventoryItemXmlProcessors.Add("SalePrice", ProcessSalePrice);
+            _InventoryItemXmlProcessors.Add("BasePermissions", ProcessBasePermissions);
+            _InventoryItemXmlProcessors.Add("CurrentPermissions", ProcessCurrentPermissions);
+            _InventoryItemXmlProcessors.Add("EveryOnePermissions", ProcessEveryOnePermissions);
+            _InventoryItemXmlProcessors.Add("NextPermissions", ProcessNextPermissions);
+            _InventoryItemXmlProcessors.Add("Flags", ProcessFlags);
+            _InventoryItemXmlProcessors.Add("GroupID", ProcessGroupID);
+            _InventoryItemXmlProcessors.Add("GroupOwned", ProcessGroupOwned);
         }
         #endregion
 
@@ -201,12 +201,12 @@ namespace OpenSim.Framework.Serialization.External
                 reader.ReadStartElement("InventoryItem");
 
                 ExternalRepresentationUtils.ExecuteReadProcessors<InventoryItemBase>(
-                    item, m_InventoryItemXmlProcessors, reader);
+                    item, _InventoryItemXmlProcessors, reader);
 
                 reader.ReadEndElement(); // InventoryItem
             }
 
-            //m_log.DebugFormat("[XXX]: parsed InventoryItemBase {0} - {1}", obj.Name, obj.UUID);
+            //_log.DebugFormat("[XXX]: parsed InventoryItemBase {0} - {1}", obj.Name, obj.UUID);
             return item;
         }
 

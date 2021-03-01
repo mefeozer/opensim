@@ -40,15 +40,15 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
 
     public class JsonStoreCommandsModule  : INonSharedRegionModule
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IConfig m_config = null;
-        private bool m_enabled = false;
+        private IConfig _config = null;
+        private bool _enabled = false;
 
-        private Scene m_scene = null;
-        //private IJsonStoreModule m_store;
-        private JsonStoreModule m_store;
+        private Scene _scene = null;
+        //private IJsonStoreModule _store;
+        private JsonStoreModule _store;
 
 #region Region Module interface
 
@@ -57,10 +57,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         /// Name of this shared module is it's class name
         /// </summary>
         // -----------------------------------------------------------------
-        public string Name
-        {
-            get { return this.GetType().Name; }
-        }
+        public string Name => this.GetType().Name;
 
         // -----------------------------------------------------------------
         /// <summary>
@@ -73,23 +70,23 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         {
             try
             {
-                if ((m_config = config.Configs["JsonStore"]) == null)
+                if ((_config = config.Configs["JsonStore"]) == null)
                 {
                     // There is no configuration, the module is disabled
-                    // m_log.InfoFormat("[JsonStore] no configuration info");
+                    // _log.InfoFormat("[JsonStore] no configuration info");
                     return;
                 }
 
-                m_enabled = m_config.GetBoolean("Enabled", m_enabled);
+                _enabled = _config.GetBoolean("Enabled", _enabled);
             }
             catch (Exception e)
             {
-                m_log.Error("[JsonStore]: initialization error: {0}", e);
+                _log.Error("[JsonStore]: initialization error: {0}", e);
                 return;
             }
 
-            if (m_enabled)
-                m_log.DebugFormat("[JsonStore]: module is enabled");
+            if (_enabled)
+                _log.DebugFormat("[JsonStore]: module is enabled");
         }
 
         // -----------------------------------------------------------------
@@ -116,9 +113,9 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         // -----------------------------------------------------------------
         public void AddRegion(Scene scene)
         {
-            if (m_enabled)
+            if (_enabled)
             {
-                m_scene = scene;
+                _scene = scene;
 
             }
         }
@@ -141,15 +138,15 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         // -----------------------------------------------------------------
         public void RegionLoaded(Scene scene)
         {
-            if (m_enabled)
+            if (_enabled)
             {
-                m_scene = scene;
+                _scene = scene;
 
-                m_store = (JsonStoreModule) m_scene.RequestModuleInterface<IJsonStoreModule>();
-                if (m_store == null)
+                _store = (JsonStoreModule) _scene.RequestModuleInterface<IJsonStoreModule>();
+                if (_store == null)
                 {
-                    m_log.ErrorFormat("[JsonStoreCommands]: JsonModule interface not defined");
-                    m_enabled = false;
+                    _log.ErrorFormat("[JsonStoreCommands]: JsonModule interface not defined");
+                    _enabled = false;
                     return;
                 }
 
@@ -163,22 +160,19 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
         /// <summary>
         /// </summary>
         // -----------------------------------------------------------------
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-#endregion
+        #endregion
 
 #region Commands
 
         private void CmdStats(string module, string[] cmd)
         {
-            if (MainConsole.Instance.ConsoleScene != m_scene && MainConsole.Instance.ConsoleScene != null)
+            if (MainConsole.Instance.ConsoleScene != _scene && MainConsole.Instance.ConsoleScene != null)
                 return;
 
-            JsonStoreStats stats = m_store.GetStoreStats();
-            MainConsole.Instance.Output("{0}\t{1}", m_scene.RegionInfo.RegionName, stats.StoreCount);
+            JsonStoreStats stats = _store.GetStoreStats();
+            MainConsole.Instance.Output("{0}\t{1}", _scene.RegionInfo.RegionName, stats.StoreCount);
         }
 
 #endregion

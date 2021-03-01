@@ -1529,25 +1529,13 @@ namespace PrimMesher
             return s;
         }
 
-        public int ProfileOuterFaceNumber
-        {
-            get { return profileOuterFaceNumber; }
-        }
+        public int ProfileOuterFaceNumber => profileOuterFaceNumber;
 
-        public int ProfileHollowFaceNumber
-        {
-            get { return profileHollowFaceNumber; }
-        }
+        public int ProfileHollowFaceNumber => profileHollowFaceNumber;
 
-        public bool HasProfileCut
-        {
-            get { return hasProfileCut; }
-        }
+        public bool HasProfileCut => hasProfileCut;
 
-        public bool HasHollow
-        {
-            get { return hasHollow; }
-        }
+        public bool HasHollow => hasHollow;
 
 
         /// <summary>

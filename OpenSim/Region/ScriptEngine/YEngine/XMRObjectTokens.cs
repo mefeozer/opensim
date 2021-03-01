@@ -2013,13 +2013,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 this.decompile = decompile;
             }
 
-            public override bool HasSideEffects
-            {
-                get
-                {
-                    return false;
-                }
-            }
+            public override bool HasSideEffects => false;
 
             public override OTOpnd GetNonByRefOpnd()
             {
@@ -2887,8 +2881,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     return obj;
                 }
 
-                // LSL_String.m_string => the object itself
-                if(field.DeclaringType == typeof(LSL_String) && field.Name == "m_string")
+                // LSL_String._string => the object itself
+                if(field.DeclaringType == typeof(LSL_String) && field.Name == "_string")
                 {
                     return obj;
                 }
@@ -6111,7 +6105,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public static readonly MyOp Div = new MyOp(OpCodes.Div, "/");
             public static readonly MyOp Div_Un = new MyOp(OpCodes.Div_Un);
             public static readonly MyOp Rem = new MyOp(OpCodes.Rem, "%");
-            public static readonly MyOp Rem_Un = new MyOp(OpCodes.Rem_Un);
+            public static readonly MyOp Re_Un = new MyOp(OpCodes.Re_Un);
             public static readonly MyOp And = new MyOp(OpCodes.And, "&");
             public static readonly MyOp Or = new MyOp(OpCodes.Or, "|");
             public static readonly MyOp Xor = new MyOp(OpCodes.Xor, "^");
@@ -6159,25 +6153,25 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             public static readonly MyOp Newarr = new MyOp(OpCodes.Newarr);
             public static readonly MyOp Ldlen = new MyOp(OpCodes.Ldlen);
             public static readonly MyOp Ldelema = new MyOp(OpCodes.Ldelema);
-            public static readonly MyOp Ldelem_I1 = new MyOp(OpCodes.Ldelem_I1);
-            public static readonly MyOp Ldelem_U1 = new MyOp(OpCodes.Ldelem_U1);
-            public static readonly MyOp Ldelem_I2 = new MyOp(OpCodes.Ldelem_I2);
-            public static readonly MyOp Ldelem_U2 = new MyOp(OpCodes.Ldelem_U2);
-            public static readonly MyOp Ldelem_I4 = new MyOp(OpCodes.Ldelem_I4);
-            public static readonly MyOp Ldelem_U4 = new MyOp(OpCodes.Ldelem_U4);
-            public static readonly MyOp Ldelem_I8 = new MyOp(OpCodes.Ldelem_I8);
-            public static readonly MyOp Ldelem_I = new MyOp(OpCodes.Ldelem_I);
-            public static readonly MyOp Ldelem_R4 = new MyOp(OpCodes.Ldelem_R4);
-            public static readonly MyOp Ldelem_R8 = new MyOp(OpCodes.Ldelem_R8);
-            public static readonly MyOp Ldelem_Ref = new MyOp(OpCodes.Ldelem_Ref);
-            public static readonly MyOp Stelem_I = new MyOp(OpCodes.Stelem_I);
-            public static readonly MyOp Stelem_I1 = new MyOp(OpCodes.Stelem_I1);
-            public static readonly MyOp Stelem_I2 = new MyOp(OpCodes.Stelem_I2);
-            public static readonly MyOp Stelem_I4 = new MyOp(OpCodes.Stelem_I4);
-            public static readonly MyOp Stelem_I8 = new MyOp(OpCodes.Stelem_I8);
-            public static readonly MyOp Stelem_R4 = new MyOp(OpCodes.Stelem_R4);
-            public static readonly MyOp Stelem_R8 = new MyOp(OpCodes.Stelem_R8);
-            public static readonly MyOp Stelem_Ref = new MyOp(OpCodes.Stelem_Ref);
+            public static readonly MyOp Ldele_I1 = new MyOp(OpCodes.Ldele_I1);
+            public static readonly MyOp Ldele_U1 = new MyOp(OpCodes.Ldele_U1);
+            public static readonly MyOp Ldele_I2 = new MyOp(OpCodes.Ldele_I2);
+            public static readonly MyOp Ldele_U2 = new MyOp(OpCodes.Ldele_U2);
+            public static readonly MyOp Ldele_I4 = new MyOp(OpCodes.Ldele_I4);
+            public static readonly MyOp Ldele_U4 = new MyOp(OpCodes.Ldele_U4);
+            public static readonly MyOp Ldele_I8 = new MyOp(OpCodes.Ldele_I8);
+            public static readonly MyOp Ldele_I = new MyOp(OpCodes.Ldele_I);
+            public static readonly MyOp Ldele_R4 = new MyOp(OpCodes.Ldele_R4);
+            public static readonly MyOp Ldele_R8 = new MyOp(OpCodes.Ldele_R8);
+            public static readonly MyOp Ldele_Ref = new MyOp(OpCodes.Ldele_Ref);
+            public static readonly MyOp Stele_I = new MyOp(OpCodes.Stele_I);
+            public static readonly MyOp Stele_I1 = new MyOp(OpCodes.Stele_I1);
+            public static readonly MyOp Stele_I2 = new MyOp(OpCodes.Stele_I2);
+            public static readonly MyOp Stele_I4 = new MyOp(OpCodes.Stele_I4);
+            public static readonly MyOp Stele_I8 = new MyOp(OpCodes.Stele_I8);
+            public static readonly MyOp Stele_R4 = new MyOp(OpCodes.Stele_R4);
+            public static readonly MyOp Stele_R8 = new MyOp(OpCodes.Stele_R8);
+            public static readonly MyOp Stele_Ref = new MyOp(OpCodes.Stele_Ref);
             public static readonly MyOp Ldelem = new MyOp(OpCodes.Ldelem);
             public static readonly MyOp Stelem = new MyOp(OpCodes.Stelem);
             public static readonly MyOp Unbox_Any = new MyOp(OpCodes.Unbox_Any);

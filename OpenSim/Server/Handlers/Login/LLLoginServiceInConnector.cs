@@ -39,23 +39,23 @@ namespace OpenSim.Server.Handlers.Login
 {
     public class LLLoginServiceInConnector : ServiceConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ILoginService m_LoginService;
-        private bool m_Proxy;
-        private BasicDosProtectorOptions m_DosProtectionOptions;
+        private readonly ILoginService _LoginService;
+        private bool _Proxy;
+        private BasicDosProtectorOptions _DosProtectionOptions;
 
         public LLLoginServiceInConnector(IConfigSource config, IHttpServer server, IScene scene) :
                 base(config, server, string.Empty)
         {
-            m_log.Debug("[LLLOGIN IN CONNECTOR]: Starting...");
+            _log.Debug("[LLLOGIN IN CONNECTOR]: Starting...");
             string loginService = ReadLocalServiceFromConfig(config);
 
             ISimulationService simService = scene.RequestModuleInterface<ISimulationService>();
             ILibraryService libService = scene.RequestModuleInterface<ILibraryService>();
 
             object[] args = new object[] { config, simService, libService };
-            m_LoginService = ServerUtils.LoadPlugin<ILoginService>(loginService, args);
+            _LoginService = ServerUtils.LoadPlugin<ILoginService>(loginService, args);
 
             InitializeHandlers(server);
         }
@@ -67,7 +67,7 @@ namespace OpenSim.Server.Handlers.Login
 
             object[] args = new object[] { config };
 
-            m_LoginService = ServerUtils.LoadPlugin<ILoginService>(loginService, args);
+            _LoginService = ServerUtils.LoadPlugin<ILoginService>(loginService, args);
 
             InitializeHandlers(server);
         }
@@ -87,8 +87,8 @@ namespace OpenSim.Server.Handlers.Login
             if (string.IsNullOrEmpty(loginService))
                 throw new Exception(string.Format("No LocalServiceModule for LoginService in config file"));
 
-            m_Proxy = serverConfig.GetBoolean("HasProxy", false);
-            m_DosProtectionOptions = new BasicDosProtectorOptions
+            _Proxy = serverConfig.GetBoolean("HasProxy", false);
+            _DosProtectionOptions = new BasicDosProtectorOptions
             {
                 // Dos Protection Options
                 AllowXForwardedFor = serverConfig.GetBoolean("DOSAllowXForwardedForHeader", false),
@@ -106,10 +106,10 @@ namespace OpenSim.Server.Handlers.Login
 
         private void InitializeHandlers(IHttpServer server)
         {
-            LLLoginHandlers loginHandlers = new LLLoginHandlers(m_LoginService, m_Proxy);
+            LLLoginHandlers loginHandlers = new LLLoginHandlers(_LoginService, _Proxy);
 //            server.AddXmlRPCHandler("login_to_simulator",
 //                new XmlRpcBasicDOSProtector(loginHandlers.HandleXMLRPCLogin, loginHandlers.HandleXMLRPCLoginBlocked,
-//                    m_DosProtectionOptions).Process, false);
+//                    _DosProtectionOptions).Process, false);
             server.AddXmlRPCHandler("login_to_simulator",loginHandlers.HandleXMLRPCLogin, false);
             server.AddXmlRPCHandler("set_login_level", loginHandlers.HandleXMLRPCSetLoginLevel, false);
             server.SetDefaultLLSDHandler(loginHandlers.HandleLLSDLogin);

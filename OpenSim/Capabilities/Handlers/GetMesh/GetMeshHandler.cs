@@ -38,16 +38,16 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class GetMeshHandler
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                    LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAssetService m_assetService;
+        private readonly IAssetService _assetService;
 
         public const string DefaultFormat = "vnd.ll.mesh";
 
         public GetMeshHandler(IAssetService assService)
         {
-            m_assetService = assService;
+            _assetService = assService;
         }
         public Hashtable Handle(Hashtable request)
         {
@@ -57,7 +57,7 @@ namespace OpenSim.Capabilities.Handlers
         public Hashtable ProcessGetMesh(Hashtable request, UUID AgentId, Caps cap)
         {
             Hashtable responsedata = new Hashtable();
-            if (m_assetService == null)
+            if (_assetService == null)
             {
                 responsedata["int_response_code"] = (int)System.Net.HttpStatusCode.ServiceUnavailable;
                 responsedata["str_response_string"] = "The asset service is unavailable";
@@ -80,7 +80,7 @@ namespace OpenSim.Capabilities.Handlers
             if(!UUID.TryParse(meshStr, out meshID))
                 return responsedata;
 
-            AssetBase mesh = m_assetService.Get(meshID.ToString());
+            AssetBase mesh = _assetService.Get(meshID.ToString());
             if(mesh == null)
             {
                 responsedata["int_response_code"] = (int)System.Net.HttpStatusCode.NotFound;
@@ -126,7 +126,7 @@ namespace OpenSim.Capabilities.Handlers
                 start = Utils.Clamp(start, 0, end);
                 int len = end - start + 1;
 
-                //m_log.Debug("Serving " + start + " to " + end + " of " + texture.Data.Length + " bytes for texture " + texture.ID);
+                //_log.Debug("Serving " + start + " to " + end + " of " + texture.Data.Length + " bytes for texture " + texture.ID);
                 Hashtable headers = new Hashtable();
                 headers["Content-Range"] = string.Format("bytes {0}-{1}/{2}", start, end, mesh.Data.Length);
                 responsedata["headers"] = headers;
@@ -139,7 +139,7 @@ namespace OpenSim.Capabilities.Handlers
                 return responsedata;
             }
 
-            m_log.Warn("[GETMESH]: Failed to parse a range from GetMesh request, sending full asset: " + (string)request["uri"]);
+            _log.Warn("[GETMESH]: Failed to parse a range from GetMesh request, sending full asset: " + (string)request["uri"]);
             responsedata["str_response_string"] = Convert.ToBase64String(mesh.Data);
             responsedata["int_response_code"] = (int)System.Net.HttpStatusCode.OK;
             return responsedata;

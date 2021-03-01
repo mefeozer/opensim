@@ -177,9 +177,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Interfaces
            LSL_Key llGetOwnerKey(string id);
           LSL_List llGetParcelDetails(LSL_Vector pos, LSL_List param);
        LSL_Integer llGetParcelFlags(LSL_Vector pos);
-       LSL_Integer llGetParcelMaxPrims(LSL_Vector pos, int sim_wide);
+       LSL_Integer llGetParcelMaxPrims(LSL_Vector pos, int si_wide);
         LSL_String llGetParcelMusicURL();
-       LSL_Integer llGetParcelPrimCount(LSL_Vector pos, int category, int sim_wide);
+       LSL_Integer llGetParcelPrimCount(LSL_Vector pos, int category, int si_wide);
           LSL_List llGetParcelPrimOwners(LSL_Vector pos);
        LSL_Integer llGetPermissions();
            LSL_Key llGetPermissionsKey();
@@ -433,7 +433,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Interfaces
         LSL_String llToLower(string source);
         LSL_String llToUpper(string source);
               void llTriggerSound(string sound, double volume);
-              void llTriggerSoundLimited(string sound, double volume, LSL_Vector top_north_east, LSL_Vector bottom_south_west);
+              void llTriggerSoundLimited(string sound, double volume, LSL_Vector top_north_east, LSL_Vector botto_south_west);
         LSL_String llUnescapeURL(string url);
               void llUnSit(string id);
          LSL_Float llVecDist(LSL_Vector a, LSL_Vector b);
@@ -454,8 +454,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Interfaces
           LSL_List GetPrimitiveParamsEx(LSL_Key prim, LSL_List rules);
           LSL_List llGetPhysicsMaterial();
               void llSetAnimationOverride(LSL_String animState, LSL_String anim);
-              void llResetAnimationOverride(LSL_String anim_state);
-        LSL_String llGetAnimationOverride(LSL_String anim_state);
+              void llResetAnimationOverride(LSL_String ani_state);
+        LSL_String llGetAnimationOverride(LSL_String ani_state);
         LSL_String llJsonGetValue(LSL_String json, LSL_List specifiers);
           LSL_List llJson2List(LSL_String json);
         LSL_String llList2Json(LSL_String type, LSL_List values);

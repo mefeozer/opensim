@@ -44,12 +44,12 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "WorldViewModule")]
     public class WorldViewModule : INonSharedRegionModule
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 
-        private bool m_Enabled = false;
-        private IMapImageGenerator m_Generator;
+        private bool _Enabled = false;
+        private IMapImageGenerator _Generator;
 
         public void Initialise(IConfigSource config)
         {
@@ -60,7 +60,7 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
             if (moduleConfig.GetString("WorldViewModule", string.Empty) != Name)
                 return;
 
-            m_Enabled = true;
+            _Enabled = true;
         }
 
         public void AddRegion(Scene scene)
@@ -69,17 +69,17 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_Generator = scene.RequestModuleInterface<IMapImageGenerator>();
-            if (m_Generator == null)
+            _Generator = scene.RequestModuleInterface<IMapImageGenerator>();
+            if (_Generator == null)
             {
-                m_Enabled = false;
+                _Enabled = false;
                 return;
             }
 
-            m_log.Info("[WORLDVIEW]: Configured and enabled");
+            _log.Info("[WORLDVIEW]: Configured and enabled");
 
             IHttpServer server = MainServer.GetHttpServer(0);
             server.AddStreamHandler(new WorldViewRequestHandler(this,
@@ -90,15 +90,9 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
         {
         }
 
-        public string Name
-        {
-            get { return "WorldViewModule"; }
-        }
+        public string Name => "WorldViewModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Close()
         {
@@ -107,10 +101,10 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
         public byte[] GenerateWorldView(Vector3 pos, Vector3 rot, float fov,
                 int width, int height, bool usetex)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return new byte[0];
 
-            using (Bitmap bmp = m_Generator.CreateViewImage(pos, rot, fov, width, height, usetex))
+            using (Bitmap bmp = _Generator.CreateViewImage(pos, rot, fov, width, height, usetex))
             {
                 using (MemoryStream str = new MemoryStream())
                 {

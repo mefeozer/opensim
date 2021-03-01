@@ -38,13 +38,13 @@ namespace OpenSim.Region.CoreModules.Framework.Library
 {
     public class LocalInventoryService : IInventoryService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly InventoryFolderImpl m_Library;
+        private readonly InventoryFolderImpl _Library;
 
         public LocalInventoryService(InventoryFolderImpl lib)
         {
-            m_Library = lib;
+            _Library = lib;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace OpenSim.Region.CoreModules.Framework.Library
         /// </summary>
         /// <param name="userID"></param>
         /// <returns>null if no root folder was found</returns>
-        public InventoryFolderBase GetRootFolder(UUID userID) { return m_Library; }
+        public InventoryFolderBase GetRootFolder(UUID userID) { return _Library; }
 
         /// <summary>
         /// Gets everything (folders and items) inside a folder
@@ -65,12 +65,12 @@ namespace OpenSim.Region.CoreModules.Framework.Library
             InventoryFolderImpl folder = null;
             InventoryCollection inv = new InventoryCollection
             {
-                OwnerID = m_Library.Owner
+                OwnerID = _Library.Owner
             };
 
-            if (folderID != m_Library.ID)
+            if (folderID != _Library.ID)
             {
-                folder = m_Library.FindFolder(folderID);
+                folder = _Library.FindFolder(folderID);
                 if (folder == null)
                 {
                     inv.Folders = new List<InventoryFolderBase>();
@@ -79,12 +79,12 @@ namespace OpenSim.Region.CoreModules.Framework.Library
                 }
             }
             else
-                folder = m_Library;
+                folder = _Library;
 
             inv.Folders = folder.RequestListOfFolders();
             inv.Items = folder.RequestListOfItems();
 
-            m_log.DebugFormat("[LIBRARY MODULE]: Got content for folder {0}", folder.Name);
+            _log.DebugFormat("[LIBRARY MODULE]: Got content for folder {0}", folder.Name);
             return inv;
         }
 
@@ -118,14 +118,14 @@ namespace OpenSim.Region.CoreModules.Framework.Library
         /// <returns>true if the folder was successfully added</returns>
         public bool AddFolder(InventoryFolderBase folder)
         {
-            //m_log.DebugFormat("[LIBRARY MODULE]: Adding folder {0} ({1}) to {2}", folder.Name, folder.ID, folder.ParentID);
-            InventoryFolderImpl parent = m_Library;
-            if (m_Library.ID != folder.ParentID)
-                parent = m_Library.FindFolder(folder.ParentID);
+            //_log.DebugFormat("[LIBRARY MODULE]: Adding folder {0} ({1}) to {2}", folder.Name, folder.ID, folder.ParentID);
+            InventoryFolderImpl parent = _Library;
+            if (_Library.ID != folder.ParentID)
+                parent = _Library.FindFolder(folder.ParentID);
 
             if (parent == null)
             {
-                m_log.DebugFormat("[LIBRARY MODULE]: could not add folder {0} because parent folder {1} not found", folder.Name, folder.ParentID);
+                _log.DebugFormat("[LIBRARY MODULE]: could not add folder {0} because parent folder {1} not found", folder.Name, folder.ParentID);
                 return false;
             }
 
@@ -141,14 +141,14 @@ namespace OpenSim.Region.CoreModules.Framework.Library
         /// <returns>true if the item was successfully added</returns>
         public bool AddItem(InventoryItemBase item)
         {
-            //m_log.DebugFormat("[LIBRARY MODULE]: Adding item {0} to {1}", item.Name, item.Folder);
-            InventoryFolderImpl folder = m_Library;
-            if (m_Library.ID != item.Folder)
-                folder = m_Library.FindFolder(item.Folder);
+            //_log.DebugFormat("[LIBRARY MODULE]: Adding item {0} to {1}", item.Name, item.Folder);
+            InventoryFolderImpl folder = _Library;
+            if (_Library.ID != item.Folder)
+                folder = _Library.FindFolder(item.Folder);
 
             if (folder == null)
             {
-                m_log.DebugFormat("[LIBRARY MODULE]: could not add item {0} because folder {1} not found", item.Name, item.Folder);
+                _log.DebugFormat("[LIBRARY MODULE]: could not add item {0} because folder {1} not found", item.Name, item.Folder);
                 return false;
             }
 

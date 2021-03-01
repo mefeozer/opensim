@@ -34,9 +34,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 {
     public class Dataserver
     {
-        private readonly ObjectJobEngine m_WorkPool;
+        private readonly ObjectJobEngine _WorkPool;
 
-        public AsyncCommandManager m_CmdManager;
+        public AsyncCommandManager _CmdManager;
 
         public int DataserverRequestsCount
         {
@@ -51,8 +51,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 
         public Dataserver(AsyncCommandManager CmdManager)
         {
-            m_CmdManager = CmdManager;
-            m_WorkPool = new ObjectJobEngine(ProcessActions, "ScriptDataServer", 1000, 4);
+            _CmdManager = CmdManager;
+            _WorkPool = new ObjectJobEngine(ProcessActions, "ScriptDataServer", 1000, 4);
         }
 
         private class DataserverRequest
@@ -70,7 +70,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         public string RequestWithImediatePost(uint localID, UUID itemID, string reply)
         {
             string ID = UUID.Random().ToString();
-            m_CmdManager.m_ScriptEngine.PostObjectEvent(localID,
+            _CmdManager._ScriptEngine.PostObjectEvent(localID,
                     new EventParams("dataserver", new object[]
                             { new LSL_Types.LSLString(ID),
                             new LSL_Types.LSLString(reply)},
@@ -108,7 +108,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         //Action<string> act = eventID =>
         //{
         //     need operations to get reply string
-        //  m_AsyncCommands.DataserverPlugin.DataserverReply(eventID, reply);
+        //  _AsyncCommands.DataserverPlugin.DataserverReply(eventID, reply);
         //}
         // eventID is the event id, provided by this on Invoque
         // see ProcessActions below
@@ -135,7 +135,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 
                 DataserverRequests[identifier] = ds;
                 if (action != null)
-                    m_WorkPool.Enqueue(identifier);
+                    _WorkPool.Enqueue(identifier);
 
                 return ds.ID;
             }
@@ -161,7 +161,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 
                 DataserverRequests[identifier] = ds;
                 if (action != null)
-                    m_WorkPool.Enqueue(identifier);
+                    _WorkPool.Enqueue(identifier);
 
                 return ds.ID;
             }
@@ -210,7 +210,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                 DataserverRequests.Remove(identifier);
             }
 
-            m_CmdManager.m_ScriptEngine.PostObjectEvent(ds.localID,
+            _CmdManager._ScriptEngine.PostObjectEvent(ds.localID,
                     new EventParams("dataserver", new object[]
                             { new LSL_Types.LSLString(ds.ID.ToString()),
                             new LSL_Types.LSLString(reply)},

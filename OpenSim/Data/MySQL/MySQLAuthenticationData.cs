@@ -36,23 +36,20 @@ namespace OpenSim.Data.MySQL
 {
     public class MySqlAuthenticationData : MySqlFramework, IAuthenticationData
     {
-        private readonly string m_Realm;
-        private List<string> m_ColumnNames;
-        private int m_LastExpire;
-        // private string m_connectionString;
+        private readonly string _Realm;
+        private List<string> _ColumnNames;
+        private int _LastExpire;
+        // private string _connectionString;
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         public MySqlAuthenticationData(string connectionString, string realm)
                 : base(connectionString)
         {
-            m_Realm = realm;
-            m_connectionString = connectionString;
+            _Realm = realm;
+            _connectionString = connectionString;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 Migration m = new Migration(dbcon, Assembly, "AuthStore");
@@ -68,12 +65,12 @@ namespace OpenSim.Data.MySQL
                 Data = new Dictionary<string, object>()
             };
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
                 using (MySqlCommand cmd
-                    = new MySqlCommand("select * from `" + m_Realm + "` where UUID = ?principalID", dbcon))
+                    = new MySqlCommand("select * from `" + _Realm + "` where UUID = ?principalID", dbcon))
                 {
                     cmd.Parameters.AddWithValue("?principalID", principalID.ToString());
 
@@ -85,7 +82,7 @@ namespace OpenSim.Data.MySQL
 
                             CheckColumnNames(result);
 
-                            foreach(string s in m_ColumnNames)
+                            foreach(string s in _ColumnNames)
                             {
                                 if(s == "UUID")
                                     continue;
@@ -108,7 +105,7 @@ namespace OpenSim.Data.MySQL
 
         private void CheckColumnNames(IDataReader result)
         {
-            if (m_ColumnNames != null)
+            if (_ColumnNames != null)
                 return;
 
             List<string> columnNames = new List<string>();
@@ -117,7 +114,7 @@ namespace OpenSim.Data.MySQL
             foreach (DataRow row in schemaTable.Rows)
                 columnNames.Add(row["ColumnName"].ToString());
 
-            m_ColumnNames = columnNames;
+            _ColumnNames = columnNames;
         }
 
         public bool Store(AuthenticationData data)
@@ -129,7 +126,7 @@ namespace OpenSim.Data.MySQL
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                string update = "update `"+m_Realm+"` set ";
+                string update = "update `"+_Realm+"` set ";
                 bool first = true;
                 foreach (string field in fields)
                 {
@@ -149,7 +146,7 @@ namespace OpenSim.Data.MySQL
 
                 if (ExecuteNonQuery(cmd) < 1)
                 {
-                    string insert = "insert into `" + m_Realm + "` (`UUID`, `" +
+                    string insert = "insert into `" + _Realm + "` (`UUID`, `" +
                             string.Join("`, `", fields) +
                             "`) values (?principalID, ?" + string.Join(", ?", fields) + ")";
 
@@ -166,7 +163,7 @@ namespace OpenSim.Data.MySQL
         public bool SetDataItem(UUID principalID, string item, string value)
         {
             using (MySqlCommand cmd
-                = new MySqlCommand("update `" + m_Realm + "` set `" + item + "` = ?" + item + " where UUID = ?UUID"))
+                = new MySqlCommand("update `" + _Realm + "` set `" + item + "` = ?" + item + " where UUID = ?UUID"))
             {
                 cmd.Parameters.AddWithValue("?"+item, value);
                 cmd.Parameters.AddWithValue("?UUID", principalID.ToString());
@@ -180,7 +177,7 @@ namespace OpenSim.Data.MySQL
 
         public bool SetToken(UUID principalID, string token, int lifetime)
         {
-            if (System.Environment.TickCount - m_LastExpire > 30000)
+            if (System.Environment.TickCount - _LastExpire > 30000)
                 DoExpire();
 
             using (MySqlCommand cmd
@@ -200,7 +197,7 @@ namespace OpenSim.Data.MySQL
 
         public bool CheckToken(UUID principalID, string token, int lifetime)
         {
-            if (System.Environment.TickCount - m_LastExpire > 30000)
+            if (System.Environment.TickCount - _LastExpire > 30000)
                 DoExpire();
 
             using (MySqlCommand cmd
@@ -225,7 +222,7 @@ namespace OpenSim.Data.MySQL
                 ExecuteNonQuery(cmd);
             }
 
-            m_LastExpire = System.Environment.TickCount;
+            _LastExpire = System.Environment.TickCount;
         }
     }
 }

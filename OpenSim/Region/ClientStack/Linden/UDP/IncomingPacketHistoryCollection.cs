@@ -35,31 +35,31 @@ namespace OpenSim.Region.ClientStack.LindenUDP
     /// </summary>
     public sealed class IncomingPacketHistoryCollection
     {
-        private readonly uint[] m_items;
-        private readonly HashSet<uint> m_hashSet;
-        private int m_first;
-        private int m_next;
-        private readonly int m_capacity;
+        private readonly uint[] _items;
+        private readonly HashSet<uint> _hashSet;
+        private int _first;
+        private int _next;
+        private readonly int _capacity;
 
         public IncomingPacketHistoryCollection(int capacity)
         {
-            this.m_capacity = capacity;
-            m_items = new uint[capacity];
-            m_hashSet = new HashSet<uint>();
+            this._capacity = capacity;
+            _items = new uint[capacity];
+            _hashSet = new HashSet<uint>();
         }
 
         public bool TryEnqueue(uint ack)
         {
-            lock (m_hashSet)
+            lock (_hashSet)
             {
-                if (m_hashSet.Add(ack))
+                if (_hashSet.Add(ack))
                 {
-                    m_items[m_next] = ack;
-                    m_next = (m_next + 1) % m_capacity;
-                    if (m_next == m_first)
+                    _items[_next] = ack;
+                    _next = (_next + 1) % _capacity;
+                    if (_next == _first)
                     {
-                        m_hashSet.Remove(m_items[m_first]);
-                        m_first = (m_first + 1) % m_capacity;
+                        _hashSet.Remove(_items[_first]);
+                        _first = (_first + 1) % _capacity;
                     }
 
                     return true;

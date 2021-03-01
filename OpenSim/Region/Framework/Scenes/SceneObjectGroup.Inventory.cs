@@ -39,14 +39,14 @@ namespace OpenSim.Region.Framework.Scenes
 {
     public partial class SceneObjectGroup : EntityBase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Force all task inventories of prims in the scene object to persist
         /// </summary>
         public void ForceInventoryPersistence()
         {
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
                 parts[i].Inventory.ForceInventoryPersistence();
         }
@@ -66,16 +66,16 @@ namespace OpenSim.Region.Framework.Scenes
         {
             int scriptsStarted = 0;
 
-            if (m_scene == null)
+            if (_scene == null)
             {
-                m_log.DebugFormat("[PRIM INVENTORY]: m_scene is null. Unable to create script instances");
+                _log.DebugFormat("[PRIM INVENTORY]: _scene is null. Unable to create script instances");
                 return 0;
             }
 
             // Don't start scripts if they're turned off in the region!
-            if (!m_scene.RegionInfo.RegionSettings.DisableScripts)
+            if (!_scene.RegionInfo.RegionSettings.DisableScripts)
             {
-                SceneObjectPart[] parts = m_parts.GetArray();
+                SceneObjectPart[] parts = _parts.GetArray();
                 for (int i = 0; i < parts.Length; i++)
                     scriptsStarted
                         += parts[i].Inventory.CreateScriptInstances(startParam, postOnRez, engine, stateSource);
@@ -89,7 +89,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// </summary>
         public void RemoveScriptInstances(bool sceneObjectBeingDeleted)
         {
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
                 parts[i].Inventory.RemoveScriptInstances(sceneObjectBeingDeleted);
         }
@@ -99,28 +99,28 @@ namespace OpenSim.Region.Framework.Scenes
         /// </summary>
         public void StopScriptInstances()
         {
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for(int i = 0; i < parts.Length; ++i)
                 parts[i].Inventory.StopScriptInstances();
         }
 
         public void SendReleaseScriptsControl()
         {
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
                 parts[i].Inventory.SendReleaseScriptsControl();
         }
 
         public void RemoveScriptsPermissions(int permissions)
         {
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
                 parts[i].Inventory.RemoveScriptsPermissions(permissions);
         }
 
         public void RemoveScriptsPermissions(ScenePresence sp, int permissions)
         {
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
                 parts[i].Inventory.RemoveScriptsPermissions(sp, permissions);
         }
@@ -135,7 +135,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns></returns>
         public bool AddInventoryItem(UUID agentID, uint localID, InventoryItemBase item, UUID copyItemID, bool withModRights = true)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[PRIM INVENTORY]: Adding inventory item {0} from {1} to part with local ID {2}",
 //                item.Name, remoteClient.Name, localID);
 
@@ -144,7 +144,7 @@ namespace OpenSim.Region.Framework.Scenes
             SceneObjectPart part = GetPart(localID);
             if (part == null)
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[PRIM INVENTORY]: " +
                     "Couldn't find prim local ID {0} in group {1}, {2} to add inventory item ID {3}",
                     localID, Name, UUID, newItemId);
@@ -164,7 +164,7 @@ namespace OpenSim.Region.Framework.Scenes
                 Flags = item.Flags
             };
 
-            if (agentID != part.OwnerID && m_scene.Permissions.PropagatePermissions())
+            if (agentID != part.OwnerID && _scene.Permissions.PropagatePermissions())
             {
                 taskItem.BasePermissions = item.BasePermissions &
                         item.NextPermissions;
@@ -190,7 +190,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
 
 
-            // m_log.DebugFormat(
+            // _log.DebugFormat(
             //      "[PRIM INVENTORY]: Flags are 0x{0:X} for item {1} added to part {2} by {3}",
             //       taskItem.Flags, taskItem.Name, localID, remoteClient.Name);
 
@@ -226,7 +226,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
             else
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[PRIM INVENTORY]: " +
                     "Couldn't find prim local ID {0} in prim {1}, {2} to get inventory item ID {3}",
                     primID, part.Name, part.UUID, itemID);
@@ -252,7 +252,7 @@ namespace OpenSim.Region.Framework.Scenes
             }
             else
             {
-                m_log.ErrorFormat(
+                _log.ErrorFormat(
                     "[PRIM INVENTORY]: " +
                     "Couldn't find prim ID {0} to update item {1}, {2}",
                     item.ParentPartID, item.Name, item.ItemID);
@@ -275,87 +275,87 @@ namespace OpenSim.Region.Framework.Scenes
         }
 
         // new test code, to place in better place later
-        private readonly object m_PermissionsLock = new object();
-        private bool m_EffectivePermsInvalid = true;
-        private bool m_DeepEffectivePermsInvalid = true;
+        private readonly object _PermissionsLock = new object();
+        private bool _EffectivePermsInvalid = true;
+        private bool _DeepEffectivePermsInvalid = true;
 
         // should called when parts chanced  by their contents did not, so we know their cacche is valid
         // in case of doubt call InvalidateDeepEffectivePerms(), it only costs a bit more cpu time
         public void InvalidateEffectivePerms()
         {
-            lock(m_PermissionsLock)
-                m_EffectivePermsInvalid = true;
+            lock(_PermissionsLock)
+                _EffectivePermsInvalid = true;
         }
 
         // should called when parts chanced and their contents where accounted for
         public void InvalidateDeepEffectivePerms()
         {
-            lock(m_PermissionsLock)
+            lock(_PermissionsLock)
             {
-                m_DeepEffectivePermsInvalid = true;
-                m_EffectivePermsInvalid = true;
+                _DeepEffectivePermsInvalid = true;
+                _EffectivePermsInvalid = true;
             }
         }
 
-        private uint m_EffectiveEveryOnePerms;
+        private uint _EffectiveEveryOnePerms;
         public uint EffectiveEveryOnePerms
         {
             get
             {
-                lock(m_PermissionsLock)
+                lock(_PermissionsLock)
                 {
-                    if(m_EffectivePermsInvalid)
+                    if(_EffectivePermsInvalid)
                         AggregatePerms();
-                    return m_EffectiveEveryOnePerms;
+                    return _EffectiveEveryOnePerms;
                 }
             }
         }
 
-        private uint m_EffectiveGroupPerms;
+        private uint _EffectiveGroupPerms;
         public uint EffectiveGroupPerms
         {
             get
             {
-                lock(m_PermissionsLock)
+                lock(_PermissionsLock)
                 {
-                    if(m_EffectivePermsInvalid)
+                    if(_EffectivePermsInvalid)
                         AggregatePerms();
-                    return m_EffectiveGroupPerms;
+                    return _EffectiveGroupPerms;
                 }
             }
         }
 
-        private uint m_EffectiveGroupOrEveryOnePerms;
+        private uint _EffectiveGroupOrEveryOnePerms;
         public uint EffectiveGroupOrEveryOnePerms
         {
             get
             {
-                lock(m_PermissionsLock)
+                lock(_PermissionsLock)
                 {
-                    if(m_EffectivePermsInvalid)
+                    if(_EffectivePermsInvalid)
                         AggregatePerms();
-                    return m_EffectiveGroupOrEveryOnePerms;
+                    return _EffectiveGroupOrEveryOnePerms;
                 }
             }
         }
 
-        private uint m_EffectiveOwnerPerms;
+        private uint _EffectiveOwnerPerms;
         public uint EffectiveOwnerPerms
         {
             get
             {
-                lock(m_PermissionsLock)
+                lock(_PermissionsLock)
                 {
-                    if(m_EffectivePermsInvalid)
+                    if(_EffectivePermsInvalid)
                         AggregatePerms();
-                    return m_EffectiveOwnerPerms;
+                    return _EffectiveOwnerPerms;
                 }
             }
         }
 
         public void AggregatePerms()
         {
-            lock(m_PermissionsLock)
+            lock(_PermissionsLock)
             {
                 // aux
                 const uint allmask = (uint)PermissionMask.AllEffective;
@@ -375,12 +375,12 @@ namespace OpenSim.Region.Framework.Scenes
                 bool needUpdate = false;
                 // date is time of writing april 30th 2017
                 bool newobj = (RootPart.CreationDate == 0 || RootPart.CreationDate > 1493574994);
-                SceneObjectPart[] parts = m_parts.GetArray();
+                SceneObjectPart[] parts = _parts.GetArray();
                 for (int i = 0; i < parts.Length; i++)
                 {
                     SceneObjectPart part = parts[i];
 
-                    if(m_DeepEffectivePermsInvalid)
+                    if(_DeepEffectivePermsInvalid)
                         part.AggregatedInnerPermsForGroup();
 
                     owner &= part.AggregatedInnerOwnerPerms; 
@@ -397,10 +397,10 @@ namespace OpenSim.Region.Framework.Scenes
                     owner |= (uint)PermissionMask.Transfer;
 
                 owner &= basePerms;
-                if(owner != m_EffectiveOwnerPerms)
+                if(owner != _EffectiveOwnerPerms)
                 {
                     needUpdate = true;
-                    m_EffectiveOwnerPerms = owner;
+                    _EffectiveOwnerPerms = owner;
                 }
 
                 uint ownertransfermask = owner & (uint)PermissionMask.Transfer;
@@ -415,10 +415,10 @@ namespace OpenSim.Region.Framework.Scenes
 
                 uint groupOrEveryone = group;
                 uint tmpPerms = group & owner;
-                if(tmpPerms != m_EffectiveGroupPerms)
+                if(tmpPerms != _EffectiveGroupPerms)
                 {
                     needUpdate = true;
-                    m_EffectiveGroupPerms = tmpPerms;
+                    _EffectiveGroupPerms = tmpPerms;
                 }
 
                 // recover move
@@ -433,21 +433,21 @@ namespace OpenSim.Region.Framework.Scenes
                 groupOrEveryone |= everyone;
 
                 tmpPerms = everyone  & owner;
-                if(tmpPerms != m_EffectiveEveryOnePerms)
+                if(tmpPerms != _EffectiveEveryOnePerms)
                 {
                     needUpdate = true;
-                    m_EffectiveEveryOnePerms = tmpPerms;
+                    _EffectiveEveryOnePerms = tmpPerms;
                 }
 
                 tmpPerms = groupOrEveryone  & owner;
-                if(tmpPerms != m_EffectiveGroupOrEveryOnePerms)
+                if(tmpPerms != _EffectiveGroupOrEveryOnePerms)
                 {
                     needUpdate = true;
-                    m_EffectiveGroupOrEveryOnePerms = tmpPerms;
+                    _EffectiveGroupOrEveryOnePerms = tmpPerms;
                 }
 
-                m_DeepEffectivePermsInvalid = false;
-                m_EffectivePermsInvalid = false;
+                _DeepEffectivePermsInvalid = false;
+                _EffectivePermsInvalid = false;
               
                 if(needUpdate)
                     RootPart.ScheduleFullUpdate();
@@ -464,7 +464,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             uint ownerMask = RootPart.OwnerMask;
 
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
             {
                 SceneObjectPart part = parts[i];
@@ -486,9 +486,9 @@ namespace OpenSim.Region.Framework.Scenes
 
         public void ApplyNextOwnerPermissions()
         {
-//            m_log.DebugFormat("[PRIM INVENTORY]: Applying next owner permissions to {0} {1}", Name, UUID);
+//            _log.DebugFormat("[PRIM INVENTORY]: Applying next owner permissions to {0} {1}", Name, UUID);
 
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
                 parts[i].ApplyNextOwnerPermissions();
         }
@@ -497,7 +497,7 @@ namespace OpenSim.Region.Framework.Scenes
         {
             Dictionary<UUID, string> states = new Dictionary<UUID, string>();
 
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
             {
                 SceneObjectPart part = parts[i];
@@ -601,10 +601,10 @@ namespace OpenSim.Region.Framework.Scenes
 
         public void ResumeScripts()
         {
-            if (m_scene.RegionInfo.RegionSettings.DisableScripts)
+            if (_scene.RegionInfo.RegionSettings.DisableScripts)
                 return;
 
-            SceneObjectPart[] parts = m_parts.GetArray();
+            SceneObjectPart[] parts = _parts.GetArray();
             for (int i = 0; i < parts.Length; i++)
                 parts[i].Inventory.ResumeScripts();
         }

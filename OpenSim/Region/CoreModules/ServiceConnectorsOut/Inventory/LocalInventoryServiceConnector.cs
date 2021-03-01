@@ -45,7 +45,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalInventoryServicesConnector")]
     public class LocalInventoryServicesConnector : ISharedRegionModule, IInventoryService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -54,32 +54,26 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
         /// </summary>
         public Scene Scene { get; set; }
 
-        private IInventoryService m_InventoryService;
+        private IInventoryService _InventoryService;
 
-        private IUserManagement m_UserManager;
+        private IUserManagement _UserManager;
         private IUserManagement UserManager
         {
             get
             {
-                if (m_UserManager == null)
+                if (_UserManager == null)
                 {
-                    m_UserManager = Scene.RequestModuleInterface<IUserManagement>();
+                    _UserManager = Scene.RequestModuleInterface<IUserManagement>();
                 }
-                return m_UserManager;
+                return _UserManager;
             }
         }
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LocalInventoryServicesConnector"; }
-        }
+        public string Name => "LocalInventoryServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -92,7 +86,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
                     IConfig inventoryConfig = source.Configs["InventoryService"];
                     if (inventoryConfig == null)
                     {
-                        m_log.Error("[LOCAL INVENTORY SERVICES CONNECTOR]: InventoryService missing from OpenSim.ini");
+                        _log.Error("[LOCAL INVENTORY SERVICES CONNECTOR]: InventoryService missing from OpenSim.ini");
                         return;
                     }
 
@@ -100,23 +94,23 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
-                        m_log.Error("[LOCAL INVENTORY SERVICES CONNECTOR]: No LocalServiceModule named in section InventoryService");
+                        _log.Error("[LOCAL INVENTORY SERVICES CONNECTOR]: No LocalServiceModule named in section InventoryService");
                         return;
                     }
 
                     object[] args = new object[] { source };
-                    m_log.DebugFormat("[LOCAL INVENTORY SERVICES CONNECTOR]: Service dll = {0}", serviceDll);
+                    _log.DebugFormat("[LOCAL INVENTORY SERVICES CONNECTOR]: Service dll = {0}", serviceDll);
 
-                    m_InventoryService = ServerUtils.LoadPlugin<IInventoryService>(serviceDll, args);
+                    _InventoryService = ServerUtils.LoadPlugin<IInventoryService>(serviceDll, args);
 
-                    if (m_InventoryService == null)
+                    if (_InventoryService == null)
                     {
-                        m_log.Error("[LOCAL INVENTORY SERVICES CONNECTOR]: Can't load inventory service");
+                        _log.Error("[LOCAL INVENTORY SERVICES CONNECTOR]: Can't load inventory service");
                         throw new Exception("Unable to proceed. Please make sure your ini files in config-include are updated according to .example's");
                     }
 
-                    m_Enabled = true;
-                    m_log.Info("[LOCAL INVENTORY SERVICES CONNECTOR]: Local inventory connector enabled");
+                    _Enabled = true;
+                    _log.Info("[LOCAL INVENTORY SERVICES CONNECTOR]: Local inventory connector enabled");
                 }
             }
         }
@@ -131,7 +125,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IInventoryService>(this);
@@ -142,13 +136,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
@@ -156,27 +150,27 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
 
         public bool CreateUserInventory(UUID user)
         {
-            return m_InventoryService.CreateUserInventory(user);
+            return _InventoryService.CreateUserInventory(user);
         }
 
         public List<InventoryFolderBase> GetInventorySkeleton(UUID userId)
         {
-            return m_InventoryService.GetInventorySkeleton(userId);
+            return _InventoryService.GetInventorySkeleton(userId);
         }
 
         public InventoryFolderBase GetRootFolder(UUID userID)
         {
-            return m_InventoryService.GetRootFolder(userID);
+            return _InventoryService.GetRootFolder(userID);
         }
 
         public InventoryFolderBase GetFolderForType(UUID userID, FolderType type)
         {
-            return m_InventoryService.GetFolderForType(userID, type);
+            return _InventoryService.GetFolderForType(userID, type);
         }
 
         public InventoryCollection GetFolderContent(UUID userID, UUID folderID)
         {
-            InventoryCollection invCol = m_InventoryService.GetFolderContent(userID, folderID);
+            InventoryCollection invCol = _InventoryService.GetFolderContent(userID, folderID);
 
             if (UserManager != null)
             {
@@ -209,7 +203,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
 
         public List<InventoryItemBase> GetFolderItems(UUID userID, UUID folderID)
         {
-            return m_InventoryService.GetFolderItems(userID, folderID);
+            return _InventoryService.GetFolderItems(userID, folderID);
         }
 
         /// <summary>
@@ -219,7 +213,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
         /// <returns>true if the folder was successfully added</returns>
         public bool AddFolder(InventoryFolderBase folder)
         {
-            return m_InventoryService.AddFolder(folder);
+            return _InventoryService.AddFolder(folder);
         }
 
         /// <summary>
@@ -229,7 +223,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
         /// <returns>true if the folder was successfully updated</returns>
         public bool UpdateFolder(InventoryFolderBase folder)
         {
-            return m_InventoryService.UpdateFolder(folder);
+            return _InventoryService.UpdateFolder(folder);
         }
 
         /// <summary>
@@ -239,12 +233,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
         /// <returns>true if the folder was successfully moved</returns>
         public bool MoveFolder(InventoryFolderBase folder)
         {
-            return m_InventoryService.MoveFolder(folder);
+            return _InventoryService.MoveFolder(folder);
         }
 
         public bool DeleteFolders(UUID ownerID, List<UUID> folderIDs)
         {
-            return m_InventoryService.DeleteFolders(ownerID, folderIDs);
+            return _InventoryService.DeleteFolders(ownerID, folderIDs);
         }
 
         /// <summary>
@@ -254,16 +248,16 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
         /// <returns>true if the folder was successfully purged</returns>
         public bool PurgeFolder(InventoryFolderBase folder)
         {
-            return m_InventoryService.PurgeFolder(folder);
+            return _InventoryService.PurgeFolder(folder);
         }
 
         public bool AddItem(InventoryItemBase item)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[LOCAL INVENTORY SERVICES CONNECTOR]: Adding inventory item {0} to user {1} folder {2}",
 //                item.Name, item.Owner, item.Folder);
 
-            return m_InventoryService.AddItem(item);
+            return _InventoryService.AddItem(item);
         }
 
         /// <summary>
@@ -273,12 +267,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
         /// <returns>true if the item was successfully updated</returns>
         public bool UpdateItem(InventoryItemBase item)
         {
-            return m_InventoryService.UpdateItem(item);
+            return _InventoryService.UpdateItem(item);
         }
 
         public bool MoveItems(UUID ownerID, List<InventoryItemBase> items)
         {
-            return m_InventoryService.MoveItems(ownerID, items);
+            return _InventoryService.MoveItems(ownerID, items);
         }
 
         /// <summary>
@@ -288,19 +282,19 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
         /// <returns>true if the item was successfully deleted</returns>
         public bool DeleteItems(UUID ownerID, List<UUID> itemIDs)
         {
-            return m_InventoryService.DeleteItems(ownerID, itemIDs);
+            return _InventoryService.DeleteItems(ownerID, itemIDs);
         }
 
         public InventoryItemBase GetItem(UUID principalID, UUID itemID)
         {
-//            m_log.DebugFormat("[LOCAL INVENTORY SERVICES CONNECTOR]: Requesting inventory item {0}", item.ID);
+//            _log.DebugFormat("[LOCAL INVENTORY SERVICES CONNECTOR]: Requesting inventory item {0}", item.ID);
 
 //            UUID requestedItemId = item.ID;
 
-            InventoryItemBase item = m_InventoryService.GetItem(principalID, itemID);
+            InventoryItemBase item = _InventoryService.GetItem(principalID, itemID);
 
 //            if (null == item)
-//                m_log.ErrorFormat(
+//                _log.ErrorFormat(
 //                    "[LOCAL INVENTORY SERVICES CONNECTOR]: Could not find item with id {0}", requestedItemId);
 
             return item;
@@ -308,12 +302,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
 
         public InventoryItemBase[] GetMultipleItems(UUID userID, UUID[] itemIDs)
         {
-            return m_InventoryService.GetMultipleItems(userID, itemIDs);
+            return _InventoryService.GetMultipleItems(userID, itemIDs);
         }
 
         public InventoryFolderBase GetFolder(UUID principalID, UUID folderID)
         {
-            return m_InventoryService.GetFolder(principalID, folderID);
+            return _InventoryService.GetFolder(principalID, folderID);
         }
 
         /// <summary>
@@ -323,17 +317,17 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Inventory
         /// <returns></returns>
         public bool HasInventoryForUser(UUID userID)
         {
-            return m_InventoryService.HasInventoryForUser(userID);
+            return _InventoryService.HasInventoryForUser(userID);
         }
 
         public List<InventoryItemBase> GetActiveGestures(UUID userId)
         {
-            return m_InventoryService.GetActiveGestures(userId);
+            return _InventoryService.GetActiveGestures(userId);
         }
 
         public int GetAssetPermissions(UUID userID, UUID assetID)
         {
-            return m_InventoryService.GetAssetPermissions(userID, assetID);
+            return _InventoryService.GetAssetPermissions(userID, assetID);
         }
         #endregion IInventoryService
     }

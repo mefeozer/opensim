@@ -26,21 +26,9 @@ namespace Amib.Threading.Internal
 
             #region IWorkItemResult Members
 
-            public bool IsCompleted
-            {
-                get
-                {
-                    return _workItem.IsCompleted;
-                }
-            }
+            public bool IsCompleted => _workItem.IsCompleted;
 
-            public bool IsCanceled
-            {
-                get
-                {
-                    return _workItem.IsCanceled;
-                }
-            }
+            public bool IsCanceled => _workItem.IsCanceled;
 
             public object GetResult()
             {
@@ -102,31 +90,19 @@ namespace Amib.Threading.Internal
                 return _workItem.Cancel(abortExecution);
             }
 
-            public object State
-            {
-                get
-                {
-                    return _workItem._state;
-                }
-            }
+            public object State => _workItem._state;
 
             /// <summary>
             /// Return the result, same as GetResult()
             /// </summary>
-            public object Result
-            {
-                get { return GetResult(); }
-            }
+            public object Result => GetResult();
 
             /// <summary>
             /// Returns the exception if occured otherwise returns null.
             /// This value is valid only after the work item completed,
             /// before that it is always null.
             /// </summary>
-            public object Exception
-            {
-                get { return _workItem._exception; }
-            }
+            public object Exception => _workItem._exception;
 
             #endregion
 
@@ -134,27 +110,15 @@ namespace Amib.Threading.Internal
 
             public event WorkItemStateCallback OnWorkItemStarted
             {
-                add
-                {
-                    _workItem.OnWorkItemStarted += value;
-                }
-                remove
-                {
-                    _workItem.OnWorkItemStarted -= value;
-                }
+                add => _workItem.OnWorkItemStarted += value;
+                remove => _workItem.OnWorkItemStarted -= value;
             }
 
 
             public event WorkItemStateCallback OnWorkItemCompleted
             {
-                add
-                {
-                    _workItem.OnWorkItemCompleted += value;
-                }
-                remove
-                {
-                    _workItem.OnWorkItemCompleted -= value;
-                }
+                add => _workItem.OnWorkItemCompleted += value;
+                remove => _workItem.OnWorkItemCompleted -= value;
             }
 
             #endregion

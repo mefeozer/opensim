@@ -44,48 +44,48 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "RegionCommandsModule")]
     public class RegionCommandsModule : INonSharedRegionModule
     {
-        private Scene m_scene;
-        private ICommandConsole m_console;
+        private Scene _scene;
+        private ICommandConsole _console;
 
-        public string Name { get { return "Region Commands Module"; } }
+        public string Name => "Region Commands Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[REGION COMMANDS MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[REGION COMMANDS MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[REGION COMMANDS MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[REGION COMMANDS MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[REGION COMMANDS MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[REGION COMMANDS MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[REGION COMMANDS MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[REGION COMMANDS MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
 
-            m_scene = scene;
-            m_console = MainConsole.Instance;
+            _scene = scene;
+            _console = MainConsole.Instance;
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Regions", false, "show scene",
                 "show scene",
                 "Show live information for the currently selected scene (fps, prims, etc.).", HandleShowScene);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Regions", false, "show region",
                 "show region",
                 "Show control information for the currently selected region (host name, max physical prim size, etc).",
                 "A synonym for \"region get\"",
                 HandleShowRegion);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Regions", false, "region get",
                 "region get",
                 "Show control information for the currently selected region (host name, max physical prim size, etc).",
@@ -93,7 +93,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 + "Others must be changed via a viewer (usually via the region/estate dialog box).",
                 HandleShowRegion);
 
-            m_console.Commands.AddCommand(
+            _console.Commands.AddCommand(
                 "Regions", false, "region set",
                 "region set",
                 "Set control information for the currently selected region.",
@@ -103,11 +103,11 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 + "  This is not persisted over restart - to set it every time you must add a MaxAgents entry to your regions file.",
                 HandleRegionSet);
 
-            m_console.Commands.AddCommand("Regions", false, "show neighbours",
+            _console.Commands.AddCommand("Regions", false, "show neighbours",
                 "show neighbours",
                 "Shows the local region neighbours", HandleShowNeighboursCommand);
 
-            m_console.Commands.AddCommand("Regions", false, "show regionsinview",
+            _console.Commands.AddCommand("Regions", false, "show regionsinview",
                 "show regionsinview",
                 "Shows regions that can be seen from a region", HandleShowRegionsInViewCommand);
 
@@ -115,24 +115,24 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[REGION COMMANDS MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[REGION COMMANDS MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[REGION COMMANDS MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[REGION COMMANDS MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
         }
 
         private void HandleShowRegion(string module, string[] cmd)
         {
-            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == m_scene))
+            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == _scene))
                 return;
 
-            RegionInfo ri = m_scene.RegionInfo;
+            RegionInfo ri = _scene.RegionInfo;
             RegionSettings rs = ri.RegionSettings;
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Region information for {0}\n", m_scene.Name);
+            sb.AppendFormat("Region information for {0}\n", _scene.Name);
 
             ConsoleDisplayList dispList = new ConsoleDisplayList();
             dispList.AddRow("Region ID", ri.RegionID);
@@ -190,7 +190,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private void HandleRegionSet(string module, string[] args)
         {
-            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == m_scene))
+            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == _scene))
                 return;
 
             if (args.Length != 4)
@@ -202,10 +202,10 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
             string param = args[2];
             string rawValue = args[3];
 
-            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == m_scene))
+            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == _scene))
                 return;
 
-            RegionInfo ri = m_scene.RegionInfo;
+            RegionInfo ri = _scene.RegionInfo;
             RegionSettings rs = ri.RegionSettings;
 
             if (param == "agent-limit")
@@ -219,14 +219,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 {
                     MainConsole.Instance.Output(
                         "Cannot set {0} to {1} in {2} as max-agent-limit is {3}", "agent-limit",
-                        newValue, m_scene.Name, ri.AgentCapacity);
+                        newValue, _scene.Name, ri.AgentCapacity);
                 }
                 else
                 {
                     rs.AgentLimit = newValue;
 
                     MainConsole.Instance.Output(
-                        "{0} set to {1} in {2}", "agent-limit", newValue, m_scene.Name);
+                        "{0} set to {1} in {2}", "agent-limit", newValue, _scene.Name);
                 }
 
                 rs.Save();
@@ -241,14 +241,14 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
                 ri.AgentCapacity = newValue;
 
                 MainConsole.Instance.Output(
-                    "max-agent-limit set to {0} in {1}", newValue, m_scene.Name);
+                    "max-agent-limit set to {0} in {1}", newValue, _scene.Name);
 
                 if (ri.AgentCapacity < rs.AgentLimit)
                 {
                     rs.AgentLimit = ri.AgentCapacity;
 
                     MainConsole.Instance.Output(
-                        "agent-limit set to {0} in {1}", rs.AgentLimit, m_scene.Name);
+                        "agent-limit set to {0} in {1}", rs.AgentLimit, _scene.Name);
                 }
 
                 rs.Save();
@@ -257,10 +257,10 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         private void HandleShowScene(string module, string[] cmd)
         {
-            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == m_scene))
+            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == _scene))
                 return;
 
-            SimStatsReporter r = m_scene.StatsReporter;
+            SimStatsReporter r = _scene.StatsReporter;
             float[] stats = r.LastReportedSimStats;
 
             float timeDilation            = stats[0];
@@ -286,7 +286,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
             float scriptLinesPerSecond    = stats[23];
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Scene statistics for {0}\n", m_scene.RegionInfo.RegionName);
+            sb.AppendFormat("Scene statistics for {0}\n", _scene.RegionInfo.RegionName);
 
             ConsoleDisplayList dispList = new ConsoleDisplayList();
             dispList.AddRow("Time Dilation", timeDilation);
@@ -315,17 +315,17 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         public void HandleShowNeighboursCommand(string module, string[] cmdparams)
         {
-            if(m_scene == null)
+            if(_scene == null)
                 return;
 
-            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == m_scene))
+            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == _scene))
                 return;
 
             System.Text.StringBuilder caps = new System.Text.StringBuilder();
 
-            RegionInfo sr = m_scene.RegionInfo;
+            RegionInfo sr = _scene.RegionInfo;
             caps.AppendFormat("*** Neighbours of {0} ({1}) ***\n", sr.RegionName, sr.RegionID);
-            List<GridRegion> regions = m_scene.GridService.GetNeighbours(sr.ScopeID, sr.RegionID);
+            List<GridRegion> regions = _scene.GridService.GetNeighbours(sr.ScopeID, sr.RegionID);
                 foreach (GridRegion r in regions)
                     caps.AppendFormat("    {0} @ {1}-{2}\n", r.RegionName, Util.WorldToRegionLoc((uint)r.RegionLocX), Util.WorldToRegionLoc((uint)r.RegionLocY));
 
@@ -334,15 +334,15 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
 
         public void HandleShowRegionsInViewCommand(string module, string[] cmdparams)
         {
-            if(m_scene == null)
+            if(_scene == null)
                 return;
 
-            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == m_scene))
+            if (!(MainConsole.Instance.ConsoleScene == null || MainConsole.Instance.ConsoleScene == _scene))
                 return;
 
             System.Text.StringBuilder caps = new System.Text.StringBuilder();
-            int maxview = (int)m_scene.MaxRegionViewDistance;
-            RegionInfo sr = m_scene.RegionInfo;
+            int maxview = (int)_scene.MaxRegionViewDistance;
+            RegionInfo sr = _scene.RegionInfo;
             caps.AppendFormat("*** Regions that can be seen from {0} ({1}) (MaxRegionViewDistance {2}m) ***\n", sr.RegionName, sr.RegionID, maxview);
             int startX = (int)sr.WorldLocX;
             int endX = startX + (int)sr.RegionSizeX;
@@ -357,7 +357,7 @@ namespace OpenSim.Region.CoreModules.World.Objects.Commands
             endX += maxview;
             endY += maxview;
 
-            List<GridRegion> regions = m_scene.GridService.GetRegionRange(sr.ScopeID, startX, endX, startY, endY);
+            List<GridRegion> regions = _scene.GridService.GetRegionRange(sr.ScopeID, startX, endX, startY, endY);
             foreach (GridRegion r in regions)
             {
                 if(r.RegionHandle == sr.RegionHandle)

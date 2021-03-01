@@ -45,26 +45,26 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Neighbour
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "NeighbourServiceInConnectorModule")]
     public class NeighbourServiceInConnectorModule : ISharedRegionModule, INeighbourService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static bool m_Enabled = false;
-        private static bool m_Registered = false;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static bool _Enabled = false;
+        private static bool _Registered = false;
 
-        private IConfigSource m_Config;
-        private readonly List<Scene> m_Scenes = new List<Scene>();
+        private IConfigSource _Config;
+        private readonly List<Scene> _Scenes = new List<Scene>();
 
         #region Region Module interface
 
         public void Initialise(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
 
             IConfig moduleConfig = config.Configs["Modules"];
             if (moduleConfig != null)
             {
-                m_Enabled = moduleConfig.GetBoolean("NeighbourServiceInConnector", false);
-                if (m_Enabled)
+                _Enabled = moduleConfig.GetBoolean("NeighbourServiceInConnector", false);
+                if (_Enabled)
                 {
-                    m_log.Info("[NEIGHBOUR IN CONNECTOR]: NeighbourServiceInConnector enabled");
+                    _log.Info("[NEIGHBOUR IN CONNECTOR]: NeighbourServiceInConnector enabled");
                 }
 
             }
@@ -73,46 +73,40 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Neighbour
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-//            m_log.Info("[NEIGHBOUR IN CONNECTOR]: Starting...");
+//            _log.Info("[NEIGHBOUR IN CONNECTOR]: Starting...");
         }
 
         public void Close()
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "NeighbourServiceInConnectorModule"; }
-        }
+        public string Name => "NeighbourServiceInConnectorModule";
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (!m_Registered)
+            if (!_Registered)
             {
-                m_Registered = true;
-                object[] args = new object[] { m_Config, MainServer.Instance, this, scene };
+                _Registered = true;
+                object[] args = new object[] { _Config, MainServer.Instance, this, scene };
                 ServerUtils.LoadPlugin<IServiceConnector>("OpenSim.Server.Handlers.dll:NeighbourServiceInConnector", args);
             }
 
-            m_Scenes.Add(scene);
+            _Scenes.Add(scene);
 
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (m_Enabled && m_Scenes.Contains(scene))
-                m_Scenes.Remove(scene);
+            if (_Enabled && _Scenes.Contains(scene))
+                _Scenes.Remove(scene);
         }
 
         public void RegionLoaded(Scene scene)
@@ -125,11 +119,11 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Neighbour
 
         public GridRegion HelloNeighbour(ulong regionHandle, RegionInfo thisRegion)
         {
-            foreach (Scene s in m_Scenes)
+            foreach (Scene s in _Scenes)
             {
                 if (s.RegionInfo.RegionHandle == regionHandle)
                 {
-                    //m_log.DebugFormat("[NEIGHBOUR IN CONNECTOR]: HelloNeighbour from {0} to {1}", thisRegion.RegionName, s.RegionInfo.RegionName);
+                    //_log.DebugFormat("[NEIGHBOUR IN CONNECTOR]: HelloNeighbour from {0} to {1}", thisRegion.RegionName, s.RegionInfo.RegionName);
                     return s.IncomingHelloNeighbour(thisRegion);
                 }
             }

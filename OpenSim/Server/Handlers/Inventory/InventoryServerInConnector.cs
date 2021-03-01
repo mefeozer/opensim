@@ -42,27 +42,27 @@ namespace OpenSim.Server.Handlers.Inventory
 {
     public class InventoryServiceInConnector : ServiceConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected IInventoryService m_InventoryService;
+        protected IInventoryService _InventoryService;
 
-        private readonly bool m_doLookup = false;
+        private readonly bool _doLookup = false;
 
         //private static readonly int INVENTORY_DEFAULT_SESSION_TIME = 30; // secs
-        //private AuthedSessionCache m_session_cache = new AuthedSessionCache(INVENTORY_DEFAULT_SESSION_TIME);
+        //private AuthedSessionCache _session_cache = new AuthedSessionCache(INVENTORY_DEFAULT_SESSION_TIME);
 
-        private readonly string m_userserver_url;
-        protected string m_ConfigName = "InventoryService";
+        private readonly string _userserver_url;
+        protected string _ConfigName = "InventoryService";
 
         public InventoryServiceInConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string inventoryService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -71,87 +71,87 @@ namespace OpenSim.Server.Handlers.Inventory
                 throw new Exception("No LocalServiceModule in config file");
 
             object[] args = new object[] { config };
-            m_InventoryService =
+            _InventoryService =
                     ServerUtils.LoadPlugin<IInventoryService>(inventoryService, args);
 
-            m_userserver_url = serverConfig.GetString("UserServerURI", string.Empty);
-            m_doLookup = serverConfig.GetBoolean("SessionAuthentication", false);
+            _userserver_url = serverConfig.GetString("UserServerURI", string.Empty);
+            _doLookup = serverConfig.GetBoolean("SessionAuthentication", false);
 
             AddHttpHandlers(server);
-            m_log.Debug("[INVENTORY HANDLER]: handlers initialized");
+            _log.Debug("[INVENTORY HANDLER]: handlers initialized");
         }
 
-        protected virtual void AddHttpHandlers(IHttpServer m_httpServer)
+        protected virtual void AddHttpHandlers(IHttpServer _httpServer)
         {
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<Guid, List<InventoryFolderBase>>(
                 "POST", "/SystemFolders/", GetSystemFolders, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<Guid, InventoryCollection>(
                 "POST", "/GetFolderContent/", GetFolderContent, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<InventoryFolderBase, bool>(
-                    "POST", "/UpdateFolder/", m_InventoryService.UpdateFolder, CheckAuthSession));
+                    "POST", "/UpdateFolder/", _InventoryService.UpdateFolder, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<InventoryFolderBase, bool>(
-                    "POST", "/MoveFolder/", m_InventoryService.MoveFolder, CheckAuthSession));
+                    "POST", "/MoveFolder/", _InventoryService.MoveFolder, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<InventoryFolderBase, bool>(
-                    "POST", "/PurgeFolder/", m_InventoryService.PurgeFolder, CheckAuthSession));
+                    "POST", "/PurgeFolder/", _InventoryService.PurgeFolder, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<List<Guid>, bool>(
                     "POST", "/DeleteFolders/", DeleteFolders, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<List<Guid>, bool>(
                     "POST", "/DeleteItem/", DeleteItems, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<Guid, InventoryItemBase>(
                     "POST", "/QueryItem/", GetItem, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<Guid, InventoryFolderBase>(
                     "POST", "/QueryFolder/", GetFolder, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseTrustedHandler<Guid, bool>(
                     "POST", "/CreateInventory/", CreateUsersInventory, CheckTrustSource));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<InventoryFolderBase, bool>(
-                    "POST", "/NewFolder/", m_InventoryService.AddFolder, CheckAuthSession));
+                    "POST", "/NewFolder/", _InventoryService.AddFolder, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<InventoryFolderBase, bool>(
-                    "POST", "/CreateFolder/", m_InventoryService.AddFolder, CheckAuthSession));
+                    "POST", "/CreateFolder/", _InventoryService.AddFolder, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<InventoryItemBase, bool>(
-                    "POST", "/NewItem/", m_InventoryService.AddItem, CheckAuthSession));
+                    "POST", "/NewItem/", _InventoryService.AddItem, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
              new RestDeserialiseTrustedHandler<InventoryItemBase, bool>(
-                 "POST", "/AddNewItem/", m_InventoryService.AddItem, CheckTrustSource));
+                 "POST", "/AddNewItem/", _InventoryService.AddItem, CheckTrustSource));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<Guid, List<InventoryItemBase>>(
                     "POST", "/GetItems/", GetFolderItems, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseSecureHandler<List<InventoryItemBase>, bool>(
                     "POST", "/MoveItems/", MoveItems, CheckAuthSession));
 
-            m_httpServer.AddStreamHandler(new InventoryServerMoveItemsHandler(m_InventoryService));
+            _httpServer.AddStreamHandler(new InventoryServerMoveItemsHandler(_InventoryService));
 
 
             // for persistent active gestures
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseTrustedHandler<Guid, List<InventoryItemBase>>
                     ("POST", "/ActiveGestures/", GetActiveGestures, CheckTrustSource));
 
@@ -160,11 +160,11 @@ namespace OpenSim.Server.Handlers.Inventory
             // It would have been better to rename this request, but complexities in the BaseHttpServer
             // (e.g. any http request not found is automatically treated as an xmlrpc request) make it easier
             // to do this for now.
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseTrustedHandler<Guid, List<InventoryFolderBase>>
                     ("POST", "/RootFolders/", GetInventorySkeleton, CheckTrustSource));
 
-            m_httpServer.AddStreamHandler(
+            _httpServer.AddStreamHandler(
                 new RestDeserialiseTrustedHandler<InventoryItemBase, int>
                 ("POST", "/AssetPermissions/", GetAssetPermissions, CheckTrustSource));
 
@@ -182,10 +182,10 @@ namespace OpenSim.Server.Handlers.Inventory
         // But I don't want to deal with types and dependencies for now.
         private Dictionary<AssetType, InventoryFolderBase> GetSystemFolders(UUID userID)
         {
-            InventoryFolderBase root = m_InventoryService.GetRootFolder(userID);
+            InventoryFolderBase root = _InventoryService.GetRootFolder(userID);
             if (root != null)
             {
-                InventoryCollection content = m_InventoryService.GetFolderContent(userID, root.ID);
+                InventoryCollection content = _InventoryService.GetFolderContent(userID, root.ID);
                 if (content != null)
                 {
                     Dictionary<AssetType, InventoryFolderBase> folders = new Dictionary<AssetType, InventoryFolderBase>();
@@ -199,23 +199,23 @@ namespace OpenSim.Server.Handlers.Inventory
                     return folders;
                 }
             }
-            m_log.WarnFormat("[INVENTORY SERVICE]: System folders for {0} not found", userID);
+            _log.WarnFormat("[INVENTORY SERVICE]: System folders for {0} not found", userID);
             return new Dictionary<AssetType, InventoryFolderBase>();
         }
 
         public InventoryItemBase GetItem(Guid guid)
         {
-            return m_InventoryService.GetItem(UUID.Zero, new UUID(guid));
+            return _InventoryService.GetItem(UUID.Zero, new UUID(guid));
         }
 
         public InventoryFolderBase GetFolder(Guid guid)
         {
-            return m_InventoryService.GetFolder(UUID.Zero, new UUID(guid));
+            return _InventoryService.GetFolder(UUID.Zero, new UUID(guid));
         }
 
         public InventoryCollection GetFolderContent(Guid guid)
         {
-            return m_InventoryService.GetFolderContent(UUID.Zero, new UUID(guid));
+            return _InventoryService.GetFolderContent(UUID.Zero, new UUID(guid));
         }
 
         public List<InventoryItemBase> GetFolderItems(Guid folderID)
@@ -226,7 +226,7 @@ namespace OpenSim.Server.Handlers.Inventory
             // inventory server only has a single inventory database and not per-user inventory databases.
             // This could be changed but it requirs a bit of hackery to pass another parameter into this
             // callback
-            List<InventoryItemBase> items = m_InventoryService.GetFolderItems(UUID.Zero, new UUID(folderID));
+            List<InventoryItemBase> items = _InventoryService.GetFolderItems(UUID.Zero, new UUID(folderID));
 
             if (items != null)
             {
@@ -240,25 +240,25 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID userID = new UUID(rawUserID);
 
 
-            return m_InventoryService.CreateUserInventory(userID);
+            return _InventoryService.CreateUserInventory(userID);
         }
 
         public List<InventoryItemBase> GetActiveGestures(Guid rawUserID)
         {
             UUID userID = new UUID(rawUserID);
 
-            return m_InventoryService.GetActiveGestures(userID);
+            return _InventoryService.GetActiveGestures(userID);
         }
 
         public List<InventoryFolderBase> GetInventorySkeleton(Guid rawUserID)
         {
             UUID userID = new UUID(rawUserID);
-            return m_InventoryService.GetInventorySkeleton(userID);
+            return _InventoryService.GetInventorySkeleton(userID);
         }
 
         public int GetAssetPermissions(InventoryItemBase item)
         {
-            return m_InventoryService.GetAssetPermissions(item.Owner, item.AssetID);
+            return _InventoryService.GetAssetPermissions(item.Owner, item.AssetID);
         }
 
         public bool DeleteFolders(List<Guid> items)
@@ -267,7 +267,7 @@ namespace OpenSim.Server.Handlers.Inventory
             foreach (Guid g in items)
                 uuids.Add(new UUID(g));
             // oops we lost the user info here. Bad bad handlers
-            return m_InventoryService.DeleteFolders(UUID.Zero, uuids);
+            return _InventoryService.DeleteFolders(UUID.Zero, uuids);
         }
 
         public bool DeleteItems(List<Guid> items)
@@ -276,7 +276,7 @@ namespace OpenSim.Server.Handlers.Inventory
             foreach (Guid g in items)
                 uuids.Add(new UUID(g));
             // oops we lost the user info here. Bad bad handlers
-            return m_InventoryService.DeleteItems(UUID.Zero, uuids);
+            return _InventoryService.DeleteItems(UUID.Zero, uuids);
         }
 
         public bool MoveItems(List<InventoryItemBase> items)
@@ -286,7 +286,7 @@ namespace OpenSim.Server.Handlers.Inventory
             UUID ownerID = UUID.Zero;
             if (items.Count > 0)
                 ownerID = items[0].Owner;
-            return m_InventoryService.MoveItems(ownerID, items);
+            return _InventoryService.MoveItems(ownerID, items);
         }
         #endregion
 
@@ -297,10 +297,10 @@ namespace OpenSim.Server.Handlers.Inventory
         /// <returns></returns>
         public bool CheckTrustSource(IPEndPoint peer)
         {
-            if (m_doLookup)
+            if (_doLookup)
             {
-                m_log.InfoFormat("[INVENTORY IN CONNECTOR]: Checking trusted source {0}", peer);
-                UriBuilder ub = new UriBuilder(m_userserver_url);
+                _log.InfoFormat("[INVENTORY IN CONNECTOR]: Checking trusted source {0}", peer);
+                UriBuilder ub = new UriBuilder(_userserver_url);
                 IPAddress[] uaddrs = Dns.GetHostAddresses(ub.Host);
                 foreach (IPAddress uaddr in uaddrs)
                 {
@@ -310,7 +310,7 @@ namespace OpenSim.Server.Handlers.Inventory
                     }
                 }
 
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[INVENTORY IN CONNECTOR]: Rejecting request since source {0} was not in the list of trusted sources",
                     peer);
 

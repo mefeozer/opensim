@@ -38,50 +38,41 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
     /// </summary>
     public class Command : ICommand
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly List<CommandArgument> m_args = new List<CommandArgument>();
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly List<CommandArgument> _args = new List<CommandArgument>();
 
-        private readonly Action<object[]> m_command;
-        private readonly string m_help;
-        private readonly string m_name;
-        private readonly CommandIntentions m_intentions; //A permission type system could implement this and know what a command intends on doing.
+        private readonly Action<object[]> _command;
+        private readonly string _help;
+        private readonly string _name;
+        private readonly CommandIntentions _intentions; //A permission type system could implement this and know what a command intends on doing.
 
         public Command(string name, CommandIntentions intention, Action<object[]> command, string help)
         {
-            m_name = name;
-            m_command = command;
-            m_help = help;
-            m_intentions = intention;
+            _name = name;
+            _command = command;
+            _help = help;
+            _intentions = intention;
         }
 
         #region ICommand Members
 
         public void AddArgument(string name, string helptext, string type)
         {
-            m_args.Add(new CommandArgument(name, helptext, type));
+            _args.Add(new CommandArgument(name, helptext, type));
         }
 
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name => _name;
 
-        public CommandIntentions Intentions
-        {
-            get { return m_intentions; }
-        }
+        public CommandIntentions Intentions => _intentions;
 
-        public string Help
-        {
-            get { return m_help; }
-        }
+        public string Help => _help;
 
         public Dictionary<string, string> Arguments
         {
             get
             {
                 Dictionary<string, string> tmp = new Dictionary<string, string>();
-                foreach (CommandArgument arg in m_args)
+                foreach (CommandArgument arg in _args)
                 {
                     tmp.Add(arg.Name, arg.ArgumentType);
                 }
@@ -91,9 +82,9 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
 
         public string ShortHelp()
         {
-            string help = m_name;
+            string help = _name;
 
-            foreach (CommandArgument arg in m_args)
+            foreach (CommandArgument arg in _args)
             {
                 help += " <" + arg.Name + ">";
             }
@@ -104,9 +95,9 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
         public void ShowConsoleHelp()
         {
             Console.WriteLine("== " + Name + " ==");
-            Console.WriteLine(m_help);
+            Console.WriteLine(_help);
             Console.WriteLine("= Parameters =");
-            foreach (CommandArgument arg in m_args)
+            foreach (CommandArgument arg in _args)
             {
                 Console.WriteLine("* " + arg.Name + " (" + arg.ArgumentType + ")");
                 Console.WriteLine("\t" + arg.HelpText);
@@ -115,7 +106,7 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
 
         public void Run(object[] args)
         {
-            object[] cleanArgs = new object[m_args.Count];
+            object[] cleanArgs = new object[_args.Count];
 
             if (args.Length < cleanArgs.Length)
             {
@@ -139,44 +130,44 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
                 }
                 try
                 {
-                    switch (m_args[i].ArgumentType)
+                    switch (_args[i].ArgumentType)
                     {
                         case "String":
-                            m_args[i].ArgumentValue = arg.ToString();
+                            _args[i].ArgumentValue = arg.ToString();
                             break;
                         case "Integer":
-                            m_args[i].ArgumentValue = int.Parse(arg.ToString());
+                            _args[i].ArgumentValue = int.Parse(arg.ToString());
                             break;
                         case "Float":
-                            m_args[i].ArgumentValue = float.Parse(arg.ToString(), OpenSim.Framework.Culture.NumberFormatInfo);
+                            _args[i].ArgumentValue = float.Parse(arg.ToString(), OpenSim.Framework.Culture.NumberFormatInfo);
                             break;
                         case "Double":
-                            m_args[i].ArgumentValue = double.Parse(arg.ToString(), OpenSim.Framework.Culture.NumberFormatInfo);
+                            _args[i].ArgumentValue = double.Parse(arg.ToString(), OpenSim.Framework.Culture.NumberFormatInfo);
                             break;
                         case "Boolean":
-                            m_args[i].ArgumentValue = bool.Parse(arg.ToString());
+                            _args[i].ArgumentValue = bool.Parse(arg.ToString());
                             break;
                         case "UUID":
-                            m_args[i].ArgumentValue = UUID.Parse(arg.ToString());
+                            _args[i].ArgumentValue = UUID.Parse(arg.ToString());
                             break;
                         default:
-                            Console.WriteLine("ERROR: Unknown desired type for argument " + m_args[i].Name + " on command " + m_name);
+                            Console.WriteLine("ERROR: Unknown desired type for argument " + _args[i].Name + " on command " + _name);
                             break;
                     }
                 }
                 catch (FormatException)
                 {
                     Console.WriteLine("ERROR: Argument number " + (i + 1) +
-                                " (" + m_args[i].Name + ") must be a valid " +
-                                m_args[i].ArgumentType.ToLower() + ".");
+                                " (" + _args[i].Name + ") must be a valid " +
+                                _args[i].ArgumentType.ToLower() + ".");
                     return;
                 }
-                cleanArgs[i] = m_args[i].ArgumentValue;
+                cleanArgs[i] = _args[i].ArgumentValue;
 
                 i++;
             }
 
-            m_command.Invoke(cleanArgs);
+            _command.Invoke(cleanArgs);
         }
 
         #endregion
@@ -187,37 +178,28 @@ namespace OpenSim.Region.CoreModules.Framework.InterfaceCommander
     /// </summary>
     public class CommandArgument
     {
-        private readonly string m_help;
-        private readonly string m_name;
-        private readonly string m_type;
-        private object m_val;
+        private readonly string _help;
+        private readonly string _name;
+        private readonly string _type;
+        private object _val;
 
         public CommandArgument(string name, string help, string type)
         {
-            m_name = name;
-            m_help = help;
-            m_type = type;
+            _name = name;
+            _help = help;
+            _type = type;
         }
 
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name => _name;
 
-        public string HelpText
-        {
-            get { return m_help; }
-        }
+        public string HelpText => _help;
 
-        public string ArgumentType
-        {
-            get { return m_type; }
-        }
+        public string ArgumentType => _type;
 
         public object ArgumentValue
         {
-            get { return m_val; }
-            set { m_val = value; }
+            get => _val;
+            set => _val = value;
         }
     }
 }

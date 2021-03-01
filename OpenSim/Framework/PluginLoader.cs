@@ -84,19 +84,13 @@ namespace OpenSim.Framework
 
         public PluginInitialiserBase Initialiser
         {
-            set { initialiser = value; }
-            get { return initialiser; }
+            set => initialiser = value;
+            get => initialiser;
         }
 
-        public List<T> Plugins
-        {
-            get { return loaded; }
-        }
+        public List<T> Plugins => loaded;
 
-        public T Plugin
-        {
-            get { return loaded.Count == 1? loaded [0] : default (T); }
-        }
+        public T Plugin => loaded.Count == 1? loaded [0] : default (T);
 
         public PluginLoader()
         {
@@ -265,9 +259,9 @@ namespace OpenSim.Framework
 
         Type typeobj;
 
-        public string ID { get { return id; } }
-        public string Provider { get { return provider; } }
-        public string TypeName { get { return type; } }
+        public string ID => id;
+        public string Provider => provider;
+        public string TypeName => type;
 
         public Type TypeObject
         {
@@ -309,14 +303,9 @@ namespace OpenSim.Framework
             max = maximum;
         }
 
-        public string Message
-        {
-            get
-            {
-                return "The number of plugins is constrained to the interval ["
-                    + min + ", " + max + "]";
-            }
-        }
+        public string Message =>
+            "The number of plugins is constrained to the interval ["
+            + min + ", " + max + "]";
 
         public bool Apply (string extpoint)
         {
@@ -335,7 +324,7 @@ namespace OpenSim.Framework
     /// </summary>
     public class PluginProviderFilter : IPluginFilter
     {
-        private readonly string[] m_filters;
+        private readonly string[] _filters;
 
         /// <summary>
         /// Constructor.
@@ -345,11 +334,11 @@ namespace OpenSim.Framework
         /// </param>
         public PluginProviderFilter(string p)
         {
-            m_filters = p.Split(',');
+            _filters = p.Split(',');
 
-            for (int i = 0; i < m_filters.Length; i++)
+            for (int i = 0; i < _filters.Length; i++)
             {
-                m_filters[i] = m_filters[i].Trim();
+                _filters[i] = _filters[i].Trim();
             }
         }
 
@@ -360,9 +349,9 @@ namespace OpenSim.Framework
         /// <returns>true if the plugin's name matched one of the filters, false otherwise.</returns>
         public bool Apply (PluginExtensionNode plugin)
         {
-            for (int i = 0; i < m_filters.Length; i++)
+            for (int i = 0; i < _filters.Length; i++)
             {
-                if (m_filters[i] == plugin.Provider)
+                if (_filters[i] == plugin.Provider)
                 {
                     return true;
                 }
@@ -377,7 +366,7 @@ namespace OpenSim.Framework
     /// </summary>
     public class PluginIdFilter : IPluginFilter
     {
-        private readonly string[] m_filters;
+        private readonly string[] _filters;
 
         /// <summary>
         /// Constructor.
@@ -387,11 +376,11 @@ namespace OpenSim.Framework
         /// </param>
         public PluginIdFilter(string p)
         {
-            m_filters = p.Split(',');
+            _filters = p.Split(',');
 
-            for (int i = 0; i < m_filters.Length; i++)
+            for (int i = 0; i < _filters.Length; i++)
             {
-                m_filters[i] = m_filters[i].Trim();
+                _filters[i] = _filters[i].Trim();
             }
         }
 
@@ -402,9 +391,9 @@ namespace OpenSim.Framework
         /// <returns>true if the plugin's ID matches one of the filters, false otherwise.</returns>
         public bool Apply (PluginExtensionNode plugin)
         {
-            for (int i = 0; i < m_filters.Length; i++)
+            for (int i = 0; i < _filters.Length; i++)
             {
-                if (m_filters[i] == plugin.ID)
+                if (_filters[i] == plugin.ID)
                 {
                     return true;
                 }

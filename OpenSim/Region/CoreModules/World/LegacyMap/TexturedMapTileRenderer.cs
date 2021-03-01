@@ -41,7 +41,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 {
     // Hue, Saturation, Value; used for color-interpolation
     struct HSV {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public float h;
         public float s;
@@ -79,10 +79,10 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
         // (for info about algorithm, see http://en.wikipedia.org/wiki/HSL_and_HSV)
         public Color toColor()
         {
-            if (s < 0f) m_log.Debug("S < 0: " + s);
-            else if (s > 1f) m_log.Debug("S > 1: " + s);
-            if (v < 0f) m_log.Debug("V < 0: " + v);
-            else if (v > 1f) m_log.Debug("V > 1: " + v);
+            if (s < 0f) _log.Debug("S < 0: " + s);
+            else if (s > 1f) _log.Debug("S > 1: " + s);
+            if (v < 0f) _log.Debug("V < 0: " + v);
+            else if (v > 1f) _log.Debug("V > 1: " + v);
 
             float f = h / 60f;
             int sector = (int)f % 6;
@@ -123,7 +123,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
     {
         #region Constants
 
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string LogHeader = "[TEXTURED MAPTILE RENDERER]";
 
         // some hardcoded terrain UUIDs that work with SL 1.20 (the four default textures and "Blank").
@@ -135,40 +135,40 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
         #endregion
 
-        private Scene m_scene;
-        private IConfigSource m_config;
-        private Color m_color_water;
-        private Color m_color_1;
-        private Color m_color_2;
-        private Color m_color_3;
-        private Color m_color_4;
+        private Scene _scene;
+        private IConfigSource _config;
+        private Color _color_water;
+        private Color _color_1;
+        private Color _color_2;
+        private Color _color_3;
+        private Color _color_4;
 
         // mapping from texture UUIDs to averaged color. This will contain 5-9 values, in general; new values are only
         // added when the terrain textures are changed in the estate dialog and a new map is generated (and will stay in
         // that map until the region-server restarts. This could be considered a memory-leak, but it's a *very* small one.
         // TODO does it make sense to use a "real" cache and regenerate missing entries on fetch?
-        private Dictionary<UUID, Color> m_mapping;
+        private Dictionary<UUID, Color> _mapping;
 
 
         public void Initialise(Scene scene, IConfigSource source)
         {
-            m_scene = scene;
-            m_config = source;
+            _scene = scene;
+            _config = source;
 
             string[] configSections = new string[] { "Map", "Startup" };
             
-            m_color_water = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(m_config, "MapColorWater", configSections, "#1D475F"));
-            m_color_1 = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(m_config, "MapColor1", configSections, "#A58976"));
-            m_color_2 = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(m_config, "MapColor2", configSections, "#455931"));
-            m_color_3 = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(m_config, "MapColor3", configSections, "#A29A8D"));
-            m_color_4 = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(m_config, "MapColor4", configSections, "#C8C8C8"));
+            _color_water = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(_config, "MapColorWater", configSections, "#1D475F"));
+            _color_1 = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(_config, "MapColor1", configSections, "#A58976"));
+            _color_2 = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(_config, "MapColor2", configSections, "#455931"));
+            _color_3 = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(_config, "MapColor3", configSections, "#A29A8D"));
+            _color_4 = System.Drawing.ColorTranslator.FromHtml(Util.GetConfigVarFromSections<string>(_config, "MapColor4", configSections, "#C8C8C8"));
 
-            m_mapping = new Dictionary<UUID,Color>();
-            m_mapping.Add(defaultTerrainTexture1, m_color_1);
-            m_mapping.Add(defaultTerrainTexture2, m_color_2);
-            m_mapping.Add(defaultTerrainTexture3, m_color_3);
-            m_mapping.Add(defaultTerrainTexture4, m_color_4);
-            m_mapping.Add(Util.BLANK_TEXTURE_UUID, Color.White);
+            _mapping = new Dictionary<UUID,Color>();
+            _mapping.Add(defaultTerrainTexture1, _color_1);
+            _mapping.Add(defaultTerrainTexture2, _color_2);
+            _mapping.Add(defaultTerrainTexture3, _color_3);
+            _mapping.Add(defaultTerrainTexture4, _color_4);
+            _mapping.Add(Util.BLANK_TEXTURE_UUID, Color.White);
         }
 
         #region Helpers
@@ -180,8 +180,8 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
         //   will wait anyway)
         private Bitmap fetchTexture(UUID id)
         {
-            AssetBase asset = m_scene.AssetService.Get(id.ToString());
-            m_log.DebugFormat("{0} Fetched texture {1}, found: {2}", LogHeader, id, asset != null);
+            AssetBase asset = _scene.AssetService.Get(id.ToString());
+            _log.DebugFormat("{0} Fetched texture {1}, found: {2}", LogHeader, id, asset != null);
             if (asset == null) return null;
 
             ManagedImage managedImage;
@@ -196,15 +196,15 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
             }
             catch (DllNotFoundException)
             {
-                m_log.ErrorFormat("{0} OpenJpeg is not installed correctly on this system.   Asset Data is empty for {1}", LogHeader, id);
+                _log.ErrorFormat("{0} OpenJpeg is not installed correctly on this system.   Asset Data is empty for {1}", LogHeader, id);
             }
             catch (IndexOutOfRangeException)
             {
-                m_log.ErrorFormat("{0} OpenJpeg was unable to encode this.   Asset Data is empty for {1}", LogHeader, id);
+                _log.ErrorFormat("{0} OpenJpeg was unable to encode this.   Asset Data is empty for {1}", LogHeader, id);
             }
             catch (Exception)
             {
-                m_log.ErrorFormat("{0} OpenJpeg was unable to encode this.   Asset Data is empty for {1}", LogHeader, id);
+                _log.ErrorFormat("{0} OpenJpeg was unable to encode this.   Asset Data is empty for {1}", LogHeader, id);
             }
             return null;
 
@@ -236,7 +236,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
         // or the texture couldn't be found
         private Color computeAverageColor(UUID textureID, Color defaultColor) {
             if (textureID == UUID.Zero) return defaultColor; // not set
-            if (m_mapping.ContainsKey(textureID)) return m_mapping[textureID]; // one of the predefined textures
+            if (_mapping.ContainsKey(textureID)) return _mapping[textureID]; // one of the predefined textures
 
             Color color;
 
@@ -244,7 +244,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
             {
                 color = bmp == null ? defaultColor : computeAverageColor(bmp);
                 // store it for future reference
-                m_mapping[textureID] = color;
+                _mapping[textureID] = color;
             }
 
             return color;
@@ -287,13 +287,13 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
         public void TerrainToBitmap(Bitmap mapbmp)
         {
             int tc = Environment.TickCount;
-            m_log.DebugFormat("{0} Generating Maptile Step 1: Terrain", LogHeader);
+            _log.DebugFormat("{0} Generating Maptile Step 1: Terrain", LogHeader);
 
-            ITerrainChannel hm = m_scene.Heightmap;
+            ITerrainChannel hm = _scene.Heightmap;
 
             if (mapbmp.Width != hm.Width || mapbmp.Height != hm.Height)
             {
-                m_log.ErrorFormat("{0} TerrainToBitmap. Passed bitmap wrong dimensions. passed=<{1},{2}>, size=<{3},{4}>",
+                _log.ErrorFormat("{0} TerrainToBitmap. Passed bitmap wrong dimensions. passed=<{1},{2}>, size=<{3},{4}>",
                     "[TEXTURED MAP TILE RENDERER]", mapbmp.Width, mapbmp.Height, hm.Width, hm.Height);
             }
 
@@ -301,13 +301,13 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
             // region needs them. Except on start, when the map is recreated (before anyone connected),
             // and on change of the estate settings (textures and terrain values), when the map should
             // be recreated.
-            RegionSettings settings = m_scene.RegionInfo.RegionSettings;
+            RegionSettings settings = _scene.RegionInfo.RegionSettings;
 
             // the four terrain colors as HSVs for interpolation
-            HSV hsv1 = new HSV(computeAverageColor(settings.TerrainTexture1, m_color_1));
-            HSV hsv2 = new HSV(computeAverageColor(settings.TerrainTexture2, m_color_2));
-            HSV hsv3 = new HSV(computeAverageColor(settings.TerrainTexture3, m_color_3));
-            HSV hsv4 = new HSV(computeAverageColor(settings.TerrainTexture4, m_color_4));
+            HSV hsv1 = new HSV(computeAverageColor(settings.TerrainTexture1, _color_1));
+            HSV hsv2 = new HSV(computeAverageColor(settings.TerrainTexture2, _color_2));
+            HSV hsv3 = new HSV(computeAverageColor(settings.TerrainTexture3, _color_3));
+            HSV hsv4 = new HSV(computeAverageColor(settings.TerrainTexture4, _color_4));
 
             float levelNElow = (float)settings.Elevation1NE;
             float levelNEhigh = (float)settings.Elevation2NE;
@@ -333,7 +333,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                     // Y flip the cordinates for the bitmap: hf origin is lower left, bm origin is upper left
                     int yr = hm.Height - 1 - y;
 
-                    float heightvalue = getHeight(m_scene.Heightmap, x, y);
+                    float heightvalue = getHeight(_scene.Heightmap, x, y);
                     if (float.IsInfinity(heightvalue) || float.IsNaN(heightvalue))
                         heightvalue = 0;
 
@@ -385,7 +385,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                         // Shade the terrain for shadows
                         if (x < hm.Width - 1 && y < hm.Height - 1)
                         {
-                            float hfvaluecompare = getHeight(m_scene.Heightmap, x + 1, y + 1); // light from north-east => look at land height there
+                            float hfvaluecompare = getHeight(_scene.Heightmap, x + 1, y + 1); // light from north-east => look at land height there
                             if (float.IsInfinity(hfvaluecompare) || float.IsNaN(hfvaluecompare))
                                 hfvaluecompare = 0f;
 
@@ -423,12 +423,12 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
                         heightvalue = 100f - heightvalue * 100f / 19f;  // 0 - 19 => 100 - 0
 
-                        mapbmp.SetPixel(x, yr, m_color_water);
+                        mapbmp.SetPixel(x, yr, _color_water);
                     }
                 }
             }
 
-            m_log.Debug("[TEXTURED MAP TILE RENDERER]: Generating Maptile Step 1: Done in " + (Environment.TickCount - tc) + " ms");
+            _log.Debug("[TEXTURED MAP TILE RENDERER]: Generating Maptile Step 1: Done in " + (Environment.TickCount - tc) + " ms");
         }
     }
 }

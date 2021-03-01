@@ -38,20 +38,20 @@ namespace Robust.Tests
     [TestFixture]
     public class InventoryClient
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //                LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly UUID m_userID = new UUID("00000000-0000-0000-0000-333333333333");
-        private UUID m_rootFolderID;
-        private UUID m_notecardsFolder;
-        private UUID m_objectsFolder;
+        private readonly UUID _userID = new UUID("00000000-0000-0000-0000-333333333333");
+        private UUID _rootFolderID;
+        private UUID _notecardsFolder;
+        private UUID _objectsFolder;
 
         [Test]
         public void Inventory_001_CreateInventory()
         {
             TestHelpers.InMethod();
-            XInventoryServicesConnector m_Connector = new XInventoryServicesConnector(DemonServer.Address);
+            XInventoryServicesConnector _Connector = new XInventoryServicesConnector(DemonServer.Address);
 
             // Create an inventory that looks like this:
             //
@@ -66,60 +66,60 @@ namespace Robust.Tests
             //      Link to notecard  -> /Notecards/Notecard 2
             //      Link to Objects folder -> /Objects
 
-            bool success = m_Connector.CreateUserInventory(m_userID);
+            bool success = _Connector.CreateUserInventory(_userID);
             Assert.IsTrue(success, "Failed to create user inventory");
 
-            m_rootFolderID = m_Connector.GetRootFolder(m_userID).ID;
-            Assert.AreNotEqual(m_rootFolderID, UUID.Zero, "Root folder ID must not be UUID.Zero");
+            _rootFolderID = _Connector.GetRootFolder(_userID).ID;
+            Assert.AreNotEqual(_rootFolderID, UUID.Zero, "Root folder ID must not be UUID.Zero");
 
-            InventoryFolderBase of = m_Connector.GetFolderForType(m_userID, FolderType.Object);
+            InventoryFolderBase of = _Connector.GetFolderForType(_userID, FolderType.Object);
             Assert.IsNotNull(of, "Failed to retrieve Objects folder");
-            m_objectsFolder = of.ID;
-            Assert.AreNotEqual(m_objectsFolder, UUID.Zero, "Objects folder ID must not be UUID.Zero");
+            _objectsFolder = of.ID;
+            Assert.AreNotEqual(_objectsFolder, UUID.Zero, "Objects folder ID must not be UUID.Zero");
 
             // Add an object
-            InventoryItemBase item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-00000000000b"), m_userID)
+            InventoryItemBase item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-00000000000b"), _userID)
             {
                 AssetID = UUID.Random(),
                 AssetType = (int)AssetType.Object,
-                Folder = m_objectsFolder,
+                Folder = _objectsFolder,
                 Name = "Some Object",
                 Description = string.Empty
             };
-            success = m_Connector.AddItem(item);
+            success = _Connector.AddItem(item);
             Assert.IsTrue(success, "Failed to add object to inventory");
 
-            InventoryFolderBase ncf = m_Connector.GetFolderForType(m_userID, FolderType.Notecard);
+            InventoryFolderBase ncf = _Connector.GetFolderForType(_userID, FolderType.Notecard);
             Assert.IsNotNull(of, "Failed to retrieve Notecards folder");
-            m_notecardsFolder = ncf.ID;
-            Assert.AreNotEqual(m_notecardsFolder, UUID.Zero, "Notecards folder ID must not be UUID.Zero");
-            m_notecardsFolder = ncf.ID;
+            _notecardsFolder = ncf.ID;
+            Assert.AreNotEqual(_notecardsFolder, UUID.Zero, "Notecards folder ID must not be UUID.Zero");
+            _notecardsFolder = ncf.ID;
 
             // Add a notecard
-            item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-000000000001"), m_userID)
+            item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-000000000001"), _userID)
             {
                 AssetID = UUID.Random(),
                 AssetType = (int)AssetType.Notecard,
-                Folder = m_notecardsFolder,
+                Folder = _notecardsFolder,
                 Name = "Test Notecard 1",
                 Description = string.Empty
             };
-            success = m_Connector.AddItem(item);
+            success = _Connector.AddItem(item);
             Assert.IsTrue(success, "Failed to add Notecard 1 to inventory");
             // Add another notecard
             item.ID = new UUID("20000000-0000-0000-0000-000000000002");
             item.AssetID = new UUID("a0000000-0000-0000-0000-00000000000a");
             item.Name = "Test Notecard 2";
             item.Description = string.Empty;
-            success = m_Connector.AddItem(item);
+            success = _Connector.AddItem(item);
             Assert.IsTrue(success, "Failed to add Notecard 2 to inventory");
 
             // Add a folder
-            InventoryFolderBase folder = new InventoryFolderBase(new UUID("f0000000-0000-0000-0000-00000000000f"), "Test Folder", m_userID, m_rootFolderID)
+            InventoryFolderBase folder = new InventoryFolderBase(new UUID("f0000000-0000-0000-0000-00000000000f"), "Test Folder", _userID, _rootFolderID)
             {
                 Type = (int)FolderType.None
             };
-            success = m_Connector.AddFolder(folder);
+            success = _Connector.AddFolder(folder);
             Assert.IsTrue(success, "Failed to add Test Folder to inventory");
 
             // Add a link to notecard 2 in Test Folder
@@ -129,24 +129,24 @@ namespace Robust.Tests
             item.Folder = folder.ID;
             item.Name = "Link to notecard";
             item.Description = string.Empty;
-            success = m_Connector.AddItem(item);
+            success = _Connector.AddItem(item);
             Assert.IsTrue(success, "Failed to add link to notecard to inventory");
 
             // Add a link to the Objects folder in Test Folder
-            item.AssetID = m_Connector.GetFolderForType(m_userID, FolderType.Object).ID; // use item ID of Objects folder
+            item.AssetID = _Connector.GetFolderForType(_userID, FolderType.Object).ID; // use item ID of Objects folder
             item.ID = new UUID("50000000-0000-0000-0000-000000000005");
             item.AssetType = (int)AssetType.LinkFolder;
             item.Folder = folder.ID;
             item.Name = "Link to Objects folder";
             item.Description = string.Empty;
-            success = m_Connector.AddItem(item);
+            success = _Connector.AddItem(item);
             Assert.IsTrue(success, "Failed to add link to objects folder to inventory");
 
-            InventoryCollection coll = m_Connector.GetFolderContent(m_userID, m_rootFolderID);
+            InventoryCollection coll = _Connector.GetFolderContent(_userID, _rootFolderID);
             Assert.IsNotNull(coll, "Failed to retrieve contents of root folder");
             Assert.Greater(coll.Folders.Count, 0, "Root folder does not have any subfolders");
 
-            coll = m_Connector.GetFolderContent(m_userID, folder.ID);
+            coll = _Connector.GetFolderContent(_userID, folder.ID);
             Assert.IsNotNull(coll, "Failed to retrieve contents of Test Folder");
             Assert.AreEqual(coll.Items.Count + coll.Folders.Count, 2, "Test Folder is expected to have exactly 2 things inside");
 
@@ -156,10 +156,10 @@ namespace Robust.Tests
         public void Inventory_002_MultipleItemsRequest()
         {
             TestHelpers.InMethod();
-            XInventoryServicesConnector m_Connector = new XInventoryServicesConnector(DemonServer.Address);
+            XInventoryServicesConnector _Connector = new XInventoryServicesConnector(DemonServer.Address);
 
             // Prefetch Notecard 1, will be cached from here on
-            InventoryItemBase item = m_Connector.GetItem(m_userID, new UUID("10000000-0000-0000-0000-000000000001"));
+            InventoryItemBase item = _Connector.GetItem(_userID, new UUID("10000000-0000-0000-0000-000000000001"));
             Assert.NotNull(item, "Failed to get Notecard 1");
             Assert.AreEqual("Test Notecard 1", item.Name, "Wrong name for Notecard 1");
 
@@ -167,19 +167,19 @@ namespace Robust.Tests
             uuids[0] = item.ID;
             uuids[1] = new UUID("20000000-0000-0000-0000-000000000002");
 
-            InventoryItemBase[] items = m_Connector.GetMultipleItems(m_userID, uuids);
+            InventoryItemBase[] items = _Connector.GetMultipleItems(_userID, uuids);
             Assert.NotNull(items, "Failed to get multiple items");
             Assert.IsTrue(items.Length == 2, "Requested 2 items, but didn't receive 2 items");
 
             // Now they should both be cached
-            items = m_Connector.GetMultipleItems(m_userID, uuids);
+            items = _Connector.GetMultipleItems(_userID, uuids);
             Assert.NotNull(items, "(Repeat) Failed to get multiple items");
             Assert.IsTrue(items.Length == 2, "(Repeat) Requested 2 items, but didn't receive 2 items");
 
             // This item doesn't exist, but [0] does, and it's cached.
             uuids[1] = new UUID("bb000000-0000-0000-0000-0000000000bb");
             // Fetching should return 2 items, but [1] should be null
-            items = m_Connector.GetMultipleItems(m_userID, uuids);
+            items = _Connector.GetMultipleItems(_userID, uuids);
             Assert.NotNull(items, "(Three times) Failed to get multiple items");
             Assert.IsTrue(items.Length == 2, "(Three times) Requested 2 items, but didn't receive 2 items");
             Assert.AreEqual("Test Notecard 1", items[0].Name, "(Three times) Wrong name for Notecard 1");
@@ -187,14 +187,14 @@ namespace Robust.Tests
 
             // Now both don't exist
             uuids[0] = new UUID("aa000000-0000-0000-0000-0000000000aa");
-            items = m_Connector.GetMultipleItems(m_userID, uuids);
+            items = _Connector.GetMultipleItems(_userID, uuids);
             Assert.Null(items[0], "Request to multiple non-existent items is supposed to return null [0]");
             Assert.Null(items[1], "Request to multiple non-existent items is supposed to return null [1]");
 
             // This item exists, and it's not cached
             uuids[1] = new UUID("b0000000-0000-0000-0000-00000000000b");
             // Fetching should return 2 items, but [0] should be null
-            items = m_Connector.GetMultipleItems(m_userID, uuids);
+            items = _Connector.GetMultipleItems(_userID, uuids);
             Assert.NotNull(items, "(Four times) Failed to get multiple items");
             Assert.IsTrue(items.Length == 2, "(Four times) Requested 2 items, but didn't receive 2 items");
             Assert.AreEqual("Some Object", items[1].Name, "(Four times) Wrong name for Some Object");

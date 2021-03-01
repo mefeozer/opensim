@@ -36,21 +36,15 @@ namespace OpenSim.Region.Framework.Scenes.Animation
     [Serializable]
     public class AnimationSet
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private OpenSim.Framework.Animation m_implicitDefaultAnimation = new OpenSim.Framework.Animation();
-        private OpenSim.Framework.Animation m_defaultAnimation = new OpenSim.Framework.Animation();
-        private List<OpenSim.Framework.Animation> m_animations = new List<OpenSim.Framework.Animation>();
+        private OpenSim.Framework.Animation _implicitDefaultAnimation = new OpenSim.Framework.Animation();
+        private OpenSim.Framework.Animation _defaultAnimation = new OpenSim.Framework.Animation();
+        private List<OpenSim.Framework.Animation> _animations = new List<OpenSim.Framework.Animation>();
 
-        public OpenSim.Framework.Animation DefaultAnimation
-        {
-            get { return m_defaultAnimation; }
-        }
+        public OpenSim.Framework.Animation DefaultAnimation => _defaultAnimation;
 
-        public OpenSim.Framework.Animation ImplicitDefaultAnimation
-        {
-            get { return m_implicitDefaultAnimation; }
-        }
+        public OpenSim.Framework.Animation ImplicitDefaultAnimation => _implicitDefaultAnimation;
 
         public AnimationSet()
         {
@@ -65,12 +59,12 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
         public bool HasAnimation(UUID animID)
         {
-            if (m_defaultAnimation.AnimID == animID)
+            if (_defaultAnimation.AnimID == animID)
                 return true;
 
-            for (int i = 0; i < m_animations.Count; ++i)
+            for (int i = 0; i < _animations.Count; ++i)
             {
-                if (m_animations[i].AnimID == animID)
+                if (_animations[i].AnimID == animID)
                     return true;
             }
 
@@ -79,11 +73,11 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
         public bool Add(UUID animID, int sequenceNum, UUID objectID)
         {
-            lock (m_animations)
+            lock (_animations)
             {
                 if (!HasAnimation(animID))
                 {
-                    m_animations.Add(new OpenSim.Framework.Animation(animID, sequenceNum, objectID));
+                    _animations.Add(new OpenSim.Framework.Animation(animID, sequenceNum, objectID));
                     return true;
                 }
             }
@@ -100,22 +94,22 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// </param>
         public bool Remove(UUID animID, bool allowNoDefault)
         {
-            lock (m_animations)
+            lock (_animations)
             {
-                if (m_defaultAnimation.AnimID == animID)
+                if (_defaultAnimation.AnimID == animID)
                 {
                     if (allowNoDefault)
-                        m_defaultAnimation = new OpenSim.Framework.Animation(UUID.Zero, 1, UUID.Zero);
+                        _defaultAnimation = new OpenSim.Framework.Animation(UUID.Zero, 1, UUID.Zero);
                     else
                         ResetDefaultAnimation();
                 }
                 else
                 {
-                    for (int i = 0; i < m_animations.Count; i++)
+                    for (int i = 0; i < _animations.Count; i++)
                     {
-                        if (m_animations[i].AnimID == animID)
+                        if (_animations[i].AnimID == animID)
                         {
-                            m_animations.RemoveAt(i);
+                            _animations.RemoveAt(i);
                             return true;
                         }
                     }
@@ -127,7 +121,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         public void Clear()
         {
             ResetDefaultAnimation();
-            m_animations.Clear();
+            _animations.Clear();
         }
 
         /// <summary>
@@ -136,10 +130,10 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// </summary>
         public bool SetDefaultAnimation(UUID animID, int sequenceNum, UUID objectID)
         {
-            if (m_defaultAnimation.AnimID != animID)
+            if (_defaultAnimation.AnimID != animID)
             {
-                m_defaultAnimation = new OpenSim.Framework.Animation(animID, sequenceNum, objectID);
-                m_implicitDefaultAnimation = m_defaultAnimation;
+                _defaultAnimation = new OpenSim.Framework.Animation(animID, sequenceNum, objectID);
+                _implicitDefaultAnimation = _defaultAnimation;
                 return true;
             }
             return false;
@@ -148,7 +142,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         // Called from serialization only
         public void SetImplicitDefaultAnimation(UUID animID, int sequenceNum, UUID objectID)
         {
-            m_implicitDefaultAnimation = new OpenSim.Framework.Animation(animID, sequenceNum, objectID);
+            _implicitDefaultAnimation = new OpenSim.Framework.Animation(animID, sequenceNum, objectID);
         }
 
         protected bool ResetDefaultAnimation()
@@ -161,7 +155,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
         /// </summary>
         public bool TrySetDefaultAnimation(string anim, int sequenceNum, UUID objectID)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[ANIMATION SET]: Setting default animation {0}, sequence number {1}, object id {2}",
 //                anim, sequenceNum, objectID);
 
@@ -174,27 +168,27 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
         public void GetArrays(out UUID[] animIDs, out int[] sequenceNums, out UUID[] objectIDs)
         {
-            lock (m_animations)
+            lock (_animations)
             {
-                int j = m_defaultAnimation.AnimID == UUID.Zero ? 0 : 1;
+                int j = _defaultAnimation.AnimID == UUID.Zero ? 0 : 1;
 
-                int defaultSize = m_animations.Count + j;
+                int defaultSize = _animations.Count + j;
                 animIDs = new UUID[defaultSize];
                 sequenceNums = new int[defaultSize];
                 objectIDs = new UUID[defaultSize];
 
-                if (m_defaultAnimation.AnimID != UUID.Zero)
+                if (_defaultAnimation.AnimID != UUID.Zero)
                 {
-                    animIDs[0] = m_defaultAnimation.AnimID;
-                    sequenceNums[0] = m_defaultAnimation.SequenceNum;
-                    objectIDs[0] = m_defaultAnimation.ObjectID;
+                    animIDs[0] = _defaultAnimation.AnimID;
+                    sequenceNums[0] = _defaultAnimation.SequenceNum;
+                    objectIDs[0] = _defaultAnimation.ObjectID;
                 }
 
-                for (int i = 0; i < m_animations.Count; ++i,++j)
+                for (int i = 0; i < _animations.Count; ++i,++j)
                 {
-                    animIDs[j] = m_animations[i].AnimID;
-                    sequenceNums[j] = m_animations[i].SequenceNum;
-                    objectIDs[j] = m_animations[i].ObjectID;
+                    animIDs[j] = _animations[i].AnimID;
+                    sequenceNums[j] = _animations[i].SequenceNum;
+                    objectIDs[j] = _animations[i].ObjectID;
                 }
             }
         }
@@ -204,7 +198,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             OpenSim.Framework.Animation[] theArray = null;
             try
             {
-                theArray = m_animations.ToArray();
+                theArray = _animations.ToArray();
             }
             catch
             {
@@ -219,7 +213,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             int ret = 0;
             foreach (OpenSim.Framework.Animation anim in theArray)
             { 
-                m_animations.Add(anim);
+                _animations.Add(anim);
                 if(anim.SequenceNum > ret)
                     ret = anim.SequenceNum;
             }
@@ -235,7 +229,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
             ret.Add(DefaultAnimation.PackUpdateMessage());
             ret.Add(ImplicitDefaultAnimation.PackUpdateMessage());
 
-            foreach (OpenSim.Framework.Animation anim in m_animations)
+            foreach (OpenSim.Framework.Animation anim in _animations)
                 ret.Add(anim.PackUpdateMessage());
 
             return ret;
@@ -247,15 +241,15 @@ namespace OpenSim.Region.Framework.Scenes.Animation
 
             if (pArray.Count >= 1)
             {
-                m_defaultAnimation = new OpenSim.Framework.Animation((OSDMap)pArray[0]);
+                _defaultAnimation = new OpenSim.Framework.Animation((OSDMap)pArray[0]);
             }
             if (pArray.Count >= 2)
             {
-                m_implicitDefaultAnimation = new OpenSim.Framework.Animation((OSDMap)pArray[1]);
+                _implicitDefaultAnimation = new OpenSim.Framework.Animation((OSDMap)pArray[1]);
             }
             for (int ii = 2; ii < pArray.Count; ii++)
             {
-                m_animations.Add(new OpenSim.Framework.Animation((OSDMap)pArray[ii]));
+                _animations.Add(new OpenSim.Framework.Animation((OSDMap)pArray[ii]));
             }
         }
 
@@ -319,11 +313,11 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                 buff.Append("same");
             else
                 buff.Append(ImplicitDefaultAnimation.ToString());
-            if (m_animations.Count > 0)
+            if (_animations.Count > 0)
             {
                 buff.Append(",anims=");
                 bool firstTime = true;
-                foreach (OpenSim.Framework.Animation anim in m_animations)
+                foreach (OpenSim.Framework.Animation anim in _animations)
                 {
                     if (!firstTime)
                         buff.Append(",");

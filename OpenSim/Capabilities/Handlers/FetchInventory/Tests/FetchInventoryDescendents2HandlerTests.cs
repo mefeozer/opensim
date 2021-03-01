@@ -39,12 +39,12 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
     [TestFixture]
     public class FetchInventoryDescendents2HandlerTests : OpenSimTestCase
     {
-        private UUID m_userID = new UUID("00000000-0000-0000-0000-000000000001");
-        private Scene m_scene;
-        private UUID m_rootFolderID;
-        private int m_rootDescendents;
-        private UUID m_notecardsFolder;
-        private UUID m_objectsFolder;
+        private UUID _userID = new UUID("00000000-0000-0000-0000-000000000001");
+        private Scene _scene;
+        private UUID _rootFolderID;
+        private int _rootDescendents;
+        private UUID _notecardsFolder;
+        private UUID _objectsFolder;
 
         private void Init()
         {
@@ -61,49 +61,49 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             //      Link to notecard  -> /Notecards/Notecard 2
             //      Link to Objects folder -> /Objects
 
-            m_scene = new SceneHelpers().SetupScene();
+            _scene = new SceneHelpers().SetupScene();
 
-            m_scene.InventoryService.CreateUserInventory(m_userID);
+            _scene.InventoryService.CreateUserInventory(_userID);
 
-            m_rootFolderID = m_scene.InventoryService.GetRootFolder(m_userID).ID;
+            _rootFolderID = _scene.InventoryService.GetRootFolder(_userID).ID;
 
-            InventoryFolderBase of = m_scene.InventoryService.GetFolderForType(m_userID, FolderType.Object);
-            m_objectsFolder = of.ID;
+            InventoryFolderBase of = _scene.InventoryService.GetFolderForType(_userID, FolderType.Object);
+            _objectsFolder = of.ID;
 
             // Add an object
-            InventoryItemBase item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-00000000000b"), m_userID)
+            InventoryItemBase item = new InventoryItemBase(new UUID("b0000000-0000-0000-0000-00000000000b"), _userID)
             {
                 AssetID = UUID.Random(),
                 AssetType = (int)AssetType.Object,
-                Folder = m_objectsFolder,
+                Folder = _objectsFolder,
                 Name = "Some Object"
             };
-            m_scene.InventoryService.AddItem(item);
+            _scene.InventoryService.AddItem(item);
 
-            InventoryFolderBase ncf = m_scene.InventoryService.GetFolderForType(m_userID, FolderType.Notecard);
-            m_notecardsFolder = ncf.ID;
+            InventoryFolderBase ncf = _scene.InventoryService.GetFolderForType(_userID, FolderType.Notecard);
+            _notecardsFolder = ncf.ID;
 
             // Add a notecard
-            item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-000000000001"), m_userID)
+            item = new InventoryItemBase(new UUID("10000000-0000-0000-0000-000000000001"), _userID)
             {
                 AssetID = UUID.Random(),
                 AssetType = (int)AssetType.Notecard,
-                Folder = m_notecardsFolder,
+                Folder = _notecardsFolder,
                 Name = "Test Notecard 1"
             };
-            m_scene.InventoryService.AddItem(item);
+            _scene.InventoryService.AddItem(item);
             // Add another notecard
             item.ID = new UUID("20000000-0000-0000-0000-000000000002");
             item.AssetID = new UUID("a0000000-0000-0000-0000-00000000000a");
             item.Name = "Test Notecard 2";
-            m_scene.InventoryService.AddItem(item);
+            _scene.InventoryService.AddItem(item);
 
             // Add a folder
-            InventoryFolderBase folder = new InventoryFolderBase(new UUID("f0000000-0000-0000-0000-00000000000f"), "Test Folder", m_userID, m_rootFolderID)
+            InventoryFolderBase folder = new InventoryFolderBase(new UUID("f0000000-0000-0000-0000-00000000000f"), "Test Folder", _userID, _rootFolderID)
             {
                 Type = (short)FolderType.None
             };
-            m_scene.InventoryService.AddFolder(folder);
+            _scene.InventoryService.AddFolder(folder);
 
             // Add a link to notecard 2 in Test Folder
             item.AssetID = item.ID; // use item ID of notecard 2
@@ -111,19 +111,19 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
             item.AssetType = (int)AssetType.Link;
             item.Folder = folder.ID;
             item.Name = "Link to notecard";
-            m_scene.InventoryService.AddItem(item);
+            _scene.InventoryService.AddItem(item);
 
             // Add a link to the Objects folder in Test Folder
-            item.AssetID = m_scene.InventoryService.GetFolderForType(m_userID, FolderType.Object).ID; // use item ID of Objects folder
+            item.AssetID = _scene.InventoryService.GetFolderForType(_userID, FolderType.Object).ID; // use item ID of Objects folder
             item.ID = new UUID("50000000-0000-0000-0000-000000000005");
             item.AssetType = (int)AssetType.LinkFolder;
             item.Folder = folder.ID;
             item.Name = "Link to Objects folder";
-            m_scene.InventoryService.AddItem(item);
+            _scene.InventoryService.AddItem(item);
 
-            InventoryCollection coll = m_scene.InventoryService.GetFolderContent(m_userID, m_rootFolderID);
-            m_rootDescendents = coll.Items.Count + coll.Folders.Count;
-            Console.WriteLine("Number of descendents: " + m_rootDescendents);
+            InventoryCollection coll = _scene.InventoryService.GetFolderContent(_userID, _rootFolderID);
+            _rootDescendents = coll.Items.Count + coll.Folders.Count;
+            Console.WriteLine("Number of descendents: " + _rootDescendents);
         }
 
         private string dorequest(FetchInvDescHandler handler, string request)
@@ -146,21 +146,21 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
 
             Init();
 
-            FetchInvDescHandler handler = new FetchInvDescHandler(m_scene.InventoryService, null, m_scene);
+            FetchInvDescHandler handler = new FetchInvDescHandler(_scene.InventoryService, null, _scene);
 
             string request = "<llsd><map><key>folders</key><array><map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
-            request += m_rootFolderID;
+            request += _rootFolderID;
             request += "</uuid><key>owner_id</key><uuid>";
-            request += m_userID.ToString();
+            request += _userID.ToString();
             request += "</uuid><key>sort_order</key><integer>1</integer></map></array></map></llsd>";
 
             string llsdresponse = dorequest(handler, request);
 
             Assert.That(llsdresponse != null, Is.True, "Incorrect null response");
             Assert.That(!string.IsNullOrEmpty(llsdresponse), Is.True, "Incorrect empty response");
-            Assert.That(llsdresponse.Contains(m_userID.ToString()), Is.True, "Response should contain userID");
+            Assert.That(llsdresponse.Contains(_userID.ToString()), Is.True, "Response should contain userID");
 
-            string descendents = "descendents</key><integer>" + m_rootDescendents + "</integer>";
+            string descendents = "descendents</key><integer>" + _rootDescendents + "</integer>";
             Assert.That(llsdresponse.Contains(descendents), Is.True, "Incorrect number of descendents");
             Console.WriteLine(llsdresponse);
         }
@@ -170,21 +170,21 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
         {
             TestHelpers.InMethod();
 
-            FetchInvDescHandler handler = new FetchInvDescHandler(m_scene.InventoryService, null, m_scene);
+            FetchInvDescHandler handler = new FetchInvDescHandler(_scene.InventoryService, null, _scene);
 
             string request = "<llsd><map><key>folders</key><array>";
             request += "<map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
-            request += m_rootFolderID;
+            request += _rootFolderID;
             request += "</uuid><key>owner_id</key><uuid>00000000-0000-0000-0000-000000000001</uuid><key>sort_order</key><integer>1</integer></map>";
             request += "<map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
-            request += m_notecardsFolder;
+            request += _notecardsFolder;
             request += "</uuid><key>owner_id</key><uuid>00000000-0000-0000-0000-000000000001</uuid><key>sort_order</key><integer>1</integer></map>";
             request += "</array></map></llsd>";
 
             string llsdresponse = dorequest(handler, request);
             Console.WriteLine(llsdresponse);
 
-            string descendents = "descendents</key><integer>" + m_rootDescendents + "</integer>";
+            string descendents = "descendents</key><integer>" + _rootDescendents + "</integer>";
             Assert.That(llsdresponse.Contains(descendents), Is.True, "Incorrect number of descendents for root folder");
             descendents = "descendents</key><integer>2</integer>";
             Assert.That(llsdresponse.Contains(descendents), Is.True, "Incorrect number of descendents for Notecard folder");
@@ -198,7 +198,7 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
         {
             TestHelpers.InMethod();
 
-            FetchInvDescHandler handler = new FetchInvDescHandler(m_scene.InventoryService, null, m_scene);
+            FetchInvDescHandler handler = new FetchInvDescHandler(_scene.InventoryService, null, _scene);
 
             string request = "<llsd><map><key>folders</key><array><map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
             request += "f0000000-0000-0000-0000-00000000000f";
@@ -240,28 +240,28 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
         {
             TestHelpers.InMethod();
 
-            FetchInvDescHandler handler = new FetchInvDescHandler(m_scene.InventoryService, null, m_scene);
+            FetchInvDescHandler handler = new FetchInvDescHandler(_scene.InventoryService, null, _scene);
 
             string request = "<llsd><map><key>folders</key><array>";
             request += "<map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
-            request += m_rootFolderID;
+            request += _rootFolderID;
             request += "</uuid><key>owner_id</key><uuid>00000000-0000-0000-0000-000000000000</uuid><key>sort_order</key><integer>1</integer></map>";
             request += "<map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
-            request += m_notecardsFolder;
+            request += _notecardsFolder;
             request += "</uuid><key>owner_id</key><uuid>00000000-0000-0000-0000-000000000000</uuid><key>sort_order</key><integer>1</integer></map>";
             request += "<map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
-            request += m_rootFolderID;
+            request += _rootFolderID;
             request += "</uuid><key>owner_id</key><uuid>00000000-0000-0000-0000-000000000000</uuid><key>sort_order</key><integer>1</integer></map>";
             request += "<map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
-            request += m_notecardsFolder;
+            request += _notecardsFolder;
             request += "</uuid><key>owner_id</key><uuid>00000000-0000-0000-0000-000000000000</uuid><key>sort_order</key><integer>1</integer></map>";
             request += "</array></map></llsd>";
 
             string llsdresponse = dorequest(handler, request);
             Console.WriteLine(llsdresponse);
 
-            string root_folder = "<key>folder_id</key><uuid>" + m_rootFolderID + "</uuid>";
-            string notecards_folder = "<key>folder_id</key><uuid>" + m_notecardsFolder + "</uuid>";
+            string root_folder = "<key>folder_id</key><uuid>" + _rootFolderID + "</uuid>";
+            string notecards_folder = "<key>folder_id</key><uuid>" + _notecardsFolder + "</uuid>";
 
             Assert.That(llsdresponse.Contains(root_folder), "Missing root folder");
             Assert.That(llsdresponse.Contains(notecards_folder), "Missing notecards folder");
@@ -279,7 +279,7 @@ namespace OpenSim.Capabilities.Handlers.FetchInventory.Tests
 
             Init();
 
-            FetchInvDescHandler handler = new FetchInvDescHandler(m_scene.InventoryService, null, m_scene);
+            FetchInvDescHandler handler = new FetchInvDescHandler(_scene.InventoryService, null, _scene);
 
             string request = "<llsd><map><key>folders</key><array><map><key>fetch_folders</key><integer>1</integer><key>fetch_items</key><boolean>1</boolean><key>folder_id</key><uuid>";
             request += UUID.Zero;

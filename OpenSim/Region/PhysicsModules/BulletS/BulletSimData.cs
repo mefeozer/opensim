@@ -67,7 +67,7 @@ public class BulletBody
     public CollisionType collisionType;
 
     public virtual void Clear() { }
-    public virtual bool HasPhysicalBody { get { return false; } }
+    public virtual bool HasPhysicalBody => false;
 
     // Apply the specificed collision mask into the physical world
     public virtual bool ApplyCollisionMask(BSScene physicsScene)
@@ -81,10 +81,7 @@ public class BulletBody
     }
 
     // Used for log messages for a unique display of the memory/object allocated to this instance
-    public virtual string AddrString
-    {
-        get { return "unknown"; }
-    }
+    public virtual string AddrString => "unknown";
 
     public override string ToString()
     {
@@ -114,7 +111,7 @@ public class BulletShape
     public bool isNativeShape;
 
     public virtual void Clear() { }
-    public virtual bool HasPhysicalShape { get { return false; } }
+    public virtual bool HasPhysicalShape => false;
 
     // Make another reference to this physical object.
     public virtual BulletShape Clone() { return new BulletShape(); }
@@ -123,10 +120,7 @@ public class BulletShape
     public virtual bool ReferenceSame(BulletShape xx) { return false; }
 
     // Used for log messages for a unique display of the memory/object allocated to this instance
-    public virtual string AddrString
-    {
-        get { return "unknown"; }
-    }
+    public virtual string AddrString => "unknown";
 
     public override string ToString()
     {
@@ -148,13 +142,10 @@ public class BulletShape
 public class BulletConstraint
 {
     public virtual void Clear() { }
-    public virtual bool HasPhysicalConstraint { get { return false; } }
+    public virtual bool HasPhysicalConstraint => false;
 
     // Used for log messages for a unique display of the memory/object allocated to this instance
-    public virtual string AddrString
-    {
-        get { return "unknown"; }
-    }
+    public virtual string AddrString => "unknown";
 }
 
 // An allocated HeightMapThing which holds various heightmap info.

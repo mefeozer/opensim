@@ -43,49 +43,49 @@ namespace OpenSim.Region.OptionalModules.PhysicsParameters
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "PhysicsParameters")]
     public class PhysicsParameters : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 //        private static string LogHeader = "[PHYSICS PARAMETERS]";
 
-        private readonly List<Scene> m_scenes = new List<Scene>();
-        private static bool m_commandsLoaded = false;
+        private readonly List<Scene> _scenes = new List<Scene>();
+        private static bool _commandsLoaded = false;
 
         #region ISharedRegionModule
-        public string Name { get { return "Runtime Physics Parameter Module"; } }
+        public string Name => "Runtime Physics Parameter Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-            // m_log.DebugFormat("{0}: INITIALIZED MODULE", LogHeader);
+            // _log.DebugFormat("{0}: INITIALIZED MODULE", LogHeader);
         }
 
         public void PostInitialise()
         {
-            // m_log.DebugFormat("[{0}: POST INITIALIZED MODULE", LogHeader);
+            // _log.DebugFormat("[{0}: POST INITIALIZED MODULE", LogHeader);
             InstallInterfaces();
         }
 
         public void Close()
         {
-            // m_log.DebugFormat("{0}: CLOSED MODULE", LogHeader);
+            // _log.DebugFormat("{0}: CLOSED MODULE", LogHeader);
         }
 
         public void AddRegion(Scene scene)
         {
-            // m_log.DebugFormat("{0}: REGION {1} ADDED", LogHeader, scene.RegionInfo.RegionName);
-            m_scenes.Add(scene);
+            // _log.DebugFormat("{0}: REGION {1} ADDED", LogHeader, scene.RegionInfo.RegionName);
+            _scenes.Add(scene);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            // m_log.DebugFormat("{0}: REGION {1} REMOVED", LogHeader, scene.RegionInfo.RegionName);
-            if (m_scenes.Contains(scene))
-                m_scenes.Remove(scene);
+            // _log.DebugFormat("{0}: REGION {1} REMOVED", LogHeader, scene.RegionInfo.RegionName);
+            if (_scenes.Contains(scene))
+                _scenes.Remove(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            // m_log.DebugFormat("{0}: REGION {1} LOADED", LogHeader, scene.RegionInfo.RegionName);
+            // _log.DebugFormat("{0}: REGION {1} LOADED", LogHeader, scene.RegionInfo.RegionName);
         }
         #endregion INonSharedRegionModule
 
@@ -94,7 +94,7 @@ namespace OpenSim.Region.OptionalModules.PhysicsParameters
         private const string listInvocation = "physics list";
         private void InstallInterfaces()
         {
-            if (!m_commandsLoaded)
+            if (!_commandsLoaded)
             {
                 MainConsole.Instance.Commands.AddCommand(
                     "Regions", false, "physics set",
@@ -114,7 +114,7 @@ namespace OpenSim.Region.OptionalModules.PhysicsParameters
                     "List settable physics parameters",
                     ProcessPhysicsList);
 
-                m_commandsLoaded = true;
+                _commandsLoaded = true;
             }
         }
 
@@ -251,13 +251,13 @@ namespace OpenSim.Region.OptionalModules.PhysicsParameters
 
         private void WriteOut(string msg, params object[] args)
         {
-            // m_log.InfoFormat(msg, args);
+            // _log.InfoFormat(msg, args);
             MainConsole.Instance.Output(msg, args);
         }
 
         private void WriteError(string msg, params object[] args)
         {
-            // m_log.ErrorFormat(msg, args);
+            // _log.ErrorFormat(msg, args);
             MainConsole.Instance.Output(msg, args);
         }
     }

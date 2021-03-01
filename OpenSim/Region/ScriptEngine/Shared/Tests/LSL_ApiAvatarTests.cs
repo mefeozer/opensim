@@ -38,8 +38,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
     [TestFixture]
     public class LSL_ApiAvatarTests : OpenSimTestCase
     {
-        protected Scene m_scene;
-        protected XEngine.XEngine m_engine;
+        protected Scene _scene;
+        protected XEngine.XEngine _engine;
 
         [SetUp]
         public override void SetUp()
@@ -55,12 +55,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             config.Set("AllowOSFunctions", "true");
             config.Set("OSFunctionThreatLevel", "Severe");
 
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, initConfigSource);
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, initConfigSource);
 
-            m_engine = new XEngine.XEngine();
-            m_engine.Initialise(initConfigSource);
-            m_engine.AddRegion(m_scene);
+            _engine = new XEngine.XEngine();
+            _engine.Initialise(initConfigSource);
+            _engine.AddRegion(_scene);
         }
 
         /// <summary>
@@ -79,13 +79,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             UUID userId = TestHelpers.ParseTail(0x1);
 
-            SceneObjectPart part = SceneHelpers.AddSceneObject(m_scene).RootPart;
+            SceneObjectPart part = SceneHelpers.AddSceneObject(_scene).RootPart;
             part.RotationOffset = new Quaternion(0.7071068f, 0, 0, 0.7071068f);
 
             LSL_Api apiGrp1 = new LSL_Api();
-            apiGrp1.Initialize(m_engine, part, null);
+            apiGrp1.Initialize(_engine, part, null);
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, userId);
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, userId);
 
             // sp has to be less than 10 meters away from 0, 0, 0 (default part position)
             Vector3 startPos = new Vector3(3, 2, 1);
@@ -103,7 +103,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
                 Assert.That(sp.OffsetPosition, Is.EqualTo(newPos));
 
-                m_scene.Update(1);
+                _scene.Update(1);
                 Assert.That(entityUpdates, Is.EqualTo(1));
             }
 
@@ -114,7 +114,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
                 Assert.That(sp.OffsetPosition, Is.EqualTo(newPos));
 
-                m_scene.Update(1);
+                _scene.Update(1);
                 Assert.That(entityUpdates, Is.EqualTo(2));
             }
 
@@ -126,7 +126,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 Assert.That(
                     sp.Rotation, new QuaternionToleranceConstraint(part.GetWorldRotation() * newRot, 0.000001));
 
-                m_scene.Update(1);
+                _scene.Update(1);
                 Assert.That(entityUpdates, Is.EqualTo(3));
             }
 
@@ -138,7 +138,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 Assert.That(
                     sp.Rotation, new QuaternionToleranceConstraint(newRot, 0.000001));
 
-                m_scene.Update(1);
+                _scene.Update(1);
                 Assert.That(entityUpdates, Is.EqualTo(4));
             }
 */

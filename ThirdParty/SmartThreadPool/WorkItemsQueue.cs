@@ -48,25 +48,12 @@ namespace Amib.Threading.Internal
         /// <summary>
         /// Returns the current number of work items in the queue
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return _workItems.Count;
-            }
-        }
+        public int Count => _workItems.Count;
 
         /// <summary>
         /// Returns the current number of waiters
         /// </summary>
-        public int WaitersCount
-        {
-            get
-            {
-                return _waitersCount;
-            }
-        }
-
+        public int WaitersCount => _waitersCount;
 
         #endregion
 
@@ -424,18 +411,9 @@ namespace Amib.Threading.Internal
 
             #region Public methods
 
-            public WaitHandle WaitHandle
-            {
-                get { return _waitHandle; }
-            }
+            public WaitHandle WaitHandle => _waitHandle;
 
-            public WorkItem WorkItem
-            {
-                get
-                {
-                    return _workItem;
-                }
-            }
+            public WorkItem WorkItem => _workItem;
 
             /// <summary>
             /// Signal the waiter that it got a work item.

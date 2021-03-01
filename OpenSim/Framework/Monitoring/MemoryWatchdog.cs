@@ -36,32 +36,32 @@ namespace OpenSim.Framework.Monitoring
     /// </summary>
     public static class MemoryWatchdog
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Is this watchdog active?
         /// </summary>
         public static bool Enabled
         {
-            get { return m_enabled; }
+            get => _enabled;
             set
             {
-//                m_log.DebugFormat("[MEMORY WATCHDOG]: Setting MemoryWatchdog.Enabled to {0}", value);
+//                _log.DebugFormat("[MEMORY WATCHDOG]: Setting MemoryWatchdog.Enabled to {0}", value);
 
-                if (value && !m_enabled)
+                if (value && !_enabled)
                     UpdateLastRecord(GC.GetTotalMemory(false), Util.EnvironmentTickCount());
 
-                m_enabled = value;
+                _enabled = value;
             }
         }
-        private static bool m_enabled;
+        private static bool _enabled;
 
         /// <summary>
         /// Average heap allocation rate in bytes per millisecond.
         /// </summary>
         public static double AverageHeapAllocationRate
         {
-            get { if (m_samples.Count > 0) return m_samples.Average(); else return 0; }
+            get { if (_samples.Count > 0) return _samples.Average(); else return 0; }
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace OpenSim.Framework.Monitoring
         /// </summary>
         public static double LastHeapAllocationRate
         {
-            get { if (m_samples.Count > 0) return m_samples.Last(); else return 0; }
+            get { if (_samples.Count > 0) return _samples.Last(); else return 0; }
         }
 
         /// <summary>
@@ -79,53 +79,53 @@ namespace OpenSim.Framework.Monitoring
         /// At the moment this corresponds to 1 minute since the sampling rate is every 2.5 seconds as triggered from
         /// the main Watchdog.
         /// </remarks>
-        private static readonly int m_maxSamples = 24;
+        private static readonly int _maxSamples = 24;
 
         /// <summary>
         /// Time when the watchdog was last updated.
         /// </summary>
-        private static int m_lastUpdateTick;
+        private static int _lastUpdateTick;
 
         /// <summary>
         /// Memory used at time of last watchdog update.
         /// </summary>
-        private static long m_lastUpdateMemory;
+        private static long _lastUpdateMemory;
 
         /// <summary>
         /// Memory churn rate per millisecond.
         /// </summary>
-//        private static double m_churnRatePerMillisecond;
+//        private static double _churnRatePerMillisecond;
 
         /// <summary>
         /// Historical samples for calculating moving average.
         /// </summary>
-        private static readonly Queue<double> m_samples = new Queue<double>(m_maxSamples);
+        private static readonly Queue<double> _samples = new Queue<double>(_maxSamples);
 
         public static void Update()
         {
             int now = Util.EnvironmentTickCount();
             long memoryNow = GC.GetTotalMemory(false);
-            long memoryDiff = memoryNow - m_lastUpdateMemory;
+            long memoryDiff = memoryNow - _lastUpdateMemory;
 
-            if (m_samples.Count >= m_maxSamples)
-                    m_samples.Dequeue();
+            if (_samples.Count >= _maxSamples)
+                    _samples.Dequeue();
 
-            double elapsed = Util.EnvironmentTickCountSubtract(now, m_lastUpdateTick);
+            double elapsed = Util.EnvironmentTickCountSubtract(now, _lastUpdateTick);
 
             // This should never happen since it's not useful for updates to occur with no time elapsed, but
             // protect ourselves from a divide-by-zero just in case.
             if (elapsed == 0)
                 return;
 
-            m_samples.Enqueue(memoryDiff / (double)elapsed);
+            _samples.Enqueue(memoryDiff / (double)elapsed);
 
             UpdateLastRecord(memoryNow, now);
         }
 
         private static void UpdateLastRecord(long memoryNow, int timeNow)
         {
-            m_lastUpdateMemory = memoryNow;
-            m_lastUpdateTick = timeNow;
+            _lastUpdateMemory = memoryNow;
+            _lastUpdateTick = timeNow;
         }
     }
 }

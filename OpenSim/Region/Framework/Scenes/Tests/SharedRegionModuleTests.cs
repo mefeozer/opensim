@@ -88,7 +88,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             ri.InternalEndPoint = new IPEndPoint(0, 0);
 
             MockRegionModulesControllerPlugin rmcp = new MockRegionModulesControllerPlugin();
-            sim.m_plugins = new List<IApplicationPlugin>() { rmcp };
+            sim._plugins = new List<IApplicationPlugin>() { rmcp };
             reg.RegisterInterface<IRegionModulesController>(rmcp);
 
             // XXX: Have to initialize directly for now
@@ -138,9 +138,9 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         // FIXME: Should really use MethodInfo
         public List<string> CallOrder = new List<string>();
 
-        public string Name { get { return "TestSharedRegion"; } }
+        public string Name => "TestSharedRegion";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void PostInitialise()
         {
@@ -176,19 +176,19 @@ namespace OpenSim.Region.Framework.Scenes.Tests
     class MockRegionModulesControllerPlugin : IRegionModulesController, IApplicationPlugin
     {
         // List of shared module instances, for adding to Scenes
-        private readonly List<ISharedRegionModule> m_sharedInstances = new List<ISharedRegionModule>();
+        private readonly List<ISharedRegionModule> _sharedInstances = new List<ISharedRegionModule>();
 
         // Config access
-        private OpenSimBase m_openSim;
+        private OpenSimBase _openSim;
 
-        public string Version { get { return "0"; } }
-        public string Name { get { return "MockRegionModulesControllerPlugin"; } }
+        public string Version => "0";
+        public string Name => "MockRegionModulesControllerPlugin";
 
         public void Initialise() {}
 
         public void Initialise(OpenSimBase sim)
         {
-            m_openSim = sim;
+            _openSim = sim;
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         /// </summary>
         public void PostInitialise()
         {
-            foreach (ISharedRegionModule module in m_sharedInstances)
+            foreach (ISharedRegionModule module in _sharedInstances)
                 module.PostInitialise();
         }
 
@@ -204,7 +204,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             List<ISharedRegionModule> sharedlist = new List<ISharedRegionModule>();
 
-            foreach (ISharedRegionModule module in m_sharedInstances)
+            foreach (ISharedRegionModule module in _sharedInstances)
             {
                 module.AddRegion(scene);
                 scene.AddRegionModule(module.Name, module);
@@ -222,7 +222,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         {
             foreach (IRegionModuleBase module in scene.RegionModules.Values)
             {
-//                m_log.DebugFormat("[REGIONMODULE]: Removing scene {0} from module {1}",
+//                _log.DebugFormat("[REGIONMODULE]: Removing scene {0} from module {1}",
 //                                  scene.RegionInfo.RegionName, module.Name);
                 module.RemoveRegion(scene);
             }
@@ -232,17 +232,17 @@ namespace OpenSim.Region.Framework.Scenes.Tests
 
         public void AddNode(ISharedRegionModule module)
         {
-            m_sharedInstances.Add(module);
-            module.Initialise(m_openSim.ConfigSource.Source);
+            _sharedInstances.Add(module);
+            module.Initialise(_openSim.ConfigSource.Source);
         }
 
         public void Dispose()
         {
             // We expect that all regions have been removed already
-            while (m_sharedInstances.Count > 0)
+            while (_sharedInstances.Count > 0)
             {
-                m_sharedInstances[0].Close();
-                m_sharedInstances.RemoveAt(0);
+                _sharedInstances[0].Close();
+                _sharedInstances.RemoveAt(0);
             }
         }
     }

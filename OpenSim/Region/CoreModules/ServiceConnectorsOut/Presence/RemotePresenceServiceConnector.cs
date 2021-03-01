@@ -37,14 +37,11 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "RemotePresenceServicesConnector")]
     public class RemotePresenceServicesConnector : BasePresenceServiceConnector, ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region ISharedRegionModule
 
-        public string Name
-        {
-            get { return "RemotePresenceServicesConnector"; }
-        }
+        public string Name => "RemotePresenceServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -54,13 +51,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence
                 string name = moduleConfig.GetString("PresenceServices", "");
                 if (name == Name)
                 {
-                    m_PresenceService = new PresenceServicesConnector(source);
+                    _PresenceService = new PresenceServicesConnector(source);
 
-                    m_Enabled = true;
+                    _Enabled = true;
 
-                    m_PresenceDetector = new PresenceDetector(this);
+                    _PresenceDetector = new PresenceDetector(this);
 
-                    m_log.Info("[REMOTE PRESENCE CONNECTOR]: Remote presence enabled");
+                    _log.Info("[REMOTE PRESENCE CONNECTOR]: Remote presence enabled");
                 }
             }
         }

@@ -63,9 +63,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
     public class ODEMeshWorker
     {
-        private readonly ILog m_log;
-        private readonly ODEScene m_scene;
-        private readonly IMesher m_mesher;
+        private readonly ILog _log;
+        private readonly ODEScene _scene;
+        private readonly IMesher _mesher;
 
         public bool meshSculptedPrim = true;
         public float meshSculptLOD = 32;
@@ -74,15 +74,15 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         //private static ObjectJobEngine<ODEPhysRepData> workQueue;
         private ObjectJobEngine workQueue;
-        private bool m_running;
+        private bool _running;
 
-        private readonly object m_threadLock = new object();
+        private readonly object _threadLock = new object();
 
         public ODEMeshWorker(ODEScene pScene, ILog pLog, IMesher pMesher, IConfig pConfig)
         {
-            m_scene = pScene;
-            m_log = pLog;
-            m_mesher = pMesher;
+            _scene = pScene;
+            _log = pLog;
+            _mesher = pMesher;
 
             if (pConfig != null)
             {
@@ -91,9 +91,9 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 MinSizeToMeshmerize =  pConfig.GetFloat("mesh_min_size", MinSizeToMeshmerize);
                 MeshSculptphysicalLOD = pConfig.GetFloat("mesh_physical_lod", MeshSculptphysicalLOD);
             }
-            m_running = true;
+            _running = true;
             Util.FireAndForget(DoCacheExpire, null, "OdeCacheExpire", false);
-            lock(m_threadLock)
+            lock(_threadLock)
             {
                 if(workQueue == null)
                     workQueue = new ObjectJobEngine(DoWork, "OdeMeshWorker");
@@ -102,7 +102,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         private void DoCacheExpire(object o)
         {
-            m_mesher.ExpireFileCache();
+            _mesher.ExpireFileCache();
         }
 
         private void Enqueue(ODEPhysRepData rep)
@@ -113,7 +113,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         private void DoWork(object rep)
         {
             ODEPhysRepData nextRep = rep as ODEPhysRepData;
-            if (m_running && nextRep != null && m_scene.haveActor(nextRep.actor))
+            if (_running && nextRep != null && _scene.haveActor(nextRep.actor))
             {
                 switch (nextRep.comand)
                 {
@@ -121,8 +121,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     case meshWorkerCmnds.changeshapetype:
                     case meshWorkerCmnds.changesize:
                         GetMesh(nextRep);
-                        if (CreateActorPhysRep(nextRep) && m_scene.haveActor(nextRep.actor))
-                            m_scene.AddChange(nextRep.actor, changes.PhysRepData, nextRep);
+                        if (CreateActorPhysRep(nextRep) && _scene.haveActor(nextRep.actor))
+                            _scene.AddChange(nextRep.actor, changes.PhysRepData, nextRep);
                         break;
                     case meshWorkerCmnds.getmesh:
                         DoRepDataGetMesh(nextRep);
@@ -135,7 +135,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
         {
             try
             {
-                m_running = false;
+                _running = false;
                 workQueue.Dispose();
                 workQueue = null;
             }
@@ -157,7 +157,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             CheckMesh(repData);
             CalcVolumeData(repData);
-            m_scene.AddChange(actor, changes.PhysRepData, repData);
+            _scene.AddChange(actor, changes.PhysRepData, repData);
             return;
         }
 
@@ -174,7 +174,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             CheckMesh(repData);
             CalcVolumeData(repData);
-            m_scene.AddChange(actor, changes.AddPhysRep, repData);
+            _scene.AddChange(actor, changes.AddPhysRep, repData);
             return repData;
         }
 
@@ -218,12 +218,12 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                 if (vertexCount == 0 || indexCount == 0)
                 {
-                    m_log.WarnFormat("[PHYSICS]: Invalid mesh data on prim {0} mesh UUID {1}",
+                    _log.WarnFormat("[PHYSICS]: Invalid mesh data on prim {0} mesh UUID {1}",
                         repData.actor.Name, repData.pbs.SculptTexture.ToString());
                     repData.meshState = MeshState.MeshFailed;
                     repData.hasOBB = false;
                     repData.mesh = null;
-                    m_scene.mesher.ReleaseMesh(mesh);
+                    _scene.mesher.ReleaseMesh(mesh);
                 }
                 else
                 {
@@ -239,7 +239,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         public void AssetLoaded(ODEPhysRepData repData)
         {
-            if (m_scene.haveActor(repData.actor))
+            if (_scene.haveActor(repData.actor))
             {
                 if (needsMeshing(repData)) // no need for pbs now?
                 {
@@ -270,14 +270,14 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if (repData.meshState != MeshState.needAsset)
             {
                 CreateActorPhysRep(repData);
-                m_scene.AddChange(repData.actor, changes.PhysRepData, repData);
+                _scene.AddChange(repData.actor, changes.PhysRepData, repData);
                 return;
             }
 
-            RequestAssetDelegate assetProvider = m_scene.RequestAssetMethod;
+            RequestAssetDelegate assetProvider = _scene.RequestAssetMethod;
             if (assetProvider == null)
                 return;
-            ODEAssetRequest asr = new ODEAssetRequest(this, assetProvider, repData, m_log);
+            ODEAssetRequest asr = new ODEAssetRequest(this, assetProvider, repData, _log);
         }
 
 
@@ -437,7 +437,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             byte shapetype = repData.shapetype;
             bool convex = shapetype == 2;
 
-            mesh = m_mesher.GetMesh(actor.Name, pbs, size, clod, true, convex);
+            mesh = _mesher.GetMesh(actor.Name, pbs, size, clod, true, convex);
 
             if (mesh == null)
             {
@@ -456,7 +456,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 else
                 {
                     repData.meshState = MeshState.needMesh;
-                    mesh = m_mesher.CreateMesh(actor.Name, pbs, size, clod, true, convex, true);
+                    mesh = _mesher.CreateMesh(actor.Name, pbs, size, clod, true, convex, true);
                     if (mesh == null)
                     {
                         repData.meshState = MeshState.MeshFailed;
@@ -524,7 +524,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     clod = (int)LevelOfDetail.Low;
             }
 
-            mesh = m_mesher.CreateMesh(actor.Name, pbs, size, clod, true, convex, true);
+            mesh = _mesher.CreateMesh(actor.Name, pbs, size, clod, true, convex, true);
 
             if (mesh == null)
             {
@@ -891,15 +891,15 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
     public class ODEAssetRequest
     {
-        readonly ODEMeshWorker m_worker;
-        private readonly ILog m_log;
+        readonly ODEMeshWorker _worker;
+        private readonly ILog _log;
         readonly ODEPhysRepData repData;
 
         public ODEAssetRequest(ODEMeshWorker pWorker, RequestAssetDelegate provider,
             ODEPhysRepData pRepData, ILog plog)
         {
-            m_worker = pWorker;
-            m_log = plog;
+            _worker = pWorker;
+            _log = plog;
             repData = pRepData;
 
             repData.meshState = MeshState.AssetFailed;
@@ -935,14 +935,14 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 //                    asset.Data.CopyTo(repData.pbs.SculptData,0);
                     repData.pbs.SculptData = asset.Data;
                     repData.meshState = MeshState.AssetOK;
-                    m_worker.AssetLoaded(repData);
+                    _worker.AssetLoaded(repData);
                 }
                 else
-                    m_log.WarnFormat("[PHYSICS]: asset provider returned invalid mesh data for prim {0} asset UUID {1}.",
+                    _log.WarnFormat("[PHYSICS]: asset provider returned invalid mesh data for prim {0} asset UUID {1}.",
                         repData.actor.Name, asset.ID.ToString());
             }
             else
-                m_log.WarnFormat("[PHYSICS]: asset provider returned null asset for mesh of prim {0}.",
+                _log.WarnFormat("[PHYSICS]: asset provider returned null asset for mesh of prim {0}.",
                     repData.actor.Name);
         }
     }

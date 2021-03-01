@@ -121,14 +121,14 @@ state another_state
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x;
     }
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(0);" +
                 "\n        }\n";
@@ -147,7 +147,7 @@ state another_state
             // (MONO at least).
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x;
         x;
@@ -155,7 +155,7 @@ state another_state
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(0);" +
                 "\n            ;" +
@@ -173,7 +173,7 @@ state another_state
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         string y;
         integer x = 14;
@@ -182,7 +182,7 @@ state another_state
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLString y = new LSL_Types.LSLString(\"\");" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(14);" +
@@ -201,7 +201,7 @@ state another_state
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer y = -3;
         integer x = 14 + 6;
@@ -211,7 +211,7 @@ state another_state
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)\n" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)\n" +
                 "        {\n" +
                 "            LSL_Types.LSLInteger y = -new LSL_Types.LSLInteger(3);\n" +
                 "            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(14) + new LSL_Types.LSLInteger(6);\n" +
@@ -231,20 +231,20 @@ state another_state
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         llOwnerSay(""Testing, 1, 2, 3"");
         llSay(0, ""I can hear you!"");
-        some_custom_function(1, 2, 3 +x, 4, ""five"", ""arguments"");
+        some_custo_function(1, 2, 3 +x, 4, ""five"", ""arguments"");
     }
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            llOwnerSay(new LSL_Types.LSLString(\"Testing, 1, 2, 3\"));" +
                 "\n            llSay(new LSL_Types.LSLInteger(0), new LSL_Types.LSLString(\"I can hear you!\"));" +
-                "\n            some_custom_function(new LSL_Types.LSLInteger(1), new LSL_Types.LSLInteger(2), new LSL_Types.LSLInteger(3) + x, new LSL_Types.LSLInteger(4), new LSL_Types.LSLString(\"five\"), new LSL_Types.LSLString(\"arguments\"));" +
+                "\n            some_custo_function(new LSL_Types.LSLInteger(1), new LSL_Types.LSLInteger(2), new LSL_Types.LSLInteger(3) + x, new LSL_Types.LSLInteger(4), new LSL_Types.LSLString(\"five\"), new LSL_Types.LSLString(\"arguments\"));" +
                 "\n        }" +
                 "\n";
 
@@ -260,7 +260,7 @@ state another_state
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer y;
         integer x = 14 + 6;
@@ -277,7 +277,7 @@ state another_state
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger y = new LSL_Types.LSLInteger(0);" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(14) + new LSL_Types.LSLInteger(6);" +
@@ -304,7 +304,7 @@ state another_state
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         float y = 1.1;
         y = 1.123E3;
@@ -326,7 +326,7 @@ state another_state
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLFloat y = new LSL_Types.LSLFloat(1.1);" +
                 "\n            y = new LSL_Types.LSLFloat(1.123E3);" +
@@ -359,14 +359,14 @@ state another_state
             string input = @"// this test tests comments
 default
 {
-    touch_start(integer num_detected) // this should be stripped
+    touch_start(integer nu_detected) // this should be stripped
     {
         // fill in code here...
     }
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n        }\n";
 
@@ -383,7 +383,7 @@ default
             string input = @"// this test tests strings, with escaped quotes and comments in strings
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         string s1 = ""this is a string."";
         string s2 = ""this is a string ""+""with an escaped \"" inside it."";
@@ -402,7 +402,7 @@ default
 ";
 
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLString s1 = new LSL_Types.LSLString(\"this is a string.\");" +
                 "\n            LSL_Types.LSLString s2 = new LSL_Types.LSLString(\"this is a string \") + new LSL_Types.LSLString(\"with an escaped \\\" inside it.\");" +
@@ -426,7 +426,7 @@ default
 */
 default
 {
-    touch_start(integer /* you can't see me! */ num_detected) /* this should be stripped */
+    touch_start(integer /* you can't see me! */ nu_detected) /* this should be stripped */
     {
         /*
          * fill
@@ -438,7 +438,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n        }\n";
 
@@ -466,7 +466,7 @@ twofunc(string s)
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         llSay(2000, onefunc());
         twofunc();
@@ -482,7 +482,7 @@ default
                 "\n        {" +
                 "\n            llSay(new LSL_Types.LSLInteger(1000), s);" +
                 "\n        }" +
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            llSay(new LSL_Types.LSLInteger(2000), onefunc());" +
                 "\n            twofunc();" +
@@ -519,7 +519,7 @@ twofunc(string s)
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         llSay(2000, onefunc());
         twofunc();
@@ -539,7 +539,7 @@ default
                 "\n        {" +
                 "\n            llSay(new LSL_Types.LSLInteger(1000), s);" +
                 "\n        }" +
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            llSay(new LSL_Types.LSLInteger(2000), onefunc());" +
                 "\n            twofunc();" +
@@ -572,7 +572,7 @@ string onefunc(string addition)
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         llSay(2000, onefunc());
 
@@ -592,7 +592,7 @@ default
                 "\n            globalString += addition;" +
                 "\n            return new LSL_Types.LSLString(\"Hi \") + new LSL_Types.LSLString(\"from \") + new LSL_Types.LSLString(\"onefunc()! \") + globalString;" +
                 "\n        }" +
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            llSay(new LSL_Types.LSLInteger(2000), onefunc());" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(2);" +
@@ -613,7 +613,7 @@ default
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         vector y = <1.2, llGetMeAFloat(), 4.4>;
         rotation x = <0.1, 0.1, one + 2, 0.9>;
@@ -623,7 +623,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.Vector3 y = new LSL_Types.Vector3(new LSL_Types.LSLFloat(1.2), llGetMeAFloat(), new LSL_Types.LSLFloat(4.4));" +
                 "\n            LSL_Types.Quaternion x = new LSL_Types.Quaternion(new LSL_Types.LSLFloat(0.1), new LSL_Types.LSLFloat(0.1), one + new LSL_Types.LSLInteger(2), new LSL_Types.LSLFloat(0.9));" +
@@ -642,7 +642,7 @@ default
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         vector y = <1.2, llGetMeAFloat(), 4.4>;
         x = y.x + 1.1;
@@ -651,7 +651,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.Vector3 y = new LSL_Types.Vector3(new LSL_Types.LSLFloat(1.2), llGetMeAFloat(), new LSL_Types.LSLFloat(4.4));" +
                 "\n            x = y.x + new LSL_Types.LSLFloat(1.1);" +
@@ -670,7 +670,7 @@ default
 
             string input = @"default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer y = -3;
         integer x = 14 + 6;
@@ -680,7 +680,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger y = -new LSL_Types.LSLInteger(3);" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(14) + new LSL_Types.LSLInteger(6);" +
@@ -702,7 +702,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer y = -3;
         integer x = 14 + 6;
@@ -712,7 +712,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger y = -new LSL_Types.LSLInteger(3);" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(14) + new LSL_Types.LSLInteger(6);" +
@@ -734,7 +734,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         list l = [];
         list m = [1, two, ""three"", <4.0, 4.0, 4.0>, 5 + 5];
@@ -743,7 +743,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.list l = new LSL_Types.list();" +
                 "\n            LSL_Types.list m = new LSL_Types.list(new LSL_Types.LSLInteger(1), two, new LSL_Types.LSLString(\"three\"), new LSL_Types.Vector3(new LSL_Types.LSLFloat(4.0), new LSL_Types.LSLFloat(4.0), new LSL_Types.LSLFloat(4.0)), new LSL_Types.LSLInteger(5) + new LSL_Types.LSLInteger(5));" +
@@ -765,7 +765,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x = 1;
 
@@ -804,7 +804,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(1);" +
                 "\n            if (x)" +
@@ -871,7 +871,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x = 1;
         integer y = 0;
@@ -911,7 +911,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(1);" +
                 "\n            LSL_Types.LSLInteger y = new LSL_Types.LSLInteger(0);" +
@@ -979,7 +979,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x = 1;
         integer y = 0;
@@ -994,7 +994,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(1);" +
                 "\n            LSL_Types.LSLInteger y = new LSL_Types.LSLInteger(0);" +
@@ -1021,7 +1021,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x = 1;
         integer y = 0;
@@ -1038,7 +1038,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(1);" +
                 "\n            LSL_Types.LSLInteger y = new LSL_Types.LSLInteger(0);" +
@@ -1067,7 +1067,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x = 1;
         integer y = 0;
@@ -1084,7 +1084,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(1);" +
                 "\n            LSL_Types.LSLInteger y = new LSL_Types.LSLInteger(0);" +
@@ -1113,7 +1113,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         float y = 1.;
         y = 1.E3;
@@ -1134,7 +1134,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLFloat y = new LSL_Types.LSLFloat(1.0);" +
                 "\n            y = new LSL_Types.LSLFloat(1.0E3);" +
@@ -1167,7 +1167,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x = 2;
         integer y = 1;
@@ -1180,7 +1180,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(2);" +
                 "\n            LSL_Types.LSLInteger y = new LSL_Types.LSLInteger(1);" +
@@ -1205,7 +1205,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         string s = """";
         integer x = 1;
@@ -1223,7 +1223,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLString s = new LSL_Types.LSLString(\"\");" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(1);" +
@@ -1252,7 +1252,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         llSay(0, ""Going to state 'statetwo'"");
         state statetwo;
@@ -1269,7 +1269,7 @@ state statetwo
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            llSay(new LSL_Types.LSLInteger(0), new LSL_Types.LSLString(\"Going to state 'statetwo'\"));" +
                 "\n            state(\"statetwo\");" +
@@ -1294,7 +1294,7 @@ state statetwo
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x = 0x23;
         integer x = 0x2f34B;
@@ -1305,7 +1305,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(0x23);" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(0x2f34B);" +
@@ -1328,7 +1328,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         jump here;
         llOwnerSay(""Uh oh, the jump didn't work"");
@@ -1338,7 +1338,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            goto here;" +
                 "\n            llOwnerSay(new LSL_Types.LSLString(\"Uh oh, the jump didn't work\"));" +
@@ -1360,7 +1360,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer i; integer j = 14;
         float f; float g = 14.0;
@@ -1373,7 +1373,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger i = new LSL_Types.LSLInteger(0);" +
                 "\n            LSL_Types.LSLInteger j = new LSL_Types.LSLInteger(14);" +
@@ -1405,7 +1405,7 @@ default
 
 default
 {
-    touch_start(integer num_detected)
+    touch_start(integer nu_detected)
     {
         integer x;
         integer y;
@@ -1416,7 +1416,7 @@ default
 }
 ";
             string expected =
-                "\n        public void default_event_touch_start(LSL_Types.LSLInteger num_detected)" +
+                "\n        public void default_event_touch_start(LSL_Types.LSLInteger nu_detected)" +
                 "\n        {" +
                 "\n            LSL_Types.LSLInteger x = new LSL_Types.LSLInteger(0);" +
                 "\n            LSL_Types.LSLInteger y = new LSL_Types.LSLInteger(0);" +

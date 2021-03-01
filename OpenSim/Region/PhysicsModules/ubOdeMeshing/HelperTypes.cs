@@ -35,20 +35,20 @@ public class Vertex : IComparable<Vertex>
 
     public float X
     {
-        get { return vector.X; }
-        set { vector.X = value; }
+        get => vector.X;
+        set => vector.X = value;
     }
 
     public float Y
     {
-        get { return vector.Y; }
-        set { vector.Y = value; }
+        get => vector.Y;
+        set => vector.Y = value;
     }
 
     public float Z
     {
-        get { return vector.Z; }
-        set { vector.Z = value; }
+        get => vector.Z;
+        set => vector.Z = value;
     }
 
     public Vertex(float x, float y, float z)

@@ -37,24 +37,24 @@ namespace OpenSim.Framework.Monitoring
     //          new EventHistogram(60, 1000)
     public class EventHistogram
 {
-    private int m_timeBase;
-    private readonly int m_numBuckets;
-    private readonly int m_bucketMilliseconds;
-    private int m_lastBucket;
-    private readonly int m_totalHistogramMilliseconds;
-    private readonly long[] m_histogram;
+    private int _timeBase;
+    private readonly int _numBuckets;
+    private readonly int _bucketMilliseconds;
+    private int _lastBucket;
+    private readonly int _totalHistogramMilliseconds;
+    private readonly long[] _histogram;
     private readonly object histoLock = new object();
 
     public EventHistogram(int numberOfBuckets, int millisecondsPerBucket)
     {
-        m_numBuckets = numberOfBuckets;
-        m_bucketMilliseconds = millisecondsPerBucket;
-        m_totalHistogramMilliseconds = m_numBuckets * m_bucketMilliseconds;
+        _numBuckets = numberOfBuckets;
+        _bucketMilliseconds = millisecondsPerBucket;
+        _totalHistogramMilliseconds = _numBuckets * _bucketMilliseconds;
 
-        m_histogram = new long[m_numBuckets];
+        _histogram = new long[_numBuckets];
         Zero();
-        m_lastBucket = 0;
-        m_timeBase = Util.EnvironmentTickCount();
+        _lastBucket = 0;
+        _timeBase = Util.EnvironmentTickCount();
     }
 
     public void Event()
@@ -68,55 +68,55 @@ namespace OpenSim.Framework.Monitoring
         lock (histoLock)
         {
             // The time as displaced from the base of the histogram
-            int bucketTime = Util.EnvironmentTickCountSubtract(m_timeBase);
+            int bucketTime = Util.EnvironmentTickCountSubtract(_timeBase);
 
             // If more than the total time of the histogram, we just start over
-            if (bucketTime > m_totalHistogramMilliseconds)
+            if (bucketTime > _totalHistogramMilliseconds)
             {
                 Zero();
-                m_lastBucket = 0;
-                m_timeBase = Util.EnvironmentTickCount();
+                _lastBucket = 0;
+                _timeBase = Util.EnvironmentTickCount();
             }
             else
             {
                 // To which bucket should we add this event?
-                int bucket = bucketTime / m_bucketMilliseconds;
+                int bucket = bucketTime / _bucketMilliseconds;
 
-                // Advance m_lastBucket to the new bucket. Zero any buckets skipped over.
-                while (bucket != m_lastBucket)
+                // Advance _lastBucket to the new bucket. Zero any buckets skipped over.
+                while (bucket != _lastBucket)
                 {
                     // Zero from just after the last bucket to the new bucket or the end
-                    for (int jj = m_lastBucket + 1; jj <= Math.Min(bucket, m_numBuckets - 1); jj++)
+                    for (int jj = _lastBucket + 1; jj <= Math.Min(bucket, _numBuckets - 1); jj++)
                     {
-                        m_histogram[jj] = 0;
+                        _histogram[jj] = 0;
                     }
-                    m_lastBucket = bucket;
+                    _lastBucket = bucket;
                     // If the new bucket is off the end, wrap around to the beginning
-                    if (bucket > m_numBuckets)
+                    if (bucket > _numBuckets)
                     {
-                        bucket -= m_numBuckets;
-                        m_lastBucket = 0;
-                        m_histogram[m_lastBucket] = 0;
-                        m_timeBase += m_totalHistogramMilliseconds;
+                        bucket -= _numBuckets;
+                        _lastBucket = 0;
+                        _histogram[_lastBucket] = 0;
+                        _timeBase += _totalHistogramMilliseconds;
                     }
                 }
             }
-            m_histogram[m_lastBucket] += cnt;
+            _histogram[_lastBucket] += cnt;
         }
     }
 
     // Get a copy of the current histogram
     public long[] GetHistogram()
     {
-        long[] ret = new long[m_numBuckets];
+        long[] ret = new long[_numBuckets];
         lock (histoLock)
         {
-            int indx = m_lastBucket + 1;
-            for (int ii = 0; ii < m_numBuckets; ii++, indx++)
+            int indx = _lastBucket + 1;
+            for (int ii = 0; ii < _numBuckets; ii++, indx++)
             {
-                if (indx >= m_numBuckets)
+                if (indx >= _numBuckets)
                     indx = 0;
-                ret[ii] = m_histogram[indx];
+                ret[ii] = _histogram[indx];
             }
         }
         return ret;
@@ -126,13 +126,13 @@ namespace OpenSim.Framework.Monitoring
     {
         OSDMap ret = new OSDMap();
 
-        ret.Add("Buckets", OSD.FromInteger(m_numBuckets));
-        ret.Add("BucketMilliseconds", OSD.FromInteger(m_bucketMilliseconds));
-        ret.Add("TotalMilliseconds", OSD.FromInteger(m_totalHistogramMilliseconds));
+        ret.Add("Buckets", OSD.FromInteger(_numBuckets));
+        ret.Add("BucketMilliseconds", OSD.FromInteger(_bucketMilliseconds));
+        ret.Add("TotalMilliseconds", OSD.FromInteger(_totalHistogramMilliseconds));
 
         // Compute a number for the first bucket in the histogram.
         // This will allow readers to know how this histogram relates to any previously read histogram.
-        int baseBucketNum = m_timeBase / m_bucketMilliseconds + m_lastBucket + 1;
+        int baseBucketNum = _timeBase / _bucketMilliseconds + _lastBucket + 1;
         ret.Add("BaseNumber", OSD.FromInteger(baseBucketNum));
 
         ret.Add("Values", GetHistogramAsOSDArray());
@@ -142,15 +142,15 @@ namespace OpenSim.Framework.Monitoring
     // Get a copy of the current histogram
     public OSDArray GetHistogramAsOSDArray()
     {
-        OSDArray ret = new OSDArray(m_numBuckets);
+        OSDArray ret = new OSDArray(_numBuckets);
         lock (histoLock)
         {
-            int indx = m_lastBucket + 1;
-            for (int ii = 0; ii < m_numBuckets; ii++, indx++)
+            int indx = _lastBucket + 1;
+            for (int ii = 0; ii < _numBuckets; ii++, indx++)
             {
-                if (indx >= m_numBuckets)
+                if (indx >= _numBuckets)
                     indx = 0;
-                ret[ii] = OSD.FromLong(m_histogram[indx]);
+                ret[ii] = OSD.FromLong(_histogram[indx]);
             }
         }
         return ret;
@@ -161,8 +161,8 @@ namespace OpenSim.Framework.Monitoring
     {
         lock (histoLock)
         {
-            for (int ii = 0; ii < m_numBuckets; ii++)
-                m_histogram[ii] = 0;
+            for (int ii = 0; ii < _numBuckets; ii++)
+                _histogram[ii] = 0;
         }
     }
 }

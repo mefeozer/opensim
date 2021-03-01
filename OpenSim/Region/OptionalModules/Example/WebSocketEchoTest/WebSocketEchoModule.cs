@@ -44,12 +44,12 @@ namespace OpenSim.Region.OptionalModules.WebSocketEchoModule
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "WebSocketEchoModule")]
     public class WebSocketEchoModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool enabled;
-        public string Name { get { return "WebSocketEchoModule"; } }
+        public string Name => "WebSocketEchoModule";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
 
         private readonly HashSet<WebSocketHttpServerHandler> _activeHandlers = new HashSet<WebSocketHttpServerHandler>();
@@ -58,7 +58,7 @@ namespace OpenSim.Region.OptionalModules.WebSocketEchoModule
         {
             enabled = pConfig.Configs["WebSocketEcho"] != null;
 //            if (enabled)
-//                m_log.DebugFormat("[WebSocketEchoModule]: INITIALIZED MODULE");
+//                _log.DebugFormat("[WebSocketEchoModule]: INITIALIZED MODULE");
         }
 
         /// <summary>
@@ -100,14 +100,14 @@ namespace OpenSim.Region.OptionalModules.WebSocketEchoModule
 
         private void HandlerOnOnPong(object sender, PongEventArgs pongdata)
         {
-            m_log.Info("[WebSocketEchoModule]: Got a pong..  ping time: " + pongdata.PingResponseMS);
+            _log.Info("[WebSocketEchoModule]: Got a pong..  ping time: " + pongdata.PingResponseMS);
         }
 
         private void HandlerOnOnData(object sender, WebsocketDataEventArgs data)
         {
             WebSocketHttpServerHandler obj = sender as WebSocketHttpServerHandler;
             obj.SendData(data.Data);
-            m_log.Info("[WebSocketEchoModule]: We received a bunch of ugly non-printable bytes");
+            _log.Info("[WebSocketEchoModule]: We received a bunch of ugly non-printable bytes");
             obj.SendPingCheck();
         }
 
@@ -122,7 +122,7 @@ namespace OpenSim.Region.OptionalModules.WebSocketEchoModule
         {
             WebSocketHttpServerHandler obj = sender as WebSocketHttpServerHandler;
             obj.SendMessage(text.Data);
-            m_log.Info("[WebSocketEchoModule]: We received this: " + text.Data);
+            _log.Info("[WebSocketEchoModule]: We received this: " + text.Data);
         }
 
         // Remove the references to our handler
@@ -159,17 +159,17 @@ namespace OpenSim.Region.OptionalModules.WebSocketEchoModule
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[WebSocketEchoModule]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[WebSocketEchoModule]: REGION {0} ADDED", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[WebSocketEchoModule]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[WebSocketEchoModule]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[WebSocketEchoModule]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[WebSocketEchoModule]: REGION {0} LOADED", scene.RegionInfo.RegionName);
         }
     }
 }

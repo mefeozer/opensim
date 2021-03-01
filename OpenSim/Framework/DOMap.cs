@@ -37,7 +37,7 @@ namespace OpenSim.Framework
     /// </remarks>
     public class DOMap
     {
-        private IDictionary<string, object> m_map;
+        private IDictionary<string, object> _map;
 
         public void Add(string ns, string objName, object dynObj)
         {
@@ -45,10 +45,10 @@ namespace OpenSim.Framework
 
             lock (this)
             {
-                if (m_map == null)
-                    m_map = new Dictionary<string, object>();
+                if (_map == null)
+                    _map = new Dictionary<string, object>();
 
-                m_map.Add(objName, dynObj);
+                _map.Add(objName, dynObj);
             }
         }
 
@@ -68,10 +68,10 @@ namespace OpenSim.Framework
         {
             lock (this)
             {
-                if (m_map == null)
+                if (_map == null)
                     return null;
                 else
-                    return m_map[key];
+                    return _map[key];
             }
         }
 
@@ -79,10 +79,10 @@ namespace OpenSim.Framework
         {
             lock (this)
             {
-                if (m_map == null)
+                if (_map == null)
                     return false;
                 else
-                    return m_map.Remove(key);
+                    return _map.Remove(key);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace OpenSim.Framework
 {
     public class InventoryFolderImpl : InventoryFolderBase
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static readonly string PATH_DELIMITER = "/";
 
@@ -45,7 +45,7 @@ namespace OpenSim.Framework
         /// <summary>
         /// Child folders that are contained in this folder
         /// </summary>
-        protected Dictionary<UUID, InventoryFolderImpl> m_childFolders = new Dictionary<UUID, InventoryFolderImpl>();
+        protected Dictionary<UUID, InventoryFolderImpl> _childFolders = new Dictionary<UUID, InventoryFolderImpl>();
 
         // Constructors
         public InventoryFolderImpl(InventoryFolderBase folderbase)
@@ -71,9 +71,9 @@ namespace OpenSim.Framework
         /// <returns>The newly created subfolder.  Returns null if the folder already exists</returns>
         public InventoryFolderImpl CreateChildFolder(UUID folderID, string folderName, ushort type)
         {
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                if (!m_childFolders.ContainsKey(folderID))
+                if (!_childFolders.ContainsKey(folderID))
                 {
                     InventoryFolderImpl subFold = new InventoryFolderImpl
                     {
@@ -83,7 +83,7 @@ namespace OpenSim.Framework
                         ParentID = this.ID,
                         Owner = Owner
                     };
-                    m_childFolders.Add(subFold.ID, subFold);
+                    _childFolders.Add(subFold.ID, subFold);
 
                     return subFold;
                 }
@@ -98,10 +98,10 @@ namespace OpenSim.Framework
         /// <param name="folder"></param>
         public void AddChildFolder(InventoryFolderImpl folder)
         {
-            lock (m_childFolders)
+            lock (_childFolders)
             {
                 folder.ParentID = ID;
-                m_childFolders[folder.ID] = folder;
+                _childFolders[folder.ID] = folder;
             }
         }
 
@@ -112,7 +112,7 @@ namespace OpenSim.Framework
         /// <returns></returns>
         public bool ContainsChildFolder(UUID folderID)
         {
-            return m_childFolders.ContainsKey(folderID);
+            return _childFolders.ContainsKey(folderID);
         }
 
         /// <summary>
@@ -124,9 +124,9 @@ namespace OpenSim.Framework
         {
             InventoryFolderImpl folder = null;
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                m_childFolders.TryGetValue(folderID, out folder);
+                _childFolders.TryGetValue(folderID, out folder);
             }
 
             return folder;
@@ -143,12 +143,12 @@ namespace OpenSim.Framework
         {
             InventoryFolderImpl removedFolder = null;
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                if (m_childFolders.ContainsKey(folderID))
+                if (_childFolders.ContainsKey(folderID))
                 {
-                    removedFolder = m_childFolders[folderID];
-                    m_childFolders.Remove(folderID);
+                    removedFolder = _childFolders[folderID];
+                    _childFolders.Remove(folderID);
                 }
             }
 
@@ -160,12 +160,12 @@ namespace OpenSim.Framework
         /// </summary>
         public void Purge()
         {
-            foreach (InventoryFolderImpl folder in m_childFolders.Values)
+            foreach (InventoryFolderImpl folder in _childFolders.Values)
             {
                 folder.Purge();
             }
 
-            m_childFolders.Clear();
+            _childFolders.Clear();
             Items.Clear();
         }
 
@@ -184,9 +184,9 @@ namespace OpenSim.Framework
                 }
             }
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                foreach (InventoryFolderImpl folder in m_childFolders.Values)
+                foreach (InventoryFolderImpl folder in _childFolders.Values)
                 {
                     InventoryItemBase item = folder.FindItem(itemID);
 
@@ -211,9 +211,9 @@ namespace OpenSim.Framework
                 }
             }
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                foreach (InventoryFolderImpl folder in m_childFolders.Values)
+                foreach (InventoryFolderImpl folder in _childFolders.Values)
                 {
                     InventoryItemBase item = folder.FindAsset(assetID);
 
@@ -245,9 +245,9 @@ namespace OpenSim.Framework
                 }
             }
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                foreach (InventoryFolderImpl folder in m_childFolders.Values)
+                foreach (InventoryFolderImpl folder in _childFolders.Values)
                 {
                     found = folder.DeleteItem(itemID);
 
@@ -271,9 +271,9 @@ namespace OpenSim.Framework
             if (folderID == ID)
                 return this;
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                foreach (InventoryFolderImpl folder in m_childFolders.Values)
+                foreach (InventoryFolderImpl folder in _childFolders.Values)
                 {
                     InventoryFolderImpl returnFolder = folder.FindFolder(folderID);
 
@@ -292,9 +292,9 @@ namespace OpenSim.Framework
         /// <returns>Returns null if no such folder is found</returns>
         public InventoryFolderImpl FindFolderForType(int type)
         {
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                foreach (InventoryFolderImpl f in m_childFolders.Values)
+                foreach (InventoryFolderImpl f in _childFolders.Values)
                 {
                     if (f.Type == type)
                         return f;
@@ -332,9 +332,9 @@ namespace OpenSim.Framework
 
             string[] components = path.Split(new string[] { PATH_DELIMITER }, 2, StringSplitOptions.None);
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                foreach (InventoryFolderImpl folder in m_childFolders.Values)
+                foreach (InventoryFolderImpl folder in _childFolders.Values)
                 {
                     if (folder.Name == components[0])
                         if (components.Length > 1)
@@ -379,9 +379,9 @@ namespace OpenSim.Framework
             }
             else
             {
-                lock (m_childFolders)
+                lock (_childFolders)
                 {
-                    foreach (InventoryFolderImpl folder in m_childFolders.Values)
+                    foreach (InventoryFolderImpl folder in _childFolders.Values)
                     {
                         if (folder.Name == components[0])
                             return folder.FindItemByPath(components[1]);
@@ -404,7 +404,7 @@ namespace OpenSim.Framework
             {
                 foreach (InventoryItemBase item in Items.Values)
                 {
-//                    m_log.DebugFormat(
+//                    _log.DebugFormat(
 //                        "[INVENTORY FOLDER IMPL]: Returning item {0} {1}, OwnerPermissions {2:X}",
 //                        item.Name, item.ID, item.CurrentPermissions);
 
@@ -412,7 +412,7 @@ namespace OpenSim.Framework
                 }
             }
 
-            //m_log.DebugFormat("[INVENTORY FOLDER IMPL]: Found {0} items", itemList.Count);
+            //_log.DebugFormat("[INVENTORY FOLDER IMPL]: Found {0} items", itemList.Count);
 
             return itemList;
         }
@@ -424,9 +424,9 @@ namespace OpenSim.Framework
         {
             List<InventoryFolderBase> folderList = new List<InventoryFolderBase>();
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                foreach (InventoryFolderBase folder in m_childFolders.Values)
+                foreach (InventoryFolderBase folder in _childFolders.Values)
                 {
                     folderList.Add(folder);
                 }
@@ -439,9 +439,9 @@ namespace OpenSim.Framework
         {
             List<InventoryFolderImpl> folderList = new List<InventoryFolderImpl>();
 
-            lock (m_childFolders)
+            lock (_childFolders)
             {
-                foreach (InventoryFolderImpl folder in m_childFolders.Values)
+                foreach (InventoryFolderImpl folder in _childFolders.Values)
                 {
                     folderList.Add(folder);
                 }
@@ -460,7 +460,7 @@ namespace OpenSim.Framework
             {
                 int total = Items.Count;
 
-                foreach (InventoryFolderImpl folder in m_childFolders.Values)
+                foreach (InventoryFolderImpl folder in _childFolders.Values)
                 {
                     total = total + folder.TotalCount;
                 }

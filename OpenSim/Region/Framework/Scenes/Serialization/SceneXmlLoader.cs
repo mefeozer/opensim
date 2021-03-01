@@ -40,7 +40,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
     /// </summary>
     public class SceneXmlLoader
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region old xml format
         public static void LoadPrimsFromXml(Scene scene, string fileName, bool newIDS, Vector3 loadOffset)
@@ -133,7 +133,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
         // Called by scene serializer (save xml2)
         public static void SaveNamedPrimsToXml2(Scene scene, string primName, string fileName)
         {
-            m_log.InfoFormat(
+            _log.InfoFormat(
                 "[SERIALISER]: Saving prims with name {0} in xml2 format for region {1} to {2}",
                 primName, scene.RegionInfo.RegionName, fileName);
 

@@ -37,18 +37,18 @@ namespace OpenSim.Server.Handlers.Authentication
 {
     public class AuthenticationServiceConnector : ServiceConnector
     {
-        private readonly IAuthenticationService m_AuthenticationService;
-        private readonly string m_ConfigName = "AuthenticationService";
+        private readonly IAuthenticationService _AuthenticationService;
+        private readonly string _ConfigName = "AuthenticationService";
 
         public AuthenticationServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string authenticationService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -57,11 +57,11 @@ namespace OpenSim.Server.Handlers.Authentication
                 throw new Exception("No AuthenticationService in config file");
 
             object[] args = new object[] { config };
-            m_AuthenticationService = ServerUtils.LoadPlugin<IAuthenticationService>(authenticationService, args);
+            _AuthenticationService = ServerUtils.LoadPlugin<IAuthenticationService>(authenticationService, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
-            server.AddStreamHandler(new AuthenticationServerPostHandler(m_AuthenticationService, serverConfig, auth));
+            server.AddStreamHandler(new AuthenticationServerPostHandler(_AuthenticationService, serverConfig, auth));
         }
     }
 }

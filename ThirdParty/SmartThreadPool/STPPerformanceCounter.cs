@@ -83,13 +83,7 @@ namespace Amib.Threading.Internal
         }
  
         // Properties
-        public string Name
-        {
-            get
-            {
-                return _counterName;
-            }
-        }
+        public string Name => _counterName;
     }
 
     internal class STPPerformanceCounters
@@ -157,13 +151,7 @@ namespace Amib.Threading.Internal
         }
  
         // Properties
-        public static STPPerformanceCounters Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
+        public static STPPerformanceCounters Instance => _instance;
     }
 
     internal class STPInstancePerformanceCounter : IDisposable
@@ -357,10 +345,7 @@ namespace Amib.Threading.Internal
     {
         private static readonly NullSTPInstancePerformanceCounters _instance = new NullSTPInstancePerformanceCounters();
 
-        public static NullSTPInstancePerformanceCounters Instance
-        {
-            get { return _instance; }
-        }
+        public static NullSTPInstancePerformanceCounters Instance => _instance;
 
         public void Close() {}
         public void Dispose() {}
@@ -369,25 +354,13 @@ namespace Amib.Threading.Internal
         public void SampleWorkItems(long workItemsQueued, long workItemsProcessed) {}
         public void SampleWorkItemsWaitTime(TimeSpan workItemWaitTime) {}
         public void SampleWorkItemsProcessTime(TimeSpan workItemProcessTime) {}
-        public long InUseThreads
-        {
-            get { return 0; }
-        }
+        public long InUseThreads => 0;
 
-        public long ActiveThreads
-        {
-            get { return 0; }
-        }
+        public long ActiveThreads => 0;
 
-        public long WorkItemsQueued
-        {
-            get { return 0; }
-        }
+        public long WorkItemsQueued => 0;
 
-        public long WorkItemsProcessed
-        {
-            get { return 0; }
-        }
+        public long WorkItemsProcessed => 0;
     }
 
     internal class LocalSTPInstancePerformanceCounters : ISTPInstancePerformanceCounters, ISTPPerformanceCountersReader
@@ -400,25 +373,13 @@ namespace Amib.Threading.Internal
         private long _workItemsQueued;
         private long _workItemsProcessed;
 
-        public long InUseThreads
-        {
-            get { return _inUseThreads; }
-        }
+        public long InUseThreads => _inUseThreads;
 
-        public long ActiveThreads
-        {
-            get { return _activeThreads; }
-        }
+        public long ActiveThreads => _activeThreads;
 
-        public long WorkItemsQueued
-        {
-            get { return _workItemsQueued; }
-        }
+        public long WorkItemsQueued => _workItemsQueued;
 
-        public long WorkItemsProcessed
-        {
-            get { return _workItemsProcessed; }
-        }
+        public long WorkItemsProcessed => _workItemsProcessed;
 
         public void SampleThreads(long activeThreads, long inUseThreads)
         {

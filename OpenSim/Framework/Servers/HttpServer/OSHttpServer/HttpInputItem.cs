@@ -59,30 +59,22 @@ namespace OSHttpServer
         /// <summary>
         /// Number of values
         /// </summary>
-        public int Count
-        {
-            get { return _values.Count; }
-        }
+        public int Count => _values.Count;
 
         /// <summary>
         /// Get a sub item
         /// </summary>
         /// <param name="name">name in lower case.</param>
         /// <returns><see cref="HttpInputItem.Empty"/> if no item was found.</returns>
-        public HttpInputItem this[string name]
-        {
-            get {
-                return _items.ContainsKey(name) ? _items[name] : Empty;
-            }
-        }
+        public HttpInputItem this[string name] => _items.ContainsKey(name) ? _items[name] : Empty;
 
         /// <summary>
         /// Name of item (in lower case).
         /// </summary>
         public string Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get => _name;
+            set => _name = value;
         }
 
         /// <summary>
@@ -90,9 +82,7 @@ namespace OSHttpServer
         /// </summary>
         public string Value
         {
-            get {
-                return _values.Count == 0 ? null : _values[0];
-            }
+            get => _values.Count == 0 ? null : _values[0];
             set
             {
                 if (_values.Count == 0)
@@ -105,21 +95,12 @@ namespace OSHttpServer
         /// <summary>
         /// Returns the last value, or null if no value exist.
         /// </summary>
-        public string LastValue
-        {
-            get
-            {
-                return _values.Count == 0 ? null : _values[_values.Count - 1];
-            }
-        }
+        public string LastValue => _values.Count == 0 ? null : _values[_values.Count - 1];
 
         /// <summary>
         /// Returns the list with values.
         /// </summary>
-        public IList<string> Values
-        {
-            get { return _values.AsReadOnly(); }
-        }
+        public IList<string> Values => _values.AsReadOnly();
 
 
         /// <summary>
@@ -212,13 +193,7 @@ namespace OSHttpServer
         /// </summary>
         /// <param name="name">name in lower case</param>
         /// <returns></returns>
-        HttpInputItem IHttpInput.this[string name]
-        {
-            get 
-            {
-                return _items.ContainsKey(name) ? _items[name] : Empty;
-            }
-        }
+        HttpInputItem IHttpInput.this[string name] => _items.ContainsKey(name) ? _items[name] : Empty;
 
         /// <summary>
         /// Add a sub item.

@@ -43,19 +43,16 @@ namespace OpenSim.Data.SQLite
 {
     public class SQLiteUserProfilesData: IProfilesData
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private SqliteConnection m_connection;
-        private string m_connectionString;
+        private SqliteConnection _connection;
+        private string _connectionString;
 
-        private readonly Dictionary<string, FieldInfo> m_FieldMap =
+        private readonly Dictionary<string, FieldInfo> _FieldMap =
             new Dictionary<string, FieldInfo>();
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         public SQLiteUserProfilesData()
         {
@@ -71,21 +68,18 @@ namespace OpenSim.Data.SQLite
             if (Util.IsWindows())
                 Util.LoadArchSpecificWindowsDll("sqlite3.dll");
 
-            m_connectionString = connectionString;
+            _connectionString = connectionString;
 
-            m_log.Info("[PROFILES_DATA]: Sqlite - connecting: "+m_connectionString);
+            _log.Info("[PROFILES_DATA]: Sqlite - connecting: "+_connectionString);
 
-            m_connection = new SqliteConnection(m_connectionString);
-            m_connection.Open();
+            _connection = new SqliteConnection(_connectionString);
+            _connection.Open();
 
-            Migration m = new Migration(m_connection, Assembly, "UserProfiles");
+            Migration m = new Migration(_connection, Assembly, "UserProfiles");
             m.Update();
         }
 
-        private string[] FieldList
-        {
-            get { return new List<string>(m_FieldMap.Keys).ToArray(); }
-        }
+        private string[] FieldList => new List<string>(_FieldMap.Keys).ToArray();
 
         #region IProfilesData implementation
         public OSDArray GetClassifiedRecords(UUID creatorId)
@@ -94,7 +88,7 @@ namespace OpenSim.Data.SQLite
             string query = "SELECT classifieduuid, name FROM classifieds WHERE creatoruuid = :Id";
             IDataReader reader = null;
 
-            using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
             {
                 cmd.CommandText = query;
                 cmd.Parameters.AddWithValue(":Id", creatorId);
@@ -113,7 +107,7 @@ namespace OpenSim.Data.SQLite
                 }
                 catch (Exception e)
                 {
-                    m_log.ErrorFormat("[PROFILES_DATA]" +
+                    _log.ErrorFormat("[PROFILES_DATA]" +
                                       ": UserAccount exception {0}", e.Message);
                 }
                 n.Add("classifieduuid", OSD.FromUUID(Id));
@@ -192,7 +186,7 @@ namespace OpenSim.Data.SQLite
             ad.ExpirationDate = (int)epochexp.TotalSeconds;
 
             try {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":ClassifiedId", ad.ClassifiedId.ToString());
@@ -216,7 +210,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": ClassifiedesUpdate exception {0}", e.Message);
                 result = e.Message;
                 return false;
@@ -232,7 +226,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":ClassifiedId", recordId.ToString());
@@ -242,7 +236,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": DeleteClassifiedRecord exception {0}", e.Message);
                 return false;
             }
@@ -259,7 +253,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":AdId", ad.ClassifiedId.ToString());
@@ -288,7 +282,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": GetPickInfo exception {0}", e.Message);
             }
             return true;
@@ -305,7 +299,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":Id", avatarId.ToString());
@@ -325,7 +319,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": GetAvatarPicks exception {0}", e.Message);
             }
             return data;
@@ -342,7 +336,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":CreatorId", avatarId.ToString());
@@ -377,7 +371,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": GetPickInfo exception {0}", e.Message);
             }
             return pick;
@@ -418,7 +412,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     int top_pick;
                     int.TryParse(pick.TopPick.ToString(), out top_pick);
@@ -445,7 +439,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": UpdateAvatarNotes exception {0}", e.Message);
                 return false;
             }
@@ -461,7 +455,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":PickId", pickId.ToString());
@@ -470,7 +464,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": DeleteUserPickRecord exception {0}", e.Message);
                 return false;
             }
@@ -489,7 +483,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":Id", notes.UserId.ToString());
@@ -506,7 +500,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": GetAvatarNotes exception {0}", e.Message);
             }
             return true;
@@ -535,7 +529,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
 
@@ -549,7 +543,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": UpdateAvatarNotes exception {0}", e.Message);
                 return false;
             }
@@ -564,7 +558,7 @@ namespace OpenSim.Data.SQLite
             query += "SELECT * FROM userprofile WHERE ";
             query += "useruuid = :Id";
 
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":Id", props.UserId.ToString());
@@ -576,7 +570,7 @@ namespace OpenSim.Data.SQLite
                     }
                     catch(Exception e)
                     {
-                        m_log.ErrorFormat("[PROFILES_DATA]" +
+                        _log.ErrorFormat("[PROFILES_DATA]" +
                                           ": GetAvatarProperties exception {0}", e.Message);
                         result = e.Message;
                         return false;
@@ -641,7 +635,7 @@ namespace OpenSim.Data.SQLite
                             query += ":profileFirstImage, ";
                             query += ":profileFirstText)";
 
-                            using (SqliteCommand put = (SqliteCommand)m_connection.CreateCommand())
+                            using (SqliteCommand put = (SqliteCommand)_connection.CreateCommand())
                             {
                                 put.CommandText = query;
                                 put.Parameters.AddWithValue(":userId", props.UserId.ToString());
@@ -680,7 +674,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":profileURL", props.WebUrl);
@@ -695,7 +689,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": AgentPropertiesUpdate exception {0}", e.Message);
 
                 return false;
@@ -717,7 +711,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":WantMask", up.WantToMask);
@@ -732,7 +726,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": AgentInterestsUpdate exception {0}", e.Message);
                 result = e.Message;
                 return false;
@@ -753,7 +747,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":ImViaEmail", pref.IMViaEmail);
@@ -766,7 +760,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": AgentInterestsUpdate exception {0}", e.Message);
                 result = e.Message;
                 return false;
@@ -787,7 +781,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue("?Id", pref.UserId.ToString());
@@ -805,7 +799,7 @@ namespace OpenSim.Data.SQLite
                             query = "INSERT INTO usersettings VALUES ";
                             query += "(:Id,'false','false', :Email)";
 
-                            using (SqliteCommand put = (SqliteCommand)m_connection.CreateCommand())
+                            using (SqliteCommand put = (SqliteCommand)_connection.CreateCommand())
                             {
                                 put.Parameters.AddWithValue(":Id", pref.UserId.ToString());
                                 put.Parameters.AddWithValue(":Email", pref.EMail);
@@ -818,7 +812,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": Get preferences exception {0}", e.Message);
                 result = e.Message;
                 return false;
@@ -837,7 +831,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":Id", props.UserId.ToString());
@@ -858,7 +852,7 @@ namespace OpenSim.Data.SQLite
                             query += ":DataKey,";
                             query +=  ":DataVal) ";
 
-                            using (SqliteCommand put = (SqliteCommand)m_connection.CreateCommand())
+                            using (SqliteCommand put = (SqliteCommand)_connection.CreateCommand())
                             {
                                 put.Parameters.AddWithValue(":Id", props.UserId.ToString());
                                 put.Parameters.AddWithValue(":TagId", props.TagId.ToString());
@@ -873,7 +867,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": Requst application data exception {0}", e.Message);
                 result = e.Message;
                 return false;
@@ -893,7 +887,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":UserId", props.UserId.ToString());
@@ -906,7 +900,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": SetUserData exception {0}", e.Message);
                 return false;
             }
@@ -923,7 +917,7 @@ namespace OpenSim.Data.SQLite
 
             try
             {
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = string.Format(query, "\"classifieds\"");
                     cmd.Parameters.AddWithValue(":Id", avatarId.ToString());
@@ -937,7 +931,7 @@ namespace OpenSim.Data.SQLite
                     }
                 }
 
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = string.Format(query, "\"userpicks\"");
                     cmd.Parameters.AddWithValue(":Id", avatarId.ToString());
@@ -953,7 +947,7 @@ namespace OpenSim.Data.SQLite
 
                 query = "SELECT `profileImage`, `profileFirstImage` FROM `userprofile` WHERE `useruuid` = :Id";
 
-                using (SqliteCommand cmd = (SqliteCommand)m_connection.CreateCommand())
+                using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
                 {
                     cmd.CommandText = query;
                     cmd.Parameters.AddWithValue(":Id", avatarId.ToString());
@@ -970,7 +964,7 @@ namespace OpenSim.Data.SQLite
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[PROFILES_DATA]" +
+                _log.ErrorFormat("[PROFILES_DATA]" +
                                   ": GetAvatarNotes exception {0}", e.Message);
             }
             return data;

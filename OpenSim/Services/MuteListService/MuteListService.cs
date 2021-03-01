@@ -38,11 +38,11 @@ namespace OpenSim.Services.EstateService
 {
     public class MuteListService : ServiceBase, IMuteListService
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //                LogManager.GetLogger(
 //                MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected IMuteListData m_database;
+        protected IMuteListData _database;
 
         public MuteListService(IConfigSource config)
             : base(config)
@@ -71,17 +71,17 @@ namespace OpenSim.Services.EstateService
             if (string.IsNullOrEmpty(dllName))
                 throw new Exception("No StorageProvider configured");
 
-            m_database = LoadPlugin<IMuteListData>(dllName, new object[] { connString });
-            if (m_database == null)
+            _database = LoadPlugin<IMuteListData>(dllName, new object[] { connString });
+            if (_database == null)
                 throw new Exception("Could not find a storage interface in the given module");
         }
 
         public byte[] MuteListRequest(UUID agentID, uint crc)
         {
-            if(m_database == null)
+            if(_database == null)
                 return null;
 
-            MuteData[] data = m_database.Get(agentID);
+            MuteData[] data = _database.Get(agentID);
             if (data == null || data.Length == 0)
                 return new byte[0];
 
@@ -111,16 +111,16 @@ namespace OpenSim.Services.EstateService
 
         public bool UpdateMute(MuteData mute)
         {
-            if(m_database == null)
+            if(_database == null)
                 return false;
-            return m_database.Store(mute);
+            return _database.Store(mute);
         }
 
         public bool RemoveMute(UUID agentID, UUID muteID, string muteName)
         {
-            if(m_database == null)
+            if(_database == null)
                 return false;
-            return m_database.Delete(agentID, muteID, muteName);
+            return _database.Delete(agentID, muteID, muteName);
         }
     }
 }

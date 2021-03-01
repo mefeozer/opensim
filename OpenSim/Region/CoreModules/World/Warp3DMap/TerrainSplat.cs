@@ -66,7 +66,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
 
         #endregion Constants
 
-        private static readonly ILog m_log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name);
+        private static readonly ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name);
         private static readonly string LogHeader = "[WARP3D TERRAIN SPLAT]";
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                             }
                             catch(Exception ex)
                             {
-                                m_log.Warn("Failed to decode cached terrain patch texture" + textureIDs[i] + "): " + ex.Message);
+                                _log.Warn("Failed to decode cached terrain patch texture" + textureIDs[i] + "): " + ex.Message);
                             }
                         }
 
@@ -153,7 +153,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                                 }
                                 catch(Exception ex)
                                 {
-                                    m_log.Warn("Failed to decode terrain texture " + asset.ID + ": " + ex.Message);
+                                    _log.Warn("Failed to decode terrain texture " + asset.ID + ": " + ex.Message);
                                 }
                             }
 
@@ -246,7 +246,7 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                     {
                         if(detailTexture[i] == null)
                         {
-                            m_log.DebugFormat("{0} Missing terrain texture for layer {1}. Filling with solid default color", LogHeader, i);
+                            _log.DebugFormat("{0} Missing terrain texture for layer {1}. Filling with solid default color", LogHeader, i);
 
                             // Create a solid color texture for this layer
                             detailTexture[i] = new Bitmap(16, 16, PixelFormat.Format24bppRgb);

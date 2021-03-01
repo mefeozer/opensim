@@ -40,11 +40,11 @@ namespace OpenSim.Services.Connectors
 {
     public class GridServicesConnector : BaseServiceConnector, IGridService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
+        private string _ServerURI = string.Empty;
 
         public GridServicesConnector()
         {
@@ -52,7 +52,7 @@ namespace OpenSim.Services.Connectors
 
         public GridServicesConnector(string serverURI)
         {
-            m_ServerURI = serverURI.TrimEnd('/');
+            _ServerURI = serverURI.TrimEnd('/');
         }
 
         public GridServicesConnector(IConfigSource source)
@@ -65,7 +65,7 @@ namespace OpenSim.Services.Connectors
             IConfig gridConfig = source.Configs["GridService"];
             if (gridConfig == null)
             {
-                m_log.Error("[GRID CONNECTOR]: GridService missing from OpenSim.ini");
+                _log.Error("[GRID CONNECTOR]: GridService missing from OpenSim.ini");
                 throw new Exception("Grid connector init error");
             }
 
@@ -74,10 +74,10 @@ namespace OpenSim.Services.Connectors
 
             if (string.IsNullOrEmpty(serviceURI))
             {
-                m_log.Error("[GRID CONNECTOR]: No Server URI named in section GridService");
+                _log.Error("[GRID CONNECTOR]: No Server URI named in section GridService");
                 throw new Exception("Grid connector init error");
             }
-            m_ServerURI = serviceURI;
+            _ServerURI = serviceURI;
 
             base.Initialise(source, "GridService");
         }
@@ -98,11 +98,11 @@ namespace OpenSim.Services.Connectors
             sendData["METHOD"] = "register";
 
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/grid";
-            // m_log.DebugFormat("[GRID CONNECTOR]: queryString = {0}", reqString);
+            string uri = _ServerURI + "/grid";
+            // _log.DebugFormat("[GRID CONNECTOR]: queryString = {0}", reqString);
             try
             {
-                string reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, m_Auth);
+                string reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, _Auth);
                 if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -113,19 +113,19 @@ namespace OpenSim.Services.Connectors
                     }
                     else if (replyData.ContainsKey("Result")&& replyData["Result"].ToString().ToLower() == "failure")
                     {
-                        m_log.ErrorFormat(
+                        _log.ErrorFormat(
                             "[GRID CONNECTOR]: Registration failed: {0} when contacting {1}", replyData["Message"], uri);
 
                         return replyData["Message"].ToString();
                     }
                     else if (!replyData.ContainsKey("Result"))
                     {
-                        m_log.ErrorFormat(
+                        _log.ErrorFormat(
                             "[GRID CONNECTOR]: reply data does not contain result field when contacting {0}", uri);
                     }
                     else
                     {
-                        m_log.ErrorFormat(
+                        _log.ErrorFormat(
                             "[GRID CONNECTOR]: unexpected result {0} when contacting {1}", replyData["Result"], uri);
 
                         return "Unexpected result " + replyData["Result"].ToString();
@@ -133,13 +133,13 @@ namespace OpenSim.Services.Connectors
                 }
                 else
                 {
-                    m_log.ErrorFormat(
+                    _log.ErrorFormat(
                         "[GRID CONNECTOR]: RegisterRegion received null reply when contacting grid server at {0}", uri);
                 }
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.ErrorFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
             }
 
             return string.Format("Error communicating with the grid service at {0}", uri);
@@ -153,12 +153,12 @@ namespace OpenSim.Services.Connectors
 
             sendData["METHOD"] = "deregister";
 
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
 
             try
             {
                 string reply
-                    = SynchronousRestFormsRequester.MakeRequest("POST", uri, ServerUtils.BuildQueryString(sendData), m_Auth);
+                    = SynchronousRestFormsRequester.MakeRequest("POST", uri, ServerUtils.BuildQueryString(sendData), _Auth);
 
                 if (!string.IsNullOrEmpty(reply))
                 {
@@ -168,11 +168,11 @@ namespace OpenSim.Services.Connectors
                         return true;
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: DeregisterRegion received null reply");
+                    _log.DebugFormat("[GRID CONNECTOR]: DeregisterRegion received null reply");
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
             }
 
             return false;
@@ -191,15 +191,15 @@ namespace OpenSim.Services.Connectors
 
             string reqString = ServerUtils.BuildQueryString(sendData);
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
 
             try
             {
-                reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, m_Auth);
+                reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return rinfos;
             }
 
@@ -208,7 +208,7 @@ namespace OpenSim.Services.Connectors
             if (replyData != null)
             {
                 Dictionary<string, object>.ValueCollection rinfosList = replyData.Values;
-                //m_log.DebugFormat("[GRID CONNECTOR]: get neighbours returned {0} elements", rinfosList.Count);
+                //_log.DebugFormat("[GRID CONNECTOR]: get neighbours returned {0} elements", rinfosList.Count);
                 foreach (object r in rinfosList)
                 {
                     if (r is Dictionary<string, object>)
@@ -219,7 +219,7 @@ namespace OpenSim.Services.Connectors
                 }
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetNeighbours {0}, {1} received null response",
+                _log.DebugFormat("[GRID CONNECTOR]: GetNeighbours {0}, {1} received null response",
                     scopeID, regionID);
 
             return rinfos;
@@ -235,14 +235,14 @@ namespace OpenSim.Services.Connectors
             sendData["METHOD"] = "get_region_by_uuid";
 
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
-                reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, ServerUtils.BuildQueryString(sendData), m_Auth);
+                reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, ServerUtils.BuildQueryString(sendData), _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return null;
             }
 
@@ -257,15 +257,15 @@ namespace OpenSim.Services.Connectors
                     if (replyData["result"] is Dictionary<string, object>)
                         rinfo = new GridRegion((Dictionary<string, object>)replyData["result"]);
                     //else
-                    //    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionByUUID {0}, {1} received null response",
+                    //    _log.DebugFormat("[GRID CONNECTOR]: GetRegionByUUID {0}, {1} received null response",
                     //        scopeID, regionID);
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionByUUID {0}, {1} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetRegionByUUID {0}, {1} received null response",
                         scopeID, regionID);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetRegionByUUID received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetRegionByUUID received null reply");
 
             return rinfo;
         }
@@ -289,16 +289,16 @@ namespace OpenSim.Services.Connectors
 
             sendData["METHOD"] = "get_region_by_position";
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return null;
             }
 
@@ -311,15 +311,15 @@ namespace OpenSim.Services.Connectors
                     if (replyData["result"] is Dictionary<string, object>)
                         rinfo = new GridRegion((Dictionary<string, object>)replyData["result"]);
                     //else
-                    //    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionByPosition {0}, {1}-{2} received no region",
+                    //    _log.DebugFormat("[GRID CONNECTOR]: GetRegionByPosition {0}, {1}-{2} received no region",
                     //        scopeID, x, y);
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionByPosition {0}, {1}-{2} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetRegionByPosition {0}, {1}-{2} received null response",
                         scopeID, x, y);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetRegionByPosition received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetRegionByPosition received null reply");
 
             return rinfo;
         }
@@ -333,16 +333,16 @@ namespace OpenSim.Services.Connectors
 
             sendData["METHOD"] = "get_region_by_name";
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return null;
             }
 
@@ -357,11 +357,11 @@ namespace OpenSim.Services.Connectors
                         rinfo = new GridRegion((Dictionary<string, object>)replyData["result"]);
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionByPosition {0}, {1} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetRegionByPosition {0}, {1} received null response",
                         scopeID, regionName);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetRegionByName received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetRegionByName received null reply");
 
             return rinfo;
         }
@@ -382,16 +382,16 @@ namespace OpenSim.Services.Connectors
             sendData["METHOD"] = "get_regions_by_name";
             List<GridRegion> rinfos = new List<GridRegion>();
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return rinfos;
             }
 
@@ -412,11 +412,11 @@ namespace OpenSim.Services.Connectors
                     }
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionsByName {0}, {1}, {2} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetRegionsByName {0}, {1}, {2} received null response",
                         scopeID, name, maxNumber);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetRegionsByName received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetRegionsByName received null reply");
 
             return rinfos;
         }
@@ -440,19 +440,19 @@ namespace OpenSim.Services.Connectors
 
             List<GridRegion> rinfos = new List<GridRegion>();
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
 
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
 
-                //m_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
+                //_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return rinfos;
             }
 
@@ -473,11 +473,11 @@ namespace OpenSim.Services.Connectors
                     }
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionRange {0}, {1}-{2} {3}-{4} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetRegionRange {0}, {1}-{2} {3}-{4} received null response",
                         scopeID, xmin, xmax, ymin, ymax);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetRegionRange received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetRegionRange received null reply");
 
             return rinfos;
         }
@@ -492,18 +492,18 @@ namespace OpenSim.Services.Connectors
 
             List<GridRegion> rinfos = new List<GridRegion>();
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
 
-                //m_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
+                //_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return rinfos;
             }
 
@@ -524,11 +524,11 @@ namespace OpenSim.Services.Connectors
                     }
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetDefaultRegions {0} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetDefaultRegions {0} received null response",
                         scopeID);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetDefaultRegions received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetDefaultRegions received null reply");
 
             return rinfos;
         }
@@ -543,18 +543,18 @@ namespace OpenSim.Services.Connectors
 
             List<GridRegion> rinfos = new List<GridRegion>();
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
 
-                //m_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
+                //_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return rinfos;
             }
 
@@ -575,11 +575,11 @@ namespace OpenSim.Services.Connectors
                     }
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetDefaultHypergridRegions {0} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetDefaultHypergridRegions {0} received null response",
                         scopeID);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetDefaultHypergridRegions received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetDefaultHypergridRegions received null reply");
 
             return rinfos;
         }
@@ -596,18 +596,18 @@ namespace OpenSim.Services.Connectors
 
             List<GridRegion> rinfos = new List<GridRegion>();
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
 
-                //m_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
+                //_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return rinfos;
             }
 
@@ -628,11 +628,11 @@ namespace OpenSim.Services.Connectors
                     }
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetFallbackRegions {0}, {1}-{2} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetFallbackRegions {0}, {1}-{2} received null response",
                         scopeID, x, y);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetFallbackRegions received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetFallbackRegions received null reply");
 
             return rinfos;
         }
@@ -647,18 +647,18 @@ namespace OpenSim.Services.Connectors
 
             List<GridRegion> rinfos = new List<GridRegion>();
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
 
-                //m_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
+                //_log.DebugFormat("[GRID CONNECTOR]: reply was {0}", reply);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return rinfos;
             }
 
@@ -679,11 +679,11 @@ namespace OpenSim.Services.Connectors
                     }
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetHyperlinks {0} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetHyperlinks {0} received null response",
                         scopeID);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetHyperlinks received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetHyperlinks received null reply");
 
             return rinfos;
         }
@@ -698,16 +698,16 @@ namespace OpenSim.Services.Connectors
             sendData["METHOD"] = "get_region_flags";
 
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                         uri,
-                        ServerUtils.BuildQueryString(sendData), m_Auth);
+                        ServerUtils.BuildQueryString(sendData), _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return -1;
             }
 
@@ -721,15 +721,15 @@ namespace OpenSim.Services.Connectors
                 {
                     int.TryParse((string)replyData["result"], out flags);
                     //else
-                    //    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionFlags {0}, {1} received wrong type {2}",
+                    //    _log.DebugFormat("[GRID CONNECTOR]: GetRegionFlags {0}, {1} received wrong type {2}",
                     //        scopeID, regionID, replyData["result"].GetType());
                 }
                 else
-                    m_log.DebugFormat("[GRID CONNECTOR]: GetRegionFlags {0}, {1} received null response",
+                    _log.DebugFormat("[GRID CONNECTOR]: GetRegionFlags {0}, {1} received null response",
                         scopeID, regionID);
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetRegionFlags received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetRegionFlags received null reply");
 
             return flags;
         }
@@ -742,17 +742,17 @@ namespace OpenSim.Services.Connectors
             sendData["METHOD"] = "get_grid_extra_features";
 
             string reply = string.Empty;
-            string uri = m_ServerURI + "/grid";
+            string uri = _ServerURI + "/grid";
 
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
                                                                   uri,
-                                                                  ServerUtils.BuildQueryString(sendData), m_Auth);
+                                                                  ServerUtils.BuildQueryString(sendData), _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[GRID CONNECTOR]: GetExtraFeatures - Exception when contacting grid server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[GRID CONNECTOR]: GetExtraFeatures - Exception when contacting grid server at {0}: {1}", uri, e.Message);
                 return extraFeatures;
             }
 
@@ -769,7 +769,7 @@ namespace OpenSim.Services.Connectors
                 }
             }
             else
-                m_log.DebugFormat("[GRID CONNECTOR]: GetExtraServiceURLs received null reply");
+                _log.DebugFormat("[GRID CONNECTOR]: GetExtraServiceURLs received null reply");
 
             return extraFeatures;
         }

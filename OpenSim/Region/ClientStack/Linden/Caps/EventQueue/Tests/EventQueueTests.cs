@@ -46,9 +46,9 @@ namespace OpenSim.Region.ClientStack.Linden.Tests
     [TestFixture]
     public class EventQueueTests : OpenSimTestCase
     {
-        private TestScene m_scene;
-        private EventQueueGetModule m_eqgMod;
-        private NPCModule m_npcMod;
+        private TestScene _scene;
+        private EventQueueGetModule _eqgMod;
+        private NPCModule _npcMod;
 
         [SetUp]
         public override void SetUp()
@@ -69,15 +69,15 @@ namespace OpenSim.Region.ClientStack.Linden.Tests
             config.AddConfig("Startup");
 
             CapabilitiesModule capsModule = new CapabilitiesModule();
-            m_eqgMod = new EventQueueGetModule();
+            _eqgMod = new EventQueueGetModule();
 
             // For NPC test support
             config.AddConfig("NPC");
             config.Configs["NPC"].Set("Enabled", "true");
-            m_npcMod = new NPCModule();
+            _npcMod = new NPCModule();
 
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, config, capsModule, m_eqgMod, m_npcMod);
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, config, capsModule, _eqgMod, _npcMod);
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace OpenSim.Region.ClientStack.Linden.Tests
             TestHelpers.InMethod();
 //            log4net.Config.XmlConfigurator.Configure();
 
-            SceneHelpers.AddScenePresence(m_scene, TestHelpers.ParseTail(0x1));
+            SceneHelpers.AddScenePresence(_scene, TestHelpers.ParseTail(0x1));
 
             // TODO: Add more assertions for the other aspects of event queues
             Assert.That(MainServer.Instance.GetPollServiceHandlerKeys().Count, Is.EqualTo(1));
@@ -100,8 +100,8 @@ namespace OpenSim.Region.ClientStack.Linden.Tests
 
             UUID spId = TestHelpers.ParseTail(0x1);
 
-            SceneHelpers.AddScenePresence(m_scene, spId);
-            m_scene.CloseAgent(spId, false);
+            SceneHelpers.AddScenePresence(_scene, spId);
+            _scene.CloseAgent(spId, false);
 
             // TODO: Add more assertions for the other aspects of event queues
             Assert.That(MainServer.Instance.GetPollServiceHandlerKeys().Count, Is.EqualTo(0));
@@ -113,21 +113,21 @@ namespace OpenSim.Region.ClientStack.Linden.Tests
             TestHelpers.InMethod();
 //            log4net.Config.XmlConfigurator.Configure();
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, TestHelpers.ParseTail(0x1));
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, TestHelpers.ParseTail(0x1));
 
             string messageName = "TestMessage";
 
-            m_eqgMod.Enqueue(m_eqgMod.BuildEvent(messageName, new OSDMap()), sp.UUID);
+            _eqgMod.Enqueue(_eqgMod.BuildEvent(messageName, new OSDMap()), sp.UUID);
 
-            Hashtable eventsResponse = m_eqgMod.GetEvents(UUID.Zero, sp.UUID);
+            Hashtable eventsResponse = _eqgMod.GetEvents(UUID.Zero, sp.UUID);
 
             // initial queue as null events
-//            eventsResponse = m_eqgMod.GetEvents(UUID.Zero, sp.UUID);
+//            eventsResponse = _eqgMod.GetEvents(UUID.Zero, sp.UUID);
             if((int)eventsResponse["int_response_code"] != (int)HttpStatusCode.OK)
             {
-                eventsResponse = m_eqgMod.GetEvents(UUID.Zero, sp.UUID);
+                eventsResponse = _eqgMod.GetEvents(UUID.Zero, sp.UUID);
                 if((int)eventsResponse["int_response_code"] != (int)HttpStatusCode.OK)
-                    eventsResponse = m_eqgMod.GetEvents(UUID.Zero, sp.UUID);
+                    eventsResponse = _eqgMod.GetEvents(UUID.Zero, sp.UUID);
             }
 
             Assert.That((int)eventsResponse["int_response_code"], Is.EqualTo((int)HttpStatusCode.OK));
@@ -163,9 +163,9 @@ namespace OpenSim.Region.ClientStack.Linden.Tests
 
             string messageName = "TestMessage";
 
-            m_eqgMod.Enqueue(m_eqgMod.BuildEvent(messageName, new OSDMap()), TestHelpers.ParseTail(0x1));
+            _eqgMod.Enqueue(_eqgMod.BuildEvent(messageName, new OSDMap()), TestHelpers.ParseTail(0x1));
 
-            Hashtable eventsResponse = m_eqgMod.GetEvents(UUID.Zero, TestHelpers.ParseTail(0x1));
+            Hashtable eventsResponse = _eqgMod.GetEvents(UUID.Zero, TestHelpers.ParseTail(0x1));
 
             Assert.That((int)eventsResponse["int_response_code"], Is.EqualTo((int)HttpStatusCode.NotFound));
         }
@@ -180,16 +180,16 @@ namespace OpenSim.Region.ClientStack.Linden.Tests
 //            TestHelpers.EnableLogging();
 
             UUID npcId
-                = m_npcMod.CreateNPC(
-                    "John", "Smith", new Vector3(128, 128, 30), UUID.Zero, true, m_scene, new AvatarAppearance());
+                = _npcMod.CreateNPC(
+                    "John", "Smith", new Vector3(128, 128, 30), UUID.Zero, true, _scene, new AvatarAppearance());
 
-            ScenePresence npc = m_scene.GetScenePresence(npcId);
+            ScenePresence npc = _scene.GetScenePresence(npcId);
 
             string messageName = "TestMessage";
 
-            m_eqgMod.Enqueue(m_eqgMod.BuildEvent(messageName, new OSDMap()), npc.UUID);
+            _eqgMod.Enqueue(_eqgMod.BuildEvent(messageName, new OSDMap()), npc.UUID);
 
-            Hashtable eventsResponse = m_eqgMod.GetEvents(UUID.Zero, npc.UUID);
+            Hashtable eventsResponse = _eqgMod.GetEvents(UUID.Zero, npc.UUID);
 
             Assert.That((int)eventsResponse["int_response_code"], Is.EqualTo((int)HttpStatusCode.NotFound));
         }

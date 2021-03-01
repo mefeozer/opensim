@@ -32,11 +32,11 @@ namespace OpenSim.Data.Null
 {
     public class NullPresenceData : IPresenceData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static NullPresenceData Instance;
 
-        readonly Dictionary<UUID, PresenceData> m_presenceData = new Dictionary<UUID, PresenceData>();
+        readonly Dictionary<UUID, PresenceData> _presenceData = new Dictionary<UUID, PresenceData>();
 
         public NullPresenceData(string connectionString, string realm)
         {
@@ -53,10 +53,10 @@ namespace OpenSim.Data.Null
             if (Instance != this)
                 return Instance.Store(data);
 
-//            m_log.DebugFormat("[NULL PRESENCE DATA]: Storing presence {0}", data.UserID);
+//            _log.DebugFormat("[NULL PRESENCE DATA]: Storing presence {0}", data.UserID);
 //            Console.WriteLine("HOME for " + data.UserID + " is " + (data.Data.ContainsKey("HomeRegionID") ? data.Data["HomeRegionID"] : "Not found"));
 
-            m_presenceData[data.SessionID] = data;
+            _presenceData[data.SessionID] = data;
             return true;
         }
 
@@ -65,9 +65,9 @@ namespace OpenSim.Data.Null
             if (Instance != this)
                 return Instance.Get(sessionID);
 
-            if (m_presenceData.ContainsKey(sessionID))
+            if (_presenceData.ContainsKey(sessionID))
             {
-                return m_presenceData[sessionID];
+                return _presenceData[sessionID];
             }
 
             return null;
@@ -82,12 +82,12 @@ namespace OpenSim.Data.Null
             }
 
             List<UUID> toBeDeleted = new List<UUID>();
-            foreach (KeyValuePair<UUID, PresenceData> kvp in m_presenceData)
+            foreach (KeyValuePair<UUID, PresenceData> kvp in _presenceData)
                 if (kvp.Value.RegionID == regionID)
                     toBeDeleted.Add(kvp.Key);
 
             foreach (UUID u in toBeDeleted)
-                m_presenceData.Remove(u);
+                _presenceData.Remove(u);
         }
 
         public bool ReportAgent(UUID sessionID, UUID regionID)
@@ -95,9 +95,9 @@ namespace OpenSim.Data.Null
             if (Instance != this)
                 return Instance.ReportAgent(sessionID, regionID);
 
-            if (m_presenceData.ContainsKey(sessionID))
+            if (_presenceData.ContainsKey(sessionID))
             {
-                m_presenceData[sessionID].RegionID = regionID;
+                _presenceData[sessionID].RegionID = regionID;
                 return true;
             }
 
@@ -109,13 +109,13 @@ namespace OpenSim.Data.Null
             if (Instance != this)
                 return Instance.Get(field, data);
 
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[NULL PRESENCE DATA]: Getting presence data for field {0} with parameter {1}", field, data);
 
             List<PresenceData> presences = new List<PresenceData>();
             if (field == "UserID")
             {
-                foreach (PresenceData p in m_presenceData.Values)
+                foreach (PresenceData p in _presenceData.Values)
                 {
                     if (p.UserID == data)
                     {
@@ -132,9 +132,9 @@ namespace OpenSim.Data.Null
                 if (!UUID.TryParse(data, out session))
                     return presences.ToArray();
 
-                if (m_presenceData.ContainsKey(session))
+                if (_presenceData.ContainsKey(session))
                 {
-                    presences.Add(m_presenceData[session]);
+                    presences.Add(_presenceData[session]);
                     return presences.ToArray();
                 }
             }
@@ -143,14 +143,14 @@ namespace OpenSim.Data.Null
                 UUID region = UUID.Zero;
                 if (!UUID.TryParse(data, out region))
                     return presences.ToArray();
-                foreach (PresenceData p in m_presenceData.Values)
+                foreach (PresenceData p in _presenceData.Values)
                     if (p.RegionID == region)
                         presences.Add(p);
                 return presences.ToArray();
             }
             else
             {
-                foreach (PresenceData p in m_presenceData.Values)
+                foreach (PresenceData p in _presenceData.Values)
                 {
                     if (p.Data.ContainsKey(field) && p.Data[field] == data)
                         presences.Add(p);
@@ -164,7 +164,7 @@ namespace OpenSim.Data.Null
 
         public bool Delete(string field, string data)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[NULL PRESENCE DATA]: Deleting presence data for field {0} with parameter {1}", field, data);
 
             if (Instance != this)
@@ -173,7 +173,7 @@ namespace OpenSim.Data.Null
             List<UUID> presences = new List<UUID>();
             if (field == "UserID")
             {
-                foreach (KeyValuePair<UUID, PresenceData> p in m_presenceData)
+                foreach (KeyValuePair<UUID, PresenceData> p in _presenceData)
                     if (p.Value.UserID == data)
                         presences.Add(p.Key);
             }
@@ -182,7 +182,7 @@ namespace OpenSim.Data.Null
                 UUID session = UUID.Zero;
                 if (UUID.TryParse(data, out session))
                 {
-                    if (m_presenceData.ContainsKey(session))
+                    if (_presenceData.ContainsKey(session))
                     {
                         presences.Add(session);
                     }
@@ -193,14 +193,14 @@ namespace OpenSim.Data.Null
                 UUID region = UUID.Zero;
                 if (UUID.TryParse(data, out region))
                 {
-                    foreach (KeyValuePair<UUID, PresenceData> p in m_presenceData)
+                    foreach (KeyValuePair<UUID, PresenceData> p in _presenceData)
                         if (p.Value.RegionID == region)
                             presences.Add(p.Key);
                 }
             }
             else
             {
-                foreach (KeyValuePair<UUID, PresenceData> p in m_presenceData)
+                foreach (KeyValuePair<UUID, PresenceData> p in _presenceData)
                 {
                     if (p.Value.Data.ContainsKey(field) && p.Value.Data[field] == data)
                         presences.Add(p.Key);
@@ -208,7 +208,7 @@ namespace OpenSim.Data.Null
             }
 
             foreach (UUID u in presences)
-                m_presenceData.Remove(u);
+                _presenceData.Remove(u);
 
             if (presences.Count == 0)
                 return false;

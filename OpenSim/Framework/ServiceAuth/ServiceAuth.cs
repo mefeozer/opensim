@@ -31,7 +31,7 @@ namespace OpenSim.Framework.ServiceAuth
 {
     public class ServiceAuth
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static IServiceAuth Create(IConfigSource config, string section)
         {
@@ -53,7 +53,7 @@ namespace OpenSim.Framework.ServiceAuth
             }
 
 //            foreach (IServiceAuth auth in compoundAuth.GetAuthentors())
-//                m_log.DebugFormat("[SERVICE AUTH]: Configured authenticator {0}", auth.Name);
+//                _log.DebugFormat("[SERVICE AUTH]: Configured authenticator {0}", auth.Name);
 
             if (compoundAuth.Count > 0)
                 return compoundAuth;

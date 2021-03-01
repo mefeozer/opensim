@@ -38,9 +38,9 @@ namespace OpenSim.Region.CoreModules.World
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "AccessModule")]
     public class AccessModule : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<Scene> m_SceneList = new List<Scene>();
+        private readonly List<Scene> _SceneList = new List<Scene>();
 
         public void Initialise(IConfigSource config)
         {
@@ -74,29 +74,23 @@ namespace OpenSim.Region.CoreModules.World
         {
         }
 
-        public string Name
-        {
-            get { return "AccessModule"; }
-        }
+        public string Name => "AccessModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void AddRegion(Scene scene)
         {
-            lock (m_SceneList)
+            lock (_SceneList)
             {
-                if (!m_SceneList.Contains(scene))
-                    m_SceneList.Add(scene);
+                if (!_SceneList.Contains(scene))
+                    _SceneList.Add(scene);
             }
         }
 
         public void RemoveRegion(Scene scene)
         {
-            lock (m_SceneList)
-                m_SceneList.Remove(scene);
+            lock (_SceneList)
+                _SceneList.Remove(scene);
         }
 
         public void RegionLoaded(Scene scene)
@@ -107,7 +101,7 @@ namespace OpenSim.Region.CoreModules.World
         {
             if ((Scene)MainConsole.Instance.ConsoleScene == null)
             {
-                foreach (Scene s in m_SceneList)
+                foreach (Scene s in _SceneList)
                 {
                     if (!ProcessCommand(s, cmd))
                         break;

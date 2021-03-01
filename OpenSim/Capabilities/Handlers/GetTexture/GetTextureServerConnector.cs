@@ -37,18 +37,18 @@ namespace OpenSim.Capabilities.Handlers
 {
     public class GetTextureServerConnector : ServiceConnector
     {
-        private readonly IAssetService m_AssetService;
-        private readonly string m_ConfigName = "CapsService";
+        private readonly IAssetService _AssetService;
+        private readonly string _ConfigName = "CapsService";
 
         public GetTextureServerConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string assetService = serverConfig.GetString("AssetService", string.Empty);
 
@@ -56,16 +56,16 @@ namespace OpenSim.Capabilities.Handlers
                 throw new Exception("No AssetService in config file");
 
             object[] args = new object[] { config };
-            m_AssetService =
+            _AssetService =
                     ServerUtils.LoadPlugin<IAssetService>(assetService, args);
 
-            if (m_AssetService == null)
-                throw new Exception(string.Format("Failed to load AssetService from {0}; config is {1}", assetService, m_ConfigName));
+            if (_AssetService == null)
+                throw new Exception(string.Format("Failed to load AssetService from {0}; config is {1}", assetService, _ConfigName));
 
             string rurl = serverConfig.GetString("GetTextureRedirectURL");
             ;
             server.AddStreamHandler(
-                new GetTextureRobustHandler("/CAPS/GetTexture", m_AssetService, "GetTexture", null, rurl));
+                new GetTextureRobustHandler("/CAPS/GetTexture", _AssetService, "GetTexture", null, rurl));
         }
     }
 }

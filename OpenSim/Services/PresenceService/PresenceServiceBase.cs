@@ -34,7 +34,7 @@ namespace OpenSim.Services.PresenceService
 {
     public class PresenceServiceBase : ServiceBase
     {
-        protected IPresenceData m_Database = null;
+        protected IPresenceData _Database = null;
 
         public PresenceServiceBase(IConfigSource config)
             : base(config)
@@ -72,8 +72,8 @@ namespace OpenSim.Services.PresenceService
             if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IPresenceData>(dllName, new object[] { connString, realm });
-            if (m_Database == null)
+            _Database = LoadPlugin<IPresenceData>(dllName, new object[] { connString, realm });
+            if (_Database == null)
                 throw new Exception("Could not find a storage interface in the given module " + dllName);
 
         }

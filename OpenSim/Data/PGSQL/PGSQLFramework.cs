@@ -37,16 +37,16 @@ namespace OpenSim.Data.PGSQL
     /// </summary>
     public class PGSqlFramework
     {
-        private static readonly log4net.ILog m_log =
+        private static readonly log4net.ILog _log =
                 log4net.LogManager.GetLogger(
                 System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected string m_connectionString;
-        protected object m_dbLock = new object();
+        protected string _connectionString;
+        protected object _dbLock = new object();
 
         protected PGSqlFramework(string connectionString)
         {
-            m_connectionString = connectionString;
+            _connectionString = connectionString;
             InitializeMonoSecurity();
         }
 
@@ -84,9 +84,9 @@ namespace OpenSim.Data.PGSQL
         //
         protected int ExecuteNonQuery(NpgsqlCommand cmd)
         {
-            lock (m_dbLock)
+            lock (_dbLock)
             {
-                using (NpgsqlConnection dbcon = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection dbcon = new NpgsqlConnection(_connectionString))
                 {
                     dbcon.Open();
                     cmd.Connection = dbcon;
@@ -97,7 +97,7 @@ namespace OpenSim.Data.PGSQL
                     }
                     catch (Exception e)
                     {
-                        m_log.Error(e.Message, e);
+                        _log.Error(e.Message, e);
                         return 0;
                     }
                 }

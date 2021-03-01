@@ -35,19 +35,13 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         public int RequestsHandled { get; protected set; }
 
-        public virtual string ContentType
-        {
-            get { return "application/xml"; }
-        }
+        public virtual string ContentType => "application/xml";
 
-        private readonly string m_httpMethod;
+        private readonly string _httpMethod;
 
-        public virtual string HttpMethod
-        {
-            get { return m_httpMethod; }
-        }
+        public virtual string HttpMethod => _httpMethod;
 
-        private readonly string m_path;
+        private readonly string _path;
 
         public string Name { get; }
 
@@ -59,20 +53,17 @@ namespace OpenSim.Framework.Servers.HttpServer
         {
             Name = name;
             Description = description;
-            m_httpMethod = httpMethod;
-            m_path = path;
+            _httpMethod = httpMethod;
+            _path = path;
         }
 
-        public virtual string Path
-        {
-            get { return m_path; }
-        }
+        public virtual string Path => _path;
 
         public string GetParam(string path)
         {
             if (CheckParam(path))
             {
-                return path.Substring(m_path.Length);
+                return path.Substring(_path.Length);
             }
 
             return string.Empty;

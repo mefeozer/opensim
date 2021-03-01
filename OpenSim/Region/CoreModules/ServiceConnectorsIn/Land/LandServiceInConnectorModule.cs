@@ -46,26 +46,26 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Land
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LandServiceInConnectorModule")]
     public class LandServiceInConnectorModule : ISharedRegionModule, ILandService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static bool m_Enabled = false;
-        private static bool m_Registered = false;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static bool _Enabled = false;
+        private static bool _Registered = false;
 
-        private IConfigSource m_Config;
-        private readonly List<Scene> m_Scenes = new List<Scene>();
+        private IConfigSource _Config;
+        private readonly List<Scene> _Scenes = new List<Scene>();
 
         #region Region Module interface
 
         public void Initialise(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
 
             IConfig moduleConfig = config.Configs["Modules"];
             if (moduleConfig != null)
             {
-                m_Enabled = moduleConfig.GetBoolean("LandServiceInConnector", false);
-                if (m_Enabled)
+                _Enabled = moduleConfig.GetBoolean("LandServiceInConnector", false);
+                if (_Enabled)
                 {
-                    m_log.Info("[LAND IN CONNECTOR]: LandServiceInConnector enabled");
+                    _log.Info("[LAND IN CONNECTOR]: LandServiceInConnector enabled");
                 }
 
             }
@@ -74,46 +74,40 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Land
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-//            m_log.Info("[LAND IN CONNECTOR]: Starting...");
+//            _log.Info("[LAND IN CONNECTOR]: Starting...");
         }
 
         public void Close()
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LandServiceInConnectorModule"; }
-        }
+        public string Name => "LandServiceInConnectorModule";
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (!m_Registered)
+            if (!_Registered)
             {
-                m_Registered = true;
-                object[] args = new object[] { m_Config, MainServer.Instance, this, scene };
+                _Registered = true;
+                object[] args = new object[] { _Config, MainServer.Instance, this, scene };
                 ServerUtils.LoadPlugin<IServiceConnector>("OpenSim.Server.Handlers.dll:LandServiceInConnector", args);
             }
 
-            m_Scenes.Add(scene);
+            _Scenes.Add(scene);
 
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (m_Enabled && m_Scenes.Contains(scene))
-                m_Scenes.Remove(scene);
+            if (_Enabled && _Scenes.Contains(scene))
+                _Scenes.Remove(scene);
         }
 
         public void RegionLoaded(Scene scene)
@@ -126,14 +120,14 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Land
 
         public LandData GetLandData(UUID scopeID, ulong regionHandle, uint x, uint y, out byte regionAccess)
         {
-//            m_log.DebugFormat("[LAND IN CONNECTOR]: GetLandData for {0}. Count = {1}",
-//                regionHandle, m_Scenes.Count);
+//            _log.DebugFormat("[LAND IN CONNECTOR]: GetLandData for {0}. Count = {1}",
+//                regionHandle, _Scenes.Count);
 
             uint rx = 0, ry = 0;
             Util.RegionHandleToWorldLoc(regionHandle, out rx, out ry);
             rx += x;
             ry += y;
-            foreach (Scene s in m_Scenes)
+            foreach (Scene s in _Scenes)
             {
                 uint t = s.RegionInfo.WorldLocX;
                 if( rx < t)
@@ -147,7 +141,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Land
                 t += s.RegionInfo.RegionSizeY;
                 if( ry  < t)
                 {
-//                    m_log.Debug("[LAND IN CONNECTOR]: Found region to GetLandData from");
+//                    _log.Debug("[LAND IN CONNECTOR]: Found region to GetLandData from");
                     x = rx - s.RegionInfo.WorldLocX;
                     y = ry - s.RegionInfo.WorldLocY;
                     regionAccess = s.RegionInfo.AccessLevel;
@@ -158,7 +152,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Land
                     return land; 
                 }
             }
-            m_log.DebugFormat("[LAND IN CONNECTOR]: region handle {0} not found", regionHandle);
+            _log.DebugFormat("[LAND IN CONNECTOR]: region handle {0} not found", regionHandle);
             regionAccess = 42;
             return null;
         }

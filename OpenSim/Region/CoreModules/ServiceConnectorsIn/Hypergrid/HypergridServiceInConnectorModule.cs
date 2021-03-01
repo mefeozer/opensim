@@ -42,33 +42,33 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Hypergrid
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "HypergridServiceInConnectorModule")]
     public class HypergridServiceInConnectorModule : ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static bool m_Enabled = false;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static bool _Enabled = false;
 
-        private IConfigSource m_Config;
-        private bool m_Registered = false;
-        private string m_LocalServiceDll = string.Empty;
-        private GatekeeperServiceInConnector m_HypergridHandler;
-        private UserAgentServerConnector m_UASHandler;
+        private IConfigSource _Config;
+        private bool _Registered = false;
+        private string _LocalServiceDll = string.Empty;
+        private GatekeeperServiceInConnector _HypergridHandler;
+        private UserAgentServerConnector _UASHandler;
 
         #region Region Module interface
 
         public void Initialise(IConfigSource config)
         {
-            m_Config = config;
+            _Config = config;
             IConfig moduleConfig = config.Configs["Modules"];
             if (moduleConfig != null)
             {
-                m_Enabled = moduleConfig.GetBoolean("HypergridServiceInConnector", false);
-                if (m_Enabled)
+                _Enabled = moduleConfig.GetBoolean("HypergridServiceInConnector", false);
+                if (_Enabled)
                 {
-                    m_log.Info("[HGGRID IN CONNECTOR]: Hypergrid Service In Connector enabled");
+                    _log.Info("[HGGRID IN CONNECTOR]: Hypergrid Service In Connector enabled");
                     IConfig fconfig = config.Configs["FriendsService"];
                     if (fconfig != null)
                     {
-                        m_LocalServiceDll = fconfig.GetString("LocalServiceModule", m_LocalServiceDll);
-                        if (string.IsNullOrEmpty(m_LocalServiceDll))
-                            m_log.WarnFormat("[HGGRID IN CONNECTOR]: Friends LocalServiceModule config missing");
+                        _LocalServiceDll = fconfig.GetString("LocalServiceModule", _LocalServiceDll);
+                        if (string.IsNullOrEmpty(_LocalServiceDll))
+                            _log.WarnFormat("[HGGRID IN CONNECTOR]: Friends LocalServiceModule config missing");
                     }
                 }
             }
@@ -82,55 +82,49 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsIn.Hypergrid
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "HypergridService"; }
-        }
+        public string Name => "HypergridService";
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (!m_Registered)
+            if (!_Registered)
             {
-                m_Registered = true;
+                _Registered = true;
 
-                m_log.Info("[HypergridService]: Starting...");
+                _log.Info("[HypergridService]: Starting...");
 
                 ISimulationService simService = scene.RequestModuleInterface<ISimulationService>();
                 IFriendsSimConnector friendsConn = scene.RequestModuleInterface<IFriendsSimConnector>();
-                object[] args = new object[] { m_Config };
-//                IFriendsService friendsService = ServerUtils.LoadPlugin<IFriendsService>(m_LocalServiceDll, args)
-                ServerUtils.LoadPlugin<IFriendsService>(m_LocalServiceDll, args);
+                object[] args = new object[] { _Config };
+//                IFriendsService friendsService = ServerUtils.LoadPlugin<IFriendsService>(_LocalServiceDll, args)
+                ServerUtils.LoadPlugin<IFriendsService>(_LocalServiceDll, args);
 
-                m_HypergridHandler = new GatekeeperServiceInConnector(m_Config, MainServer.Instance, simService);
+                _HypergridHandler = new GatekeeperServiceInConnector(_Config, MainServer.Instance, simService);
 
-                m_UASHandler = new UserAgentServerConnector(m_Config, MainServer.Instance, friendsConn);
+                _UASHandler = new UserAgentServerConnector(_Config, MainServer.Instance, friendsConn);
 
-                new HeloServiceInConnector(m_Config, MainServer.Instance, "HeloService");
+                new HeloServiceInConnector(_Config, MainServer.Instance, "HeloService");
 
-                new HGFriendsServerConnector(m_Config, MainServer.Instance, "HGFriendsService", friendsConn);
+                new HGFriendsServerConnector(_Config, MainServer.Instance, "HGFriendsService", friendsConn);
             }
-            scene.RegisterModuleInterface<IGatekeeperService>(m_HypergridHandler.GateKeeper);
-            scene.RegisterModuleInterface<IUserAgentService>(m_UASHandler.HomeUsersService);
+            scene.RegisterModuleInterface<IGatekeeperService>(_HypergridHandler.GateKeeper);
+            scene.RegisterModuleInterface<IUserAgentService>(_UASHandler.HomeUsersService);
         }
 
         #endregion

@@ -42,7 +42,7 @@ namespace OpenSim
     public class ConfigurationLoader
     {
 
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Various Config settings the region needs to start
@@ -50,17 +50,17 @@ namespace OpenSim
         /// StorageDLL, Storage Connection String, Estate connection String, Client Stack
         /// Standalone settings.
         /// </summary>
-        protected ConfigSettings m_configSettings;
+        protected ConfigSettings _configSettings;
 
         /// <summary>
         /// A source of Configuration data
         /// </summary>
-        protected OpenSimConfigSource m_config;
+        protected OpenSimConfigSource _config;
 
         /// <summary>
         /// Grid Service Information.  This refers to classes and addresses of the grid service
         /// </summary>
-        protected NetworkServersInfo m_networkServersInfo;
+        protected NetworkServersInfo _networkServersInfo;
 
         /// <summary>
         /// Loads the region configuration
@@ -73,8 +73,8 @@ namespace OpenSim
                 IConfigSource argvSource, out ConfigSettings configSettings,
                 out NetworkServersInfo networkInfo)
         {
-            m_configSettings = configSettings = new ConfigSettings();
-            m_networkServersInfo = networkInfo = new NetworkServersInfo();
+            _configSettings = configSettings = new ConfigSettings();
+            _networkServersInfo = networkInfo = new NetworkServersInfo();
             IConfig startupConfig = argvSource.Configs["Startup"];
 
             List<string> sources = new List<string>();
@@ -82,21 +82,21 @@ namespace OpenSim
             AddOpensimDefaultsIniToSource(startupConfig, sources);
             AddOpenSimIniToSource(startupConfig, sources);
 
-            m_config = new OpenSimConfigSource
+            _config = new OpenSimConfigSource
             {
                 Source = new IniConfigSource()
             };
 
-            m_log.Info("[CONFIG]: Reading configuration settings");
+            _log.Info("[CONFIG]: Reading configuration settings");
 
 
             bool iniFileExists = false;
             for (int i = 0; i < sources.Count; i++)
             {
-                if (ReadConfig(m_config, sources[i]))
+                if (ReadConfig(_config, sources[i]))
                 {
                     iniFileExists = true;
-                    AddIncludes(m_config, sources);
+                    AddIncludes(_config, sources);
                 }
             }
 
@@ -106,7 +106,7 @@ namespace OpenSim
 
             if (Directory.Exists(iniDirPath))
             {
-                m_log.InfoFormat("[CONFIG]: Searching folder {0} for config ini files", iniDirPath);
+                _log.InfoFormat("[CONFIG]: Searching folder {0} for config ini files", iniDirPath);
                 List<string> overrideSources = new List<string>();
 
                 string[] fileEntries = Directory.GetFiles(iniDirName);
@@ -139,24 +139,24 @@ namespace OpenSim
                             AddIncludes(overrideConfig, overrideSources);
                         }
                     }
-                    m_config.Source.Merge(overrideConfig.Source);
+                    _config.Source.Merge(overrideConfig.Source);
                 }
             }
 
             ExitForNoConfig(iniFileExists, sources);
 
             // Merge OpSys env vars
-            m_log.Info("[CONFIG]: Loading environment variables for Config");
-            Util.MergeEnvironmentToConfig(m_config.Source);
+            _log.Info("[CONFIG]: Loading environment variables for Config");
+            Util.MergeEnvironmentToConfig(_config.Source);
 
             // Make sure command line options take precedence
-            m_config.Source.Merge(argvSource);
+            _config.Source.Merge(argvSource);
 
-            m_config.Source.ReplaceKeyValues();
+            _config.Source.ReplaceKeyValues();
 
             ReadConfigSettings();
 
-            return m_config;
+            return _config;
         }
 
         private void AddOpensimDefaultsIniToSource(IConfig startupConfig, List<string> sources)
@@ -185,7 +185,7 @@ namespace OpenSim
                     }
                     else
                     {
-                        m_log.ErrorFormat("Master ini file {0} not found", Path.GetFullPath(masterFilePath));
+                        _log.ErrorFormat("Master ini file {0} not found", Path.GetFullPath(masterFilePath));
                         Environment.Exit(1);
                     }
                 }
@@ -196,13 +196,13 @@ namespace OpenSim
         {
             if (sources.Count == 0)
             {
-                m_log.FatalFormat("[CONFIG]: Could not load any configuration");
+                _log.FatalFormat("[CONFIG]: Could not load any configuration");
                 Environment.Exit(1);
             }
             else if (!iniFileExists)
             {
-                m_log.FatalFormat("[CONFIG]: Could not load any configuration");
-                m_log.FatalFormat("[CONFIG]: Configuration exists, but there was an error loading it!");
+                _log.FatalFormat("[CONFIG]: Could not load any configuration");
+                _log.FatalFormat("[CONFIG]: Configuration exists, but there was an error loading it!");
                 Environment.Exit(1);
             }
         }
@@ -275,7 +275,7 @@ namespace OpenSim
                             // If the include path contains no wildcards, then warn the user that it wasn't found.
                             if (wildcardIndex == -1 && paths.Length == 0)
                             {
-                                m_log.WarnFormat("[CONFIG]: Could not find include file {0}", path);
+                                _log.WarnFormat("[CONFIG]: Could not find include file {0}", path);
                             }
                             else
                             {
@@ -314,14 +314,14 @@ namespace OpenSim
 
             if (!IsUri(iniPath))
             {
-                m_log.InfoFormat("[CONFIG]: Reading configuration file {0}", Path.GetFullPath(iniPath));
+                _log.InfoFormat("[CONFIG]: Reading configuration file {0}", Path.GetFullPath(iniPath));
 
                 configSource.Source.Merge(new IniConfigSource(iniPath));
                 success = true;
             }
             else
             {
-                m_log.InfoFormat("[CONFIG]: {0} is a http:// URI, fetching ...", iniPath);
+                _log.InfoFormat("[CONFIG]: {0} is a http:// URI, fetching ...", iniPath);
 
                 // The ini file path is a http URI
                 // Try to read it
@@ -335,7 +335,7 @@ namespace OpenSim
                 }
                 catch (Exception e)
                 {
-                    m_log.FatalFormat("[CONFIG]: Exception reading config from URI {0}\n" + e.ToString(), iniPath);
+                    _log.FatalFormat("[CONFIG]: Exception reading config from URI {0}\n" + e.ToString(), iniPath);
                     Environment.Exit(1);
                 }
             }
@@ -347,17 +347,17 @@ namespace OpenSim
         /// </summary>
         protected virtual void ReadConfigSettings()
         {
-            IConfig startupConfig = m_config.Source.Configs["Startup"];
+            IConfig startupConfig = _config.Source.Configs["Startup"];
             if (startupConfig != null)
             {
-                m_configSettings.PhysicsEngine = startupConfig.GetString("physics");
-                m_configSettings.MeshEngineName = startupConfig.GetString("meshing");
+                _configSettings.PhysicsEngine = startupConfig.GetString("physics");
+                _configSettings.MeshEngineName = startupConfig.GetString("meshing");
 
-                m_configSettings.ClientstackDll
+                _configSettings.ClientstackDll
                     = startupConfig.GetString("clientstack_plugin", "OpenSim.Region.ClientStack.LindenUDP.dll");
             }
 
-            m_networkServersInfo.loadFromConfiguration(m_config.Source);
+            _networkServersInfo.loadFromConfiguration(_config.Source);
         }
     }
 }

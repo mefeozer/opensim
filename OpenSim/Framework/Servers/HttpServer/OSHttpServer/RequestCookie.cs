@@ -47,10 +47,7 @@ namespace OSHttpServer
         /// <summary>
         /// Gets the cookie identifier.
         /// </summary>
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name => _name;
 
 
         /// <summary>
@@ -58,11 +55,8 @@ namespace OSHttpServer
         /// </summary>
         public string Value
         {
-            get { return _value; }
-            set
-            {
-                _value = value;
-            }
+            get => _value;
+            set => _value = value;
         }
 
         #endregion

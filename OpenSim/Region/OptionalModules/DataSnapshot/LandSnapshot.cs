@@ -43,11 +43,11 @@ namespace OpenSim.Region.DataSnapshot.Providers
 {
     public class LandSnapshot : IDataSnapshotProvider
     {
-        private Scene m_scene = null;
-        private DataSnapshotManager m_parent = null;
-        //private Dictionary<int, Land> m_landIndexed = new Dictionary<int, Land>();
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private bool m_stale = true;
+        private Scene _scene = null;
+        private DataSnapshotManager _parent = null;
+        //private Dictionary<int, Land> _landIndexed = new Dictionary<int, Land>();
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private bool _stale = true;
 
         #region Dead code
 
@@ -81,22 +81,22 @@ namespace OpenSim.Region.DataSnapshot.Providers
 
         public void PrepareData()
         {
-            m_log.Info("[EXTERNALDATA]: Generating land data.");
+            _log.Info("[EXTERNALDATA]: Generating land data.");
 
-            m_landIndexed.Clear();
+            _landIndexed.Clear();
 
             //Index sim land
-            foreach (KeyValuePair<int, Land> curLand in m_scene.LandManager.landList)
+            foreach (KeyValuePair<int, Land> curLand in _scene.LandManager.landList)
             {
                 //if ((curLand.Value.LandData.landFlags & (uint)ParcelFlags.ShowDirectory) == (uint)ParcelFlags.ShowDirectory)
                 //{
-                    m_landIndexed.Add(curLand.Key, curLand.Value.Copy());
+                    _landIndexed.Add(curLand.Key, curLand.Value.Copy());
                 //}
             }
         }
 
         public Dictionary<int,Land> IndexedLand {
-            get { return m_landIndexed; }
+            get { return _landIndexed; }
         }
         */
 
@@ -106,33 +106,30 @@ namespace OpenSim.Region.DataSnapshot.Providers
 
         public void Initialize(Scene scene, DataSnapshotManager parent)
         {
-            m_scene = scene;
-            m_parent = parent;
+            _scene = scene;
+            _parent = parent;
 
             //Brought back from the dead for staleness checks.
-            m_scene.EventManager.OnNewClient += OnNewClient;
+            _scene.EventManager.OnNewClient += OnNewClient;
         }
 
-        public Scene GetParentScene
-        {
-            get { return m_scene; }
-        }
+        public Scene GetParentScene => _scene;
 
         public XmlNode RequestSnapshotData(XmlDocument nodeFactory)
         {
             XmlNode parent = nodeFactory.CreateNode(XmlNodeType.Element, "parceldata", "");
-            ILandChannel landChannel = m_scene.LandChannel;
+            ILandChannel landChannel = _scene.LandChannel;
             if(landChannel == null)
                 return parent;
 
             List<ILandObject> parcels = landChannel.AllParcels();
 
-            IDwellModule dwellModule = m_scene.RequestModuleInterface<IDwellModule>();
+            IDwellModule dwellModule = _scene.RequestModuleInterface<IDwellModule>();
 
             if (parcels != null)
             {
 
-                //foreach (KeyValuePair<int, Land> curParcel in m_landIndexed)
+                //foreach (KeyValuePair<int, Land> curParcel in _landIndexed)
                 foreach (ILandObject parcel_interface in parcels)
                 {
                     // Play it safe
@@ -142,8 +139,8 @@ namespace OpenSim.Region.DataSnapshot.Providers
                     LandObject land = (LandObject)parcel_interface;
 
                     LandData parcel = land.LandData;
-                    if (m_parent.ExposureLevel.Equals("all") ||
-                        m_parent.ExposureLevel.Equals("minimum") &&
+                    if (_parent.ExposureLevel.Equals("all") ||
+                        _parent.ExposureLevel.Equals("minimum") &&
                         (parcel.Flags & (uint)ParcelFlags.ShowDirectory) == (uint)ParcelFlags.ShowDirectory)
                     {
 
@@ -209,7 +206,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
                         uint x = (uint)loc.X, y = (uint)loc.Y;
                         findPointInParcel(land, ref x, ref y); // find a suitable spot
                         infouuid.InnerText = Util.BuildFakeParcelID(
-                                m_scene.RegionInfo.RegionHandle, x, y).ToString();
+                                _scene.RegionInfo.RegionHandle, x, y).ToString();
                         xmlparcel.AppendChild(infouuid);
 
                         XmlNode dwell = nodeFactory.CreateNode(XmlNodeType.Element, "dwell", "");
@@ -239,7 +236,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
                             groupuuid.InnerText = parcel.GroupID.ToString();
                             groupblock.AppendChild(groupuuid);
 
-                            IGroupsModule gm = m_scene.RequestModuleInterface<IGroupsModule>();
+                            IGroupsModule gm = _scene.RequestModuleInterface<IGroupsModule>();
                             if (gm != null)
                             {
                                 GroupRecord g = gm.GetGroupRecord(parcel.GroupID);
@@ -267,7 +264,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
                             try
                             {
                                 XmlNode username = nodeFactory.CreateNode(XmlNodeType.Element, "name", "");
-                                UserAccount account = m_scene.UserAccountService.GetUserAccount(m_scene.RegionInfo.ScopeID, userOwnerUUID);
+                                UserAccount account = _scene.UserAccountService.GetUserAccount(_scene.RegionInfo.ScopeID, userOwnerUUID);
                                 if(account != null)
                                     username.InnerText = account.FirstName + " " + account.LastName;
                                 else
@@ -277,7 +274,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
                             }
                             catch (Exception)
                             {
-                                //m_log.Info("[DATASNAPSHOT]: Cannot find owner name; ignoring this parcel");
+                                //_log.Info("[DATASNAPSHOT]: Cannot find owner name; ignoring this parcel");
                             }
 
                         }
@@ -300,22 +297,16 @@ namespace OpenSim.Region.DataSnapshot.Providers
             return parent;
         }
 
-        public string Name
-        {
-            get { return "LandSnapshot"; }
-        }
+        public string Name => "LandSnapshot";
 
         public bool Stale
         {
-            get
-            {
-                return m_stale;
-            }
+            get => _stale;
             set
             {
-                m_stale = value;
+                _stale = value;
 
-                if (m_stale)
+                if (_stale)
                     OnStale(this);
             }
         }
@@ -404,7 +395,7 @@ namespace OpenSim.Region.DataSnapshot.Providers
         // another, smaller rectangular parcel). Both will have the same initial coordinates.
         private void findPointInParcel(ILandObject land, ref uint refX, ref uint refY)
         {
-            m_log.DebugFormat("[DATASNAPSHOT] trying {0}, {1}", refX, refY);
+            _log.DebugFormat("[DATASNAPSHOT] trying {0}, {1}", refX, refY);
             // the point we started with already is in the parcel
             if (land.ContainsPoint((int)refX, (int)refY)) return;
 

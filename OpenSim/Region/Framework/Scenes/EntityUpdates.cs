@@ -52,49 +52,37 @@ namespace OpenSim.Region.Framework.Scenes
         public int PriorityQueueIndex;
         public ulong EntryOrder;
 
-        private ISceneEntity m_entity;
-        private PrimUpdateFlags m_flags;
-        public ObjectPropertyUpdateFlags m_propsFlags;
+        private ISceneEntity _entity;
+        private PrimUpdateFlags _flags;
+        public ObjectPropertyUpdateFlags _propsFlags;
 
         public ObjectPropertyUpdateFlags PropsFlags
         {
-            get
-            {
-                return m_propsFlags;
-            }
-            set
-            {
-                m_propsFlags = value;
-            }
+            get => _propsFlags;
+            set => _propsFlags = value;
         }
 
         public ISceneEntity Entity
         {
-            get
-            {
-                return m_entity;
-            }
-            internal set
-            {
-                m_entity = value;
-            }
+            get => _entity;
+            internal set => _entity = value;
         }
 
         public PrimUpdateFlags Flags
         {
-            get { return m_flags; }
-            set { m_flags = value; }
+            get => _flags;
+            set => _flags = value;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void Update(int pqueue, ulong entry)
         {
-            if ((m_flags & PrimUpdateFlags.CancelKill) != 0)
+            if ((_flags & PrimUpdateFlags.CancelKill) != 0)
             {
-                if ((m_flags & PrimUpdateFlags.UpdateProbe) != 0)
-                    m_flags = PrimUpdateFlags.UpdateProbe;
+                if ((_flags & PrimUpdateFlags.UpdateProbe) != 0)
+                    _flags = PrimUpdateFlags.UpdateProbe;
                 else
-                    m_flags = PrimUpdateFlags.FullUpdatewithAnim;
+                    _flags = PrimUpdateFlags.FullUpdatewithAnim;
             }
 
             PriorityQueue = pqueue;
@@ -104,21 +92,21 @@ namespace OpenSim.Region.Framework.Scenes
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void UpdateFromNew(EntityUpdate newupdate, int pqueue)
         {
-            m_propsFlags |= newupdate.PropsFlags;
+            _propsFlags |= newupdate.PropsFlags;
             PrimUpdateFlags newFlags = newupdate.Flags;
 
             if ((newFlags & PrimUpdateFlags.UpdateProbe) != 0)
-                m_flags &= ~PrimUpdateFlags.UpdateProbe;
+                _flags &= ~PrimUpdateFlags.UpdateProbe;
 
             if ((newFlags & PrimUpdateFlags.CancelKill) != 0)
             {
                 if ((newFlags & PrimUpdateFlags.UpdateProbe) != 0)
-                    m_flags = PrimUpdateFlags.UpdateProbe;
+                    _flags = PrimUpdateFlags.UpdateProbe;
                 else
                     newFlags = PrimUpdateFlags.FullUpdatewithAnim;
             }
             else
-                m_flags |= newFlags;
+                _flags |= newFlags;
 
             PriorityQueue = pqueue;
         }
@@ -126,32 +114,32 @@ namespace OpenSim.Region.Framework.Scenes
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void Free()
         {
-            m_entity = null;
+            _entity = null;
             PriorityQueueIndex = -1;
             EntityUpdatesPool.Free(this);
         }
 
         public EntityUpdate(ISceneEntity entity, PrimUpdateFlags flags)
         {
-            m_entity = entity;
-            m_flags = flags;
+            _entity = entity;
+            _flags = flags;
         }
 
         public EntityUpdate(ISceneEntity entity, PrimUpdateFlags flags, bool sendfam, bool sendobj)
         {
-            m_entity = entity;
-            m_flags = flags;
+            _entity = entity;
+            _flags = flags;
 
             if (sendfam)
-                m_propsFlags |= ObjectPropertyUpdateFlags.Family;
+                _propsFlags |= ObjectPropertyUpdateFlags.Family;
 
             if (sendobj)
-                m_propsFlags |= ObjectPropertyUpdateFlags.Object;
+                _propsFlags |= ObjectPropertyUpdateFlags.Object;
         }
 
         public override string ToString()
         {
-            return string.Format("[{0},{1},{2}]", PriorityQueue, EntryOrder, m_entity.LocalId);
+            return string.Format("[{0},{1},{2}]", PriorityQueue, EntryOrder, _entity.LocalId);
         }
     }
 
@@ -159,30 +147,30 @@ namespace OpenSim.Region.Framework.Scenes
     {
         const int MAXSIZE = 32768;
         const int PREALLOC = 16384;
-        private static readonly EntityUpdate[] m_pool = new EntityUpdate[MAXSIZE];
-        private static readonly object m_poollock = new object();
-        private static int m_poolPtr;
-        //private static int m_min = int.MaxValue;
-        //private static int m_max = int.MinValue;
+        private static readonly EntityUpdate[] _pool = new EntityUpdate[MAXSIZE];
+        private static readonly object _poollock = new object();
+        private static int _poolPtr;
+        //private static int _min = int.MaxValue;
+        //private static int _max = int.MinValue;
 
         static EntityUpdatesPool()
         {
             for(int i = 0; i < PREALLOC; ++i)
-                m_pool[i] = new EntityUpdate(null, 0);
-            m_poolPtr = PREALLOC - 1;
+                _pool[i] = new EntityUpdate(null, 0);
+            _poolPtr = PREALLOC - 1;
         }
 
         public static EntityUpdate Get(ISceneEntity entity, PrimUpdateFlags flags)
         {
-            lock (m_poollock)
+            lock (_poollock)
             {
-                if (m_poolPtr >= 0)
+                if (_poolPtr >= 0)
                 {
-                    EntityUpdate eu = m_pool[m_poolPtr];
-                    m_pool[m_poolPtr] = null;
-                    m_poolPtr--;
-                    //if (m_min > m_poolPtr)
-                    //    m_min = m_poolPtr;
+                    EntityUpdate eu = _pool[_poolPtr];
+                    _pool[_poolPtr] = null;
+                    _poolPtr--;
+                    //if (_min > _poolPtr)
+                    //    _min = _poolPtr;
                     eu.Entity = entity;
                     eu.Flags = flags;
                     return eu;
@@ -193,15 +181,15 @@ namespace OpenSim.Region.Framework.Scenes
 
         public static EntityUpdate Get(ISceneEntity entity, PrimUpdateFlags flags, bool sendfam, bool sendobj)
         {
-            lock (m_poollock)
+            lock (_poollock)
             {
-                if (m_poolPtr >= 0)
+                if (_poolPtr >= 0)
                 {
-                    EntityUpdate eu = m_pool[m_poolPtr];
-                    m_pool[m_poolPtr] = null;
-                    m_poolPtr--;
-                    //if (m_min > m_poolPtr)
-                    //    m_min = m_poolPtr;
+                    EntityUpdate eu = _pool[_poolPtr];
+                    _pool[_poolPtr] = null;
+                    _poolPtr--;
+                    //if (_min > _poolPtr)
+                    //    _min = _poolPtr;
                     eu.Entity = entity;
                     eu.Flags = flags;
                     ObjectPropertyUpdateFlags tmp = 0;
@@ -220,14 +208,14 @@ namespace OpenSim.Region.Framework.Scenes
 
         public static void Free(EntityUpdate eu)
         {
-            lock (m_poollock)
+            lock (_poollock)
             {
-                if (m_poolPtr < MAXSIZE - 1)
+                if (_poolPtr < MAXSIZE - 1)
                 {
-                    m_poolPtr++;
-                    //if (m_max < m_poolPtr)
-                    //    m_max = m_poolPtr;
-                    m_pool[m_poolPtr] = eu;
+                    _poolPtr++;
+                    //if (_max < _poolPtr)
+                    //    _max = _poolPtr;
+                    _pool[_poolPtr] = eu;
                 }
             }
         }

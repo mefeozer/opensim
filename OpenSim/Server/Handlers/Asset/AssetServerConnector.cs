@@ -41,18 +41,18 @@ namespace OpenSim.Server.Handlers.Asset
 {
     public class AssetServiceConnector : ServiceConnector
     {
-        private readonly IAssetService m_AssetService;
-        private readonly string m_ConfigName = "AssetService";
+        private readonly IAssetService _AssetService;
+        private readonly string _ConfigName = "AssetService";
 
         public AssetServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section '{0}' in config file", m_ConfigName));
+                throw new Exception(string.Format("No section '{0}' in config file", _ConfigName));
 
             string assetService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -60,12 +60,12 @@ namespace OpenSim.Server.Handlers.Asset
             if (string.IsNullOrEmpty(assetService))
                 throw new Exception("No LocalServiceModule in config file");
 
-            object[] args = new object[] { config, m_ConfigName };
-            m_AssetService =
+            object[] args = new object[] { config, _ConfigName };
+            _AssetService =
                     ServerUtils.LoadPlugin<IAssetService>(assetService, args);
 
-            if (m_AssetService == null)
-                throw new Exception(string.Format("Failed to load AssetService from {0}; config is {1}", assetService, m_ConfigName));
+            if (_AssetService == null)
+                throw new Exception(string.Format("Failed to load AssetService from {0}; config is {1}", assetService, _ConfigName));
 
             bool allowDelete = serverConfig.GetBoolean("AllowRemoteDelete", false);
             bool allowDeleteAllTypes = serverConfig.GetBoolean("AllowRemoteDeleteAllTypes", false);
@@ -86,12 +86,12 @@ namespace OpenSim.Server.Handlers.Asset
                     allowedRemoteDeleteTypes = AllowedRemoteDeleteTypes.MapTile;
             }
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
-            server.AddStreamHandler(new AssetServerGetHandler(m_AssetService, auth, redirectURL));
-            server.AddStreamHandler(new AssetServerPostHandler(m_AssetService, auth));
-            server.AddStreamHandler(new AssetServerDeleteHandler(m_AssetService, allowedRemoteDeleteTypes, auth));
-            server.AddStreamHandler(new AssetsExistHandler(m_AssetService));
+            server.AddStreamHandler(new AssetServerGetHandler(_AssetService, auth, redirectURL));
+            server.AddStreamHandler(new AssetServerPostHandler(_AssetService, auth));
+            server.AddStreamHandler(new AssetServerDeleteHandler(_AssetService, allowedRemoteDeleteTypes, auth));
+            server.AddStreamHandler(new AssetsExistHandler(_AssetService));
 
             MainConsole.Instance.Commands.AddCommand("Assets", false,
                     "show asset",
@@ -121,7 +121,7 @@ namespace OpenSim.Server.Handlers.Asset
                 return;
             }
 
-            AssetBase asset = m_AssetService.Get(args[2]);
+            AssetBase asset = _AssetService.Get(args[2]);
 
             if (asset == null || asset.Data.Length == 0)
             {
@@ -129,7 +129,7 @@ namespace OpenSim.Server.Handlers.Asset
                 return;
             }
 
-            if (!m_AssetService.Delete(asset.ID))
+            if (!_AssetService.Delete(asset.ID))
                 MainConsole.Instance.Output("ERROR: Could not delete asset {0} {1}", asset.ID, asset.Name);
             else
                 MainConsole.Instance.Output("Deleted asset {0} {1}", asset.ID, asset.Name);
@@ -152,7 +152,7 @@ namespace OpenSim.Server.Handlers.Asset
                 return;
             }
 
-            AssetBase asset = m_AssetService.Get(assetId.ToString());
+            AssetBase asset = _AssetService.Get(assetId.ToString());
             if (asset == null)
             {
                 MainConsole.Instance.Output("ERROR: No asset found with ID {0}", assetId);
@@ -183,7 +183,7 @@ namespace OpenSim.Server.Handlers.Asset
                 return;
             }
 
-            AssetBase asset = m_AssetService.Get(args[2]);
+            AssetBase asset = _AssetService.Get(args[2]);
 
             if (asset == null || asset.Data.Length == 0)
             {

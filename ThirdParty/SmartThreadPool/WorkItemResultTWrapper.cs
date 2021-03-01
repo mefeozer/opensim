@@ -66,20 +66,11 @@ namespace Amib.Threading.Internal
             return (TResult)_workItemResult.GetResult(timeout, exitContext, cancelWaitHandle, out e);
         }
 
-        public bool IsCompleted
-        {
-            get { return _workItemResult.IsCompleted; }
-        }
+        public bool IsCompleted => _workItemResult.IsCompleted;
 
-        public bool IsCanceled
-        {
-            get { return _workItemResult.IsCanceled; }
-        }
+        public bool IsCanceled => _workItemResult.IsCanceled;
 
-        public object State
-        {
-            get { return _workItemResult.State; }
-        }
+        public object State => _workItemResult.State;
 
         public bool Cancel()
         {
@@ -91,15 +82,9 @@ namespace Amib.Threading.Internal
             return _workItemResult.Cancel(abortExecution);
         }
 
-        public TResult Result
-        {
-            get { return (TResult)_workItemResult.Result; }
-        }
+        public TResult Result => (TResult)_workItemResult.Result;
 
-        public object Exception
-        {
-            get { return (TResult)_workItemResult.Exception; }
-        }
+        public object Exception => (TResult)_workItemResult.Exception;
 
         #region IInternalWorkItemResult Members
 

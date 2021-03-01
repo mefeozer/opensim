@@ -129,7 +129,7 @@ namespace OpenSim.Services.Interfaces
 
     public class GridRegion
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 #pragma warning disable 414
         private static readonly string LogHeader = "[GRID REGION]";
@@ -146,52 +146,52 @@ namespace OpenSim.Services.Interfaces
         public string ServerURI
         {
             get {
-                if (!string.IsNullOrEmpty(m_serverURI)) {
-                    return m_serverURI;
+                if (!string.IsNullOrEmpty(_serverURI)) {
+                    return _serverURI;
                 } else {
                     if (HttpPort == 0)
-                        return "http://" + m_externalHostName + "/";
+                        return "http://" + _externalHostName + "/";
                     else
-                        return "http://" + m_externalHostName + ":" + HttpPort + "/";
+                        return "http://" + _externalHostName + ":" + HttpPort + "/";
                 }
             }
             set {
                 if ( value == null)
                 {
-                    m_serverURI = string.Empty;
+                    _serverURI = string.Empty;
                     return;
                 }
 
                 if ( value.EndsWith("/") )
                 {
 
-                    m_serverURI = value;
+                    _serverURI = value;
                 }
                 else
                 {
-                    m_serverURI = value + '/';
+                    _serverURI = value + '/';
                 }
             }
         }
 
-        protected string m_serverURI;
+        protected string _serverURI;
 
         /// <summary>
-        /// Provides direct access to the 'm_serverURI' field, without returning a generated URL if m_serverURI is missing.
+        /// Provides direct access to the '_serverURI' field, without returning a generated URL if _serverURI is missing.
         /// </summary>
         public string RawServerURI
         {
-            get { return m_serverURI; }
-            set { m_serverURI = value; }
+            get => _serverURI;
+            set => _serverURI = value;
         }
 
 
         public string RegionName
         {
-            get { return m_regionName; }
-            set { m_regionName = value; }
+            get => _regionName;
+            set => _regionName = value;
         }
-        protected string m_regionName = string.Empty;
+        protected string _regionName = string.Empty;
 
         /// <summary>
         /// Region flags.
@@ -204,19 +204,19 @@ namespace OpenSim.Services.Interfaces
         /// </remarks>
         public OpenSim.Framework.RegionFlags? RegionFlags { get; set; }
 
-        protected string m_externalHostName;
+        protected string _externalHostName;
 
-        protected IPEndPoint m_internalEndPoint;
+        protected IPEndPoint _internalEndPoint;
 
         /// <summary>
         /// The co-ordinate of this region in region units.
         /// </summary>
-        public int RegionCoordX { get { return (int)Util.WorldToRegionLoc((uint)RegionLocX); } }
+        public int RegionCoordX => (int)Util.WorldToRegionLoc((uint)RegionLocX);
 
         /// <summary>
         /// The co-ordinate of this region in region units
         /// </summary>
-        public int RegionCoordY { get { return (int)Util.WorldToRegionLoc((uint)RegionLocY); } }
+        public int RegionCoordY => (int)Util.WorldToRegionLoc((uint)RegionLocY);
 
         /// <summary>
         /// The location of this region in meters.
@@ -224,10 +224,10 @@ namespace OpenSim.Services.Interfaces
         /// </summary>
         public int RegionLocX
         {
-            get { return m_regionLocX; }
-            set { m_regionLocX = value; }
+            get => _regionLocX;
+            set => _regionLocX = value;
         }
-        protected int m_regionLocX;
+        protected int _regionLocX;
 
         public int RegionSizeX { get; set; }
         public int RegionSizeY { get; set; }
@@ -238,17 +238,17 @@ namespace OpenSim.Services.Interfaces
         /// </summary>
         public int RegionLocY
         {
-            get { return m_regionLocY; }
-            set { m_regionLocY = value; }
+            get => _regionLocY;
+            set => _regionLocY = value;
         }
-        protected int m_regionLocY;
+        protected int _regionLocY;
 
-        protected UUID m_estateOwner;
+        protected UUID _estateOwner;
 
         public UUID EstateOwner
         {
-            get { return m_estateOwner; }
-            set { m_estateOwner = value; }
+            get => _estateOwner;
+            set => _estateOwner = value;
         }
 
         public UUID RegionID = UUID.Zero;
@@ -265,26 +265,26 @@ namespace OpenSim.Services.Interfaces
         {
             RegionSizeX = (int)Constants.RegionSize;
             RegionSizeY = (int)Constants.RegionSize;
-            m_serverURI = string.Empty;
+            _serverURI = string.Empty;
         }
 
         public GridRegion(uint xcell, uint ycell)
         {
-            m_regionLocX = (int)Util.RegionToWorldLoc(xcell);
-            m_regionLocY = (int)Util.RegionToWorldLoc(ycell);
+            _regionLocX = (int)Util.RegionToWorldLoc(xcell);
+            _regionLocY = (int)Util.RegionToWorldLoc(ycell);
             RegionSizeX = (int)Constants.RegionSize;
             RegionSizeY = (int)Constants.RegionSize;
         }
 
         public GridRegion(RegionInfo ConvertFrom)
         {
-            m_regionName = ConvertFrom.RegionName;
-            m_regionLocX = (int)ConvertFrom.WorldLocX;
-            m_regionLocY = (int)ConvertFrom.WorldLocY;
+            _regionName = ConvertFrom.RegionName;
+            _regionLocX = (int)ConvertFrom.WorldLocX;
+            _regionLocY = (int)ConvertFrom.WorldLocY;
             RegionSizeX = (int)ConvertFrom.RegionSizeX;
             RegionSizeY = (int)ConvertFrom.RegionSizeY;
-            m_internalEndPoint = ConvertFrom.InternalEndPoint;
-            m_externalHostName = ConvertFrom.ExternalHostName;
+            _internalEndPoint = ConvertFrom.InternalEndPoint;
+            _externalHostName = ConvertFrom.ExternalHostName;
             HttpPort = ConvertFrom.HttpPort;
             RegionID = ConvertFrom.RegionID;
             ServerURI = ConvertFrom.ServerURI;
@@ -298,14 +298,14 @@ namespace OpenSim.Services.Interfaces
 
         public GridRegion(GridRegion ConvertFrom)
         {
-            m_regionName = ConvertFrom.RegionName;
+            _regionName = ConvertFrom.RegionName;
             RegionFlags = ConvertFrom.RegionFlags;
-            m_regionLocX = ConvertFrom.RegionLocX;
-            m_regionLocY = ConvertFrom.RegionLocY;
+            _regionLocX = ConvertFrom.RegionLocX;
+            _regionLocY = ConvertFrom.RegionLocY;
             RegionSizeX = ConvertFrom.RegionSizeX;
             RegionSizeY = ConvertFrom.RegionSizeY;
-            m_internalEndPoint = ConvertFrom.InternalEndPoint;
-            m_externalHostName = ConvertFrom.ExternalHostName;
+            _internalEndPoint = ConvertFrom.InternalEndPoint;
+            _externalHostName = ConvertFrom.ExternalHostName;
             HttpPort = ConvertFrom.HttpPort;
             RegionID = ConvertFrom.RegionID;
             ServerURI = ConvertFrom.ServerURI;
@@ -393,7 +393,7 @@ namespace OpenSim.Services.Interfaces
             if (kvp.ContainsKey("Token"))
                 Token = kvp["Token"].ToString();
 
-            // m_log.DebugFormat("{0} New GridRegion. id={1}, loc=<{2},{3}>, size=<{4},{5}>",
+            // _log.DebugFormat("{0} New GridRegion. id={1}, loc=<{2},{3}>, size=<{4},{5}>",
             //                         LogHeader, RegionID, RegionLocX, RegionLocY, RegionSizeX, RegionSizeY);
         }
 
@@ -457,26 +457,20 @@ namespace OpenSim.Services.Interfaces
         ///
         /// XXX Isn't this really doing too much to be a simple getter, rather than an explict method?
         /// </value>
-        public IPEndPoint ExternalEndPoint
-        {
-            get { return Util.getEndPoint(m_externalHostName, m_internalEndPoint.Port); }
-        }
+        public IPEndPoint ExternalEndPoint => Util.getEndPoint(_externalHostName, _internalEndPoint.Port);
 
         public string ExternalHostName
         {
-            get { return m_externalHostName; }
-            set { m_externalHostName = value; }
+            get => _externalHostName;
+            set => _externalHostName = value;
         }
 
         public IPEndPoint InternalEndPoint
         {
-            get { return m_internalEndPoint; }
-            set { m_internalEndPoint = value; }
+            get => _internalEndPoint;
+            set => _internalEndPoint = value;
         }
 
-        public ulong RegionHandle
-        {
-            get { return Util.UIntsToLong((uint)RegionLocX, (uint)RegionLocY); }
-        }
+        public ulong RegionHandle => Util.UIntsToLong((uint)RegionLocX, (uint)RegionLocY);
     }
 }

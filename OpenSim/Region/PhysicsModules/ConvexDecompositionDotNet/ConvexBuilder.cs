@@ -377,12 +377,12 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
 
                     //r.mOBBVolume = r.mOBBSides[0] * r.mOBBSides[1] * r.mOBBSides[2]; // compute the OBB volume.
 
-                    //fm_getTranslation(r.mOBBTransform, r.mOBBCenter); // get the translation component of the 4x4 matrix.
+                    //f_getTranslation(r.mOBBTransform, r.mOBBCenter); // get the translation component of the 4x4 matrix.
 
-                    //fm_matrixToQuat(r.mOBBTransform, r.mOBBOrientation); // extract the orientation as a quaternion.
+                    //f_matrixToQuat(r.mOBBTransform, r.mOBBOrientation); // extract the orientation as a quaternion.
 
                     //r.mSphereRadius = computeBoundingSphere(result.mNumOutputVertices, result.mOutputVertices, r.mSphereCenter);
-                    //r.mSphereVolume = fm_sphereVolume(r.mSphereRadius);
+                    //r.mSphereVolume = f_sphereVolume(r.mSphereRadius);
 
                     mCallback(r);
                 }

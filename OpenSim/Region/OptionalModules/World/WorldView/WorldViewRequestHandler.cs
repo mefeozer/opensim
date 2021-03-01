@@ -38,15 +38,15 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
 {
     public class WorldViewRequestHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected WorldViewModule m_WorldViewModule;
-        protected object m_RequestLock = new object();
+        protected WorldViewModule _WorldViewModule;
+        protected object _RequestLock = new object();
 
         public WorldViewRequestHandler(WorldViewModule fmodule, string rid)
                 : base("GET", "/worldview/" + rid)
         {
-            m_WorldViewModule = fmodule;
+            _WorldViewModule = fmodule;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -61,7 +61,7 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
 
             try
             {
-                lock (m_RequestLock)
+                lock (_RequestLock)
                 {
                     Dictionary<string, object> request =
                             new Dictionary<string, object>();
@@ -73,7 +73,7 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
             }
             catch (Exception e)
             {
-                m_log.Debug("[WORLDVIEW]: Exception: " + e.ToString());
+                _log.Debug("[WORLDVIEW]: Exception: " + e.ToString());
             }
 
             return new byte[0];
@@ -134,7 +134,7 @@ namespace OpenSim.Region.OptionalModules.World.WorldView
             Vector3 pos = new Vector3(posX, posY, posZ);
             Vector3 rot = new Vector3(rotX, rotY, rotZ);
 
-            return m_WorldViewModule.GenerateWorldView(pos, rot, fov, width,
+            return _WorldViewModule.GenerateWorldView(pos, rot, fov, width,
                     height, usetex);
         }
     }

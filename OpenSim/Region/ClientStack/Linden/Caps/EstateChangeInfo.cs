@@ -44,13 +44,13 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "EstateChangeInfoCapModule")]
     public class EstateChangeInfoCapModule : INonSharedRegionModule
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
-        private bool m_Enabled = false;
-        private string m_capUrl;
-        IEstateModule m_EstateModule;
+        private Scene _scene;
+        private bool _Enabled = false;
+        private string _capUrl;
+        IEstateModule _EstateModule;
 
         #region INonSharedRegionModule Members
 
@@ -60,46 +60,46 @@ namespace OpenSim.Region.ClientStack.Linden
             if (config == null)
                 return;
 
-            m_capUrl = config.GetString("Cap_EstateChangeInfo", string.Empty);
-            if (!string.IsNullOrEmpty(m_capUrl) && m_capUrl.Equals("localhost"))
-                m_Enabled = true;
+            _capUrl = config.GetString("Cap_EstateChangeInfo", string.Empty);
+            if (!string.IsNullOrEmpty(_capUrl) && _capUrl.Equals("localhost"))
+                _Enabled = true;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_scene = scene;
+            _scene = scene;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (m_scene == scene)
+            if (_scene == scene)
             {
-                m_scene.EventManager.OnRegisterCaps -= RegisterCaps;
-                m_scene = null;
+                _scene.EventManager.OnRegisterCaps -= RegisterCaps;
+                _scene = null;
             }
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             if (scene.RegionInfo == null || scene.RegionInfo.EstateSettings == null)
             {
-                m_Enabled = false;
+                _Enabled = false;
                 return;
             }
 
-            m_EstateModule = scene.RequestModuleInterface<IEstateModule>();
-            if(m_EstateModule == null)
+            _EstateModule = scene.RequestModuleInterface<IEstateModule>();
+            if(_EstateModule == null)
             {
-                m_Enabled = false;
+                _Enabled = false;
                 return;
             }
 
@@ -110,15 +110,9 @@ namespace OpenSim.Region.ClientStack.Linden
         {
         }
 
-        public string Name
-        {
-            get { return "EstateChangeInfoCapModule"; }
-        }
+        public string Name => "EstateChangeInfoCapModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -140,13 +134,13 @@ namespace OpenSim.Region.ClientStack.Linden
             }
 
             ScenePresence avatar;
-            if (!m_scene.TryGetScenePresence(AgentId, out avatar) || !m_scene.Permissions.CanIssueEstateCommand(AgentId, false))
+            if (!_scene.TryGetScenePresence(AgentId, out avatar) || !_scene.Permissions.CanIssueEstateCommand(AgentId, false))
             {
                 response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 return;
             }
 
-            if (m_scene.RegionInfo == null || m_scene.RegionInfo.EstateSettings == null)
+            if (_scene.RegionInfo == null || _scene.RegionInfo.EstateSettings == null)
             {
                 response.StatusCode = (int)HttpStatusCode.NotImplemented;
                 return;
@@ -159,7 +153,7 @@ namespace OpenSim.Region.ClientStack.Linden
             }
             catch (Exception ex)
             {
-                m_log.Error("[UPLOAD OBJECT ASSET MODULE]: Error deserializing message " + ex.ToString());
+                _log.Error("[UPLOAD OBJECT ASSET MODULE]: Error deserializing message " + ex.ToString());
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return;
             }
@@ -178,15 +172,15 @@ namespace OpenSim.Region.ClientStack.Linden
                 bool alloVoiceChat = r["allow_voice_chat"].AsBoolean();
                 // taxfree is now !AllowAccessOverride
                 OSD tmp;
-                bool overridePublicAccess = !m_scene.RegionInfo.EstateSettings.TaxFree;
+                bool overridePublicAccess = !_scene.RegionInfo.EstateSettings.TaxFree;
                 if (r.TryGetValue("override_public_access", out tmp))
                     overridePublicAccess = !tmp.AsBoolean();
     
-                bool allowEnvironmentOverride = m_scene.RegionInfo.EstateSettings.AllowEnvironmentOverride;
+                bool allowEnvironmentOverride = _scene.RegionInfo.EstateSettings.AllowEnvironmentOverride;
                 if (r.TryGetValue("override_environment", out tmp))
                     allowEnvironmentOverride = tmp.AsBoolean();
 
-                ok = m_EstateModule.handleEstateChangeInfoCap(estateName, invoice,
+                ok = _EstateModule.handleEstateChangeInfoCap(estateName, invoice,
                         externallyVisible, allowDirectTeleport, denyAnonymous, denyAgeUnverified,
                         alloVoiceChat, overridePublicAccess, allowEnvironmentOverride);
             }

@@ -31,11 +31,11 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Monitors
 {
     class PhysicsUpdateFrameMonitor : IMonitor
     {
-        private readonly Scene m_scene;
+        private readonly Scene _scene;
 
         public PhysicsUpdateFrameMonitor(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
         }
 
         #region Implementation of IMonitor
@@ -47,7 +47,7 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Monitors
 
         public double GetValue()
         {
-            return m_scene.MonitorPhysicsUpdateTime;
+            return _scene.MonitorPhysicsUpdateTime;
         }
 
         public string GetFriendlyName()

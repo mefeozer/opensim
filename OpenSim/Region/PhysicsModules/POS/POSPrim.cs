@@ -37,83 +37,77 @@ namespace OpenSim.Region.PhysicsModule.POS
         private Vector3 _velocity;
         private Vector3 _acceleration;
         private Vector3 _size;
-        private Vector3 m_rotationalVelocity = Vector3.Zero;
+        private Vector3 _rotationalVelocity = Vector3.Zero;
         private Quaternion _orientation;
         private bool iscolliding;
 
         public override int PhysicsActorType
         {
-            get { return (int) ActorTypes.Prim; }
+            get => (int) ActorTypes.Prim;
             set { return; }
         }
 
         public override Vector3 RotationalVelocity
         {
-            get { return m_rotationalVelocity; }
-            set { m_rotationalVelocity = value; }
+            get => _rotationalVelocity;
+            set => _rotationalVelocity = value;
         }
 
         public override bool IsPhysical
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool ThrottleUpdates
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool IsColliding
         {
-            get { return iscolliding; }
-            set { iscolliding = value; }
+            get => iscolliding;
+            set => iscolliding = value;
         }
 
         public override bool CollidingGround
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool CollidingObj
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
-        public override bool Stopped
-        {
-            get { return false; }
-        }
+        public override bool Stopped => false;
 
         public override Vector3 Position
         {
-            get { return _position; }
-            set { _position = value; }
+            get => _position;
+            set => _position = value;
         }
 
         public override Vector3 Size
         {
-            get { return _size; }
-            set { _size = value; }
+            get => _size;
+            set => _size = value;
         }
 
-        public override float Mass
-        {
-            get { return 0f; }
-        }
+        public override float Mass => 0f;
 
         public override Vector3 Force
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
         public override int VehicleType
         {
-            get { return 0; }
+            get => 0;
             set { return; }
         }
 
@@ -139,15 +133,9 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         }
 
-        public override Vector3 CenterOfMass
-        {
-            get { return Vector3.Zero; }
-        }
+        public override Vector3 CenterOfMass => Vector3.Zero;
 
-        public override Vector3 GeometricCenter
-        {
-            get { return Vector3.Zero; }
-        }
+        public override Vector3 GeometricCenter => Vector3.Zero;
 
         public override PrimitiveBaseShape Shape
         {
@@ -156,7 +144,7 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public override float Buoyancy
         {
-            get { return 0f; }
+            get => 0f;
             set { return; }
         }
 
@@ -167,31 +155,31 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public override Vector3 Velocity
         {
-            get { return _velocity; }
-            set { _velocity = value; }
+            get => _velocity;
+            set => _velocity = value;
         }
 
         public override float CollisionScore
         {
-            get { return 0f; }
+            get => 0f;
             set { }
         }
 
         public override Quaternion Orientation
         {
-            get { return _orientation; }
-            set { _orientation = value; }
+            get => _orientation;
+            set => _orientation = value;
         }
 
         public override Vector3 Acceleration
         {
-            get { return _acceleration; }
-            set { _acceleration = value; }
+            get => _acceleration;
+            set => _acceleration = value;
         }
 
         public override bool Kinematic
         {
-            get { return true; }
+            get => true;
             set { }
         }
 
@@ -205,7 +193,7 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public override Vector3 Torque
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
@@ -215,13 +203,13 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public override bool Flying
         {
-            get { return false; }
+            get => false;
             set { }
         }
 
         public override bool SetAlwaysRun
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
@@ -263,7 +251,7 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public override bool PIDActive
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
@@ -279,7 +267,7 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public override bool PIDHoverActive
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 

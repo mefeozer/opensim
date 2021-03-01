@@ -34,7 +34,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     static readonly string LogHeader = "[BULLETSIM TERRAIN HEIGHTMAP]";
 
-    BulletHMapInfo m_mapInfo = null;
+    BulletHMapInfo _mapInfo = null;
 
     // Constructor to build a default, flat heightmap terrain.
     public BSTerrainHeightmap(BSScene physicsScene, Vector3 regionBase, uint id, Vector3 regionSize)
@@ -48,7 +48,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         {
             initialMap[ii] = BSTerrainManager.HEIGHT_INITIALIZATION;
         }
-            m_mapInfo = new BulletHMapInfo(id, initialMap, regionSize.X, regionSize.Y)
+            _mapInfo = new BulletHMapInfo(id, initialMap, regionSize.X, regionSize.Y)
             {
                 minCoords = minTerrainCoords,
                 maxCoords = maxTerrainCoords,
@@ -64,7 +64,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                                     Vector3 minCoords, Vector3 maxCoords)
         : base(physicsScene, regionBase, id)
     {
-            m_mapInfo = new BulletHMapInfo(id, initialMap, maxCoords.X - minCoords.X, maxCoords.Y - minCoords.Y)
+            _mapInfo = new BulletHMapInfo(id, initialMap, maxCoords.X - minCoords.X, maxCoords.Y - minCoords.Y)
             {
                 minCoords = minCoords,
                 maxCoords = maxCoords,
@@ -82,58 +82,58 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         ReleaseHeightMapTerrain();
     }
 
-    // Using the information in m_mapInfo, create the physical representation of the heightmap.
+    // Using the information in _mapInfo, create the physical representation of the heightmap.
     private void BuildHeightmapTerrain()
     {
         // Create the terrain shape from the mapInfo
-        m_mapInfo.terrainShape = m_physicsScene.PE.CreateTerrainShape( m_mapInfo.ID,
-                                new Vector3(m_mapInfo.sizeX, m_mapInfo.sizeY, 0), m_mapInfo.minZ, m_mapInfo.maxZ,
-                                m_mapInfo.heightMap, 1f, BSParam.TerrainCollisionMargin);
+        _mapInfo.terrainShape = _physicsScene.PE.CreateTerrainShape( _mapInfo.ID,
+                                new Vector3(_mapInfo.sizeX, _mapInfo.sizeY, 0), _mapInfo.minZ, _mapInfo.maxZ,
+                                _mapInfo.heightMap, 1f, BSParam.TerrainCollisionMargin);
 
 
         // The terrain object initial position is at the center of the object
         Vector3 centerPos;
-        centerPos.X = m_mapInfo.minCoords.X + m_mapInfo.sizeX / 2f;
-        centerPos.Y = m_mapInfo.minCoords.Y + m_mapInfo.sizeY / 2f;
-        centerPos.Z = m_mapInfo.minZ + (m_mapInfo.maxZ - m_mapInfo.minZ) / 2f;
+        centerPos.X = _mapInfo.minCoords.X + _mapInfo.sizeX / 2f;
+        centerPos.Y = _mapInfo.minCoords.Y + _mapInfo.sizeY / 2f;
+        centerPos.Z = _mapInfo.minZ + (_mapInfo.maxZ - _mapInfo.minZ) / 2f;
 
-        m_mapInfo.terrainBody = m_physicsScene.PE.CreateBodyWithDefaultMotionState(m_mapInfo.terrainShape,
-                                m_mapInfo.ID, centerPos, Quaternion.Identity);
+        _mapInfo.terrainBody = _physicsScene.PE.CreateBodyWithDefaultMotionState(_mapInfo.terrainShape,
+                                _mapInfo.ID, centerPos, Quaternion.Identity);
 
         // Set current terrain attributes
-        m_physicsScene.PE.SetFriction(m_mapInfo.terrainBody, BSParam.TerrainFriction);
-        m_physicsScene.PE.SetHitFraction(m_mapInfo.terrainBody, BSParam.TerrainHitFraction);
-        m_physicsScene.PE.SetRestitution(m_mapInfo.terrainBody, BSParam.TerrainRestitution);
-        m_physicsScene.PE.SetCollisionFlags(m_mapInfo.terrainBody, CollisionFlags.CF_STATIC_OBJECT);
+        _physicsScene.PE.SetFriction(_mapInfo.terrainBody, BSParam.TerrainFriction);
+        _physicsScene.PE.SetHitFraction(_mapInfo.terrainBody, BSParam.TerrainHitFraction);
+        _physicsScene.PE.SetRestitution(_mapInfo.terrainBody, BSParam.TerrainRestitution);
+        _physicsScene.PE.SetCollisionFlags(_mapInfo.terrainBody, CollisionFlags.CF_STATIC_OBJECT);
 
-        m_mapInfo.terrainBody.collisionType = CollisionType.Terrain;
+        _mapInfo.terrainBody.collisionType = CollisionType.Terrain;
 
         // Return the new terrain to the world of physical objects
-        m_physicsScene.PE.AddObjectToWorld(m_physicsScene.World, m_mapInfo.terrainBody);
+        _physicsScene.PE.AddObjectToWorld(_physicsScene.World, _mapInfo.terrainBody);
 
         // redo its bounding box now that it is in the world
-        m_physicsScene.PE.UpdateSingleAabb(m_physicsScene.World, m_mapInfo.terrainBody);
+        _physicsScene.PE.UpdateSingleAabb(_physicsScene.World, _mapInfo.terrainBody);
 
         // Make it so the terrain will not move or be considered for movement.
-        m_physicsScene.PE.ForceActivationState(m_mapInfo.terrainBody, ActivationState.DISABLE_SIMULATION);
+        _physicsScene.PE.ForceActivationState(_mapInfo.terrainBody, ActivationState.DISABLE_SIMULATION);
 
         return;
     }
 
-    // If there is information in m_mapInfo pointing to physical structures, release same.
+    // If there is information in _mapInfo pointing to physical structures, release same.
     private void ReleaseHeightMapTerrain()
     {
-        if (m_mapInfo != null)
+        if (_mapInfo != null)
         {
-            if (m_mapInfo.terrainBody.HasPhysicalBody)
+            if (_mapInfo.terrainBody.HasPhysicalBody)
             {
-                m_physicsScene.PE.RemoveObjectFromWorld(m_physicsScene.World, m_mapInfo.terrainBody);
+                _physicsScene.PE.RemoveObjectFromWorld(_physicsScene.World, _mapInfo.terrainBody);
                 // Frees both the body and the shape.
-                m_physicsScene.PE.DestroyObject(m_physicsScene.World, m_mapInfo.terrainBody);
+                _physicsScene.PE.DestroyObject(_physicsScene.World, _mapInfo.terrainBody);
             }
-            m_mapInfo.Release();
+            _mapInfo.Release();
         }
-        m_mapInfo = null;
+        _mapInfo = null;
     }
 
     // The passed position is relative to the base of the region.
@@ -145,28 +145,28 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         try {
             int baseX = (int)pos.X;
             int baseY = (int)pos.Y;
-            int maxX = (int)m_mapInfo.sizeX;
-            int maxY = (int)m_mapInfo.sizeY;
+            int maxX = (int)_mapInfo.sizeX;
+            int maxY = (int)_mapInfo.sizeY;
             float diffX = pos.X - (float)baseX;
             float diffY = pos.Y - (float)baseY;
 
-            float mapHeight1 = m_mapInfo.heightMap[baseY * maxY + baseX];
-            float mapHeight2 = m_mapInfo.heightMap[Math.Min(baseY + 1, maxY - 1) * maxY + baseX];
-            float mapHeight3 = m_mapInfo.heightMap[baseY * maxY + Math.Min(baseX + 1, maxX  - 1)];
-            float mapHeight4 = m_mapInfo.heightMap[Math.Min(baseY + 1, maxY - 1) * maxY +  Math.Min(baseX + 1, maxX  - 1)];
+            float mapHeight1 = _mapInfo.heightMap[baseY * maxY + baseX];
+            float mapHeight2 = _mapInfo.heightMap[Math.Min(baseY + 1, maxY - 1) * maxY + baseX];
+            float mapHeight3 = _mapInfo.heightMap[baseY * maxY + Math.Min(baseX + 1, maxX  - 1)];
+            float mapHeight4 = _mapInfo.heightMap[Math.Min(baseY + 1, maxY - 1) * maxY +  Math.Min(baseX + 1, maxX  - 1)];
 
             float Xrise = (mapHeight4 - mapHeight3) * diffX;
             float Yrise = (mapHeight2 - mapHeight1) * diffY;
 
             ret = mapHeight1 + (Xrise + Yrise) / 2f;
-            // m_physicsScene.DetailLog("{0},BSTerrainHeightMap,GetTerrainHeightAtXYZ,pos={1},{2}/{3}/{4}/{5},ret={6}",
+            // _physicsScene.DetailLog("{0},BSTerrainHeightMap,GetTerrainHeightAtXYZ,pos={1},{2}/{3}/{4}/{5},ret={6}",
             //         BSScene.DetailLogZero, pos, mapHeight1, mapHeight2, mapHeight3, mapHeight4, ret);
         }
         catch
         {
             // Sometimes they give us wonky values of X and Y. Give a warning and return something.
-            m_physicsScene.Logger.WarnFormat("{0} Bad request for terrain height. terrainBase={1}, pos={2}",
-                                LogHeader, m_mapInfo.terrainRegionBase, pos);
+            _physicsScene.Logger.WarnFormat("{0} Bad request for terrain height. terrainBase={1}, pos={2}",
+                                LogHeader, _mapInfo.terrainRegionBase, pos);
             ret = BSTerrainManager.HEIGHT_GETHEIGHT_RET;
         }
         return ret;
@@ -175,7 +175,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // The passed position is relative to the base of the region.
     public override float GetWaterLevelAtXYZ(Vector3 pos)
     {
-        return m_physicsScene.SimpleWaterLevel;
+        return _physicsScene.SimpleWaterLevel;
     }
 }
 }

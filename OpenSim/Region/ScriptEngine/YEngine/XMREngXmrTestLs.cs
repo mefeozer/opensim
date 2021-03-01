@@ -65,7 +65,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 if(args[i] == "-help")
                 {
-                    m_log.Info("[YEngine]: yeng ls -full -max=<number> -out=<filename> -queues -topcpu");
+                    _log.Info("[YEngine]: yeng ls -full -max=<number> -out=<filename> -queues -topcpu");
                     return;
                 }
                 if(args[i].StartsWith("-max="))
@@ -76,7 +76,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     }
                     catch(Exception e)
                     {
-                        m_log.Error("[YEngine]: bad max " + args[i].Substring(5) + ": " + e.Message);
+                        _log.Error("[YEngine]: bad max " + args[i].Substring(5) + ": " + e.Message);
                         return;
                     }
                     continue;
@@ -98,7 +98,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 if(args[i][0] == '-')
                 {
-                    m_log.Error("[YEngine]: unknown option " + args[i] + ", try 'yeng ls -help'");
+                    _log.Error("[YEngine]: unknown option " + args[i] + ", try 'yeng ls -help'");
                     return;
                 }
             }
@@ -112,27 +112,27 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 catch(Exception e)
                 {
-                    m_log.Error("[YEngine]: error creating " + outName + ": " + e.Message);
+                    _log.Error("[YEngine]: error creating " + outName + ": " + e.Message);
                     return;
                 }
             }
             else
             {
-                outFile = new LogInfoTextWriter(m_log);
+                outFile = new LogInfoTextWriter(_log);
             }
 
             try
             {
                  // Scan instance list to find those that match selection criteria.
-                if(!Monitor.TryEnter(m_InstancesDict, 100))
+                if(!Monitor.TryEnter(_InstancesDict, 100))
                 {
-                    m_log.Error("[YEngine]: deadlock m_LockedDict=" + m_LockedDict);
+                    _log.Error("[YEngine]: deadlock _LockedDict=" + _LockedDict);
                     return;
                 }
                 try
                 {
-                    instances = new XMRInstance[m_InstancesDict.Count];
-                    foreach(XMRInstance ins in m_InstancesDict.Values)
+                    instances = new XMRInstance[_InstancesDict.Count];
+                    foreach(XMRInstance ins in _InstancesDict.Values)
                     {
                         if(InstanceMatchesArgs(ins, args, indx))
                         {
@@ -142,7 +142,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 finally
                 {
-                    Monitor.Exit(m_InstancesDict);
+                    Monitor.Exit(_InstancesDict);
                 }
 
                  // Maybe sort by descending CPU time.
@@ -173,9 +173,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                  // If -queues given, print out queue contents too.
                 if(flagQueues)
                 {
-                    LsQueue(outFile, "start", m_StartQueue, args, indx);
-                    LsQueue(outFile, "sleep", m_SleepQueue, args, indx);
-                    LsQueue(outFile, "yield", m_YieldQueue, args, indx);
+                    LsQueue(outFile, "start", _StartQueue, args, indx);
+                    LsQueue(outFile, "sleep", _SleepQueue, args, indx);
+                    LsQueue(outFile, "yield", _YieldQueue, args, indx);
                 }
             }
             finally
@@ -205,12 +205,12 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 if(arg == "-help")
                 {
-                    m_log.Info("[YEngine]: yeng pev -all | <part-of-script-name> <event-name> <params...>");
+                    _log.Info("[YEngine]: yeng pev -all | <part-of-script-name> <event-name> <params...>");
                     return;
                 }
                 if(arg[0] == '-')
                 {
-                    m_log.Error("[YEngine]: unknown option " + arg + ", try 'yeng pev -help'");
+                    _log.Error("[YEngine]: unknown option " + arg + ", try 'yeng pev -help'");
                     return;
                 }
                 for(j = 0; j < eventmethods.Length; j++)
@@ -221,7 +221,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 selargs.Add(arg);
             }
-            m_log.Error("[YEngine]: missing <event-name> <params...>, try 'yeng pev -help'");
+            _log.Error("[YEngine]: missing <event-name> <params...>, try 'yeng pev -help'");
             return;
             gotevent:
             string eventname = eventmethod.Name;
@@ -256,16 +256,16 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     new OpenSim.Region.ScriptEngine.Shared.EventParams(eventname, paramvalues, zeroDetectParams);
 
              // Scan instance list to find those that match selection criteria.
-            if(!Monitor.TryEnter(m_InstancesDict, 100))
+            if(!Monitor.TryEnter(_InstancesDict, 100))
             {
-                m_log.Error("[YEngine]: deadlock m_LockedDict=" + m_LockedDict);
+                _log.Error("[YEngine]: deadlock _LockedDict=" + _LockedDict);
                 return;
             }
 
             try
             {
-                instances = new XMRInstance[m_InstancesDict.Count];
-                foreach(XMRInstance ins in m_InstancesDict.Values)
+                instances = new XMRInstance[_InstancesDict.Count];
+                foreach(XMRInstance ins in _InstancesDict.Values)
                 {
                     if(flagAll || InstanceMatchesArgs(ins, selargs.ToArray(), 0))
                     {
@@ -275,14 +275,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             finally
             {
-                Monitor.Exit(m_InstancesDict);
+                Monitor.Exit(_InstancesDict);
             }
 
              // Post event to the matching instances.
             for(i = 0; i < numScripts; i++)
             {
                 XMRInstance inst = instances[i];
-                m_log.Info("[YEngine]: post " + eventname + " to " + inst.m_DescName);
+                _log.Info("[YEngine]: post " + eventname + " to " + inst._DescName);
                 inst.PostEvent(eps);
             }
         }
@@ -380,7 +380,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private void ErrorMsg(Token token, string message)
         {
             youveanerror = true;
-            m_log.Info("[YEngine]: " + token.posn + " " + message);
+            _log.Info("[YEngine]: " + token.posn + " " + message);
         }
 
         private void XmrTestReset(string[] args, int indx)
@@ -391,7 +391,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             if(args.Length <= indx)
             {
-                m_log.Error("[YEngine]: must specify part of script name or -all for all scripts");
+                _log.Error("[YEngine]: must specify part of script name or -all for all scripts");
                 return;
             }
 
@@ -405,27 +405,27 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 if(args[i] == "-help")
                 {
-                    m_log.Info("[YEngine]: yeng reset -all | <part-of-script-name>");
+                    _log.Info("[YEngine]: yeng reset -all | <part-of-script-name>");
                     return;
                 }
                 if(args[i][0] == '-')
                 {
-                    m_log.Error("[YEngine]: unknown option " + args[i] + ", try 'yeng reset -help'");
+                    _log.Error("[YEngine]: unknown option " + args[i] + ", try 'yeng reset -help'");
                     return;
                 }
             }
 
              // Scan instance list to find those that match selection criteria.
-            if(!Monitor.TryEnter(m_InstancesDict, 100))
+            if(!Monitor.TryEnter(_InstancesDict, 100))
             {
-                m_log.Error("[YEngine]: deadlock m_LockedDict=" + m_LockedDict);
+                _log.Error("[YEngine]: deadlock _LockedDict=" + _LockedDict);
                 return;
             }
 
             try
             {
-                instances = new XMRInstance[m_InstancesDict.Count];
-                foreach(XMRInstance ins in m_InstancesDict.Values)
+                instances = new XMRInstance[_InstancesDict.Count];
+                foreach(XMRInstance ins in _InstancesDict.Values)
                 {
                     if(flagAll || InstanceMatchesArgs(ins, args, indx))
                     {
@@ -435,14 +435,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             finally
             {
-                Monitor.Exit(m_InstancesDict);
+                Monitor.Exit(_InstancesDict);
             }
 
              // Reset the instances as if someone clicked their "Reset" button.
             for(int i = 0; i < numScripts; i++)
             {
                 XMRInstance inst = instances[i];
-                m_log.Info("[YEngine]: resetting " + inst.m_DescName);
+                _log.Info("[YEngine]: resetting " + inst._DescName);
                 inst.Reset();
             }
         }
@@ -457,9 +457,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             {
                 return -1;
             }
-            if(b.m_CPUTime < a.m_CPUTime)
+            if(b._CPUTime < a._CPUTime)
                 return -1;
-            if(b.m_CPUTime > a.m_CPUTime)
+            if(b._CPUTime > a._CPUTime)
                 return 1;
             return 0;
         }
@@ -469,20 +469,20 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             outFile.WriteLine("Queue " + name + ":");
             lock(queue)
             {
-                for(XMRInstance inst = queue.PeekHead(); inst != null; inst = inst.m_NextInst)
+                for(XMRInstance inst = queue.PeekHead(); inst != null; inst = inst._NextInst)
                 {
                     try
                     {
                          // Try to print instance name.
                         if(InstanceMatchesArgs(inst, args, indx))
                         {
-                            outFile.WriteLine("   " + inst.ItemID.ToString() + " " + inst.m_DescName);
+                            outFile.WriteLine("   " + inst.ItemID.ToString() + " " + inst._DescName);
                         }
                     }
                     catch(Exception e)
                     {
                          // Sometimes there are instances in the queue that are disposed.
-                        outFile.WriteLine("   " + inst.ItemID.ToString() + " " + inst.m_DescName + ": " + e.Message);
+                        outFile.WriteLine("   " + inst.ItemID.ToString() + " " + inst._DescName + ": " + e.Message);
                     }
                 }
             }
@@ -497,7 +497,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 if(args[i][0] != '-')
                 {
                     hadSomethingToCompare = true;
-                    if(ins.m_DescName.Contains(args[i]))
+                    if(ins._DescName.Contains(args[i]))
                         return true;
                     if(ins.ItemID.ToString().Contains(args[i]))
                         return true;
@@ -510,21 +510,21 @@ namespace OpenSim.Region.ScriptEngine.Yengine
     }
 
     /**
-     * @brief Make m_log.Info look like a text writer.
+     * @brief Make _log.Info look like a text writer.
      */
     public class LogInfoTextWriter: TextWriter
     {
         private readonly StringBuilder sb = new StringBuilder();
-        private readonly ILog m_log;
-        public LogInfoTextWriter(ILog m_log)
+        private readonly ILog _log;
+        public LogInfoTextWriter(ILog _log)
         {
-            this.m_log = m_log;
+            this._log = _log;
         }
         public override void Write(char c)
         {
             if(c == '\n')
             {
-                m_log.Info("[YEngine]: " + sb.ToString());
+                _log.Info("[YEngine]: " + sb.ToString());
                 sb.Remove(0, sb.Length);
             }
             else
@@ -535,12 +535,6 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public override void Close()
         {
         }
-        public override Encoding Encoding
-        {
-            get
-            {
-                return Encoding.UTF8;
-            }
-        }
+        public override Encoding Encoding => Encoding.UTF8;
     }
 }

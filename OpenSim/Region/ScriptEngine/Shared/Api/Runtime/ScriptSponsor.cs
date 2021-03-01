@@ -32,16 +32,16 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Runtime
 {
     public class ScriptSponsor : MarshalByRefObject, ISponsor
     {
-        private bool m_closed = false;
+        private bool _closed = false;
 
         public TimeSpan Renewal(ILease lease)
         {
-            if (!m_closed)
+            if (!_closed)
                 return lease.InitialLeaseTime;
             return TimeSpan.FromTicks(0);
         }
 
-        public void Close() { m_closed = true; }
+        public void Close() { _closed = true; }
 
 #if DEBUG
         // For tracing GC while debugging

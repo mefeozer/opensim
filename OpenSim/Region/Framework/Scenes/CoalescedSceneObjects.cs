@@ -48,15 +48,15 @@ namespace OpenSim.Region.Framework.Scenes
         {
             get
             {
-                lock (m_memberObjects)
-                    return m_memberObjects.Count;
+                lock (_memberObjects)
+                    return _memberObjects.Count;
             }
         }
 
         /// <summary>
         /// Does this coalesence have any member objects?
         /// </summary>
-        public bool HasObjects { get { return Count > 0; } }
+        public bool HasObjects => Count > 0;
 
         /// <summary>
         /// Get the objects currently in this coalescence
@@ -65,8 +65,8 @@ namespace OpenSim.Region.Framework.Scenes
         {
             get
             {
-                lock (m_memberObjects)
-                    return new List<SceneObjectGroup>(m_memberObjects);
+                lock (_memberObjects)
+                    return new List<SceneObjectGroup>(_memberObjects);
             }
         }
 
@@ -88,7 +88,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// At this point, we need to preserve the order of objects added to the coalescence, since the first
         /// one will end up matching the item name when rerezzed.
         /// </summary>
-        protected List<SceneObjectGroup> m_memberObjects = new List<SceneObjectGroup>();
+        protected List<SceneObjectGroup> _memberObjects = new List<SceneObjectGroup>();
 
         public CoalescedSceneObjects(UUID creatorId)
         {
@@ -108,8 +108,8 @@ namespace OpenSim.Region.Framework.Scenes
         /// <param name="offset">The offset of the object within the group</param>
         public void Add(SceneObjectGroup obj)
         {
-            lock (m_memberObjects)
-                m_memberObjects.Add(obj);
+            lock (_memberObjects)
+                _memberObjects.Add(obj);
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace OpenSim.Region.Framework.Scenes
         /// <returns>true if the object was there to be removed, false if not.</returns>
         public bool Remove(SceneObjectGroup obj)
         {
-            lock (m_memberObjects)
-                return m_memberObjects.Remove(obj);
+            lock (_memberObjects)
+                return _memberObjects.Remove(obj);
         }
 
         /// <summary>

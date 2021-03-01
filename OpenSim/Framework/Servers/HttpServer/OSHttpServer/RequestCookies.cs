@@ -95,22 +95,14 @@ namespace OSHttpServer
         /// <summary>
         /// Gets the count of cookies in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return _items.Count; }
-        }
+        public int Count => _items.Count;
 
 
         /// <summary>
         /// Gets the cookie of a given identifier (null if not existing).
         /// </summary>
-        public RequestCookie this[string id]
-        {
-            get 
-            {
-                return _items.ContainsKey(id) ? _items[id] : null;
-            }
-        }
+        public RequestCookie this[string id] => _items.ContainsKey(id) ? _items[id] : null;
+
         /// <summary>
         /// Gets a collection enumerator on the cookie list.
         /// </summary>

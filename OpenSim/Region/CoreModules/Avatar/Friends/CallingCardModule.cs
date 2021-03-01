@@ -43,33 +43,33 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "XCallingCard")]
     public class CallingCardModule : ISharedRegionModule, ICallingCardModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        protected List<Scene> m_Scenes = new List<Scene>();
-        protected bool m_Enabled = true;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        protected List<Scene> _Scenes = new List<Scene>();
+        protected bool _Enabled = true;
 
         public void Initialise(IConfigSource source)
         {
             IConfig ccConfig = source.Configs["XCallingCard"];
             if (ccConfig != null)
-                m_Enabled = ccConfig.GetBoolean("Enabled", true);
+                _Enabled = ccConfig.GetBoolean("Enabled", true);
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_Scenes.Add(scene);
+            _Scenes.Add(scene);
 
             scene.RegisterModuleInterface<ICallingCardModule>(this);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_Scenes.Remove(scene);
+            _Scenes.Remove(scene);
 
             scene.EventManager.OnNewClient -= OnNewClient;
             scene.EventManager.OnIncomingInstantMessage +=
@@ -80,7 +80,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
             scene.EventManager.OnNewClient += OnNewClient;
         }
@@ -93,15 +93,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
         {
         }
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "XCallingCardModule"; }
-        }
+        public string Name => "XCallingCardModule";
 
         private void OnNewClient(IClientAPI client)
         {
@@ -133,7 +127,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             }
 
             IMessageTransferModule transferModule =
-                    m_Scenes[0].RequestModuleInterface<IMessageTransferModule>();
+                    _Scenes[0].RequestModuleInterface<IMessageTransferModule>();
 
             if (transferModule != null)
             {
@@ -166,7 +160,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
         private UUID CreateCallingCard(UUID userID, UUID creatorID, UUID folderID, bool isGod)
         {
-            IUserAccountService userv = m_Scenes[0].UserAccountService;
+            IUserAccountService userv = _Scenes[0].UserAccountService;
             if (userv == null)
                 return UUID.Zero;
 
@@ -174,7 +168,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (info == null)
                 return UUID.Zero;
 
-            IInventoryService inv = m_Scenes[0].InventoryService;
+            IInventoryService inv = _Scenes[0].InventoryService;
             if (inv == null)
                 return UUID.Zero;
 
@@ -189,7 +183,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                 folderID = folder.ID;
             }
 
-            m_log.DebugFormat("[XCALLINGCARD]: Creating calling card for {0} in inventory of {1}", info.Name, userID);
+            _log.DebugFormat("[XCALLINGCARD]: Creating calling card for {0} in inventory of {1}", info.Name, userID);
 
             InventoryItemBase item = new InventoryItemBase
             {
@@ -236,7 +230,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
         private void OnDeclineCallingCard(IClientAPI client, UUID transactionID)
         {
-            IInventoryService invService = m_Scenes[0].InventoryService;
+            IInventoryService invService = _Scenes[0].InventoryService;
 
             InventoryFolderBase trashFolder =
                     invService.GetFolderForType(client.AgentId, FolderType.Trash);
@@ -249,7 +243,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                 List<UUID> uuids = new List<UUID>();
                 uuids.Add(item.ID);
                 invService.DeleteItems(item.Owner, uuids);
-                m_Scenes[0].AddInventoryItem(client, item);
+                _Scenes[0].AddInventoryItem(client, item);
             }
         }
 
@@ -268,9 +262,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
         private Scene GetClientScene(UUID agentId)
         {
-            lock (m_Scenes)
+            lock (_Scenes)
             {
-                foreach (Scene scene in m_Scenes)
+                foreach (Scene scene in _Scenes)
                 {
                     ScenePresence presence = scene.GetScenePresence(agentId);
                     if (presence != null)
@@ -285,9 +279,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
         private ScenePresence GetClientPresence(UUID agentId)
         {
-            lock (m_Scenes)
+            lock (_Scenes)
             {
-                foreach (Scene scene in m_Scenes)
+                foreach (Scene scene in _Scenes)
                 {
                     ScenePresence presence = scene.GetScenePresence(agentId);
                     if (presence != null)

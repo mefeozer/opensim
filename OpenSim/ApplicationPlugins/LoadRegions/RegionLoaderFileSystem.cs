@@ -37,13 +37,13 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
 {
     public class RegionLoaderFileSystem : IRegionLoader
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IConfigSource m_configSource;
+        private IConfigSource _configSource;
 
         public void SetIniConfigSource(IConfigSource configSource)
         {
-            m_configSource = configSource;
+            _configSource = configSource;
         }
 
         public RegionInfo[] LoadRegions()
@@ -53,7 +53,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
 
             try
             {
-                IConfig startupConfig = (IConfig)m_configSource.Configs["Startup"];
+                IConfig startupConfig = (IConfig)_configSource.Configs["Startup"];
                 regionConfigPath = startupConfig.GetString("regionload_regionsdir", regionConfigPath).Trim();
                 allowRegionless = startupConfig.GetBoolean("allow_regionless", false);
             }
@@ -73,27 +73,27 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
             // Create an empty Regions.ini if there are no existing config files.
             if (!allowRegionless && configFiles.Length == 0 && iniFiles.Length == 0)
             {
-                new RegionInfo("DEFAULT REGION CONFIG", Path.Combine(regionConfigPath, "Regions.ini"), false, m_configSource);
+                new RegionInfo("DEFAULT REGION CONFIG", Path.Combine(regionConfigPath, "Regions.ini"), false, _configSource);
                 iniFiles = Directory.GetFiles(regionConfigPath, "*.ini");
             }
 
-            m_log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loading config files from {0}", regionConfigPath);
+            _log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loading config files from {0}", regionConfigPath);
 
             List<RegionInfo> regionInfos = new List<RegionInfo>();
 
             int i = 0;
             foreach (string file in iniFiles)
             {
-                m_log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loading config file {0}", file);
+                _log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loading config file {0}", file);
 
                 IConfigSource source = new IniConfigSource(file);
 
                 foreach (IConfig config in source.Configs)
                 {
-                    RegionInfo regionInfo = new RegionInfo("REGION CONFIG #" + (i + 1), file, false, m_configSource, config.Name);
+                    RegionInfo regionInfo = new RegionInfo("REGION CONFIG #" + (i + 1), file, false, _configSource, config.Name);
                     regionInfos.Add(regionInfo);
 
-                    m_log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loaded config for region {0}", regionInfo.RegionName);
+                    _log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loaded config for region {0}", regionInfo.RegionName);
 
                     i++;
                 }
@@ -101,12 +101,12 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
 
             foreach (string file in configFiles)
             {
-                m_log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loading config file {0}", file);
+                _log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loading config file {0}", file);
 
-                RegionInfo regionInfo = new RegionInfo("REGION CONFIG #" + (i + 1), file, false, m_configSource);
+                RegionInfo regionInfo = new RegionInfo("REGION CONFIG #" + (i + 1), file, false, _configSource);
                 regionInfos.Add(regionInfo);
 
-                m_log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loaded config for region {0}", regionInfo.RegionName);
+                _log.InfoFormat("[REGION LOADER FILE SYSTEM]: Loaded config for region {0}", regionInfo.RegionName);
 
                 i++;
             }

@@ -78,7 +78,7 @@ namespace OpenSim.Framework.Capabilities
 
         public LLSDNewFileAngentInventoryVariablePriceReplyResponse()
         {
-            state = "confirm_upload";
+            state = "confir_upload";
         }
     }
 }

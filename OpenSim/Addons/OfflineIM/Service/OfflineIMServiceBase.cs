@@ -33,14 +33,14 @@ namespace OpenSim.OfflineIM
 {
     public class OfflineIMServiceBase : ServiceBase
     {
-        protected IOfflineIMData m_Database = null;
+        protected IOfflineIMData _Database = null;
 
         public OfflineIMServiceBase(IConfigSource config)
             : base(config)
         {
             string dllName = string.Empty;
             string connString = string.Empty;
-            string realm = "im_offline";
+            string realm = "i_offline";
 
             //
             // Try reading the [DatabaseService] section, if it exists
@@ -71,8 +71,8 @@ namespace OpenSim.OfflineIM
             if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IOfflineIMData>(dllName, new object[] { connString, realm });
-            if (m_Database == null)
+            _Database = LoadPlugin<IOfflineIMData>(dllName, new object[] { connString, realm });
+            if (_Database == null)
                 throw new Exception("Could not find a storage interface in the given module " + dllName);
         }
     }

@@ -13,13 +13,13 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 {
     public class HGStatusNotifier
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly HGFriendsModule m_FriendsModule;
+        private readonly HGFriendsModule _FriendsModule;
 
         public HGStatusNotifier(HGFriendsModule friendsModule)
         {
-            m_FriendsModule = friendsModule;
+            _FriendsModule = friendsModule;
         }
 
         public void Notify(UUID userID, Dictionary<string, List<FriendInfo>> friendsPerDomain, bool online)
@@ -36,14 +36,14 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                     if (ids.Count == 0)
                         continue; // no one to notify. caller don't do this
 
-                    //m_log.DebugFormat("[HG STATUS NOTIFIER]: Notifying {0} friends in {1}", ids.Count, kvp.Key);
+                    //_log.DebugFormat("[HG STATUS NOTIFIER]: Notifying {0} friends in {1}", ids.Count, kvp.Key);
                     // ASSUMPTION: we assume that all users for one home domain
                     // have exactly the same set of service URLs.
                     // If this is ever not true, we need to change this.
                     UUID friendID = UUID.Zero; string tmp = string.Empty;
                     if (Util.ParseUniversalUserIdentifier(ids[0], out friendID, out tmp, out tmp, out tmp, out tmp))
                     {
-                        string friendsServerURI = m_FriendsModule.UserManagementModule.GetUserServerURL(friendID, "FriendsServerURI");
+                        string friendsServerURI = _FriendsModule.UserManagementModule.GetUserServerURL(friendID, "FriendsServerURI");
                         if (!string.IsNullOrEmpty(friendsServerURI))
                         {
                             HGFriendsServicesConnector fConn = new HGFriendsServicesConnector(friendsServerURI);
@@ -52,7 +52,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
 
                             if (online && friendsOnline.Count > 0)
                             {
-                                IClientAPI client = m_FriendsModule.LocateClientObject(userID);
+                                IClientAPI client = _FriendsModule.LocateClientObject(userID);
                                 if (client != null)
                                     client.SendAgentOnline(friendsOnline.ToArray());
                             }

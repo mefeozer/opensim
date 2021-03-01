@@ -37,7 +37,7 @@ namespace OpenSim.Framework.Monitoring
     /// </summary>
     public class Stat : IDisposable
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static readonly char[] DisallowedShortNameCharacters = { '.' };
 
@@ -81,16 +81,13 @@ namespace OpenSim.Framework.Monitoring
                 if (StatType == StatType.Pull)
                     PullAction(this);
 
-                return m_value;
+                return _value;
             }
 
-            set
-            {
-                m_value = value;
-            }
+            set => _value = value;
         }
 
-        private double m_value;
+        private double _value;
 
         /// <summary>
         /// Historical samples for calculating measures of interest average.
@@ -98,7 +95,7 @@ namespace OpenSim.Framework.Monitoring
         /// <remarks>
         /// Will be null if no measures of interest require samples.
         /// </remarks>
-        private readonly Queue<double> m_samples;
+        private readonly Queue<double> _samples;
 
         /// <summary>
         /// Maximum number of statistical samples.
@@ -107,7 +104,7 @@ namespace OpenSim.Framework.Monitoring
         /// At the moment this corresponds to 1 minute since the sampling rate is every 2.5 seconds as triggered from
         /// the main Watchdog.
         /// </remarks>
-        private static readonly int m_maxSamples = 24;
+        private static readonly int _maxSamples = 24;
 
         public Stat(
             string shortName,
@@ -188,7 +185,7 @@ namespace OpenSim.Framework.Monitoring
             MeasuresOfInterest = moi;
 
             if ((moi & MeasuresOfInterest.AverageChangeOverTime) == MeasuresOfInterest.AverageChangeOverTime)
-                m_samples = new Queue<double>(m_maxSamples);
+                _samples = new Queue<double>(_maxSamples);
 
             Verbosity = verbosity;
         }
@@ -209,14 +206,14 @@ namespace OpenSim.Framework.Monitoring
         {
             double newValue = Value;
 
-            lock (m_samples)
+            lock (_samples)
             {
-                if (m_samples.Count >= m_maxSamples)
-                    m_samples.Dequeue();
+                if (_samples.Count >= _maxSamples)
+                    _samples.Dequeue();
 
-//                m_log.DebugFormat("[STAT]: Recording value {0} for {1}", newValue, Name);
+//                _log.DebugFormat("[STAT]: Recording value {0} for {1}", newValue, Name);
 
-                m_samples.Enqueue(newValue);
+                _samples.Enqueue(newValue);
             }
         }
 
@@ -280,13 +277,13 @@ namespace OpenSim.Framework.Monitoring
                 double? penultimateSample = null;
                 double? lastSample = null;
 
-                lock (m_samples)
+                lock (_samples)
                 {
-                    //                    m_log.DebugFormat(
+                    //                    _log.DebugFormat(
                     //                        "[STAT]: Samples for {0} are {1}",
-                    //                        Name, string.Join(",", m_samples.Select(s => s.ToString()).ToArray()));
+                    //                        Name, string.Join(",", _samples.Select(s => s.ToString()).ToArray()));
 
-                    foreach (double s in m_samples)
+                    foreach (double s in _samples)
                     {
                         if (lastSample != null)
                             totalChange += s - (double)lastSample;
@@ -302,7 +299,7 @@ namespace OpenSim.Framework.Monitoring
                         = ((double)lastSample - (double)penultimateSample) / (Watchdog.WATCHDOG_INTERVAL_MS / 1000);
                 }
 
-                int divisor = m_samples.Count <= 1 ? 1 : m_samples.Count - 1;
+                int divisor = _samples.Count <= 1 ? 1 : _samples.Count - 1;
 
                 averageChangeOverTime = totalChange / divisor / (Watchdog.WATCHDOG_INTERVAL_MS / 1000);
                 ret = true;

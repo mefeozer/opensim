@@ -39,7 +39,7 @@ namespace OpenSim.Services.Connectors.InstantMessage
 {
     public class InstantMessageServiceConnector
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -68,24 +68,24 @@ namespace OpenSim.Services.Connectors.InstantMessage
                 {
                     if ((string)responseData["success"] == "TRUE")
                     {
-                        //m_log.DebugFormat("[XXX] Success");
+                        //_log.DebugFormat("[XXX] Success");
                         return true;
                     }
                     else
                     {
-                        //m_log.DebugFormat("[XXX] Fail");
+                        //_log.DebugFormat("[XXX] Fail");
                         return false;
                     }
                 }
                 else
                 {
-                    m_log.DebugFormat("[GRID INSTANT MESSAGE]: No response from {0}", url);
+                    _log.DebugFormat("[GRID INSTANT MESSAGE]: No response from {0}", url);
                     return false;
                 }
             }
             catch (WebException e)
             {
-                m_log.ErrorFormat("[GRID INSTANT MESSAGE]: Error sending message to {0} the host didn't respond " + e.ToString(), url);
+                _log.ErrorFormat("[GRID INSTANT MESSAGE]: Error sending message to {0} the host didn't respond " + e.ToString(), url);
             }
 
             return false;
@@ -99,21 +99,21 @@ namespace OpenSim.Services.Connectors.InstantMessage
         protected static Hashtable ConvertGridInstantMessageToXMLRPC(GridInstantMessage msg, string messageKey)
         {
             Hashtable gim = new Hashtable();
-            gim["from_agent_id"] = msg.fromAgentID.ToString();
+            gim["fro_agent_id"] = msg.fromAgentID.ToString();
             // Kept for compatibility
-            gim["from_agent_session"] = UUID.Zero.ToString();
+            gim["fro_agent_session"] = UUID.Zero.ToString();
             gim["to_agent_id"] = msg.toAgentID.ToString();
-            gim["im_session_id"] = msg.imSessionID.ToString();
+            gim["i_session_id"] = msg.imSessionID.ToString();
             gim["timestamp"] = msg.timestamp.ToString();
-            gim["from_agent_name"] = msg.fromAgentName;
+            gim["fro_agent_name"] = msg.fromAgentName;
             gim["message"] = msg.message;
             byte[] dialogdata = new byte[1]; dialogdata[0] = msg.dialog;
             gim["dialog"] = Convert.ToBase64String(dialogdata, Base64FormattingOptions.None);
 
             if (msg.fromGroup)
-                gim["from_group"] = "TRUE";
+                gim["fro_group"] = "TRUE";
             else
-                gim["from_group"] = "FALSE";
+                gim["fro_group"] = "FALSE";
             byte[] offlinedata = new byte[1]; offlinedata[0] = msg.offline;
             gim["offline"] = Convert.ToBase64String(offlinedata, Base64FormattingOptions.None);
             gim["parent_estate_id"] = msg.ParentEstateID.ToString();

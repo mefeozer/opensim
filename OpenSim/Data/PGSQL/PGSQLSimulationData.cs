@@ -54,11 +54,8 @@ namespace OpenSim.Data.PGSQL
         /// The database manager
         /// </summary>
         private PGSQLManager _Database;
-        private string m_connectionString;
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        private string _connectionString;
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         public PGSQLSimulationData()
         {
@@ -75,7 +72,7 @@ namespace OpenSim.Data.PGSQL
         /// <param name="connectionString">The connection string.</param>
         public void Initialise(string connectionString)
         {
-            m_connectionString = connectionString;
+            _connectionString = connectionString;
             _Database = new PGSQLManager(connectionString);
 
             using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
@@ -114,7 +111,7 @@ namespace OpenSim.Data.PGSQL
                             WHERE ""RegionUUID"" = :RegionUUID
                             ORDER BY ""SceneGroupID"" asc, sort asc, ""LinkNumber"" asc";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
             {
                 command.Parameters.Add(_Database.CreateParameter("regionUUID", regionUUID));
@@ -180,7 +177,7 @@ namespace OpenSim.Data.PGSQL
             // LoadItems only on those
             List<SceneObjectPart> primsWithInventory = new List<SceneObjectPart>();
             string qry = "select distinct \"primID\" from primitems";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand command = new NpgsqlCommand(qry, conn))
             {
                 conn.Open();
@@ -214,7 +211,7 @@ namespace OpenSim.Data.PGSQL
         private void LoadItems(List<SceneObjectPart> allPrimsWithInventory)
         {
             string sql = @"SELECT * FROM primitems WHERE ""primID"" = :PrimID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand command = new NpgsqlCommand(sql, conn))
             {
                 conn.Open();
@@ -259,7 +256,7 @@ namespace OpenSim.Data.PGSQL
 
             //_Log.DebugFormat("[PGSQL]: Adding/Changing SceneObjectGroup: {0} to region: {1}, object has {2} prims.", obj.UUID, regionUUID, obj.Parts.Length);
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 NpgsqlTransaction transaction = conn.BeginTransaction();
@@ -456,7 +453,7 @@ namespace OpenSim.Data.PGSQL
             lock (_Database)
             {
                 //Using the non transaction mode.
-                using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
                 using (NpgsqlCommand cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = conn;
@@ -491,7 +488,7 @@ namespace OpenSim.Data.PGSQL
             //TODO add index on PrimID in DB, if not already exist
 
             string sql = @"delete from primitems where ""primID"" = :primID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("primID", primID));
@@ -506,7 +503,7 @@ namespace OpenSim.Data.PGSQL
             VALUES (:itemID,:primID,:assetID,:parentFolderID,:invType,:assetType,:name,:description,:creationDate,:creatorID,:ownerID,
             :lastOwnerID,:groupID,:nextPermissions,:currentPermissions,:basePermissions,:everyonePermissions,:groupPermissions,:flags)";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 conn.Open();
@@ -543,7 +540,7 @@ namespace OpenSim.Data.PGSQL
             string sql = @"select ""RegionUUID"", ""Revision"", ""Heightfield"" from terrain
                             where ""RegionUUID"" = :RegionUUID order by ""Revision"" desc limit 1; ";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
@@ -582,7 +579,7 @@ namespace OpenSim.Data.PGSQL
             string sql = @"select ""RegionUUID"", ""Revision"", ""Heightfield"" from bakedterrain
                             where ""RegionUUID"" = :RegionUUID; ";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
@@ -623,7 +620,7 @@ namespace OpenSim.Data.PGSQL
         {
             //Delete old terrain map
             string sql = @"delete from terrain where ""RegionUUID""=:RegionUUID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
@@ -641,7 +638,7 @@ namespace OpenSim.Data.PGSQL
 
             sql = @"insert into terrain(""RegionUUID"", ""Revision"", ""Heightfield"") values(:RegionUUID, :Revision, :Heightfield)";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
@@ -667,7 +664,7 @@ namespace OpenSim.Data.PGSQL
         {
             //Delete old terrain map
             string sql = @"delete from bakedterrain where ""RegionUUID""=:RegionUUID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
@@ -685,7 +682,7 @@ namespace OpenSim.Data.PGSQL
 
             sql = @"insert into bakedterrain(""RegionUUID"", ""Revision"", ""Heightfield"") values(:RegionUUID, :Revision, :Heightfield)";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             {
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
@@ -713,7 +710,7 @@ namespace OpenSim.Data.PGSQL
             string sql = @"select * from land where ""RegionUUID"" = :RegionUUID";
 
             //Retrieve all land data from region
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("RegionUUID", regionUUID));
@@ -731,7 +728,7 @@ namespace OpenSim.Data.PGSQL
             foreach (LandData LandData in LandDataForRegion)
             {
                 sql = @"select * from landaccesslist where ""LandUUID"" = :LandUUID";
-                using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.Parameters.Add(_Database.CreateParameter("LandUUID", LandData.GlobalID));
@@ -776,7 +773,7 @@ namespace OpenSim.Data.PGSQL
                  :MediaType,:MediaDescription,:MediaWidth::text || ',' || :MediaHeight::text,:MediaLoop,:ObscureMusic,:ObscureMedia,:SeeAVs::int::smallint,
                  :AnyAVSounds::int::smallint,:GroupAVSounds::int::smallint,:environment)";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.AddRange(CreateLandParameters(parcel.LandData, parcel.RegionUUID));
@@ -786,7 +783,7 @@ namespace OpenSim.Data.PGSQL
 
             sql = @"INSERT INTO landaccesslist (""LandUUID"",""AccessUUID"",""LandFlags"",""Expires"") VALUES (:LandUUID,:AccessUUID,:Flags,:Expires)";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 conn.Open();
@@ -807,7 +804,7 @@ namespace OpenSim.Data.PGSQL
         public void RemoveLandObject(UUID globalID)
         {
             string sql = @"delete from land where ""UUID""=:UUID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("UUID", globalID));
@@ -815,7 +812,7 @@ namespace OpenSim.Data.PGSQL
                 cmd.ExecuteNonQuery();
             }
             sql = @"delete from landaccesslist where ""LandUUID""=:UUID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("UUID", globalID));
@@ -828,7 +825,7 @@ namespace OpenSim.Data.PGSQL
         public string LoadRegionEnvironmentSettings(UUID regionUUID)
         {
             string sql = "select * from regionenvironment where region_id = :region_id";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("region_id", regionUUID));
@@ -852,7 +849,7 @@ namespace OpenSim.Data.PGSQL
             {
                 string sql = "DELETE FROM regionenvironment WHERE region_id = :region_id ;";
 
-                using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.Parameters.Add(_Database.CreateParameter("region_id", regionUUID));
@@ -862,7 +859,7 @@ namespace OpenSim.Data.PGSQL
 
                 sql = "INSERT INTO regionenvironment (region_id, llsd_settings) VALUES (:region_id, :llsd_settings) ;";
 
-                using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.Parameters.Add(_Database.CreateParameter("region_id", regionUUID));
@@ -877,7 +874,7 @@ namespace OpenSim.Data.PGSQL
         public void RemoveRegionEnvironmentSettings(UUID regionUUID)
         {
             string sql = "delete from regionenvironment where region_id = :region_id ;";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("region_id", regionUUID));
@@ -897,7 +894,7 @@ namespace OpenSim.Data.PGSQL
         {
             string sql = @"select * from regionsettings where ""regionUUID"" = :regionUUID";
             RegionSettings regionSettings;
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("regionUUID", regionUUID));
@@ -938,7 +935,7 @@ namespace OpenSim.Data.PGSQL
             //Little check if regionUUID already exist in DB
             string regionUUID;
             string sql = @"SELECT ""regionUUID"" FROM regionsettings WHERE ""regionUUID"" = :regionUUID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("regionUUID", regionSettings.RegionUUID));
@@ -968,7 +965,7 @@ namespace OpenSim.Data.PGSQL
 ""TelehubObject"" = :telehubobject, ""parcel_tile_ID"" = :ParcelImageID, ""cacheID"" = :cacheID
  WHERE ""regionUUID"" = :regionUUID";
 
-                using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddRange(CreateRegionSettingParameters(regionSettings));
@@ -1008,7 +1005,7 @@ namespace OpenSim.Data.PGSQL
                                 :terrain_lower_limit,:use_estate_sun,:fixed_sun,:sun_position,:covenant, :covenant_datetime, :sunvectorx,:sunvectory,
                                 :sunvectorz, :Sandbox, :loaded_creation_datetime, :loaded_creation_id )";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.AddRange(CreateRegionSettingParameters(regionSettings));
@@ -1927,7 +1924,7 @@ namespace OpenSim.Data.PGSQL
 
             string sql = @"SELECT ""Yaw"", ""Pitch"", ""Distance"" FROM spawn_points WHERE ""RegionUUID"" = :RegionUUID";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("RegionUUID", rs.RegionUUID));
@@ -1952,7 +1949,7 @@ namespace OpenSim.Data.PGSQL
         private void SaveSpawnPoints(RegionSettings rs)
         {
             string sql = @"DELETE FROM spawn_points WHERE ""RegionUUID"" = :RegionUUID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
                 cmd.Parameters.Add(_Database.CreateParameter("RegionUUID", rs.RegionUUID));
@@ -1962,7 +1959,7 @@ namespace OpenSim.Data.PGSQL
             foreach (SpawnPoint p in rs.SpawnPoints())
             {
                 sql = @"INSERT INTO spawn_points (""RegionUUID"", ""Yaw"", ""Pitch"", ""Distance"") VALUES (:RegionUUID, :Yaw, :Pitch, :Distance)";
-                using (NpgsqlConnection conn = new NpgsqlConnection(m_connectionString))
+                using (NpgsqlConnection conn = new NpgsqlConnection(_connectionString))
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.Parameters.Add(_Database.CreateParameter("RegionUUID", rs.RegionUUID));

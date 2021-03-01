@@ -39,14 +39,14 @@ namespace OpenSim.Server.Handlers.Hypergrid
 {
     public class HypergridHandlers
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IGatekeeperService m_GatekeeperService;
+        private readonly IGatekeeperService _GatekeeperService;
 
         public HypergridHandlers(IGatekeeperService gatekeeper)
         {
-            m_GatekeeperService = gatekeeper;
-            m_log.DebugFormat("[HYPERGRID HANDLERS]: Active");
+            _GatekeeperService = gatekeeper;
+            _log.DebugFormat("[HYPERGRID HANDLERS]: Active");
         }
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace OpenSim.Server.Handlers.Hypergrid
             int sizeX = 256;
             int sizeY = 256;
 
-            m_log.DebugFormat("[HG Handler]: XMLRequest to link to {0} from {1}", string.IsNullOrEmpty(name) ? "default region" : name, remoteClient.Address.ToString());
-            bool success = m_GatekeeperService.LinkRegion(name, out regionID, out regionHandle, out externalName, out imageURL, out reason, out sizeX, out sizeY);
+            _log.DebugFormat("[HG Handler]: XMLRequest to link to {0} from {1}", string.IsNullOrEmpty(name) ? "default region" : name, remoteClient.Address.ToString());
+            bool success = _GatekeeperService.LinkRegion(name, out regionID, out regionHandle, out externalName, out imageURL, out reason, out sizeX, out sizeY);
 
             Hashtable hash = new Hashtable();
             hash["result"] = success.ToString();
@@ -107,7 +107,7 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 agentHomeURI = (string)requestData["agent_home_uri"];
 
             string message;
-            GridRegion regInfo = m_GatekeeperService.GetHyperlinkRegion(regionID, agentID, agentHomeURI, out message);
+            GridRegion regInfo = _GatekeeperService.GetHyperlinkRegion(regionID, agentID, agentHomeURI, out message);
 
             Hashtable hash = new Hashtable();
             if (regInfo == null)

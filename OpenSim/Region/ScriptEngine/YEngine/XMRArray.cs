@@ -488,13 +488,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         /**
          * @brief Get heap tracking size.
          */
-        public int Size
-        {
-            get
-            {
-                return original.Size;
-            }
-        }
+        public int Size => original.Size;
 
         /**
          * @brief See if the given object is an XMRArrayListKey and every value is equal to our own.

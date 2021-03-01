@@ -106,8 +106,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private static readonly FieldInfo rotationZFieldInfo = typeof(LSL_Rotation).GetField("z");
         private static readonly FieldInfo rotationSFieldInfo = typeof(LSL_Rotation).GetField("s");
         private static readonly FieldInfo sdtXMRInstFieldInfo = typeof(XMRSDTypeClObj).GetField("xmrInst");
-        private static readonly FieldInfo stackLeftFieldInfo = typeof(XMRInstAbstract).GetField("m_StackLeft");
-        private static readonly FieldInfo heapUsedFieldInfo = typeof(XMRInstAbstract).GetField("m_localsHeapUsed");
+        private static readonly FieldInfo stackLeftFieldInfo = typeof(XMRInstAbstract).GetField("_StackLeft");
+        private static readonly FieldInfo heapUsedFieldInfo = typeof(XMRInstAbstract).GetField("_localsHeapUsed");
         private static readonly FieldInfo vectorXFieldInfo = typeof(LSL_Vector).GetField("x");
         private static readonly FieldInfo vectorYFieldInfo = typeof(LSL_Vector).GetField("y");
         private static readonly FieldInfo vectorZFieldInfo = typeof(LSL_Vector).GetField("z");
@@ -1301,7 +1301,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
              // Output:
              //    int __mainCallNo = -1;
-             //    instance.m_StackLeft -= stackframesize;
+             //    instance._StackLeft -= stackframesize;
              //    try {
              //        if (instance.callMode != CallMode_NORMAL) goto __cmRestore;
             actCallNo = null;
@@ -1455,7 +1455,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // Output epilog that saves stack frame state if CallMode_SAVE.
              //
              //   finally {
-             //      instance.m_StackLeft += stackframesize;
+             //      instance._StackLeft += stackframesize;
              //      if (instance.callMode != CallMode_SAVE) goto __endFin;
              //      GenerateFrameCaptureCode();
              //   __endFin:
@@ -1571,7 +1571,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 ilGen.Emit(curDeclFunc, OpCodes.Dup);
                 ilGen.Emit(curDeclFunc, OpCodes.Ldc_I4, i);
                 argVar.location.PushVal(this, argVar.name, tokenTypeObj);
-                ilGen.Emit(curDeclFunc, OpCodes.Stelem_Ref);
+                ilGen.Emit(curDeclFunc, OpCodes.Stele_Ref);
                 i++;
             }
 
@@ -1598,7 +1598,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 {
                     ilGen.Emit(curDeclFunc, OpCodes.Box, t);
                 }
-                ilGen.Emit(curDeclFunc, OpCodes.Stelem_Ref);
+                ilGen.Emit(curDeclFunc, OpCodes.Stele_Ref);
             }
 
             ilGen.Emit(curDeclFunc, OpCodes.Pop);
@@ -1630,7 +1630,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 argLoc.PopPre(this, argVar.name);
                 ilGen.Emit(curDeclFunc, OpCodes.Ldloc, objArray);
                 ilGen.Emit(curDeclFunc, OpCodes.Ldc_I4, i);
-                ilGen.Emit(curDeclFunc, OpCodes.Ldelem_Ref);
+                ilGen.Emit(curDeclFunc, OpCodes.Ldele_Ref);
                 TypeCast.CastTopOfStack(this, argVar.name, tokenTypeObj, argLoc.type, true);
                 argLoc.PopPost(this, argVar.name);
                 i++;
@@ -1653,7 +1653,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 ilGen.Emit(curDeclFunc, OpCodes.Ldloc, objArray);
                 ilGen.Emit(curDeclFunc, OpCodes.Ldc_I4, i++);
-                ilGen.Emit(curDeclFunc, OpCodes.Ldelem_Ref);
+                ilGen.Emit(curDeclFunc, OpCodes.Ldele_Ref);
                 if(u.IsValueType)
                 {
                     ilGen.Emit(curDeclFunc, OpCodes.Unbox_Any, u);

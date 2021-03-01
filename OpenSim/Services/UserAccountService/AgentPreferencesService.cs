@@ -37,16 +37,16 @@ namespace OpenSim.Services.UserAccountService
 {
     public class AgentPreferencesService : AgentPreferencesServiceBase, IAgentPreferencesService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public AgentPreferencesService(IConfigSource config) : base(config)
         {
-            m_log.Debug("[AGENT PREFERENCES SERVICE]: Starting agent preferences service");
+            _log.Debug("[AGENT PREFERENCES SERVICE]: Starting agent preferences service");
         }
 
         public AgentPrefs GetAgentPreferences(UUID principalID)
         {
-            AgentPreferencesData d = m_Database.GetPrefs(principalID);
+            AgentPreferencesData d = _Database.GetPrefs(principalID);
             AgentPrefs prefs = d == null ? null : new AgentPrefs(d.Data);
             return prefs;
         }
@@ -65,7 +65,7 @@ namespace OpenSim.Services.UserAccountService
             d.Data["PermEveryone"] = data.PermEveryone.ToString();
             d.Data["PermGroup"] = data.PermGroup.ToString();
             d.Data["PermNextOwner"] = data.PermNextOwner.ToString();
-            return m_Database.Store(d);
+            return _Database.Store(d);
         }
 
         public string GetLang(UUID principalID)

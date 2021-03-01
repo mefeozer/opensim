@@ -41,20 +41,20 @@ namespace OpenSim.OfflineIM
 {
     public class OfflineIMService : OfflineIMServiceBase, IOfflineIMService
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private const int MAX_IM = 25;
 
-        private readonly XmlSerializer m_serializer;
-        private static bool m_Initialized = false;
+        private readonly XmlSerializer _serializer;
+        private static bool _Initialized = false;
 
         public OfflineIMService(IConfigSource config)
             : base(config)
         {
-            m_serializer = new XmlSerializer(typeof(GridInstantMessage));
-            if (!m_Initialized)
+            _serializer = new XmlSerializer(typeof(GridInstantMessage));
+            if (!_Initialized)
             {
-                m_Database.DeleteOld();
-                m_Initialized = true;
+                _Database.DeleteOld();
+                _Initialized = true;
             }
         }
 
@@ -62,7 +62,7 @@ namespace OpenSim.OfflineIM
         {
             List<GridInstantMessage> ims = new List<GridInstantMessage>();
 
-            OfflineIMData[] messages = m_Database.Get("PrincipalID", principalID.ToString());
+            OfflineIMData[] messages = _Database.Get("PrincipalID", principalID.ToString());
 
             if (messages == null || messages != null && messages.Length == 0)
                 return ims;
@@ -71,13 +71,13 @@ namespace OpenSim.OfflineIM
             {
                 using (MemoryStream mstream = new MemoryStream(Encoding.UTF8.GetBytes(m.Data["Message"])))
                 {
-                    GridInstantMessage im = (GridInstantMessage)m_serializer.Deserialize(mstream);
+                    GridInstantMessage im = (GridInstantMessage)_serializer.Deserialize(mstream);
                     ims.Add(im);
                 }
             }
 
             // Then, delete them
-            m_Database.Delete("PrincipalID", principalID.ToString());
+            _Database.Delete("PrincipalID", principalID.ToString());
 
             return ims;
         }
@@ -88,7 +88,7 @@ namespace OpenSim.OfflineIM
 
             // Check limits
             UUID principalID = new UUID(im.toAgentID);
-            long count = m_Database.GetCount("PrincipalID", principalID.ToString());
+            long count = _Database.GetCount("PrincipalID", principalID.ToString());
             if (count >= MAX_IM)
             {
                 reason = "Number of offline IMs has maxed out";
@@ -105,7 +105,7 @@ namespace OpenSim.OfflineIM
 
                 using (XmlWriter writer = XmlWriter.Create(mstream, settings))
                 {
-                    m_serializer.Serialize(writer, im);
+                    _serializer.Serialize(writer, im);
                     writer.Flush();
                     imXml = Util.UTF8NoBomEncoding.GetString(mstream.ToArray());
                 }
@@ -119,14 +119,14 @@ namespace OpenSim.OfflineIM
             };
             data.Data["Message"] = imXml;
 
-            return m_Database.Store(data);
+            return _Database.Store(data);
 
         }
 
         public void DeleteMessages(UUID userID)
         {
-            m_Database.Delete("PrincipalID", userID.ToString());
-            m_Database.Delete("FromID", userID.ToString());
+            _Database.Delete("PrincipalID", userID.ToString());
+            _Database.Delete("FromID", userID.ToString());
         }
 
     }

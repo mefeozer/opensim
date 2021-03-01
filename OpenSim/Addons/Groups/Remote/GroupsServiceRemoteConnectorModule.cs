@@ -43,14 +43,14 @@ namespace OpenSim.Groups
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "GroupsServiceRemoteConnectorModule")]
     public class GroupsServiceRemoteConnectorModule : ISharedRegionModule, IGroupsServicesConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private bool m_Enabled = false;
-        private GroupsServiceRemoteConnector m_GroupsService;
-        private IUserManagement m_UserManagement;
-        private List<Scene> m_Scenes;
+        private bool _Enabled = false;
+        private GroupsServiceRemoteConnector _GroupsService;
+        private IUserManagement _UserManagement;
+        private List<Scene> _Scenes;
 
-        private RemoteConnectorCacheWrapper m_CacheWrapper;
+        private RemoteConnectorCacheWrapper _CacheWrapper;
 
         #region constructors
         public GroupsServiceRemoteConnectorModule()
@@ -60,16 +60,16 @@ namespace OpenSim.Groups
         public GroupsServiceRemoteConnectorModule(IConfigSource config, IUserManagement uman)
         {
             Init(config);
-            m_UserManagement = uman;
-            m_CacheWrapper = new RemoteConnectorCacheWrapper(m_UserManagement);
+            _UserManagement = uman;
+            _CacheWrapper = new RemoteConnectorCacheWrapper(_UserManagement);
 
         }
         #endregion
 
         private void Init(IConfigSource config)
         {
-            m_GroupsService = new GroupsServiceRemoteConnector(config);
-            m_Scenes = new List<Scene>();
+            _GroupsService = new GroupsServiceRemoteConnector(config);
+            _Scenes = new List<Scene>();
 
         }
 
@@ -89,48 +89,42 @@ namespace OpenSim.Groups
 
             Init(config);
 
-            m_Enabled = true;
-            m_log.DebugFormat("[Groups.RemoteConnector]: Initializing {0}", this.Name);
+            _Enabled = true;
+            _log.DebugFormat("[Groups.RemoteConnector]: Initializing {0}", this.Name);
         }
 
-        public string Name
-        {
-            get { return "Groups Remote Service Connector"; }
-        }
+        public string Name => "Groups Remote Service Connector";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_log.DebugFormat("[Groups.RemoteConnector]: Registering {0} with {1}", this.Name, scene.RegionInfo.RegionName);
+            _log.DebugFormat("[Groups.RemoteConnector]: Registering {0} with {1}", this.Name, scene.RegionInfo.RegionName);
             scene.RegisterModuleInterface<IGroupsServicesConnector>(this);
-            m_Scenes.Add(scene);
+            _Scenes.Add(scene);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.UnregisterModuleInterface<IGroupsServicesConnector>(this);
-            m_Scenes.Remove(scene);
+            _Scenes.Remove(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if (m_UserManagement == null)
+            if (_UserManagement == null)
             {
-                m_UserManagement = scene.RequestModuleInterface<IUserManagement>();
-                m_CacheWrapper = new RemoteConnectorCacheWrapper(m_UserManagement);
+                _UserManagement = scene.RequestModuleInterface<IUserManagement>();
+                _CacheWrapper = new RemoteConnectorCacheWrapper(_UserManagement);
             }
         }
 
@@ -149,12 +143,12 @@ namespace OpenSim.Groups
         public UUID CreateGroup(UUID RequestingAgentID, string name, string charter, bool showInList, UUID insigniaID, int membershipFee, bool openEnrollment,
             bool allowPublish, bool maturePublish, UUID founderID, out string reason)
         {
-            m_log.DebugFormat("[Groups.RemoteConnector]: Creating group {0}", name);
+            _log.DebugFormat("[Groups.RemoteConnector]: Creating group {0}", name);
             string r = string.Empty;
 
-            UUID groupID = m_CacheWrapper.CreateGroup(RequestingAgentID, delegate
+            UUID groupID = _CacheWrapper.CreateGroup(RequestingAgentID, delegate
             {
-                return m_GroupsService.CreateGroup(RequestingAgentID.ToString(), name, charter, showInList, insigniaID,
+                return _GroupsService.CreateGroup(RequestingAgentID.ToString(), name, charter, showInList, insigniaID,
                     membershipFee, openEnrollment, allowPublish, maturePublish, founderID, out r);
             });
 
@@ -167,9 +161,9 @@ namespace OpenSim.Groups
         {
             string r = string.Empty;
 
-            bool success = m_CacheWrapper.UpdateGroup(groupID, delegate
+            bool success = _CacheWrapper.UpdateGroup(groupID, delegate
             {
-                return m_GroupsService.UpdateGroup(RequestingAgentID, groupID, charter, showInList, insigniaID, membershipFee, openEnrollment, allowPublish, maturePublish);
+                return _GroupsService.UpdateGroup(RequestingAgentID, groupID, charter, showInList, insigniaID, membershipFee, openEnrollment, allowPublish, maturePublish);
             });
 
             reason = r;
@@ -181,27 +175,27 @@ namespace OpenSim.Groups
             if (GroupID == UUID.Zero && (GroupName == null || GroupName != null && string.IsNullOrEmpty(GroupName)))
                 return null;
 
-            return m_CacheWrapper.GetGroupRecord(RequestingAgentID,GroupID,GroupName, delegate
+            return _CacheWrapper.GetGroupRecord(RequestingAgentID,GroupID,GroupName, delegate
             {
-                return m_GroupsService.GetGroupRecord(RequestingAgentID, GroupID, GroupName);
+                return _GroupsService.GetGroupRecord(RequestingAgentID, GroupID, GroupName);
             });
         }
 
         public List<DirGroupsReplyData> FindGroups(string RequestingAgentIDstr, string search)
         {
             // TODO!
-            return m_GroupsService.FindGroups(RequestingAgentIDstr, search);
+            return _GroupsService.FindGroups(RequestingAgentIDstr, search);
         }
 
         public bool AddAgentToGroup(string RequestingAgentID, string AgentID, UUID GroupID, UUID RoleID, string token, out string reason)
         {
             string agentFullID = AgentID;
-            m_log.DebugFormat("[Groups.RemoteConnector]: Add agent {0} to group {1}", agentFullID, GroupID);
+            _log.DebugFormat("[Groups.RemoteConnector]: Add agent {0} to group {1}", agentFullID, GroupID);
             string r = string.Empty;
 
-            bool success = m_CacheWrapper.AddAgentToGroup(RequestingAgentID, AgentID, GroupID, delegate
+            bool success = _CacheWrapper.AddAgentToGroup(RequestingAgentID, AgentID, GroupID, delegate
             {
-                return m_GroupsService.AddAgentToGroup(RequestingAgentID, agentFullID, GroupID, RoleID, token, out r);
+                return _GroupsService.AddAgentToGroup(RequestingAgentID, agentFullID, GroupID, RoleID, token, out r);
             });
 
             reason = r;
@@ -210,60 +204,60 @@ namespace OpenSim.Groups
 
         public void RemoveAgentFromGroup(string RequestingAgentID, string AgentID, UUID GroupID)
         {
-            m_CacheWrapper.RemoveAgentFromGroup(RequestingAgentID, AgentID, GroupID, delegate
+            _CacheWrapper.RemoveAgentFromGroup(RequestingAgentID, AgentID, GroupID, delegate
             {
-                m_GroupsService.RemoveAgentFromGroup(RequestingAgentID, AgentID, GroupID);
+                _GroupsService.RemoveAgentFromGroup(RequestingAgentID, AgentID, GroupID);
             });
 
         }
 
         public void SetAgentActiveGroup(string RequestingAgentID, string AgentID, UUID GroupID)
         {
-            m_CacheWrapper.SetAgentActiveGroup(AgentID, delegate
+            _CacheWrapper.SetAgentActiveGroup(AgentID, delegate
             {
-                return m_GroupsService.SetAgentActiveGroup(RequestingAgentID, AgentID, GroupID);
+                return _GroupsService.SetAgentActiveGroup(RequestingAgentID, AgentID, GroupID);
             });
         }
 
         public ExtendedGroupMembershipData GetAgentActiveMembership(string RequestingAgentID, string AgentID)
         {
-            return m_CacheWrapper.GetAgentActiveMembership(AgentID, delegate
+            return _CacheWrapper.GetAgentActiveMembership(AgentID, delegate
             {
-                return m_GroupsService.GetMembership(RequestingAgentID, AgentID, UUID.Zero);
+                return _GroupsService.GetMembership(RequestingAgentID, AgentID, UUID.Zero);
             });
         }
 
         public ExtendedGroupMembershipData GetAgentGroupMembership(string RequestingAgentID, string AgentID, UUID GroupID)
         {
-            return m_CacheWrapper.GetAgentGroupMembership(AgentID, GroupID, delegate
+            return _CacheWrapper.GetAgentGroupMembership(AgentID, GroupID, delegate
             {
-                return m_GroupsService.GetMembership(RequestingAgentID, AgentID, GroupID);
+                return _GroupsService.GetMembership(RequestingAgentID, AgentID, GroupID);
             });
         }
 
         public List<GroupMembershipData> GetAgentGroupMemberships(string RequestingAgentID, string AgentID)
         {
-            return m_CacheWrapper.GetAgentGroupMemberships(AgentID, delegate
+            return _CacheWrapper.GetAgentGroupMemberships(AgentID, delegate
             {
-                return m_GroupsService.GetMemberships(RequestingAgentID, AgentID);
+                return _GroupsService.GetMemberships(RequestingAgentID, AgentID);
             });
         }
 
 
         public List<GroupMembersData> GetGroupMembers(string RequestingAgentID, UUID GroupID)
         {
-            return m_CacheWrapper.GetGroupMembers(RequestingAgentID, GroupID, delegate
+            return _CacheWrapper.GetGroupMembers(RequestingAgentID, GroupID, delegate
             {
-                return m_GroupsService.GetGroupMembers(RequestingAgentID, GroupID);
+                return _GroupsService.GetGroupMembers(RequestingAgentID, GroupID);
             });
         }
 
         public bool AddGroupRole(string RequestingAgentID, UUID groupID, UUID roleID, string name, string description, string title, ulong powers, out string reason)
         {
             string r = string.Empty;
-            bool success = m_CacheWrapper.AddGroupRole(groupID, roleID, description, name, powers, title, delegate
+            bool success = _CacheWrapper.AddGroupRole(groupID, roleID, description, name, powers, title, delegate
             {
-                return m_GroupsService.AddGroupRole(RequestingAgentID, groupID, roleID, name, description, title, powers, out r);
+                return _GroupsService.AddGroupRole(RequestingAgentID, groupID, roleID, name, description, title, powers, out r);
             });
 
             reason = r;
@@ -272,89 +266,89 @@ namespace OpenSim.Groups
 
         public bool UpdateGroupRole(string RequestingAgentID, UUID groupID, UUID roleID, string name, string description, string title, ulong powers)
         {
-            return m_CacheWrapper.UpdateGroupRole(groupID, roleID, name, description, title, powers, delegate
+            return _CacheWrapper.UpdateGroupRole(groupID, roleID, name, description, title, powers, delegate
             {
-                return m_GroupsService.UpdateGroupRole(RequestingAgentID, groupID, roleID, name, description, title, powers);
+                return _GroupsService.UpdateGroupRole(RequestingAgentID, groupID, roleID, name, description, title, powers);
             });
         }
 
         public void RemoveGroupRole(string RequestingAgentID, UUID groupID, UUID roleID)
         {
-            m_CacheWrapper.RemoveGroupRole(RequestingAgentID, groupID, roleID, delegate
+            _CacheWrapper.RemoveGroupRole(RequestingAgentID, groupID, roleID, delegate
             {
-                m_GroupsService.RemoveGroupRole(RequestingAgentID, groupID, roleID);
+                _GroupsService.RemoveGroupRole(RequestingAgentID, groupID, roleID);
             });
         }
 
         public List<GroupRolesData> GetGroupRoles(string RequestingAgentID, UUID GroupID)
         {
-            return m_CacheWrapper.GetGroupRoles(RequestingAgentID, GroupID, delegate
+            return _CacheWrapper.GetGroupRoles(RequestingAgentID, GroupID, delegate
             {
-                return m_GroupsService.GetGroupRoles(RequestingAgentID, GroupID);
+                return _GroupsService.GetGroupRoles(RequestingAgentID, GroupID);
             });
         }
 
         public List<GroupRoleMembersData> GetGroupRoleMembers(string RequestingAgentID, UUID GroupID)
         {
-            return m_CacheWrapper.GetGroupRoleMembers(RequestingAgentID, GroupID, delegate
+            return _CacheWrapper.GetGroupRoleMembers(RequestingAgentID, GroupID, delegate
             {
-                return m_GroupsService.GetGroupRoleMembers(RequestingAgentID, GroupID);
+                return _GroupsService.GetGroupRoleMembers(RequestingAgentID, GroupID);
             });
         }
 
         public void AddAgentToGroupRole(string RequestingAgentID, string AgentID, UUID GroupID, UUID RoleID)
         {
-            m_CacheWrapper.AddAgentToGroupRole(RequestingAgentID, AgentID, GroupID, RoleID, delegate
+            _CacheWrapper.AddAgentToGroupRole(RequestingAgentID, AgentID, GroupID, RoleID, delegate
             {
-                return m_GroupsService.AddAgentToGroupRole(RequestingAgentID, AgentID, GroupID, RoleID);
+                return _GroupsService.AddAgentToGroupRole(RequestingAgentID, AgentID, GroupID, RoleID);
             });
         }
 
         public void RemoveAgentFromGroupRole(string RequestingAgentID, string AgentID, UUID GroupID, UUID RoleID)
         {
-            m_CacheWrapper.RemoveAgentFromGroupRole(RequestingAgentID, AgentID, GroupID, RoleID, delegate
+            _CacheWrapper.RemoveAgentFromGroupRole(RequestingAgentID, AgentID, GroupID, RoleID, delegate
             {
-                return m_GroupsService.RemoveAgentFromGroupRole(RequestingAgentID, AgentID, GroupID, RoleID);
+                return _GroupsService.RemoveAgentFromGroupRole(RequestingAgentID, AgentID, GroupID, RoleID);
             });
         }
 
         public List<GroupRolesData> GetAgentGroupRoles(string RequestingAgentID, string AgentID, UUID GroupID)
         {
-            return m_CacheWrapper.GetAgentGroupRoles(RequestingAgentID, AgentID, GroupID, delegate
+            return _CacheWrapper.GetAgentGroupRoles(RequestingAgentID, AgentID, GroupID, delegate
             {
-                return m_GroupsService.GetAgentGroupRoles(RequestingAgentID, AgentID, GroupID); ;
+                return _GroupsService.GetAgentGroupRoles(RequestingAgentID, AgentID, GroupID); ;
             });
         }
 
         public void SetAgentActiveGroupRole(string RequestingAgentID, string AgentID, UUID GroupID, UUID RoleID)
         {
-            m_CacheWrapper.SetAgentActiveGroupRole(AgentID, GroupID, delegate
+            _CacheWrapper.SetAgentActiveGroupRole(AgentID, GroupID, delegate
             {
-                m_GroupsService.SetAgentActiveGroupRole(RequestingAgentID, AgentID, GroupID, RoleID);
+                _GroupsService.SetAgentActiveGroupRole(RequestingAgentID, AgentID, GroupID, RoleID);
             });
         }
 
         public void UpdateMembership(string RequestingAgentID, string AgentID, UUID GroupID, bool AcceptNotices, bool ListInProfile)
         {
-            m_CacheWrapper.UpdateMembership(AgentID, GroupID, AcceptNotices, ListInProfile, delegate
+            _CacheWrapper.UpdateMembership(AgentID, GroupID, AcceptNotices, ListInProfile, delegate
             {
-                m_GroupsService.UpdateMembership(RequestingAgentID, AgentID, GroupID, AcceptNotices, ListInProfile);
+                _GroupsService.UpdateMembership(RequestingAgentID, AgentID, GroupID, AcceptNotices, ListInProfile);
             });
         }
 
         public bool AddAgentToGroupInvite(string RequestingAgentID, UUID inviteID, UUID groupID, UUID roleID, string agentID)
         {
-            return m_GroupsService.AddAgentToGroupInvite(RequestingAgentID, inviteID, groupID, roleID, agentID);
+            return _GroupsService.AddAgentToGroupInvite(RequestingAgentID, inviteID, groupID, roleID, agentID);
         }
 
         public GroupInviteInfo GetAgentToGroupInvite(string RequestingAgentID, UUID inviteID)
         {
-            return m_GroupsService.GetAgentToGroupInvite(RequestingAgentID, inviteID);
+            return _GroupsService.GetAgentToGroupInvite(RequestingAgentID, inviteID);
         }
 
         public void RemoveAgentToGroupInvite(string RequestingAgentID, UUID inviteID)
         {
-            m_GroupsService.RemoveAgentToGroupInvite(RequestingAgentID, inviteID);
+            _GroupsService.RemoveAgentToGroupInvite(RequestingAgentID, inviteID);
         }
 
         public bool AddGroupNotice(string RequestingAgentID, UUID groupID, UUID noticeID, string fromName, string subject, string message,
@@ -378,26 +372,26 @@ namespace OpenSim.Groups
                 }
             };
 
-            return m_CacheWrapper.AddGroupNotice(groupID, noticeID, notice, delegate
+            return _CacheWrapper.AddGroupNotice(groupID, noticeID, notice, delegate
             {
-                return m_GroupsService.AddGroupNotice(RequestingAgentID, groupID, noticeID, fromName, subject, message,
+                return _GroupsService.AddGroupNotice(RequestingAgentID, groupID, noticeID, fromName, subject, message,
                             hasAttachment, attType, attName, attItemID, attOwnerID);
             });
         }
 
         public GroupNoticeInfo GetGroupNotice(string RequestingAgentID, UUID noticeID)
         {
-            return m_CacheWrapper.GetGroupNotice(noticeID, delegate
+            return _CacheWrapper.GetGroupNotice(noticeID, delegate
             {
-                return m_GroupsService.GetGroupNotice(RequestingAgentID, noticeID);
+                return _GroupsService.GetGroupNotice(RequestingAgentID, noticeID);
             });
         }
 
         public List<ExtendedGroupNoticeData> GetGroupNotices(string RequestingAgentID, UUID GroupID)
         {
-            return m_CacheWrapper.GetGroupNotices(GroupID, delegate
+            return _CacheWrapper.GetGroupNotices(GroupID, delegate
             {
-                return m_GroupsService.GetGroupNotices(RequestingAgentID, GroupID);
+                return _GroupsService.GetGroupNotices(RequestingAgentID, GroupID);
             });
         }
 

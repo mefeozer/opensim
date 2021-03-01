@@ -38,25 +38,25 @@ namespace OpenSim.Data.MySQL
     /// </summary>
     public class MySQLXInventoryData : IXInventoryData
     {
-        private readonly MySqlFolderHandler m_Folders;
-        private readonly MySqlItemHandler m_Items;
+        private readonly MySqlFolderHandler _Folders;
+        private readonly MySqlItemHandler _Items;
 
         public MySQLXInventoryData(string conn, string realm)
         {
-            m_Folders = new MySqlFolderHandler(
+            _Folders = new MySqlFolderHandler(
                     conn, "inventoryfolders", "InventoryStore");
-            m_Items = new MySqlItemHandler(
+            _Items = new MySqlItemHandler(
                     conn, "inventoryitems", string.Empty);
         }
 
         public XInventoryFolder[] GetFolders(string[] fields, string[] vals)
         {
-            return m_Folders.Get(fields, vals);
+            return _Folders.Get(fields, vals);
         }
 
         public XInventoryItem[] GetItems(string[] fields, string[] vals)
         {
-            return m_Items.Get(fields, vals);
+            return _Items.Get(fields, vals);
         }
 
         public bool StoreFolder(XInventoryFolder folder)
@@ -64,7 +64,7 @@ namespace OpenSim.Data.MySQL
             if (folder.folderName.Length > 64)
                 folder.folderName = folder.folderName.Substring(0, 64);
 
-            return m_Folders.Store(folder);
+            return _Folders.Store(folder);
         }
 
         public bool StoreItem(XInventoryItem item)
@@ -74,53 +74,53 @@ namespace OpenSim.Data.MySQL
             if (item.inventoryDescription.Length > 128)
                 item.inventoryDescription = item.inventoryDescription.Substring(0, 128);
 
-            return m_Items.Store(item);
+            return _Items.Store(item);
         }
 
         public bool DeleteFolders(string field, string val)
         {
-            return m_Folders.Delete(field, val);
+            return _Folders.Delete(field, val);
         }
 
         public bool DeleteFolders(string[] fields, string[] vals)
         {
-            return m_Folders.Delete(fields, vals);
+            return _Folders.Delete(fields, vals);
         }
 
         public bool DeleteItems(string field, string val)
         {
-            return m_Items.Delete(field, val);
+            return _Items.Delete(field, val);
         }
 
         public bool DeleteItems(string[] fields, string[] vals)
         {
-            return m_Items.Delete(fields, vals);
+            return _Items.Delete(fields, vals);
         }
 
         public bool MoveItem(string id, string newParent)
         {
-            return m_Items.MoveItem(id, newParent);
+            return _Items.MoveItem(id, newParent);
         }
 
         public bool MoveFolder(string id, string newParent)
         {
-            return m_Folders.MoveFolder(id, newParent);
+            return _Folders.MoveFolder(id, newParent);
         }
 
         public XInventoryItem[] GetActiveGestures(UUID principalID)
         {
-            return m_Items.GetActiveGestures(principalID);
+            return _Items.GetActiveGestures(principalID);
         }
 
         public int GetAssetPermissions(UUID principalID, UUID assetID)
         {
-            return m_Items.GetAssetPermissions(principalID, assetID);
+            return _Items.GetAssetPermissions(principalID, assetID);
         }
     }
 
     public class MySqlItemHandler : MySqlInventoryHandler<XInventoryItem>
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public MySqlItemHandler(string c, string t, string m) :
                 base(c, t, m)
@@ -171,7 +171,7 @@ namespace OpenSim.Data.MySQL
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = string.Format("update {0} set parentFolderID = ?ParentFolderID where inventoryID = ?InventoryID", m_Realm);
+                cmd.CommandText = string.Format("update {0} set parentFolderID = ?ParentFolderID where inventoryID = ?InventoryID", _Realm);
                 cmd.Parameters.AddWithValue("?ParentFolderID", newParent);
                 cmd.Parameters.AddWithValue("?InventoryID", id);
 
@@ -189,7 +189,7 @@ namespace OpenSim.Data.MySQL
         {
             using (MySqlCommand cmd  = new MySqlCommand())
             {
-//                cmd.CommandText = String.Format("select * from inventoryitems where avatarId = ?uuid and assetType = ?type and flags & 1", m_Realm);
+//                cmd.CommandText = String.Format("select * from inventoryitems where avatarId = ?uuid and assetType = ?type and flags & 1", _Realm);
 
                 cmd.CommandText = string.Format("select * from inventoryitems where avatarId = ?uuid and assetType = ?type and flags & 1");
 
@@ -202,7 +202,7 @@ namespace OpenSim.Data.MySQL
 
         public int GetAssetPermissions(UUID principalID, UUID assetID)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -210,7 +210,7 @@ namespace OpenSim.Data.MySQL
                 {
                     cmd.Connection = dbcon;
 
-//                    cmd.CommandText = String.Format("select bit_or(inventoryCurrentPermissions) as inventoryCurrentPermissions from inventoryitems where avatarID = ?PrincipalID and assetID = ?AssetID group by assetID", m_Realm);
+//                    cmd.CommandText = String.Format("select bit_or(inventoryCurrentPermissions) as inventoryCurrentPermissions from inventoryitems where avatarID = ?PrincipalID and assetID = ?AssetID group by assetID", _Realm);
 
                     cmd.CommandText = string.Format("select bit_or(inventoryCurrentPermissions) as inventoryCurrentPermissions from inventoryitems where avatarID = ?PrincipalID and assetID = ?AssetID group by assetID");
 
@@ -246,7 +246,7 @@ namespace OpenSim.Data.MySQL
 
     public class MySqlFolderHandler : MySqlInventoryHandler<XInventoryFolder>
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public MySqlFolderHandler(string c, string t, string m) :
                 base(c, t, m)
@@ -266,7 +266,7 @@ namespace OpenSim.Data.MySQL
             {
                 cmd.CommandText
                     = string.Format(
-                        "update {0} set parentFolderID = ?ParentFolderID where folderID = ?folderID", m_Realm);
+                        "update {0} set parentFolderID = ?ParentFolderID where folderID = ?folderID", _Realm);
                 cmd.Parameters.AddWithValue("?ParentFolderID", newParentFolderID);
                 cmd.Parameters.AddWithValue("?folderID", id);
 
@@ -302,10 +302,10 @@ namespace OpenSim.Data.MySQL
 
         protected bool IncrementFolderVersion(string folderID)
         {
-//            m_log.DebugFormat("[MYSQL FOLDER HANDLER]: Incrementing version on folder {0}", folderID);
+//            _log.DebugFormat("[MYSQL FOLDER HANDLER]: Incrementing version on folder {0}", folderID);
 //            Util.PrintCallStack();
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 

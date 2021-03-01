@@ -34,7 +34,7 @@ namespace OpenSim.Services.Friends
 {
     public class FriendsServiceBase : ServiceBase
     {
-        protected IFriendsData m_Database = null;
+        protected IFriendsData _Database = null;
 
         public FriendsServiceBase(IConfigSource config) : base(config)
         {
@@ -73,8 +73,8 @@ namespace OpenSim.Services.Friends
             if (friendsConfig != null)
                 realm = friendsConfig.GetString("Realm", realm);
 
-            m_Database = LoadPlugin<IFriendsData>(dllName, new object[] { connString, realm });
-            if (m_Database == null)
+            _Database = LoadPlugin<IFriendsData>(dllName, new object[] { connString, realm });
+            if (_Database == null)
             {
                 throw new Exception(
                     string.Format(

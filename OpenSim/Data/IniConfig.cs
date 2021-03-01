@@ -88,10 +88,7 @@ namespace OpenSim.Data
             return null;
         }
 
-        public string IniFileName
-        {
-            get { return _iniFileName; }
-        }
+        public string IniFileName => _iniFileName;
 
         private readonly string _iniFileName;
     }

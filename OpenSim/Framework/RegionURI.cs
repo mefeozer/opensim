@@ -477,30 +477,15 @@ namespace OpenSim.Framework
             return false;
         }
 
-        public bool IsValid
-        {
-            get { return (Flags & (URIFlags.HasHost | URIFlags.HasRegionName)) != 0; }
-        }
+        public bool IsValid => (Flags & (URIFlags.HasHost | URIFlags.HasRegionName)) != 0;
 
-        public bool HasHost
-        {
-            get { return (Flags & URIFlags.HasHost) != 0; }
-        }
+        public bool HasHost => (Flags & URIFlags.HasHost) != 0;
 
-        public bool HasRegionName
-        {
-            get { return (Flags & URIFlags.HasRegionName) != 0; }
-        }
+        public bool HasRegionName => (Flags & URIFlags.HasRegionName) != 0;
 
-        public string HostUrl
-        {
-            get { return (Flags & URIFlags.HasHost) != 0 ? Schema + Host + ":" + Port : ""; }
-        }
+        public string HostUrl => (Flags & URIFlags.HasHost) != 0 ? Schema + Host + ":" + Port : "";
 
-        public string HostUrlEndSlash
-        {
-            get { return (Flags & URIFlags.HasHost) != 0 ? Schema + Host + ":" + Port + "/" : ""; }
-        }
+        public string HostUrlEndSlash => (Flags & URIFlags.HasHost) != 0 ? Schema + Host + ":" + Port + "/" : "";
 
         public string RegionUrlAndName
         {
@@ -527,7 +512,7 @@ namespace OpenSim.Framework
         // this needs to be set before get
         public bool IsLocalGrid
         {
-            get { return (Flags & URIFlags.IsLocalGrid) != 0; }
+            get => (Flags & URIFlags.IsLocalGrid) != 0;
             set
             {
                 if(value)

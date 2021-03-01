@@ -32,10 +32,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
 {
     public class LSL2CSCodeTransformer
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly SYMBOL m_astRoot = null;
-        private static Dictionary<string, string> m_datatypeLSL2OpenSim = null;
+        private readonly SYMBOL _astRoot = null;
+        private static Dictionary<string, string> _datatypeLSL2OpenSim = null;
 
         /// <summary>
         /// Pass the new CodeTranformer an abstract syntax tree.
@@ -43,20 +43,20 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
         /// <param name="astRoot">The root node of the AST.</param>
         public LSL2CSCodeTransformer(SYMBOL astRoot)
         {
-            m_astRoot = astRoot;
+            _astRoot = astRoot;
 
             // let's populate the dictionary
-            if (null == m_datatypeLSL2OpenSim)
+            if (null == _datatypeLSL2OpenSim)
             {
-                m_datatypeLSL2OpenSim = new Dictionary<string, string>();
-                m_datatypeLSL2OpenSim.Add("integer", "LSL_Types.LSLInteger");
-                m_datatypeLSL2OpenSim.Add("float", "LSL_Types.LSLFloat");
-                //m_datatypeLSL2OpenSim.Add("key", "LSL_Types.key"); // key doesn't seem to be used
-                m_datatypeLSL2OpenSim.Add("key", "LSL_Types.LSLString");
-                m_datatypeLSL2OpenSim.Add("string", "LSL_Types.LSLString");
-                m_datatypeLSL2OpenSim.Add("vector", "LSL_Types.Vector3");
-                m_datatypeLSL2OpenSim.Add("rotation", "LSL_Types.Quaternion");
-                m_datatypeLSL2OpenSim.Add("list", "LSL_Types.list");
+                _datatypeLSL2OpenSim = new Dictionary<string, string>();
+                _datatypeLSL2OpenSim.Add("integer", "LSL_Types.LSLInteger");
+                _datatypeLSL2OpenSim.Add("float", "LSL_Types.LSLFloat");
+                //_datatypeLSL2OpenSim.Add("key", "LSL_Types.key"); // key doesn't seem to be used
+                _datatypeLSL2OpenSim.Add("key", "LSL_Types.LSLString");
+                _datatypeLSL2OpenSim.Add("string", "LSL_Types.LSLString");
+                _datatypeLSL2OpenSim.Add("vector", "LSL_Types.Vector3");
+                _datatypeLSL2OpenSim.Add("rotation", "LSL_Types.Quaternion");
+                _datatypeLSL2OpenSim.Add("list", "LSL_Types.list");
             }
         }
 
@@ -66,10 +66,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
         /// <returns>The root node of the transformed AST</returns>
         public SYMBOL Transform()
         {
-            foreach (SYMBOL s in m_astRoot.kids)
+            foreach (SYMBOL s in _astRoot.kids)
                 TransformNode(s);
 
-            return m_astRoot;
+            return _astRoot;
         }
 
         /// <summary>
@@ -79,19 +79,19 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
         /// <param name="s">The current node to transform.</param>
         private void TransformNode(SYMBOL s)
         {
-//            m_log.DebugFormat("[LSL2CSCODETRANSFORMER]: Tranforming node {0}", s);
+//            _log.DebugFormat("[LSL2CSCODETRANSFORMER]: Tranforming node {0}", s);
 
             // make sure to put type lower in the inheritance hierarchy first
             // ie: since IdentConstant and StringConstant inherit from Constant,
             // put IdentConstant and StringConstant before Constant
             if (s is Declaration)
-                ((Declaration) s).Datatype = m_datatypeLSL2OpenSim[((Declaration) s).Datatype];
+                ((Declaration) s).Datatype = _datatypeLSL2OpenSim[((Declaration) s).Datatype];
             else if (s is Constant)
-                ((Constant) s).Type = m_datatypeLSL2OpenSim[((Constant) s).Type];
+                ((Constant) s).Type = _datatypeLSL2OpenSim[((Constant) s).Type];
             else if (s is TypecastExpression)
-                ((TypecastExpression) s).TypecastType = m_datatypeLSL2OpenSim[((TypecastExpression) s).TypecastType];
+                ((TypecastExpression) s).TypecastType = _datatypeLSL2OpenSim[((TypecastExpression) s).TypecastType];
             else if (s is GlobalFunctionDefinition && "void" != ((GlobalFunctionDefinition) s).ReturnType) // we don't need to translate "void"
-                ((GlobalFunctionDefinition) s).ReturnType = m_datatypeLSL2OpenSim[((GlobalFunctionDefinition) s).ReturnType];
+                ((GlobalFunctionDefinition) s).ReturnType = _datatypeLSL2OpenSim[((GlobalFunctionDefinition) s).ReturnType];
 
             for (int i = 0; i < s.kids.Count; i++)
             {
@@ -106,14 +106,14 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
                 // We need to check for that here.
                 if (null != s.kids[i])
                 {
-//                    m_log.Debug("[LSL2CSCODETRANSFORMER]: Moving down level");
+//                    _log.Debug("[LSL2CSCODETRANSFORMER]: Moving down level");
 
                     if (!(s is Assignment || s is ArgumentDeclarationList) && s.kids[i] is Declaration)
                         AddImplicitInitialization(s, i);
 
                     TransformNode((SYMBOL) s.kids[i]);
 
-//                    m_log.Debug("[LSL2CSCODETRANSFORMER]: Moving up level");
+//                    _log.Debug("[LSL2CSCODETRANSFORMER]: Moving up level");
                 }
             }
         }

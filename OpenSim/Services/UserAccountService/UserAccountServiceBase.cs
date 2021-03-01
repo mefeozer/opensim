@@ -34,7 +34,7 @@ namespace OpenSim.Services.UserAccountService
 {
     public class UserAccountServiceBase: ServiceBase
     {
-        protected IUserAccountData m_Database = null;
+        protected IUserAccountData _Database = null;
 
         public UserAccountServiceBase(IConfigSource config) : base(config)
         {
@@ -62,9 +62,9 @@ namespace OpenSim.Services.UserAccountService
 
             realm = userConfig.GetString("Realm", realm);
 
-            m_Database = LoadPlugin<IUserAccountData>(dllName, new object[] {connString, realm});
+            _Database = LoadPlugin<IUserAccountData>(dllName, new object[] {connString, realm});
 
-            if (m_Database == null)
+            if (_Database == null)
                 throw new Exception("Could not find a storage interface in the given module");
         }
     }

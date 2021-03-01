@@ -109,42 +109,42 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         /// <summary>
         /// Number of collision events in this update.
         /// </summary>
-        public int Count { get { return m_objCollisionList.Count; } }
+        public int Count => _objCollisionList.Count;
 
         public bool CollisionsOnPreviousFrame { get; private set; }
 
-        public Dictionary<uint, ContactPoint> m_objCollisionList;
+        public Dictionary<uint, ContactPoint> _objCollisionList;
 
         public CollisionEventUpdate(Dictionary<uint, ContactPoint> objCollisionList)
         {
-            m_objCollisionList = objCollisionList;
+            _objCollisionList = objCollisionList;
         }
 
         public CollisionEventUpdate()
         {
-            m_objCollisionList = new Dictionary<uint, ContactPoint>();
+            _objCollisionList = new Dictionary<uint, ContactPoint>();
         }
 
         public void AddCollider(uint localID, ContactPoint contact)
         {
-            if (!m_objCollisionList.ContainsKey(localID))
+            if (!_objCollisionList.ContainsKey(localID))
             {
-                m_objCollisionList.Add(localID, contact);
+                _objCollisionList.Add(localID, contact);
             }
             else
             {
-                float lastVel = m_objCollisionList[localID].RelativeSpeed;
-                if (m_objCollisionList[localID].PenetrationDepth < contact.PenetrationDepth)
+                float lastVel = _objCollisionList[localID].RelativeSpeed;
+                if (_objCollisionList[localID].PenetrationDepth < contact.PenetrationDepth)
                 {
                     if(Math.Abs(lastVel) > Math.Abs(contact.RelativeSpeed))
                         contact.RelativeSpeed = lastVel;
-                    m_objCollisionList[localID] = contact;
+                    _objCollisionList[localID] = contact;
                 }
                 else if(Math.Abs(lastVel) < Math.Abs(contact.RelativeSpeed))
                 {
-                    ContactPoint tmp = m_objCollisionList[localID];
+                    ContactPoint tmp = _objCollisionList[localID];
                     tmp.RelativeSpeed = contact.RelativeSpeed;
-                    m_objCollisionList[localID] = tmp;
+                    _objCollisionList[localID] = tmp;
                 }
             }
         }
@@ -154,13 +154,13 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         /// </summary>
         public void Clear()
         {
-            m_objCollisionList.Clear();
+            _objCollisionList.Clear();
         }
     }
 
     public abstract class PhysicsActor
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public delegate void RequestTerseUpdate();
         public delegate void CollisionUpdate(EventArgs e);
@@ -195,10 +195,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
             return new CameraData { Valid = false };
         }
 
-        public static PhysicsActor Null
-        {
-            get { return new NullPhysicsActor(); }
-        }
+        public static PhysicsActor Null => new NullPhysicsActor();
 
         public virtual bool Building { get; set; }
 
@@ -221,7 +218,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public virtual bool IsVolumeDtc
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
@@ -229,11 +226,11 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public abstract PrimitiveBaseShape Shape { set; }
 
-        uint m_baseLocalID;
+        uint _baseLocalID;
         public virtual uint LocalID
         {
-            set { m_baseLocalID = value; }
-            get { return m_baseLocalID; }
+            set => _baseLocalID = value;
+            get => _baseLocalID;
         }
 
         public abstract bool Grabbed { set; }
@@ -293,7 +290,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         {
             CollisionUpdate handler = OnCollisionUpdate;
 
-//            m_log.DebugFormat("[PHYSICS ACTOR]: Sending collision for {0}", LocalID);
+//            _log.DebugFormat("[PHYSICS ACTOR]: Sending collision for {0}", LocalID);
 
             if (handler != null)
                 handler(e);
@@ -332,45 +329,45 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
             VehicleData vdata = (VehicleData)pvdata;
             // vehicleActor.ProcessSetVehicle((VehicleData)vdata);
 
-            this.VehicleType = (int)vdata.m_type;
+            this.VehicleType = (int)vdata._type;
             this.VehicleFlags(-1, false);   // clears all flags
-            this.VehicleFlags((int)vdata.m_flags, false);
+            this.VehicleFlags((int)vdata._flags, false);
 
             // Linear properties
-            this.VehicleVectorParam((int)Vehicle.LINEAR_MOTOR_DIRECTION, vdata.m_linearMotorDirection);
-            this.VehicleVectorParam((int)Vehicle.LINEAR_FRICTION_TIMESCALE, vdata.m_linearFrictionTimescale);
-            this.VehicleFloatParam((int)Vehicle.LINEAR_MOTOR_DECAY_TIMESCALE, vdata.m_linearMotorDecayTimescale);
-            this.VehicleFloatParam((int)Vehicle.LINEAR_MOTOR_TIMESCALE, vdata.m_linearMotorTimescale);
-            this.VehicleVectorParam((int)Vehicle.LINEAR_MOTOR_OFFSET, vdata.m_linearMotorOffset);
+            this.VehicleVectorParam((int)Vehicle.LINEAR_MOTOR_DIRECTION, vdata._linearMotorDirection);
+            this.VehicleVectorParam((int)Vehicle.LINEAR_FRICTION_TIMESCALE, vdata._linearFrictionTimescale);
+            this.VehicleFloatParam((int)Vehicle.LINEAR_MOTOR_DECAY_TIMESCALE, vdata._linearMotorDecayTimescale);
+            this.VehicleFloatParam((int)Vehicle.LINEAR_MOTOR_TIMESCALE, vdata._linearMotorTimescale);
+            this.VehicleVectorParam((int)Vehicle.LINEAR_MOTOR_OFFSET, vdata._linearMotorOffset);
 
             //Angular properties
-            this.VehicleVectorParam((int)Vehicle.ANGULAR_MOTOR_DIRECTION, vdata.m_angularMotorDirection);
-            this.VehicleFloatParam((int)Vehicle.ANGULAR_MOTOR_TIMESCALE, vdata.m_angularMotorTimescale);
-            this.VehicleFloatParam((int)Vehicle.ANGULAR_MOTOR_DECAY_TIMESCALE, vdata.m_angularMotorDecayTimescale);
-            this.VehicleVectorParam((int)Vehicle.ANGULAR_FRICTION_TIMESCALE, vdata.m_angularFrictionTimescale);
+            this.VehicleVectorParam((int)Vehicle.ANGULAR_MOTOR_DIRECTION, vdata._angularMotorDirection);
+            this.VehicleFloatParam((int)Vehicle.ANGULAR_MOTOR_TIMESCALE, vdata._angularMotorTimescale);
+            this.VehicleFloatParam((int)Vehicle.ANGULAR_MOTOR_DECAY_TIMESCALE, vdata._angularMotorDecayTimescale);
+            this.VehicleVectorParam((int)Vehicle.ANGULAR_FRICTION_TIMESCALE, vdata._angularFrictionTimescale);
 
             //Deflection properties
-            this.VehicleFloatParam((int)Vehicle.ANGULAR_DEFLECTION_EFFICIENCY, vdata.m_angularDeflectionEfficiency);
-            this.VehicleFloatParam((int)Vehicle.ANGULAR_DEFLECTION_TIMESCALE, vdata.m_angularDeflectionTimescale);
-            this.VehicleFloatParam((int)Vehicle.LINEAR_DEFLECTION_EFFICIENCY, vdata.m_linearDeflectionEfficiency);
-            this.VehicleFloatParam((int)Vehicle.LINEAR_DEFLECTION_TIMESCALE, vdata.m_linearDeflectionTimescale);
+            this.VehicleFloatParam((int)Vehicle.ANGULAR_DEFLECTION_EFFICIENCY, vdata._angularDeflectionEfficiency);
+            this.VehicleFloatParam((int)Vehicle.ANGULAR_DEFLECTION_TIMESCALE, vdata._angularDeflectionTimescale);
+            this.VehicleFloatParam((int)Vehicle.LINEAR_DEFLECTION_EFFICIENCY, vdata._linearDeflectionEfficiency);
+            this.VehicleFloatParam((int)Vehicle.LINEAR_DEFLECTION_TIMESCALE, vdata._linearDeflectionTimescale);
 
             //Banking properties
-            this.VehicleFloatParam((int)Vehicle.BANKING_EFFICIENCY, vdata.m_bankingEfficiency);
-            this.VehicleFloatParam((int)Vehicle.BANKING_MIX, vdata.m_bankingMix);
-            this.VehicleFloatParam((int)Vehicle.BANKING_TIMESCALE, vdata.m_bankingTimescale);
+            this.VehicleFloatParam((int)Vehicle.BANKING_EFFICIENCY, vdata._bankingEfficiency);
+            this.VehicleFloatParam((int)Vehicle.BANKING_MIX, vdata._bankingMix);
+            this.VehicleFloatParam((int)Vehicle.BANKING_TIMESCALE, vdata._bankingTimescale);
 
             //Hover and Buoyancy properties
-            this.VehicleFloatParam((int)Vehicle.HOVER_HEIGHT, vdata.m_VhoverHeight);
-            this.VehicleFloatParam((int)Vehicle.HOVER_EFFICIENCY, vdata.m_VhoverEfficiency);
-            this.VehicleFloatParam((int)Vehicle.HOVER_TIMESCALE, vdata.m_VhoverTimescale);
-            this.VehicleFloatParam((int)Vehicle.BUOYANCY, vdata.m_VehicleBuoyancy);
+            this.VehicleFloatParam((int)Vehicle.HOVER_HEIGHT, vdata._VhoverHeight);
+            this.VehicleFloatParam((int)Vehicle.HOVER_EFFICIENCY, vdata._VhoverEfficiency);
+            this.VehicleFloatParam((int)Vehicle.HOVER_TIMESCALE, vdata._VhoverTimescale);
+            this.VehicleFloatParam((int)Vehicle.BUOYANCY, vdata._VehicleBuoyancy);
 
             //Attractor properties
-            this.VehicleFloatParam((int)Vehicle.VERTICAL_ATTRACTION_EFFICIENCY, vdata.m_verticalAttractionEfficiency);
-            this.VehicleFloatParam((int)Vehicle.VERTICAL_ATTRACTION_TIMESCALE, vdata.m_verticalAttractionTimescale);
+            this.VehicleFloatParam((int)Vehicle.VERTICAL_ATTRACTION_EFFICIENCY, vdata._verticalAttractionEfficiency);
+            this.VehicleFloatParam((int)Vehicle.VERTICAL_ATTRACTION_TIMESCALE, vdata._verticalAttractionTimescale);
 
-            this.VehicleRotationParam((int)Vehicle.REFERENCE_FRAME, vdata.m_referenceFrame);
+            this.VehicleRotationParam((int)Vehicle.REFERENCE_FRAME, vdata._referenceFrame);
         }
 
 
@@ -382,21 +379,9 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         public abstract Vector3 GeometricCenter { get; }
         public abstract Vector3 CenterOfMass { get; }
 
-        public virtual float PhysicsCost
-        {
-            get
-            {
-                return 0.1f;
-            }
-        }
+        public virtual float PhysicsCost => 0.1f;
 
-        public virtual float StreamCost
-        {
-            get
-            {
-                return 1.0f;
-            }
-        }
+        public virtual float StreamCost => 1.0f;
 
         /// <summary>
         /// The desired velocity of this actor.
@@ -405,18 +390,18 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         /// Setting this provides a target velocity for physics scene updates.
         /// Getting this returns the last set target. Fetch Velocity to get the current velocity.
         /// </remarks>
-        protected Vector3 m_targetVelocity;
+        protected Vector3 _targetVelocity;
         public virtual Vector3 TargetVelocity
         {
-            get { return m_targetVelocity; }
+            get => _targetVelocity;
             set {
-                m_targetVelocity = value;
-                Velocity = m_targetVelocity;
+                _targetVelocity = value;
+                Velocity = _targetVelocity;
             }
         }
 
         public abstract Vector3 Velocity { get; set; }
-        public virtual Vector3 rootVelocity { get { return Vector3.Zero; } }
+        public virtual Vector3 rootVelocity => Vector3.Zero;
 
         public abstract Vector3 Torque { get; set; }
         public abstract float CollisionScore { get; set;}
@@ -482,7 +467,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         public virtual float SimulationSuspended { get; set; }
 
         // Warning in a parent part it returns itself, not null
-        public virtual PhysicsActor ParentActor { get { return this; } }
+        public virtual PhysicsActor ParentActor => this;
 
 
         // Extendable interface for new, physics engine specific operations
@@ -495,28 +480,25 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
     public class NullPhysicsActor : PhysicsActor
     {
-        private ActorTypes m_actorType = ActorTypes.Unknown;
+        private ActorTypes _actorType = ActorTypes.Unknown;
 
-        public override bool Stopped
-        {
-            get{ return true; }
-        }
+        public override bool Stopped => true;
 
         public override Vector3 Position
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
         public override bool SetAlwaysRun
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override uint LocalID
         {
-            get { return 0; }
+            get => 0;
             set { return; }
         }
 
@@ -532,7 +514,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public override float Buoyancy
         {
-            get { return 0f; }
+            get => 0f;
             set { return; }
         }
 
@@ -543,36 +525,33 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public override bool CollidingGround
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool CollidingObj
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override Vector3 Size
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
-        public override float Mass
-        {
-            get { return 0f; }
-        }
+        public override float Mass => 0f;
 
         public override Vector3 Force
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
         public override int VehicleType
         {
-            get { return 0; }
+            get => 0;
             set { return; }
         }
 
@@ -582,27 +561,27 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         public override void VehicleFlags(int param, bool remove) { }
         public override void SetVolumeDetect(int param) {}
         public override void SetMaterial(int material) {}
-        public override Vector3 CenterOfMass { get { return Vector3.Zero; }}
+        public override Vector3 CenterOfMass => Vector3.Zero;
 
-        public override Vector3 GeometricCenter { get { return Vector3.Zero; }}
+        public override Vector3 GeometricCenter => Vector3.Zero;
 
         public override PrimitiveBaseShape Shape { set { return; }}
 
         public override Vector3 Velocity
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
         public override Vector3 Torque
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
         public override float CollisionScore
         {
-            get { return 0f; }
+            get => 0f;
             set { }
         }
 
@@ -610,53 +589,53 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public override Quaternion Orientation
         {
-            get { return Quaternion.Identity; }
+            get => Quaternion.Identity;
             set { }
         }
 
         public override Vector3 Acceleration
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { }
         }
 
         public override bool IsPhysical
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool Flying
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool ThrottleUpdates
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override bool IsColliding
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override int PhysicsActorType
         {
-            get { return (int)m_actorType; }
+            get => (int)_actorType;
             set {
                 ActorTypes type = (ActorTypes)value;
                 switch (type)
                 {
                     case ActorTypes.Ground:
                     case ActorTypes.Water:
-                        m_actorType = type;
+                        _actorType = type;
                         break;
                     default:
-                        m_actorType = ActorTypes.Unknown;
+                        _actorType = ActorTypes.Unknown;
                         break;
                 }
             }
@@ -664,7 +643,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public override bool Kinematic
         {
-            get { return true; }
+            get => true;
             set { return; }
         }
 
@@ -676,7 +655,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public override Vector3 RotationalVelocity
         {
-            get { return Vector3.Zero; }
+            get => Vector3.Zero;
             set { return; }
         }
 
@@ -684,14 +663,15 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public override bool PIDActive
         {
-            get { return false; }
+            get => false;
             set { return; }
         }
 
         public override float PIDTau { set { return; } }
 
         public override float PIDHoverHeight { set { return; } }
-        public override bool PIDHoverActive {get {return false;} set { return; } }
+        public override bool PIDHoverActive {get => false;
+            set { return; } }
         public override PIDHoverType PIDHoverType { set { return; } }
         public override float PIDHoverTau { set { return; } }
 

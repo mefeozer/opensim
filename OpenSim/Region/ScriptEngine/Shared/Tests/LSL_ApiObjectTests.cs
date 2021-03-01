@@ -44,8 +44,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
         private const double VECTOR_COMPONENT_ACCURACY = 0.0000005d;
         private const float FLOAT_ACCURACY = 0.00005f;
 
-        protected Scene m_scene;
-        protected XEngine.XEngine m_engine;
+        protected Scene _scene;
+        protected XEngine.XEngine _engine;
 
         [SetUp]
         public override void SetUp()
@@ -56,12 +56,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             IConfig config = initConfigSource.AddConfig("XEngine");
             config.Set("Enabled", "true");
 
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, initConfigSource);
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, initConfigSource);
 
-            m_engine = new XEngine.XEngine();
-            m_engine.Initialise(initConfigSource);
-            m_engine.AddRegion(m_scene);
+            _engine = new XEngine.XEngine();
+            _engine.Initialise(initConfigSource);
+            _engine.AddRegion(_scene);
         }
 
         [Test]
@@ -74,10 +74,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             SceneObjectGroup grp1 = SceneHelpers.CreateSceneObject(2, ownerId, "grp1-", 0x10);
             grp1.AbsolutePosition = new Vector3(10, 11, 12);
-            m_scene.AddSceneObject(grp1);
+            _scene.AddSceneObject(grp1);
 
             LSL_Api apiGrp1 = new LSL_Api();
-            apiGrp1.Initialize(m_engine, grp1.RootPart, null);
+            apiGrp1.Initialize(_engine, grp1.RootPart, null);
 
             // Check simple 1 prim case
             {
@@ -155,7 +155,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
             Assert.That(scene.AddNewSceneObject(new SceneObjectGroup(part1), false), Is.True);
 
             LSL_Api apiGrp1 = new LSL_Api();
-            apiGrp1.Initialize(m_engine, part1, null);
+            apiGrp1.Initialize(_engine, part1, null);
 
             // Note that prim hollow check is passed with the other prim params in order to allow the
             // specification of a different check value from the prim param. A cylinder, prism, sphere,

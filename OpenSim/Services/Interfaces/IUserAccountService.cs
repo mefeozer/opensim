@@ -98,10 +98,7 @@ namespace OpenSim.Services.Interfaces
 
         public int Created;
 
-        public string Name
-        {
-            get { return FirstName + " " + LastName; }
-        }
+        public string Name => FirstName + " " + LastName;
 
         public UserAccount(Dictionary<string, object> kvp)
         {

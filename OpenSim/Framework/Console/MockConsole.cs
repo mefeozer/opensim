@@ -42,9 +42,9 @@ namespace OpenSim.Framework.Console
         public event OnOutputDelegate OnOutput;
 #pragma warning restore 0067
 
-        private readonly MockCommands m_commands = new MockCommands();
+        private readonly MockCommands _commands = new MockCommands();
 
-        public ICommands Commands { get { return m_commands; } }
+        public ICommands Commands => _commands;
 
         public string DefaultPrompt { get; set; }
 
@@ -55,7 +55,7 @@ namespace OpenSim.Framework.Console
         public string ReadLine(string p, bool isCommand, bool e) { return ""; }
 
         public IScene ConsoleScene {
-            get { return null; }
+            get => null;
             set {}
         }
 

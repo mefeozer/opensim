@@ -31,7 +31,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public sealed class BSConstraintSlider : BSConstraint
 {
-    public override ConstraintType Type { get { return ConstraintType.SLIDER_CONSTRAINT_TYPE; } }
+    public override ConstraintType Type => ConstraintType.SLIDER_CONSTRAINT_TYPE;
 
     public BSConstraintSlider(BulletWorld world, BulletBody obj1, BulletBody obj2,
                     Vector3 frameInAloc, Quaternion frameInArot,
@@ -39,12 +39,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     bool useLinearReferenceFrameA, bool disableCollisionsBetweenLinkedBodies)
         : base(world)
     {
-        m_body1 = obj1;
-        m_body2 = obj2;
-        m_constraint = PhysicsScene.PE.CreateSliderConstraint(world, obj1, obj2,
+        _body1 = obj1;
+        _body2 = obj2;
+        _constraint = PhysicsScene.PE.CreateSliderConstraint(world, obj1, obj2,
                                 frameInAloc, frameInArot, frameInBloc, frameInBrot,
                                 useLinearReferenceFrameA, disableCollisionsBetweenLinkedBodies);
-        m_enabled = true;
+        _enabled = true;
     }
 
 }

@@ -45,21 +45,21 @@ namespace OpenSim.Services.HypergridService
     /// </summary>
     public class HGRemoteAssetService : IAssetService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_HomeURL;
-        private readonly IUserAccountService m_UserAccountService;
-        private readonly IAssetService m_assetConnector;
+        private readonly string _HomeURL;
+        private readonly IUserAccountService _UserAccountService;
+        private readonly IAssetService _assetConnector;
 
-        private readonly UserAccountCache m_Cache;
+        private readonly UserAccountCache _Cache;
 
-        private readonly AssetPermissions m_AssetPerms;
+        private readonly AssetPermissions _AssetPerms;
 
         public HGRemoteAssetService(IConfigSource config, string configName)
         {
-            m_log.Debug("[HGRemoteAsset Service]: Starting");
+            _log.Debug("[HGRemoteAsset Service]: Starting");
             IConfig assetConfig = config.Configs[configName];
             if (assetConfig == null)
                 throw new Exception("No HGAssetService configuration");
@@ -70,39 +70,39 @@ namespace OpenSim.Services.HypergridService
             if (string.IsNullOrEmpty(assetConnectorDll))
                 throw new Exception("Please specify AssetConnector in HGAssetService configuration");
 
-            m_assetConnector = ServerUtils.LoadPlugin<IAssetService>(assetConnectorDll, args);
-            if (m_assetConnector == null)
+            _assetConnector = ServerUtils.LoadPlugin<IAssetService>(assetConnectorDll, args);
+            if (_assetConnector == null)
                 throw new Exception(string.Format("Unable to create AssetConnector from {0}", assetConnectorDll));
 
             string userAccountsDll = assetConfig.GetString("UserAccountsService", string.Empty);
             if (string.IsNullOrEmpty(userAccountsDll))
                 throw new Exception("Please specify UserAccountsService in HGAssetService configuration");
 
-            m_UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userAccountsDll, args);
-            if (m_UserAccountService == null)
+            _UserAccountService = ServerUtils.LoadPlugin<IUserAccountService>(userAccountsDll, args);
+            if (_UserAccountService == null)
                 throw new Exception(string.Format("Unable to create UserAccountService from {0}", userAccountsDll));
 
-            m_HomeURL = Util.GetConfigVarFromSections<string>(config, "HomeURI",
+            _HomeURL = Util.GetConfigVarFromSections<string>(config, "HomeURI",
                 new string[] { "Startup", "Hypergrid", configName }, string.Empty);
-            if (string.IsNullOrEmpty(m_HomeURL))
+            if (string.IsNullOrEmpty(_HomeURL))
                 throw new Exception("[HGAssetService] No HomeURI specified");
 
-            m_Cache = UserAccountCache.CreateUserAccountCache(m_UserAccountService);
+            _Cache = UserAccountCache.CreateUserAccountCache(_UserAccountService);
 
             // Permissions
-            m_AssetPerms = new AssetPermissions(assetConfig);
+            _AssetPerms = new AssetPermissions(assetConfig);
 
         }
 
         #region IAssetService overrides
         public AssetBase Get(string id)
         {
-            AssetBase asset = m_assetConnector.Get(id);
+            AssetBase asset = _assetConnector.Get(id);
 
             if (asset == null)
                 return null;
 
-            if (!m_AssetPerms.AllowedExport(asset.Type))
+            if (!_AssetPerms.AllowedExport(asset.Type))
                 return null;
 
             if (asset.Metadata.Type == (sbyte)AssetType.Object)
@@ -120,7 +120,7 @@ namespace OpenSim.Services.HypergridService
 
         public AssetMetadata GetMetadata(string id)
         {
-            AssetMetadata meta = m_assetConnector.GetMetadata(id);
+            AssetMetadata meta = _assetConnector.GetMetadata(id);
 
             if (meta == null)
                 return null;
@@ -137,7 +137,7 @@ namespace OpenSim.Services.HypergridService
             if (asset == null)
                 return null;
 
-            if (!m_AssetPerms.AllowedExport(asset.Type))
+            if (!_AssetPerms.AllowedExport(asset.Type))
                 return null;
 
             // Deal with bug introduced in Oct. 20 (1eb3e6cc43e2a7b4053bc1185c7c88e22356c5e8)
@@ -154,11 +154,11 @@ namespace OpenSim.Services.HypergridService
         // public delegate void AssetRetrieved(string id, Object sender, AssetBase asset);
         public virtual bool Get(string id, object sender, AssetRetrieved handler)
         {
-            return m_assetConnector.Get(id, sender, (i, s, asset) =>
+            return _assetConnector.Get(id, sender, (i, s, asset) =>
             {
                 if (asset != null)
                 {
-                    if (!m_AssetPerms.AllowedExport(asset.Type))
+                    if (!_AssetPerms.AllowedExport(asset.Type))
                     {
                         asset = null;
                     }
@@ -177,7 +177,7 @@ namespace OpenSim.Services.HypergridService
 
         public string Store(AssetBase asset)
         {
-            if (!m_AssetPerms.AllowedImport(asset.Type))
+            if (!_AssetPerms.AllowedImport(asset.Type))
                 return string.Empty;
 
             // Deal with bug introduced in Oct. 20 (1eb3e6cc43e2a7b4053bc1185c7c88e22356c5e8)
@@ -188,7 +188,7 @@ namespace OpenSim.Services.HypergridService
                 asset.Data = Utils.StringToBytes(xml);
             }
 
-            return m_assetConnector.Store(asset);
+            return _assetConnector.Store(asset);
         }
 
         public bool Delete(string id)
@@ -201,12 +201,12 @@ namespace OpenSim.Services.HypergridService
 
         protected void AdjustIdentifiers(AssetMetadata meta)
         {
-            if (meta == null || m_Cache == null)
+            if (meta == null || _Cache == null)
                 return;
 
-            UserAccount creator = m_Cache.GetUser(meta.CreatorID);
+            UserAccount creator = _Cache.GetUser(meta.CreatorID);
             if (creator != null)
-                meta.CreatorID = meta.CreatorID + ";" + m_HomeURL + "/" + creator.FirstName + " " + creator.LastName;
+                meta.CreatorID = meta.CreatorID + ";" + _HomeURL + "/" + creator.FirstName + " " + creator.LastName;
         }
 
         // Only for Object
@@ -218,7 +218,7 @@ namespace OpenSim.Services.HypergridService
             // Fix bad assets before sending them elsewhere
             xml = ExternalRepresentationUtils.SanitizeXml(xml);
 
-            return Utils.StringToBytes(ExternalRepresentationUtils.RewriteSOP(xml, "HGAssetService", m_HomeURL, m_Cache, UUID.Zero));
+            return Utils.StringToBytes(ExternalRepresentationUtils.RewriteSOP(xml, "HGAssetService", _HomeURL, _Cache, UUID.Zero));
         }
 
         public AssetBase GetCached(string id)
@@ -228,7 +228,7 @@ namespace OpenSim.Services.HypergridService
 
         public bool[] AssetsExist(string[] ids)
         {
-            return m_assetConnector.AssetsExist(ids);
+            return _assetConnector.AssetsExist(ids);
         }
 
         public bool UpdateContent(string id, byte[] data)

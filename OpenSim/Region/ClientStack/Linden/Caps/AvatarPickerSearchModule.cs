@@ -45,13 +45,13 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "AvatarPickerSearchModule")]
     public class AvatarPickerSearchModule : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private int m_nscenes;
-        private IPeople m_People = null;
-        private bool m_Enabled = false;
+        private int _nscenes;
+        private IPeople _People = null;
+        private bool _Enabled = false;
 
-        private string m_URL;
+        private string _URL;
 
         #region ISharedRegionModule Members
 
@@ -61,38 +61,38 @@ namespace OpenSim.Region.ClientStack.Linden
             if (config == null)
                 return;
 
-            m_URL = config.GetString("Cap_AvatarPickerSearch", string.Empty);
+            _URL = config.GetString("Cap_AvatarPickerSearch", string.Empty);
             // Cap doesn't exist
-            if (!string.IsNullOrEmpty(m_URL))
-                m_Enabled = true;
+            if (!string.IsNullOrEmpty(_URL))
+                _Enabled = true;
         }
 
         public void AddRegion(Scene s)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RemoveRegion(Scene s)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             s.EventManager.OnRegisterCaps -= RegisterCaps;
-            --m_nscenes;
-            if(m_nscenes >= 0)
-                m_People = null;
+            --_nscenes;
+            if(_nscenes >= 0)
+                _People = null;
         }
 
         public void RegionLoaded(Scene s)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            if(m_People == null)
-                m_People = s.RequestModuleInterface<IPeople>();
+            if(_People == null)
+                _People = s.RequestModuleInterface<IPeople>();
             s.EventManager.OnRegisterCaps += RegisterCaps;
-            ++m_nscenes;
+            ++_nscenes;
         }
 
         public void PostInitialise()
@@ -101,12 +101,9 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void Close() { }
 
-        public string Name { get { return "AvatarPickerSearchModule"; } }
+        public string Name => "AvatarPickerSearchModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -114,17 +111,17 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             UUID capID = UUID.Random();
 
-            if (m_URL == "localhost")
+            if (_URL == "localhost")
             {
-                // m_log.DebugFormat("[AVATAR PICKER SEARCH]: /CAPS/{0} in region {1}", capID, m_scene.RegionInfo.RegionName);
-                if(m_People != null)
+                // _log.DebugFormat("[AVATAR PICKER SEARCH]: /CAPS/{0} in region {1}", capID, _scene.RegionInfo.RegionName);
+                if(_People != null)
                     caps.RegisterSimpleHandler("AvatarPickerSearch",
                         new SimpleStreamHandler("/" + UUID.Random(), ProcessRequest));
             }
             else
             {
-                // m_log.DebugFormat("[AVATAR PICKER SEARCH]: {0} in region {1}", m_URL, m_scene.RegionInfo.RegionName);
-                caps.RegisterHandler("AvatarPickerSearch", m_URL);
+                // _log.DebugFormat("[AVATAR PICKER SEARCH]: {0} in region {1}", _URL, _scene.RegionInfo.RegionName);
+                caps.RegisterHandler("AvatarPickerSearch", _URL);
             }
         }
 
@@ -160,7 +157,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 return;
             }
             // Full content request
-            List<UserData> users = m_People.GetUserData(names, page_size, page_number);
+            List<UserData> users = _People.GetUserData(names, page_size, page_number);
 
             LLSDAvatarPicker osdReply = new LLSDAvatarPicker
             {

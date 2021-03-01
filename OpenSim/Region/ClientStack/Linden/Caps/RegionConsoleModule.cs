@@ -46,13 +46,13 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "RegionConsoleModule")]
     public class RegionConsoleModule : INonSharedRegionModule, IRegionConsole
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
-        private IEventQueue m_eventQueue;
-        private readonly Commands m_commands = new Commands();
-        public ICommands Commands { get { return m_commands; } }
+        private Scene _scene;
+        private IEventQueue _eventQueue;
+        private readonly Commands _commands = new Commands();
+        public ICommands Commands => _commands;
 
         readonly ConcurrentDictionary<UUID, OnOutputDelegate> currentConsoles = new ConcurrentDictionary<UUID, OnOutputDelegate>();
 
@@ -60,25 +60,25 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void Initialise(IConfigSource source)
         {
-            m_commands.AddCommand( "Help", false, "help", "help [<item>]", "Display help on a particular command or on a list of commands in a category", Help);
+            _commands.AddCommand( "Help", false, "help", "help [<item>]", "Display help on a particular command or on a list of commands in a category", Help);
         }
 
         public void AddRegion(Scene s)
         {
-            m_scene = s;
-            m_scene.RegisterModuleInterface<IRegionConsole>(this);
+            _scene = s;
+            _scene.RegisterModuleInterface<IRegionConsole>(this);
         }
 
         public void RemoveRegion(Scene s)
         {
-            m_scene.EventManager.OnRegisterCaps -= RegisterCaps;
-            m_scene = null;
+            _scene.EventManager.OnRegisterCaps -= RegisterCaps;
+            _scene = null;
         }
 
         public void RegionLoaded(Scene s)
         {
-            m_scene.EventManager.OnRegisterCaps += RegisterCaps;
-            m_eventQueue = m_scene.RequestModuleInterface<IEventQueue>();
+            _scene.EventManager.OnRegisterCaps += RegisterCaps;
+            _eventQueue = _scene.RequestModuleInterface<IEventQueue>();
         }
 
         public void PostInitialise()
@@ -87,19 +87,16 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void Close() { }
 
-        public string Name { get { return "RegionConsoleModule"; } }
+        public string Name => "RegionConsoleModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void RegisterCaps(UUID agentID, Caps caps)
         {
-            //if (!m_scene.RegionInfo.EstateSettings.IsEstateManagerOrOwner(agentID) && !m_scene.Permissions.IsGod(agentID))
+            //if (!_scene.RegionInfo.EstateSettings.IsEstateManagerOrOwner(agentID) && !_scene.Permissions.IsGod(agentID))
             //    return;
             caps.RegisterSimpleHandler("SimConsoleAsync",
-                    new ConsoleHandler("/" + UUID.Random(), "SimConsoleAsync", agentID, this, m_scene));
+                    new ConsoleHandler("/" + UUID.Random(), "SimConsoleAsync", agentID, this, _scene));
         }
 
         public void AddConsole(UUID agentID, OnOutputDelegate console)
@@ -116,13 +113,13 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void SendConsoleOutput(UUID agentID, string message)
         {
-            if (!m_scene.TryGetScenePresence(agentID, out ScenePresence sp) || sp.IsChildAgent || sp.IsDeleted)
+            if (!_scene.TryGetScenePresence(agentID, out ScenePresence sp) || sp.IsChildAgent || sp.IsDeleted)
             {
                 RemoveConsole(agentID);
                 return;
             }
 
-            m_eventQueue.Enqueue(m_eventQueue.BuildEvent("SimConsoleResponse", OSD.FromString(message)), agentID);
+            _eventQueue.Enqueue(_eventQueue.BuildEvent("SimConsoleResponse", OSD.FromString(message)), agentID);
             OnConsoleMessage?.Invoke( agentID, message);
         }
 
@@ -132,7 +129,7 @@ namespace OpenSim.Region.ClientStack.Linden
             Array.Resize(ref parts, parts.Length + 1);
             parts[parts.Length - 1] = invokerID.ToString();
 
-            if (m_commands.Resolve(parts).Length == 0)
+            if (_commands.Resolve(parts).Length == 0)
                 return false;
 
             return true;
@@ -157,28 +154,28 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void AddCommand(string module, bool shared, string command, string help, string longhelp, CommandDelegate fn)
         {
-            m_commands.AddCommand(module, shared, command, help, longhelp, fn);
+            _commands.AddCommand(module, shared, command, help, longhelp, fn);
         }
     }
 
     public class ConsoleHandler : SimpleStreamHandler
     {
-//        private static readonly ILog m_log =
+//        private static readonly ILog _log =
 //            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly RegionConsoleModule m_consoleModule;
-        private readonly UUID m_agentID;
-        private readonly bool m_isGod;
-        private readonly Scene m_scene;
-        private bool m_consoleIsOn = false;
+        private readonly RegionConsoleModule _consoleModule;
+        private readonly UUID _agentID;
+        private readonly bool _isGod;
+        private readonly Scene _scene;
+        private bool _consoleIsOn = false;
 
         public ConsoleHandler(string path, string name, UUID agentID, RegionConsoleModule module, Scene scene)
                 :base(path)
         {
-            m_agentID = agentID;
-            m_consoleModule = module;
-            m_scene = scene;
-            m_isGod = m_scene.Permissions.IsGod(agentID);
+            _agentID = agentID;
+            _consoleModule = module;
+            _scene = scene;
+            _isGod = _scene.Permissions.IsGod(agentID);
         }
 
         protected override void ProcessRequest(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
@@ -193,14 +190,14 @@ namespace OpenSim.Region.ClientStack.Linden
 
             httpResponse.StatusCode = (int)HttpStatusCode.OK;
 
-            if (!m_scene.TryGetScenePresence(m_agentID, out ScenePresence sp) || sp.IsChildAgent || sp.IsDeleted)
+            if (!_scene.TryGetScenePresence(_agentID, out ScenePresence sp) || sp.IsChildAgent || sp.IsDeleted)
             {
                 return;
             }
 
-            if (!m_scene.RegionInfo.EstateSettings.IsEstateManagerOrOwner(m_agentID) && !m_isGod)
+            if (!_scene.RegionInfo.EstateSettings.IsEstateManagerOrOwner(_agentID) && !_isGod)
             {
-                m_consoleModule.SendConsoleOutput(m_agentID, "No access");
+                _consoleModule.SendConsoleOutput(_agentID, "No access");
                 return;
             }
 
@@ -218,38 +215,38 @@ namespace OpenSim.Region.ClientStack.Linden
             string cmd = osd.AsString();
             if (cmd == "set console on")
             {
-                if (m_isGod)
+                if (_isGod)
                 {
-                    m_consoleModule.AddConsole(m_agentID, ConsoleSender);
-                    m_consoleIsOn = true;
-                    m_consoleModule.SendConsoleOutput(m_agentID, "Console is now on");
+                    _consoleModule.AddConsole(_agentID, ConsoleSender);
+                    _consoleIsOn = true;
+                    _consoleModule.SendConsoleOutput(_agentID, "Console is now on");
                 }
                 return;
             }
             else if (cmd == "set console off")
             {
-                m_consoleModule.RemoveConsole(m_agentID);
-                m_consoleIsOn = false;
-                m_consoleModule.SendConsoleOutput(m_agentID, "Console is now off");
+                _consoleModule.RemoveConsole(_agentID);
+                _consoleIsOn = false;
+                _consoleModule.SendConsoleOutput(_agentID, "Console is now off");
                 return;
             }
 
-            if (m_consoleIsOn == false && m_consoleModule.RunCommand(osd.AsString().Trim(), m_agentID))
+            if (_consoleIsOn == false && _consoleModule.RunCommand(osd.AsString().Trim(), _agentID))
                 return;
 
-            if (m_isGod && m_consoleIsOn)
+            if (_isGod && _consoleIsOn)
             {
                 MainConsole.Instance.RunCommand(osd.AsString().Trim());
             }
             else
             {
-                m_consoleModule.SendConsoleOutput(m_agentID, "Unknown command");
+                _consoleModule.SendConsoleOutput(_agentID, "Unknown command");
             }
         }
 
         private void ConsoleSender(string text)
         {
-            m_consoleModule.SendConsoleOutput(m_agentID, text);
+            _consoleModule.SendConsoleOutput(_agentID, text);
         }
 
  

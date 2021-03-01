@@ -42,7 +42,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "PresenceModule")]
     public class PresenceModule : ISharedRegionModule, IPresenceModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(
+        private static readonly ILog _log = LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
 #pragma warning disable 0067
@@ -50,21 +50,21 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
         public event BulkPresenceData OnBulkPresenceData;
 #pragma warning restore 0067
 
-        protected List<Scene> m_Scenes = new List<Scene>();
+        protected List<Scene> _Scenes = new List<Scene>();
 
-        protected IPresenceService m_PresenceService = null;
+        protected IPresenceService _PresenceService = null;
 
         protected IPresenceService PresenceService
         {
             get
             {
-                if (m_PresenceService == null)
+                if (_PresenceService == null)
                 {
-                    if (m_Scenes.Count > 0)
-                        m_PresenceService = m_Scenes[0].RequestModuleInterface<IPresenceService>();
+                    if (_Scenes.Count > 0)
+                        _PresenceService = _Scenes[0].RequestModuleInterface<IPresenceService>();
                 }
 
-                return m_PresenceService;
+                return _PresenceService;
             }
         }
 
@@ -74,7 +74,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         public void AddRegion(Scene scene)
         {
-            m_Scenes.Add(scene);
+            _Scenes.Add(scene);
 
             scene.EventManager.OnNewClient += OnNewClient;
 
@@ -87,7 +87,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
 
         public void RemoveRegion(Scene scene)
         {
-            m_Scenes.Remove(scene);
+            _Scenes.Remove(scene);
         }
 
         public void PostInitialise()
@@ -98,15 +98,9 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
         {
         }
 
-        public string Name
-        {
-            get { return "PresenceModule"; }
-        }
+        public string Name => "PresenceModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void RequestBulkPresenceData(UUID[] users)
         {
@@ -123,7 +117,7 @@ namespace OpenSim.Region.CoreModules.Avatar.InstantMessage
                 return;
 
             IClientAPI client = (IClientAPI)sender;
-            m_log.DebugFormat("[PRESENCE MODULE]: OnlineNotification requested by {0}", client.Name);
+            _log.DebugFormat("[PRESENCE MODULE]: OnlineNotification requested by {0}", client.Name);
 
             PresenceInfo[] status = PresenceService.GetAgents(args.ToArray());
 

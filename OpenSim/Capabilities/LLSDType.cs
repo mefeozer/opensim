@@ -39,10 +39,7 @@ namespace OpenSim.Framework.Capabilities
             myType = type;
         }
 
-        public string ObjectType
-        {
-            get { return myType; }
-        }
+        public string ObjectType => myType;
     }
 
     [AttributeUsage(AttributeTargets.Class)]

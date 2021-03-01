@@ -32,13 +32,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
 {
     class OdePhysicsJoint : PhysicsJoint
     {
-        public override bool IsInPhysicsEngine
-        {
-            get
-            {
-                return jointID != IntPtr.Zero;
-            }
-        }
+        public override bool IsInPhysicsEngine => jointID != IntPtr.Zero;
         public IntPtr jointID;
     }
 }

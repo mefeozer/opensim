@@ -36,15 +36,15 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     private static string LogHeader = "[BULLETSIM SHAPE COLLECTION]";
 #pragma warning restore 414
 
-    private BSScene m_physicsScene { get; }
+    private BSScene _physicsScene { get; }
 
-    private readonly object m_collectionActivityLock = new object();
+    private readonly object _collectionActivityLock = new object();
 
     private readonly bool DDetail = false;
 
     public BSShapeCollection(BSScene physScene)
     {
-        m_physicsScene = physScene;
+        _physicsScene = physScene;
         // Set the next to 'true' for very detailed shape update detailed logging (detailed details?)
         // While detailed debugging is still active, this is better than commenting out all the
         //     DetailLog statements. When debugging slows down, this and the protected logging
@@ -75,7 +75,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         bool ret = false;
 
         // This lock could probably be pushed down lower but building shouldn't take long
-        lock (m_collectionActivityLock)
+        lock (_collectionActivityLock)
         {
             // Do we have the correct geometry for this type of object?
             // Updates prim.BSShape with information/pointers to shape.
@@ -85,7 +85,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             //    rebuild the body around it.
             // Updates prim.BSBody with information/pointers to requested body
             // Returns 'true' if BSBody was changed.
-            bool newBody = CreateBody(newGeom || forceRebuild, prim, m_physicsScene.World, bodyCallback);
+            bool newBody = CreateBody(newGeom || forceRebuild, prim, _physicsScene.World, bodyCallback);
             ret = newGeom || newBody;
         }
         DetailLog("{0},BSShapeCollection.GetBodyAndShape,taintExit,force={1},ret={2},body={3},shape={4}",
@@ -107,7 +107,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         {
             if (shapeCallback != null)
                 shapeCallback(prim.PhysBody, prim.PhysShape.physShapeInfo);
-            prim.PhysShape.Dereference(m_physicsScene);
+            prim.PhysShape.Dereference(_physicsScene);
         }
         prim.PhysShape = new BSShapeNull();
     }
@@ -140,20 +140,20 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             switch (BSParam.AvatarShape)
             {
                 case AvatarShapeCapsule:
-                    prim.PhysShape = BSShapeNative.GetReference(m_physicsScene, prim,
+                    prim.PhysShape = BSShapeNative.GetReference(_physicsScene, prim,
                                             BSPhysicsShapeType.SHAPE_CAPSULE, FixedShapeKey.KEY_CAPSULE);
                     ret = true;
                     haveShape = true;
                     break;
                 case AvatarShapeCube:
-                    prim.PhysShape = BSShapeNative.GetReference(m_physicsScene, prim,
+                    prim.PhysShape = BSShapeNative.GetReference(_physicsScene, prim,
                                             BSPhysicsShapeType.SHAPE_BOX, FixedShapeKey.KEY_CAPSULE);
                     ret = true;
                     haveShape = true;
                     break;
                 case AvatarShapeOvoid:
                     // Saddly, Bullet doesn't scale spheres so this doesn't work as an avatar shape
-                    prim.PhysShape = BSShapeNative.GetReference(m_physicsScene, prim,
+                    prim.PhysShape = BSShapeNative.GetReference(_physicsScene, prim,
                                             BSPhysicsShapeType.SHAPE_SPHERE, FixedShapeKey.KEY_CAPSULE);
                     ret = true;
                     haveShape = true;
@@ -177,7 +177,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             // Get the scale of any existing shape so we can see if the new shape is same native type and same size.
             OMV.Vector3 scaleOfExistingShape = OMV.Vector3.Zero;
             if (prim.PhysShape.HasPhysicalShape)
-                scaleOfExistingShape = m_physicsScene.PE.GetLocalScaling(prim.PhysShape.physShapeInfo);
+                scaleOfExistingShape = _physicsScene.PE.GetLocalScaling(prim.PhysShape.physShapeInfo);
 
             if (DDetail) DetailLog("{0},BSShapeCollection.CreateGeom,maybeNative,force={1},primScale={2},primSize={3},primShape={4}",
                         prim.LocalID, forceRebuild, prim.Scale, prim.Size, prim.PhysShape.physShapeInfo.shapeType);
@@ -192,7 +192,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     )
                 {
                     DereferenceExistingShape(prim, shapeCallback);
-                    prim.PhysShape = BSShapeNative.GetReference(m_physicsScene, prim,
+                    prim.PhysShape = BSShapeNative.GetReference(_physicsScene, prim,
                                             BSPhysicsShapeType.SHAPE_SPHERE, FixedShapeKey.KEY_SPHERE);
                     ret = true;
                 }
@@ -209,7 +209,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                         )
                 {
                     DereferenceExistingShape(prim, shapeCallback);
-                    prim.PhysShape = BSShapeNative.GetReference(m_physicsScene, prim,
+                    prim.PhysShape = BSShapeNative.GetReference(_physicsScene, prim,
                                             BSPhysicsShapeType.SHAPE_BOX, FixedShapeKey.KEY_BOX);
                     ret = true;
                 }
@@ -224,7 +224,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             ret = CreateGeomMeshOrHull(prim, shapeCallback);
         }
 
-        m_physicsScene.PE.ResetBroadphasePool(m_physicsScene.World);    // DEBUG DEBUG
+        _physicsScene.PE.ResetBroadphasePool(_physicsScene.World);    // DEBUG DEBUG
 
         return ret;
     }
@@ -261,7 +261,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 && PrimHasNoCuts(pbs)
                 )
             {
-                potentialHull = BSShapeConvexHull.GetReference(m_physicsScene, false /* forceRebuild */, prim);
+                potentialHull = BSShapeConvexHull.GetReference(_physicsScene, false /* forceRebuild */, prim);
             }
             // Use the GImpact shape if it is a prim that has some concaveness
             if (potentialHull == null
@@ -270,12 +270,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 && !pbs.SculptEntry
                 )
             {
-                    potentialHull = BSShapeGImpact.GetReference(m_physicsScene, false /* forceRebuild */, prim);
+                    potentialHull = BSShapeGImpact.GetReference(_physicsScene, false /* forceRebuild */, prim);
             }
             // If not any of the simple cases, just make a hull
             if (potentialHull == null)
             {
-                potentialHull = BSShapeHull.GetReference(m_physicsScene, false /*forceRebuild*/, prim);
+                potentialHull = BSShapeHull.GetReference(_physicsScene, false /*forceRebuild*/, prim);
             }
 
             // If the current shape is not what is on the prim at the moment, time to change.
@@ -290,14 +290,14 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             else
             {
                 // The current shape on the prim is the correct one. We don't need the potential reference.
-                potentialHull.Dereference(m_physicsScene);
+                potentialHull.Dereference(_physicsScene);
             }
             if (DDetail) DetailLog("{0},BSShapeCollection.CreateGeom,hull,shape={1}", prim.LocalID, prim.PhysShape);
         }
         else
         {
             // Non-physical objects should be just meshes.
-            BSShape potentialMesh = BSShapeMesh.GetReference(m_physicsScene, false /*forceRebuild*/, prim);
+            BSShape potentialMesh = BSShapeMesh.GetReference(_physicsScene, false /*forceRebuild*/, prim);
             // If the current shape is not what is on the prim at the moment, time to change.
             if (!prim.PhysShape.HasPhysicalShape
                         || potentialMesh.ShapeType != prim.PhysShape.ShapeType
@@ -310,7 +310,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             else
             {
                 // We don't need this reference to the mesh that is already being using.
-                potentialMesh.Dereference(m_physicsScene);
+                potentialMesh.Dereference(_physicsScene);
             }
             if (DDetail) DetailLog("{0},BSShapeCollection.CreateGeom,mesh,shape={1}", prim.LocalID, prim.PhysShape);
         }
@@ -322,12 +322,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // Bodies only have one user so the body is just put into the world if not already there.
     private void ReferenceBody(BulletBody body)
     {
-        lock (m_collectionActivityLock)
+        lock (_collectionActivityLock)
         {
             if (DDetail) DetailLog("{0},BSShapeCollection.ReferenceBody,newBody,body={1}", body.ID, body);
-            if (!m_physicsScene.PE.IsInWorld(m_physicsScene.World, body))
+            if (!_physicsScene.PE.IsInWorld(_physicsScene.World, body))
             {
-                m_physicsScene.PE.AddObjectToWorld(m_physicsScene.World, body);
+                _physicsScene.PE.AddObjectToWorld(_physicsScene.World, body);
                 if (DDetail) DetailLog("{0},BSShapeCollection.ReferenceBody,addedToWorld,ref={1}", body.ID, body);
             }
         }
@@ -341,7 +341,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         if (!body.HasPhysicalBody)
             return;
 
-        lock (m_collectionActivityLock)
+        lock (_collectionActivityLock)
         {
             if (DDetail) DetailLog("{0},BSShapeCollection.DereferenceBody,DestroyingBody,body={1}", body.ID, body);
             // If the caller needs to know the old body is going away, pass the event up.
@@ -349,12 +349,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 bodyCallback(body, null);
 
             // Removing an object not in the world is a NOOP
-            m_physicsScene.PE.RemoveObjectFromWorld(m_physicsScene.World, body);
+            _physicsScene.PE.RemoveObjectFromWorld(_physicsScene.World, body);
 
             // Zero any reference to the shape so it is not freed when the body is deleted.
-            m_physicsScene.PE.SetCollisionShape(m_physicsScene.World, body, null);
+            _physicsScene.PE.SetCollisionShape(_physicsScene.World, body, null);
 
-            m_physicsScene.PE.DestroyObject(m_physicsScene.World, body);
+            _physicsScene.PE.DestroyObject(_physicsScene.World, body);
         }
     }
 
@@ -373,7 +373,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         // If not a solid object, body is a GhostObject. Otherwise a RigidBody.
         if (!mustRebuild)
         {
-            CollisionObjectTypes bodyType = (CollisionObjectTypes)m_physicsScene.PE.GetBodyType(prim.PhysBody);
+            CollisionObjectTypes bodyType = (CollisionObjectTypes)_physicsScene.PE.GetBodyType(prim.PhysBody);
             if (prim.IsSolid && bodyType != CollisionObjectTypes.CO_RIGID_BODY
                 || !prim.IsSolid && bodyType != CollisionObjectTypes.CO_GHOST_OBJECT)
             {
@@ -391,12 +391,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             BulletBody aBody;
             if (prim.IsSolid)
             {
-                aBody = m_physicsScene.PE.CreateBodyFromShape(sim, prim.PhysShape.physShapeInfo, prim.LocalID, prim.RawPosition, prim.RawOrientation);
+                aBody = _physicsScene.PE.CreateBodyFromShape(sim, prim.PhysShape.physShapeInfo, prim.LocalID, prim.RawPosition, prim.RawOrientation);
                 if (DDetail) DetailLog("{0},BSShapeCollection.CreateBody,rigid,body={1}", prim.LocalID, aBody);
             }
             else
             {
-                aBody = m_physicsScene.PE.CreateGhostFromShape(sim, prim.PhysShape.physShapeInfo, prim.LocalID, prim.RawPosition, prim.RawOrientation);
+                aBody = _physicsScene.PE.CreateGhostFromShape(sim, prim.PhysShape.physShapeInfo, prim.LocalID, prim.RawPosition, prim.RawOrientation);
                 if (DDetail) DetailLog("{0},BSShapeCollection.CreateBody,ghost,body={1}", prim.LocalID, aBody);
             }
 
@@ -412,8 +412,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     private void DetailLog(string msg, params object[] args)
     {
-        if (m_physicsScene.PhysicsLogging.Enabled)
-            m_physicsScene.DetailLog(msg, args);
+        if (_physicsScene.PhysicsLogging.Enabled)
+            _physicsScene.DetailLog(msg, args);
     }
 }
 }

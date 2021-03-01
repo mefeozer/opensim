@@ -35,7 +35,7 @@ namespace OpenSim.Framework.Serialization.Tests
     [TestFixture]
     public class RegionSettingsSerializerTests : OpenSimTestCase
     {
-        private readonly string m_serializedRs = @"<?xml version=""1.0"" encoding=""utf-16""?>
+        private readonly string _serializedRs = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <RegionSettings>
   <General>
     <AllowDamage>True</AllowDamage>
@@ -80,12 +80,12 @@ namespace OpenSim.Framework.Serialization.Tests
   </Telehub>
 </RegionSettings>";
 
-        private RegionSettings m_rs;
+        private RegionSettings _rs;
 
         [SetUp]
         public void Setup()
         {
-            m_rs = new RegionSettings
+            _rs = new RegionSettings
             {
                 AgentLimit = 17,
                 AllowDamage = true,
@@ -119,7 +119,7 @@ namespace OpenSim.Framework.Serialization.Tests
                 WaterHeight = 23,
                 TelehubObject = UUID.Parse("00000000-0000-0000-0000-111111111111")
             };
-            m_rs.AddSpawnPoint(SpawnPoint.Parse("1,-2,0.33"));
+            _rs.AddSpawnPoint(SpawnPoint.Parse("1,-2,0.33"));
         }
 
         [Test]
@@ -128,13 +128,13 @@ namespace OpenSim.Framework.Serialization.Tests
             TestHelpers.InMethod();
 //            log4net.Config.XmlConfigurator.Configure();
 
-            RegionSettings deserRs = RegionSettingsSerializer.Deserialize(m_serializedRs, out ViewerEnvironment dummy);
+            RegionSettings deserRs = RegionSettingsSerializer.Deserialize(_serializedRs, out ViewerEnvironment dummy);
             Assert.That(deserRs, Is.Not.Null);
-            Assert.That(deserRs.TerrainTexture2, Is.EqualTo(m_rs.TerrainTexture2));
-            Assert.That(deserRs.DisablePhysics, Is.EqualTo(m_rs.DisablePhysics));
-            Assert.That(deserRs.TerrainLowerLimit, Is.EqualTo(m_rs.TerrainLowerLimit));
-            Assert.That(deserRs.TelehubObject, Is.EqualTo(m_rs.TelehubObject));
-            Assert.That(deserRs.SpawnPoints()[0].ToString(), Is.EqualTo(m_rs.SpawnPoints()[0].ToString()));
+            Assert.That(deserRs.TerrainTexture2, Is.EqualTo(_rs.TerrainTexture2));
+            Assert.That(deserRs.DisablePhysics, Is.EqualTo(_rs.DisablePhysics));
+            Assert.That(deserRs.TerrainLowerLimit, Is.EqualTo(_rs.TerrainLowerLimit));
+            Assert.That(deserRs.TelehubObject, Is.EqualTo(_rs.TelehubObject));
+            Assert.That(deserRs.SpawnPoints()[0].ToString(), Is.EqualTo(_rs.SpawnPoints()[0].ToString()));
         }
     }
 }

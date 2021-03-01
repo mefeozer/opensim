@@ -36,7 +36,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 {
     public class SensorRepeat
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Used by one-off and repeated sensors
@@ -61,28 +61,22 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
         }
 
-        public AsyncCommandManager m_CmdManager;
+        public AsyncCommandManager _CmdManager;
 
         /// <summary>
         /// Number of sensors active.
         /// </summary>
-        public int SensorsCount
-        {
-            get
-            {
-                return SenseRepeaters.Count;
-            }
-        }
+        public int SensorsCount => SenseRepeaters.Count;
 
         public SensorRepeat(AsyncCommandManager CmdManager)
         {
-            m_CmdManager = CmdManager;
-            maximumRange = CmdManager.m_ScriptEngine.Config.GetDouble("SensorMaxRange", 96.0d);
-            maximumToReturn = CmdManager.m_ScriptEngine.Config.GetInt("SensorMaxResults", 16);
-            m_npcModule = m_CmdManager.m_ScriptEngine.World.RequestModuleInterface<INPCModule>();
+            _CmdManager = CmdManager;
+            maximumRange = CmdManager._ScriptEngine.Config.GetDouble("SensorMaxRange", 96.0d);
+            maximumToReturn = CmdManager._ScriptEngine.Config.GetInt("SensorMaxResults", 16);
+            _npcModule = _CmdManager._ScriptEngine.World.RequestModuleInterface<INPCModule>();
         }
 
-        private readonly INPCModule m_npcModule;
+        private readonly INPCModule _npcModule;
 
         private readonly object SenseLock = new object();
 
@@ -131,12 +125,12 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         private List<SensorInfo> SenseRepeaters = new List<SensorInfo>();
         private readonly object SenseRepeatListLock = new object();
 
-        public void SetSenseRepeatEvent(uint m_localID, UUID m_itemID,
+        public void SetSenseRepeatEvent(uint _localID, UUID _itemID,
                                         string name, UUID keyID, int type, double range,
                                         double arc, double sec, SceneObjectPart host)
         {
             // Always remove first, in case this is a re-set
-            UnSetSenseRepeaterEvents(m_localID, m_itemID);
+            UnSetSenseRepeaterEvents(_localID, _itemID);
 
             if (sec == 0) // Disabling timer
                 return;
@@ -144,8 +138,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             // Add to timer
             SensorInfo ts = new SensorInfo
             {
-                localID = m_localID,
-                itemID = m_itemID,
+                localID = _localID,
+                itemID = _itemID,
                 interval = sec,
                 name = name,
                 keyID = keyID,
@@ -175,7 +169,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
         }
 
-        public void UnSetSenseRepeaterEvents(uint m_localID, UUID m_itemID)
+        public void UnSetSenseRepeaterEvents(uint _localID, UUID _itemID)
         {
             // Remove from timer
             lock (SenseRepeatListLock)
@@ -183,7 +177,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                 List<SensorInfo> newSenseRepeaters = new List<SensorInfo>();
                 foreach (SensorInfo ts in SenseRepeaters)
                 {
-                    if (ts.localID != m_localID || ts.itemID != m_itemID)
+                    if (ts.localID != _localID || ts.itemID != _itemID)
                     {
                         newSenseRepeaters.Add(ts);
                     }
@@ -214,15 +208,15 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
         }
 
-        public void SenseOnce(uint m_localID, UUID m_itemID,
+        public void SenseOnce(uint _localID, UUID _itemID,
                               string name, UUID keyID, int type,
                               double range, double arc, SceneObjectPart host)
         {
             // Add to timer
             SensorInfo ts = new SensorInfo
             {
-                localID = m_localID,
-                itemID = m_itemID,
+                localID = _localID,
+                itemID = _itemID,
                 interval = 0,
                 name = name,
                 keyID = keyID,
@@ -264,7 +258,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                 {
                     // send a "no_sensor"
                     // Add it to queue
-                    m_CmdManager.m_ScriptEngine.PostScriptEvent(ts.itemID,
+                    _CmdManager._ScriptEngine.PostScriptEvent(ts.itemID,
                             new EventParams("no_sensor", new object[0],
                             new DetectParams[0]));
                 }
@@ -283,7 +277,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                             {
                                 Key = sensedEntities[idx].itemID
                             };
-                            detect.Populate(m_CmdManager.m_ScriptEngine.World);
+                            detect.Populate(_CmdManager._ScriptEngine.World);
                             detected.Add(detect);
                         }
                         catch (Exception)
@@ -300,13 +294,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                         // To get here with zero in the list there must have been some sort of problem
                         // like the object being deleted or the avatar leaving to have caused some
                         // difficulty during the Populate above so fire a no_sensor event
-                        m_CmdManager.m_ScriptEngine.PostScriptEvent(ts.itemID,
+                        _CmdManager._ScriptEngine.PostScriptEvent(ts.itemID,
                                 new EventParams("no_sensor", new object[0],
                                 new DetectParams[0]));
                     }
                     else
                     {
-                        m_CmdManager.m_ScriptEngine.PostScriptEvent(ts.itemID,
+                        _CmdManager._ScriptEngine.PostScriptEvent(ts.itemID,
                                 new EventParams("sensor",
                                 new object[] {new LSL_Types.LSLInteger(detected.Count) },
                                 detected.ToArray()));
@@ -324,7 +318,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             // rather than getting a list to scan through
             if (ts.keyID != UUID.Zero)
             {
-                m_CmdManager.m_ScriptEngine.World.Entities.TryGetValue(ts.keyID, out EntityBase e);
+                _CmdManager._ScriptEngine.World.Entities.TryGetValue(ts.keyID, out EntityBase e);
                 if (e == null)
                     return sensedEntities;
                 Entities = new List<EntityBase>
@@ -334,7 +328,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
             else
             {
-                Entities = new List<EntityBase>(m_CmdManager.m_ScriptEngine.World.GetEntities());
+                Entities = new List<EntityBase>(_CmdManager._ScriptEngine.World.GetEntities());
             }
             SceneObjectPart SensePoint = ts.host;
 
@@ -363,7 +357,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                 // avatar rotation and position.
                 // Position of a sensor in a child prim attached to an avatar
                 // will be still wrong.
-                ScenePresence avatar = m_CmdManager.m_ScriptEngine.World.GetScenePresence(SensePoint.ParentGroup.AttachedAvatar);
+                ScenePresence avatar = _CmdManager._ScriptEngine.World.GetScenePresence(SensePoint.ParentGroup.AttachedAvatar);
 
                 // Don't proceed if the avatar for this attachment has since been removed from the scene.
                 if (avatar == null)
@@ -479,7 +473,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             List<SensedEntity> sensedEntities = new List<SensedEntity>();
 
             // If nobody about quit fast
-            if (m_CmdManager.m_ScriptEngine.World.GetRootAgentCount() == 0)
+            if (_CmdManager._ScriptEngine.World.GetRootAgentCount() == 0)
                 return sensedEntities;
 
             SceneObjectPart SensePoint = ts.host;
@@ -498,7 +492,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                 // avatar rotation and position.
                 // Position of a sensor in a child prim attached to an avatar
                 // will be still wrong.
-                ScenePresence avatar = m_CmdManager.m_ScriptEngine.World.GetScenePresence(SensePoint.ParentGroup.AttachedAvatar);
+                ScenePresence avatar = _CmdManager._ScriptEngine.World.GetScenePresence(SensePoint.ParentGroup.AttachedAvatar);
 
                 // Don't proceed if the avatar for this attachment has since been removed from the scene.
                 if (avatar == null)
@@ -516,16 +510,16 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 
             Action<ScenePresence> senseEntity = new Action<ScenePresence>(presence =>
             {
-//                m_log.DebugFormat(
+//                _log.DebugFormat(
 //                    "[SENSOR REPEAT]: Inspecting scene presence {0}, type {1} on sensor sweep for {2}, type {3}",
 //                    presence.Name, presence.PresenceType, ts.name, ts.type);
 
                 if ((ts.type & NPC) == 0 && presence.PresenceType == PresenceType.Npc)
                 {
-                    INPC npcData = m_npcModule.GetNPC(presence.UUID, presence.Scene);
+                    INPC npcData = _npcModule.GetNPC(presence.UUID, presence.Scene);
                     if (npcData == null || !npcData.SenseAsAgent)
                     {
-//                        m_log.DebugFormat(
+//                        _log.DebugFormat(
 //                            "[SENSOR REPEAT]: Discarding NPC {0} from agent sense sweep for script item id {1}",
 //                            presence.Name, ts.itemID);
                         return;
@@ -540,10 +534,10 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                     }
                     else
                     {
-                        INPC npcData = m_npcModule.GetNPC(presence.UUID, presence.Scene);
+                        INPC npcData = _npcModule.GetNPC(presence.UUID, presence.Scene);
                         if (npcData != null && npcData.SenseAsAgent)
                         {
-//                            m_log.DebugFormat(
+//                            _log.DebugFormat(
 //                                "[SENSOR REPEAT]: Discarding NPC {0} from non-agent sense sweep for script item id {1}",
 //                                presence.Name, ts.itemID);
                             return;
@@ -623,18 +617,18 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             if (ts.keyID != UUID.Zero)
             {
                 // Try direct lookup by UUID
-                if (!m_CmdManager.m_ScriptEngine.World.TryGetScenePresence(ts.keyID, out ScenePresence sp))
+                if (!_CmdManager._ScriptEngine.World.TryGetScenePresence(ts.keyID, out ScenePresence sp))
                     return sensedEntities;
                 senseEntity(sp);
             }
             else if (!string.IsNullOrEmpty(ts.name))
             {
                 // Try lookup by name will return if/when found
-                if (((ts.type & AGENT) != 0) && m_CmdManager.m_ScriptEngine.World.TryGetAvatarByName(ts.name, out ScenePresence sp))
+                if (((ts.type & AGENT) != 0) && _CmdManager._ScriptEngine.World.TryGetAvatarByName(ts.name, out ScenePresence sp))
                     senseEntity(sp);
                 if ((ts.type & AGENT_BY_USERNAME) != 0)
                 {
-                    m_CmdManager.m_ScriptEngine.World.ForEachRootScenePresence(
+                    _CmdManager._ScriptEngine.World.ForEachRootScenePresence(
                         delegate (ScenePresence ssp)
                         {
                             if (ssp.Lastname == "Resident")
@@ -653,7 +647,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
             }
             else
             {
-                m_CmdManager.m_ScriptEngine.World.ForEachRootScenePresence(senseEntity);
+                _CmdManager._ScriptEngine.World.ForEachRootScenePresence(senseEntity);
             }
             return sensedEntities;
         }
@@ -682,7 +676,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                                    object[] data)
         {
             SceneObjectPart part =
-                m_CmdManager.m_ScriptEngine.World.GetSceneObjectPart(
+                _CmdManager._ScriptEngine.World.GetSceneObjectPart(
                     objectID);
 
             if (part == null)

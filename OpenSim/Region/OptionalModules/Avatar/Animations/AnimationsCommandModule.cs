@@ -46,48 +46,48 @@ namespace OpenSim.Region.OptionalModules.Avatar.Animations
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "AnimationsCommandModule")]
     public class AnimationsCommandModule : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<Scene> m_scenes = new List<Scene>();
+        private readonly List<Scene> _scenes = new List<Scene>();
 
-        public string Name { get { return "Animations Command Module"; } }
+        public string Name => "Animations Command Module";
 
-        public Type ReplaceableInterface { get { return null; } }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: INITIALIZED MODULE");
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: INITIALIZED MODULE");
         }
 
         public void PostInitialise()
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: POST INITIALIZED MODULE");
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: POST INITIALIZED MODULE");
         }
 
         public void Close()
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: CLOSED MODULE");
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: CLOSED MODULE");
         }
 
         public void AddRegion(Scene scene)
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: REGION {0} ADDED", scene.RegionInfo.RegionName);
         }
 
         public void RemoveRegion(Scene scene)
         {
-//            m_log.DebugFormat("[ATTACHMENTS COMMAND MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ATTACHMENTS COMMAND MODULE]: REGION {0} REMOVED", scene.RegionInfo.RegionName);
 
-            lock (m_scenes)
-                m_scenes.Remove(scene);
+            lock (_scenes)
+                _scenes.Remove(scene);
         }
 
         public void RegionLoaded(Scene scene)
         {
-//            m_log.DebugFormat("[ANIMATIONS COMMAND MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ANIMATIONS COMMAND MODULE]: REGION {0} LOADED", scene.RegionInfo.RegionName);
 
-            lock (m_scenes)
-                m_scenes.Add(scene);
+            lock (_scenes)
+                _scenes.Add(scene);
 
             scene.AddCommand(
                 "Users", this, "show animations",
@@ -120,9 +120,9 @@ namespace OpenSim.Region.OptionalModules.Avatar.Animations
 
             StringBuilder sb = new StringBuilder();
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                foreach (Scene scene in m_scenes)
+                foreach (Scene scene in _scenes)
                 {
                     if (targetNameSupplied)
                     {

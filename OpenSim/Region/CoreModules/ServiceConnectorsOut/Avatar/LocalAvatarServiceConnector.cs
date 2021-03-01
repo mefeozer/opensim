@@ -43,25 +43,19 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalAvatarServicesConnector")]
     public class LocalAvatarServicesConnector : ISharedRegionModule, IAvatarService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAvatarService m_AvatarService;
+        private IAvatarService _AvatarService;
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
         #region ISharedRegionModule
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LocalAvatarServicesConnector"; }
-        }
+        public string Name => "LocalAvatarServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -74,7 +68,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
                     IConfig userConfig = source.Configs["AvatarService"];
                     if (userConfig == null)
                     {
-                        m_log.Error("[AVATAR CONNECTOR]: AvatarService missing from OpenSim.ini");
+                        _log.Error("[AVATAR CONNECTOR]: AvatarService missing from OpenSim.ini");
                         return;
                     }
 
@@ -83,41 +77,41 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
-                        m_log.Error("[AVATAR CONNECTOR]: No LocalServiceModule named in section AvatarService");
+                        _log.Error("[AVATAR CONNECTOR]: No LocalServiceModule named in section AvatarService");
                         return;
                     }
 
                     object[] args = new object[] { source };
-                    m_AvatarService =
+                    _AvatarService =
                             ServerUtils.LoadPlugin<IAvatarService>(serviceDll,
                             args);
 
-                    if (m_AvatarService == null)
+                    if (_AvatarService == null)
                     {
-                        m_log.Error("[AVATAR CONNECTOR]: Can't load user account service");
+                        _log.Error("[AVATAR CONNECTOR]: Can't load user account service");
                         return;
                     }
-                    m_Enabled = true;
-                    m_log.Info("[AVATAR CONNECTOR]: Local avatar connector enabled");
+                    _Enabled = true;
+                    _log.Info("[AVATAR CONNECTOR]: Local avatar connector enabled");
                 }
             }
         }
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void Close()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<IAvatarService>(this);
@@ -125,13 +119,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
@@ -141,37 +135,37 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Avatar
 
         public AvatarAppearance GetAppearance(UUID userID)
         {
-            return m_AvatarService.GetAppearance(userID);
+            return _AvatarService.GetAppearance(userID);
         }
 
         public bool SetAppearance(UUID userID, AvatarAppearance appearance)
         {
-            return m_AvatarService.SetAppearance(userID,appearance);
+            return _AvatarService.SetAppearance(userID,appearance);
         }
 
         public AvatarData GetAvatar(UUID userID)
         {
-            return m_AvatarService.GetAvatar(userID);
+            return _AvatarService.GetAvatar(userID);
         }
 
         public bool SetAvatar(UUID userID, AvatarData avatar)
         {
-            return m_AvatarService.SetAvatar(userID, avatar);
+            return _AvatarService.SetAvatar(userID, avatar);
         }
 
         public bool ResetAvatar(UUID userID)
         {
-            return m_AvatarService.ResetAvatar(userID);
+            return _AvatarService.ResetAvatar(userID);
         }
 
         public bool SetItems(UUID userID, string[] names, string[] values)
         {
-            return m_AvatarService.SetItems(userID, names, values);
+            return _AvatarService.SetItems(userID, names, values);
         }
 
         public bool RemoveItems(UUID userID, string[] names)
         {
-            return m_AvatarService.RemoveItems(userID, names);
+            return _AvatarService.RemoveItems(userID, names);
         }
 
         #endregion

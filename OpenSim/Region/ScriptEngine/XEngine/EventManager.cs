@@ -41,7 +41,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
     /// </summary>
     public class EventManager
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly XEngine myScriptEngine;
 
@@ -49,7 +49,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
         {
             myScriptEngine = _ScriptEngine;
 
-//            m_log.Info("[XEngine] Hooking up to server events");
+//            _log.Info("[XEngine] Hooking up to server events");
             myScriptEngine.World.EventManager.OnAttach += attach;
             myScriptEngine.World.EventManager.OnObjectGrab += touch_start;
             myScriptEngine.World.EventManager.OnObjectGrabbing += touch;
@@ -98,7 +98,7 @@ namespace OpenSim.Region.ScriptEngine.XEngine
             if ((part.ScriptEvents & scriptEvents.money) == 0)
                 part = part.ParentGroup.RootPart;
 
-            m_log.Debug("Paid: " + objectID + " from " + agentID + ", amount " + amount);
+            _log.Debug("Paid: " + objectID + " from " + agentID + ", amount " + amount);
 
 //            part = part.ParentGroup.RootPart;
             money(part.LocalId, agentID, amount);

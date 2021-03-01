@@ -34,8 +34,8 @@ namespace OpenSim.Framework.Tests
     [TestFixture]
     public class AgentCircuitManagerTests
     {
-        private AgentCircuitData m_agentCircuitData1;
-        private AgentCircuitData m_agentCircuitData2;
+        private AgentCircuitData _agentCircuitData1;
+        private AgentCircuitData _agentCircuitData2;
         private UUID AgentId1;
         private UUID AgentId2;
         private uint circuitcode1;
@@ -66,7 +66,7 @@ namespace OpenSim.Framework.Tests
             UUID SecureSessionId = UUID.Random();
             // TODO: unused: UUID SessionId = UUID.Random();
 
-            m_agentCircuitData1 = new AgentCircuitData
+            _agentCircuitData1 = new AgentCircuitData
             {
                 AgentID = AgentId1,
                 Appearance = new AvatarAppearance(),
@@ -83,7 +83,7 @@ namespace OpenSim.Framework.Tests
                 startpos = StartPos
             };
 
-            m_agentCircuitData2 = new AgentCircuitData
+            _agentCircuitData2 = new AgentCircuitData
             {
                 AgentID = AgentId2,
                 Appearance = new AvatarAppearance(),
@@ -108,23 +108,23 @@ namespace OpenSim.Framework.Tests
         public void AddAgentCircuitTest()
         {
             AgentCircuitManager agentCircuitManager = new AgentCircuitManager();
-            agentCircuitManager.AddNewCircuit(circuitcode1,m_agentCircuitData1);
-            agentCircuitManager.AddNewCircuit(circuitcode2, m_agentCircuitData2);
+            agentCircuitManager.AddNewCircuit(circuitcode1,_agentCircuitData1);
+            agentCircuitManager.AddNewCircuit(circuitcode2, _agentCircuitData2);
             AgentCircuitData agent = agentCircuitManager.GetAgentCircuitData(circuitcode1);
 
-            Assert.That(m_agentCircuitData1.AgentID == agent.AgentID);
-            Assert.That(m_agentCircuitData1.BaseFolder == agent.BaseFolder);
+            Assert.That(_agentCircuitData1.AgentID == agent.AgentID);
+            Assert.That(_agentCircuitData1.BaseFolder == agent.BaseFolder);
 
-            Assert.That(m_agentCircuitData1.CapsPath == agent.CapsPath);
-            Assert.That(m_agentCircuitData1.child == agent.child);
-            Assert.That(m_agentCircuitData1.ChildrenCapSeeds.Count == agent.ChildrenCapSeeds.Count);
-            Assert.That(m_agentCircuitData1.circuitcode == agent.circuitcode);
-            Assert.That(m_agentCircuitData1.firstname == agent.firstname);
-            Assert.That(m_agentCircuitData1.InventoryFolder == agent.InventoryFolder);
-            Assert.That(m_agentCircuitData1.lastname == agent.lastname);
-            Assert.That(m_agentCircuitData1.SecureSessionID == agent.SecureSessionID);
-            Assert.That(m_agentCircuitData1.SessionID == agent.SessionID);
-            Assert.That(m_agentCircuitData1.startpos == agent.startpos);
+            Assert.That(_agentCircuitData1.CapsPath == agent.CapsPath);
+            Assert.That(_agentCircuitData1.child == agent.child);
+            Assert.That(_agentCircuitData1.ChildrenCapSeeds.Count == agent.ChildrenCapSeeds.Count);
+            Assert.That(_agentCircuitData1.circuitcode == agent.circuitcode);
+            Assert.That(_agentCircuitData1.firstname == agent.firstname);
+            Assert.That(_agentCircuitData1.InventoryFolder == agent.InventoryFolder);
+            Assert.That(_agentCircuitData1.lastname == agent.lastname);
+            Assert.That(_agentCircuitData1.SecureSessionID == agent.SecureSessionID);
+            Assert.That(_agentCircuitData1.SessionID == agent.SessionID);
+            Assert.That(_agentCircuitData1.startpos == agent.startpos);
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace OpenSim.Framework.Tests
         public void RemoveAgentCircuitTest()
         {
             AgentCircuitManager agentCircuitManager = new AgentCircuitManager();
-            agentCircuitManager.AddNewCircuit(circuitcode1, m_agentCircuitData1);
-            agentCircuitManager.AddNewCircuit(circuitcode2, m_agentCircuitData2);
+            agentCircuitManager.AddNewCircuit(circuitcode1, _agentCircuitData1);
+            agentCircuitManager.AddNewCircuit(circuitcode2, _agentCircuitData2);
             agentCircuitManager.RemoveCircuit(circuitcode2);
 
             AgentCircuitData agent = agentCircuitManager.GetAgentCircuitData(circuitcode2);
@@ -150,8 +150,8 @@ namespace OpenSim.Framework.Tests
         public void ChangeAgentCircuitCodeTest()
         {
             AgentCircuitManager agentCircuitManager = new AgentCircuitManager();
-            agentCircuitManager.AddNewCircuit(circuitcode1, m_agentCircuitData1);
-            agentCircuitManager.AddNewCircuit(circuitcode2, m_agentCircuitData2);
+            agentCircuitManager.AddNewCircuit(circuitcode1, _agentCircuitData1);
+            agentCircuitManager.AddNewCircuit(circuitcode2, _agentCircuitData2);
             bool result = false;
 
             result = agentCircuitManager.TryChangeCircuitCode(circuitcode1, 393930);
@@ -173,8 +173,8 @@ namespace OpenSim.Framework.Tests
         public void ValidateLoginTest()
         {
             AgentCircuitManager agentCircuitManager = new AgentCircuitManager();
-            agentCircuitManager.AddNewCircuit(circuitcode1, m_agentCircuitData1);
-            agentCircuitManager.AddNewCircuit(circuitcode2, m_agentCircuitData2);
+            agentCircuitManager.AddNewCircuit(circuitcode1, _agentCircuitData1);
+            agentCircuitManager.AddNewCircuit(circuitcode2, _agentCircuitData2);
 
             // should be authorized
             AuthenticateResponse resp = agentCircuitManager.AuthenticateSession(SessionId1, AgentId1, circuitcode1);

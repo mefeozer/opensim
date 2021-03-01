@@ -47,7 +47,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "DynamicMenu")]
     public class DynamicMenuModule : INonSharedRegionModule, IDynamicMenuModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private class MenuItemData
         {
@@ -58,20 +58,14 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             public CustomMenuHandler Handler;
         }
 
-        private readonly Dictionary<UUID, List<MenuItemData>> m_menuItems =
+        private readonly Dictionary<UUID, List<MenuItemData>> _menuItems =
                 new Dictionary<UUID, List<MenuItemData>>();
 
-        private Scene m_scene;
+        private Scene _scene;
 
-        public string Name
-        {
-            get { return "DynamicMenuModule"; }
-        }
+        public string Name => "DynamicMenuModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource config)
         {
@@ -83,14 +77,14 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         public void AddRegion(Scene scene)
         {
-            m_scene = scene;
+            _scene = scene;
             scene.EventManager.OnRegisterCaps += OnRegisterCaps;
-            m_scene.RegisterModuleInterface<IDynamicMenuModule>(this);
+            _scene.RegisterModuleInterface<IDynamicMenuModule>(this);
         }
 
         public void RegionLoaded(Scene scene)
         {
-            ISimulatorFeaturesModule featuresModule = m_scene.RequestModuleInterface<ISimulatorFeaturesModule>();
+            ISimulatorFeaturesModule featuresModule = _scene.RequestModuleInterface<ISimulatorFeaturesModule>();
 
             if (featuresModule != null)
                 featuresModule.OnSimulatorFeaturesRequest += OnSimulatorFeaturesRequest;
@@ -122,13 +116,13 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             if (((OSDMap)menus).ContainsKey("admin"))
                 admin = (OSDMap)((OSDMap)menus)["admin"];
 
-            if (m_menuItems.ContainsKey(UUID.Zero))
+            if (_menuItems.ContainsKey(UUID.Zero))
             {
-                foreach (MenuItemData d in m_menuItems[UUID.Zero])
+                foreach (MenuItemData d in _menuItems[UUID.Zero])
                 {
-                    if (!m_scene.Permissions.IsGod(agentID))
+                    if (!_scene.Permissions.IsGod(agentID))
                     {
-                        if (d.Mode == UserMode.RegionManager && !m_scene.Permissions.IsAdministrator(agentID))
+                        if (d.Mode == UserMode.RegionManager && !_scene.Permissions.IsAdministrator(agentID))
                             continue;
                     }
 
@@ -159,11 +153,11 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                 }
             }
 
-            if (m_menuItems.ContainsKey(agentID))
+            if (_menuItems.ContainsKey(agentID))
             {
-                foreach (MenuItemData d in m_menuItems[agentID])
+                foreach (MenuItemData d in _menuItems[agentID])
                 {
-                    if (d.Mode == UserMode.God && !m_scene.Permissions.IsGod(agentID))
+                    if (d.Mode == UserMode.God && !_scene.Permissions.IsGod(agentID))
                         continue;
 
                     OSDMap loc = null;
@@ -205,23 +199,23 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         private void OnRegisterCaps(UUID agentID, Caps caps)
         {
-            caps.RegisterSimpleHandler("CustomMenuAction", new MenuActionHandler("/" + UUID.Random(), "CustomMenuAction", agentID, this, m_scene));
+            caps.RegisterSimpleHandler("CustomMenuAction", new MenuActionHandler("/" + UUID.Random(), "CustomMenuAction", agentID, this, _scene));
         }
 
         internal void HandleMenuSelection(string action, UUID agentID, List<uint> selection)
         {
-            if (m_menuItems.ContainsKey(agentID))
+            if (_menuItems.ContainsKey(agentID))
             {
-                foreach (MenuItemData d in m_menuItems[agentID])
+                foreach (MenuItemData d in _menuItems[agentID])
                 {
                     if (d.Title == action)
                         d.Handler(action, agentID, selection);
                 }
             }
 
-            if (m_menuItems.ContainsKey(UUID.Zero))
+            if (_menuItems.ContainsKey(UUID.Zero))
             {
-                foreach (MenuItemData d in m_menuItems[UUID.Zero])
+                foreach (MenuItemData d in _menuItems[UUID.Zero])
                 {
                     if (d.Title == action)
                         d.Handler(action, agentID, selection);
@@ -236,15 +230,15 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
         public void AddMenuItem(UUID agentID, string title, InsertLocation location, UserMode mode, CustomMenuHandler handler)
         {
-            if (!m_menuItems.ContainsKey(agentID))
-                m_menuItems[agentID] = new List<MenuItemData>();
+            if (!_menuItems.ContainsKey(agentID))
+                _menuItems[agentID] = new List<MenuItemData>();
 
-            m_menuItems[agentID].Add(new MenuItemData() { Title = title, AgentID = agentID, Location = location, Mode = mode, Handler = handler });
+            _menuItems[agentID].Add(new MenuItemData() { Title = title, AgentID = agentID, Location = location, Mode = mode, Handler = handler });
         }
 
         public void RemoveMenuItem(string action)
         {
-            foreach (KeyValuePair<UUID,List< MenuItemData>> kvp in m_menuItems)
+            foreach (KeyValuePair<UUID,List< MenuItemData>> kvp in _menuItems)
             {
                 List<MenuItemData> pendingDeletes = new List<MenuItemData>();
                 foreach (MenuItemData d in kvp.Value)
@@ -261,19 +255,19 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
 
     public class MenuActionHandler : SimpleOSDMapHandler
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly UUID m_agentID;
-        private Scene m_scene;
-        private readonly DynamicMenuModule m_module;
+        private readonly UUID _agentID;
+        private Scene _scene;
+        private readonly DynamicMenuModule _module;
 
         public MenuActionHandler(string path, string name, UUID agentID, DynamicMenuModule module, Scene scene)
                 :base("POST", path)
         {
-            m_agentID = agentID;
-            m_scene = scene;
-            m_module = module;
+            _agentID = agentID;
+            _scene = scene;
+            _module = module;
         }
 
         protected override void ProcessRequest(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, OSDMap osd)
@@ -285,7 +279,7 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                 sel.Add(selection[i].AsUInteger());
 
             Util.FireAndForget(
-                x => { m_module.HandleMenuSelection(action, m_agentID, sel); }, null, "DynamicMenuModule.HandleMenuSelection");
+                x => { _module.HandleMenuSelection(action, _agentID, sel); }, null, "DynamicMenuModule.HandleMenuSelection");
 
             httpResponse.StatusCode = (int)HttpStatusCode.OK;
             //httpResponse.RawBuffer = Util.UTF8NBGetbytes("<llsd></llsd>");

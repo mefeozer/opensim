@@ -38,18 +38,18 @@ namespace OpenSim.Groups
 {
     public class GroupsServiceHGConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_ServerURI;
-        private readonly object m_Lock = new object();
+        private readonly string _ServerURI;
+        private readonly object _Lock = new object();
 
         public GroupsServiceHGConnector(string url)
         {
-            m_ServerURI = url;
-            if (!m_ServerURI.EndsWith("/"))
-                m_ServerURI += "/";
+            _ServerURI = url;
+            if (!_ServerURI.EndsWith("/"))
+                _ServerURI += "/";
 
-            m_log.DebugFormat("[Groups.HGConnector]: Groups server at {0}", m_ServerURI);
+            _log.DebugFormat("[Groups.HGConnector]: Groups server at {0}", _ServerURI);
         }
 
         public bool CreateProxy(string RequestingAgentID, string AgentID, string accessToken, UUID groupID, string url, string name, out string reason)
@@ -267,9 +267,9 @@ namespace OpenSim.Groups
             string reply = string.Empty;
             try
             {
-                lock (m_Lock)
+                lock (_Lock)
                     reply = SynchronousRestFormsRequester.MakeRequest("POST",
-                         m_ServerURI + "hg-groups",
+                         _ServerURI + "hg-groups",
                          ServerUtils.BuildQueryString(sendData));
             }
             catch
@@ -277,7 +277,7 @@ namespace OpenSim.Groups
                 return null;
             }
 
-            //m_log.DebugFormat("[XXX]: reply was {0}", reply);
+            //_log.DebugFormat("[XXX]: reply was {0}", reply);
 
             if (string.IsNullOrEmpty(reply))
                 return null;

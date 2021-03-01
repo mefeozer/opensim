@@ -2,10 +2,10 @@
 
 BEGIN Transaction;
 
-Create Sequence im_offiline_id increment by 1 start with 1;
+Create Sequence i_offiline_id increment by 1 start with 1;
 
-CREATE TABLE im_offline (
-  "ID" integer PRIMARY KEY NOT NULL DEFAULT nextval('im_offiline_id') ,
+CREATE TABLE i_offline (
+  "ID" integer PRIMARY KEY NOT NULL DEFAULT nextval('i_offiline_id') ,
   "PrincipalID" char(36) NOT NULL default '',
   "Message" text NOT NULL,
   "TMStamp" timestamp NOT NULL default now()
@@ -18,9 +18,9 @@ COMMIT;
 BEGIN;
 
 /*
-INSERT INTO `im_offline` SELECT * from `diva_im_offline`;
-DROP TABLE `diva_im_offline`;
-DELETE FROM `migrations` WHERE name='diva_im_Store';
+INSERT INTO `i_offline` SELECT * from `diva_i_offline`;
+DROP TABLE `diva_i_offline`;
+DELETE FROM `migrations` WHERE name='diva_i_Store';
 */
 
 COMMIT;
@@ -31,8 +31,8 @@ BEGIN;
 
 -- dropping the table here as there most likely is only one record in the table at the time of migration
 
-DROP TABLE IF EXISTS "public"."im_offline";
-CREATE TABLE "public"."im_offline" (
+DROP TABLE IF EXISTS "public"."i_offline";
+CREATE TABLE "public"."i_offline" (
 	"ID" serial,
 	"PrincipalID" uuid NOT NULL,
 	"Message" text NOT NULL COLLATE "default",
@@ -40,6 +40,6 @@ CREATE TABLE "public"."im_offline" (
 	"FromID" uuid NOT NULL
 )
 WITH (OIDS=FALSE);
-ALTER TABLE "public"."im_offline" ADD PRIMARY KEY ("ID","PrincipalID","FromID") NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE "public"."i_offline" ADD PRIMARY KEY ("ID","PrincipalID","FromID") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
 COMMIT;

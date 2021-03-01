@@ -46,16 +46,13 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "UploadObjectAssetModule")]
     public class UploadObjectAssetModule : INonSharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Scene m_scene;
+        private Scene _scene;
 
         #region Region Module interfaceBase Members
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -63,18 +60,18 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void AddRegion(Scene pScene)
         {
-            m_scene = pScene;
+            _scene = pScene;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            m_scene.EventManager.OnRegisterCaps -= RegisterCaps;
-            m_scene = null;
+            _scene.EventManager.OnRegisterCaps -= RegisterCaps;
+            _scene = null;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            m_scene.EventManager.OnRegisterCaps += RegisterCaps;
+            _scene.EventManager.OnRegisterCaps += RegisterCaps;
         }
 
         #endregion
@@ -84,7 +81,7 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void Close() { }
 
-        public string Name { get { return "UploadObjectAssetModuleModule"; } }
+        public string Name => "UploadObjectAssetModuleModule";
 
 
         public void RegisterCaps(UUID agentID, Caps caps)
@@ -94,7 +91,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 {
                     ProcessAdd(httpRequest, httpResponse, map, agentID, caps);
                 }));
-            // m_log.Debug("[UPLOAD OBJECT ASSET MODULE]: /CAPS/" + capID);
+            // _log.Debug("[UPLOAD OBJECT ASSET MODULE]: /CAPS/" + capID);
         }
 
         #endregion
@@ -111,7 +108,7 @@ namespace OpenSim.Region.ClientStack.Linden
         {
             httpResponse.KeepAlive = false;
 
-            if (!m_scene.TryGetScenePresence(agentID, out ScenePresence avatar))
+            if (!_scene.TryGetScenePresence(agentID, out ScenePresence avatar))
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.Gone;
                 return;
@@ -125,7 +122,7 @@ namespace OpenSim.Region.ClientStack.Linden
             }
             catch (Exception ex)
             {
-                m_log.Error("[UPLOAD OBJECT ASSET MODULE]: Error deserializing message " + ex.ToString());
+                _log.Error("[UPLOAD OBJECT ASSET MODULE]: Error deserializing message " + ex.ToString());
                 message = null;
             }
 
@@ -270,16 +267,16 @@ namespace OpenSim.Region.ClientStack.Linden
 
                         rootGroup = grp;
 
-                    grp.AttachToScene(m_scene);
+                    grp.AttachToScene(_scene);
                     grp.AbsolutePosition = obj.Position;
                     prim.RotationOffset = obj.Rotation;
 
                     // Required for linking
                     grp.RootPart.ClearUpdateSchedule();
 
-                    if (m_scene.Permissions.CanRezObject(1, avatar.UUID, pos))
+                    if (_scene.Permissions.CanRezObject(1, avatar.UUID, pos))
                     {
-                        m_scene.AddSceneObject(grp);
+                        _scene.AddSceneObject(grp);
                         grp.AbsolutePosition = obj.Position;
                     }
 

@@ -50,7 +50,7 @@ namespace OpenSim.Framework.Monitoring
     /// </remarks>
     public static class WorkManager
     {
-        private static readonly ILog m_log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public static JobEngine JobEngine { get; }
 
@@ -171,7 +171,7 @@ namespace OpenSim.Framework.Monitoring
                 }
                 catch (Exception e)
                 {
-                    m_log.Error(string.Format("[WATCHDOG]: Exception in thread {0}.", name), e);
+                    _log.Error(string.Format("[WATCHDOG]: Exception in thread {0}.", name), e);
                 }
                 finally
                 {
@@ -202,7 +202,7 @@ namespace OpenSim.Framework.Monitoring
 
         private static void HandleControlCommand(string module, string[] args)
         {
-            //            if (SceneManager.Instance.CurrentScene != null && SceneManager.Instance.CurrentScene != m_udpServer.Scene)
+            //            if (SceneManager.Instance.CurrentScene != null && SceneManager.Instance.CurrentScene != _udpServer.Scene)
             //                return;
 
             if (args.Length < 3)

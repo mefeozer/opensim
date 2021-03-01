@@ -35,7 +35,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     public sealed class BSCharacter : BSPhysObject
 {
-    private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     private static readonly string LogHeader = "[BULLETS CHAR]";
 
     // private bool _stopped;
@@ -57,7 +57,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     private OMV.Vector3 _size;
     private readonly float _footOffset;
 
-    private BSActorAvatarMove m_moveActor;
+    private BSActorAvatarMove _moveActor;
     private const string AvatarMoveActorName = "BSCharacter.AvatarMove";
 
     private OMV.Vector3 _PIDTarget;
@@ -73,7 +73,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 //        }
 
     // Avatars are always complete (in the physics engine sense)
-    public override bool IsIncomplete { get { return false; } }
+    public override bool IsIncomplete => false;
 
     public BSCharacter(
             uint localID, string avName, BSScene parent_scene, OMV.Vector3 pos, OMV.Vector3 vel, OMV.Vector3 size, float footOffset, bool isFlying)
@@ -112,8 +112,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             //    the avatar seeking to reach the motor's target speed.
             // This motor runs as a prestep action for the avatar so it will keep the avatar
             //    standing as well as moving. Destruction of the avatar will destroy the pre-step action.
-            m_moveActor = new BSActorAvatarMove(PhysScene, this, AvatarMoveActorName);
-            PhysicalActors.Add(AvatarMoveActorName, m_moveActor);
+            _moveActor = new BSActorAvatarMove(PhysScene, this, AvatarMoveActorName);
+            PhysicalActors.Add(AvatarMoveActorName, _moveActor);
 
             SetPhysicalProperties();
 
@@ -146,8 +146,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         ForcePosition = RawPosition;
 
         // Set the velocity
-        if (m_moveActor != null)
-            m_moveActor.SetVelocityAndTarget(RawVelocity, RawVelocity, false);
+        if (_moveActor != null)
+            _moveActor.SetVelocityAndTarget(RawVelocity, RawVelocity, false);
 
         ForceVelocity = RawVelocity;
         TargetVelocity = RawVelocity;
@@ -197,17 +197,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     }
 
     // No one calls this method so I don't know what it could possibly mean
-    public override bool Stopped { get { return false; } }
+    public override bool Stopped => false;
 
     public override OMV.Vector3 Size {
-        get
-        {
-            return _size;
-        }
+        get => _size;
 
-        set {
-            setAvatarSize(value, _footOffset);
-        }
+        set => setAvatarSize(value, _footOffset);
     }
 
     // OpenSim 0.9 introduces a common avatar size computation
@@ -265,19 +260,16 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         public override PrimitiveBaseShape Shape
     {
-        set { BaseShape = value; }
-    }
+        set => BaseShape = value;
+        }
 
     public override bool Grabbed {
-        set { _grabbed = value; }
+        set => _grabbed = value;
     }
     public override bool Selected {
-        set { _selected = value; }
+        set => _selected = value;
     }
-    public override bool IsSelected
-    {
-        get { return _selected; }
-    }
+    public override bool IsSelected => _selected;
     public override void CrossingFailure() { return; }
     public override void link(PhysicsActor obj) { return; }
     public override void delink() { return; }
@@ -320,11 +312,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public override void LockAngularMotion(byte axislocks) { return; }
 
     public override OMV.Vector3 Position {
-        get {
+        get =>
             // Don't refetch the position because this function is called a zillion times
             // RawPosition = PhysicsScene.PE.GetObjectPosition(Scene.World, LocalID);
-            return RawPosition;
-        }
+            RawPosition;
         set {
             RawPosition = value;
 
@@ -409,12 +400,11 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         return ret;
     }
 
-    public override float Mass { get { return _mass; } }
+    public override float Mass => _mass;
 
     // used when we only want this prim's mass and not the linkset thing
-    public override float RawMass {
-        get {return _mass; }
-    }
+    public override float RawMass => _mass;
+
     public override void UpdatePhysicalMassProperties(float physMass, bool inWorld)
     {
         OMV.Vector3 localInertia = PhysScene.PE.CalculateLocalInertia(PhysShape.physShapeInfo, physMass);
@@ -422,10 +412,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     }
 
     public override OMV.Vector3 Force {
-        get { return RawForce; }
+        get => RawForce;
         set {
             RawForce = value;
-            // m_log.DebugFormat("{0}: Force = {1}", LogHeader, _force);
+            // _log.DebugFormat("{0}: Force = {1}", LogHeader, _force);
             PhysScene.TaintedObject(LocalID, "BSCharacter.SetForce", delegate()
             {
                 DetailLog("{0},BSCharacter.setForce,taint,force={1}", LocalID, RawForce);
@@ -436,7 +426,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     }
 
     // Avatars don't do vehicles
-    public override int VehicleType { get { return (int)Vehicle.TYPE_NONE; } set { return; } }
+    public override int VehicleType { get => (int)Vehicle.TYPE_NONE;
+        set { return; } }
     public override void VehicleFloatParam(int param, float value) { }
     public override void VehicleVectorParam(int param, OMV.Vector3 value) {}
     public override void VehicleRotationParam(int param, OMV.Quaternion rotation) { }
@@ -444,19 +435,16 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     // Allows the detection of collisions with inherently non-physical prims. see llVolumeDetect for more
     public override void SetVolumeDetect(int param) { return; }
-    public override bool IsVolumeDetect { get { return false; } }
+    public override bool IsVolumeDetect => false;
 
-    public override OMV.Vector3 GeometricCenter { get { return OMV.Vector3.Zero; } }
-    public override OMV.Vector3 CenterOfMass { get { return OMV.Vector3.Zero; } }
+    public override OMV.Vector3 GeometricCenter => OMV.Vector3.Zero;
+    public override OMV.Vector3 CenterOfMass => OMV.Vector3.Zero;
 
     // PhysicsActor.TargetVelocity
     // Sets the target in the motor. This starts the changing of the avatar's velocity.
     public override OMV.Vector3 TargetVelocity
     {
-        get
-        {
-            return base.m_targetVelocity;
-        }
+        get => base._targetVelocity;
         set
         {
             DetailLog("{0},BSCharacter.setTargetVelocity,call,vel={1}", LocalID, value);
@@ -469,20 +457,20 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     if (BSParam.AvatarWalkVelocityFactor != 1f)
                         targetVel *= new OMV.Vector3(BSParam.AvatarWalkVelocityFactor, BSParam.AvatarWalkVelocityFactor, 1f);
             }
-            base.m_targetVelocity = targetVel;
+            base._targetVelocity = targetVel;
 
-            if (m_moveActor != null)
-                m_moveActor.SetVelocityAndTarget(RawVelocity, base.m_targetVelocity, false /* inTaintTime */);
+            if (_moveActor != null)
+                _moveActor.SetVelocityAndTarget(RawVelocity, base._targetVelocity, false /* inTaintTime */);
         }
     }
     // Directly setting velocity means this is what the user really wants now.
     public override OMV.Vector3 Velocity {
-        get { return RawVelocity; }
+        get => RawVelocity;
         set {
-            if (m_moveActor != null)
+            if (_moveActor != null)
             {
-                // m_moveActor.SetVelocityAndTarget(OMV.Vector3.Zero, OMV.Vector3.Zero, false /* inTaintTime */);
-                m_moveActor.SetVelocityAndTarget(RawVelocity, RawVelocity, false /* inTaintTime */);
+                // _moveActor.SetVelocityAndTarget(OMV.Vector3.Zero, OMV.Vector3.Zero, false /* inTaintTime */);
+                _moveActor.SetVelocityAndTarget(RawVelocity, RawVelocity, false /* inTaintTime */);
             }
             base.Velocity = value;
         }
@@ -491,16 +479,16 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // SetMomentum just sets the velocity without a target. We need to stop the movement actor if a character.
     public override void SetMomentum(OMV.Vector3 momentum)
     {
-        if (m_moveActor != null)
+        if (_moveActor != null)
         {
-            // m_moveActor.SetVelocityAndTarget(OMV.Vector3.Zero, OMV.Vector3.Zero, false /* inTaintTime */);
-            m_moveActor.SetVelocityAndTarget(RawVelocity, RawVelocity, false /* inTaintTime */);
+            // _moveActor.SetVelocityAndTarget(OMV.Vector3.Zero, OMV.Vector3.Zero, false /* inTaintTime */);
+            _moveActor.SetVelocityAndTarget(RawVelocity, RawVelocity, false /* inTaintTime */);
         }
         base.SetMomentum(momentum);
     }
 
     public override OMV.Vector3 ForceVelocity {
-        get { return RawVelocity; }
+        get => RawVelocity;
         set {
             DetailLog("{0},BSCharacter.ForceVelocity.set={1}", LocalID, value);
 
@@ -511,22 +499,20 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     }
 
     public override OMV.Vector3 Torque {
-        get { return RawTorque; }
-        set { RawTorque = value;
-        }
+        get => RawTorque;
+        set => RawTorque = value;
     }
 
     public override float CollisionScore {
-        get { return _collisionScore; }
-        set { _collisionScore = value;
-        }
+        get => _collisionScore;
+        set => _collisionScore = value;
     }
     public override OMV.Vector3 Acceleration {
-        get { return _acceleration; }
-        set { _acceleration = value; }
+        get => _acceleration;
+        set => _acceleration = value;
     }
     public override OMV.Quaternion Orientation {
-        get { return RawOrientation; }
+        get => RawOrientation;
         set {
             // Orientation is set zillions of times when an avatar is walking. It's like
             //      the viewer doesn't trust us.
@@ -569,26 +555,21 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         }
     }
     public override int PhysicsActorType {
-        get { return _physicsActorType; }
-        set { _physicsActorType = value;
-        }
+        get => _physicsActorType;
+        set => _physicsActorType = value;
     }
     public override bool IsPhysical {
-        get { return _isPhysical; }
-        set { _isPhysical = value;
-        }
+        get => _isPhysical;
+        set => _isPhysical = value;
     }
-    public override bool IsSolid {
-        get { return true; }
-    }
-    public override bool IsStatic {
-        get { return false; }
-    }
-    public override bool IsPhysicallyActive {
-        get { return true; }
-    }
+    public override bool IsSolid => true;
+
+    public override bool IsStatic => false;
+
+    public override bool IsPhysicallyActive => true;
+
     public override bool Flying {
-        get { return _flying; }
+        get => _flying;
         set {
             _flying = value;
 
@@ -603,12 +584,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     }
     public override bool
         SetAlwaysRun {
-        get { return _setAlwaysRun; }
-        set { _setAlwaysRun = value; }
+        get => _setAlwaysRun;
+        set => _setAlwaysRun = value;
     }
     public override bool ThrottleUpdates {
-        get { return _throttleUpdates; }
-        set { _throttleUpdates = value; }
+        get => _throttleUpdates;
+        set => _throttleUpdates = value;
     }
     public override bool FloatOnWater {
         set {
@@ -626,12 +607,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         }
     }
     public override bool Kinematic {
-        get { return _kinematic; }
-        set { _kinematic = value; }
+        get => _kinematic;
+        set => _kinematic = value;
     }
     // neg=fall quickly, 0=1g, 1=0g, pos=float up
     public override float Buoyancy {
-        get { return _buoyancy; }
+        get => _buoyancy;
         set { _buoyancy = value;
             PhysScene.TaintedObject(LocalID, "BSCharacter.setBuoyancy", delegate()
             {
@@ -641,7 +622,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         }
     }
     public override float ForceBuoyancy {
-        get { return _buoyancy; }
+        get => _buoyancy;
         set {
             _buoyancy = value;
             DetailLog("{0},BSCharacter.setForceBuoyancy,taint,buoy={1}", LocalID, _buoyancy);
@@ -655,13 +636,13 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     // Used for MoveTo
     public override OMV.Vector3 PIDTarget {
-        set { _PIDTarget = value; }
+        set => _PIDTarget = value;
     }
 
     public override bool PIDActive { get; set; }
 
     public override float PIDTau {
-        set { _PIDTau = value; }
+        set => _PIDTau = value;
     }
 
     public override void AddForce(OMV.Vector3 force, bool pushforce)
@@ -698,15 +679,15 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     PhysScene.PE.ApplyCentralForce(PhysBody, addForce);
                     PhysScene.PE.Activate(PhysBody, true);
                 }
-                if (m_moveActor != null)
+                if (_moveActor != null)
                 {
-                    m_moveActor.SuppressStationayCheckUntilLowVelocity(BSParam.AvatarAddForceFrames);
+                    _moveActor.SuppressStationayCheckUntilLowVelocity(BSParam.AvatarAddForceFrames);
                 }
             });
         }
         else
         {
-            m_log.WarnFormat("{0}: Got a NaN force applied to a character. LocalID={1}", LogHeader, LocalID);
+            _log.WarnFormat("{0}: Got a NaN force applied to a character. LocalID={1}", LogHeader, LocalID);
             return;
         }
     }
@@ -765,7 +746,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             {
                 newScale.Z = size.Z + heightAdjust;
             }
-            // m_log.DebugFormat("{0} ComputeAvatarScale: size={1},adj={2},scale={3}", LogHeader, size, heightAdjust, newScale);
+            // _log.DebugFormat("{0} ComputeAvatarScale: size={1},adj={2},scale={3}", LogHeader, size, heightAdjust, newScale);
 
             // If smaller than the endcaps, just fake like we're almost that small
             if (newScale.Z < 0)

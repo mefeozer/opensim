@@ -45,33 +45,33 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
         /// <summary>
         /// A raw array of bytes that we'll use to create an IAR memory stream suitable for isolated use in each test.
         /// </summary>
-        protected byte[] m_iarStreamBytes;
+        protected byte[] _iarStreamBytes;
 
         /// <summary>
         /// Stream of data representing a common IAR for load tests.
         /// </summary>
-        protected MemoryStream m_iarStream;
+        protected MemoryStream _iarStream;
 
-        protected UserAccount m_uaMT
+        protected UserAccount _uaMT
             = new UserAccount {
                 PrincipalID = UUID.Parse("00000000-0000-0000-0000-000000000555"),
                 FirstName = "Mr",
                 LastName = "Tiddles" };
 
-        protected UserAccount m_uaLL1
+        protected UserAccount _uaLL1
             = new UserAccount {
                 PrincipalID = UUID.Parse("00000000-0000-0000-0000-000000000666"),
                 FirstName = "Lord",
                 LastName = "Lucan" };
 
-        protected UserAccount m_uaLL2
+        protected UserAccount _uaLL2
             = new UserAccount {
                 PrincipalID = UUID.Parse("00000000-0000-0000-0000-000000000777"),
                 FirstName = "Lord",
                 LastName = "Lucan" };
 
-        protected string m_item1Name = "Ray Gun Item";
-        protected string m_coaItemName = "Coalesced Item";
+        protected string _item1Name = "Ray Gun Item";
+        protected string _coaItemName = "Coalesced Item";
 
         [TestFixtureSetUp]
         public void FixtureSetup()
@@ -95,7 +95,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
         public override void SetUp()
         {
             base.SetUp();
-            m_iarStream = new MemoryStream(m_iarStreamBytes);
+            _iarStream = new MemoryStream(_iarStreamBytes);
         }
 
         protected void ConstructDefaultIarBytesForTestLoad()
@@ -106,7 +106,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             Scene scene = new SceneHelpers().SetupScene();
             SceneHelpers.SetupSceneModules(scene, archiverModule);
 
-            UserAccountHelpers.CreateUserWithInventory(scene, m_uaLL1, "hampshire");
+            UserAccountHelpers.CreateUserWithInventory(scene, _uaLL1, "hampshire");
 
             MemoryStream archiveWriteStream = new MemoryStream();
 
@@ -121,24 +121,24 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             // Create scene object item
             InventoryItemBase item1 = new InventoryItemBase
             {
-                Name = m_item1Name,
+                Name = _item1Name,
                 ID = UUID.Parse("00000000-0000-0000-0000-000000000020"),
                 AssetID = asset1.FullID,
                 GroupID = UUID.Random(),
-                CreatorId = m_uaLL1.PrincipalID.ToString(),
-                Owner = m_uaLL1.PrincipalID,
-                Folder = scene.InventoryService.GetRootFolder(m_uaLL1.PrincipalID).ID
+                CreatorId = _uaLL1.PrincipalID.ToString(),
+                Owner = _uaLL1.PrincipalID,
+                Folder = scene.InventoryService.GetRootFolder(_uaLL1.PrincipalID).ID
             };
             scene.AddInventoryItem(item1);
 
             // Create coalesced objects asset
-            SceneObjectGroup cobj1 = SceneHelpers.CreateSceneObject(1, m_uaLL1.PrincipalID, "Object1", 0x120);
+            SceneObjectGroup cobj1 = SceneHelpers.CreateSceneObject(1, _uaLL1.PrincipalID, "Object1", 0x120);
             cobj1.AbsolutePosition = new Vector3(15, 30, 45);
 
-            SceneObjectGroup cobj2 = SceneHelpers.CreateSceneObject(1, m_uaLL1.PrincipalID, "Object2", 0x140);
+            SceneObjectGroup cobj2 = SceneHelpers.CreateSceneObject(1, _uaLL1.PrincipalID, "Object2", 0x140);
             cobj2.AbsolutePosition = new Vector3(25, 50, 75);
 
-            CoalescedSceneObjects coa = new CoalescedSceneObjects(m_uaLL1.PrincipalID, cobj1, cobj2);
+            CoalescedSceneObjects coa = new CoalescedSceneObjects(_uaLL1.PrincipalID, cobj1, cobj2);
 
             AssetBase coaAsset = AssetHelpers.CreateAsset(0x160, coa);
             scene.AssetService.Store(coaAsset);
@@ -146,20 +146,20 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             // Create coalesced objects inventory item
             InventoryItemBase coaItem = new InventoryItemBase
             {
-                Name = m_coaItemName,
+                Name = _coaItemName,
                 ID = UUID.Parse("00000000-0000-0000-0000-000000000180"),
                 AssetID = coaAsset.FullID,
                 GroupID = UUID.Random(),
-                CreatorId = m_uaLL1.PrincipalID.ToString(),
-                Owner = m_uaLL1.PrincipalID,
-                Folder = scene.InventoryService.GetRootFolder(m_uaLL1.PrincipalID).ID
+                CreatorId = _uaLL1.PrincipalID.ToString(),
+                Owner = _uaLL1.PrincipalID,
+                Folder = scene.InventoryService.GetRootFolder(_uaLL1.PrincipalID).ID
             };
             scene.AddInventoryItem(coaItem);
 
             archiverModule.ArchiveInventory(
-                UUID.Random(), m_uaLL1.FirstName, m_uaLL1.LastName, "/*", "hampshire", archiveWriteStream);
+                UUID.Random(), _uaLL1.FirstName, _uaLL1.LastName, "/*", "hampshire", archiveWriteStream);
 
-            m_iarStreamBytes = archiveWriteStream.ToArray();
+            _iarStreamBytes = archiveWriteStream.ToArray();
         }
 
         protected void SaveCompleted(

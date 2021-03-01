@@ -35,9 +35,9 @@ namespace OpenSim.Services.AssetService
 {
     public class AssetServiceBase : ServiceBase
     {
-        protected IAssetDataPlugin m_Database = null;
-        protected IAssetLoader m_AssetLoader = null;
-        protected string m_ConfigName = "AssetService";
+        protected IAssetDataPlugin _Database = null;
+        protected IAssetLoader _AssetLoader = null;
+        protected string _ConfigName = "AssetService";
 
         public AssetServiceBase(IConfigSource config)
             : this(config, "AssetService")
@@ -47,7 +47,7 @@ namespace OpenSim.Services.AssetService
         public AssetServiceBase(IConfigSource config, string configName) : base(config)
         {
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
             string dllName = string.Empty;
             string connString = string.Empty;
@@ -55,7 +55,7 @@ namespace OpenSim.Services.AssetService
             //
             // Try reading the [AssetService] section, if it exists
             //
-            IConfig assetConfig = config.Configs[m_ConfigName];
+            IConfig assetConfig = config.Configs[_ConfigName];
             if (assetConfig != null)
             {
                 dllName = assetConfig.GetString("StorageProvider", dllName);
@@ -80,20 +80,20 @@ namespace OpenSim.Services.AssetService
             if (dllName.Equals(string.Empty))
                 throw new Exception("No StorageProvider configured");
 
-            m_Database = LoadPlugin<IAssetDataPlugin>(dllName);
-            if (m_Database == null)
+            _Database = LoadPlugin<IAssetDataPlugin>(dllName);
+            if (_Database == null)
                 throw new Exception(string.Format("Could not find a storage interface in the module {0}", dllName));
 
-            m_Database.Initialise(connString);
+            _Database.Initialise(connString);
 
             string loaderName = assetConfig.GetString("DefaultAssetLoader",
                     string.Empty);
 
             if (!string.IsNullOrEmpty(loaderName))
             {
-                m_AssetLoader = LoadPlugin<IAssetLoader>(loaderName);
+                _AssetLoader = LoadPlugin<IAssetLoader>(loaderName);
 
-                if (m_AssetLoader == null)
+                if (_AssetLoader == null)
                     throw new Exception(string.Format("Asset loader could not be loaded from {0}", loaderName));
             }
         }

@@ -53,7 +53,7 @@ namespace OpenSim.Region.UserStatistics
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "WebStatsModule")]
     public class WebStatsModule : ISharedRegionModule
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static SqliteConnection dbConn;
@@ -61,17 +61,17 @@ namespace OpenSim.Region.UserStatistics
         /// <summary>
         /// User statistics sessions keyed by agent ID
         /// </summary>
-        private readonly Dictionary<UUID, UserSession> m_sessions = new Dictionary<UUID, UserSession>();
+        private readonly Dictionary<UUID, UserSession> _sessions = new Dictionary<UUID, UserSession>();
 
-        private readonly List<Scene> m_scenes = new List<Scene>();
+        private readonly List<Scene> _scenes = new List<Scene>();
         private readonly Dictionary<string, IStatsController> reports = new Dictionary<string, IStatsController>();
-        private readonly Dictionary<UUID, USimStatsData> m_simstatsCounters = new Dictionary<UUID, USimStatsData>();
+        private readonly Dictionary<UUID, USimStatsData> _simstatsCounters = new Dictionary<UUID, USimStatsData>();
         private const int updateStatsMod = 6;
         private int updateLogMod = 1;
         private volatile int updateLogCounter = 0;
         private volatile int concurrencyCounter = 0;
         private bool enabled = false;
-        private string m_loglines = string.Empty;
+        private string _loglines = string.Empty;
         private volatile int lastHit = 12000;
 
         #region ISharedRegionModule
@@ -137,12 +137,12 @@ namespace OpenSim.Region.UserStatistics
             if (!enabled)
                 return;
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                m_scenes.Add(scene);
-                updateLogMod = m_scenes.Count * 2;
+                _scenes.Add(scene);
+                updateLogMod = _scenes.Count * 2;
 
-                m_simstatsCounters.Add(scene.RegionInfo.RegionID, new USimStatsData(scene.RegionInfo.RegionID));
+                _simstatsCounters.Add(scene.RegionInfo.RegionID, new USimStatsData(scene.RegionInfo.RegionID));
 
                 scene.EventManager.OnRegisterCaps += OnRegisterCaps;
                 scene.EventManager.OnDeregisterCaps += OnDeRegisterCaps;
@@ -161,11 +161,11 @@ namespace OpenSim.Region.UserStatistics
             if (!enabled)
                 return;
 
-            lock (m_scenes)
+            lock (_scenes)
             {
-                m_scenes.Remove(scene);
-                updateLogMod = m_scenes.Count * 2;
-                m_simstatsCounters.Remove(scene.RegionInfo.RegionID);
+                _scenes.Remove(scene);
+                updateLogMod = _scenes.Count * 2;
+                _simstatsCounters.Remove(scene.RegionInfo.RegionID);
             }
         }
 
@@ -176,21 +176,15 @@ namespace OpenSim.Region.UserStatistics
 
             dbConn.Close();
             dbConn.Dispose();
-            m_sessions.Clear();
-            m_scenes.Clear();
+            _sessions.Clear();
+            _scenes.Clear();
             reports.Clear();
-            m_simstatsCounters.Clear();
+            _simstatsCounters.Clear();
         }
 
-        public virtual string Name
-        {
-            get { return "ViewerStatsModule"; }
-        }
+        public virtual string Name => "ViewerStatsModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -209,17 +203,17 @@ namespace OpenSim.Region.UserStatistics
                 // We will conduct this under lock so that fields such as updateLogCounter do not potentially get
                 // confused if a scene is removed.
                 // XXX: Possibly the scope of this lock could be reduced though it's not critical.
-                lock (m_scenes)
+                lock (_scenes)
                 {
                     if (updateLogMod != 0 && updateLogCounter++ % updateLogMod == 0)
                     {
-                        m_loglines = readLogLines(10);
+                        _loglines = readLogLines(10);
 
                         if (updateLogCounter > 10000)
                             updateLogCounter = 1;
                     }
 
-                    USimStatsData ss = m_simstatsCounters[stats.RegionUUID];
+                    USimStatsData ss = _simstatsCounters[stats.RegionUUID];
 
                     if (++ss.StatsCounter % updateStatsMod == 0)
                     {
@@ -282,9 +276,9 @@ namespace OpenSim.Region.UserStatistics
 
 
                 repParams["DatabaseConnection"] = dbConn;
-                repParams["Scenes"] = m_scenes;
-                repParams["SimStats"] = m_simstatsCounters;
-                repParams["LogLines"] = m_loglines;
+                repParams["Scenes"] = _scenes;
+                repParams["SimStats"] = _simstatsCounters;
+                repParams["LogLines"] = _loglines;
                 repParams["Reports"] = reports;
 
                 concurrencyCounter++;
@@ -336,7 +330,7 @@ namespace OpenSim.Region.UserStatistics
 
         private void OnRegisterCaps(UUID agentID, Caps caps)
         {
-//            m_log.DebugFormat("[WEB STATS MODULE]: OnRegisterCaps: agentID {0} caps {1}", agentID, caps);
+//            _log.DebugFormat("[WEB STATS MODULE]: OnRegisterCaps: agentID {0} caps {1}", agentID, caps);
 
             string capsPath = "/" + UUID.Random();
             caps.RegisterHandler(
@@ -356,10 +350,10 @@ namespace OpenSim.Region.UserStatistics
 
         protected virtual void AddEventHandlers()
         {
-            lock (m_scenes)
+            lock (_scenes)
             {
-                updateLogMod = m_scenes.Count * 2;
-                foreach (Scene scene in m_scenes)
+                updateLogMod = _scenes.Count * 2;
+                foreach (Scene scene in _scenes)
                 {
                     scene.EventManager.OnRegisterCaps += OnRegisterCaps;
                     scene.EventManager.OnDeregisterCaps += OnDeRegisterCaps;
@@ -371,15 +365,15 @@ namespace OpenSim.Region.UserStatistics
 
         private void OnMakeRootAgent(ScenePresence agent)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[WEB STATS MODULE]: Looking for session {0} for {1} in {2}",
 //                agent.ControllingClient.SessionId, agent.Name, agent.Scene.Name);
 
-            lock (m_sessions)
+            lock (_sessions)
             {
                 UserSession uid;
 
-                if (!m_sessions.ContainsKey(agent.UUID))
+                if (!_sessions.ContainsKey(agent.UUID))
                 {
                     UserSessionData usd = UserSessionUtil.newUserSessionData();
                     uid = new UserSession
@@ -389,11 +383,11 @@ namespace OpenSim.Region.UserStatistics
                         session_data = usd
                     };
 
-                    m_sessions.Add(agent.UUID, uid);
+                    _sessions.Add(agent.UUID, uid);
                 }
                 else
                 {
-                    uid = m_sessions[agent.UUID];
+                    uid = _sessions[agent.UUID];
                 }
 
                 uid.region_id = agent.Scene.RegionInfo.RegionID;
@@ -403,11 +397,11 @@ namespace OpenSim.Region.UserStatistics
 
         private void OnClientClosed(UUID agentID, Scene scene)
         {
-            lock (m_sessions)
+            lock (_sessions)
             {
-                if (m_sessions.ContainsKey(agentID) && m_sessions[agentID].region_id == scene.RegionInfo.RegionID)
+                if (_sessions.ContainsKey(agentID) && _sessions[agentID].region_id == scene.RegionInfo.RegionID)
                 {
-                    m_sessions.Remove(agentID);
+                    _sessions.Remove(agentID);
                 }
             }
         }
@@ -462,7 +456,7 @@ namespace OpenSim.Region.UserStatistics
         private string ViewerStatsReport(string request, string path, string param,
                                       UUID agentID, Caps caps)
         {
-//            m_log.DebugFormat("[WEB STATS MODULE]: Received viewer starts report from {0}", agentID);
+//            _log.DebugFormat("[WEB STATS MODULE]: Received viewer starts report from {0}", agentID);
 
             UpdateUserStats(ParseViewerStats(request, agentID), dbConn);
 
@@ -476,19 +470,19 @@ namespace OpenSim.Region.UserStatistics
             OSD message = OSDParser.DeserializeLLSDXml(request);
             OSDMap mmap;
 
-            lock (m_sessions)
+            lock (_sessions)
             {
                 if (agentID != UUID.Zero)
                 {
-                    if (!m_sessions.ContainsKey(agentID))
+                    if (!_sessions.ContainsKey(agentID))
                     {
-                        m_log.WarnFormat("[WEB STATS MODULE]: no session for stat disclosure for agent {0}", agentID);
+                        _log.WarnFormat("[WEB STATS MODULE]: no session for stat disclosure for agent {0}", agentID);
                         return new UserSession();
                     }
 
-                    uid = m_sessions[agentID];
+                    uid = _sessions[agentID];
 
-//                    m_log.DebugFormat("[WEB STATS MODULE]: Got session {0} for {1}", uid.session_id, agentID);
+//                    _log.DebugFormat("[WEB STATS MODULE]: Got session {0} for {1}", uid.session_id, agentID);
                 }
                 else
                 {
@@ -505,13 +499,13 @@ namespace OpenSim.Region.UserStatistics
 
 
                         // search through each session looking for the owner
-                        foreach (UUID usersessionid in m_sessions.Keys)
+                        foreach (UUID usersessionid in _sessions.Keys)
                         {
                             // got it!
-                            if (m_sessions[usersessionid].session_id == sessionID)
+                            if (_sessions[usersessionid].session_id == sessionID)
                             {
                                 agentID = usersessionid;
-                                uid = m_sessions[usersessionid];
+                                uid = _sessions[usersessionid];
                                 break;
                             }
 
@@ -541,7 +535,7 @@ namespace OpenSim.Region.UserStatistics
                 usd.name_l = uid.name_l;
                 usd.region_id = uid.region_id;
                 usd.a_language = agent_map["language"].AsString();
-                usd.mem_use = (float)agent_map["mem_use"].AsReal();
+                usd.me_use = (float)agent_map["me_use"].AsReal();
                 usd.meters_traveled = (float)agent_map["meters_traveled"].AsReal();
                 usd.regions_visited = agent_map["regions_visited"].AsInteger();
                 usd.run_time = (float)agent_map["run_time"].AsReal();
@@ -550,7 +544,7 @@ namespace OpenSim.Region.UserStatistics
 
                 UserSessionUtil.UpdateMultiItems(ref usd, agent_map["agents_in_view"].AsInteger(),
                                                  (float)agent_map["ping"].AsReal(),
-                                                 (float)agent_map["sim_fps"].AsReal(),
+                                                 (float)agent_map["si_fps"].AsReal(),
                                                  (float)agent_map["fps"].AsReal());
 
                 if (mmap["downloads"].Type != OSDType.Map)
@@ -560,18 +554,18 @@ namespace OpenSim.Region.UserStatistics
                 usd.d_texture_kb = (float)downloads_map["texture_kbytes"].AsReal();
                 usd.d_world_kb = (float)downloads_map["workd_kbytes"].AsReal();
 
-//                m_log.DebugFormat("[WEB STATS MODULE]: mmap[\"session_id\"] = [{0}]", mmap["session_id"].AsUUID());
+//                _log.DebugFormat("[WEB STATS MODULE]: mmap[\"session_id\"] = [{0}]", mmap["session_id"].AsUUID());
 
                 usd.session_id = mmap["session_id"].AsUUID();
 
                 if (mmap["system"].Type != OSDType.Map)
                     return new UserSession();
-                OSDMap system_map = (OSDMap)mmap["system"];
+                OSDMap syste_map = (OSDMap)mmap["system"];
 
-                usd.s_cpu = system_map["cpu"].AsString();
-                usd.s_gpu = system_map["gpu"].AsString();
-                usd.s_os = system_map["os"].AsString();
-                usd.s_ram = system_map["ram"].AsInteger();
+                usd.s_cpu = syste_map["cpu"].AsString();
+                usd.s_gpu = syste_map["gpu"].AsString();
+                usd.s_os = syste_map["os"].AsString();
+                usd.s_ram = syste_map["ram"].AsInteger();
 
                 if (mmap["stats"].Type != OSDType.Map)
                     return new UserSession();
@@ -610,9 +604,9 @@ namespace OpenSim.Region.UserStatistics
             }
 
             uid.session_data = usd;
-            m_sessions[agentID] = uid;
+            _sessions[agentID] = uid;
 
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[WEB STATS MODULE]: Parse data for {0} {1}, session {2}", uid.name_f, uid.name_l, uid.session_id);
 
             return uid;
@@ -620,7 +614,7 @@ namespace OpenSim.Region.UserStatistics
 
         private void UpdateUserStats(UserSession uid, SqliteConnection db)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[WEB STATS MODULE]: Updating user stats for {0} {1}, session {2}", uid.name_f, uid.name_l, uid.session_id);
 
             if (uid.session_id == UUID.Zero)
@@ -649,7 +643,7 @@ namespace OpenSim.Region.UserStatistics
                     updatecmd.Parameters.Add(new SqliteParameter(":max_fps", uid.session_data.max_fps));
                     updatecmd.Parameters.Add(new SqliteParameter(":mode_fps", uid.session_data.mode_fps));
                     updatecmd.Parameters.Add(new SqliteParameter(":a_language", uid.session_data.a_language));
-                    updatecmd.Parameters.Add(new SqliteParameter(":mem_use", uid.session_data.mem_use));
+                    updatecmd.Parameters.Add(new SqliteParameter(":me_use", uid.session_data.me_use));
                     updatecmd.Parameters.Add(new SqliteParameter(":meters_traveled", uid.session_data.meters_traveled));
                     updatecmd.Parameters.Add(new SqliteParameter(":avg_ping", uid.session_data.avg_ping));
                     updatecmd.Parameters.Add(new SqliteParameter(":min_ping", uid.session_data.min_ping));
@@ -657,10 +651,10 @@ namespace OpenSim.Region.UserStatistics
                     updatecmd.Parameters.Add(new SqliteParameter(":mode_ping", uid.session_data.mode_ping));
                     updatecmd.Parameters.Add(new SqliteParameter(":regions_visited", uid.session_data.regions_visited));
                     updatecmd.Parameters.Add(new SqliteParameter(":run_time", uid.session_data.run_time));
-                    updatecmd.Parameters.Add(new SqliteParameter(":avg_sim_fps", uid.session_data.avg_sim_fps));
-                    updatecmd.Parameters.Add(new SqliteParameter(":min_sim_fps", uid.session_data.min_sim_fps));
-                    updatecmd.Parameters.Add(new SqliteParameter(":max_sim_fps", uid.session_data.max_sim_fps));
-                    updatecmd.Parameters.Add(new SqliteParameter(":mode_sim_fps", uid.session_data.mode_sim_fps));
+                    updatecmd.Parameters.Add(new SqliteParameter(":avg_si_fps", uid.session_data.avg_si_fps));
+                    updatecmd.Parameters.Add(new SqliteParameter(":min_si_fps", uid.session_data.min_si_fps));
+                    updatecmd.Parameters.Add(new SqliteParameter(":max_si_fps", uid.session_data.max_si_fps));
+                    updatecmd.Parameters.Add(new SqliteParameter(":mode_si_fps", uid.session_data.mode_si_fps));
                     updatecmd.Parameters.Add(new SqliteParameter(":start_time", uid.session_data.start_time));
                     updatecmd.Parameters.Add(new SqliteParameter(":client_version", uid.session_data.client_version));
                     updatecmd.Parameters.Add(new SqliteParameter(":s_cpu", uid.session_data.s_cpu));
@@ -686,9 +680,9 @@ namespace OpenSim.Region.UserStatistics
 //                        foreach (SqliteParameter sp in spc)
 //                            parameters.AppendFormat("{0}={1},", sp.ParameterName, sp.Value);
 //
-//                        m_log.DebugFormat("[WEB STATS MODULE]: Parameters {0}", parameters);
+//                        _log.DebugFormat("[WEB STATS MODULE]: Parameters {0}", parameters);
 
-//                    m_log.DebugFormat("[WEB STATS MODULE]: Database stats update for {0}", uid.session_data.agent_id);
+//                    _log.DebugFormat("[WEB STATS MODULE]: Database stats update for {0}", uid.session_data.agent_id);
 
                     updatecmd.ExecuteNonQuery();
                 }
@@ -713,7 +707,7 @@ namespace OpenSim.Region.UserStatistics
                max_fps FLOAT NOT NULL DEFAULT '0',
                mode_fps FLOAT NOT NULL DEFAULT '0',
                a_language VARCHAR(25) NOT NULL DEFAULT '',
-               mem_use FLOAT NOT NULL DEFAULT '0',
+               me_use FLOAT NOT NULL DEFAULT '0',
                meters_traveled FLOAT NOT NULL DEFAULT '0',
                avg_ping FLOAT NOT NULL DEFAULT '0',
                min_ping FLOAT NOT NULL DEFAULT '0',
@@ -721,10 +715,10 @@ namespace OpenSim.Region.UserStatistics
                mode_ping FLOAT NOT NULL DEFAULT '0',
                regions_visited INT NOT NULL DEFAULT '0',
                run_time FLOAT NOT NULL DEFAULT '0',
-               avg_sim_fps FLOAT NOT NULL DEFAULT '0',
-               min_sim_fps FLOAT NOT NULL DEFAULT '0',
-               max_sim_fps FLOAT NOT NULL DEFAULT '0',
-               mode_sim_fps FLOAT NOT NULL DEFAULT '0',
+               avg_si_fps FLOAT NOT NULL DEFAULT '0',
+               min_si_fps FLOAT NOT NULL DEFAULT '0',
+               max_si_fps FLOAT NOT NULL DEFAULT '0',
+               mode_si_fps FLOAT NOT NULL DEFAULT '0',
                start_time FLOAT NOT NULL DEFAULT '0',
                client_version VARCHAR(255) NOT NULL DEFAULT '',
                s_cpu VARCHAR(255) NOT NULL DEFAULT '',
@@ -748,16 +742,16 @@ namespace OpenSim.Region.UserStatistics
 
         private const string SQL_STATS_TABLE_INSERT = @"INSERT OR REPLACE INTO stats_session_data (
 session_id, agent_id, region_id, last_updated, remote_ip, name_f, name_l, avg_agents_in_view, min_agents_in_view, max_agents_in_view,
-mode_agents_in_view, avg_fps, min_fps, max_fps, mode_fps, a_language, mem_use, meters_traveled, avg_ping, min_ping, max_ping, mode_ping,
-regions_visited, run_time, avg_sim_fps, min_sim_fps, max_sim_fps, mode_sim_fps, start_time, client_version, s_cpu, s_gpu, s_os, s_ram,
+mode_agents_in_view, avg_fps, min_fps, max_fps, mode_fps, a_language, me_use, meters_traveled, avg_ping, min_ping, max_ping, mode_ping,
+regions_visited, run_time, avg_si_fps, min_si_fps, max_si_fps, mode_si_fps, start_time, client_version, s_cpu, s_gpu, s_os, s_ram,
 d_object_kb, d_texture_kb, d_world_kb, n_in_kb, n_in_pk, n_out_kb, n_out_pk, f_dropped, f_failed_resends, f_invalid, f_off_circuit,
 f_resent, f_send_packet
 )
 VALUES
 (
 :session_id, :agent_id, :region_id, :last_updated, :remote_ip, :name_f, :name_l, :avg_agents_in_view, :min_agents_in_view, :max_agents_in_view,
-:mode_agents_in_view, :avg_fps, :min_fps, :max_fps, :mode_fps, :a_language, :mem_use, :meters_traveled, :avg_ping, :min_ping, :max_ping, :mode_ping,
-:regions_visited, :run_time, :avg_sim_fps, :min_sim_fps, :max_sim_fps, :mode_sim_fps, :start_time, :client_version, :s_cpu, :s_gpu, :s_os, :s_ram,
+:mode_agents_in_view, :avg_fps, :min_fps, :max_fps, :mode_fps, :a_language, :me_use, :meters_traveled, :avg_ping, :min_ping, :max_ping, :mode_ping,
+:regions_visited, :run_time, :avg_si_fps, :min_si_fps, :max_si_fps, :mode_si_fps, :start_time, :client_version, :s_cpu, :s_gpu, :s_os, :s_ram,
 :d_object_kb, :d_texture_kb, :d_world_kb, :n_in_kb, :n_in_pk, :n_out_kb, :n_out_pk, :f_dropped, :f_failed_resends, :f_invalid, :f_off_circuit,
 :f_resent, :f_send_packet
 )
@@ -775,14 +769,14 @@ VALUES
             return obj;
         }
 
-        public static void UpdateMultiItems(ref UserSessionData s, int agents_in_view, float ping, float sim_fps, float fps)
+        public static void UpdateMultiItems(ref UserSessionData s, int agents_in_view, float ping, float si_fps, float fps)
         {
             // don't insert zero values here or it'll skew the statistics.
-            if (agents_in_view == 0 && fps == 0 && sim_fps == 0 && ping == 0)
+            if (agents_in_view == 0 && fps == 0 && si_fps == 0 && ping == 0)
                 return;
             s._agents_in_view.Add(agents_in_view);
             s._fps.Add(fps);
-            s._sim_fps.Add(sim_fps);
+            s._si_fps.Add(si_fps);
             s._ping.Add(ping);
 
             int[] __agents_in_view = s._agents_in_view.ToArray();
@@ -798,11 +792,11 @@ VALUES
             s.max_fps = ArrayMax_f(__fps);
             s.mode_fps = ArrayMode_f(__fps);
 
-            float[] __sim_fps = s._sim_fps.ToArray();
-            s.avg_sim_fps = ArrayAvg_f(__sim_fps);
-            s.min_sim_fps = ArrayMin_f(__sim_fps);
-            s.max_sim_fps = ArrayMax_f(__sim_fps);
-            s.mode_sim_fps = ArrayMode_f(__sim_fps);
+            float[] __si_fps = s._si_fps.ToArray();
+            s.avg_si_fps = ArrayAvg_f(__si_fps);
+            s.min_si_fps = ArrayMin_f(__si_fps);
+            s.max_si_fps = ArrayMax_f(__si_fps);
+            s.mode_si_fps = ArrayMode_f(__si_fps);
 
             float[] __ping = s._ping.ToArray();
             s.avg_ping = ArrayAvg_f(__ping);
@@ -1013,7 +1007,7 @@ VALUES
             s.max_fps = 0;
             s.mode_fps = 0;
             s.a_language = "";
-            s.mem_use = 0;
+            s.me_use = 0;
             s.meters_traveled = 0;
             s.avg_ping = 0;
             s.min_ping = 0;
@@ -1021,10 +1015,10 @@ VALUES
             s.mode_ping = 0;
             s.regions_visited = 0;
             s.run_time = 0;
-            s.avg_sim_fps = 0;
-            s.min_sim_fps = 0;
-            s.max_sim_fps = 0;
-            s.mode_sim_fps = 0;
+            s.avg_si_fps = 0;
+            s.min_si_fps = 0;
+            s.max_si_fps = 0;
+            s.mode_si_fps = 0;
             s.start_time = 0;
             s.client_version = "";
             s.s_cpu = "";
@@ -1046,7 +1040,7 @@ VALUES
             s.f_send_packet = 0;
             s._ping = new List<float>();
             s._fps = new List<float>();
-            s._sim_fps = new List<float>();
+            s._si_fps = new List<float>();
             s._agents_in_view = new List<int>();
             return s;
         }
@@ -1080,7 +1074,7 @@ VALUES
         public float max_fps;
         public float mode_fps;
         public string a_language;
-        public float mem_use;
+        public float me_use;
         public float meters_traveled;
         public float avg_ping;
         public float min_ping;
@@ -1088,10 +1082,10 @@ VALUES
         public float mode_ping;
         public int regions_visited;
         public float run_time;
-        public float avg_sim_fps;
-        public float min_sim_fps;
-        public float max_sim_fps;
-        public float mode_sim_fps;
+        public float avg_si_fps;
+        public float min_si_fps;
+        public float max_si_fps;
+        public float mode_si_fps;
         public float start_time;
         public string client_version;
         public string s_cpu;
@@ -1113,7 +1107,7 @@ VALUES
         public int f_send_packet;
         public List<float> _ping;
         public List<float> _fps;
-        public List<float> _sim_fps;
+        public List<float> _si_fps;
         public List<int> _agents_in_view;
     }
 
@@ -1121,83 +1115,85 @@ VALUES
 
     public class USimStatsData
     {
-        private UUID m_regionID = UUID.Zero;
-        private volatile int m_statcounter = 0;
-        private volatile float m_timeDilation;
-        private volatile float m_simFps;
-        private volatile float m_physicsFps;
-        private volatile float m_agentUpdates;
-        private volatile float m_rootAgents;
-        private volatile float m_childAgents;
-        private volatile float m_totalPrims;
-        private volatile float m_activePrims;
-        private volatile float m_totalFrameTime;
-        private volatile float m_netFrameTime;
-        private volatile float m_physicsFrameTime;
-        private volatile float m_otherFrameTime;
-        private volatile float m_imageFrameTime;
-        private volatile float m_inPacketsPerSecond;
-        private volatile float m_outPacketsPerSecond;
-        private volatile float m_unackedBytes;
-        private volatile float m_agentFrameTime;
-        private volatile float m_pendingDownloads;
-        private volatile float m_pendingUploads;
-        private volatile float m_activeScripts;
-        private volatile float m_scriptLinesPerSecond;
+        private UUID _regionID = UUID.Zero;
+        private volatile int _statcounter = 0;
+        private volatile float _timeDilation;
+        private volatile float _simFps;
+        private volatile float _physicsFps;
+        private volatile float _agentUpdates;
+        private volatile float _rootAgents;
+        private volatile float _childAgents;
+        private volatile float _totalPrims;
+        private volatile float _activePrims;
+        private volatile float _totalFrameTime;
+        private volatile float _netFrameTime;
+        private volatile float _physicsFrameTime;
+        private volatile float _otherFrameTime;
+        private volatile float _imageFrameTime;
+        private volatile float _inPacketsPerSecond;
+        private volatile float _outPacketsPerSecond;
+        private volatile float _unackedBytes;
+        private volatile float _agentFrameTime;
+        private volatile float _pendingDownloads;
+        private volatile float _pendingUploads;
+        private volatile float _activeScripts;
+        private volatile float _scriptLinesPerSecond;
 
-        public UUID RegionId { get { return m_regionID; } }
-        public int StatsCounter { get { return m_statcounter; } set { m_statcounter = value;}}
-        public float TimeDilation { get { return m_timeDilation; } }
-        public float SimFps { get { return m_simFps; } }
-        public float PhysicsFps { get { return m_physicsFps; } }
-        public float AgentUpdates { get { return m_agentUpdates; } }
-        public float RootAgents { get { return m_rootAgents; } }
-        public float ChildAgents { get { return m_childAgents; } }
-        public float TotalPrims { get { return m_totalPrims; } }
-        public float ActivePrims { get { return m_activePrims; } }
-        public float TotalFrameTime { get { return m_totalFrameTime; } }
-        public float NetFrameTime { get { return m_netFrameTime; } }
-        public float PhysicsFrameTime { get { return m_physicsFrameTime; } }
-        public float OtherFrameTime { get { return m_otherFrameTime; } }
-        public float ImageFrameTime { get { return m_imageFrameTime; } }
-        public float InPacketsPerSecond { get { return m_inPacketsPerSecond; } }
-        public float OutPacketsPerSecond { get { return m_outPacketsPerSecond; } }
-        public float UnackedBytes { get { return m_unackedBytes; } }
-        public float AgentFrameTime { get { return m_agentFrameTime; } }
-        public float PendingDownloads { get { return m_pendingDownloads; } }
-        public float PendingUploads { get { return m_pendingUploads; } }
-        public float ActiveScripts { get { return m_activeScripts; } }
-        public float ScriptLinesPerSecond { get { return m_scriptLinesPerSecond; } }
+        public UUID RegionId => _regionID;
+        public int StatsCounter { get => _statcounter;
+            set => _statcounter = value;
+        }
+        public float TimeDilation => _timeDilation;
+        public float SimFps => _simFps;
+        public float PhysicsFps => _physicsFps;
+        public float AgentUpdates => _agentUpdates;
+        public float RootAgents => _rootAgents;
+        public float ChildAgents => _childAgents;
+        public float TotalPrims => _totalPrims;
+        public float ActivePrims => _activePrims;
+        public float TotalFrameTime => _totalFrameTime;
+        public float NetFrameTime => _netFrameTime;
+        public float PhysicsFrameTime => _physicsFrameTime;
+        public float OtherFrameTime => _otherFrameTime;
+        public float ImageFrameTime => _imageFrameTime;
+        public float InPacketsPerSecond => _inPacketsPerSecond;
+        public float OutPacketsPerSecond => _outPacketsPerSecond;
+        public float UnackedBytes => _unackedBytes;
+        public float AgentFrameTime => _agentFrameTime;
+        public float PendingDownloads => _pendingDownloads;
+        public float PendingUploads => _pendingUploads;
+        public float ActiveScripts => _activeScripts;
+        public float ScriptLinesPerSecond => _scriptLinesPerSecond;
 
         public USimStatsData(UUID pRegionID)
         {
-            m_regionID = pRegionID;
+            _regionID = pRegionID;
         }
 
         public void ConsumeSimStats(SimStats stats)
         {
-            m_regionID = stats.RegionUUID;
-            m_timeDilation = stats.StatsBlock[0].StatValue;
-            m_simFps = stats.StatsBlock[1].StatValue;
-            m_physicsFps = stats.StatsBlock[2].StatValue;
-            m_agentUpdates = stats.StatsBlock[3].StatValue;
-            m_rootAgents = stats.StatsBlock[4].StatValue;
-            m_childAgents = stats.StatsBlock[5].StatValue;
-            m_totalPrims = stats.StatsBlock[6].StatValue;
-            m_activePrims = stats.StatsBlock[7].StatValue;
-            m_totalFrameTime = stats.StatsBlock[8].StatValue;
-            m_netFrameTime = stats.StatsBlock[9].StatValue;
-            m_physicsFrameTime = stats.StatsBlock[10].StatValue;
-            m_otherFrameTime = stats.StatsBlock[11].StatValue;
-            m_imageFrameTime = stats.StatsBlock[12].StatValue;
-            m_inPacketsPerSecond = stats.StatsBlock[13].StatValue;
-            m_outPacketsPerSecond = stats.StatsBlock[14].StatValue;
-            m_unackedBytes = stats.StatsBlock[15].StatValue;
-            m_agentFrameTime = stats.StatsBlock[16].StatValue;
-            m_pendingDownloads = stats.StatsBlock[17].StatValue;
-            m_pendingUploads = stats.StatsBlock[18].StatValue;
-            m_activeScripts = stats.StatsBlock[19].StatValue;
-            m_scriptLinesPerSecond = stats.ExtraStatsBlock[0].StatValue;
+            _regionID = stats.RegionUUID;
+            _timeDilation = stats.StatsBlock[0].StatValue;
+            _simFps = stats.StatsBlock[1].StatValue;
+            _physicsFps = stats.StatsBlock[2].StatValue;
+            _agentUpdates = stats.StatsBlock[3].StatValue;
+            _rootAgents = stats.StatsBlock[4].StatValue;
+            _childAgents = stats.StatsBlock[5].StatValue;
+            _totalPrims = stats.StatsBlock[6].StatValue;
+            _activePrims = stats.StatsBlock[7].StatValue;
+            _totalFrameTime = stats.StatsBlock[8].StatValue;
+            _netFrameTime = stats.StatsBlock[9].StatValue;
+            _physicsFrameTime = stats.StatsBlock[10].StatValue;
+            _otherFrameTime = stats.StatsBlock[11].StatValue;
+            _imageFrameTime = stats.StatsBlock[12].StatValue;
+            _inPacketsPerSecond = stats.StatsBlock[13].StatValue;
+            _outPacketsPerSecond = stats.StatsBlock[14].StatValue;
+            _unackedBytes = stats.StatsBlock[15].StatValue;
+            _agentFrameTime = stats.StatsBlock[16].StatValue;
+            _pendingDownloads = stats.StatsBlock[17].StatValue;
+            _pendingUploads = stats.StatsBlock[18].StatValue;
+            _activeScripts = stats.StatsBlock[19].StatValue;
+            _scriptLinesPerSecond = stats.ExtraStatsBlock[0].StatValue;
         }
     }
 }

@@ -42,26 +42,23 @@ namespace OpenSim.Data.PGSQL
     /// </summary>
     public class PGSQLRegionData : IRegionData
     {
-        private readonly string m_Realm;
-        private List<string> m_ColumnNames = null;
-        private readonly string m_ConnectionString;
-        private readonly PGSQLManager m_database;
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly string _Realm;
+        private List<string> _ColumnNames = null;
+        private readonly string _ConnectionString;
+        private readonly PGSQLManager _database;
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Dictionary<string, string> m_FieldTypes = new Dictionary<string, string>();
+        protected Dictionary<string, string> _FieldTypes = new Dictionary<string, string>();
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         public PGSQLRegionData(string connectionString, string realm)
         {
-            m_Realm = realm;
-            m_ConnectionString = connectionString;
-            m_database = new PGSQLManager(connectionString);
+            _Realm = realm;
+            _ConnectionString = connectionString;
+            _database = new PGSQLManager(connectionString);
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             {
                 conn.Open();
                 Migration m = new Migration(conn, GetType().Assembly, "GridStore");
@@ -72,14 +69,14 @@ namespace OpenSim.Data.PGSQL
 
         private void LoadFieldTypes()
         {
-            m_FieldTypes = new Dictionary<string, string>();
+            _FieldTypes = new Dictionary<string, string>();
 
             string query = string.Format(@"select column_name,data_type
                         from INFORMATION_SCHEMA.COLUMNS
                        where table_name = lower('{0}');
 
-                ", m_Realm);
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+                ", _Realm);
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(query, conn))
             {
                 conn.Open();
@@ -88,7 +85,7 @@ namespace OpenSim.Data.PGSQL
                     while (rdr.Read())
                     {
                         // query produces 0 to many rows of single column, so always add the first item in each row
-                        m_FieldTypes.Add((string)rdr[0], (string)rdr[1]);
+                        _FieldTypes.Add((string)rdr[0], (string)rdr[1]);
                     }
                 }
             }
@@ -96,17 +93,17 @@ namespace OpenSim.Data.PGSQL
 
         public List<RegionData> Get(string regionName, UUID scopeID)
         {
-            string sql = "select * from "+m_Realm+" where lower(\"regionName\") like lower(:regionName) ";
+            string sql = "select * from "+_Realm+" where lower(\"regionName\") like lower(:regionName) ";
             if (scopeID != UUID.Zero)
                 sql += " and \"ScopeID\" = :scopeID";
             sql += " order by lower(\"regionName\")";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("regionName", regionName));
+                cmd.Parameters.Add(_database.CreateParameter("regionName", regionName));
                 if (scopeID != UUID.Zero)
-                    cmd.Parameters.Add(m_database.CreateParameter("scopeID", scopeID));
+                    cmd.Parameters.Add(_database.CreateParameter("scopeID", scopeID));
                 conn.Open();
                 return RunCommand(cmd);
             }
@@ -114,16 +111,16 @@ namespace OpenSim.Data.PGSQL
 
         public RegionData GetSpecific(string regionName, UUID scopeID)
         {
-            string sql = "select * from " + m_Realm + " where lower(\"regionName\") = lower(:regionName) ";
+            string sql = "select * from " + _Realm + " where lower(\"regionName\") = lower(:regionName) ";
             if (scopeID != UUID.Zero)
                 sql += " and \"ScopeID\" = :scopeID";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("regionName", regionName));
+                cmd.Parameters.Add(_database.CreateParameter("regionName", regionName));
                 if (scopeID != UUID.Zero)
-                    cmd.Parameters.Add(m_database.CreateParameter("scopeID", scopeID));
+                    cmd.Parameters.Add(_database.CreateParameter("scopeID", scopeID));
                 conn.Open();
                 List<RegionData> ret = RunCommand(cmd);
                 if (ret.Count == 0)
@@ -136,7 +133,7 @@ namespace OpenSim.Data.PGSQL
         public RegionData Get(int posX, int posY, UUID scopeID)
         {
             // extend database search for maximum region size area
-            string sql = "select * from "+m_Realm+" where \"locX\" between :startX and :endX and \"locY\" between :startY and :endY";
+            string sql = "select * from "+_Realm+" where \"locX\" between :startX and :endX and \"locY\" between :startY and :endY";
             if (scopeID != UUID.Zero)
                 sql += " and \"ScopeID\" = :scopeID";
 
@@ -146,15 +143,15 @@ namespace OpenSim.Data.PGSQL
             int endY = posY;
 
             List<RegionData> ret;
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("startX", startX));
-                cmd.Parameters.Add(m_database.CreateParameter("startY", startY));
-                cmd.Parameters.Add(m_database.CreateParameter("endX", endX));
-                cmd.Parameters.Add(m_database.CreateParameter("endY", endY));
+                cmd.Parameters.Add(_database.CreateParameter("startX", startX));
+                cmd.Parameters.Add(_database.CreateParameter("startY", startY));
+                cmd.Parameters.Add(_database.CreateParameter("endX", endX));
+                cmd.Parameters.Add(_database.CreateParameter("endY", endY));
                 if (scopeID != UUID.Zero)
-                    cmd.Parameters.Add(m_database.CreateParameter("scopeID", scopeID));
+                    cmd.Parameters.Add(_database.CreateParameter("scopeID", scopeID));
                 conn.Open();
                 ret = RunCommand(cmd);
             }
@@ -179,15 +176,15 @@ namespace OpenSim.Data.PGSQL
 
         public RegionData Get(UUID regionID, UUID scopeID)
         {
-            string sql = "select * from "+m_Realm+" where uuid = :regionID";
+            string sql = "select * from "+_Realm+" where uuid = :regionID";
             if (scopeID != UUID.Zero)
                 sql += " and \"ScopeID\" = :scopeID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("regionID", regionID));
+                cmd.Parameters.Add(_database.CreateParameter("regionID", regionID));
                 if (scopeID != UUID.Zero)
-                    cmd.Parameters.Add(m_database.CreateParameter("scopeID", scopeID));
+                    cmd.Parameters.Add(_database.CreateParameter("scopeID", scopeID));
                 conn.Open();
                 List<RegionData> ret = RunCommand(cmd);
                 if (ret.Count == 0)
@@ -200,7 +197,7 @@ namespace OpenSim.Data.PGSQL
         public List<RegionData> Get(int startX, int startY, int endX, int endY, UUID scopeID)
         {
             // extend database search for maximum region size area
-            string sql = "select * from "+m_Realm+" where \"locX\" between :startX and :endX and \"locY\" between :startY and :endY";
+            string sql = "select * from "+_Realm+" where \"locX\" between :startX and :endX and \"locY\" between :startY and :endY";
             if (scopeID != UUID.Zero)
                 sql += " and \"ScopeID\" = :scopeID";
 
@@ -208,15 +205,15 @@ namespace OpenSim.Data.PGSQL
             int qstartY = startY - (int)Constants.MaximumRegionSize;
 
             List<RegionData> dbret;
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("startX", qstartX));
-                cmd.Parameters.Add(m_database.CreateParameter("startY", qstartY));
-                cmd.Parameters.Add(m_database.CreateParameter("endX", endX));
-                cmd.Parameters.Add(m_database.CreateParameter("endY", endY));
+                cmd.Parameters.Add(_database.CreateParameter("startX", qstartX));
+                cmd.Parameters.Add(_database.CreateParameter("startY", qstartY));
+                cmd.Parameters.Add(_database.CreateParameter("endX", endX));
+                cmd.Parameters.Add(_database.CreateParameter("endY", endY));
                 if (scopeID != UUID.Zero)
-                    cmd.Parameters.Add(m_database.CreateParameter("scopeID", scopeID));
+                    cmd.Parameters.Add(_database.CreateParameter("scopeID", scopeID));
                 conn.Open();
 
                 dbret = RunCommand(cmd);
@@ -261,16 +258,16 @@ namespace OpenSim.Data.PGSQL
                 ret.sizeX = Convert.ToInt32(result["sizeX"]);
                 ret.sizeY = Convert.ToInt32(result["sizeY"]);
 
-                if (m_ColumnNames == null)
+                if (_ColumnNames == null)
                 {
-                    m_ColumnNames = new List<string>();
+                    _ColumnNames = new List<string>();
 
                     DataTable schemaTable = result.GetSchemaTable();
                     foreach (DataRow row in schemaTable.Rows)
-                        m_ColumnNames.Add(row["ColumnName"].ToString());
+                        _ColumnNames.Add(row["ColumnName"].ToString());
                 }
 
-                foreach (string s in m_ColumnNames)
+                foreach (string s in _ColumnNames)
                 {
                     if (s == "uuid")
                         continue;
@@ -314,11 +311,11 @@ namespace OpenSim.Data.PGSQL
 
             string[] fields = new List<string>(data.Data.Keys).ToArray();
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
 
-                string update = "update " + m_Realm + " set \"locX\"=:posX, \"locY\"=:posY, \"sizeX\"=:sizeX, \"sizeY\"=:sizeY ";
+                string update = "update " + _Realm + " set \"locX\"=:posX, \"locY\"=:posY, \"sizeX\"=:sizeX, \"sizeY\"=:sizeY ";
 
                 foreach (string field in fields)
                 {
@@ -326,10 +323,10 @@ namespace OpenSim.Data.PGSQL
                     update += ", ";
                     update += " \"" + field + "\" = :" + field;
 
-                    if (m_FieldTypes.ContainsKey(field))
-                        cmd.Parameters.Add(m_database.CreateParameter(field, data.Data[field], m_FieldTypes[field]));
+                    if (_FieldTypes.ContainsKey(field))
+                        cmd.Parameters.Add(_database.CreateParameter(field, data.Data[field], _FieldTypes[field]));
                     else
-                        cmd.Parameters.Add(m_database.CreateParameter(field, data.Data[field]));
+                        cmd.Parameters.Add(_database.CreateParameter(field, data.Data[field]));
                 }
 
                 update += " where uuid = :regionID";
@@ -339,19 +336,19 @@ namespace OpenSim.Data.PGSQL
 
                 cmd.CommandText = update;
                 cmd.Connection = conn;
-                cmd.Parameters.Add(m_database.CreateParameter("regionID", data.RegionID));
-                cmd.Parameters.Add(m_database.CreateParameter("regionName", data.RegionName));
-                cmd.Parameters.Add(m_database.CreateParameter("scopeID", data.ScopeID));
-                cmd.Parameters.Add(m_database.CreateParameter("posX", data.posX));
-                cmd.Parameters.Add(m_database.CreateParameter("posY", data.posY));
-                cmd.Parameters.Add(m_database.CreateParameter("sizeX", data.sizeX));
-                cmd.Parameters.Add(m_database.CreateParameter("sizeY", data.sizeY));
+                cmd.Parameters.Add(_database.CreateParameter("regionID", data.RegionID));
+                cmd.Parameters.Add(_database.CreateParameter("regionName", data.RegionName));
+                cmd.Parameters.Add(_database.CreateParameter("scopeID", data.ScopeID));
+                cmd.Parameters.Add(_database.CreateParameter("posX", data.posX));
+                cmd.Parameters.Add(_database.CreateParameter("posY", data.posY));
+                cmd.Parameters.Add(_database.CreateParameter("sizeX", data.sizeX));
+                cmd.Parameters.Add(_database.CreateParameter("sizeY", data.sizeY));
                 conn.Open();
                 try
                 {
                     if (cmd.ExecuteNonQuery() < 1)
                     {
-                        string insert = "insert into " + m_Realm + " (uuid, \"ScopeID\", \"locX\", \"locY\", \"sizeX\", \"sizeY\", \"regionName\", \"" +
+                        string insert = "insert into " + _Realm + " (uuid, \"ScopeID\", \"locX\", \"locY\", \"sizeX\", \"sizeY\", \"regionName\", \"" +
                                 string.Join("\", \"", fields) +
                                 "\") values (:regionID, :scopeID, :posX, :posY, :sizeX, :sizeY, :regionName, :" + string.Join(", :", fields) + ")";
 
@@ -366,13 +363,13 @@ namespace OpenSim.Data.PGSQL
                         }
                         catch (Exception ex)
                         {
-                            m_log.Warn("[PGSQL Grid]: Error inserting into Regions table: " + ex.Message + ", INSERT sql: " + insert);
+                            _log.Warn("[PGSQL Grid]: Error inserting into Regions table: " + ex.Message + ", INSERT sql: " + insert);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    m_log.Warn("[PGSQL Grid]: Error updating Regions table: " + ex.Message + ", UPDATE sql: " + update);
+                    _log.Warn("[PGSQL Grid]: Error updating Regions table: " + ex.Message + ", UPDATE sql: " + update);
                 }
             }
 
@@ -381,14 +378,14 @@ namespace OpenSim.Data.PGSQL
 
         public bool SetDataItem(UUID regionID, string item, string value)
         {
-            string sql = "update " + m_Realm +
+            string sql = "update " + _Realm +
                     " set \"" + item + "\" = :" + item + " where uuid = :UUID";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("" + item, value));
-                cmd.Parameters.Add(m_database.CreateParameter("UUID", regionID));
+                cmd.Parameters.Add(_database.CreateParameter("" + item, value));
+                cmd.Parameters.Add(_database.CreateParameter("UUID", regionID));
                 conn.Open();
                 if (cmd.ExecuteNonQuery() > 0)
                     return true;
@@ -398,12 +395,12 @@ namespace OpenSim.Data.PGSQL
 
         public bool Delete(UUID regionID)
         {
-            string sql = "delete from " + m_Realm +
+            string sql = "delete from " + _Realm +
                     " where uuid = :UUID";
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("UUID", regionID));
+                cmd.Parameters.Add(_database.CreateParameter("UUID", regionID));
                 conn.Open();
                 if (cmd.ExecuteNonQuery() > 0)
                     return true;
@@ -437,14 +434,14 @@ namespace OpenSim.Data.PGSQL
 
         private List<RegionData> Get(int regionFlags, UUID scopeID)
         {
-            string sql = "SELECT * FROM " + m_Realm + " WHERE (\"flags\" & " + regionFlags.ToString() + ") <> 0";
+            string sql = "SELECT * FROM " + _Realm + " WHERE (\"flags\" & " + regionFlags.ToString() + ") <> 0";
             if (scopeID != UUID.Zero)
                 sql += " AND \"ScopeID\" = :scopeID";
 
-            using (NpgsqlConnection conn = new NpgsqlConnection(m_ConnectionString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_ConnectionString))
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.Add(m_database.CreateParameter("scopeID", scopeID));
+                cmd.Parameters.Add(_database.CreateParameter("scopeID", scopeID));
                 conn.Open();
                 return RunCommand(cmd);
             }

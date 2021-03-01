@@ -39,23 +39,23 @@ namespace OpenSim.Tests.Common
     /// </summary>
     public class TestLandChannel : ILandChannel
     {
-        private readonly Scene m_scene;
-        private readonly List<ILandObject> m_parcels;
+        private readonly Scene _scene;
+        private readonly List<ILandObject> _parcels;
 
-        public float BanLineSafeHeight { get { return 100f; } }
+        public float BanLineSafeHeight => 100f;
 
         public TestLandChannel(Scene scene)
         {
-            m_scene = scene;
-            m_parcels = new List<ILandObject>();
+            _scene = scene;
+            _parcels = new List<ILandObject>();
             SetupDefaultParcel();
         }
 
         private void SetupDefaultParcel()
         {
-            ILandObject obj = new LandObject(UUID.Zero, false, m_scene);
+            ILandObject obj = new LandObject(UUID.Zero, false, _scene);
             obj.LandData.Name = "Your Parcel";
-            m_parcels.Add(obj);
+            _parcels.Add(obj);
         }
 
         public List<ILandObject> ParcelsNearPoint(Vector3 position)
@@ -65,12 +65,12 @@ namespace OpenSim.Tests.Common
 
         public List<ILandObject> AllParcels()
         {
-            return m_parcels;
+            return _parcels;
         }
 
         public void Clear(bool setupDefaultParcel)
         {
-            m_parcels.Clear();
+            _parcels.Clear();
 
             if (setupDefaultParcel)
                 SetupDefaultParcel();
@@ -78,7 +78,7 @@ namespace OpenSim.Tests.Common
 
         protected ILandObject GetNoLand()
         {
-            ILandObject obj = new LandObject(UUID.Zero, false, m_scene);
+            ILandObject obj = new LandObject(UUID.Zero, false, _scene);
             obj.LandData.Name = "NO LAND";
             return obj;
         }

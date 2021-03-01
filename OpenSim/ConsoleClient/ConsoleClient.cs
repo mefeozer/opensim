@@ -38,18 +38,18 @@ namespace OpenSim.ConsoleClient
 {
     public class OpenSimConsoleClient
     {
-        protected static ServicesServerBase m_Server = null;
-        private static string m_Host;
-        private static int m_Port;
-        private static string m_User;
-        private static string m_Pass;
-        private static UUID m_SessionID;
+        protected static ServicesServerBase _Server = null;
+        private static string _Host;
+        private static int _Port;
+        private static string _User;
+        private static string _Pass;
+        private static UUID _SessionID;
 
         static int Main(string[] args)
         {
-            m_Server = new ServicesServerBase("Client", args);
+            _Server = new ServicesServerBase("Client", args);
 
-            IConfig serverConfig = m_Server.Config.Configs["Startup"];
+            IConfig serverConfig = _Server.Config.Configs["Startup"];
             if (serverConfig == null)
             {
                 System.Console.WriteLine("Startup config section missing in .ini file");
@@ -63,18 +63,18 @@ namespace OpenSim.ConsoleClient
             argvConfig.AddSwitch("Startup", "user", "u");
             argvConfig.AddSwitch("Startup", "pass", "P");
 
-            m_Server.Config.Merge(argvConfig);
+            _Server.Config.Merge(argvConfig);
 
-            m_User = serverConfig.GetString("user", "Test");
-            m_Host = serverConfig.GetString("host", "localhost");
-            m_Port = serverConfig.GetInt("port", 8003);
-            m_Pass = serverConfig.GetString("pass", "secret");
+            _User = serverConfig.GetString("user", "Test");
+            _Host = serverConfig.GetString("host", "localhost");
+            _Port = serverConfig.GetInt("port", 8003);
+            _Pass = serverConfig.GetString("pass", "secret");
 
-            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/StartSession/", string.Format("USER={0}&PASS={1}", m_User, m_Pass), LoginReply);
+            Requester.MakeRequest("http://"+_Host+":"+_Port.ToString()+"/StartSession/", string.Format("USER={0}&PASS={1}", _User, _Pass), LoginReply);
 
             string pidFile = serverConfig.GetString("PIDFile", string.Empty);
 
-            while (m_Server.Running)
+            while (_Server.Running)
             {
                 System.Threading.Thread.Sleep(500);
                 MainConsole.Instance.Prompt();
@@ -101,7 +101,7 @@ namespace OpenSim.ConsoleClient
                 sendCmd += " \"" + string.Join("\" \"", cmdlist) + "\"";
             }
 
-            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/SessionCommand/", string.Format("ID={0}&COMMAND={1}", m_SessionID, sendCmd), CommandReply);
+            Requester.MakeRequest("http://"+_Host+":"+_Port.ToString()+"/SessionCommand/", string.Format("ID={0}&COMMAND={1}", _SessionID, sendCmd), CommandReply);
         }
 
         public static void LoginReply(string requestUrl, string requestData, string replyData)
@@ -152,7 +152,7 @@ namespace OpenSim.ConsoleClient
                 Environment.Exit(1);
             }
 
-            if (!UUID.TryParse(sessionNode.InnerText, out m_SessionID))
+            if (!UUID.TryParse(sessionNode.InnerText, out _SessionID))
             {
                 MainConsole.Instance.Output("Connection data info was not valid");
                 Environment.Exit(1);
@@ -160,7 +160,7 @@ namespace OpenSim.ConsoleClient
 
             MainConsole.Instance.Commands.FromXml(helpNode, SendCommand);
 
-            Requester.MakeRequest("http://"+m_Host+":"+m_Port.ToString()+"/ReadResponses/"+m_SessionID.ToString()+"/", string.Empty, ReadResponses);
+            Requester.MakeRequest("http://"+_Host+":"+_Port.ToString()+"/ReadResponses/"+_SessionID.ToString()+"/", string.Empty, ReadResponses);
         }
 
         public static void ReadResponses(string requestUrl, string requestData, string replyData)

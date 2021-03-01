@@ -300,12 +300,9 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
             bs.Close();
         }
 
-        public string FileExtension
-        {
-            get { return ".ter"; }
-        }
+        public string FileExtension => ".ter";
 
-        public virtual void SaveFile(ITerrainChannel m_channel, string filename,
+        public virtual void SaveFile(ITerrainChannel _channel, string filename,
                              int offsetX, int offsetY,
                              int fileWidth, int fileHeight,
                              int regionSizeX, int regionSizeY)

@@ -38,7 +38,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     [Serializable]
 public class BSPrim : BSPhysObject
 {
-    protected static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    protected static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     private static readonly string LogHeader = "[BULLETS PRIM]";
 
     // _size is what the user passed. Scale is what we pass to the physics engine with the mesh.
@@ -78,7 +78,7 @@ public class BSPrim : BSPhysObject
                        OMV.Quaternion rotation, PrimitiveBaseShape pbs, bool pisPhysical)
             : base(parent_scene, localID, primName, "BSPrim")
     {
-        // m_log.DebugFormat("{0}: BSPrim creation of {1}, id={2}", LogHeader, primName, localID);
+        // _log.DebugFormat("{0}: BSPrim creation of {1}, id={2}", LogHeader, primName, localID);
         _physicsActorType = (int)ActorTypes.Prim;
         RawPosition = pos;
         _size = size;
@@ -112,7 +112,7 @@ public class BSPrim : BSPhysObject
     // called when this prim is being destroyed and we should free all the resources
     public override void Destroy()
     {
-        // m_log.DebugFormat("{0}: Destroy, id={1}", LogHeader, LocalID);
+        // _log.DebugFormat("{0}: Destroy, id={1}", LogHeader, LocalID);
         IsInitialized = false;
 
         base.Destroy();
@@ -132,15 +132,9 @@ public class BSPrim : BSPhysObject
     }
 
     // No one uses this property.
-    public override bool Stopped {
-        get { return false; }
-    }
+    public override bool Stopped => false;
 
-    public override bool IsIncomplete {
-        get {
-            return ShapeRebuildScheduled;
-        }
-    }
+    public override bool IsIncomplete => ShapeRebuildScheduled;
 
     // 'true' if this object's shape is in need of a rebuild and a rebuild has been queued.
     // The prim is still available but its underlying shape will change soon.
@@ -148,7 +142,7 @@ public class BSPrim : BSPhysObject
     public bool ShapeRebuildScheduled { get; protected set; }
 
     public override OMV.Vector3 Size {
-        get { return _size; }
+        get => _size;
         set {
             // We presume the scale and size are the same. If scale must be changed for
             //     the physical shape, that is done when the geometry is built.
@@ -200,8 +194,7 @@ public class BSPrim : BSPhysObject
         return true;
     }
     public override bool Grabbed {
-        set { _grabbed = value;
-        }
+        set => _grabbed = value;
     }
     public override bool Selected {
         set
@@ -217,10 +210,7 @@ public class BSPrim : BSPhysObject
             }
         }
     }
-    public override bool IsSelected
-    {
-        get { return _isSelected; }
-    }
+    public override bool IsSelected => _isSelected;
 
     public override void CrossingFailure()
     {
@@ -231,7 +221,7 @@ public class BSPrim : BSPhysObject
         }
         else if (CrossingFailures == BSParam.CrossingFailuresBeforeOutOfBounds)
         {
-            m_log.WarnFormat("{0} Too many crossing failures for {1}", LogHeader, Name);
+            _log.WarnFormat("{0} Too many crossing failures for {1}", LogHeader, Name);
         }
         return;
     }
@@ -300,11 +290,10 @@ public class BSPrim : BSPhysObject
     }
 
     public override OMV.Vector3 Position {
-        get {
+        get =>
             // don't do the GetObjectPosition for root elements because this function is called a zillion times.
             // RawPosition = ForcePosition;
-            return RawPosition;
-        }
+            RawPosition;
         set {
             // If the position must be forced into the physics engine, use ForcePosition.
             // All positions are given in world positions.
@@ -434,19 +423,14 @@ public class BSPrim : BSPhysObject
     // Return the effective mass of the object.
         // The definition of this call is to return the mass of the prim.
         // If the simulator cares about the mass of the linkset, it will sum it itself.
-    public override float Mass
-    {
-        get { return _mass; }
-    }
+    public override float Mass => _mass;
+
     // TotalMass returns the mass of the large object the prim may be in (overridden by linkset code)
-    public virtual float TotalMass
-    {
-        get { return _mass; }
-    }
+    public virtual float TotalMass => _mass;
+
     // used when we only want this prim's mass and not the linkset thing
-    public override float RawMass {
-        get { return _mass; }
-    }
+    public override float RawMass => _mass;
+
     // Set the physical mass to the passed mass.
     // Note that this does not change _mass!
     public override void UpdatePhysicalMassProperties(float physMass, bool inWorld)
@@ -507,19 +491,13 @@ public class BSPrim : BSPhysObject
     }
 
     // Is this used?
-    public override OMV.Vector3 CenterOfMass
-    {
-        get { return RawPosition; }
-    }
+    public override OMV.Vector3 CenterOfMass => RawPosition;
 
     // Is this used?
-    public override OMV.Vector3 GeometricCenter
-    {
-        get { return RawPosition; }
-    }
+    public override OMV.Vector3 GeometricCenter => RawPosition;
 
     public override OMV.Vector3 Force {
-        get { return RawForce; }
+        get => RawForce;
         set {
             RawForce = value;
             EnableActor(RawForce != OMV.Vector3.Zero, SetForceActorName, delegate()
@@ -653,45 +631,45 @@ public class BSPrim : BSPhysObject
                 VehicleData vdata = (VehicleData)pvdata;
                 // vehicleActor.ProcessSetVehicle((VehicleData)vdata);
 
-                vehicleActor.ProcessTypeChange(vdata.m_type);
+                vehicleActor.ProcessTypeChange(vdata._type);
                 vehicleActor.ProcessVehicleFlags(-1, false);
-                vehicleActor.ProcessVehicleFlags((int)vdata.m_flags, false);
+                vehicleActor.ProcessVehicleFlags((int)vdata._flags, false);
 
                 // Linear properties
-                vehicleActor.ProcessVectorVehicleParam(Vehicle.LINEAR_MOTOR_DIRECTION, vdata.m_linearMotorDirection);
-                vehicleActor.ProcessVectorVehicleParam(Vehicle.LINEAR_FRICTION_TIMESCALE, vdata.m_linearFrictionTimescale);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.LINEAR_MOTOR_DECAY_TIMESCALE, vdata.m_linearMotorDecayTimescale);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.LINEAR_MOTOR_TIMESCALE, vdata.m_linearMotorTimescale);
-                vehicleActor.ProcessVectorVehicleParam(Vehicle.LINEAR_MOTOR_OFFSET, vdata.m_linearMotorOffset);
+                vehicleActor.ProcessVectorVehicleParam(Vehicle.LINEAR_MOTOR_DIRECTION, vdata._linearMotorDirection);
+                vehicleActor.ProcessVectorVehicleParam(Vehicle.LINEAR_FRICTION_TIMESCALE, vdata._linearFrictionTimescale);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.LINEAR_MOTOR_DECAY_TIMESCALE, vdata._linearMotorDecayTimescale);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.LINEAR_MOTOR_TIMESCALE, vdata._linearMotorTimescale);
+                vehicleActor.ProcessVectorVehicleParam(Vehicle.LINEAR_MOTOR_OFFSET, vdata._linearMotorOffset);
 
                 //Angular properties
-                vehicleActor.ProcessVectorVehicleParam(Vehicle.ANGULAR_MOTOR_DIRECTION, vdata.m_angularMotorDirection);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.ANGULAR_MOTOR_TIMESCALE, vdata.m_angularMotorTimescale);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.ANGULAR_MOTOR_DECAY_TIMESCALE, vdata.m_angularMotorDecayTimescale);
-                vehicleActor.ProcessVectorVehicleParam(Vehicle.ANGULAR_FRICTION_TIMESCALE, vdata.m_angularFrictionTimescale);
+                vehicleActor.ProcessVectorVehicleParam(Vehicle.ANGULAR_MOTOR_DIRECTION, vdata._angularMotorDirection);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.ANGULAR_MOTOR_TIMESCALE, vdata._angularMotorTimescale);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.ANGULAR_MOTOR_DECAY_TIMESCALE, vdata._angularMotorDecayTimescale);
+                vehicleActor.ProcessVectorVehicleParam(Vehicle.ANGULAR_FRICTION_TIMESCALE, vdata._angularFrictionTimescale);
 
                 //Deflection properties
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.ANGULAR_DEFLECTION_EFFICIENCY, vdata.m_angularDeflectionEfficiency);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.ANGULAR_DEFLECTION_TIMESCALE, vdata.m_angularDeflectionTimescale);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.LINEAR_DEFLECTION_EFFICIENCY, vdata.m_linearDeflectionEfficiency);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.LINEAR_DEFLECTION_TIMESCALE, vdata.m_linearDeflectionTimescale);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.ANGULAR_DEFLECTION_EFFICIENCY, vdata._angularDeflectionEfficiency);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.ANGULAR_DEFLECTION_TIMESCALE, vdata._angularDeflectionTimescale);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.LINEAR_DEFLECTION_EFFICIENCY, vdata._linearDeflectionEfficiency);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.LINEAR_DEFLECTION_TIMESCALE, vdata._linearDeflectionTimescale);
 
                 //Banking properties
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.BANKING_EFFICIENCY, vdata.m_bankingEfficiency);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.BANKING_MIX, vdata.m_bankingMix);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.BANKING_TIMESCALE, vdata.m_bankingTimescale);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.BANKING_EFFICIENCY, vdata._bankingEfficiency);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.BANKING_MIX, vdata._bankingMix);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.BANKING_TIMESCALE, vdata._bankingTimescale);
 
                 //Hover and Buoyancy properties
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.HOVER_HEIGHT, vdata.m_VhoverHeight);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.HOVER_EFFICIENCY, vdata.m_VhoverEfficiency);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.HOVER_TIMESCALE, vdata.m_VhoverTimescale);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.BUOYANCY, vdata.m_VehicleBuoyancy);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.HOVER_HEIGHT, vdata._VhoverHeight);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.HOVER_EFFICIENCY, vdata._VhoverEfficiency);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.HOVER_TIMESCALE, vdata._VhoverTimescale);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.BUOYANCY, vdata._VehicleBuoyancy);
 
                 //Attractor properties
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.VERTICAL_ATTRACTION_EFFICIENCY, vdata.m_verticalAttractionEfficiency);
-                vehicleActor.ProcessFloatVehicleParam(Vehicle.VERTICAL_ATTRACTION_TIMESCALE, vdata.m_verticalAttractionTimescale);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.VERTICAL_ATTRACTION_EFFICIENCY, vdata._verticalAttractionEfficiency);
+                vehicleActor.ProcessFloatVehicleParam(Vehicle.VERTICAL_ATTRACTION_TIMESCALE, vdata._verticalAttractionTimescale);
 
-                vehicleActor.ProcessRotationVehicleParam(Vehicle.REFERENCE_FRAME, vdata.m_referenceFrame);
+                vehicleActor.ProcessRotationVehicleParam(Vehicle.REFERENCE_FRAME, vdata._referenceFrame);
             }
         });
     }
@@ -710,10 +688,8 @@ public class BSPrim : BSPhysObject
         }
         return;
     }
-    public override bool IsVolumeDetect
-    {
-        get { return _isVolumeDetect; }
-    }
+    public override bool IsVolumeDetect => _isVolumeDetect;
+
     public override void SetMaterial(int material)
     {
         base.SetMaterial(material);
@@ -724,7 +700,7 @@ public class BSPrim : BSPhysObject
     }
     public override float Friction
     {
-        get { return base.Friction; }
+        get => base.Friction;
         set
         {
             if (base.Friction != value)
@@ -739,7 +715,7 @@ public class BSPrim : BSPhysObject
     }
     public override float Restitution
     {
-        get { return base.Restitution; }
+        get => base.Restitution;
         set
         {
             if (base.Restitution != value)
@@ -756,7 +732,7 @@ public class BSPrim : BSPhysObject
     // Remember to use BSParam.DensityScaleFactor to create the physical density.
     public override float Density
     {
-        get { return base.Density; }
+        get => base.Density;
         set
         {
             if (base.Density != value)
@@ -771,7 +747,7 @@ public class BSPrim : BSPhysObject
     }
     public override float GravModifier
     {
-        get { return base.GravModifier; }
+        get => base.GravModifier;
         set
         {
             if (base.GravModifier != value)
@@ -785,7 +761,7 @@ public class BSPrim : BSPhysObject
         }
     }
     public override OMV.Vector3 ForceVelocity {
-        get { return RawVelocity; }
+        get => RawVelocity;
         set {
             RawVelocity = Util.ClampV(value, BSParam.MaxLinearVelocity);
             if (PhysBody.HasPhysicalBody)
@@ -797,7 +773,7 @@ public class BSPrim : BSPhysObject
         }
     }
     public override OMV.Vector3 Torque {
-        get { return RawTorque; }
+        get => RawTorque;
         set {
             RawTorque = value;
             EnableActor(RawTorque != OMV.Vector3.Zero, SetTorqueActorName, delegate()
@@ -814,14 +790,12 @@ public class BSPrim : BSPhysObject
         }
     }
     public override OMV.Vector3 Acceleration {
-        get { return _acceleration; }
-        set { _acceleration = value; }
+        get => _acceleration;
+        set => _acceleration = value;
     }
 
     public override OMV.Quaternion Orientation {
-        get {
-            return RawOrientation;
-        }
+        get => RawOrientation;
         set {
             if (RawOrientation == value)
                 return;
@@ -849,11 +823,11 @@ public class BSPrim : BSPhysObject
         }
     }
     public override int PhysicsActorType {
-        get { return _physicsActorType; }
-        set { _physicsActorType = value; }
+        get => _physicsActorType;
+        set => _physicsActorType = value;
     }
     public override bool IsPhysical {
-        get { return _isPhysical; }
+        get => _isPhysical;
         set {
             if (_isPhysical != value)
             {
@@ -871,22 +845,13 @@ public class BSPrim : BSPhysObject
     }
 
     // An object is static (does not move) if selected or not physical
-    public override bool IsStatic
-    {
-        get { return _isSelected || !IsPhysical; }
-    }
+    public override bool IsStatic => _isSelected || !IsPhysical;
 
     // An object is solid if it's not phantom and if it's not doing VolumeDetect
-    public override bool IsSolid
-    {
-        get { return !IsPhantom && !_isVolumeDetect; }
-    }
+    public override bool IsSolid => !IsPhantom && !_isVolumeDetect;
 
     // The object is moving and is actively being dynamic in the physical world
-    public override bool IsPhysicallyActive
-    {
-        get { return !_isSelected && IsPhysical; }
-    }
+    public override bool IsPhysicallyActive => !_isSelected && IsPhysical;
 
     // Make gravity work if the object is physical and not selected
     // Called at taint-time!!
@@ -1030,7 +995,7 @@ public class BSPrim : BSPhysObject
             // Verify the previous code created the correct shape for this type of thing.
             if ((bodyType & CollisionObjectTypes.CO_RIGID_BODY) == 0)
             {
-                m_log.ErrorFormat("{0} MakeSolid: physical body of wrong type for solidity. id={1}, type={2}", LogHeader, LocalID, bodyType);
+                _log.ErrorFormat("{0} MakeSolid: physical body of wrong type for solidity. id={1}, type={2}", LogHeader, LocalID, bodyType);
             }
             CurrentCollisionFlags = PhysScene.PE.RemoveFromCollisionFlags(PhysBody, CollisionFlags.CF_NO_CONTACT_RESPONSE);
         }
@@ -1038,7 +1003,7 @@ public class BSPrim : BSPhysObject
         {
             if ((bodyType & CollisionObjectTypes.CO_GHOST_OBJECT) == 0)
             {
-                m_log.ErrorFormat("{0} MakeSolid: physical body of wrong type for non-solidness. id={1}, type={2}", LogHeader, LocalID, bodyType);
+                _log.ErrorFormat("{0} MakeSolid: physical body of wrong type for non-solidness. id={1}, type={2}", LogHeader, LocalID, bodyType);
             }
             CurrentCollisionFlags = PhysScene.PE.AddToCollisionFlags(PhysBody, CollisionFlags.CF_NO_CONTACT_RESPONSE);
 
@@ -1071,34 +1036,30 @@ public class BSPrim : BSPhysObject
         }
         else
         {
-            m_log.ErrorFormat("{0} Attempt to add physical object without body. id={1}", LogHeader, LocalID);
+            _log.ErrorFormat("{0} Attempt to add physical object without body. id={1}", LogHeader, LocalID);
             DetailLog("{0},BSPrim.AddObjectToPhysicalWorld,addObjectWithoutBody,cType={1}", LocalID, PhysBody.collisionType);
         }
     }
 
     // prims don't fly
     public override bool Flying {
-        get { return _flying; }
-        set {
-            _flying = value;
-        }
+        get => _flying;
+        set => _flying = value;
     }
     public override bool SetAlwaysRun {
-        get { return _setAlwaysRun; }
-        set { _setAlwaysRun = value; }
+        get => _setAlwaysRun;
+        set => _setAlwaysRun = value;
     }
     public override bool ThrottleUpdates {
-        get { return _throttleUpdates; }
-        set { _throttleUpdates = value; }
+        get => _throttleUpdates;
+        set => _throttleUpdates = value;
     }
-    public bool IsPhantom {
-        get {
-            // SceneObjectPart removes phantom objects from the physics scene
-            // so, although we could implement touching and such, we never
-            // are invoked as a phantom object
-            return false;
-        }
-    }
+    public bool IsPhantom =>
+        // SceneObjectPart removes phantom objects from the physics scene
+        // so, although we could implement touching and such, we never
+        // are invoked as a phantom object
+        false;
+
     public override bool FloatOnWater {
         set {
             _floatOnWater = value;
@@ -1112,13 +1073,12 @@ public class BSPrim : BSPhysObject
         }
     }
     public override bool Kinematic {
-        get { return _kinematic; }
-        set { _kinematic = value;
-            // m_log.DebugFormat("{0}: Kinematic={1}", LogHeader, _kinematic);
-        }
+        get => _kinematic;
+        set => _kinematic = value;
+        // _log.DebugFormat("{0}: Kinematic={1}", LogHeader, _kinematic);
     }
     public override float Buoyancy {
-        get { return _buoyancy; }
+        get => _buoyancy;
         set {
             _buoyancy = value;
             PhysScene.TaintedObject(LocalID, "BSPrim.setBuoyancy", delegate()
@@ -1128,7 +1088,7 @@ public class BSPrim : BSPhysObject
         }
     }
     public override float ForceBuoyancy {
-        get { return _buoyancy; }
+        get => _buoyancy;
         set {
             _buoyancy = value;
             // DetailLog("{0},BSPrim.setForceBuoyancy,taint,buoy={1}", LocalID, _buoyancy);
@@ -1141,10 +1101,7 @@ public class BSPrim : BSPhysObject
 
     public override bool PIDActive
     {
-        get
-        {
-            return MoveToTargetActive;
-        }
+        get => MoveToTargetActive;
 
         set
         {
@@ -1180,10 +1137,7 @@ public class BSPrim : BSPhysObject
     // Used for llSetHoverHeight and maybe vehicle height
     // Hover Height will override MoveTo target's Z
     public override bool PIDHoverActive {
-        get
-        {
-        return base.HoverActive;
-        }
+        get => base.HoverActive;
         set {
             base.HoverActive = value;
             EnableActor(HoverActive, HoverActorName, delegate()
@@ -1238,7 +1192,7 @@ public class BSPrim : BSPhysObject
             }
             else
             {
-                m_log.WarnFormat("{0}: AddForce: Got a NaN force applied to a prim. LocalID={1}", LogHeader, LocalID);
+                _log.WarnFormat("{0}: AddForce: Got a NaN force applied to a prim. LocalID={1}", LogHeader, LocalID);
                 return;
             }
         }
@@ -1266,7 +1220,7 @@ public class BSPrim : BSPhysObject
             }
             else
             {
-                m_log.WarnFormat("{0}: AddForceImpulse: Got a NaN impulse applied to a prim. LocalID={1}", LogHeader, LocalID);
+                _log.WarnFormat("{0}: AddForceImpulse: Got a NaN impulse applied to a prim. LocalID={1}", LogHeader, LocalID);
                 return;
             }
         }
@@ -1290,7 +1244,7 @@ public class BSPrim : BSPhysObject
         }
         else
         {
-            m_log.WarnFormat("{0}: Got a NaN force applied to a prim. LocalID={1}", LogHeader, LocalID);
+            _log.WarnFormat("{0}: Got a NaN force applied to a prim. LocalID={1}", LogHeader, LocalID);
             return;
         }
     }
@@ -1711,7 +1665,7 @@ public class BSPrim : BSPhysObject
                                 index += 3;
                                 break;
                             default:
-                                m_log.WarnFormat("{0} SetSxisLockLimitsExtension. Unknown op={1}", LogHeader, funct);
+                                _log.WarnFormat("{0} SetSxisLockLimitsExtension. Unknown op={1}", LogHeader, funct);
                                 index += 1;
                                 break;
                         }
@@ -1723,7 +1677,7 @@ public class BSPrim : BSPhysObject
         }
         catch (Exception e)
         {
-            m_log.WarnFormat("{0} SetSxisLockLimitsExtension exception in object {1}: {2}", LogHeader, this.Name, e);
+            _log.WarnFormat("{0} SetSxisLockLimitsExtension exception in object {1}: {2}", LogHeader, this.Name, e);
             ret = null;
         }
         return ret;    // not implemented yet

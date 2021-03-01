@@ -44,13 +44,13 @@ namespace OpenSim.Region.CoreModules.Avatar.Profile
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "BasicProfileModule")]
     public class BasicProfileModule : IProfileModule, ISharedRegionModule
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //
         // Module vars
         //
-        private readonly List<Scene> m_Scenes = new List<Scene>();
-        private bool m_Enabled = false;
+        private readonly List<Scene> _Scenes = new List<Scene>();
+        private bool _Enabled = false;
 
         #region ISharedRegionModule
 
@@ -59,20 +59,20 @@ namespace OpenSim.Region.CoreModules.Avatar.Profile
             if(config.Configs["UserProfiles"] != null)
                 return;
 
-            m_log.DebugFormat("[PROFILE MODULE]: Basic Profile Module enabled");
-            m_Enabled = true;
+            _log.DebugFormat("[PROFILE MODULE]: Basic Profile Module enabled");
+            _Enabled = true;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            lock (m_Scenes)
+            lock (_Scenes)
             {
-                if (!m_Scenes.Contains(scene))
+                if (!_Scenes.Contains(scene))
                 {
-                    m_Scenes.Add(scene);
+                    _Scenes.Add(scene);
                     // Hook up events
                     scene.EventManager.OnNewClient += OnNewClient;
                     scene.RegisterModuleInterface<IProfileModule>(this);
@@ -82,18 +82,18 @@ namespace OpenSim.Region.CoreModules.Avatar.Profile
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            lock (m_Scenes)
+            lock (_Scenes)
             {
-                m_Scenes.Remove(scene);
+                _Scenes.Remove(scene);
             }
         }
 
@@ -105,15 +105,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Profile
         {
         }
 
-        public string Name
-        {
-            get { return "BasicProfileModule"; }
-        }
+        public string Name => "BasicProfileModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return typeof(IProfileModule); }
-        }
+        public Type ReplaceableInterface => typeof(IProfileModule);
 
         #endregion
 
@@ -144,7 +138,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Profile
             string skillsText = string.Empty;
             string languages = string.Empty;
 
-            UserAccount account = m_Scenes[0].UserAccountService.GetUserAccount(m_Scenes[0].RegionInfo.ScopeID, avatarID);
+            UserAccount account = _Scenes[0].UserAccountService.GetUserAccount(_Scenes[0].RegionInfo.ScopeID, avatarID);
 
             string name = "Avatar";
             int created = 0;

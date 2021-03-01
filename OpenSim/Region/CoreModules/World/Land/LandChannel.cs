@@ -72,48 +72,45 @@ namespace OpenSim.Region.CoreModules.World.Land
 
         #endregion
 
-        private readonly Scene m_scene;
-        private readonly LandManagementModule m_landManagementModule;
+        private readonly Scene _scene;
+        private readonly LandManagementModule _landManagementModule;
 
-        private float m_BanLineSafeHeight = 100.0f;
+        private float _BanLineSafeHeight = 100.0f;
         public float BanLineSafeHeight
         {
-            get
-            {
-                return m_BanLineSafeHeight;
-            }
+            get => _BanLineSafeHeight;
             private set
             {
                 if (value >= 20f && value <= 5000f)
-                    m_BanLineSafeHeight = value;
+                    _BanLineSafeHeight = value;
                 else
-                    m_BanLineSafeHeight = 100.0f;
+                    _BanLineSafeHeight = 100.0f;
             }
         }
 
         public LandChannel(Scene scene, LandManagementModule landManagementMod)
         {
-            m_scene = scene;
-            m_landManagementModule = landManagementMod;
+            _scene = scene;
+            _landManagementModule = landManagementMod;
             if(landManagementMod != null)
-                m_BanLineSafeHeight = landManagementMod.BanLineSafeHeight;
+                _BanLineSafeHeight = landManagementMod.BanLineSafeHeight;
         }
 
         #region ILandChannel Members
 
         public ILandObject GetLandObject(float x_float, float y_float)
         {
-            return m_landManagementModule != null ? m_landManagementModule.GetLandObject(x_float, y_float) : null;
+            return _landManagementModule != null ? _landManagementModule.GetLandObject(x_float, y_float) : null;
         }
 
         public ILandObject GetLandObject(int localID)
         {
-            return m_landManagementModule != null ? m_landManagementModule.GetLandObject(localID) : null;
+            return _landManagementModule != null ? _landManagementModule.GetLandObject(localID) : null;
         }
 
         public ILandObject GetLandObject(UUID GlobalID)
         {
-                return m_landManagementModule != null ? m_landManagementModule.GetLandObject(GlobalID) : null;
+                return _landManagementModule != null ? _landManagementModule.GetLandObject(GlobalID) : null;
         }
 
         public ILandObject GetLandObject(Vector3 position)
@@ -123,77 +120,77 @@ namespace OpenSim.Region.CoreModules.World.Land
 
         public ILandObject GetLandObject(int x, int y)
         {
-            return m_landManagementModule != null ? m_landManagementModule.GetLandObject(x, y) : null;
+            return _landManagementModule != null ? _landManagementModule.GetLandObject(x, y) : null;
         }
 
         public ILandObject GetLandObjectClippedXY(float x, float y)
         {
-            return m_landManagementModule != null ? m_landManagementModule.GetLandObjectClippedXY(x, y) : null;
+            return _landManagementModule != null ? _landManagementModule.GetLandObjectClippedXY(x, y) : null;
         }
 
         public List<ILandObject> AllParcels()
         {
-            return m_landManagementModule != null ? m_landManagementModule.AllParcels() : new List<ILandObject>();
+            return _landManagementModule != null ? _landManagementModule.AllParcels() : new List<ILandObject>();
         }
 
         public void Clear(bool setupDefaultParcel)
         {
-             m_landManagementModule?.Clear(setupDefaultParcel);
+             _landManagementModule?.Clear(setupDefaultParcel);
         }
 
         public List<ILandObject> ParcelsNearPoint(Vector3 position)
         {
-            return m_landManagementModule != null ? m_landManagementModule.ParcelsNearPoint(position) : new List<ILandObject>();
+            return _landManagementModule != null ? _landManagementModule.ParcelsNearPoint(position) : new List<ILandObject>();
         }
 
         public bool IsForcefulBansAllowed()
         {
-            return m_landManagementModule != null ? m_landManagementModule.AllowedForcefulBans : false;
+            return _landManagementModule != null ? _landManagementModule.AllowedForcefulBans : false;
         }
 
         public void UpdateLandObject(int localID, LandData data)
         {
-            m_landManagementModule?.UpdateLandObject(localID, data);
+            _landManagementModule?.UpdateLandObject(localID, data);
         }
 
         public void SendParcelsOverlay(IClientAPI client)
         {
-            m_landManagementModule?.SendParcelOverlay(client);
+            _landManagementModule?.SendParcelOverlay(client);
         }
 
         public void Join(int start_x, int start_y, int end_x, int end_y, UUID attempting_user_id)
         {
-            m_landManagementModule?.Join(start_x, start_y, end_x, end_y, attempting_user_id);
+            _landManagementModule?.Join(start_x, start_y, end_x, end_y, attempting_user_id);
         }
 
         public void Subdivide(int start_x, int start_y, int end_x, int end_y, UUID attempting_user_id)
         {
-            m_landManagementModule?.Subdivide(start_x, start_y, end_x, end_y, attempting_user_id);
+            _landManagementModule?.Subdivide(start_x, start_y, end_x, end_y, attempting_user_id);
         }
 
         public void ReturnObjectsInParcel(int localID, uint returnType, UUID[] agentIDs, UUID[] taskIDs, IClientAPI remoteClient)
         {
-            m_landManagementModule?.ReturnObjectsInParcel(localID, returnType, agentIDs, taskIDs, remoteClient);
+            _landManagementModule?.ReturnObjectsInParcel(localID, returnType, agentIDs, taskIDs, remoteClient);
         }
 
         public void setParcelObjectMaxOverride(overrideParcelMaxPrimCountDelegate overrideDel)
         {
-            m_landManagementModule?.setParcelObjectMaxOverride(overrideDel);
+            _landManagementModule?.setParcelObjectMaxOverride(overrideDel);
         }
 
         public void setSimulatorObjectMaxOverride(overrideSimulatorMaxPrimCountDelegate overrideDel)
         {
-            m_landManagementModule?.setSimulatorObjectMaxOverride(overrideDel);
+            _landManagementModule?.setSimulatorObjectMaxOverride(overrideDel);
         }
 
         public void SetParcelOtherCleanTime(IClientAPI remoteClient, int localID, int otherCleanTime)
         {
-            m_landManagementModule?.SetParcelOtherCleanTime(remoteClient, localID, otherCleanTime);
+            _landManagementModule?.SetParcelOtherCleanTime(remoteClient, localID, otherCleanTime);
         }
 
         public void sendClientInitialLandInfo(IClientAPI remoteClient, bool overlay)
         {
-            m_landManagementModule?.sendClientInitialLandInfo(remoteClient, overlay);
+            _landManagementModule?.sendClientInitialLandInfo(remoteClient, overlay);
         }
 
         public void ClearAllEnvironments()

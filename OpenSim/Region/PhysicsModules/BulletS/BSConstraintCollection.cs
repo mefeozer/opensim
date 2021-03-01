@@ -32,18 +32,18 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public sealed class BSConstraintCollection : IDisposable
 {
-    // private static readonly ILog m_log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    // private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     // private static readonly string LogHeader = "[CONSTRAINT COLLECTION]";
 
     delegate bool ConstraintAction(BSConstraint constrain);
 
-    private readonly List<BSConstraint> m_constraints;
-    private BulletWorld m_world;
+    private readonly List<BSConstraint> _constraints;
+    private BulletWorld _world;
 
     public BSConstraintCollection(BulletWorld world)
     {
-        m_world = world;
-        m_constraints = new List<BSConstraint>();
+        _world = world;
+        _constraints = new List<BSConstraint>();
     }
 
     public void Dispose()
@@ -53,24 +53,24 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public void Clear()
     {
-        lock (m_constraints)
+        lock (_constraints)
         {
-            foreach (BSConstraint cons in m_constraints)
+            foreach (BSConstraint cons in _constraints)
             {
                 cons.Dispose();
             }
-            m_constraints.Clear();
+            _constraints.Clear();
         }
     }
 
     public bool AddConstraint(BSConstraint cons)
     {
-        lock (m_constraints)
+        lock (_constraints)
         {
             // There is only one constraint between any bodies. Remove any old just to make sure.
             RemoveAndDestroyConstraint(cons.Body1, cons.Body2);
 
-            m_constraints.Add(cons);
+            _constraints.Add(cons);
         }
 
         return true;
@@ -85,9 +85,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         uint lookingID1 = body1.ID;
         uint lookingID2 = body2.ID;
-        lock (m_constraints)
+        lock (_constraints)
         {
-            foreach (BSConstraint constrain in m_constraints)
+            foreach (BSConstraint constrain in _constraints)
             {
                 if (constrain.Body1.ID == lookingID1 && constrain.Body2.ID == lookingID2
                     || constrain.Body1.ID == lookingID2 && constrain.Body2.ID == lookingID1)
@@ -108,7 +108,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public bool RemoveAndDestroyConstraint(BulletBody body1, BulletBody body2)
     {
         bool ret = false;
-        lock (m_constraints)
+        lock (_constraints)
         {
             BSConstraint constrain;
             if (this.TryGetConstraint(body1, body2, out constrain))
@@ -127,10 +127,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public bool RemoveAndDestroyConstraint(BSConstraint constrain)
     {
         bool removed = false;
-        lock (m_constraints)
+        lock (_constraints)
         {
             // remove the constraint from our collection
-            removed = m_constraints.Remove(constrain);
+            removed = _constraints.Remove(constrain);
         }
         // Dispose() is safe to call multiple times
         constrain.Dispose();
@@ -143,9 +143,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     {
         List<BSConstraint> toRemove = new List<BSConstraint>();
         uint lookingID = body1.ID;
-        lock (m_constraints)
+        lock (_constraints)
         {
-            foreach (BSConstraint constrain in m_constraints)
+            foreach (BSConstraint constrain in _constraints)
             {
                 if (constrain.Body1.ID == lookingID || constrain.Body2.ID == lookingID)
                 {
@@ -154,7 +154,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             }
             foreach (BSConstraint constrain in toRemove)
             {
-                m_constraints.Remove(constrain);
+                _constraints.Remove(constrain);
                 constrain.Dispose();
             }
         }
@@ -164,9 +164,9 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     public bool RecalculateAllConstraints()
     {
         bool ret = false;
-        lock (m_constraints)
+        lock (_constraints)
         {
-            foreach (BSConstraint constrain in m_constraints)
+            foreach (BSConstraint constrain in _constraints)
             {
                 constrain.CalculateTransforms();
                 ret = true;

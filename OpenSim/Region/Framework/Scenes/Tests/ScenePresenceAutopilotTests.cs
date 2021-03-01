@@ -35,7 +35,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
     [TestFixture]
     public class ScenePresenceAutopilotTests : OpenSimTestCase
     {
-        private TestScene m_scene;
+        private TestScene _scene;
 
         [TestFixtureSetUp]
         public void FixtureInit()
@@ -55,7 +55,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
         [SetUp]
         public void Init()
         {
-            m_scene = new SceneHelpers().SetupScene();
+            _scene = new SceneHelpers().SetupScene();
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             TestHelpers.InMethod();
 //            log4net.Config.XmlConfigurator.Configure();
 
-            ScenePresence sp = SceneHelpers.AddScenePresence(m_scene, TestHelpers.ParseTail(0x1));
+            ScenePresence sp = SceneHelpers.AddScenePresence(_scene, TestHelpers.ParseTail(0x1));
 
             Vector3 startPos = sp.AbsolutePosition;
 //            Vector3 startPos = new Vector3(128, 128, 30);
@@ -72,7 +72,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             // For now, we'll make the scene presence fly to simplify this test, but this needs to change.
             sp.Flying = true;
 
-            m_scene.Update(1);
+            _scene.Update(1);
             Assert.That(sp.AbsolutePosition, Is.EqualTo(startPos));
 
             Vector3 targetPos = startPos + new Vector3(0, 10, 0);
@@ -82,7 +82,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Assert.That(
                 sp.Rotation, new QuaternionToleranceConstraint(new Quaternion(0, 0, 0.7071068f, 0.7071068f), 0.000001));
 
-            m_scene.Update(1);
+            _scene.Update(1);
 
             // We should really check the exact figure.
             Assert.That(sp.AbsolutePosition.X, Is.EqualTo(startPos.X));
@@ -90,7 +90,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Assert.That(sp.AbsolutePosition.Z, Is.EqualTo(startPos.Z));
             Assert.That(sp.AbsolutePosition.Z, Is.LessThan(targetPos.X));
 
-            m_scene.Update(50);
+            _scene.Update(50);
 
             double distanceToTarget = Util.GetDistanceTo(sp.AbsolutePosition, targetPos);
             Assert.That(distanceToTarget, Is.LessThan(1), "Avatar not within 1 unit of target position on first move");
@@ -106,7 +106,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Assert.That(
                 sp.Rotation, new QuaternionToleranceConstraint(new Quaternion(0, 0, 0, 1), 0.000001));
 
-            m_scene.Update(1);
+            _scene.Update(1);
 
             // We should really check the exact figure.
             Assert.That(sp.AbsolutePosition.X, Is.GreaterThan(startPos.X));
@@ -114,7 +114,7 @@ namespace OpenSim.Region.Framework.Scenes.Tests
             Assert.That(sp.AbsolutePosition.Y, Is.EqualTo(startPos.Y));
             Assert.That(sp.AbsolutePosition.Z, Is.EqualTo(startPos.Z));
 
-            m_scene.Update(50);
+            _scene.Update(50);
 
             distanceToTarget = Util.GetDistanceTo(sp.AbsolutePosition, targetPos);
             Assert.That(distanceToTarget, Is.LessThan(1), "Avatar not within 1 unit of target position on second move");

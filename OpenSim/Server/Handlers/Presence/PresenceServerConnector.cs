@@ -37,15 +37,15 @@ namespace OpenSim.Server.Handlers.Presence
 {
     public class PresenceServiceConnector : ServiceConnector
     {
-        private readonly IPresenceService m_PresenceService;
-        private readonly string m_ConfigName = "PresenceService";
+        private readonly IPresenceService _PresenceService;
+        private readonly string _ConfigName = "PresenceService";
 
         public PresenceServiceConnector(IConfigSource config, IHttpServer server, string configName) :
                 base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string gridService = serverConfig.GetString("LocalServiceModule",
                     string.Empty);
@@ -54,11 +54,11 @@ namespace OpenSim.Server.Handlers.Presence
                 throw new Exception("No LocalServiceModule in config file");
 
             object[] args = new object[] { config };
-            m_PresenceService = ServerUtils.LoadPlugin<IPresenceService>(gridService, args);
+            _PresenceService = ServerUtils.LoadPlugin<IPresenceService>(gridService, args);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
-            server.AddStreamHandler(new PresenceServerPostHandler(m_PresenceService, auth));
+            server.AddStreamHandler(new PresenceServerPostHandler(_PresenceService, auth));
         }
     }
 }

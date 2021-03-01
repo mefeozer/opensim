@@ -44,7 +44,7 @@ namespace OpenSim.Services.AuthenticationService
     public class WebkeyAuthenticationService :
             AuthenticationServiceBase, IAuthenticationService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -68,11 +68,11 @@ namespace OpenSim.Services.AuthenticationService
         {
             if (new UUID(password) == UUID.Zero)
             {
-                m_log.DebugFormat("[AUTH SERVICE]: UUID.Zero is not a valid web_login_key on PrincipalID {0}", principalID);
+                _log.DebugFormat("[AUTH SERVICE]: UUID.Zero is not a valid web_login_key on PrincipalID {0}", principalID);
             }
             else
             {
-                AuthenticationData data = m_Database.Get(principalID);
+                AuthenticationData data = _Database.Get(principalID);
                 if (data != null && data.Data != null)
                 {
                     if (data.Data.ContainsKey("webLoginKey"))
@@ -81,18 +81,18 @@ namespace OpenSim.Services.AuthenticationService
                         if (key == password)
                         {
                             data.Data["webLoginKey"] = UUID.Zero.ToString();
-                            m_Database.Store(data);
+                            _Database.Store(data);
                             return GetToken(principalID, lifetime);
                         }
                         else
                         {
-                            m_log.DebugFormat("[AUTH SERVICE]: web login auth failed, got PrincipalID {0} gave {1} instead of {2}", principalID, password, key);
+                            _log.DebugFormat("[AUTH SERVICE]: web login auth failed, got PrincipalID {0} gave {1} instead of {2}", principalID, password, key);
                         }
                     }else{
-                        m_log.DebugFormat("[AUTH SERVICE]: no col webLoginKey in passwd.db");
+                        _log.DebugFormat("[AUTH SERVICE]: no col webLoginKey in passwd.db");
                     }
                 }
-                m_log.DebugFormat("[AUTH SERVICE]: PrincipalID {0} or its data not found", principalID);
+                _log.DebugFormat("[AUTH SERVICE]: PrincipalID {0} or its data not found", principalID);
             }
             return string.Empty;
         }

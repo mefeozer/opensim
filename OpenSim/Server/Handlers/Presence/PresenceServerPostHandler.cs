@@ -42,14 +42,14 @@ namespace OpenSim.Server.Handlers.Presence
 {
     public class PresenceServerPostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IPresenceService m_PresenceService;
+        private readonly IPresenceService _PresenceService;
 
         public PresenceServerPostHandler(IPresenceService service, IServiceAuth auth) :
                 base("POST", "/presence", auth)
         {
-            m_PresenceService = service;
+            _PresenceService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -60,7 +60,7 @@ namespace OpenSim.Server.Handlers.Presence
             sr.Close();
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
             string method = string.Empty;
             try
             {
@@ -87,11 +87,11 @@ namespace OpenSim.Server.Handlers.Presence
                     case "getagents":
                         return GetAgents(request);
                 }
-                m_log.DebugFormat("[PRESENCE HANDLER]: unknown method request: {0}", method);
+                _log.DebugFormat("[PRESENCE HANDLER]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[PRESENCE HANDLER]: Exception in method {0}: {1}", method, e);
+                _log.DebugFormat("[PRESENCE HANDLER]: Exception in method {0}: {1}", method, e);
             }
 
             return FailureResult();
@@ -116,7 +116,7 @@ namespace OpenSim.Server.Handlers.Presence
                 // If it's malformed, we go on with a Zero on it
                 UUID.TryParse(request["SecureSessionID"].ToString(), out ssession);
 
-            if (m_PresenceService.LoginAgent(user, session, ssession))
+            if (_PresenceService.LoginAgent(user, session, ssession))
                 return SuccessResult();
 
             return FailureResult();
@@ -132,7 +132,7 @@ namespace OpenSim.Server.Handlers.Presence
             if (!UUID.TryParse(request["SessionID"].ToString(), out session))
                 return FailureResult();
 
-            if (m_PresenceService.LogoutAgent(session))
+            if (_PresenceService.LogoutAgent(session))
                 return SuccessResult();
 
             return FailureResult();
@@ -148,7 +148,7 @@ namespace OpenSim.Server.Handlers.Presence
             if (!UUID.TryParse(request["RegionID"].ToString(), out region))
                 return FailureResult();
 
-            if (m_PresenceService.LogoutRegionAgents(region))
+            if (_PresenceService.LogoutRegionAgents(region))
                 return SuccessResult();
 
             return FailureResult();
@@ -168,7 +168,7 @@ namespace OpenSim.Server.Handlers.Presence
             if (!UUID.TryParse(request["RegionID"].ToString(), out region))
                 return FailureResult();
 
-            if (m_PresenceService.ReportAgent(session, region))
+            if (_PresenceService.ReportAgent(session, region))
             {
                 return SuccessResult();
             }
@@ -186,7 +186,7 @@ namespace OpenSim.Server.Handlers.Presence
             if (!UUID.TryParse(request["SessionID"].ToString(), out session))
                 return FailureResult();
 
-            PresenceInfo pinfo = m_PresenceService.GetAgent(session);
+            PresenceInfo pinfo = _PresenceService.GetAgent(session);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
             if (pinfo == null)
@@ -196,7 +196,7 @@ namespace OpenSim.Server.Handlers.Presence
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -207,19 +207,19 @@ namespace OpenSim.Server.Handlers.Presence
 
             if (!request.ContainsKey("uuids"))
             {
-                m_log.DebugFormat("[PRESENCE HANDLER]: GetAgents called without required uuids argument");
+                _log.DebugFormat("[PRESENCE HANDLER]: GetAgents called without required uuids argument");
                 return FailureResult();
             }
 
             if (!(request["uuids"] is List<string>))
             {
-                m_log.DebugFormat("[PRESENCE HANDLER]: GetAgents input argument was of unexpected type {0}", request["uuids"].GetType().ToString());
+                _log.DebugFormat("[PRESENCE HANDLER]: GetAgents input argument was of unexpected type {0}", request["uuids"].GetType().ToString());
                 return FailureResult();
             }
 
             userIDs = ((List<string>)request["uuids"]).ToArray();
 
-            PresenceInfo[] pinfos = m_PresenceService.GetAgents(userIDs);
+            PresenceInfo[] pinfos = _PresenceService.GetAgents(userIDs);
 
             Dictionary<string, object> result = new Dictionary<string, object>();
             if (pinfos == null || pinfos != null && pinfos.Length == 0)
@@ -237,7 +237,7 @@ namespace OpenSim.Server.Handlers.Presence
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[GRID HANDLER]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 

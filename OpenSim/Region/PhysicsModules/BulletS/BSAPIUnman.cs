@@ -55,18 +55,13 @@ private sealed class BulletBodyUnman : BulletBody
     {
         ptr = xx;
     }
-    public override bool HasPhysicalBody
-    {
-        get { return ptr != IntPtr.Zero; }
-    }
+    public override bool HasPhysicalBody => ptr != IntPtr.Zero;
+
     public override void Clear()
     {
         ptr = IntPtr.Zero;
     }
-    public override string AddrString
-    {
-        get { return ptr.ToString("X"); }
-    }
+    public override string AddrString => ptr.ToString("X");
 }
 
 private sealed class BulletShapeUnman : BulletShape
@@ -78,10 +73,8 @@ private sealed class BulletShapeUnman : BulletShape
         ptr = xx;
         shapeType = typ;
     }
-    public override bool HasPhysicalShape
-    {
-        get { return ptr != IntPtr.Zero; }
-    }
+    public override bool HasPhysicalShape => ptr != IntPtr.Zero;
+
     public override void Clear()
     {
         ptr = IntPtr.Zero;
@@ -96,10 +89,7 @@ private sealed class BulletShapeUnman : BulletShape
         return otheru != null && this.ptr == otheru.ptr;
 
     }
-    public override string AddrString
-    {
-        get { return ptr.ToString("X"); }
-    }
+    public override string AddrString => ptr.ToString("X");
 }
 private sealed class BulletConstraintUnman : BulletConstraint
 {
@@ -113,28 +103,25 @@ private sealed class BulletConstraintUnman : BulletConstraint
     {
         ptr = IntPtr.Zero;
     }
-    public override bool HasPhysicalConstraint { get { return ptr != IntPtr.Zero; } }
+    public override bool HasPhysicalConstraint => ptr != IntPtr.Zero;
 
     // Used for log messages for a unique display of the memory/object allocated to this instance
-    public override string AddrString
-    {
-        get { return ptr.ToString("X"); }
-    }
+    public override string AddrString => ptr.ToString("X");
 }
 
 // We pin the memory passed between the managed and unmanaged code.
-GCHandle m_paramsHandle;
-private GCHandle m_collisionArrayPinnedHandle;
-private GCHandle m_updateArrayPinnedHandle;
+GCHandle _paramsHandle;
+private GCHandle _collisionArrayPinnedHandle;
+private GCHandle _updateArrayPinnedHandle;
 
 // Handle to the callback used by the unmanaged code to call into the managed code.
 // Used for debug logging.
 // Need to store the handle in a persistant variable so it won't be freed.
-private BSAPICPP.DebugLogCallback m_DebugLogCallbackHandle;
+private BSAPICPP.DebugLogCallback _DebugLogCallbackHandle;
 
 private BSScene PhysicsScene { get; }
 
-public override string BulletEngineName { get { return "BulletUnmanaged"; } }
+public override string BulletEngineName => "BulletUnmanaged";
 public override string BulletEngineVersion { get; protected set; }
 
 public BSAPIUnman(string paramName, BSScene physScene)
@@ -157,20 +144,20 @@ public override BulletWorld Initialize(Vector3 maxPosition, ConfigurationParamet
                                             )
 {
     // Pin down the memory that will be used to pass object collisions and updates back from unmanaged code
-    m_paramsHandle = GCHandle.Alloc(parms, GCHandleType.Pinned);
-    m_collisionArrayPinnedHandle = GCHandle.Alloc(collisionArray, GCHandleType.Pinned);
-    m_updateArrayPinnedHandle = GCHandle.Alloc(updateArray, GCHandleType.Pinned);
+    _paramsHandle = GCHandle.Alloc(parms, GCHandleType.Pinned);
+    _collisionArrayPinnedHandle = GCHandle.Alloc(collisionArray, GCHandleType.Pinned);
+    _updateArrayPinnedHandle = GCHandle.Alloc(updateArray, GCHandleType.Pinned);
 
     // If Debug logging level, enable logging from the unmanaged code
-    m_DebugLogCallbackHandle = null;
-    if (BSScene.m_log.IsDebugEnabled && PhysicsScene.PhysicsLogging.Enabled)
+    _DebugLogCallbackHandle = null;
+    if (BSScene._log.IsDebugEnabled && PhysicsScene.PhysicsLogging.Enabled)
     {
-        BSScene.m_log.DebugFormat("{0}: Initialize: Setting debug callback for unmanaged code", BSScene.LogHeader);
+        BSScene._log.DebugFormat("{0}: Initialize: Setting debug callback for unmanaged code", BSScene.LogHeader);
         if (PhysicsScene.PhysicsLogging.Enabled)
             // The handle is saved in a variable to make sure it doesn't get freed after this call
-            m_DebugLogCallbackHandle = new BSAPICPP.DebugLogCallback(BulletLoggerPhysLog);
+            _DebugLogCallbackHandle = new BSAPICPP.DebugLogCallback(BulletLoggerPhysLog);
         else
-            m_DebugLogCallbackHandle = new BSAPICPP.DebugLogCallback(BulletLogger);
+            _DebugLogCallbackHandle = new BSAPICPP.DebugLogCallback(BulletLogger);
     }
 
     // Get the version of the DLL
@@ -179,17 +166,17 @@ public override BulletWorld Initialize(Vector3 maxPosition, ConfigurationParamet
     BulletEngineVersion = "";
 
     // Call the unmanaged code with the buffers and other information
-    return new BulletWorldUnman(0, PhysicsScene, BSAPICPP.Initialize2(maxPosition, m_paramsHandle.AddrOfPinnedObject(),
-                                    maxCollisions, m_collisionArrayPinnedHandle.AddrOfPinnedObject(),
-                                    maxUpdates, m_updateArrayPinnedHandle.AddrOfPinnedObject(),
-                                    m_DebugLogCallbackHandle));
+    return new BulletWorldUnman(0, PhysicsScene, BSAPICPP.Initialize2(maxPosition, _paramsHandle.AddrOfPinnedObject(),
+                                    maxCollisions, _collisionArrayPinnedHandle.AddrOfPinnedObject(),
+                                    maxUpdates, _updateArrayPinnedHandle.AddrOfPinnedObject(),
+                                    _DebugLogCallbackHandle));
 
 }
 
 // Called directly from unmanaged code so don't do much
 private void BulletLogger(string msg)
 {
-    BSScene.m_log.Debug("[BULLETS UNMANAGED]:" + msg);
+    BSScene._log.Debug("[BULLETS UNMANAGED]:" + msg);
 }
 
 // Called directly from unmanaged code so don't do much
@@ -210,17 +197,17 @@ public override void Shutdown(BulletWorld world)
     BulletWorldUnman worldu = world as BulletWorldUnman;
     BSAPICPP.Shutdown2(worldu.ptr);
 
-    if (m_paramsHandle.IsAllocated)
+    if (_paramsHandle.IsAllocated)
     {
-        m_paramsHandle.Free();
+        _paramsHandle.Free();
     }
-    if (m_collisionArrayPinnedHandle.IsAllocated)
+    if (_collisionArrayPinnedHandle.IsAllocated)
     {
-        m_collisionArrayPinnedHandle.Free();
+        _collisionArrayPinnedHandle.Free();
     }
-    if (m_updateArrayPinnedHandle.IsAllocated)
+    if (_updateArrayPinnedHandle.IsAllocated)
     {
-        m_updateArrayPinnedHandle.Free();
+        _updateArrayPinnedHandle.Free();
     }
 }
 
@@ -1095,7 +1082,7 @@ public override void SetCenterOfMassByPosRot(BulletBody obj, Vector3 pos, Quater
 }
 
 // Add a force to the object as if its mass is one.
-// Deep down in Bullet: m_totalForce += force*m_linearFactor;
+// Deep down in Bullet: _totalForce += force*_linearFactor;
 public override void ApplyCentralForce(BulletBody obj, Vector3 force)
 {
     BulletBodyUnman bodyu = obj as BulletBodyUnman;
@@ -1139,7 +1126,7 @@ public override void SetSleepingThresholds(BulletBody obj, float lin_threshold, 
     BSAPICPP.SetSleepingThresholds2(bodyu.ptr, lin_threshold, ang_threshold);
 }
 
-// Deep down in Bullet: m_totalTorque += torque*m_angularFactor;
+// Deep down in Bullet: _totalTorque += torque*_angularFactor;
 public override void ApplyTorque(BulletBody obj, Vector3 torque)
 {
     BulletBodyUnman bodyu = obj as BulletBodyUnman;
@@ -1148,7 +1135,7 @@ public override void ApplyTorque(BulletBody obj, Vector3 torque)
 
 // Apply force at the given point. Will add torque to the object.
 // Deep down in Bullet: applyCentralForce(force);
-//              		applyTorque(rel_pos.cross(force*m_linearFactor));
+//              		applyTorque(rel_pos.cross(force*_linearFactor));
 public override void ApplyForce(BulletBody obj, Vector3 force, Vector3 pos)
 {
     BulletBodyUnman bodyu = obj as BulletBodyUnman;
@@ -1156,7 +1143,7 @@ public override void ApplyForce(BulletBody obj, Vector3 force, Vector3 pos)
 }
 
 // Apply impulse to the object. Same as "ApplycentralForce" but force scaled by object's mass.
-// Deep down in Bullet: m_linearVelocity += impulse *m_linearFactor * m_inverseMass;
+// Deep down in Bullet: _linearVelocity += impulse *_linearFactor * _inverseMass;
 public override void ApplyCentralImpulse(BulletBody obj, Vector3 imp)
 {
     BulletBodyUnman bodyu = obj as BulletBodyUnman;
@@ -1164,7 +1151,7 @@ public override void ApplyCentralImpulse(BulletBody obj, Vector3 imp)
 }
 
 // Apply impulse to the object's torque. Force is scaled by object's mass.
-// Deep down in Bullet: m_angularVelocity += m_invInertiaTensorWorld * torque * m_angularFactor;
+// Deep down in Bullet: _angularVelocity += _invInertiaTensorWorld * torque * _angularFactor;
 public override void ApplyTorqueImpulse(BulletBody obj, Vector3 imp)
 {
     BulletBodyUnman bodyu = obj as BulletBodyUnman;
@@ -1173,7 +1160,7 @@ public override void ApplyTorqueImpulse(BulletBody obj, Vector3 imp)
 
 // Apply impulse at the point given. For is scaled by object's mass and effects both linear and angular forces.
 // Deep down in Bullet: applyCentralImpulse(impulse);
-//          			applyTorqueImpulse(rel_pos.cross(impulse*m_linearFactor));
+//          			applyTorqueImpulse(rel_pos.cross(impulse*_linearFactor));
 public override void ApplyImpulse(BulletBody obj, Vector3 imp, Vector3 pos)
 {
     BulletBodyUnman bodyu = obj as BulletBodyUnman;

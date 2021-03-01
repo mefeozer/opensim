@@ -38,19 +38,16 @@ namespace OpenSim.Data.MySQL
 {
     public class MySQLEstateStore : IEstateDataStore
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_connectionString;
+        private string _connectionString;
 
-        private FieldInfo[] m_Fields;
-        private readonly Dictionary<string, FieldInfo> m_FieldMap =
+        private FieldInfo[] _Fields;
+        private readonly Dictionary<string, FieldInfo> _FieldMap =
                 new Dictionary<string, FieldInfo>();
 
-        protected virtual Assembly Assembly
-        {
-            get { return GetType().Assembly; }
-        }
+        protected virtual Assembly Assembly => GetType().Assembly;
 
         public MySQLEstateStore()
         {
@@ -63,18 +60,18 @@ namespace OpenSim.Data.MySQL
 
         public void Initialise(string connectionString)
         {
-            m_connectionString = connectionString;
+            _connectionString = connectionString;
 
             try
             {
-                m_log.Info("[REGION DB]: MySql - connecting: " + Util.GetDisplayConnectionString(m_connectionString));
+                _log.Info("[REGION DB]: MySql - connecting: " + Util.GetDisplayConnectionString(_connectionString));
             }
             catch (Exception e)
             {
-                m_log.Debug("Exception: password not found in connection string\n" + e.ToString());
+                _log.Debug("Exception: password not found in connection string\n" + e.ToString());
             }
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -83,22 +80,19 @@ namespace OpenSim.Data.MySQL
                 dbcon.Close();
 
                 Type t = typeof(EstateSettings);
-                m_Fields = t.GetFields(BindingFlags.NonPublic |
+                _Fields = t.GetFields(BindingFlags.NonPublic |
                                        BindingFlags.Instance |
                                        BindingFlags.DeclaredOnly);
 
-                foreach (FieldInfo f in m_Fields)
+                foreach (FieldInfo f in _Fields)
                 {
-                    if (f.Name.Substring(0, 2) == "m_")
-                        m_FieldMap[f.Name.Substring(2)] = f;
+                    if (f.Name.Substring(0, 2) == "_")
+                        _FieldMap[f.Name.Substring(2)] = f;
                 }
             }
         }
 
-        private string[] FieldList
-        {
-            get { return new List<string>(m_FieldMap.Keys).ToArray(); }
-        }
+        private string[] FieldList => new List<string>(_FieldMap.Keys).ToArray();
 
         public EstateSettings LoadEstateSettings(UUID regionID, bool create)
         {
@@ -141,7 +135,7 @@ namespace OpenSim.Data.MySQL
             EstateSettings es = new EstateSettings();
             es.OnSave += StoreEstateSettings;
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 cmd.Connection = dbcon;
@@ -156,17 +150,17 @@ namespace OpenSim.Data.MySQL
 
                         foreach (string name in FieldList)
                         {
-                            if (m_FieldMap[name].FieldType == typeof(bool))
+                            if (_FieldMap[name].FieldType == typeof(bool))
                             {
-                                m_FieldMap[name].SetValue(es, Convert.ToInt32(r[name]) != 0);
+                                _FieldMap[name].SetValue(es, Convert.ToInt32(r[name]) != 0);
                             }
-                            else if (m_FieldMap[name].FieldType == typeof(UUID))
+                            else if (_FieldMap[name].FieldType == typeof(UUID))
                             {
-                                m_FieldMap[name].SetValue(es, DBGuid.FromDB(r[name]));
+                                _FieldMap[name].SetValue(es, DBGuid.FromDB(r[name]));
                             }
                             else
                             {
-                                m_FieldMap[name].SetValue(es, r[name]);
+                                _FieldMap[name].SetValue(es, r[name]);
                             }
                         }
                     }
@@ -199,7 +193,7 @@ namespace OpenSim.Data.MySQL
 
             string sql = "insert into estate_settings (" + string.Join(",", names.ToArray()) + ") values ( ?" + string.Join(", ?", names.ToArray()) + ")";
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 using (MySqlCommand cmd2 = dbcon.CreateCommand())
@@ -209,16 +203,16 @@ namespace OpenSim.Data.MySQL
 
                     foreach (string name in FieldList)
                     {
-                        if (m_FieldMap[name].GetValue(es) is bool)
+                        if (_FieldMap[name].GetValue(es) is bool)
                         {
-                            if ((bool)m_FieldMap[name].GetValue(es))
+                            if ((bool)_FieldMap[name].GetValue(es))
                                 cmd2.Parameters.AddWithValue("?" + name, "1");
                             else
                                 cmd2.Parameters.AddWithValue("?" + name, "0");
                         }
                         else
                         {
-                            cmd2.Parameters.AddWithValue("?" + name, m_FieldMap[name].GetValue(es).ToString());
+                            cmd2.Parameters.AddWithValue("?" + name, _FieldMap[name].GetValue(es).ToString());
                         }
                     }
 
@@ -247,7 +241,7 @@ namespace OpenSim.Data.MySQL
         {
             string sql = "replace into estate_settings (" + string.Join(",", FieldList) + ") values ( ?" + string.Join(", ?", FieldList) + ")";
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -257,16 +251,16 @@ namespace OpenSim.Data.MySQL
 
                     foreach (string name in FieldList)
                     {
-                        if (m_FieldMap[name].GetValue(es) is bool)
+                        if (_FieldMap[name].GetValue(es) is bool)
                         {
-                            if ((bool)m_FieldMap[name].GetValue(es))
+                            if ((bool)_FieldMap[name].GetValue(es))
                                 cmd.Parameters.AddWithValue("?" + name, "1");
                             else
                                 cmd.Parameters.AddWithValue("?" + name, "0");
                         }
                         else
                         {
-                            cmd.Parameters.AddWithValue("?" + name, m_FieldMap[name].GetValue(es).ToString());
+                            cmd.Parameters.AddWithValue("?" + name, _FieldMap[name].GetValue(es).ToString());
                         }
                     }
 
@@ -285,7 +279,7 @@ namespace OpenSim.Data.MySQL
         {
             es.ClearBans();
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -317,7 +311,7 @@ namespace OpenSim.Data.MySQL
 
         private void SaveBanList(EstateSettings es)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -349,7 +343,7 @@ namespace OpenSim.Data.MySQL
 
         void SaveUUIDList(uint EstateID, string table, UUID[] data)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -381,7 +375,7 @@ namespace OpenSim.Data.MySQL
         {
             List<UUID> uuids = new List<UUID>();
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -437,7 +431,7 @@ namespace OpenSim.Data.MySQL
         {
             List<int> result = new List<int>();
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -464,7 +458,7 @@ namespace OpenSim.Data.MySQL
         {
             List<int> result = new List<int>();
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -492,7 +486,7 @@ namespace OpenSim.Data.MySQL
         {
             List<int> result = new List<int>();
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -519,7 +513,7 @@ namespace OpenSim.Data.MySQL
 
         public bool LinkRegion(UUID regionID, int estateID)
         {
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
                 MySqlTransaction transaction = dbcon.BeginTransaction();
@@ -557,7 +551,7 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (MySqlException ex)
                 {
-                    m_log.Error("[REGION DB]: LinkRegion failed: " + ex.Message);
+                    _log.Error("[REGION DB]: LinkRegion failed: " + ex.Message);
                     transaction.Rollback();
                 }
 
@@ -571,7 +565,7 @@ namespace OpenSim.Data.MySQL
         {
             List<UUID> result = new List<UUID>();
 
-            using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+            using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
             {
                 dbcon.Open();
 
@@ -592,7 +586,7 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (Exception e)
                 {
-                    m_log.Error("[REGION DB]: Error reading estate map. " + e.ToString());
+                    _log.Error("[REGION DB]: Error reading estate map. " + e.ToString());
                     return result;
                 }
                 dbcon.Close();

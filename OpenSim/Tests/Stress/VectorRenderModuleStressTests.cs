@@ -89,18 +89,18 @@ namespace OpenSim.Tests.Stress
             public int Pass { get; private set; }
             public bool Ready { get; set; }
 
-            private readonly VectorRenderModuleStressTests m_tests;
+            private readonly VectorRenderModuleStressTests _tests;
 
             public Drawer(VectorRenderModuleStressTests tests, int number)
             {
-                m_tests = tests;
+                _tests = tests;
                 Number = number;
                 Ready = true;
             }
 
             public void Draw()
             {
-                SceneObjectGroup so = SceneHelpers.AddSceneObject(m_tests.Scene);
+                SceneObjectGroup so = SceneHelpers.AddSceneObject(_tests.Scene);
 
                 while (Ready)
                 {
@@ -109,10 +109,10 @@ namespace OpenSim.Tests.Stress
                     // Ensure unique text
                     string text = string.Format("{0:D2}{1}", Number, Pass);
 
-                    m_tests.Dtm.AddDynamicTextureData(
-                        m_tests.Scene.RegionInfo.RegionID,
+                    _tests.Dtm.AddDynamicTextureData(
+                        _tests.Scene.RegionInfo.RegionID,
                         so.UUID,
-                        m_tests.Vrm.GetContentType(),
+                        _tests.Vrm.GetContentType(),
                         string.Format("PenColour BLACK; MoveTo 40,220; FontSize 32; Text {0};", text),
                         "");
 

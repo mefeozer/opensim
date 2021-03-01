@@ -42,12 +42,12 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
     public class GodNamesModule : ISharedRegionModule
     {
         // Infrastructure
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Configuration
-        private static bool m_enabled = false;
-        private static readonly List<string> m_lastNames = new List<string>();
-        private static readonly List<string> m_fullNames = new List<string>();
+        private static bool _enabled = false;
+        private static readonly List<string> _lastNames = new List<string>();
+        private static readonly List<string> _fullNames = new List<string>();
 
         public void Initialise(IConfigSource config)
         {
@@ -58,19 +58,19 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             }
 
             if (!moduleConfig.GetBoolean("Enabled", false)) {
-                m_log.Info("[GODNAMES]: Addon is disabled");
+                _log.Info("[GODNAMES]: Addon is disabled");
                 return;
             }
 
-            m_log.Info("[GODNAMES]: Enabled");
-            m_enabled = true;
+            _log.Info("[GODNAMES]: Enabled");
+            _enabled = true;
             string conf_str = moduleConfig.GetString("FullNames", string.Empty);
             if (!string.IsNullOrEmpty(conf_str))
             {
                 foreach (string strl in conf_str.Split(',')) {
                     string strlan = strl.Trim(" \t".ToCharArray());
-                    m_log.DebugFormat("[GODNAMES]: Adding {0} as a God name", strlan);
-                    m_fullNames.Add(strlan);
+                    _log.DebugFormat("[GODNAMES]: Adding {0} as a God name", strlan);
+                    _fullNames.Add(strlan);
                 }
             }
 
@@ -79,8 +79,8 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             {
                 foreach (string strl in conf_str.Split(',')) {
                     string strlan = strl.Trim(" \t".ToCharArray());
-                    m_log.DebugFormat("[GODNAMES]: Adding {0} as a God last name", strlan);
-                    m_lastNames.Add(strlan);
+                    _log.DebugFormat("[GODNAMES]: Adding {0} as a God last name", strlan);
+                    _lastNames.Add(strlan);
                 }
             }
         }
@@ -101,21 +101,15 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
             /*no op*/
         }
 
-        public Type ReplaceableInterface {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name {
-            get { return "Godnames"; }
-        }
+        public string Name => "Godnames";
 
-        public bool IsSharedModule {
-            get { return true; }
-        }
+        public bool IsSharedModule => true;
 
         public virtual void RegionLoaded(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
             ISimulatorFeaturesModule featuresModule = scene.RequestModuleInterface<ISimulatorFeaturesModule>();
@@ -134,13 +128,13 @@ namespace OpenSim.Region.OptionalModules.ViewerSupport
                 features["god_names"] = namesmap;
 
             OSDArray fnames = new OSDArray();
-            foreach (string name in m_fullNames) {
+            foreach (string name in _fullNames) {
                 fnames.Add(name);
             }
             ((OSDMap)namesmap)["full_names"] = fnames;
 
             OSDArray lnames = new OSDArray();
-            foreach (string name in m_lastNames) {
+            foreach (string name in _lastNames) {
                 lnames.Add(name);
             }
             ((OSDMap)namesmap)["last_names"] = lnames;

@@ -31,31 +31,31 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     public class BSActorCollection
 {
-    private readonly Dictionary<string, BSActor> m_actors;
+    private readonly Dictionary<string, BSActor> _actors;
 
     public BSActorCollection()
     {
-        m_actors = new Dictionary<string, BSActor>();
+        _actors = new Dictionary<string, BSActor>();
     }
     public void Add(string name, BSActor actor)
     {
-        lock (m_actors)
+        lock (_actors)
         {
-            if (!m_actors.ContainsKey(name))
+            if (!_actors.ContainsKey(name))
             {
-                m_actors[name] = actor;
+                _actors[name] = actor;
             }
         }
     }
     public bool RemoveAndRelease(string name)
     {
         bool ret = false;
-        lock (m_actors)
+        lock (_actors)
         {
-            if (m_actors.ContainsKey(name))
+            if (_actors.ContainsKey(name))
             {
-                BSActor beingRemoved = m_actors[name];
-                m_actors.Remove(name);
+                BSActor beingRemoved = _actors[name];
+                _actors.Remove(name);
                 beingRemoved.Dispose();
                 ret = true;
             }
@@ -64,10 +64,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     }
     public void Clear()
     {
-        lock (m_actors)
+        lock (_actors)
         {
             ForEachActor(a => a.Dispose());
-            m_actors.Clear();
+            _actors.Clear();
         }
     }
     public void Dispose()
@@ -76,17 +76,17 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     }
     public bool HasActor(string name)
     {
-        return m_actors.ContainsKey(name);
+        return _actors.ContainsKey(name);
     }
     public bool TryGetActor(string actorName, out BSActor theActor)
     {
-        return m_actors.TryGetValue(actorName, out theActor);
+        return _actors.TryGetValue(actorName, out theActor);
     }
     public void ForEachActor(Action<BSActor> act)
     {
-        lock (m_actors)
+        lock (_actors)
         {
-            foreach (KeyValuePair<string, BSActor> kvp in m_actors)
+            foreach (KeyValuePair<string, BSActor> kvp in _actors)
                 act(kvp.Value);
         }
     }
@@ -116,24 +116,21 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 /// </summary>
 public abstract class BSActor
 {
-    protected BSScene m_physicsScene { get; }
-    protected BSPhysObject m_controllingPrim { get; }
+    protected BSScene _physicsScene { get; }
+    protected BSPhysObject _controllingPrim { get; }
     public virtual bool Enabled { get; set; }
     public string ActorName { get; }
 
     public BSActor(BSScene physicsScene, BSPhysObject pObj, string actorName)
     {
-        m_physicsScene = physicsScene;
-        m_controllingPrim = pObj;
+        _physicsScene = physicsScene;
+        _controllingPrim = pObj;
         ActorName = actorName;
         Enabled = true;
     }
 
     // Return 'true' if activily updating the prim
-    public virtual bool isActive
-    {
-        get { return Enabled; }
-    }
+    public virtual bool isActive => Enabled;
 
     // Turn the actor on an off. Only used by ActorCollection to set all enabled/disabled.
     // Anyone else should assign true/false to 'Enabled'.

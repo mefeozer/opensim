@@ -42,36 +42,36 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance.Tests
     [TestFixture]
     public class CoopTerminationTests : OpenSimTestCase
     {
-        private TestScene m_scene;
-        private OpenSim.Region.ScriptEngine.XEngine.XEngine m_xEngine;
+        private TestScene _scene;
+        private OpenSim.Region.ScriptEngine.XEngine.XEngine _xEngine;
 
-        private AutoResetEvent m_chatEvent;
-        private AutoResetEvent m_stoppedEvent;
+        private AutoResetEvent _chatEvent;
+        private AutoResetEvent _stoppedEvent;
 
-        private OSChatMessage m_osChatMessageReceived;
+        private OSChatMessage _osChatMessageReceived;
 
         /// <summary>
         /// Number of chat messages received so far.  Reset before each test.
         /// </summary>
-        private int m_chatMessagesReceived;
+        private int _chatMessagesReceived;
 
         /// <summary>
-        /// Number of chat messages expected.  m_chatEvent is not fired until this number is reached or exceeded.
+        /// Number of chat messages expected.  _chatEvent is not fired until this number is reached or exceeded.
         /// </summary>
-        private int m_chatMessagesThreshold;
+        private int _chatMessagesThreshold;
 
         [SetUp]
         public void Init()
         {
-            m_osChatMessageReceived = null;
-            m_chatMessagesReceived = 0;
-            m_chatMessagesThreshold = 0;
-            m_chatEvent = new AutoResetEvent(false);
-            m_stoppedEvent = new AutoResetEvent(false);
+            _osChatMessageReceived = null;
+            _chatMessagesReceived = 0;
+            _chatMessagesThreshold = 0;
+            _chatEvent = new AutoResetEvent(false);
+            _stoppedEvent = new AutoResetEvent(false);
 
             //AppDomain.CurrentDomain.SetData("APPBASE", Environment.CurrentDirectory + "/bin");
             //            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
-            m_xEngine = new OpenSim.Region.ScriptEngine.XEngine.XEngine
+            _xEngine = new OpenSim.Region.ScriptEngine.XEngine.XEngine
             {
                 DebugLevel = 1
             };
@@ -109,9 +109,9 @@ namespace OpenSim.Region.ScriptEngine.Shared.Instance.Tests
             config.Set("AllowOSFunctions", "true");
             config.Set("OSFunctionThreatLevel", "Severe");
 
-            m_scene = new SceneHelpers().SetupScene("My Test", TestHelpers.ParseTail(0x9999), 1000, 1000, configSource);
-            SceneHelpers.SetupSceneModules(m_scene, configSource, m_xEngine);
-            m_scene.StartScripts();
+            _scene = new SceneHelpers().SetupScene("My Test", TestHelpers.ParseTail(0x9999), 1000, 1000, configSource);
+            SceneHelpers.SetupSceneModules(_scene, configSource, _xEngine);
+            _scene.StartScripts();
         }
 
         /// <summary>
@@ -422,7 +422,7 @@ default
 
             SceneObjectGroup so
                 = SceneHelpers.CreateSceneObject(1, userId, string.Format("Object for {0}", itemName), 0x100);
-            m_scene.AddNewSceneObject(so, true);
+            _scene.AddNewSceneObject(so, true);
 
             InventoryItemBase itemTemplate = new InventoryItemBase
             {
@@ -432,15 +432,15 @@ default
                 InvType = (int)InventoryType.LSL
             };
 
-            m_scene.EventManager.OnChatFromWorld += OnChatFromWorld;
+            _scene.EventManager.OnChatFromWorld += OnChatFromWorld;
 
-            return m_scene.RezNewScript(userId, itemTemplate, script);
+            return _scene.RezNewScript(userId, itemTemplate, script);
         }
 
         private void TestSingleStatementNoStop(string script)
         {
             // In these tests we expect to see at least 2 chat messages to confirm that the loop is working properly.
-            m_chatMessagesThreshold = 2;
+            _chatMessagesThreshold = 2;
 
             UUID userId = TestHelpers.ParseTail(0x1);
 //            UUID objectId = TestHelpers.ParseTail(0x100);
@@ -450,24 +450,24 @@ default
             SceneObjectPart partWhereRezzed = CreateScript(script, itemName, userId);
 
             // Wait for the script to start the event before we try stopping it.
-            m_chatEvent.WaitOne(60000);
+            _chatEvent.WaitOne(60000);
 
-            if (m_osChatMessageReceived == null)
+            if (_osChatMessageReceived == null)
                 Assert.Fail("Script did not start");
             else
-                Assert.That(m_chatMessagesReceived, Is.EqualTo(2));
+                Assert.That(_chatMessagesReceived, Is.EqualTo(2));
 
             bool running;
             TaskInventoryItem scriptItem = partWhereRezzed.Inventory.GetInventoryItem(itemName);
             Assert.That(
-                SceneObjectPartInventory.TryGetScriptInstanceRunning(m_scene, scriptItem, out running), Is.True);
+                SceneObjectPartInventory.TryGetScriptInstanceRunning(_scene, scriptItem, out running), Is.True);
             Assert.That(running, Is.True);
         }
 
         private void TestStop(string script)
         {
             // In these tests we're only interested in the first message to confirm that the script has started.
-            m_chatMessagesThreshold = 1;
+            _chatMessagesThreshold = 1;
 
             UUID userId = TestHelpers.ParseTail(0x1);
 //            UUID objectId = TestHelpers.ParseTail(0x100);
@@ -478,10 +478,10 @@ default
             TaskInventoryItem rezzedItem = partWhereRezzed.Inventory.GetInventoryItem(itemName);
 
             // Wait for the script to start the event before we try stopping it.
-            m_chatEvent.WaitOne(60000);
+            _chatEvent.WaitOne(60000);
 
-            if (m_osChatMessageReceived != null)
-                Console.WriteLine("Script started with message [{0}]", m_osChatMessageReceived.Message);
+            if (_osChatMessageReceived != null)
+                Console.WriteLine("Script started with message [{0}]", _osChatMessageReceived.Message);
             else
                 Assert.Fail("Script did not start");
 
@@ -491,27 +491,27 @@ default
 
             // We need a way of carrying on if StopScript() fail, since it won't return if the script isn't actually
             // stopped.  This kind of multi-threading is far from ideal in a regression test.
-            new Thread(() => { m_xEngine.StopScript(rezzedItem.ItemID); m_stoppedEvent.Set(); }).Start();
+            new Thread(() => { _xEngine.StopScript(rezzedItem.ItemID); _stoppedEvent.Set(); }).Start();
 
-            if (!m_stoppedEvent.WaitOne(30000))
+            if (!_stoppedEvent.WaitOne(30000))
                 Assert.Fail("Script did not co-operatively stop.");
 
             bool running;
             TaskInventoryItem scriptItem = partWhereRezzed.Inventory.GetInventoryItem(itemName);
             Assert.That(
-                SceneObjectPartInventory.TryGetScriptInstanceRunning(m_scene, scriptItem, out running), Is.True);
+                SceneObjectPartInventory.TryGetScriptInstanceRunning(_scene, scriptItem, out running), Is.True);
             Assert.That(running, Is.False);
         }
 
         private void OnChatFromWorld(object sender, OSChatMessage oscm)
         {
             Console.WriteLine("Got chat [{0}]", oscm.Message);
-            m_osChatMessageReceived = oscm;
+            _osChatMessageReceived = oscm;
 
-            if (++m_chatMessagesReceived >= m_chatMessagesThreshold)
+            if (++_chatMessagesReceived >= _chatMessagesThreshold)
             {
-                m_scene.EventManager.OnChatFromWorld -= OnChatFromWorld;
-                m_chatEvent.Set();
+                _scene.EventManager.OnChatFromWorld -= OnChatFromWorld;
+                _chatEvent.Set();
             }
         }
     }

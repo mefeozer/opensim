@@ -922,23 +922,17 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
 
         // if followed by OpCodes.Pop, it can be discarded
-        public bool isPoppable
-        {
-            get
-            {
-                return
-                    opcode.StackBehaviourPop == StackBehaviour.Pop0 &&    // ldarg,ldloc,ldsfld
-                    opcode.StackBehaviourPush == StackBehaviour.Push1 ||
-                    opcode.StackBehaviourPop == StackBehaviour.Pop0 &&    // ldarga,ldloca,ldc,ldsflda,...
-                    opcode.StackBehaviourPush == StackBehaviour.Pushi ||
-                    opcode == OpCodes.Ldnull ||
-                    opcode == OpCodes.Ldc_R4 ||
-                    opcode == OpCodes.Ldc_R8 ||
-                    opcode == OpCodes.Ldstr ||
-                    opcode == OpCodes.Ldc_I8 ||
-                    opcode == OpCodes.Dup;
-            }
-        }
+        public bool isPoppable =>
+            opcode.StackBehaviourPop == StackBehaviour.Pop0 &&    // ldarg,ldloc,ldsfld
+            opcode.StackBehaviourPush == StackBehaviour.Push1 ||
+            opcode.StackBehaviourPop == StackBehaviour.Pop0 &&    // ldarga,ldloca,ldc,ldsflda,...
+            opcode.StackBehaviourPush == StackBehaviour.Pushi ||
+            opcode == OpCodes.Ldnull ||
+            opcode == OpCodes.Ldc_R4 ||
+            opcode == OpCodes.Ldc_R8 ||
+            opcode == OpCodes.Ldstr ||
+            opcode == OpCodes.Ldc_I8 ||
+            opcode == OpCodes.Dup;
 
         public override void DebString(StringBuilder sb)
         {
@@ -2275,20 +2269,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public abstract bool MoveNext();
         public abstract void Reset();
 
-        GraphNode System.Collections.Generic.IEnumerator<GraphNode>.Current
-        {
-            get
-            {
-                return this.nn;
-            }
-        }
-        object System.Collections.IEnumerator.Current
-        {
-            get
-            {
-                return this.nn;
-            }
-        }
+        GraphNode System.Collections.Generic.IEnumerator<GraphNode>.Current => this.nn;
+
+        object System.Collections.IEnumerator.Current => this.nn;
+
         void System.IDisposable.Dispose()
         {
         }
@@ -2314,13 +2298,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         private readonly List<ScriptMyLocal> declaredLocals = new List<ScriptMyLocal>();
         private readonly List<ScriptMyLabel> definedLabels = new List<ScriptMyLabel>();
 
-        public string methName
-        {
-            get
-            {
-                return wrapped.methName;
-            }
-        }
+        public string methName => wrapped.methName;
 
         /**
          * @brief Wrap the optimizer around the ScriptObjWriter to collect the instruction stream.

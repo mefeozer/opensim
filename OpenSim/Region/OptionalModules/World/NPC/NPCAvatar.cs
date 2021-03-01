@@ -39,10 +39,7 @@ namespace OpenSim.Region.OptionalModules.World.NPC
     public class NPCAvatar : IClientAPI, INPC
     {
         public bool SenseAsAgent { get; set; }
-        public UUID Owner
-        {
-            get { return m_ownerID;}
-        }
+        public UUID Owner => _ownerID;
 
         public delegate void ChatToNPC(
             string message, byte type, Vector3 fromPos, string fromName,
@@ -58,80 +55,71 @@ namespace OpenSim.Region.OptionalModules.World.NPC
         /// </summary>
         public event Action<GridInstantMessage> OnInstantMessageToNPC;
 
-        private readonly string m_firstname;
-        private readonly string m_lastname;
-        private readonly Vector3 m_startPos;
-        private UUID m_uuid = UUID.Random();
-        private readonly Scene m_scene;
-        private readonly UUID m_scopeID;
-        private readonly UUID m_ownerID;
-        private UUID m_hostGroupID;
-        private string m_profileAbout = "";
-        private UUID m_profileImage = UUID.Zero;
-        private string m_born;
+        private readonly string _firstname;
+        private readonly string _lastname;
+        private readonly Vector3 _startPos;
+        private UUID _uuid = UUID.Random();
+        private readonly Scene _scene;
+        private readonly UUID _scopeID;
+        private readonly UUID _ownerID;
+        private UUID _hostGroupID;
+        private string _profileAbout = "";
+        private UUID _profileImage = UUID.Zero;
+        private string _born;
         public List<uint> SelectedObjects {get; private set;}
 
         public NPCAvatar(
             string firstname, string lastname, Vector3 position, UUID ownerID, bool senseAsAgent, Scene scene)
         {
-            m_firstname = firstname;
-            m_lastname = lastname;
-            m_startPos = position;
-            m_uuid = UUID.Random();
-            m_scene = scene;
-            m_scopeID = scene.RegionInfo.ScopeID;
-            m_ownerID = ownerID;
+            _firstname = firstname;
+            _lastname = lastname;
+            _startPos = position;
+            _uuid = UUID.Random();
+            _scene = scene;
+            _scopeID = scene.RegionInfo.ScopeID;
+            _ownerID = ownerID;
             SenseAsAgent = senseAsAgent;
-            m_hostGroupID = UUID.Zero;
+            _hostGroupID = UUID.Zero;
         }
 
         public NPCAvatar(
             string firstname, string lastname, UUID agentID, Vector3 position, UUID ownerID, bool senseAsAgent, Scene scene)
         {
-            m_firstname = firstname;
-            m_lastname = lastname;
-            m_startPos = position;
-            m_uuid = agentID;
-            m_scene = scene;
-            m_ownerID = ownerID;
+            _firstname = firstname;
+            _lastname = lastname;
+            _startPos = position;
+            _uuid = agentID;
+            _scene = scene;
+            _ownerID = ownerID;
             SenseAsAgent = senseAsAgent;
-            m_hostGroupID = UUID.Zero;
+            _hostGroupID = UUID.Zero;
         }
 
         public string profileAbout
         {
-            get { return m_profileAbout; }
+            get => _profileAbout;
             set
             {
                 if(value.Length > 255)
-                    m_profileAbout = value.Substring(0,255);
+                    _profileAbout = value.Substring(0,255);
                 else
-                    m_profileAbout = value;
+                    _profileAbout = value;
             }
         }
 
         public UUID profileImage
         {
-            get { return m_profileImage; }
-            set { m_profileImage = value; }
+            get => _profileImage;
+            set => _profileImage = value;
         }
 
-        public IScene Scene
-        {
-            get { return m_scene; }
-        }
+        public IScene Scene => _scene;
 
-        public UUID ScopeId
-        {
-            get { return m_scopeID; }
-        }
+        public UUID ScopeId => _scopeID;
 
-        public int PingTimeMS { get { return 0; } }
+        public int PingTimeMS => 0;
 
-        public UUID OwnerID
-        {
-            get { return m_ownerID; }
-        }
+        public UUID OwnerID => _ownerID;
 
         public ISceneAgent SceneAgent { get; set; }
 
@@ -162,12 +150,12 @@ namespace OpenSim.Region.OptionalModules.World.NPC
 
         public void GiveMoney(UUID target, int amount)
         {
-            OnMoneyTransferRequest(m_uuid, target, amount, 1, "Payment");
+            OnMoneyTransferRequest(_uuid, target, amount, 1, "Payment");
         }
 
         public bool Touch(UUID target)
         {
-            SceneObjectPart part = m_scene.GetSceneObjectPart(target);
+            SceneObjectPart part = _scene.GetSceneObjectPart(target);
             if (part == null)
                 return false;
             bool objectTouchable = hasTouchEvents(part); // Only touch an object that is scripted to respond
@@ -201,8 +189,8 @@ namespace OpenSim.Region.OptionalModules.World.NPC
 
         public void InstantMessage(UUID target, string message)
         {
-            OnInstantMessage(this, new GridInstantMessage(m_scene,
-                    m_uuid, m_firstname + " " + m_lastname,
+            OnInstantMessage(this, new GridInstantMessage(_scene,
+                    _uuid, _firstname + " " + _lastname,
                     target, 0, false, message,
                     UUID.Zero, false, Position, new byte[0], true));
         }
@@ -241,8 +229,8 @@ namespace OpenSim.Region.OptionalModules.World.NPC
 
         public Vector3 Position
         {
-            get { return m_scene.Entities[m_uuid].AbsolutePosition; }
-            set { m_scene.Entities[m_uuid].AbsolutePosition = value; }
+            get => _scene.Entities[_uuid].AbsolutePosition;
+            set => _scene.Entities[_uuid].AbsolutePosition = value;
         }
 
         public bool SendLogoutPacketWhenClosing
@@ -270,7 +258,7 @@ namespace OpenSim.Region.OptionalModules.World.NPC
                 From = Name,
                 Message = message,
                 Position = StartPos,
-                Scene = m_scene,
+                Scene = _scene,
                 Sender = this,
                 SenderUUID = AgentId,
                 Type = chatType
@@ -560,7 +548,7 @@ namespace OpenSim.Region.OptionalModules.World.NPC
 
         public virtual Vector3 StartPos
         {
-            get { return m_startPos; }
+            get => _startPos;
             set { }
         }
 
@@ -568,73 +556,58 @@ namespace OpenSim.Region.OptionalModules.World.NPC
 
         public virtual UUID AgentId
         {
-            get { return m_uuid; }
-            set { m_uuid = value; }
+            get => _uuid;
+            set => _uuid = value;
         }
 
-        public UUID SessionId
-        {
-            get { return UUID.Zero; }
-        }
+        public UUID SessionId => UUID.Zero;
 
-        public UUID SecureSessionId
-        {
-            get { return UUID.Zero; }
-        }
+        public UUID SecureSessionId => UUID.Zero;
 
-        public virtual string FirstName
-        {
-            get { return m_firstname; }
-        }
+        public virtual string FirstName => _firstname;
 
-        public virtual string LastName
-        {
-            get { return m_lastname; }
-        }
+        public virtual string LastName => _lastname;
 
-        public virtual string Name
-        {
-            get { return FirstName + " " + LastName; }
-        }
+        public virtual string Name => FirstName + " " + LastName;
 
         public bool IsActive
         {
-            get { return true; }
+            get => true;
             set { }
         }
 
         public bool IsLoggingOut
         {
-            get { return false; }
+            get => false;
             set { }
         }
         public UUID ActiveGroupId
         {
-            get { return m_hostGroupID; }
-            set { m_hostGroupID = value; }
+            get => _hostGroupID;
+            set => _hostGroupID = value;
         }
 
         public string ActiveGroupName
         {
-            get { return string.Empty; }
+            get => string.Empty;
             set { }
         }
 
         public ulong ActiveGroupPowers
         {
-            get { return 0; }
+            get => 0;
             set { }
         }
 
         public string Born
         {
-            get { return m_born; }
-            set { m_born = value; }
+            get => _born;
+            set => _born = value;
         }
 
         public bool IsGroupMember(UUID groupID)
         {
-            return m_hostGroupID == groupID;
+            return _hostGroupID == groupID;
         }
 
         public Dictionary<UUID, ulong> GetGroupPowers()
@@ -651,7 +624,7 @@ namespace OpenSim.Region.OptionalModules.World.NPC
 
         public virtual int NextAnimationSequenceNumber
         {
-            get { return 1; }
+            get => 1;
             set { }
         }
 
@@ -1022,7 +995,7 @@ namespace OpenSim.Region.OptionalModules.World.NPC
         public void Close(bool sendStop, bool force)
         {
             // Remove ourselves from the scene
-            m_scene.RemoveClient(AgentId, false);
+            _scene.RemoveClient(AgentId, false);
         }
 
         public void Disconnect(string reason)
@@ -1040,23 +1013,20 @@ namespace OpenSim.Region.OptionalModules.World.NPC
         {
         }
 
-        private uint m_circuitCode;
-        private IPEndPoint m_remoteEndPoint;
+        private uint _circuitCode;
+        private IPEndPoint _remoteEndPoint;
 
         public uint CircuitCode
         {
-            get { return m_circuitCode; }
+            get => _circuitCode;
             set
             {
-                m_circuitCode = value;
-                m_remoteEndPoint = new IPEndPoint(IPAddress.Loopback, (ushort)m_circuitCode);
+                _circuitCode = value;
+                _remoteEndPoint = new IPEndPoint(IPAddress.Loopback, (ushort)_circuitCode);
             }
         }
 
-        public IPEndPoint RemoteEndPoint
-        {
-            get { return m_remoteEndPoint; }
-        }
+        public IPEndPoint RemoteEndPoint => _remoteEndPoint;
 
         public void SendBlueBoxMessage(UUID FromAvatarID, string FromAvatarName, string Message)
         {

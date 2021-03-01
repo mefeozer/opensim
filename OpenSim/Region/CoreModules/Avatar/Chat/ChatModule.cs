@@ -42,73 +42,73 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "ChatModule")]
     public class ChatModule : ISharedRegionModule
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         protected const int DEBUG_CHANNEL = 2147483647;
 
-        protected bool m_enabled = true;
-        protected int m_saydistance = 20;
-        protected int m_shoutdistance = 100;
-        protected int m_whisperdistance = 10;
+        protected bool _enabled = true;
+        protected int _saydistance = 20;
+        protected int _shoutdistance = 100;
+        protected int _whisperdistance = 10;
 
-        protected float m_saydistanceSQ;
-        protected float m_shoutdistanceSQ;
-        protected float m_whisperdistanceSQ;
+        protected float _saydistanceSQ;
+        protected float _shoutdistanceSQ;
+        protected float _whisperdistanceSQ;
 
-        protected List<Scene> m_scenes = new List<Scene>();
+        protected List<Scene> _scenes = new List<Scene>();
         protected List<string> FreezeCache = new List<string>();
-        protected string m_adminPrefix = "";
-        protected object m_syncy = new object();
-        protected IConfig m_config;
+        protected string _adminPrefix = "";
+        protected object _syncy = new object();
+        protected IConfig _config;
         #region ISharedRegionModule Members
         public virtual void Initialise(IConfigSource config)
         {
-            m_config = config.Configs["Chat"];
+            _config = config.Configs["Chat"];
 
-            if (m_config != null)
+            if (_config != null)
             {
-                if (!m_config.GetBoolean("enabled", true))
+                if (!_config.GetBoolean("enabled", true))
                 {
-                    m_log.Info("[CHAT]: plugin disabled by configuration");
-                    m_enabled = false;
+                    _log.Info("[CHAT]: plugin disabled by configuration");
+                    _enabled = false;
                     return;
                 }
 
-                m_whisperdistance = m_config.GetInt("whisper_distance", m_whisperdistance);
-                m_saydistance = m_config.GetInt("say_distance", m_saydistance);
-                m_shoutdistance = m_config.GetInt("shout_distance", m_shoutdistance);
-                m_adminPrefix = m_config.GetString("admin_prefix", "");
+                _whisperdistance = _config.GetInt("whisper_distance", _whisperdistance);
+                _saydistance = _config.GetInt("say_distance", _saydistance);
+                _shoutdistance = _config.GetInt("shout_distance", _shoutdistance);
+                _adminPrefix = _config.GetString("admin_prefix", "");
 
             }
-            m_saydistanceSQ = m_saydistance * m_saydistance;
-            m_shoutdistanceSQ = m_shoutdistance * m_shoutdistance;
-            m_whisperdistanceSQ = m_whisperdistance *m_whisperdistance;
+            _saydistanceSQ = _saydistance * _saydistance;
+            _shoutdistanceSQ = _shoutdistance * _shoutdistance;
+            _whisperdistanceSQ = _whisperdistance *_whisperdistance;
 
         }
 
         public virtual void AddRegion(Scene scene)
         {
-            if (!m_enabled) return;
+            if (!_enabled) return;
 
-            lock (m_syncy)
+            lock (_syncy)
             {
-                if (!m_scenes.Contains(scene))
+                if (!_scenes.Contains(scene))
                 {
-                    m_scenes.Add(scene);
+                    _scenes.Add(scene);
                     scene.EventManager.OnNewClient += OnNewClient;
                     scene.EventManager.OnChatFromWorld += OnChatFromWorld;
                     scene.EventManager.OnChatBroadcast += OnChatBroadcast;
                 }
             }
 
-            m_log.InfoFormat("[CHAT]: Initialized for {0} w:{1} s:{2} S:{3}", scene.RegionInfo.RegionName,
-                             m_whisperdistance, m_saydistance, m_shoutdistance);
+            _log.InfoFormat("[CHAT]: Initialized for {0} w:{1} s:{2} S:{3}", scene.RegionInfo.RegionName,
+                             _whisperdistance, _saydistance, _shoutdistance);
         }
 
         public virtual void RegionLoaded(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
             ISimulatorFeaturesModule featuresModule = scene.RequestModuleInterface<ISimulatorFeaturesModule>();
@@ -120,16 +120,16 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
 
         public virtual void RemoveRegion(Scene scene)
         {
-            if (!m_enabled) return;
+            if (!_enabled) return;
 
-            lock (m_syncy)
+            lock (_syncy)
             {
-                if (m_scenes.Contains(scene))
+                if (_scenes.Contains(scene))
                 {
                     scene.EventManager.OnNewClient -= OnNewClient;
                     scene.EventManager.OnChatFromWorld -= OnChatFromWorld;
                     scene.EventManager.OnChatBroadcast -= OnChatBroadcast;
-                    m_scenes.Remove(scene);
+                    _scenes.Remove(scene);
                 }
             }
         }
@@ -142,15 +142,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
         {
         }
 
-        public virtual Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public virtual Type ReplaceableInterface => null;
 
-        public virtual string Name
-        {
-            get { return "ChatModule"; }
-        }
+        public virtual string Name => "ChatModule";
 
         #endregion
 
@@ -184,7 +178,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
             // sanity check:
             if (c.Sender == null)
             {
-                m_log.ErrorFormat("[CHAT]: OnChatFromClient from {0} has empty Sender field!", sender);
+                _log.ErrorFormat("[CHAT]: OnChatFromClient from {0} has empty Sender field!", sender);
                 return;
             }
 
@@ -224,9 +218,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
 
             if (c.Channel == DEBUG_CHANNEL) c.Type = ChatTypeEnum.DebugChannel;
 
-            if(!m_scenes.Contains(scene))
+            if(!_scenes.Contains(scene))
             {
-                m_log.WarnFormat("[CHAT]: message from unkown scene {0} ignored",
+                _log.WarnFormat("[CHAT]: message from unkown scene {0} ignored",
                                      scene.RegionInfo.RegionName);
                 return;
             }
@@ -242,7 +236,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
                     fromID = c.Sender.AgentId;
                     if (avatar.IsViewerUIGod)
                     { // let gods speak to outside or things may get confusing
-                        fromNamePrefix = m_adminPrefix;
+                        fromNamePrefix = _adminPrefix;
                         checkParcelHide = false;
                     }
                     else
@@ -274,7 +268,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
             if (message.Length >= 1000) // libomv limit
                 message = message.Substring(0, 1000);
 
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[CHAT]: DCTA: fromID {0} fromName {1}, region{2}, cType {3}, sType {4}",
 //                fromID, fromName, scene.RegionInfo.RegionName, c.Type, sourceType);
 
@@ -373,7 +367,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
                 ownerID = ((SceneObjectPart)c.SenderObject).OwnerID;
             }
 
-            // m_log.DebugFormat("[CHAT] Broadcast: fromID {0} fromName {1}, cType {2}, sType {3}", fromID, fromName, cType, sourceType);
+            // _log.DebugFormat("[CHAT] Broadcast: fromID {0} fromName {1}, cType {2}, sType {3}", fromID, fromName, cType, sourceType);
             HashSet<UUID> receiverIDs = new HashSet<UUID>();
 
             if (c.Scene != null)
@@ -430,13 +424,13 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
                 switch(type)
                 {
                     case ChatTypeEnum.Whisper:
-                        maxDistSQ = m_whisperdistanceSQ;
+                        maxDistSQ = _whisperdistanceSQ;
                         break;
                     case ChatTypeEnum.Say:
-                        maxDistSQ = m_saydistanceSQ;
+                        maxDistSQ = _saydistanceSQ;
                         break;
                     case ChatTypeEnum.Shout:
-                        maxDistSQ = m_shoutdistanceSQ;
+                        maxDistSQ = _shoutdistanceSQ;
                         break;
                     default:
                         maxDistSQ = -1f;
@@ -493,7 +487,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
         }
         #region SimulatorFeaturesRequest
 
-        protected static OSDInteger m_SayRange, m_WhisperRange, m_ShoutRange;
+        protected static OSDInteger _SayRange, _WhisperRange, _ShoutRange;
 
         protected virtual void OnSimulatorFeaturesRequest(UUID agentID, ref OSDMap features)
         {
@@ -501,17 +495,17 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
             if (!features.TryGetValue("OpenSimExtras", out extras))
                 extras = new OSDMap();
 
-            if (m_SayRange == null)
+            if (_SayRange == null)
             {
                 // Do this only once
-                m_SayRange = new OSDInteger(m_saydistance);
-                m_WhisperRange = new OSDInteger(m_whisperdistance);
-                m_ShoutRange = new OSDInteger(m_shoutdistance);
+                _SayRange = new OSDInteger(_saydistance);
+                _WhisperRange = new OSDInteger(_whisperdistance);
+                _ShoutRange = new OSDInteger(_shoutdistance);
             }
 
-            ((OSDMap)extras)["say-range"] = m_SayRange;
-            ((OSDMap)extras)["whisper-range"] = m_WhisperRange;
-            ((OSDMap)extras)["shout-range"] = m_ShoutRange;
+            ((OSDMap)extras)["say-range"] = _SayRange;
+            ((OSDMap)extras)["whisper-range"] = _WhisperRange;
+            ((OSDMap)extras)["shout-range"] = _ShoutRange;
 
         }
 

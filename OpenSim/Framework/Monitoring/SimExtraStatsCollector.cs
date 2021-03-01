@@ -78,11 +78,11 @@ namespace OpenSim.Framework.Monitoring
 
 
         private volatile float scriptLinesPerSecond;
-        private volatile float m_frameDilation;
-        private volatile float m_usersLoggingIn;
-        private volatile float m_totalGeoPrims;
-        private volatile float m_totalMeshes;
-        private volatile float m_inUseThreads;
+        private volatile float _frameDilation;
+        private volatile float _usersLoggingIn;
+        private volatile float _totalGeoPrims;
+        private volatile float _totalMeshes;
+        private volatile float _inUseThreads;
 
 //        /// <summary>
 //        /// These statistics are being collected by push rather than pull.  Pull would be simpler, but I had the
@@ -106,29 +106,29 @@ namespace OpenSim.Framework.Monitoring
 //        /// </value>
 //        public long TextureCacheMemoryUsage { get { return textureCacheMemoryUsage; } }
 
-        public float TimeDilation { get { return timeDilation; } }
-        public float SimFps { get { return simFps; } }
-        public float PhysicsFps { get { return physicsFps; } }
-        public float AgentUpdates { get { return agentUpdates; } }
-        public float RootAgents { get { return rootAgents; } }
-        public float ChildAgents { get { return childAgents; } }
-        public float TotalPrims { get { return totalPrims; } }
-        public float ActivePrims { get { return activePrims; } }
-        public float TotalFrameTime { get { return totalFrameTime; } }
-        public float NetFrameTime { get { return netFrameTime; } }
-        public float PhysicsFrameTime { get { return physicsFrameTime; } }
-        public float OtherFrameTime { get { return otherFrameTime; } }
-        public float ImageFrameTime { get { return imageFrameTime; } }
-        public float InPacketsPerSecond { get { return inPacketsPerSecond; } }
-        public float OutPacketsPerSecond { get { return outPacketsPerSecond; } }
-        public float UnackedBytes { get { return unackedBytes; } }
-        public float AgentFrameTime { get { return agentFrameTime; } }
-        public float PendingDownloads { get { return pendingDownloads; } }
-        public float PendingUploads { get { return pendingUploads; } }
-        public float ActiveScripts { get { return activeScripts; } }
-        public float ScriptLinesPerSecond { get { return scriptLinesPerSecond; } }
+        public float TimeDilation => timeDilation;
+        public float SimFps => simFps;
+        public float PhysicsFps => physicsFps;
+        public float AgentUpdates => agentUpdates;
+        public float RootAgents => rootAgents;
+        public float ChildAgents => childAgents;
+        public float TotalPrims => totalPrims;
+        public float ActivePrims => activePrims;
+        public float TotalFrameTime => totalFrameTime;
+        public float NetFrameTime => netFrameTime;
+        public float PhysicsFrameTime => physicsFrameTime;
+        public float OtherFrameTime => otherFrameTime;
+        public float ImageFrameTime => imageFrameTime;
+        public float InPacketsPerSecond => inPacketsPerSecond;
+        public float OutPacketsPerSecond => outPacketsPerSecond;
+        public float UnackedBytes => unackedBytes;
+        public float AgentFrameTime => agentFrameTime;
+        public float PendingDownloads => pendingDownloads;
+        public float PendingUploads => pendingUploads;
+        public float ActiveScripts => activeScripts;
+        public float ScriptLinesPerSecond => scriptLinesPerSecond;
 
-//        /// <summary>
+        //        /// <summary>
 //        /// This is the time it took for the last asset request made in response to a cache miss.
 //        /// </summary>
 //        public TimeSpan AssetRequestTimeAfterCacheMiss { get { return assetRequestTimeAfterCacheMiss; } }
@@ -290,11 +290,11 @@ namespace OpenSim.Framework.Monitoring
             physicsStep             = stats.StatsBlock[22].StatValue;
 
             scriptLinesPerSecond    = stats.ExtraStatsBlock[0].StatValue;
-            m_frameDilation         = stats.ExtraStatsBlock[1].StatValue;
-            m_usersLoggingIn        = stats.ExtraStatsBlock[2].StatValue;
-            m_totalGeoPrims         = stats.ExtraStatsBlock[3].StatValue;
-            m_totalMeshes           = stats.ExtraStatsBlock[4].StatValue;
-            m_inUseThreads          = stats.ExtraStatsBlock[5].StatValue;
+            _frameDilation         = stats.ExtraStatsBlock[1].StatValue;
+            _usersLoggingIn        = stats.ExtraStatsBlock[2].StatValue;
+            _totalGeoPrims         = stats.ExtraStatsBlock[3].StatValue;
+            _totalMeshes           = stats.ExtraStatsBlock[4].StatValue;
+            _inUseThreads          = stats.ExtraStatsBlock[5].StatValue;
         }
 
         /// <summary>
@@ -488,15 +488,15 @@ Asset service request failures: {3}" + Environment.NewLine,
             args["Uptime"] = OSD.FromString (uptime);
             args["Version"] = OSD.FromString (version);
 
-            args["FrameDilatn"] = OSD.FromString(string.Format("{0:0.##}", m_frameDilation));
+            args["FrameDilatn"] = OSD.FromString(string.Format("{0:0.##}", _frameDilation));
             args["Logging in Users"] = OSD.FromString(string.Format("{0:0.##}",
-                m_usersLoggingIn));
+                _usersLoggingIn));
             args["GeoPrims"] = OSD.FromString(string.Format("{0:0.##}",
-                m_totalGeoPrims));
+                _totalGeoPrims));
             args["Mesh Objects"] = OSD.FromString(string.Format("{0:0.##}",
-                m_totalMeshes));
+                _totalMeshes));
             args["XEngine Thread Count"] = OSD.FromString(string.Format("{0:0.##}",
-                m_inUseThreads));
+                _inUseThreads));
             args["Util Thread Count"] = OSD.FromString(string.Format("{0:0.##}",
                 Util.GetSmartThreadPoolInfo().InUseThreads));
             args["System Thread Count"] = OSD.FromString(string.Format(
@@ -514,11 +514,11 @@ Asset service request failures: {3}" + Environment.NewLine,
     /// </summary>
     public class PacketQueueStatsCollector : IStatsCollector
     {
-        private readonly IPullStatsProvider m_statsProvider;
+        private readonly IPullStatsProvider _statsProvider;
 
         public PacketQueueStatsCollector(IPullStatsProvider provider)
         {
-            m_statsProvider = provider;
+            _statsProvider = provider;
         }
 
         /// <summary>
@@ -527,7 +527,7 @@ Asset service request failures: {3}" + Environment.NewLine,
         /// <returns></returns>
         public string Report()
         {
-            return m_statsProvider.GetStats();
+            return _statsProvider.GetStats();
         }
 
         public string XReport(string uptime, string version)

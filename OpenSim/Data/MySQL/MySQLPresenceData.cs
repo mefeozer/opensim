@@ -37,7 +37,7 @@ namespace OpenSim.Data.MySQL
     public class MySQLPresenceData : MySQLGenericTableHandler<PresenceData>,
             IPresenceData
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public MySQLPresenceData(string connectionString, string realm) :
                 base(connectionString, realm, "Presence")
@@ -59,7 +59,7 @@ namespace OpenSim.Data.MySQL
         {
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = string.Format("delete from {0} where `RegionID`=?RegionID", m_Realm);
+                cmd.CommandText = string.Format("delete from {0} where `RegionID`=?RegionID", _Realm);
 
                 cmd.Parameters.AddWithValue("?RegionID", regionID.ToString());
 
@@ -78,7 +78,7 @@ namespace OpenSim.Data.MySQL
 
             using (MySqlCommand cmd = new MySqlCommand())
             {
-                cmd.CommandText = string.Format("update {0} set RegionID=?RegionID, LastSeen=NOW() where `SessionID`=?SessionID", m_Realm);
+                cmd.CommandText = string.Format("update {0} set RegionID=?RegionID, LastSeen=NOW() where `SessionID`=?SessionID", _Realm);
 
                 cmd.Parameters.AddWithValue("?SessionID", sessionID.ToString());
                 cmd.Parameters.AddWithValue("?RegionID", regionID.ToString());

@@ -31,7 +31,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     public sealed class BSConstraintHinge : BSConstraint
 {
-    public override ConstraintType Type { get { return ConstraintType.HINGE_CONSTRAINT_TYPE; } }
+    public override ConstraintType Type => ConstraintType.HINGE_CONSTRAINT_TYPE;
 
     public BSConstraintHinge(BulletWorld world, BulletBody obj1, BulletBody obj2,
                     Vector3 pivotInA, Vector3 pivotInB,
@@ -39,12 +39,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     bool useLinearReferenceFrameA, bool disableCollisionsBetweenLinkedBodies)
         : base(world)
     {
-        m_body1 = obj1;
-        m_body2 = obj2;
-        m_constraint = PhysicsScene.PE.CreateHingeConstraint(world, obj1, obj2,
+        _body1 = obj1;
+        _body2 = obj2;
+        _constraint = PhysicsScene.PE.CreateHingeConstraint(world, obj1, obj2,
                                 pivotInA, pivotInB, axisInA, axisInB,
                                 useLinearReferenceFrameA, disableCollisionsBetweenLinkedBodies);
-        m_enabled = true;
+        _enabled = true;
     }
 
 }

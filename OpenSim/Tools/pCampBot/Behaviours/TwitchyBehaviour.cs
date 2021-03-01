@@ -38,7 +38,7 @@ namespace pCampBot
     /// </summary>
     public class TwitchyBehaviour : AbstractBehaviour
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public TwitchyBehaviour()
         {
@@ -56,7 +56,7 @@ namespace pCampBot
                 Bot.Client.Self.Movement.BodyRotation.Z,
                 Bot.Client.Self.Movement.BodyRotation.W);
 
-            //m_log.DebugFormat("[TWITCH]: BodyRot {0}", Bot.Client.Self.Movement.BodyRotation);
+            //_log.DebugFormat("[TWITCH]: BodyRot {0}", Bot.Client.Self.Movement.BodyRotation);
             direction = -direction;
 
             Bot.Client.Self.Movement.SendUpdate();

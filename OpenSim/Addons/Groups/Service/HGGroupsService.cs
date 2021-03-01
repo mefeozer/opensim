@@ -40,20 +40,20 @@ namespace OpenSim.Groups
 {
     public class HGGroupsService : GroupsService
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IOfflineIMService m_OfflineIM;
-        private readonly IUserAccountService m_UserAccounts;
-        private readonly string m_HomeURI;
+        private readonly IOfflineIMService _OfflineIM;
+        private readonly IUserAccountService _UserAccounts;
+        private readonly string _HomeURI;
 
         public HGGroupsService(IConfigSource config, IOfflineIMService im, IUserAccountService users, string homeURI)
             : base(config, string.Empty)
         {
-            m_OfflineIM = im;
-            m_UserAccounts = users;
-            m_HomeURI = homeURI;
-            if (!m_HomeURI.EndsWith("/"))
-                m_HomeURI += "/";
+            _OfflineIM = im;
+            _UserAccounts = users;
+            _HomeURI = homeURI;
+            if (!_HomeURI.EndsWith("/"))
+                _HomeURI += "/";
         }
 
 
@@ -74,7 +74,7 @@ namespace OpenSim.Groups
             }
 
             // Check if it already exists
-            GroupData grec = m_Database.RetrieveGroup(groupID);
+            GroupData grec = _Database.RetrieveGroup(groupID);
             if (grec == null ||
                 !string.IsNullOrEmpty(grec.Data["Location"]) && !string.Equals(grec.Data["Location"], serviceLocation, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -97,7 +97,7 @@ namespace OpenSim.Groups
                 grec.Data["OwnerRoleID"] = UUID.Zero.ToString();
 
 
-                if (!m_Database.StoreGroup(grec))
+                if (!_Database.StoreGroup(grec))
                     return false;
             }
 
@@ -129,7 +129,7 @@ namespace OpenSim.Groups
             membership.Data["AcceptNotices"] = "1";
             membership.Data["AccessToken"] = accessToken;
 
-            m_Database.StoreMember(membership);
+            _Database.StoreMember(membership);
 
             return true;
         }
@@ -137,7 +137,7 @@ namespace OpenSim.Groups
         public bool RemoveAgentFromGroup(string RequestingAgentID, string AgentID, UUID GroupID, string token)
         {
             // check the token
-            MembershipData membership = m_Database.RetrieveMember(GroupID, AgentID);
+            MembershipData membership = _Database.RetrieveMember(GroupID, AgentID);
             if (membership != null)
             {
                 if (!string.IsNullOrEmpty(token) && token.Equals(membership.Data["AccessToken"]))
@@ -146,13 +146,13 @@ namespace OpenSim.Groups
                 }
                 else
                 {
-                    m_log.DebugFormat("[Groups.HGGroupsService]: access token {0} did not match stored one {1}", token, membership.Data["AccessToken"]);
+                    _log.DebugFormat("[Groups.HGGroupsService]: access token {0} did not match stored one {1}", token, membership.Data["AccessToken"]);
                     return false;
                 }
             }
             else
             {
-                m_log.DebugFormat("[Groups.HGGroupsService]: membership not found for {0}", AgentID);
+                _log.DebugFormat("[Groups.HGGroupsService]: membership not found for {0}", AgentID);
                 return false;
             }
         }
@@ -187,9 +187,9 @@ namespace OpenSim.Groups
             {
                 if (m.AgentID.ToString().Length == 36) // UUID
                 {
-                    UserAccount account = m_UserAccounts.GetUserAccount(UUID.Zero, new UUID(m.AgentID));
+                    UserAccount account = _UserAccounts.GetUserAccount(UUID.Zero, new UUID(m.AgentID));
                     if (account != null)
-                        m.AgentID = Util.UniversalIdentifier(account.PrincipalID, account.FirstName, account.LastName, m_HomeURI);
+                        m.AgentID = Util.UniversalIdentifier(account.PrincipalID, account.FirstName, account.LastName, _HomeURI);
                 }
             });
 
@@ -216,9 +216,9 @@ namespace OpenSim.Groups
             {
                 if (m.MemberID.ToString().Length == 36) // UUID
                 {
-                    UserAccount account = m_UserAccounts.GetUserAccount(UUID.Zero, new UUID(m.MemberID));
+                    UserAccount account = _UserAccounts.GetUserAccount(UUID.Zero, new UUID(m.MemberID));
                     if (account != null)
-                        m.MemberID = Util.UniversalIdentifier(account.PrincipalID, account.FirstName, account.LastName, m_HomeURI);
+                        m.MemberID = Util.UniversalIdentifier(account.PrincipalID, account.FirstName, account.LastName, _HomeURI);
                 }
             });
 
@@ -232,21 +232,21 @@ namespace OpenSim.Groups
             ExtendedGroupRecord grec = GetGroupRecord(RequestingAgentID, groupID);
             if (grec == null)
             {
-                m_log.DebugFormat("[Groups.HGGroupsService]: attempt at adding notice to non-existent group proxy");
+                _log.DebugFormat("[Groups.HGGroupsService]: attempt at adding notice to non-existent group proxy");
                 return false;
             }
 
             // check that the group is remote
             if (string.IsNullOrEmpty(grec.ServiceLocation))
             {
-                m_log.DebugFormat("[Groups.HGGroupsService]: attempt at adding notice to local (non-proxy) group");
+                _log.DebugFormat("[Groups.HGGroupsService]: attempt at adding notice to local (non-proxy) group");
                 return false;
             }
 
             // check that there isn't already a notice with the same ID
             if (GetGroupNotice(RequestingAgentID, noticeID) != null)
             {
-                m_log.DebugFormat("[Groups.HGGroupsService]: a notice with the same ID already exists", grec.ServiceLocation);
+                _log.DebugFormat("[Groups.HGGroupsService]: a notice with the same ID already exists", grec.ServiceLocation);
                 return false;
             }
 
@@ -258,7 +258,7 @@ namespace OpenSim.Groups
             //GroupsServiceHGConnector c = new GroupsServiceHGConnector(grec.ServiceLocation);
             //if (!c.VerifyNotice(noticeID, groupID))
             //{
-            //    m_log.DebugFormat("[Groups.HGGroupsService]: notice does not exist at origin {0}", grec.ServiceLocation);
+            //    _log.DebugFormat("[Groups.HGGroupsService]: notice does not exist at origin {0}", grec.ServiceLocation);
             //    return false;
             //}
 
@@ -311,7 +311,7 @@ namespace OpenSim.Groups
                 };
 
                 string reason = string.Empty;
-                m_OfflineIM.StoreMessage(msg, out reason);
+                _OfflineIM.StoreMessage(msg, out reason);
 
             }
         }
@@ -319,14 +319,14 @@ namespace OpenSim.Groups
         private bool AddAgentToGroupInvite(UUID inviteID, UUID groupID, string agentID)
         {
             // Check whether the invitee is already a member of the group
-            MembershipData m = m_Database.RetrieveMember(groupID, agentID);
+            MembershipData m = _Database.RetrieveMember(groupID, agentID);
             if (m != null)
                 return false;
 
             // Check whether there are pending invitations and delete them
-            InvitationData invite = m_Database.RetrieveInvitation(groupID, agentID);
+            InvitationData invite = _Database.RetrieveInvitation(groupID, agentID);
             if (invite != null)
-                m_Database.DeleteInvite(invite.InviteID);
+                _Database.DeleteInvite(invite.InviteID);
 
             invite = new InvitationData
             {
@@ -337,29 +337,29 @@ namespace OpenSim.Groups
                 Data = new Dictionary<string, string>()
             };
 
-            return m_Database.StoreInvitation(invite);
+            return _Database.StoreInvitation(invite);
         }
 
         private void FillFounderUUI(ExtendedGroupRecord grec)
         {
-            UserAccount account = m_UserAccounts.GetUserAccount(UUID.Zero, grec.FounderID);
+            UserAccount account = _UserAccounts.GetUserAccount(UUID.Zero, grec.FounderID);
             if (account != null)
-                grec.FounderUUI = Util.UniversalIdentifier(account.PrincipalID, account.FirstName, account.LastName, m_HomeURI);
+                grec.FounderUUI = Util.UniversalIdentifier(account.PrincipalID, account.FirstName, account.LastName, _HomeURI);
         }
 
         private bool VerifyToken(UUID groupID, string agentID, string token)
         {
             // check the token
-            MembershipData membership = m_Database.RetrieveMember(groupID, agentID);
+            MembershipData membership = _Database.RetrieveMember(groupID, agentID);
             if (membership != null)
             {
                 if (!string.IsNullOrEmpty(token) && token.Equals(membership.Data["AccessToken"]))
                     return true;
                 else
-                    m_log.DebugFormat("[Groups.HGGroupsService]: access token {0} did not match stored one {1}", token, membership.Data["AccessToken"]);
+                    _log.DebugFormat("[Groups.HGGroupsService]: access token {0} did not match stored one {1}", token, membership.Data["AccessToken"]);
             }
             else
-                m_log.DebugFormat("[Groups.HGGroupsService]: membership not found for {0}", agentID);
+                _log.DebugFormat("[Groups.HGGroupsService]: membership not found for {0}", agentID);
 
             return false;
         }

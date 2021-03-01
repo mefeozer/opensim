@@ -46,9 +46,9 @@ namespace OpenSim.Services.LLLoginService
 {
     public class LLFailedLoginResponse : OpenSim.Services.Interfaces.FailedLoginResponse
     {
-        protected string m_key;
-        protected string m_value;
-        protected string m_login;
+        protected string _key;
+        protected string _value;
+        protected string _login;
 
         public static LLFailedLoginResponse UserProblem;
         public static LLFailedLoginResponse GridProblem;
@@ -90,17 +90,17 @@ namespace OpenSim.Services.LLLoginService
 
         public LLFailedLoginResponse(string key, string value, string login)
         {
-            m_key = key;
-            m_value = value;
-            m_login = login;
+            _key = key;
+            _value = value;
+            _login = login;
         }
 
         public override Hashtable ToHashtable()
         {
             Hashtable loginError = new Hashtable();
-            loginError["reason"] = m_key;
-            loginError["message"] = m_value;
-            loginError["login"] = m_login;
+            loginError["reason"] = _key;
+            loginError["message"] = _value;
+            loginError["login"] = _login;
             return loginError;
         }
 
@@ -108,9 +108,9 @@ namespace OpenSim.Services.LLLoginService
         {
             OSDMap map = new OSDMap();
 
-            map["reason"] = OSD.FromString(m_key);
-            map["message"] = OSD.FromString(m_value);
-            map["login"] = OSD.FromString(m_login);
+            map["reason"] = OSD.FromString(_key);
+            map["message"] = OSD.FromString(_value);
+            map["login"] = OSD.FromString(_login);
 
             return map;
         }
@@ -121,7 +121,7 @@ namespace OpenSim.Services.LLLoginService
     /// </summary>
     public class LLLoginResponse : OpenSim.Services.Interfaces.LoginResponse
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly Hashtable globalTexturesHash;
         // Global Textures
         private static string sunTexture = "cce0f112-878f-4586-a2e2-a8f104bba271";
@@ -192,7 +192,7 @@ namespace OpenSim.Services.LLLoginService
         private string seedCapability;
         private string lookAt;
 
-        private BuddyList m_buddyList = null;
+        private BuddyList _buddyList = null;
 
         private string currency;
         private string classifiedFee;
@@ -267,7 +267,7 @@ namespace OpenSim.Services.LLLoginService
             LookAt = string.Format("[r{0},r{1},r{2}]", lookAt.X, lookAt.Y, lookAt.Z);
 
             FillOutRegionData(destination);
-            m_log.DebugFormat("[LOGIN RESPONSE] LLLoginResponse create. sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);
+            _log.DebugFormat("[LOGIN RESPONSE] LLLoginResponse create. sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);
 
             FillOutSeedCap(aCircuit, destination, clientIP);
 
@@ -298,7 +298,7 @@ namespace OpenSim.Services.LLLoginService
 
                     if (dstTimeZone == null)
                     {
-                        m_log.WarnFormat(
+                        _log.WarnFormat(
                             "[LLOGIN RESPONSE]: No valid timezone found for DST in {0}, falling back to system time.", tzList);
                         DST = TimeZone.CurrentTimeZone.IsDaylightSavingTime(DateTime.Now) ? "Y" : "N";
                     }
@@ -321,7 +321,7 @@ namespace OpenSim.Services.LLLoginService
             }
             catch (Exception e)
             {
-                m_log.WarnFormat(
+                _log.WarnFormat(
                     "[LLLOGIN SERVICE]: Error processing inventory skeleton of agent {0} - {1}",
                     agentID, e);
 
@@ -360,7 +360,7 @@ namespace OpenSim.Services.LLLoginService
                 foreach (InventoryItemBase gesture in gestures)
                 {
                     Hashtable item = new Hashtable();
-                    item["item_id"] = gesture.ID.ToString();
+                    item["ite_id"] = gesture.ID.ToString();
                     item["asset_id"] = gesture.AssetID.ToString();
                     list.Add(item);
                 }
@@ -422,7 +422,7 @@ namespace OpenSim.Services.LLLoginService
 //            }
 //            catch (Exception e)
 //            {
-//                m_log.WarnFormat(
+//                _log.WarnFormat(
 //                    "[TIMEZONE]: {0} Falling back to system time. System time should be set to Pacific Standard Time to provide the expected time",
 //                    e.Message);
 
@@ -522,8 +522,8 @@ namespace OpenSim.Services.LLLoginService
                 AddToUIConfig("allow_first_life", allowFirstLife);
                 uiConfig.Add(uiConfigHash);
 
-                responseData["sim_port"] = (int) SimPort;
-                responseData["sim_ip"] = SimAddress;
+                responseData["si_port"] = (int) SimPort;
+                responseData["si_ip"] = SimAddress;
                 responseData["http_port"] = (int)SimHttpPort;
 
                 responseData["agent_id"] = AgentID.ToString();
@@ -561,7 +561,7 @@ namespace OpenSim.Services.LLLoginService
                 responseData["region_y"] = (int)RegionY;
                 responseData["region_size_x"] = (int)RegionSizeX;
                 responseData["region_size_y"] = (int)RegionSizeY;
-                m_log.DebugFormat("[LOGIN RESPONSE] returning sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);
+                _log.DebugFormat("[LOGIN RESPONSE] returning sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);
 
                 if (!string.IsNullOrEmpty(searchURL))
                     responseData["search"] = searchURL;
@@ -585,9 +585,9 @@ namespace OpenSim.Services.LLLoginService
                     responseData["openid_token"] = AgentID.ToString() + ":" + Util.Md5Hash(SecureSessionID.ToString());
                 }
 
-                if (m_buddyList != null)
+                if (_buddyList != null)
                 {
-                    responseData["buddy-list"] = m_buddyList.ToArray();
+                    responseData["buddy-list"] = _buddyList.ToArray();
                 }
 
                 if (!string.IsNullOrEmpty(currency))
@@ -605,7 +605,7 @@ namespace OpenSim.Services.LLLoginService
             }
             catch (Exception e)
             {
-                m_log.Warn("[CLIENT]: LoginResponse: Error creating Hashtable Response: " + e.Message);
+                _log.Warn("[CLIENT]: LoginResponse: Error creating Hashtable Response: " + e.Message);
 
                 return LLFailedLoginResponse.InternalError.ToHashtable();
             }
@@ -622,8 +622,8 @@ namespace OpenSim.Services.LLLoginService
                 map["agent_access"] = OSD.FromString(agentAccess);
                 map["agent_access_max"] = OSD.FromString(agentAccessMax);
 
-                map["sim_port"] = OSD.FromInteger(SimPort);
-                map["sim_ip"] = OSD.FromString(SimAddress);
+                map["si_port"] = OSD.FromInteger(SimPort);
+                map["si_ip"] = OSD.FromString(SimAddress);
 
                 map["agent_id"] = OSD.FromUUID(AgentID);
                 map["real_id"] = OSD.FromUUID(RealID);
@@ -710,9 +710,9 @@ namespace OpenSim.Services.LLLoginService
                 if (!string.IsNullOrEmpty(ClassifiedFee))
                     map["classified_fee"] = OSD.FromString(ClassifiedFee);
 
-                if (m_buddyList != null)
+                if (_buddyList != null)
                 {
-                    map["buddy-list"] = ArrayListToOSDArray(m_buddyList.ToArray());
+                    map["buddy-list"] = ArrayListToOSDArray(_buddyList.ToArray());
                 }
 
                 map["login"] = OSD.FromString("true");
@@ -721,7 +721,7 @@ namespace OpenSim.Services.LLLoginService
             }
             catch (Exception e)
             {
-                m_log.Warn("[CLIENT]: LoginResponse: Error creating LLSD Response: " + e.Message);
+                _log.Warn("[CLIENT]: LoginResponse: Error creating LLSD Response: " + e.Message);
 
                 return LLFailedLoginResponse.InternalError.ToOSDMap();
             }
@@ -829,7 +829,7 @@ namespace OpenSim.Services.LLLoginService
         protected virtual ArrayList GetInventoryLibrary(ILibraryService library)
         {
             Dictionary<UUID, InventoryFolderImpl> rootFolders = library.GetAllFolders();
-//            m_log.DebugFormat("[LLOGIN]: Library has {0} folders", rootFolders.Count);
+//            _log.DebugFormat("[LLOGIN]: Library has {0} folders", rootFolders.Count);
             //Dictionary<UUID, InventoryFolderImpl> rootFolders = new Dictionary<UUID,InventoryFolderImpl>();
             ArrayList folderHashes = new ArrayList();
 
@@ -855,7 +855,7 @@ namespace OpenSim.Services.LLLoginService
         {
             //for now create random inventory library owner
             Hashtable TempHash = new Hashtable();
-            TempHash["agent_id"] = Constants.m_MrOpenSimID.ToString(); // libFolder.Owner
+            TempHash["agent_id"] = Constants._MrOpenSimID.ToString(); // libFolder.Owner
             ArrayList inventoryLibOwner = new ArrayList();
             inventoryLibOwner.Add(TempHash);
             return inventoryLibOwner;
@@ -877,92 +877,92 @@ namespace OpenSim.Services.LLLoginService
 
         public string Login
         {
-            get { return login; }
-            set { login = value; }
+            get => login;
+            set => login = value;
         }
 
         public string DST
         {
-            get { return dst; }
-            set { dst = value; }
+            get => dst;
+            set => dst = value;
         }
 
         public string StipendSinceLogin
         {
-            get { return stipendSinceLogin; }
-            set { stipendSinceLogin = value; }
+            get => stipendSinceLogin;
+            set => stipendSinceLogin = value;
         }
 
         public string Gendered
         {
-            get { return gendered; }
-            set { gendered = value; }
+            get => gendered;
+            set => gendered = value;
         }
 
         public string EverLoggedIn
         {
-            get { return everLoggedIn; }
-            set { everLoggedIn = value; }
+            get => everLoggedIn;
+            set => everLoggedIn = value;
         }
 
         public uint SimPort
         {
-            get { return simPort; }
-            set { simPort = value; }
+            get => simPort;
+            set => simPort = value;
         }
 
         public uint SimHttpPort
         {
-            get { return simHttpPort; }
-            set { simHttpPort = value; }
+            get => simHttpPort;
+            set => simHttpPort = value;
         }
 
         public string SimAddress
         {
-            get { return simAddress; }
-            set { simAddress = value; }
+            get => simAddress;
+            set => simAddress = value;
         }
 
         public UUID AgentID
         {
-            get { return agentID; }
-            set { agentID = value; }
+            get => agentID;
+            set => agentID = value;
         }
 
         public UUID SessionID
         {
-            get { return sessionID; }
-            set { sessionID = value; }
+            get => sessionID;
+            set => sessionID = value;
         }
 
         public UUID SecureSessionID
         {
-            get { return secureSessionID; }
-            set { secureSessionID = value; }
+            get => secureSessionID;
+            set => secureSessionID = value;
         }
 
         public UUID RealID
         {
-            get { return realID; }
-            set { realID = value; }
+            get => realID;
+            set => realID = value;
         }
 
         public int CircuitCode
         {
-            get { return circuitCode; }
-            set { circuitCode = value; }
+            get => circuitCode;
+            set => circuitCode = value;
         }
 
         public uint RegionX
         {
-            get { return regionX; }
-            set { regionX = value; }
+            get => regionX;
+            set => regionX = value;
         }
 
         public uint RegionY
         {
-            get { return regionY; }
-            set { regionY = value; }
+            get => regionY;
+            set => regionY = value;
         }
 
         public int RegionSizeX { get; private set; }
@@ -970,170 +970,170 @@ namespace OpenSim.Services.LLLoginService
 
         public string SunTexture
         {
-            get { return sunTexture; }
-            set { sunTexture = value; }
+            get => sunTexture;
+            set => sunTexture = value;
         }
 
         public string CloudTexture
         {
-            get { return cloudTexture; }
-            set { cloudTexture = value; }
+            get => cloudTexture;
+            set => cloudTexture = value;
         }
 
         public string MoonTexture
         {
-            get { return moonTexture; }
-            set { moonTexture = value; }
+            get => moonTexture;
+            set => moonTexture = value;
         }
 
         public string Firstname
         {
-            get { return firstname; }
-            set { firstname = value; }
+            get => firstname;
+            set => firstname = value;
         }
 
         public string Lastname
         {
-            get { return lastname; }
-            set { lastname = value; }
+            get => lastname;
+            set => lastname = value;
         }
 
         public string AgentAccess
         {
-            get { return agentAccess; }
-            set { agentAccess = value; }
+            get => agentAccess;
+            set => agentAccess = value;
         }
 
         public string AgentAccessMax
         {
-            get { return agentAccessMax; }
-            set { agentAccessMax = value; }
+            get => agentAccessMax;
+            set => agentAccessMax = value;
         }
 
         public string StartLocation
         {
-            get { return startLocation; }
-            set { startLocation = value; }
+            get => startLocation;
+            set => startLocation = value;
         }
 
         public string LookAt
         {
-            get { return lookAt; }
-            set { lookAt = value; }
+            get => lookAt;
+            set => lookAt = value;
         }
 
         public string SeedCapability
         {
-            get { return seedCapability; }
-            set { seedCapability = value; }
+            get => seedCapability;
+            set => seedCapability = value;
         }
 
         public string ErrorReason
         {
-            get { return errorReason; }
-            set { errorReason = value; }
+            get => errorReason;
+            set => errorReason = value;
         }
 
         public string ErrorMessage
         {
-            get { return errorMessage; }
-            set { errorMessage = value; }
+            get => errorMessage;
+            set => errorMessage = value;
         }
 
         public ArrayList InventoryRoot
         {
-            get { return inventoryRoot; }
-            set { inventoryRoot = value; }
+            get => inventoryRoot;
+            set => inventoryRoot = value;
         }
 
         public ArrayList InventorySkeleton
         {
-            get { return agentInventory; }
-            set { agentInventory = value; }
+            get => agentInventory;
+            set => agentInventory = value;
         }
 
         public ArrayList InventoryLibrary
         {
-            get { return inventoryLibrary; }
-            set { inventoryLibrary = value; }
+            get => inventoryLibrary;
+            set => inventoryLibrary = value;
         }
 
         public ArrayList InventoryLibraryOwner
         {
-            get { return inventoryLibraryOwner; }
-            set { inventoryLibraryOwner = value; }
+            get => inventoryLibraryOwner;
+            set => inventoryLibraryOwner = value;
         }
 
         public ArrayList InventoryLibRoot
         {
-            get { return inventoryLibRoot; }
-            set { inventoryLibRoot = value; }
+            get => inventoryLibRoot;
+            set => inventoryLibRoot = value;
         }
 
         public ArrayList ActiveGestures
         {
-            get { return activeGestures; }
-            set { activeGestures = value; }
+            get => activeGestures;
+            set => activeGestures = value;
         }
 
         public string Home
         {
-            get { return home; }
-            set { home = value; }
+            get => home;
+            set => home = value;
         }
 
         public string MapTileURL
         {
-            get { return mapTileURL; }
-            set { mapTileURL = value; }
+            get => mapTileURL;
+            set => mapTileURL = value;
         }
 
         public string ProfileURL
         {
-            get { return profileURL; }
-            set { profileURL = value; }
+            get => profileURL;
+            set => profileURL = value;
         }
 
         public string OpenIDURL
         {
-            get { return openIDURL; }
-            set { openIDURL = value; }
+            get => openIDURL;
+            set => openIDURL = value;
         }
 
         public string SearchURL
         {
-            get { return searchURL; }
-            set { searchURL = value; }
+            get => searchURL;
+            set => searchURL = value;
         }
 
         public string Message
         {
-            get { return welcomeMessage; }
-            set { welcomeMessage = value; }
+            get => welcomeMessage;
+            set => welcomeMessage = value;
         }
 
         public BuddyList BuddList
         {
-            get { return m_buddyList; }
-            set { m_buddyList = value; }
+            get => _buddyList;
+            set => _buddyList = value;
         }
 
         public string Currency
         {
-            get { return currency; }
-            set { currency = value; }
+            get => currency;
+            set => currency = value;
         }
 
         public string ClassifiedFee
         {
-            get { return classifiedFee; }
-            set { classifiedFee = value; }
+            get => classifiedFee;
+            set => classifiedFee = value;
         }
 
         public int MaxAgentGroups
         {
-            get { return maxAgentGroups; }
-            set { maxAgentGroups = value; }
+            get => maxAgentGroups;
+            set => maxAgentGroups = value;
         }
 
         public string DestinationsURL

@@ -41,11 +41,11 @@ namespace OpenSim.Services.Connectors.Friends
 {
     public class FriendsServicesConnector : BaseServiceConnector, IFriendsService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_ServerURI = string.Empty;
+        private string _ServerURI = string.Empty;
 
         public FriendsServicesConnector()
         {
@@ -53,7 +53,7 @@ namespace OpenSim.Services.Connectors.Friends
 
         public FriendsServicesConnector(string serverURI)
         {
-            m_ServerURI = serverURI.TrimEnd('/');
+            _ServerURI = serverURI.TrimEnd('/');
         }
 
         public FriendsServicesConnector(IConfigSource source)
@@ -66,7 +66,7 @@ namespace OpenSim.Services.Connectors.Friends
             IConfig gridConfig = source.Configs["FriendsService"];
             if (gridConfig == null)
             {
-                m_log.Error("[FRIENDS SERVICE CONNECTOR]: FriendsService missing from OpenSim.ini");
+                _log.Error("[FRIENDS SERVICE CONNECTOR]: FriendsService missing from OpenSim.ini");
                 throw new Exception("Friends connector init error");
             }
 
@@ -75,10 +75,10 @@ namespace OpenSim.Services.Connectors.Friends
 
             if (string.IsNullOrEmpty(serviceURI))
             {
-                m_log.Error("[FRIENDS SERVICE CONNECTOR]: No Server URI named in section FriendsService");
+                _log.Error("[FRIENDS SERVICE CONNECTOR]: No Server URI named in section FriendsService");
                 throw new Exception("Friends connector init error");
             }
-            m_ServerURI = serviceURI;
+            _ServerURI = serviceURI;
             base.Initialise(source, "FriendsService");
         }
 
@@ -108,11 +108,11 @@ namespace OpenSim.Services.Connectors.Friends
         protected FriendInfo[] GetFriends(Dictionary<string, object> sendData, string PrincipalID)
         {
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/friends";
+            string uri = _ServerURI + "/friends";
 
             try
             {
-                string reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, m_Auth);
+                string reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, reqString, _Auth);
                 if (!string.IsNullOrEmpty(reply))
                 {
                     Dictionary<string, object> replyData = ServerUtils.ParseXmlResponse(reply);
@@ -126,7 +126,7 @@ namespace OpenSim.Services.Connectors.Friends
 
                         List<FriendInfo> finfos = new List<FriendInfo>();
                         Dictionary<string, object>.ValueCollection finfosList = replyData.Values;
-                        //m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: get neighbours returned {0} elements", rinfosList.Count);
+                        //_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: get neighbours returned {0} elements", rinfosList.Count);
                         foreach (object f in finfosList)
                         {
                             if (f is Dictionary<string, object>)
@@ -135,7 +135,7 @@ namespace OpenSim.Services.Connectors.Friends
                                 finfos.Add(finfo);
                             }
                             else
-                                m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: GetFriends {0} received invalid response type {1}",
+                                _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: GetFriends {0} received invalid response type {1}",
                                     PrincipalID, f.GetType());
                         }
 
@@ -143,14 +143,14 @@ namespace OpenSim.Services.Connectors.Friends
                         return finfos.ToArray();
                     }
                     else
-                        m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: GetFriends {0} received null response",
+                        _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: GetFriends {0} received null response",
                             PrincipalID);
 
                 }
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
             }
 
             return new FriendInfo[0];
@@ -165,14 +165,14 @@ namespace OpenSim.Services.Connectors.Friends
             sendData["METHOD"] = "storefriend";
 
             string reply = string.Empty;
-            string uri = m_ServerURI + "/friends";
+            string uri = _ServerURI + "/friends";
             try
             {
-                reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, ServerUtils.BuildQueryString(sendData), m_Auth);
+                reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, ServerUtils.BuildQueryString(sendData), _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
                 return false;
             }
 
@@ -187,11 +187,11 @@ namespace OpenSim.Services.Connectors.Friends
                     return success;
                 }
                 else
-                    m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: StoreFriend {0} {1} received null response",
+                    _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: StoreFriend {0} {1} received null response",
                         PrincipalID, Friend);
             }
             else
-                m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: StoreFriend received null reply");
+                _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: StoreFriend received null reply");
 
             return false;
 
@@ -220,14 +220,14 @@ namespace OpenSim.Services.Connectors.Friends
         public bool Delete(Dictionary<string, object> sendData, string PrincipalID, string Friend)
         {
             string reply = string.Empty;
-            string uri = m_ServerURI + "/friends";
+            string uri = _ServerURI + "/friends";
             try
             {
-                reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, ServerUtils.BuildQueryString(sendData), m_Auth);
+                reply = SynchronousRestFormsRequester.MakeRequest("POST", uri, ServerUtils.BuildQueryString(sendData), _Auth);
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
                 return false;
             }
 
@@ -242,11 +242,11 @@ namespace OpenSim.Services.Connectors.Friends
                     return success;
                 }
                 else
-                    m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: DeleteFriend {0} {1} received null response",
+                    _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: DeleteFriend {0} {1} received null response",
                         PrincipalID, Friend);
             }
             else
-                m_log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: DeleteFriend received null reply");
+                _log.DebugFormat("[FRIENDS SERVICE CONNECTOR]: DeleteFriend received null reply");
 
             return false;
         }

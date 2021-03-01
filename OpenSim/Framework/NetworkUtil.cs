@@ -46,22 +46,22 @@ namespace OpenSim.Framework
     public static class NetworkUtil
     {
         // Logger
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static bool m_disabled = true;
+        private static bool _disabled = true;
 
         public static bool Enabled
         {
-            set { m_disabled = value; }
-            get { return m_disabled; }
+            set => _disabled = value;
+            get => _disabled;
         }
 
         // IPv4Address, Subnet
-        static readonly Dictionary<IPAddress,IPAddress> m_subnets = new Dictionary<IPAddress, IPAddress>();
+        static readonly Dictionary<IPAddress,IPAddress> _subnets = new Dictionary<IPAddress, IPAddress>();
 
         public static IPAddress GetIPFor(IPAddress user, IPAddress simulator)
         {
-            if (m_disabled)
+            if (_disabled)
                 return simulator;
 
             // Check if we're accessing localhost.
@@ -69,13 +69,13 @@ namespace OpenSim.Framework
             {
                 if (host.Equals(user) && host.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    m_log.Info("[NetworkUtil] Localhost user detected, sending them '" + host + "' instead of '" + simulator + "'");
+                    _log.Info("[NetworkUtil] Localhost user detected, sending them '" + host + "' instead of '" + simulator + "'");
                     return host;
                 }
             }
 
             // Check for same LAN segment
-            foreach (KeyValuePair<IPAddress, IPAddress> subnet in m_subnets)
+            foreach (KeyValuePair<IPAddress, IPAddress> subnet in _subnets)
             {
                 byte[] subnetBytes = subnet.Value.GetAddressBytes();
                 byte[] localBytes = subnet.Key.GetAddressBytes();
@@ -100,7 +100,7 @@ namespace OpenSim.Framework
 
                 if (valid)
                 {
-                    m_log.Info("[NetworkUtil] Local LAN user detected, sending them '" + subnet.Key + "' instead of '" + simulator + "'");
+                    _log.Info("[NetworkUtil] Local LAN user detected, sending them '" + subnet.Key + "' instead of '" + simulator + "'");
                     return subnet.Key;
                 }
             }
@@ -118,7 +118,7 @@ namespace OpenSim.Framework
                 {
                     if (host.AddressFamily == AddressFamily.InterNetworkV6)
                     {
-                        m_log.Info("[NetworkUtil] Localhost user detected, sending them '" + host + "' instead of '" + defaultHostname + "'");
+                        _log.Info("[NetworkUtil] Localhost user detected, sending them '" + host + "' instead of '" + defaultHostname + "'");
                         return host;
                     }
                 }
@@ -128,18 +128,18 @@ namespace OpenSim.Framework
                 return null;
 
             // Check if we're accessing localhost.
-            foreach (KeyValuePair<IPAddress, IPAddress> pair in m_subnets)
+            foreach (KeyValuePair<IPAddress, IPAddress> pair in _subnets)
             {
                 IPAddress host = pair.Value;
                 if (host.Equals(destination) && host.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    m_log.Info("[NATROUTING] Localhost user detected, sending them '" + host + "' instead of '" + defaultHostname + "'");
+                    _log.Info("[NATROUTING] Localhost user detected, sending them '" + host + "' instead of '" + defaultHostname + "'");
                     return destination;
                 }
             }
 
             // Check for same LAN segment
-            foreach (KeyValuePair<IPAddress, IPAddress> subnet in m_subnets)
+            foreach (KeyValuePair<IPAddress, IPAddress> subnet in _subnets)
             {
                 byte[] subnetBytes = subnet.Value.GetAddressBytes();
                 byte[] localBytes = subnet.Key.GetAddressBytes();
@@ -164,7 +164,7 @@ namespace OpenSim.Framework
 
                 if (valid)
                 {
-                    m_log.Info("[NetworkUtil] Local LAN user detected, sending them '" + subnet.Key + "' instead of '" + defaultHostname + "'");
+                    _log.Info("[NetworkUtil] Local LAN user detected, sending them '" + subnet.Key + "' instead of '" + defaultHostname + "'");
                     return subnet.Key;
                 }
             }
@@ -192,7 +192,7 @@ namespace OpenSim.Framework
                         {
                             if (address.IPv4Mask != null)
                             {
-                                m_subnets.Add(address.Address, address.IPv4Mask);
+                                _subnets.Add(address.Address, address.IPv4Mask);
                             }
                         }
                     }
@@ -206,7 +206,7 @@ namespace OpenSim.Framework
 
         public static IPAddress GetIPFor(IPEndPoint user, string defaultHostname)
         {
-            if (!m_disabled)
+            if (!_disabled)
             {
                 // Try subnet matching
                 IPAddress rtn = GetExternalIPFor(user.Address, defaultHostname);
@@ -236,7 +236,7 @@ namespace OpenSim.Framework
 
         public static string GetHostFor(IPAddress user, string defaultHostname)
         {
-            if (!m_disabled)
+            if (!_disabled)
             {
                 IPAddress rtn = GetExternalIPFor(user, defaultHostname);
                 if (rtn != null)

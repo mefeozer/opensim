@@ -42,14 +42,14 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "InventoryTransferModule")]
     public class InventoryTransferModule : ISharedRegionModule
     {
-        private static readonly ILog m_log
+        private static readonly ILog _log
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        private readonly List<Scene> m_Scenelist = new List<Scene>();
+        private readonly List<Scene> _Scenelist = new List<Scene>();
 
-        private IMessageTransferModule m_TransferModule;
-        private bool m_Enabled = true;
+        private IMessageTransferModule _TransferModule;
+        private bool _Enabled = true;
 
         #region Region Module interface
 
@@ -63,7 +63,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
                         "InventoryTransferModule", "InventoryTransferModule") !=
                         "InventoryTransferModule")
                 {
-                    m_Enabled = false;
+                    _Enabled = false;
                     return;
                 }
             }
@@ -71,10 +71,10 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            m_Scenelist.Add(scene);
+            _Scenelist.Add(scene);
 
 //            scene.RegisterModuleInterface<IInventoryTransferModule>(this);
 
@@ -84,15 +84,15 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
 
         public void RegionLoaded(Scene scene)
         {
-            if (m_TransferModule == null)
+            if (_TransferModule == null)
             {
-                m_TransferModule = m_Scenelist[0].RequestModuleInterface<IMessageTransferModule>();
-                if (m_TransferModule == null)
+                _TransferModule = _Scenelist[0].RequestModuleInterface<IMessageTransferModule>();
+                if (_TransferModule == null)
                 {
-                    m_log.Error("[INVENTORY TRANSFER]: No Message transfer module found, transfers will be local only");
-                    m_Enabled = false;
+                    _log.Error("[INVENTORY TRANSFER]: No Message transfer module found, transfers will be local only");
+                    _Enabled = false;
 
-//                    m_Scenelist.Clear();
+//                    _Scenelist.Clear();
 //                    scene.EventManager.OnNewClient -= OnNewClient;
                     scene.EventManager.OnIncomingInstantMessage -= OnGridInstantMessage;
                 }
@@ -103,7 +103,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
         {
             scene.EventManager.OnNewClient -= OnNewClient;
             scene.EventManager.OnIncomingInstantMessage -= OnGridInstantMessage;
-            m_Scenelist.Remove(scene);
+            _Scenelist.Remove(scene);
         }
 
         public void PostInitialise()
@@ -114,15 +114,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
         {
         }
 
-        public string Name
-        {
-            get { return "InventoryModule"; }
-        }
+        public string Name => "InventoryModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
@@ -134,9 +128,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
 
         private Scene FindClientScene(UUID agentId)
         {
-            lock (m_Scenelist)
+            lock (_Scenelist)
             {
-                foreach (Scene scene in m_Scenelist)
+                foreach (Scene scene in _Scenelist)
                 {
                     ScenePresence presence = scene.GetScenePresence(agentId);
                     if (presence != null)
@@ -148,7 +142,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
 
         private void OnInstantMessage(IClientAPI client, GridInstantMessage im)
         {
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[INVENTORY TRANSFER]: {0} IM type received from client {1}. From={2} ({3}), To={4}",
 //                (InstantMessageDialog)im.dialog, client.Name,
 //                im.fromAgentID, im.fromAgentName, im.toAgentID);
@@ -197,7 +191,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
                                 ids[new UUID(iddata, i + 1)] = (AssetType)im.binaryBucket[i];
                         }
 
-                        m_log.DebugFormat("[INVENTORY TRANSFER]: offering folder {0} to agent {1}'s inventory",
+                        _log.DebugFormat("[INVENTORY TRANSFER]: offering folder {0} to agent {1}'s inventory",
                             folderID, recipientID);
 
                         InventoryFolderBase folderCopy = scene.GiveInventoryFolder(client, recipientID, agentID, folderID, UUID.Zero, ids);
@@ -225,7 +219,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
                             return;
                         }
 
-                        m_log.DebugFormat("[INVENTORY TRANSFER]: (giving) Inserting item {0} "+
+                        _log.DebugFormat("[INVENTORY TRANSFER]: (giving) Inserting item {0} "+
                                 "into agent {1}'s inventory",
                                 itemID, recipientID);
 
@@ -263,9 +257,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
                     else
                     {
                         im.offline = 0;
-                        if (m_TransferModule != null)
+                        if (_TransferModule != null)
                         {
-                            m_TransferModule.SendInstantMessage(im, delegate(bool success)
+                            _TransferModule.SendInstantMessage(im, delegate(bool success)
                             {
                                 if (!success)
                                     client.SendAlertMessage("User not online. Inventory has been saved");
@@ -289,8 +283,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
                     }
                     else
                     {
-                        if (m_TransferModule != null)
-                            m_TransferModule.SendInstantMessage(im, delegate(bool success) {});
+                        if (_TransferModule != null)
+                            _TransferModule.SendInstantMessage(im, delegate(bool success) {});
                     }
                     break;
                 }
@@ -398,8 +392,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer
                         }
                         else
                         {
-                            if (m_TransferModule != null)
-                                m_TransferModule.SendInstantMessage(im, delegate(bool success) { });
+                            if (_TransferModule != null)
+                                _TransferModule.SendInstantMessage(im, delegate(bool success) { });
                         }
                     }
                     break;

@@ -42,47 +42,47 @@ namespace OpenSim.Groups
 {
     public class GroupsServiceRobustConnector : ServiceConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly GroupsService m_GroupsService;
-        private readonly string m_ConfigName = "Groups";
+        private readonly GroupsService _GroupsService;
+        private readonly string _ConfigName = "Groups";
 
         public GroupsServiceRobustConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)
         {
             string key = string.Empty;
             if (!string.IsNullOrEmpty(configName))
-                m_ConfigName = configName;
+                _ConfigName = configName;
 
-            m_log.DebugFormat("[Groups.RobustConnector]: Starting with config name {0}", m_ConfigName);
+            _log.DebugFormat("[Groups.RobustConnector]: Starting with config name {0}", _ConfigName);
 
-            IConfig groupsConfig = config.Configs[m_ConfigName];
+            IConfig groupsConfig = config.Configs[_ConfigName];
             if (groupsConfig != null)
             {
                 key = groupsConfig.GetString("SecretKey", string.Empty);
-                m_log.DebugFormat("[Groups.RobustConnector]: Starting with secret key {0}", key);
+                _log.DebugFormat("[Groups.RobustConnector]: Starting with secret key {0}", key);
             }
 //            else
-//                m_log.DebugFormat("[Groups.RobustConnector]: Unable to find {0} section in configuration", m_ConfigName);
+//                _log.DebugFormat("[Groups.RobustConnector]: Unable to find {0} section in configuration", _ConfigName);
 
-            m_GroupsService = new GroupsService(config);
+            _GroupsService = new GroupsService(config);
 
-            IServiceAuth auth = ServiceAuth.Create(config, m_ConfigName);
+            IServiceAuth auth = ServiceAuth.Create(config, _ConfigName);
 
-            server.AddStreamHandler(new GroupsServicePostHandler(m_GroupsService, auth));
+            server.AddStreamHandler(new GroupsServicePostHandler(_GroupsService, auth));
         }
     }
 
     public class GroupsServicePostHandler : BaseStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly GroupsService m_GroupsService;
+        private readonly GroupsService _GroupsService;
 
         public GroupsServicePostHandler(GroupsService service, IServiceAuth auth) :
             base("POST", "/groups", auth)
         {
-            m_GroupsService = service;
+            _GroupsService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream requestData,
@@ -94,7 +94,7 @@ namespace OpenSim.Groups
 
             body = body.Trim();
 
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
 
             try
             {
@@ -107,7 +107,7 @@ namespace OpenSim.Groups
                 string method = request["METHOD"].ToString();
                 request.Remove("METHOD");
 
-//                m_log.DebugFormat("[Groups.Handler]: {0}", method);
+//                _log.DebugFormat("[Groups.Handler]: {0}", method);
                 switch (method)
                 {
                     case "PUTGROUP":
@@ -147,11 +147,11 @@ namespace OpenSim.Groups
                     case "FINDGROUPS":
                         return HandleFindGroups(request);
                 }
-                m_log.DebugFormat("[GROUPS HANDLER]: unknown method request: {0}", method);
+                _log.DebugFormat("[GROUPS HANDLER]: unknown method request: {0}", method);
             }
             catch (Exception e)
             {
-                m_log.Error(string.Format("[GROUPS HANDLER]: Exception {0} ", e.Message), e);
+                _log.Error(string.Format("[GROUPS HANDLER]: Exception {0} ", e.Message), e);
             }
 
             return FailureResult();
@@ -172,20 +172,20 @@ namespace OpenSim.Groups
                 string op = request["OP"].ToString();
                 if (op == "ADD")
                 {
-                    grec.GroupID = m_GroupsService.CreateGroup(RequestingAgentID, grec.GroupName, grec.Charter, grec.ShowInList, grec.GroupPicture, grec.MembershipFee,
+                    grec.GroupID = _GroupsService.CreateGroup(RequestingAgentID, grec.GroupName, grec.Charter, grec.ShowInList, grec.GroupPicture, grec.MembershipFee,
                         grec.OpenEnrollment, grec.AllowPublish, grec.MaturePublish, grec.FounderID, out reason);
 
                 }
                 else if (op == "UPDATE")
                 {
-                    m_GroupsService.UpdateGroup(RequestingAgentID, grec.GroupID, grec.Charter, grec.ShowInList, grec.GroupPicture, grec.MembershipFee,
+                    _GroupsService.UpdateGroup(RequestingAgentID, grec.GroupID, grec.Charter, grec.ShowInList, grec.GroupPicture, grec.MembershipFee,
                         grec.OpenEnrollment, grec.AllowPublish, grec.MaturePublish);
 
                 }
 
                 if (grec.GroupID != UUID.Zero)
                 {
-                    grec = m_GroupsService.GetGroupRecord(RequestingAgentID, grec.GroupID);
+                    grec = _GroupsService.GetGroupRecord(RequestingAgentID, grec.GroupID);
                     if (grec == null)
                         NullResult(result, "Internal Error");
                     else
@@ -197,7 +197,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -214,12 +214,12 @@ namespace OpenSim.Groups
                 if (request.ContainsKey("GroupID"))
                 {
                     UUID groupID = new UUID(request["GroupID"].ToString());
-                    grec = m_GroupsService.GetGroupRecord(RequestingAgentID, groupID);
+                    grec = _GroupsService.GetGroupRecord(RequestingAgentID, groupID);
                 }
                 else if (request.ContainsKey("Name"))
                 {
                     string name = request["Name"].ToString();
-                    grec = m_GroupsService.GetGroupRecord(RequestingAgentID, name);
+                    grec = _GroupsService.GetGroupRecord(RequestingAgentID, name);
                 }
 
                 if (grec == null)
@@ -230,7 +230,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -253,11 +253,11 @@ namespace OpenSim.Groups
                 if (request.ContainsKey("AccessToken"))
                     token = request["AccessToken"].ToString();
 
-                if (!m_GroupsService.AddAgentToGroup(requestingAgentID, agentID, groupID, roleID, token, out reason))
+                if (!_GroupsService.AddAgentToGroup(requestingAgentID, agentID, groupID, roleID, token, out reason))
                     NullResult(result, reason);
                 else
                 {
-                    GroupMembershipData membership = m_GroupsService.GetAgentGroupMembership(requestingAgentID, agentID, groupID);
+                    GroupMembershipData membership = _GroupsService.GetAgentGroupMembership(requestingAgentID, agentID, groupID);
                     if (membership == null)
                         NullResult(result, "Internal error");
                     else
@@ -267,7 +267,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -283,13 +283,13 @@ namespace OpenSim.Groups
                 string agentID = request["AgentID"].ToString();
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
-                if (!m_GroupsService.RemoveAgentFromGroup(requestingAgentID, agentID, groupID))
+                if (!_GroupsService.RemoveAgentFromGroup(requestingAgentID, agentID, groupID))
                     NullResult(result, string.Format("Insufficient permissions. {0}", agentID));
                 else
                     result["RESULT"] = "true";
             }
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(ServerUtils.BuildXmlResponse(result));
         }
 
@@ -313,11 +313,11 @@ namespace OpenSim.Groups
                     ExtendedGroupMembershipData membership = null;
                     if (groupID == UUID.Zero)
                     {
-                        membership = m_GroupsService.GetAgentActiveMembership(requestingAgentID, agentID);
+                        membership = _GroupsService.GetAgentActiveMembership(requestingAgentID, agentID);
                     }
                     else
                     {
-                        membership = m_GroupsService.GetAgentGroupMembership(requestingAgentID, agentID, groupID);
+                        membership = _GroupsService.GetAgentGroupMembership(requestingAgentID, agentID, groupID);
                     }
 
                     if (membership == null)
@@ -327,7 +327,7 @@ namespace OpenSim.Groups
                 }
                 else
                 {
-                    List<GroupMembershipData> memberships = m_GroupsService.GetAgentGroupMemberships(requestingAgentID, agentID);
+                    List<GroupMembershipData> memberships = _GroupsService.GetAgentGroupMemberships(requestingAgentID, agentID);
                     if (memberships == null || memberships != null && memberships.Count == 0)
                     {
                         NullResult(result, "No memberships");
@@ -346,7 +346,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -361,7 +361,7 @@ namespace OpenSim.Groups
                 UUID groupID = new UUID(request["GroupID"].ToString());
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
-                List<ExtendedGroupMembersData> members = m_GroupsService.GetGroupMembers(requestingAgentID, groupID);
+                List<ExtendedGroupMembersData> members = _GroupsService.GetGroupMembers(requestingAgentID, groupID);
                 if (members == null || members != null && members.Count == 0)
                 {
                     NullResult(result, "No members");
@@ -381,7 +381,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -401,12 +401,12 @@ namespace OpenSim.Groups
 
                 bool success = false;
                 if (op == "ADD")
-                    success = m_GroupsService.AddGroupRole(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
+                    success = _GroupsService.AddGroupRole(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
                         new UUID(request["RoleID"].ToString()), request["Name"].ToString(), request["Description"].ToString(),
                         request["Title"].ToString(), ulong.Parse(request["Powers"].ToString()), out reason);
 
                 else if (op == "UPDATE")
-                    success = m_GroupsService.UpdateGroupRole(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
+                    success = _GroupsService.UpdateGroupRole(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
                         new UUID(request["RoleID"].ToString()), request["Name"].ToString(), request["Description"].ToString(),
                         request["Title"].ToString(), ulong.Parse(request["Powers"].ToString()));
 
@@ -415,7 +415,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -428,12 +428,12 @@ namespace OpenSim.Groups
 
             else
             {
-                m_GroupsService.RemoveGroupRole(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
+                _GroupsService.RemoveGroupRole(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
                     new UUID(request["RoleID"].ToString()));
                 result["RESULT"] = "true";
             }
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(ServerUtils.BuildXmlResponse(result));
         }
 
@@ -448,7 +448,7 @@ namespace OpenSim.Groups
                 UUID groupID = new UUID(request["GroupID"].ToString());
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
-                List<GroupRolesData> roles = m_GroupsService.GetGroupRoles(requestingAgentID, groupID);
+                List<GroupRolesData> roles = _GroupsService.GetGroupRoles(requestingAgentID, groupID);
                 if (roles == null || roles != null && roles.Count == 0)
                 {
                     NullResult(result, "No members");
@@ -466,7 +466,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -481,7 +481,7 @@ namespace OpenSim.Groups
                 UUID groupID = new UUID(request["GroupID"].ToString());
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
-                List<ExtendedGroupRoleMembersData> rmembers = m_GroupsService.GetGroupRoleMembers(requestingAgentID, groupID);
+                List<ExtendedGroupRoleMembersData> rmembers = _GroupsService.GetGroupRoleMembers(requestingAgentID, groupID);
                 if (rmembers == null || rmembers != null && rmembers.Count == 0)
                 {
                     NullResult(result, "No members");
@@ -499,7 +499,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -517,11 +517,11 @@ namespace OpenSim.Groups
 
                 bool success = false;
                 if (op == "ADD")
-                    success = m_GroupsService.AddAgentToGroupRole(request["RequestingAgentID"].ToString(), request["AgentID"].ToString(),
+                    success = _GroupsService.AddAgentToGroupRole(request["RequestingAgentID"].ToString(), request["AgentID"].ToString(),
                         new UUID(request["GroupID"].ToString()), new UUID(request["RoleID"].ToString()));
 
                 else if (op == "DELETE")
-                    success = m_GroupsService.RemoveAgentFromGroupRole(request["RequestingAgentID"].ToString(), request["AgentID"].ToString(),
+                    success = _GroupsService.RemoveAgentFromGroupRole(request["RequestingAgentID"].ToString(), request["AgentID"].ToString(),
                         new UUID(request["GroupID"].ToString()), new UUID(request["RoleID"].ToString()));
 
                 result["RESULT"] = success.ToString();
@@ -529,7 +529,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -545,7 +545,7 @@ namespace OpenSim.Groups
                 string agentID = request["AgentID"].ToString();
                 string requestingAgentID = request["RequestingAgentID"].ToString();
 
-                List<GroupRolesData> roles = m_GroupsService.GetAgentGroupRoles(requestingAgentID, agentID, groupID);
+                List<GroupRolesData> roles = _GroupsService.GetAgentGroupRoles(requestingAgentID, agentID, groupID);
                 if (roles == null || roles != null && roles.Count == 0)
                 {
                     NullResult(result, "No members");
@@ -563,7 +563,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -584,7 +584,7 @@ namespace OpenSim.Groups
 
                 if (op == "GROUP")
                 {
-                    ExtendedGroupMembershipData group = m_GroupsService.SetAgentActiveGroup(request["RequestingAgentID"].ToString(),
+                    ExtendedGroupMembershipData group = _GroupsService.SetAgentActiveGroup(request["RequestingAgentID"].ToString(),
                         request["AgentID"].ToString(), new UUID(request["GroupID"].ToString()));
 
                     if (group == null)
@@ -594,13 +594,13 @@ namespace OpenSim.Groups
 
                     string xmlString = ServerUtils.BuildXmlResponse(result);
 
-                    //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+                    //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
                     return Util.UTF8NoBomEncoding.GetBytes(xmlString);
 
                 }
                 else if (op == "ROLE" && request.ContainsKey("RoleID"))
                 {
-                    m_GroupsService.SetAgentActiveGroupRole(request["RequestingAgentID"].ToString(), request["AgentID"].ToString(),
+                    _GroupsService.SetAgentActiveGroupRole(request["RequestingAgentID"].ToString(), request["AgentID"].ToString(),
                         new UUID(request["GroupID"].ToString()), new UUID(request["RoleID"].ToString()));
                     result["RESULT"] = "true";
                 }
@@ -620,13 +620,13 @@ namespace OpenSim.Groups
 
             else
             {
-                m_GroupsService.UpdateMembership(request["RequestingAgentID"].ToString(), request["AgentID"].ToString(), new UUID(request["GroupID"].ToString()),
+                _GroupsService.UpdateMembership(request["RequestingAgentID"].ToString(), request["AgentID"].ToString(), new UUID(request["GroupID"].ToString()),
                     bool.Parse(request["AcceptNotices"].ToString()), bool.Parse(request["ListInProfile"].ToString()));
 
                 result["RESULT"] = "true";
             }
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(ServerUtils.BuildXmlResponse(result));
         }
 
@@ -646,7 +646,7 @@ namespace OpenSim.Groups
 
                 if (op == "ADD" && request.ContainsKey("GroupID") && request.ContainsKey("RoleID") && request.ContainsKey("AgentID"))
                 {
-                    bool success = m_GroupsService.AddAgentToGroupInvite(request["RequestingAgentID"].ToString(),
+                    bool success = _GroupsService.AddAgentToGroupInvite(request["RequestingAgentID"].ToString(),
                         new UUID(request["InviteID"].ToString()), new UUID(request["GroupID"].ToString()),
                         new UUID(request["RoleID"].ToString()), request["AgentID"].ToString());
 
@@ -656,13 +656,13 @@ namespace OpenSim.Groups
                 }
                 else if (op == "DELETE")
                 {
-                    m_GroupsService.RemoveAgentToGroupInvite(request["RequestingAgentID"].ToString(), new UUID(request["InviteID"].ToString()));
+                    _GroupsService.RemoveAgentToGroupInvite(request["RequestingAgentID"].ToString(), new UUID(request["InviteID"].ToString()));
                     result["RESULT"] = "true";
                     return Util.UTF8NoBomEncoding.GetBytes(ServerUtils.BuildXmlResponse(result));
                 }
                 else if (op == "GET")
                 {
-                    GroupInviteInfo invite = m_GroupsService.GetAgentToGroupInvite(request["RequestingAgentID"].ToString(),
+                    GroupInviteInfo invite = _GroupsService.GetAgentToGroupInvite(request["RequestingAgentID"].ToString(),
                         new UUID(request["InviteID"].ToString()));
 
                     if (invite != null)
@@ -705,7 +705,7 @@ namespace OpenSim.Groups
                 if (request.ContainsKey("AttachmentOwnerID"))
                     attOwner = request["AttachmentOwnerID"].ToString();
 
-                bool success = m_GroupsService.AddGroupNotice(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
+                bool success = _GroupsService.AddGroupNotice(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()),
                         new UUID(request["NoticeID"].ToString()), request["FromName"].ToString(), request["Subject"].ToString(),
                         request["Message"].ToString(), hasAtt, attType, attName, attItem, attOwner);
 
@@ -714,7 +714,7 @@ namespace OpenSim.Groups
 
             string xmlString = ServerUtils.BuildXmlResponse(result);
 
-            //m_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
+            //_log.DebugFormat("[XXX]: resp string: {0}", xmlString);
             return Util.UTF8NoBomEncoding.GetBytes(xmlString);
         }
 
@@ -727,7 +727,7 @@ namespace OpenSim.Groups
 
             else if (request.ContainsKey("NoticeID")) // just one
             {
-                GroupNoticeInfo notice =  m_GroupsService.GetGroupNotice(request["RequestingAgentID"].ToString(), new UUID(request["NoticeID"].ToString()));
+                GroupNoticeInfo notice =  _GroupsService.GetGroupNotice(request["RequestingAgentID"].ToString(), new UUID(request["NoticeID"].ToString()));
 
                 if (notice == null)
                     NullResult(result, "NO such notice");
@@ -737,7 +737,7 @@ namespace OpenSim.Groups
             }
             else if (request.ContainsKey("GroupID")) // all notices for group
             {
-                List<ExtendedGroupNoticeData> notices = m_GroupsService.GetGroupNotices(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()));
+                List<ExtendedGroupNoticeData> notices = _GroupsService.GetGroupNotices(request["RequestingAgentID"].ToString(), new UUID(request["GroupID"].ToString()));
 
                 if (notices == null || notices != null && notices.Count == 0)
                     NullResult(result, "No notices");
@@ -766,7 +766,7 @@ namespace OpenSim.Groups
             if (!request.ContainsKey("RequestingAgentID") || !request.ContainsKey("Query"))
                 NullResult(result, "Bad network data");
 
-            List<DirGroupsReplyData> hits = m_GroupsService.FindGroups(request["RequestingAgentID"].ToString(), request["Query"].ToString());
+            List<DirGroupsReplyData> hits = _GroupsService.FindGroups(request["RequestingAgentID"].ToString(), request["Query"].ToString());
 
             if (hits == null || hits != null && hits.Count == 0)
                 NullResult(result, "No hits");

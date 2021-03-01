@@ -45,12 +45,12 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "UploadBakedTextureModule")]
     public class UploadBakedTextureModule : ISharedRegionModule
     {
-       private static readonly ILog m_log =LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+       private static readonly ILog _log =LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private int m_nscenes;
-        IAssetCache m_assetCache = null;
+        private int _nscenes;
+        IAssetCache _assetCache = null;
 
-        private string m_URL;
+        private string _URL;
 
         public void Initialise(IConfigSource source)
         {
@@ -58,7 +58,7 @@ namespace OpenSim.Region.ClientStack.Linden
             if (config == null)
                 return;
 
-            m_URL = config.GetString("Cap_UploadBakedTexture", string.Empty);
+            _URL = config.GetString("Cap_UploadBakedTexture", string.Empty);
         }
 
         public void AddRegion(Scene s)
@@ -68,18 +68,18 @@ namespace OpenSim.Region.ClientStack.Linden
         public void RemoveRegion(Scene s)
         {
             s.EventManager.OnRegisterCaps -= RegisterCaps;
-            --m_nscenes;
-            if(m_nscenes <= 0)
-                m_assetCache = null;
+            --_nscenes;
+            if(_nscenes <= 0)
+                _assetCache = null;
         }
 
         public void RegionLoaded(Scene s)
         {
-            if (m_assetCache == null)
-                m_assetCache = s.RequestModuleInterface <IAssetCache>();
-            if (m_assetCache != null)
+            if (_assetCache == null)
+                _assetCache = s.RequestModuleInterface <IAssetCache>();
+            if (_assetCache != null)
             {
-                ++m_nscenes;
+                ++_nscenes;
                 s.EventManager.OnRegisterCaps += RegisterCaps;
             }
         }
@@ -90,26 +90,23 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void Close() { }
 
-        public string Name { get { return "UploadBakedTextureModule"; } }
+        public string Name => "UploadBakedTextureModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void RegisterCaps(UUID agentID, Caps caps)
         {
-            if (m_URL == "localhost")
+            if (_URL == "localhost")
             {
                 caps.RegisterSimpleHandler("UploadBakedTexture",
                     new SimpleStreamHandler("/" + UUID.Random(), delegate (IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
                     {
-                        UploadBakedTexture(httpRequest, httpResponse, agentID, caps, m_assetCache);
+                        UploadBakedTexture(httpRequest, httpResponse, agentID, caps, _assetCache);
                     }));
             }
-            else if(!string.IsNullOrWhiteSpace(m_URL))
+            else if(!string.IsNullOrWhiteSpace(_URL))
             {
-                caps.RegisterHandler("UploadBakedTexture", m_URL);
+                caps.RegisterHandler("UploadBakedTexture", _URL);
             }
         }
 
@@ -148,7 +145,7 @@ namespace OpenSim.Region.ClientStack.Linden
             }
             catch (Exception e)
             {
-                m_log.ErrorFormat("[UPLOAD BAKED TEXTURE HANDLER]: {0}{1}", e.Message, e.StackTrace);
+                _log.ErrorFormat("[UPLOAD BAKED TEXTURE HANDLER]: {0}{1}", e.Message, e.StackTrace);
             }
             httpResponse.StatusCode = (int)HttpStatusCode.BadRequest;
         }
@@ -156,33 +153,33 @@ namespace OpenSim.Region.ClientStack.Linden
 
     class BakedTextureUploader
     {
-        // private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_uploaderPath = string.Empty;
-        private readonly IHttpServer m_httpListener;
-        private UUID m_agentID = UUID.Zero;
-        private readonly IPAddress m_remoteAddress;
-        private readonly IAssetCache m_assetCache;
-        private readonly Timer m_timeout;
+        private readonly string _uploaderPath = string.Empty;
+        private readonly IHttpServer _httpListener;
+        private UUID _agentID = UUID.Zero;
+        private readonly IPAddress _remoteAddress;
+        private readonly IAssetCache _assetCache;
+        private readonly Timer _timeout;
 
         public BakedTextureUploader(string path, IHttpServer httpServer, UUID agentID, IAssetCache cache, IPAddress remoteAddress)
         {
-            m_uploaderPath = path;
-            m_httpListener = httpServer;
-            m_agentID = agentID;
-            m_remoteAddress = remoteAddress;
-            m_assetCache = cache;
-            m_timeout = new Timer();
-            m_timeout.Elapsed += Timeout;
-            m_timeout.AutoReset = false;
-            m_timeout.Interval = 30000;
-            m_timeout.Start();
+            _uploaderPath = path;
+            _httpListener = httpServer;
+            _agentID = agentID;
+            _remoteAddress = remoteAddress;
+            _assetCache = cache;
+            _timeout = new Timer();
+            _timeout.Elapsed += Timeout;
+            _timeout.AutoReset = false;
+            _timeout.Interval = 30000;
+            _timeout.Start();
         }
 
         private void Timeout(object source, ElapsedEventArgs e)
         {
-            m_httpListener.RemoveSimpleStreamHandler(m_uploaderPath);
-            m_timeout.Dispose();
+            _httpListener.RemoveSimpleStreamHandler(_uploaderPath);
+            _timeout.Dispose();
         }
 
         /// <summary>
@@ -194,11 +191,11 @@ namespace OpenSim.Region.ClientStack.Linden
         /// <returns></returns>
         public void process(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, byte[] data)
         {
-            m_timeout.Stop();
-            m_httpListener.RemoveSimpleStreamHandler(m_uploaderPath);
-            m_timeout.Dispose();
+            _timeout.Stop();
+            _httpListener.RemoveSimpleStreamHandler(_uploaderPath);
+            _timeout.Dispose();
 
-            if (!httpRequest.RemoteIPEndPoint.Address.Equals(m_remoteAddress))
+            if (!httpRequest.RemoteIPEndPoint.Address.Equals(_remoteAddress))
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.Unauthorized;
                 return;
@@ -208,14 +205,14 @@ namespace OpenSim.Region.ClientStack.Linden
             try
             {
                 UUID newAssetID = UUID.Random();
-                AssetBase asset = new AssetBase(newAssetID, "Baked Texture", (sbyte)AssetType.Texture, m_agentID.ToString())
+                AssetBase asset = new AssetBase(newAssetID, "Baked Texture", (sbyte)AssetType.Texture, _agentID.ToString())
                 {
                     Data = data,
                     Temporary = true,
                     Local = true
                 };
                 //asset.Flags = AssetFlags.AvatarBake;
-                m_assetCache.Cache(asset);
+                _assetCache.Cache(asset);
 
                 LLSDAssetUploadComplete uploadComplete = new LLSDAssetUploadComplete
                 {

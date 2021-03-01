@@ -65,9 +65,6 @@ namespace OpenSim.Tests.Common
             return true;
         }
 
-        public AsyncSceneObjectGroupDeleter SceneObjectGroupDeleter
-        {
-            get { return m_asyncSceneObjectDeleter; }
-        }
+        public AsyncSceneObjectGroupDeleter SceneObjectGroupDeleter => _asyncSceneObjectDeleter;
     }
 }

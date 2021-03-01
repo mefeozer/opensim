@@ -42,25 +42,19 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authentication
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalAuthenticationServicesConnector")]
     public class LocalAuthenticationServicesConnector : ISharedRegionModule, IAuthenticationService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IAuthenticationService m_AuthenticationService;
+        private IAuthenticationService _AuthenticationService;
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
         #region ISharedRegionModule
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LocalAuthenticationServicesConnector"; }
-        }
+        public string Name => "LocalAuthenticationServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -73,7 +67,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authentication
                     IConfig userConfig = source.Configs["AuthenticationService"];
                     if (userConfig == null)
                     {
-                        m_log.Error("[AUTH CONNECTOR]: AuthenticationService missing from OpenSim.ini");
+                        _log.Error("[AUTH CONNECTOR]: AuthenticationService missing from OpenSim.ini");
                         return;
                     }
 
@@ -82,55 +76,55 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authentication
 
                     if (string.IsNullOrEmpty(serviceDll))
                     {
-                        m_log.Error("[AUTH CONNECTOR]: No LocalServiceModule named in section AuthenticationService");
+                        _log.Error("[AUTH CONNECTOR]: No LocalServiceModule named in section AuthenticationService");
                         return;
                     }
 
                     object[] args = new object[] { source };
-                    m_AuthenticationService =
+                    _AuthenticationService =
                             ServerUtils.LoadPlugin<IAuthenticationService>(serviceDll,
                             args);
 
-                    if (m_AuthenticationService == null)
+                    if (_AuthenticationService == null)
                     {
-                        m_log.Error("[AUTH CONNECTOR]: Can't load Authentication service");
+                        _log.Error("[AUTH CONNECTOR]: Can't load Authentication service");
                         return;
                     }
-                    m_Enabled = true;
-                    m_log.Info("[AUTH CONNECTOR]: Local Authentication connector enabled");
+                    _Enabled = true;
+                    _log.Info("[AUTH CONNECTOR]: Local Authentication connector enabled");
                 }
             }
         }
 
         public void PostInitialise()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void Close()
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            scene.RegisterModuleInterface<IAuthenticationService>(m_AuthenticationService);
+            scene.RegisterModuleInterface<IAuthenticationService>(_AuthenticationService);
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
@@ -153,27 +147,27 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Authentication
 
         public bool Verify(UUID principalID, string token, int lifetime)
         {
-            return m_AuthenticationService.Verify(principalID, token, lifetime);
+            return _AuthenticationService.Verify(principalID, token, lifetime);
         }
 
         public bool Release(UUID principalID, string token)
         {
-            return m_AuthenticationService.Release(principalID, token);
+            return _AuthenticationService.Release(principalID, token);
         }
 
         public bool SetPassword(UUID principalID, string passwd)
         {
-            return m_AuthenticationService.SetPassword(principalID, passwd);
+            return _AuthenticationService.SetPassword(principalID, passwd);
         }
 
         public AuthInfo GetAuthInfo(UUID principalID)
         {
-            return m_AuthenticationService.GetAuthInfo(principalID);
+            return _AuthenticationService.GetAuthInfo(principalID);
         }
 
         public bool SetAuthInfo(AuthInfo info)
         {
-            return m_AuthenticationService.SetAuthInfo(info);
+            return _AuthenticationService.SetAuthInfo(info);
         }
 
         #endregion

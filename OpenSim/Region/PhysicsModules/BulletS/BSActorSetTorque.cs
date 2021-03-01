@@ -31,20 +31,17 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     public class BSActorSetTorque : BSActor
 {
-    BSFMotor m_torqueMotor;
+    BSFMotor _torqueMotor;
 
     public BSActorSetTorque(BSScene physicsScene, BSPhysObject pObj, string actorName)
         : base(physicsScene, pObj, actorName)
     {
-        m_torqueMotor = null;
-        m_physicsScene.DetailLog("{0},BSActorSetTorque,constructor", m_controllingPrim.LocalID);
+        _torqueMotor = null;
+        _physicsScene.DetailLog("{0},BSActorSetTorque,constructor", _controllingPrim.LocalID);
     }
 
     // BSActor.isActive
-    public override bool isActive
-    {
-        get { return Enabled && m_controllingPrim.IsPhysicallyActive; }
-    }
+    public override bool isActive => Enabled && _controllingPrim.IsPhysicallyActive;
 
     // Release any connections and resources used by the actor.
     // BSActor.Dispose()
@@ -59,12 +56,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // BSActor.Refresh()
     public override void Refresh()
     {
-        m_physicsScene.DetailLog("{0},BSActorSetTorque,refresh,torque={1}", m_controllingPrim.LocalID, m_controllingPrim.RawTorque);
+        _physicsScene.DetailLog("{0},BSActorSetTorque,refresh,torque={1}", _controllingPrim.LocalID, _controllingPrim.RawTorque);
 
         // If not active any more, get rid of me (shouldn't ever happen, but just to be safe)
-        if (m_controllingPrim.RawTorque == OMV.Vector3.Zero)
+        if (_controllingPrim.RawTorque == OMV.Vector3.Zero)
         {
-            m_physicsScene.DetailLog("{0},BSActorSetTorque,refresh,notSetTorque,disabling={1}", m_controllingPrim.LocalID, ActorName);
+            _physicsScene.DetailLog("{0},BSActorSetTorque,refresh,notSetTorque,disabling={1}", _controllingPrim.LocalID, ActorName);
             Enabled = false;
             return;
         }
@@ -92,21 +89,21 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // If a hover motor has not been created, create one and start the hovering.
     private void ActivateSetTorque()
     {
-        if (m_torqueMotor == null)
+        if (_torqueMotor == null)
         {
             // A fake motor that might be used someday
-            m_torqueMotor = new BSFMotor("setTorque", 1f, 1f, 1f);
+            _torqueMotor = new BSFMotor("setTorque", 1f, 1f, 1f);
 
-            m_physicsScene.BeforeStep += Mover;
+            _physicsScene.BeforeStep += Mover;
         }
     }
 
     private void DeactivateSetTorque()
     {
-        if (m_torqueMotor != null)
+        if (_torqueMotor != null)
         {
-            m_physicsScene.BeforeStep -= Mover;
-            m_torqueMotor = null;
+            _physicsScene.BeforeStep -= Mover;
+            _torqueMotor = null;
         }
     }
 
@@ -117,11 +114,11 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         if (!isActive)
             return;
 
-        m_physicsScene.DetailLog("{0},BSActorSetTorque,preStep,force={1}", m_controllingPrim.LocalID, m_controllingPrim.RawTorque);
-        if (m_controllingPrim.PhysBody.HasPhysicalBody)
+        _physicsScene.DetailLog("{0},BSActorSetTorque,preStep,force={1}", _controllingPrim.LocalID, _controllingPrim.RawTorque);
+        if (_controllingPrim.PhysBody.HasPhysicalBody)
         {
-            m_controllingPrim.AddAngularForce(true /* inTaintTime */, m_controllingPrim.RawTorque);
-            m_controllingPrim.ActivateIfPhysical(false);
+            _controllingPrim.AddAngularForce(true /* inTaintTime */, _controllingPrim.RawTorque);
+            _controllingPrim.ActivateIfPhysical(false);
         }
 
         // TODO:

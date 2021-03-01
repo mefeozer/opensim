@@ -35,7 +35,7 @@ namespace OpenSim.Framework.Monitoring
     // Built this way mostly so histograms and history can be created.
     public class CounterStat : Stat
 {
-    private readonly SortedDictionary<string, EventHistogram> m_histograms;
+    private readonly SortedDictionary<string, EventHistogram> _histograms;
     private readonly object counterLock = new object();
 
     public CounterStat(
@@ -48,20 +48,20 @@ namespace OpenSim.Framework.Monitoring
                         StatVerbosity verbosity)
         : base(shortName, name, description, unitName, category, container, StatType.Push, null, verbosity)
     {
-        m_histograms = new SortedDictionary<string, EventHistogram>();
+        _histograms = new SortedDictionary<string, EventHistogram>();
     }
 
     // Histograms are presumably added at intialization time and the list does not change thereafter.
     // Thus no locking of the histogram list.
     public void AddHistogram(string histoName, EventHistogram histo)
     {
-        m_histograms.Add(histoName, histo);
+        _histograms.Add(histoName, histo);
     }
 
     public delegate void ProcessHistogram(string name, EventHistogram histo);
     public void ForEachHistogram(ProcessHistogram process)
     {
-        foreach (KeyValuePair<string, EventHistogram> kvp in m_histograms)
+        foreach (KeyValuePair<string, EventHistogram> kvp in _histograms)
         {
             process(kvp.Key, kvp.Value);
         }
@@ -79,7 +79,7 @@ namespace OpenSim.Framework.Monitoring
         {
             base.Value += cnt;
 
-            foreach (EventHistogram histo in m_histograms.Values)
+            foreach (EventHistogram histo in _histograms.Values)
             {
                 histo.Event(cnt);
             }
@@ -95,14 +95,14 @@ namespace OpenSim.Framework.Monitoring
         map["StatType"] = "CounterStat";
 
         // If there are any histograms, add a new field that is an array of histograms as OSDMaps
-        if (m_histograms.Count > 0)
+        if (_histograms.Count > 0)
         {
             lock (counterLock)
             {
-                if (m_histograms.Count > 0)
+                if (_histograms.Count > 0)
                 {
                     OSDArray histos = new OSDArray();
-                    foreach (EventHistogram histo in m_histograms.Values)
+                    foreach (EventHistogram histo in _histograms.Values)
                     {
                         histos.Add(histo.GetHistogramAsOSDMap());
                     }

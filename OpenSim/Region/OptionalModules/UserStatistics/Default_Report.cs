@@ -40,20 +40,17 @@ namespace OpenSim.Region.UserStatistics
     public class Default_Report : IStatsController
     {
 
-        public string ReportName
-        {
-            get { return "Home"; }
-        }
+        public string ReportName => "Home";
 
         #region IStatsController Members
 
         public Hashtable ProcessModel(Hashtable pParams)
         {
             SqliteConnection conn = (SqliteConnection)pParams["DatabaseConnection"];
-            List<Scene> m_scene = (List<Scene>)pParams["Scenes"];
+            List<Scene> _scene = (List<Scene>)pParams["Scenes"];
 
-            stats_default_page_values mData = rep_DefaultReport_data(conn, m_scene);
-            mData.sim_stat_data = (Dictionary<UUID,USimStatsData>)pParams["SimStats"];
+            stats_default_page_values mData = rep_DefaultReport_data(conn, _scene);
+            mData.si_stat_data = (Dictionary<UUID,USimStatsData>)pParams["SimStats"];
             mData.stats_reports = (Dictionary<string, IStatsController>) pParams["Reports"];
 
             Hashtable nh = new Hashtable();
@@ -155,19 +152,19 @@ TD.align_top { vertical-align: top; }
             HTMLUtil.TR_C(ref output);
             HTMLUtil.TR_O(ref output, TRClass);
             HTMLUtil.TD_O(ref output, TDDataClass);
-            output.Append(values.total_num_users);
+            output.Append(values.total_nu_users);
             HTMLUtil.TD_C(ref output);
             HTMLUtil.TD_O(ref output, TDDataClass);
-            output.Append(values.total_num_sessions);
+            output.Append(values.total_nu_sessions);
             HTMLUtil.TD_C(ref output);
             HTMLUtil.TD_O(ref output, TDDataClassCenter);
             output.Append(values.avg_client_fps);
             HTMLUtil.TD_C(ref output);
             HTMLUtil.TD_O(ref output, TDDataClassCenter);
-            output.Append(values.avg_client_mem_use);
+            output.Append(values.avg_client_me_use);
             HTMLUtil.TD_C(ref output);
             HTMLUtil.TD_O(ref output, TDDataClassCenter);
-            output.Append(values.avg_sim_fps);
+            output.Append(values.avg_si_fps);
             HTMLUtil.TD_C(ref output);
             HTMLUtil.TD_O(ref output, TDDataClassCenter);
             output.Append(values.avg_ping);
@@ -200,31 +197,31 @@ TD.align_top { vertical-align: top; }
 
 
 
-        public stats_default_page_values rep_DefaultReport_data(SqliteConnection db, List<Scene> m_scene)
+        public stats_default_page_values rep_DefaultReport_data(SqliteConnection db, List<Scene> _scene)
         {
             stats_default_page_values returnstruct = new stats_default_page_values
             {
-                all_scenes = m_scene.ToArray()
+                all_scenes = _scene.ToArray()
             };
             lock (db)
             {
                 string SQL = @"SELECT COUNT(DISTINCT agent_id) as agents, COUNT(*) as sessions, AVG(avg_fps) as client_fps,
-                                AVG(avg_sim_fps) as savg_sim_fps, AVG(avg_ping) as sav_ping, SUM(n_out_kb) as num_in_kb,
-                                SUM(n_out_pk) as num_in_packets, SUM(n_in_kb) as num_out_kb, SUM(n_in_pk) as num_out_packets, AVG(mem_use) as sav_mem_use
+                                AVG(avg_si_fps) as savg_si_fps, AVG(avg_ping) as sav_ping, SUM(n_out_kb) as nu_in_kb,
+                                SUM(n_out_pk) as nu_in_packets, SUM(n_in_kb) as nu_out_kb, SUM(n_in_pk) as nu_out_packets, AVG(me_use) as sav_me_use
                                 FROM stats_session_data;";
                 SqliteCommand cmd = new SqliteCommand(SQL, db);
                 SqliteDataReader sdr = cmd.ExecuteReader();
                 if (sdr.HasRows)
                 {
                     sdr.Read();
-                    returnstruct.total_num_users = Convert.ToInt32(sdr["agents"]);
-                    returnstruct.total_num_sessions = Convert.ToInt32(sdr["sessions"]);
+                    returnstruct.total_nu_users = Convert.ToInt32(sdr["agents"]);
+                    returnstruct.total_nu_sessions = Convert.ToInt32(sdr["sessions"]);
                     returnstruct.avg_client_fps = Convert.ToSingle(sdr["client_fps"]);
-                    returnstruct.avg_sim_fps = Convert.ToSingle(sdr["savg_sim_fps"]);
+                    returnstruct.avg_si_fps = Convert.ToSingle(sdr["savg_si_fps"]);
                     returnstruct.avg_ping = Convert.ToSingle(sdr["sav_ping"]);
-                    returnstruct.total_kb_out = Convert.ToSingle(sdr["num_out_kb"]);
-                    returnstruct.total_kb_in = Convert.ToSingle(sdr["num_in_kb"]);
-                    returnstruct.avg_client_mem_use = Convert.ToSingle(sdr["sav_mem_use"]);
+                    returnstruct.total_kb_out = Convert.ToSingle(sdr["nu_out_kb"]);
+                    returnstruct.total_kb_in = Convert.ToSingle(sdr["nu_in_kb"]);
+                    returnstruct.avg_client_me_use = Convert.ToSingle(sdr["sav_me_use"]);
 
                 }
                 sdr.Close();
@@ -249,11 +246,11 @@ TD.align_top { vertical-align: top; }
             stats_default_page_values values = (stats_default_page_values) pModelResult["hdata"];
 
             OSDMap summaryInfo = new OSDMap();
-            summaryInfo.Add("totalUsers", new OSDString(values.total_num_users.ToString()));
-            summaryInfo.Add("totalSessions", new OSDString(values.total_num_sessions.ToString()));
+            summaryInfo.Add("totalUsers", new OSDString(values.total_nu_users.ToString()));
+            summaryInfo.Add("totalSessions", new OSDString(values.total_nu_sessions.ToString()));
             summaryInfo.Add("averageClientFPS", new OSDString(values.avg_client_fps.ToString()));
-            summaryInfo.Add("averageClientMem", new OSDString(values.avg_client_mem_use.ToString()));
-            summaryInfo.Add("averageSimFPS", new OSDString(values.avg_sim_fps.ToString()));
+            summaryInfo.Add("averageClientMem", new OSDString(values.avg_client_me_use.ToString()));
+            summaryInfo.Add("averageSimFPS", new OSDString(values.avg_si_fps.ToString()));
             summaryInfo.Add("averagePingTime", new OSDString(values.avg_ping.ToString()));
             summaryInfo.Add("totalKBOut", new OSDString(values.total_kb_out.ToString()));
             summaryInfo.Add("totalKBIn", new OSDString(values.total_kb_in.ToString()));
@@ -263,17 +260,17 @@ TD.align_top { vertical-align: top; }
 
     public struct stats_default_page_values
     {
-        public int total_num_users;
-        public int total_num_sessions;
+        public int total_nu_users;
+        public int total_nu_sessions;
         public float avg_client_fps;
-        public float avg_client_mem_use;
-        public float avg_sim_fps;
+        public float avg_client_me_use;
+        public float avg_si_fps;
         public float avg_ping;
         public float total_kb_out;
         public float total_kb_in;
         public float avg_client_resends;
         public Scene[] all_scenes;
-        public Dictionary<UUID, USimStatsData> sim_stat_data;
+        public Dictionary<UUID, USimStatsData> si_stat_data;
         public Dictionary<string, IStatsController> stats_reports;
     }
 

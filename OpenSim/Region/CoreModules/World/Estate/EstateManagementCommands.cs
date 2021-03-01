@@ -38,41 +38,41 @@ namespace OpenSim.Region.CoreModules.World.Estate
     /// </summary>
     public class EstateManagementCommands
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected EstateManagementModule m_module;
+        protected EstateManagementModule _module;
 
         public EstateManagementCommands(EstateManagementModule module)
         {
-            m_module = module;
+            _module = module;
         }
 
         public void Initialise()
         {
-//            m_log.DebugFormat("[ESTATE MODULE]: Setting up estate commands for region {0}", m_module.Scene.RegionInfo.RegionName);
+//            _log.DebugFormat("[ESTATE MODULE]: Setting up estate commands for region {0}", _module.Scene.RegionInfo.RegionName);
 
-            m_module.Scene.AddCommand("Regions", m_module, "set terrain texture",
+            _module.Scene.AddCommand("Regions", _module, "set terrain texture",
                                "set terrain texture <number> <uuid> [<x>] [<y>]",
                                "Sets the terrain <number> to <uuid>, if <x> or <y> are specified, it will only " +
                                "set it on regions with a matching coordinate. Specify -1 in <x> or <y> to wildcard" +
                                " that coordinate.",
                                consoleSetTerrainTexture);
 
-            m_module.Scene.AddCommand("Regions", m_module, "set terrain heights",
+            _module.Scene.AddCommand("Regions", _module, "set terrain heights",
                                "set terrain heights <corner> <min> <max> [<x>] [<y>]",
                                "Sets the terrain texture heights on corner #<corner> to <min>/<max>, if <x> or <y> are specified, it will only " +
                                "set it on regions with a matching coordinate. Specify -1 in <x> or <y> to wildcard" +
                                " that coordinate. Corner # SW = 0, NW = 1, SE = 2, NE = 3, all corners = -1.",
                                consoleSetTerrainHeights);
 
-            m_module.Scene.AddCommand("Regions", m_module, "set water height",
+            _module.Scene.AddCommand("Regions", _module, "set water height",
                                "set water height <height> [<x>] [<y>]",
                                "Sets the water height in meters.  If <x> and <y> are specified, it will only set it on regions with a matching coordinate. " +
                                "Specify -1 in <x> or <y> to wildcard that coordinate.",
                                consoleSetWaterHeight);
 
-            m_module.Scene.AddCommand(
-                "Estates", m_module, "estate show", "estate show", "Shows all estates on the simulator.", ShowEstatesCommand);
+            _module.Scene.AddCommand(
+                "Estates", _module, "estate show", "estate show", "Shows all estates on the simulator.", ShowEstatesCommand);
         }
 
         public void Close() {}
@@ -85,35 +85,35 @@ namespace OpenSim.Region.CoreModules.World.Estate
             int x = args.Length > 5 ? int.Parse(args[5]) : -1;
             int y = args.Length > 6 ? int.Parse(args[6]) : -1;
 
-            if (x == -1 || m_module.Scene.RegionInfo.RegionLocX == x)
+            if (x == -1 || _module.Scene.RegionInfo.RegionLocX == x)
             {
-                if (y == -1 || m_module.Scene.RegionInfo.RegionLocY == y)
+                if (y == -1 || _module.Scene.RegionInfo.RegionLocY == y)
                 {
                     int corner = int.Parse(num);
                     UUID texture = UUID.Parse(uuid);
 
-                    m_log.Debug("[ESTATEMODULE]: Setting terrain textures for " + m_module.Scene.RegionInfo.RegionName +
+                    _log.Debug("[ESTATEMODULE]: Setting terrain textures for " + _module.Scene.RegionInfo.RegionName +
                                 string.Format(" (C#{0} = {1})", corner, texture));
 
                     switch (corner)
                     {
                         case 0:
-                            m_module.Scene.RegionInfo.RegionSettings.TerrainTexture1 = texture;
+                            _module.Scene.RegionInfo.RegionSettings.TerrainTexture1 = texture;
                             break;
                         case 1:
-                            m_module.Scene.RegionInfo.RegionSettings.TerrainTexture2 = texture;
+                            _module.Scene.RegionInfo.RegionSettings.TerrainTexture2 = texture;
                             break;
                         case 2:
-                            m_module.Scene.RegionInfo.RegionSettings.TerrainTexture3 = texture;
+                            _module.Scene.RegionInfo.RegionSettings.TerrainTexture3 = texture;
                             break;
                         case 3:
-                            m_module.Scene.RegionInfo.RegionSettings.TerrainTexture4 = texture;
+                            _module.Scene.RegionInfo.RegionSettings.TerrainTexture4 = texture;
                             break;
                     }
 
-                    m_module.Scene.RegionInfo.RegionSettings.Save();
-                    m_module.TriggerRegionInfoChange();
-                    m_module.sendRegionHandshakeToAll();
+                    _module.Scene.RegionInfo.RegionSettings.Save();
+                    _module.TriggerRegionInfoChange();
+                    _module.sendRegionHandshakeToAll();
                 }
             }
         }
@@ -124,19 +124,19 @@ namespace OpenSim.Region.CoreModules.World.Estate
             int x = args.Length > 4 ? int.Parse(args[4]) : -1;
             int y = args.Length > 5 ? int.Parse(args[5]) : -1;
 
-            if (x == -1 || m_module.Scene.RegionInfo.RegionLocX == x)
+            if (x == -1 || _module.Scene.RegionInfo.RegionLocX == x)
             {
-                if (y == -1 || m_module.Scene.RegionInfo.RegionLocY == y)
+                if (y == -1 || _module.Scene.RegionInfo.RegionLocY == y)
                 {
                     double selectedheight = double.Parse(heightstring);
 
-                    m_log.Debug("[ESTATEMODULE]: Setting water height in " + m_module.Scene.RegionInfo.RegionName + " to " +
+                    _log.Debug("[ESTATEMODULE]: Setting water height in " + _module.Scene.RegionInfo.RegionName + " to " +
                                 string.Format(" {0}", selectedheight));
-                    m_module.Scene.RegionInfo.RegionSettings.WaterHeight = selectedheight;
+                    _module.Scene.RegionInfo.RegionSettings.WaterHeight = selectedheight;
 
-                    m_module.Scene.RegionInfo.RegionSettings.Save();
-                    m_module.TriggerRegionInfoChange();
-                    m_module.sendRegionHandshakeToAll();
+                    _module.Scene.RegionInfo.RegionSettings.Save();
+                    _module.TriggerRegionInfoChange();
+                    _module.sendRegionHandshakeToAll();
                 }
             }
         }
@@ -148,50 +148,50 @@ namespace OpenSim.Region.CoreModules.World.Estate
             int x = args.Length > 6 ? int.Parse(args[6]) : -1;
             int y = args.Length > 7 ? int.Parse(args[7]) : -1;
 
-            if (x == -1 || m_module.Scene.RegionInfo.RegionLocX == x)
+            if (x == -1 || _module.Scene.RegionInfo.RegionLocX == x)
             {
-                if (y == -1 || m_module.Scene.RegionInfo.RegionLocY == y)
+                if (y == -1 || _module.Scene.RegionInfo.RegionLocY == y)
                 {
                     int corner = int.Parse(num);
                     float lowValue = float.Parse(min, Culture.NumberFormatInfo);
                     float highValue = float.Parse(max, Culture.NumberFormatInfo);
 
-                    m_log.Debug("[ESTATEMODULE]: Setting terrain heights " + m_module.Scene.RegionInfo.RegionName +
+                    _log.Debug("[ESTATEMODULE]: Setting terrain heights " + _module.Scene.RegionInfo.RegionName +
                                 string.Format(" (C{0}, {1}-{2}", corner, lowValue, highValue));
 
                     switch (corner)
                     {
                         case -1:
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation1SW = lowValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation2SW = highValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation1NW = lowValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation2NW = highValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation1SE = lowValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation2SE = highValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation1NE = lowValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation2NE = highValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation1SW = lowValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation2SW = highValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation1NW = lowValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation2NW = highValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation1SE = lowValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation2SE = highValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation1NE = lowValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation2NE = highValue;
                             break;
                         case 0:
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation1SW = lowValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation2SW = highValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation1SW = lowValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation2SW = highValue;
                             break;
                         case 1:
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation1NW = lowValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation2NW = highValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation1NW = lowValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation2NW = highValue;
                             break;
                         case 2:
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation1SE = lowValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation2SE = highValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation1SE = lowValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation2SE = highValue;
                             break;
                         case 3:
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation1NE = lowValue;
-                            m_module.Scene.RegionInfo.RegionSettings.Elevation2NE = highValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation1NE = lowValue;
+                            _module.Scene.RegionInfo.RegionSettings.Elevation2NE = highValue;
                             break;
                     }
 
-                    m_module.Scene.RegionInfo.RegionSettings.Save();
-                    m_module.TriggerRegionInfoChange();
-                    m_module.sendRegionHandshakeToAll();
+                    _module.Scene.RegionInfo.RegionSettings.Save();
+                    _module.TriggerRegionInfoChange();
+                    _module.sendRegionHandshakeToAll();
                 }
             }
         }
@@ -199,7 +199,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
         protected void ShowEstatesCommand(string module, string[] cmd)
         {
             StringBuilder report = new StringBuilder();
-            RegionInfo ri = m_module.Scene.RegionInfo;
+            RegionInfo ri = _module.Scene.RegionInfo;
             EstateSettings es = ri.EstateSettings;
 
             report.AppendFormat("Estate information for region {0}\n", ri.RegionName);
@@ -211,7 +211,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
             report.AppendFormat(
                 "{0,-20} {1,-7} {2,-20}\n",
-                es.EstateName, es.EstateID, m_module.UserManager.GetUserName(es.EstateOwner));
+                es.EstateName, es.EstateID, _module.UserManager.GetUserName(es.EstateOwner));
 
             MainConsole.Instance.Output(report.ToString());
         }

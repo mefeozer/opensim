@@ -49,7 +49,7 @@ namespace OpenSim.Services.MapImageService
 {
     public class MapImageService : IMapImageService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 #pragma warning disable 414
@@ -61,47 +61,47 @@ namespace OpenSim.Services.MapImageService
         private const int HALF_WIDTH = 128;
         private const int JPEG_QUALITY = 80;
 
-        private static string m_TilesStoragePath = "maptiles";
+        private static string _TilesStoragePath = "maptiles";
 
-        private static readonly object m_Sync = new object();
-        private static bool m_Initialized = false;
-        private static string m_WaterTileFile = string.Empty;
-        private static readonly Color m_Watercolor = Color.FromArgb(29, 71, 95);
-        private static Bitmap m_WaterBitmap = null;
-        private static byte[] m_WaterBytes = null;
+        private static readonly object _Sync = new object();
+        private static bool _Initialized = false;
+        private static string _WaterTileFile = string.Empty;
+        private static readonly Color _Watercolor = Color.FromArgb(29, 71, 95);
+        private static Bitmap _WaterBitmap = null;
+        private static byte[] _WaterBytes = null;
 
         public MapImageService(IConfigSource config)
         {
-            if (!m_Initialized)
+            if (!_Initialized)
             {
-                m_Initialized = true;
-                m_log.Debug("[MAP IMAGE SERVICE]: Starting MapImage service");
+                _Initialized = true;
+                _log.Debug("[MAP IMAGE SERVICE]: Starting MapImage service");
 
                 IConfig serviceConfig = config.Configs["MapImageService"];
                 if (serviceConfig != null)
                 {
-                    m_TilesStoragePath = serviceConfig.GetString("TilesStoragePath", m_TilesStoragePath);
-                    if (!Directory.Exists(m_TilesStoragePath))
-                        Directory.CreateDirectory(m_TilesStoragePath);
+                    _TilesStoragePath = serviceConfig.GetString("TilesStoragePath", _TilesStoragePath);
+                    if (!Directory.Exists(_TilesStoragePath))
+                        Directory.CreateDirectory(_TilesStoragePath);
 
 
-                    m_WaterTileFile = Path.Combine(m_TilesStoragePath, "water.jpg");
-                    if (!File.Exists(m_WaterTileFile))
+                    _WaterTileFile = Path.Combine(_TilesStoragePath, "water.jpg");
+                    if (!File.Exists(_WaterTileFile))
                     {
                         Bitmap waterTile = new Bitmap(IMAGE_WIDTH, IMAGE_WIDTH);
-                        FillImage(waterTile, m_Watercolor);
-                        waterTile.Save(m_WaterTileFile, ImageFormat.Jpeg);
-                        m_WaterBitmap = waterTile;
+                        FillImage(waterTile, _Watercolor);
+                        waterTile.Save(_WaterTileFile, ImageFormat.Jpeg);
+                        _WaterBitmap = waterTile;
                     }
 
-                    if (File.Exists(m_WaterTileFile))
+                    if (File.Exists(_WaterTileFile))
                     {
-                        m_WaterBitmap = new Bitmap(m_WaterTileFile);
+                        _WaterBitmap = new Bitmap(_WaterTileFile);
                         using (MemoryStream ms = new MemoryStream())
                         {
-                            m_WaterBitmap.Save(ms,ImageFormat.Jpeg);
+                            _WaterBitmap.Save(ms,ImageFormat.Jpeg);
                             ms.Seek(0, SeekOrigin.Begin);
-                            m_WaterBytes = ms.ToArray();
+                            _WaterBytes = ms.ToArray();
                         }
                     }
                 }
@@ -115,7 +115,7 @@ namespace OpenSim.Services.MapImageService
             reason = string.Empty;
             string fileName = GetFileName(1, x, y, scopeID);
 
-            lock (m_Sync)
+            lock (_Sync)
             {
                 try
                 {
@@ -124,7 +124,7 @@ namespace OpenSim.Services.MapImageService
                 }
                 catch (Exception e)
                 {
-                    m_log.WarnFormat("[MAP IMAGE SERVICE]: Unable to save image file {0}: {1}", fileName, e);
+                    _log.WarnFormat("[MAP IMAGE SERVICE]: Unable to save image file {0}: {1}", fileName, e);
                     reason = e.Message;
                     return false;
                 }
@@ -138,7 +138,7 @@ namespace OpenSim.Services.MapImageService
             reason = string.Empty;
             string fileName = GetFileName(1, x, y, scopeID);
 
-            lock (m_Sync)
+            lock (_Sync)
             {
                 try
                 {
@@ -147,7 +147,7 @@ namespace OpenSim.Services.MapImageService
                 catch (Exception e)
                 {
 
-                    m_log.WarnFormat("[MAP IMAGE SERVICE]: Unable to save delete file {0}: {1}", fileName, e);
+                    _log.WarnFormat("[MAP IMAGE SERVICE]: Unable to save delete file {0}: {1}", fileName, e);
                     reason = e.Message;
                     return false;
                 }
@@ -180,7 +180,7 @@ namespace OpenSim.Services.MapImageService
 
             lock (multiRezToBuild)
             {
-                // m_log.DebugFormat("{0} UpdateMultiResolutionFilesAsync: scheduling update for <{1},{2}>", LogHeader, x, y);
+                // _log.DebugFormat("{0} UpdateMultiResolutionFilesAsync: scheduling update for <{1},{2}>", LogHeader, x, y);
                 multiRezToBuild.Enqueue(new mapToMultiRez(x, y, scopeID));
                 if (multiRezToBuild.Count == 1)
                     Util.FireAndForget(
@@ -208,7 +208,7 @@ namespace OpenSim.Services.MapImageService
                     int x = toMultiRez.xx;
                     int y = toMultiRez.yy;
                     UUID scopeID = toMultiRez.scopeID;
-                    // m_log.DebugFormat("{0} DoUpdateMultiResolutionFilesAsync: doing build for <{1},{2}>", LogHeader, x, y);
+                    // _log.DebugFormat("{0} DoUpdateMultiResolutionFilesAsync: doing build for <{1},{2}>", LogHeader, x, y);
 
                     int width = 1;
 
@@ -221,11 +221,11 @@ namespace OpenSim.Services.MapImageService
                         int x1 = x - x % width;
                         int y1 = y - y % width;
 
-                        lock (m_Sync)   // must lock the reading and writing of the maptile files
+                        lock (_Sync)   // must lock the reading and writing of the maptile files
                         {
                             if (!CreateTile(zoomLevel, x1, y1, scopeID))
                             {
-                                m_log.WarnFormat("[MAP IMAGE SERVICE]: Unable to create tile for {0},{1} at zoom level {1}", x, y, zoomLevel);
+                                _log.WarnFormat("[MAP IMAGE SERVICE]: Unable to create tile for {0},{1} at zoom level {1}", x, y, zoomLevel);
                                 return;
                             }
                         }
@@ -237,23 +237,23 @@ namespace OpenSim.Services.MapImageService
 
         public byte[] GetMapTile(string fileName, UUID scopeID, out string format)
         {
-            //m_log.DebugFormat("[MAP IMAGE SERVICE]: Getting map tile {0}", fileName);
-            string fullName = Path.Combine(m_TilesStoragePath, scopeID.ToString());
+            //_log.DebugFormat("[MAP IMAGE SERVICE]: Getting map tile {0}", fileName);
+            string fullName = Path.Combine(_TilesStoragePath, scopeID.ToString());
             fullName = Path.Combine(fullName, fileName);
             try
             {
                 format = Path.GetExtension(fileName).ToLower();
-                //m_log.DebugFormat("[MAP IMAGE SERVICE]: Found file {0}, extension {1}", fileName, format);
+                //_log.DebugFormat("[MAP IMAGE SERVICE]: Found file {0}, extension {1}", fileName, format);
                 return File.ReadAllBytes(fullName);
             }
             catch
             {
                 format = ".jpg";
-                if (m_WaterBytes != null)
-                    return (byte[])m_WaterBytes.Clone();
+                if (_WaterBytes != null)
+                    return (byte[])_WaterBytes.Clone();
                 else
                 {
-                    //m_log.DebugFormat("[MAP IMAGE SERVICE]: unable to get file {0}", fileName);
+                    //_log.DebugFormat("[MAP IMAGE SERVICE]: unable to get file {0}", fileName);
                     return new byte[0];
                 }
             }
@@ -265,7 +265,7 @@ namespace OpenSim.Services.MapImageService
         private string GetFileName(uint zoomLevel, int x, int y, UUID scopeID)
         {
             string extension = "jpg";
-            string path = Path.Combine(m_TilesStoragePath, scopeID.ToString());
+            string path = Path.Combine(_TilesStoragePath, scopeID.ToString());
             Directory.CreateDirectory(path);
             return Path.Combine(path, string.Format("map-{0}-{1}-{2}-objects.{3}", zoomLevel, x, y, extension));
         }
@@ -279,7 +279,7 @@ namespace OpenSim.Services.MapImageService
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[MAP IMAGE SERVICE]: Unable to read image data from {0}: {1}", fileName, e);
+                _log.WarnFormat("[MAP IMAGE SERVICE]: Unable to read image data from {0}: {1}", fileName, e);
             }
 
             return null;
@@ -302,7 +302,7 @@ namespace OpenSim.Services.MapImageService
             }
             catch (Exception e)
             {
-                m_log.WarnFormat("[MAP IMAGE SERVICE]: Unable to read image data from {0}: {1}", fileName, e);
+                _log.WarnFormat("[MAP IMAGE SERVICE]: Unable to read image data from {0}: {1}", fileName, e);
             }
 
             return null;
@@ -310,7 +310,7 @@ namespace OpenSim.Services.MapImageService
 
         private bool CreateTile(uint zoomLevel, int x, int y, UUID scopeID)
         {
-//            m_log.DebugFormat("[MAP IMAGE SERVICE]: Create tile for {0} {1}, zoom {2}", x, y, zoomLevel);
+//            _log.DebugFormat("[MAP IMAGE SERVICE]: Create tile for {0} {1}, zoom {2}", x, y, zoomLevel);
             int prevWidth = (int)Math.Pow(2, (double)zoomLevel - 2);
             int thisWidth = (int)Math.Pow(2, (double)zoomLevel - 1);
 
@@ -332,7 +332,7 @@ namespace OpenSim.Services.MapImageService
             string outputFile = GetFileName(zoomLevel, xOut, yOut, scopeID);
 
             int ntiles = 0;
-            Bitmap output = (Bitmap)m_WaterBitmap.Clone();
+            Bitmap output = (Bitmap)_WaterBitmap.Clone();
 
             if (inputBL != null)
             {
@@ -372,7 +372,7 @@ namespace OpenSim.Services.MapImageService
                 }
                 catch (Exception e)
                 {
-                    m_log.WarnFormat("[MAP IMAGE SERVICE]: Oops on saving {0} {1}", outputFile, e);
+                    _log.WarnFormat("[MAP IMAGE SERVICE]: Oops on saving {0} {1}", outputFile, e);
                 }
             }            // Save also as png?
 

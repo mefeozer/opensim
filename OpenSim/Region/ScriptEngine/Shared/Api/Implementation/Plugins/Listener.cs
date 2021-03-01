@@ -35,33 +35,30 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 {
     public class Listener
     {
-        // private static readonly ILog m_log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        // private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public AsyncCommandManager m_CmdManager;
+        public AsyncCommandManager _CmdManager;
 
-        private readonly IWorldComm m_commsPlugin;
+        private readonly IWorldComm _commsPlugin;
 
-        public int ListenerCount
-        {
-            get { return m_commsPlugin.ListenerCount; }
-        }
+        public int ListenerCount => _commsPlugin.ListenerCount;
 
         public Listener(AsyncCommandManager CmdManager)
         {
-            m_CmdManager = CmdManager;
-            m_commsPlugin = m_CmdManager.m_ScriptEngine.World.RequestModuleInterface<IWorldComm>();
+            _CmdManager = CmdManager;
+            _commsPlugin = _CmdManager._ScriptEngine.World.RequestModuleInterface<IWorldComm>();
         }
 
         public void CheckListeners()
         {
-            if (m_CmdManager.m_ScriptEngine.World == null)
+            if (_CmdManager._ScriptEngine.World == null)
                 return;
 
-            if (m_commsPlugin != null)
+            if (_commsPlugin != null)
             {
-                while (m_commsPlugin.HasMessages())
+                while (_commsPlugin.HasMessages())
                 {
-                    ListenerInfo lInfo = (ListenerInfo)m_commsPlugin.GetNextMessage();
+                    ListenerInfo lInfo = (ListenerInfo)_commsPlugin.GetNextMessage();
 
                     //Deliver data to prim's listen handler
                     object[] resobj = new object[]
@@ -72,7 +69,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
                         new LSL_Types.LSLString(lInfo.GetMessage())
                     };
 
-                    foreach (IScriptEngine e in m_CmdManager.ScriptEngines)
+                    foreach (IScriptEngine e in _CmdManager.ScriptEngines)
                     {
                         e.PostScriptEvent(
                                 lInfo.GetItemID(), new EventParams(
@@ -85,8 +82,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
 
         public object[] GetSerializationData(UUID itemID)
         {
-            if (m_commsPlugin != null)
-                return m_commsPlugin.GetSerializationData(itemID);
+            if (_commsPlugin != null)
+                return _commsPlugin.GetSerializationData(itemID);
             else
                 return new object[]{};
         }
@@ -94,8 +91,8 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api.Plugins
         public void CreateFromData(uint localID, UUID itemID, UUID hostID,
                 object[] data)
         {
-            if (m_commsPlugin != null)
-                m_commsPlugin.CreateFromData(localID, itemID, hostID, data);
+            if (_commsPlugin != null)
+                _commsPlugin.CreateFromData(localID, itemID, hostID, data);
         }
     }
 }

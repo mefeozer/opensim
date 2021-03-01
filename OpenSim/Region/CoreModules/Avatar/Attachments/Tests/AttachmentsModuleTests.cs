@@ -34,11 +34,11 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
         [TestFixture]
         public class AttachmentsModuleTests : OpenSimTestCase
         {
-            private AutoResetEvent m_chatEvent = new AutoResetEvent(false);
-    //        private OSChatMessage m_osChatMessageReceived;
+            private AutoResetEvent _chatEvent = new AutoResetEvent(false);
+    //        private OSChatMessage _osChatMessageReceived;
 
             // Used to test whether the operations have fired the attach event.  Must be reset after each test.
-            private int m_numberOfAttachEventsFired;
+            private int _numberOfAttachEventsFired;
 
             [TestFixtureSetUp]
             public void FixtureInit()
@@ -59,8 +59,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
             {
     //            Console.WriteLine("Got chat [{0}]", oscm.Message);
 
-    //            m_osChatMessageReceived = oscm;
-                m_chatEvent.Set();
+    //            _osChatMessageReceived = oscm;
+                _chatEvent.Set();
             }
 
             private Scene CreateTestScene()
@@ -75,7 +75,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                         "attachments-test-scene", TestHelpers.ParseTail(999), 1000, 1000, config);
                 SceneHelpers.SetupSceneModules(scene, config, modules.ToArray());
 
-                scene.EventManager.OnAttach += (localID, itemID, avatarID) => m_numberOfAttachEventsFired++;
+                scene.EventManager.OnAttach += (localID, itemID, avatarID) => _numberOfAttachEventsFired++;
 
                 return scene;
             }
@@ -161,7 +161,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 TestHelpers.InMethod();
     //            TestHelpers.EnableLogging();
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
 
                 Scene scene = CreateTestScene();
                 UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(scene, 0x1);
@@ -172,7 +172,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 SceneObjectGroup so = SceneHelpers.AddSceneObject(scene, attName, sp.UUID);
                 Assert.That(so.Backup, Is.True);
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
                 scene.AttachmentsModule.AttachObject(sp, so, (uint)AttachmentPoint.Chest,  false, true, false);
 
                 // Check status on scene presence
@@ -202,7 +202,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                 // Check events
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(1));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(1));
             }
 
             [Test]
@@ -220,7 +220,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 {
                     SceneObjectGroup so = SceneHelpers.AddSceneObject(scene, "att1", sp.UUID);
 
-                    m_numberOfAttachEventsFired = 0;
+                    _numberOfAttachEventsFired = 0;
                     scene.AttachmentsModule.AttachObject(sp, so, (uint)AttachmentPoint.Default, false, true, false);
 
                     // Check status on scene presence
@@ -249,7 +249,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(2));
 
                     // Check events
-                    Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(1));
+                    Assert.That(_numberOfAttachEventsFired, Is.EqualTo(1));
                 }
 
                 // Test wearing a different attachment from the ground.
@@ -282,7 +282,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                     // Check events
-                    Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(3));
+                    Assert.That(_numberOfAttachEventsFired, Is.EqualTo(3));
                 }
 
                 // Test rewearing an already worn attachment from ground.  Nothing should happen.
@@ -315,7 +315,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                     // Check events
-                    Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(3));
+                    Assert.That(_numberOfAttachEventsFired, Is.EqualTo(3));
                 }
             }
 
@@ -328,7 +328,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 TestHelpers.InMethod();
     //            TestHelpers.EnableLogging();
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
 
                 Scene scene = CreateTestScene();
                 UserAccount ua1 = UserAccountHelpers.CreateUserWithInventory(scene, 0x1);
@@ -351,7 +351,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                 // Check events
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(0));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(0));
             }
 
             [Test]
@@ -388,7 +388,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                     // Check events
-                    Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(1));
+                    Assert.That(_numberOfAttachEventsFired, Is.EqualTo(1));
                 }
 
                 // Test attaching an already attached attachment
@@ -413,7 +413,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                     // Check events
-                    Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(1));
+                    Assert.That(_numberOfAttachEventsFired, Is.EqualTo(1));
                 }
             }
 
@@ -434,7 +434,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 InventoryItemBase attItem2 = CreateAttachmentItem(scene, ua1.PrincipalID, "att2", 0x11, 0x21);
 
                 {
-                    m_numberOfAttachEventsFired = 0;
+                    _numberOfAttachEventsFired = 0;
                     scene.AttachmentsModule.RezSingleAttachmentFromInventory(sp, attItem1.ID, (uint)AttachmentPoint.Default);
 
                     // default attachment point is currently the left hand.
@@ -452,7 +452,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                     // Check events
-                    Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(1));
+                    Assert.That(_numberOfAttachEventsFired, Is.EqualTo(1));
                 }
 
                 // Test wearing a second attachment at the same position
@@ -477,7 +477,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                     // Check events
-                    Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(3));
+                    Assert.That(_numberOfAttachEventsFired, Is.EqualTo(3));
                 }
 
                 // Test wearing an already attached attachment
@@ -499,7 +499,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                     // Check events
-                    Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(3));
+                    Assert.That(_numberOfAttachEventsFired, Is.EqualTo(3));
                 }
             }
 
@@ -529,10 +529,10 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 // In the future, we need to be able to do this programatically more predicably.
                 scene.EventManager.OnChatFromWorld += OnChatFromWorld;
 
-                m_chatEvent.Reset();
+                _chatEvent.Reset();
                 scene.AttachmentsModule.RezSingleAttachmentFromInventory(sp, userItem.ID, (uint)AttachmentPoint.Chest);
 
-                m_chatEvent.WaitOne(60000);
+                _chatEvent.WaitOne(60000);
 
                 // TODO: Need to have a test that checks the script is actually started but this involves a lot more
                 // plumbing of the script engine and either pausing for events or more infrastructure to turn off various
@@ -561,7 +561,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     = scene.AttachmentsModule.RezSingleAttachmentFromInventory(
                         sp, attItem.ID, (uint)AttachmentPoint.Chest);
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
                 scene.AttachmentsModule.DetachSingleAttachmentToGround(sp, so.LocalId);
 
                 // Check scene presence status
@@ -581,7 +581,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 Assert.IsTrue(soInScene.Backup);
 
                 // Check events
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(1));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(1));
             }
 
             [Test]
@@ -599,7 +599,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     = (SceneObjectGroup)scene.AttachmentsModule.RezSingleAttachmentFromInventory(
                         sp, attItem.ID, (uint)AttachmentPoint.Chest);
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
                 scene.AttachmentsModule.DetachSingleAttachmentToInv(sp, so);
 
                 // Check status on scene presence
@@ -613,7 +613,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(0));
 
                 // Check events
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(1));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(1));
             }
 
             /// <summary>
@@ -643,12 +643,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 // In the future, we need to be able to do this programatically more predicably.
                 scene.EventManager.OnChatFromWorld += OnChatFromWorld;
 
-                m_chatEvent.Reset();
+                _chatEvent.Reset();
                 SceneObjectGroup rezzedSo
                     = (SceneObjectGroup)(scene.AttachmentsModule.RezSingleAttachmentFromInventory(sp, userItem.ID, (uint)AttachmentPoint.Chest));
 
                 // Wait for chat to signal rezzed script has been started.
-                m_chatEvent.WaitOne(60000);
+                _chatEvent.WaitOne(60000);
 
                 scene.AttachmentsModule.DetachSingleAttachmentToInv(sp, rezzedSo);
 
@@ -667,7 +667,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 SceneObjectGroup reRezzedSo = (SceneObjectGroup)(scene.AttachmentsModule.RezSingleAttachmentFromInventory(sp, userItem.ID, (uint)AttachmentPoint.Chest));
 
                 // Wait for chat to signal rezzed script has been started.
-                m_chatEvent.WaitOne(60000);
+                _chatEvent.WaitOne(60000);
 
                 TaskInventoryItem reRezzedScriptItem = reRezzedSo.RootPart.Inventory.GetInventoryItem(scriptTaskItem.Name);
                 IScriptModule xengine = scene.RequestModuleInterface<IScriptModule>();
@@ -696,14 +696,14 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
 
                 UUID rezzedAttID = presence.GetAttachments()[0].UUID;
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
                 scene.CloseAgent(presence.UUID, false);
 
                 // Check that we can't retrieve this attachment from the scene.
                 Assert.That(scene.GetSceneObjectGroup(rezzedAttID), Is.Null);
 
                 // Check events
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(0));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(0));
             }
 
             [Test]
@@ -720,7 +720,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 acd.Appearance = new AvatarAppearance();
                 acd.Appearance.SetAttachment((int)AttachmentPoint.Chest, attItem.ID, attItem.AssetID);
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
                 ScenePresence presence = SceneHelpers.AddScenePresence(scene, acd);
 
                 Assert.That(presence.HasAttachments(), Is.True);
@@ -746,7 +746,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 Assert.That(scene.GetSceneObjectGroups().Count, Is.EqualTo(1));
 
                 // Check events.  We expect OnAttach to fire on login.
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(1));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(1));
             }
 
             [Test]
@@ -767,14 +767,14 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
 
                 Vector3 newPosition = new Vector3(1, 2, 4);
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
                 scene.SceneGraph.UpdatePrimGroupPosition(attSo.LocalId, newPosition, sp.ControllingClient);
 
                 Assert.That(attSo.AbsolutePosition, Is.EqualTo(sp.AbsolutePosition));
                 Assert.That(attSo.RootPart.AttachedPos, Is.EqualTo(newPosition));
 
                 // Check events
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(0));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(0));
             }
 
 
@@ -837,7 +837,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 Vector3 teleportPosition = new Vector3(10, 11, 12);
                 Vector3 teleportLookAt = new Vector3(20, 21, 22);
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
                 sceneA.RequestTeleportLocation(
                     beforeTeleportSp.ControllingClient,
                     sceneB.RegionInfo.RegionHandle,
@@ -883,7 +883,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 Assert.That(sceneA.GetSceneObjectGroups().Count, Is.EqualTo(0));
 
                 // Check events
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(0));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(0));
             }
 
 
@@ -951,7 +951,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                     += (regionHandle, simAccess, regionExternalEndPoint, locationID, flags, capsURL)
                         => ThreadPool.UnsafeQueueUserWorkItem(o => destinationTestClients[0].CompleteMovement(), null);
 
-                m_numberOfAttachEventsFired = 0;
+                _numberOfAttachEventsFired = 0;
                 sceneA.RequestTeleportLocation(
                     beforeTeleportSp.ControllingClient,
                     sceneB.RegionInfo.RegionHandle,
@@ -995,7 +995,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments.Tests
                 Assert.That(sceneA.GetSceneObjectGroups().Count, Is.EqualTo(0));
 
                 // Check events
-                Assert.That(m_numberOfAttachEventsFired, Is.EqualTo(0));
+                Assert.That(_numberOfAttachEventsFired, Is.EqualTo(0));
             }
         }
     */

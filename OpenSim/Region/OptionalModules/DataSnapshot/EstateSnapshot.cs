@@ -43,9 +43,9 @@ namespace OpenSim.Region.DataSnapshot.Providers
          *
          * I don't think anything changes the fields beyond RegionModule PostInit, however.
          */
-        private Scene m_scene = null;
-        // private DataSnapshotManager m_parent = null;
-        private bool m_stale = true;
+        private Scene _scene = null;
+        // private DataSnapshotManager _parent = null;
+        private bool _stale = true;
 
         #region IDataSnapshotProvider Members
 
@@ -55,9 +55,9 @@ namespace OpenSim.Region.DataSnapshot.Providers
             //Now in DataSnapshotProvider module form!
             XmlNode estatedata = factory.CreateNode(XmlNodeType.Element, "estate", "");
 
-            UUID ownerid = m_scene.RegionInfo.EstateSettings.EstateOwner;
+            UUID ownerid = _scene.RegionInfo.EstateSettings.EstateOwner;
 
-            UserAccount userInfo = m_scene.UserAccountService.GetUserAccount(m_scene.RegionInfo.ScopeID, ownerid);
+            UserAccount userInfo = _scene.UserAccountService.GetUserAccount(_scene.RegionInfo.ScopeID, ownerid);
             //TODO: Change to query userserver about the master avatar UUID ?
             string firstname;
             string lastname;
@@ -86,25 +86,25 @@ namespace OpenSim.Region.DataSnapshot.Providers
             }
 
             XmlNode estatename = factory.CreateNode(XmlNodeType.Element, "name", "");
-            estatename.InnerText = m_scene.RegionInfo.EstateSettings.EstateName.ToString();
+            estatename.InnerText = _scene.RegionInfo.EstateSettings.EstateName.ToString();
             estatedata.AppendChild(estatename);
 
             XmlNode estateid = factory.CreateNode(XmlNodeType.Element, "id", "");
-            estateid.InnerText = m_scene.RegionInfo.EstateSettings.EstateID.ToString();
+            estateid.InnerText = _scene.RegionInfo.EstateSettings.EstateID.ToString();
             estatedata.AppendChild(estateid);
 
             XmlNode parentid = factory.CreateNode(XmlNodeType.Element, "parentid", "");
-            parentid.InnerText = m_scene.RegionInfo.EstateSettings.ParentEstateID.ToString();
+            parentid.InnerText = _scene.RegionInfo.EstateSettings.ParentEstateID.ToString();
             estatedata.AppendChild(parentid);
 
             XmlNode flags = factory.CreateNode(XmlNodeType.Element, "flags", "");
 
             XmlAttribute teleport = (XmlAttribute)factory.CreateNode(XmlNodeType.Attribute, "teleport", "");
-            teleport.Value = m_scene.RegionInfo.EstateSettings.AllowDirectTeleport.ToString();
+            teleport.Value = _scene.RegionInfo.EstateSettings.AllowDirectTeleport.ToString();
             flags.Attributes.Append(teleport);
 
             XmlAttribute publicaccess = (XmlAttribute)factory.CreateNode(XmlNodeType.Attribute, "public", "");
-            publicaccess.Value = m_scene.RegionInfo.EstateSettings.PublicAccess.ToString();
+            publicaccess.Value = _scene.RegionInfo.EstateSettings.PublicAccess.ToString();
             flags.Attributes.Append(publicaccess);
 
             estatedata.AppendChild(flags);
@@ -115,28 +115,21 @@ namespace OpenSim.Region.DataSnapshot.Providers
 
         public void Initialize(Scene scene, DataSnapshotManager parent)
         {
-            m_scene = scene;
-            // m_parent = parent;
+            _scene = scene;
+            // _parent = parent;
         }
 
-        public Scene GetParentScene
-        {
-            get { return m_scene; }
-        }
+        public Scene GetParentScene => _scene;
 
-        public string Name {
-            get { return "EstateSnapshot"; }
-        }
+        public string Name => "EstateSnapshot";
 
         public bool Stale
         {
-            get {
-                return m_stale;
-            }
+            get => _stale;
             set {
-                m_stale = value;
+                _stale = value;
 
-                if (m_stale)
+                if (_stale)
                     OnStale(this);
             }
         }

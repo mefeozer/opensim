@@ -40,7 +40,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
     [TestFixture]
     public class InventoryTransferModuleTests : OpenSimTestCase
     {
-        protected TestScene m_scene;
+        protected TestScene _scene;
 
         [SetUp]
         public override void SetUp()
@@ -51,8 +51,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             config.AddConfig("Messaging");
             config.Configs["Messaging"].Set("InventoryTransferModule", "InventoryTransferModule");
 
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, config, new InventoryTransferModule());
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, config, new InventoryTransferModule());
         }
 
         [Test]
@@ -65,20 +65,20 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             UUID assetId = TestHelpers.ParseTail(0x200);
 
             UserAccount ua1
-                = UserAccountHelpers.CreateUserWithInventory(m_scene, "User", "One", TestHelpers.ParseTail(0x1), "pw");
+                = UserAccountHelpers.CreateUserWithInventory(_scene, "User", "One", TestHelpers.ParseTail(0x1), "pw");
             UserAccount ua2
-                = UserAccountHelpers.CreateUserWithInventory(m_scene, "User", "Two", TestHelpers.ParseTail(0x2), "pw");
+                = UserAccountHelpers.CreateUserWithInventory(_scene, "User", "Two", TestHelpers.ParseTail(0x2), "pw");
 
-            ScenePresence giverSp = SceneHelpers.AddScenePresence(m_scene, ua1);
+            ScenePresence giverSp = SceneHelpers.AddScenePresence(_scene, ua1);
             TestClient giverClient = (TestClient)giverSp.ControllingClient;
 
-            ScenePresence receiverSp = SceneHelpers.AddScenePresence(m_scene, ua2);
+            ScenePresence receiverSp = SceneHelpers.AddScenePresence(_scene, ua2);
             TestClient receiverClient = (TestClient)receiverSp.ControllingClient;
 
             // Create the object to test give
             InventoryItemBase originalItem
                 = UserInventoryHelpers.CreateInventoryItem(
-                    m_scene, "givenObj", itemId, assetId, giverSp.UUID, InventoryType.Object);
+                    _scene, "givenObj", itemId, assetId, giverSp.UUID, InventoryType.Object);
 
             byte[] giveImBinaryBucket = new byte[17];
             byte[] itemIdBytes = itemId.GetBytes();
@@ -86,7 +86,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
 
             GridInstantMessage giveIm
                 = new GridInstantMessage(
-                    m_scene,
+                    _scene,
                     giverSp.UUID,
                     giverSp.Name,
                     receiverSp.UUID,
@@ -104,7 +104,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             // These details might not all be correct.
             GridInstantMessage acceptIm
                 = new GridInstantMessage(
-                    m_scene,
+                    _scene,
                     receiverSp.UUID,
                     receiverSp.Name,
                     giverSp.UUID,
@@ -122,23 +122,23 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             // Test for item remaining in the giver's inventory (here we assume a copy item)
             // TODO: Test no-copy items.
             InventoryItemBase originalItemAfterGive
-                = UserInventoryHelpers.GetInventoryItem(m_scene.InventoryService, giverSp.UUID, "Objects/givenObj");
+                = UserInventoryHelpers.GetInventoryItem(_scene.InventoryService, giverSp.UUID, "Objects/givenObj");
 
             Assert.That(originalItemAfterGive, Is.Not.Null);
             Assert.That(originalItemAfterGive.ID, Is.EqualTo(originalItem.ID));
 
             // Test for item successfully making it into the receiver's inventory
             InventoryItemBase receivedItem
-                = UserInventoryHelpers.GetInventoryItem(m_scene.InventoryService, receiverSp.UUID, "Objects/givenObj");
+                = UserInventoryHelpers.GetInventoryItem(_scene.InventoryService, receiverSp.UUID, "Objects/givenObj");
 
             Assert.That(receivedItem, Is.Not.Null);
             Assert.That(receivedItem.ID, Is.Not.EqualTo(originalItem.ID));
 
             // Test that on a delete, item still exists and is accessible for the giver.
-            m_scene.InventoryService.DeleteItems(receiverSp.UUID, new List<UUID>() { receivedItem.ID });
+            _scene.InventoryService.DeleteItems(receiverSp.UUID, new List<UUID>() { receivedItem.ID });
 
             InventoryItemBase originalItemAfterDelete
-                = UserInventoryHelpers.GetInventoryItem(m_scene.InventoryService, giverSp.UUID, "Objects/givenObj");
+                = UserInventoryHelpers.GetInventoryItem(_scene.InventoryService, giverSp.UUID, "Objects/givenObj");
 
             Assert.That(originalItemAfterDelete, Is.Not.Null);
 
@@ -161,20 +161,20 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             UUID assetId = TestHelpers.ParseTail(0x200);
 
             UserAccount ua1
-                = UserAccountHelpers.CreateUserWithInventory(m_scene, "User", "One", TestHelpers.ParseTail(0x1), "pw");
+                = UserAccountHelpers.CreateUserWithInventory(_scene, "User", "One", TestHelpers.ParseTail(0x1), "pw");
             UserAccount ua2
-                = UserAccountHelpers.CreateUserWithInventory(m_scene, "User", "Two", TestHelpers.ParseTail(0x2), "pw");
+                = UserAccountHelpers.CreateUserWithInventory(_scene, "User", "Two", TestHelpers.ParseTail(0x2), "pw");
 
-            ScenePresence giverSp = SceneHelpers.AddScenePresence(m_scene, ua1);
+            ScenePresence giverSp = SceneHelpers.AddScenePresence(_scene, ua1);
             TestClient giverClient = (TestClient)giverSp.ControllingClient;
 
-            ScenePresence receiverSp = SceneHelpers.AddScenePresence(m_scene, ua2);
+            ScenePresence receiverSp = SceneHelpers.AddScenePresence(_scene, ua2);
             TestClient receiverClient = (TestClient)receiverSp.ControllingClient;
 
             // Create the object to test give
             InventoryItemBase originalItem
                 = UserInventoryHelpers.CreateInventoryItem(
-                    m_scene, "givenObj", itemId, assetId, giverSp.UUID, InventoryType.Object);
+                    _scene, "givenObj", itemId, assetId, giverSp.UUID, InventoryType.Object);
 
             GridInstantMessage receivedIm = null;
             receiverClient.OnReceivedInstantMessage += im => receivedIm = im;
@@ -185,7 +185,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
 
             GridInstantMessage giveIm
                 = new GridInstantMessage(
-                    m_scene,
+                    _scene,
                     giverSp.UUID,
                     giverSp.Name,
                     receiverSp.UUID,
@@ -204,7 +204,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             // Session ID is now the created item ID (!)
             GridInstantMessage rejectIm
                 = new GridInstantMessage(
-                    m_scene,
+                    _scene,
                     receiverSp.UUID,
                     receiverSp.Name,
                     giverSp.UUID,
@@ -222,27 +222,27 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             // Test for item remaining in the giver's inventory (here we assume a copy item)
             // TODO: Test no-copy items.
             InventoryItemBase originalItemAfterGive
-                = UserInventoryHelpers.GetInventoryItem(m_scene.InventoryService, giverSp.UUID, "Objects/givenObj");
+                = UserInventoryHelpers.GetInventoryItem(_scene.InventoryService, giverSp.UUID, "Objects/givenObj");
 
             Assert.That(originalItemAfterGive, Is.Not.Null);
             Assert.That(originalItemAfterGive.ID, Is.EqualTo(originalItem.ID));
 
             // Test for item successfully making it into the receiver's inventory
             InventoryItemBase receivedItem
-                = UserInventoryHelpers.GetInventoryItem(m_scene.InventoryService, receiverSp.UUID, "Trash/givenObj");
+                = UserInventoryHelpers.GetInventoryItem(_scene.InventoryService, receiverSp.UUID, "Trash/givenObj");
 
             InventoryFolderBase trashFolder
-                = m_scene.InventoryService.GetFolderForType(receiverSp.UUID, FolderType.Trash);
+                = _scene.InventoryService.GetFolderForType(receiverSp.UUID, FolderType.Trash);
 
             Assert.That(receivedItem, Is.Not.Null);
             Assert.That(receivedItem.ID, Is.Not.EqualTo(originalItem.ID));
             Assert.That(receivedItem.Folder, Is.EqualTo(trashFolder.ID));
 
             // Test that on a delete, item still exists and is accessible for the giver.
-            m_scene.InventoryService.PurgeFolder(trashFolder);
+            _scene.InventoryService.PurgeFolder(trashFolder);
 
             InventoryItemBase originalItemAfterDelete
-                = UserInventoryHelpers.GetInventoryItem(m_scene.InventoryService, giverSp.UUID, "Objects/givenObj");
+                = UserInventoryHelpers.GetInventoryItem(_scene.InventoryService, giverSp.UUID, "Objects/givenObj");
 
             Assert.That(originalItemAfterDelete, Is.Not.Null);
         }
@@ -257,19 +257,19 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             UUID folderId = TestHelpers.ParseTail(0x100);
 
             UserAccount ua1
-                = UserAccountHelpers.CreateUserWithInventory(m_scene, "User", "One", TestHelpers.ParseTail(0x1), "pw");
+                = UserAccountHelpers.CreateUserWithInventory(_scene, "User", "One", TestHelpers.ParseTail(0x1), "pw");
             UserAccount ua2
-                = UserAccountHelpers.CreateUserWithInventory(m_scene, "User", "Two", TestHelpers.ParseTail(0x2), "pw");
+                = UserAccountHelpers.CreateUserWithInventory(_scene, "User", "Two", TestHelpers.ParseTail(0x2), "pw");
 
-            ScenePresence giverSp = SceneHelpers.AddScenePresence(m_scene, ua1);
+            ScenePresence giverSp = SceneHelpers.AddScenePresence(_scene, ua1);
             TestClient giverClient = (TestClient)giverSp.ControllingClient;
 
-            ScenePresence receiverSp = SceneHelpers.AddScenePresence(m_scene, ua2);
+            ScenePresence receiverSp = SceneHelpers.AddScenePresence(_scene, ua2);
             TestClient receiverClient = (TestClient)receiverSp.ControllingClient;
 
             InventoryFolderBase originalFolder
                 = UserInventoryHelpers.CreateInventoryFolder(
-                    m_scene.InventoryService, giverSp.UUID, folderId, "f1", true);
+                    _scene.InventoryService, giverSp.UUID, folderId, "f1", true);
 
             byte[] giveImBinaryBucket = new byte[17];
             giveImBinaryBucket[0] = (byte)AssetType.Folder;
@@ -278,7 +278,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
 
             GridInstantMessage giveIm
                 = new GridInstantMessage(
-                    m_scene,
+                    _scene,
                     giverSp.UUID,
                     giverSp.Name,
                     receiverSp.UUID,
@@ -296,7 +296,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             // These details might not all be correct.
             GridInstantMessage acceptIm
                 = new GridInstantMessage(
-                    m_scene,
+                    _scene,
                     receiverSp.UUID,
                     receiverSp.Name,
                     giverSp.UUID,
@@ -314,23 +314,23 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             // Test for item remaining in the giver's inventory (here we assume a copy item)
             // TODO: Test no-copy items.
             InventoryFolderBase originalFolderAfterGive
-                = UserInventoryHelpers.GetInventoryFolder(m_scene.InventoryService, giverSp.UUID, "f1");
+                = UserInventoryHelpers.GetInventoryFolder(_scene.InventoryService, giverSp.UUID, "f1");
 
             Assert.That(originalFolderAfterGive, Is.Not.Null);
             Assert.That(originalFolderAfterGive.ID, Is.EqualTo(originalFolder.ID));
 
             // Test for item successfully making it into the receiver's inventory
             InventoryFolderBase receivedFolder
-                = UserInventoryHelpers.GetInventoryFolder(m_scene.InventoryService, receiverSp.UUID, "f1");
+                = UserInventoryHelpers.GetInventoryFolder(_scene.InventoryService, receiverSp.UUID, "f1");
 
             Assert.That(receivedFolder, Is.Not.Null);
             Assert.That(receivedFolder.ID, Is.Not.EqualTo(originalFolder.ID));
 
             // Test that on a delete, item still exists and is accessible for the giver.
-            m_scene.InventoryService.DeleteFolders(receiverSp.UUID, new List<UUID>() { receivedFolder.ID });
+            _scene.InventoryService.DeleteFolders(receiverSp.UUID, new List<UUID>() { receivedFolder.ID });
 
             InventoryFolderBase originalFolderAfterDelete
-                = UserInventoryHelpers.GetInventoryFolder(m_scene.InventoryService, giverSp.UUID, "f1");
+                = UserInventoryHelpers.GetInventoryFolder(_scene.InventoryService, giverSp.UUID, "f1");
 
             Assert.That(originalFolderAfterDelete, Is.Not.Null);
 
@@ -353,20 +353,20 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             UUID folderId = TestHelpers.ParseTail(0x100);
 
             UserAccount ua1
-                = UserAccountHelpers.CreateUserWithInventory(m_scene, "User", "One", TestHelpers.ParseTail(0x1), "pw");
+                = UserAccountHelpers.CreateUserWithInventory(_scene, "User", "One", TestHelpers.ParseTail(0x1), "pw");
             UserAccount ua2
-                = UserAccountHelpers.CreateUserWithInventory(m_scene, "User", "Two", TestHelpers.ParseTail(0x2), "pw");
+                = UserAccountHelpers.CreateUserWithInventory(_scene, "User", "Two", TestHelpers.ParseTail(0x2), "pw");
 
-            ScenePresence giverSp = SceneHelpers.AddScenePresence(m_scene, ua1);
+            ScenePresence giverSp = SceneHelpers.AddScenePresence(_scene, ua1);
             TestClient giverClient = (TestClient)giverSp.ControllingClient;
 
-            ScenePresence receiverSp = SceneHelpers.AddScenePresence(m_scene, ua2);
+            ScenePresence receiverSp = SceneHelpers.AddScenePresence(_scene, ua2);
             TestClient receiverClient = (TestClient)receiverSp.ControllingClient;
 
             // Create the folder to test give
             InventoryFolderBase originalFolder
                 = UserInventoryHelpers.CreateInventoryFolder(
-                    m_scene.InventoryService, giverSp.UUID, folderId, "f1", true);
+                    _scene.InventoryService, giverSp.UUID, folderId, "f1", true);
 
             GridInstantMessage receivedIm = null;
             receiverClient.OnReceivedInstantMessage += im => receivedIm = im;
@@ -378,7 +378,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
 
             GridInstantMessage giveIm
                 = new GridInstantMessage(
-                    m_scene,
+                    _scene,
                     giverSp.UUID,
                     giverSp.Name,
                     receiverSp.UUID,
@@ -397,7 +397,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             // Session ID is now the created item ID (!)
             GridInstantMessage rejectIm
                 = new GridInstantMessage(
-                    m_scene,
+                    _scene,
                     receiverSp.UUID,
                     receiverSp.Name,
                     giverSp.UUID,
@@ -415,27 +415,27 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Transfer.Tests
             // Test for item remaining in the giver's inventory (here we assume a copy item)
             // TODO: Test no-copy items.
             InventoryFolderBase originalFolderAfterGive
-                = UserInventoryHelpers.GetInventoryFolder(m_scene.InventoryService, giverSp.UUID, "f1");
+                = UserInventoryHelpers.GetInventoryFolder(_scene.InventoryService, giverSp.UUID, "f1");
 
             Assert.That(originalFolderAfterGive, Is.Not.Null);
             Assert.That(originalFolderAfterGive.ID, Is.EqualTo(originalFolder.ID));
 
             // Test for folder successfully making it into the receiver's inventory
             InventoryFolderBase receivedFolder
-                = UserInventoryHelpers.GetInventoryFolder(m_scene.InventoryService, receiverSp.UUID, "Trash/f1");
+                = UserInventoryHelpers.GetInventoryFolder(_scene.InventoryService, receiverSp.UUID, "Trash/f1");
 
             InventoryFolderBase trashFolder
-                = m_scene.InventoryService.GetFolderForType(receiverSp.UUID, FolderType.Trash);
+                = _scene.InventoryService.GetFolderForType(receiverSp.UUID, FolderType.Trash);
 
             Assert.That(receivedFolder, Is.Not.Null);
             Assert.That(receivedFolder.ID, Is.Not.EqualTo(originalFolder.ID));
             Assert.That(receivedFolder.ParentID, Is.EqualTo(trashFolder.ID));
 
             // Test that on a delete, item still exists and is accessible for the giver.
-            m_scene.InventoryService.PurgeFolder(trashFolder);
+            _scene.InventoryService.PurgeFolder(trashFolder);
 
             InventoryFolderBase originalFolderAfterDelete
-                = UserInventoryHelpers.GetInventoryFolder(m_scene.InventoryService, giverSp.UUID, "f1");
+                = UserInventoryHelpers.GetInventoryFolder(_scene.InventoryService, giverSp.UUID, "f1");
 
             Assert.That(originalFolderAfterDelete, Is.Not.Null);
         }

@@ -50,26 +50,17 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
         private readonly List<BasicActor> _actors = new List<BasicActor>();
         private readonly List<BasicPhysicsPrim> _prims = new List<BasicPhysicsPrim>();
         private float[] _heightMap;
-        private Vector3 m_regionExtent;
+        private Vector3 _regionExtent;
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
         //protected internal string sceneIdentifier;
         #region INonSharedRegionModule
-        public string Name
-        {
-            get { return "basicphysics"; }
-        }
+        public string Name => "basicphysics";
 
-        public string Version
-        {
-            get { return "1.0"; }
-        }
+        public string Version => "1.0";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public void Initialise(IConfigSource source)
         {
@@ -79,7 +70,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
             {
                 string physics = config.GetString("physics", string.Empty);
                 if (physics == Name)
-                    m_Enabled = true;
+                    _Enabled = true;
             }
 
         }
@@ -90,7 +81,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             EngineType = Name;
@@ -98,7 +89,7 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
             EngineName = Name + " " + Version;
 
             scene.RegisterModuleInterface<PhysicsScene>(this);
-            m_regionExtent = new Vector3(scene.RegionInfo.RegionSizeX, scene.RegionInfo.RegionSizeY, scene.RegionInfo.RegionSizeZ);
+            _regionExtent = new Vector3(scene.RegionInfo.RegionSizeX, scene.RegionInfo.RegionSizeY, scene.RegionInfo.RegionSizeZ);
             base.Initialise(scene.PhysicsRequestAsset,
                 scene.Heightmap != null ? scene.Heightmap.GetFloatsSerialised() : new float[scene.RegionInfo.RegionSizeX * scene.RegionInfo.RegionSizeY],
                 (float)scene.RegionInfo.RegionSettings.WaterHeight);
@@ -107,13 +98,13 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
 
         public void RegionLoaded(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
         }
         #endregion
@@ -184,23 +175,23 @@ namespace OpenSim.Region.PhysicsModule.BasicPhysics
                 {
                     actorPosition.Y = 0.1F;
                 }
-                else if (actor.Position.Y >= m_regionExtent.Y)
+                else if (actor.Position.Y >= _regionExtent.Y)
                 {
-                    actorPosition.Y = m_regionExtent.Y - 0.1f;
+                    actorPosition.Y = _regionExtent.Y - 0.1f;
                 }
 
                 if (actor.Position.X < 0)
                 {
                     actorPosition.X = 0.1F;
                 }
-                else if (actor.Position.X >= m_regionExtent.X)
+                else if (actor.Position.X >= _regionExtent.X)
                 {
-                    actorPosition.X = m_regionExtent.X - 0.1f;
+                    actorPosition.X = _regionExtent.X - 0.1f;
                 }
 
                 float terrainHeight = 0;
                 if (_heightMap != null)
-                    terrainHeight = _heightMap[(int)actor.Position.Y * (int)m_regionExtent.Y + (int)actor.Position.X];
+                    terrainHeight = _heightMap[(int)actor.Position.Y * (int)_regionExtent.Y + (int)actor.Position.X];
 
                 float height = terrainHeight + actor.Size.Z;
 //                Console.WriteLine("height {0}, actorPosition {1}", height, actorPosition);

@@ -67,7 +67,7 @@ namespace OpenSim.Framework
 
         private readonly MetricsBucket<T>[] buckets;
 
-        private int NumBuckets { get { return buckets.Length; } }
+        private int NumBuckets => buckets.Length;
 
 
         // The number of the current bucket, if we had an infinite number of buckets and didn't have to wrap around

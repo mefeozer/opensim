@@ -46,16 +46,16 @@ namespace OpenSim.Region.ClientStack.Linden
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "FetchInventory2Module")]
     public class FetchInventory2Module : ISharedRegionModule
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public bool Enabled { get; private set; }
 
-        private int m_nScenes;
+        private int _nScenes;
 
-        private IInventoryService m_inventoryService = null;
-        private ILibraryService m_LibraryService = null;
-        private string m_fetchInventory2Url;
-        private ExpiringKey<UUID> m_badRequests;
+        private IInventoryService _inventoryService = null;
+        private ILibraryService _LibraryService = null;
+        private string _fetchInventory2Url;
+        private ExpiringKey<UUID> _badRequests;
 
         #region ISharedRegionModule Members
 
@@ -65,9 +65,9 @@ namespace OpenSim.Region.ClientStack.Linden
             if (config == null)
                 return;
 
-            m_fetchInventory2Url = config.GetString("Cap_FetchInventory2", string.Empty);
+            _fetchInventory2Url = config.GetString("Cap_FetchInventory2", string.Empty);
 
-            if (!string.IsNullOrEmpty(m_fetchInventory2Url))
+            if (!string.IsNullOrEmpty(_fetchInventory2Url))
                 Enabled = true;
         }
 
@@ -81,13 +81,13 @@ namespace OpenSim.Region.ClientStack.Linden
                 return;
 
             s.EventManager.OnRegisterCaps -= RegisterCaps;
-            --m_nScenes;
-            if(m_nScenes <= 0)
+            --_nScenes;
+            if(_nScenes <= 0)
             {
-                m_inventoryService = null;
-                m_LibraryService = null;
-                m_badRequests.Dispose();
-                m_badRequests = null;
+                _inventoryService = null;
+                _LibraryService = null;
+                _badRequests.Dispose();
+                _badRequests = null;
             }
         }
 
@@ -96,18 +96,18 @@ namespace OpenSim.Region.ClientStack.Linden
             if (!Enabled)
                 return;
 
-            if (m_inventoryService == null)
-                m_inventoryService = s.InventoryService;
-            if(m_LibraryService == null)
-                m_LibraryService = s.LibraryService;
+            if (_inventoryService == null)
+                _inventoryService = s.InventoryService;
+            if(_LibraryService == null)
+                _LibraryService = s.LibraryService;
 
-            if(m_badRequests == null)
-                m_badRequests = new ExpiringKey<UUID>(30000);
+            if(_badRequests == null)
+                _badRequests = new ExpiringKey<UUID>(30000);
 
-            if (m_inventoryService != null)
+            if (_inventoryService != null)
             {
                 s.EventManager.OnRegisterCaps += RegisterCaps;
-                ++m_nScenes;
+                ++_nScenes;
             }
         }
 
@@ -115,35 +115,32 @@ namespace OpenSim.Region.ClientStack.Linden
 
         public void Close() {}
 
-        public string Name { get { return "FetchInventory2Module"; } }
+        public string Name => "FetchInventory2Module";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         #endregion
 
         private void RegisterCaps(UUID agentID, Caps caps)
         {
-            if (m_fetchInventory2Url == "localhost")
+            if (_fetchInventory2Url == "localhost")
             {
-                FetchInventory2Handler fetchHandler = new FetchInventory2Handler(m_inventoryService, agentID);
+                FetchInventory2Handler fetchHandler = new FetchInventory2Handler(_inventoryService, agentID);
                 caps.RegisterSimpleHandler("FetchInventory2",
                     new SimpleOSDMapHandler("POST", "/" + UUID.Random(), delegate (IOSHttpRequest httpRequest, IOSHttpResponse httpResponse, OSDMap map)
                     {
-                        fetchHandler.FetchInventorySimpleRequest(httpRequest, httpResponse, map, m_badRequests);
+                        fetchHandler.FetchInventorySimpleRequest(httpRequest, httpResponse, map, _badRequests);
                     }
                  ));
             }
             else
             {
-                caps.RegisterHandler("FetchInventory2", m_fetchInventory2Url);
+                caps.RegisterHandler("FetchInventory2", _fetchInventory2Url);
             }
 
-//            m_log.DebugFormat(
+//            _log.DebugFormat(
 //                "[FETCH INVENTORY2 MODULE]: Registered capability {0} at {1} in region {2} for {3}",
-//                capName, capUrl, m_scene.RegionInfo.RegionName, agentID);
+//                capName, capUrl, _scene.RegionInfo.RegionName, agentID);
         }
     }
 }

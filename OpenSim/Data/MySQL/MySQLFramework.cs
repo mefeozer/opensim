@@ -35,18 +35,18 @@ namespace OpenSim.Data.MySQL
     /// </summary>
     public class MySqlFramework
     {
-        private static readonly log4net.ILog m_log =
+        private static readonly log4net.ILog _log =
                 log4net.LogManager.GetLogger(
                 System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected string m_connectionString = string.Empty;
-        protected MySqlTransaction m_trans = null;
+        protected string _connectionString = string.Empty;
+        protected MySqlTransaction _trans = null;
 
         // Constructor using a connection string. Instances constructed
         // this way will open a new connection for each call.
         protected MySqlFramework(string connectionString)
         {
-            m_connectionString = connectionString;
+            _connectionString = connectionString;
         }
 
         // Constructor using a connection object. Instances constructed
@@ -54,7 +54,7 @@ namespace OpenSim.Data.MySQL
         // new connections.
         protected MySqlFramework(MySqlTransaction trans)
         {
-            m_trans = trans;
+            _trans = trans;
         }
 
         //////////////////////////////////////////////////////////////
@@ -64,9 +64,9 @@ namespace OpenSim.Data.MySQL
         //
         protected int ExecuteNonQuery(MySqlCommand cmd)
         {
-            if (m_trans == null)
+            if (_trans == null)
             {
-                using (MySqlConnection dbcon = new MySqlConnection(m_connectionString))
+                using (MySqlConnection dbcon = new MySqlConnection(_connectionString))
                 {
                     dbcon.Open();
                     int ret = ExecuteNonQueryWithConnection(cmd, dbcon);
@@ -76,7 +76,7 @@ namespace OpenSim.Data.MySQL
             }
             else
             {
-                return ExecuteNonQueryWithTransaction(cmd, m_trans);
+                return ExecuteNonQueryWithTransaction(cmd, _trans);
             }
         }
 
@@ -100,15 +100,15 @@ namespace OpenSim.Data.MySQL
                 }
                 catch (Exception e)
                 {
-                    m_log.Error(e.Message, e);
-                    m_log.Error(Environment.StackTrace.ToString());
+                    _log.Error(e.Message, e);
+                    _log.Error(Environment.StackTrace.ToString());
                     cmd.Connection = null;
                     return 0;
                 }
             }
             catch (Exception e)
             {
-                m_log.Error(e.Message, e);
+                _log.Error(e.Message, e);
                 return 0;
             }
         }

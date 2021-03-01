@@ -39,8 +39,8 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
     [TestFixture]
     public class InventoryArchiveLoadTests : InventoryArchiveTestCase
     {
-        protected TestScene m_scene;
-        protected InventoryArchiverModule m_archiverModule;
+        protected TestScene _scene;
+        protected InventoryArchiverModule _archiverModule;
 
         [SetUp]
         public override void SetUp()
@@ -48,10 +48,10 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             base.SetUp();
 
             SerialiserModule serialiserModule = new SerialiserModule();
-            m_archiverModule = new InventoryArchiverModule();
+            _archiverModule = new InventoryArchiverModule();
 
-            m_scene = new SceneHelpers().SetupScene();
-            SceneHelpers.SetupSceneModules(m_scene, serialiserModule, m_archiverModule);
+            _scene = new SceneHelpers().SetupScene();
+            SceneHelpers.SetupSceneModules(_scene, serialiserModule, _archiverModule);
         }
 
         [Test]
@@ -60,15 +60,15 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             TestHelpers.InMethod();
 //            TestHelpers.EnableLogging();
 
-            UserAccountHelpers.CreateUserWithInventory(m_scene, m_uaLL1, "password");
-            m_archiverModule.DearchiveInventory(UUID.Random(), m_uaLL1.FirstName, m_uaLL1.LastName, "/", "password", m_iarStream);
+            UserAccountHelpers.CreateUserWithInventory(_scene, _uaLL1, "password");
+            _archiverModule.DearchiveInventory(UUID.Random(), _uaLL1.FirstName, _uaLL1.LastName, "/", "password", _iarStream);
 
             InventoryItemBase coaItem
-                = InventoryArchiveUtils.FindItemByPath(m_scene.InventoryService, m_uaLL1.PrincipalID, m_coaItemName);
+                = InventoryArchiveUtils.FindItemByPath(_scene.InventoryService, _uaLL1.PrincipalID, _coaItemName);
 
             Assert.That(coaItem, Is.Not.Null, "Didn't find loaded item 1");
 
-            string assetXml = AssetHelpers.ReadAssetAsString(m_scene.AssetService, coaItem.AssetID);
+            string assetXml = AssetHelpers.ReadAssetAsString(_scene.AssetService, coaItem.AssetID);
 
             CoalescedSceneObjects coa;
             bool readResult = CoalescedSceneObjectsSerializer.TryFromXml(assetXml, out coa);
@@ -94,26 +94,26 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             TestHelpers.InMethod();
 //            log4net.Config.XmlConfigurator.Configure();
 
-            UserAccountHelpers.CreateUserWithInventory(m_scene, m_uaLL1, "meowfood");
+            UserAccountHelpers.CreateUserWithInventory(_scene, _uaLL1, "meowfood");
 
-            m_archiverModule.DearchiveInventory(UUID.Random(), m_uaLL1.FirstName, m_uaLL1.LastName, "/", "meowfood", m_iarStream);
+            _archiverModule.DearchiveInventory(UUID.Random(), _uaLL1.FirstName, _uaLL1.LastName, "/", "meowfood", _iarStream);
             InventoryItemBase foundItem1
-                = InventoryArchiveUtils.FindItemByPath(m_scene.InventoryService, m_uaLL1.PrincipalID, m_item1Name);
+                = InventoryArchiveUtils.FindItemByPath(_scene.InventoryService, _uaLL1.PrincipalID, _item1Name);
 
             Assert.That(
-                foundItem1.CreatorId, Is.EqualTo(m_uaLL1.PrincipalID.ToString()),
+                foundItem1.CreatorId, Is.EqualTo(_uaLL1.PrincipalID.ToString()),
                 "Loaded item non-uuid creator doesn't match original");
             Assert.That(
-                foundItem1.CreatorIdAsUuid, Is.EqualTo(m_uaLL1.PrincipalID),
+                foundItem1.CreatorIdAsUuid, Is.EqualTo(_uaLL1.PrincipalID),
                 "Loaded item uuid creator doesn't match original");
-            Assert.That(foundItem1.Owner, Is.EqualTo(m_uaLL1.PrincipalID),
+            Assert.That(foundItem1.Owner, Is.EqualTo(_uaLL1.PrincipalID),
                 "Loaded item owner doesn't match inventory reciever");
 
-            AssetBase asset1 = m_scene.AssetService.Get(foundItem1.AssetID.ToString());
+            AssetBase asset1 = _scene.AssetService.Get(foundItem1.AssetID.ToString());
             string xmlData = Utils.BytesToString(asset1.Data);
             SceneObjectGroup sog1 = SceneObjectSerializer.FromOriginalXmlFormat(xmlData);
 
-            Assert.That(sog1.RootPart.CreatorID, Is.EqualTo(m_uaLL1.PrincipalID));
+            Assert.That(sog1.RootPart.CreatorID, Is.EqualTo(_uaLL1.PrincipalID));
         }
 
 //        /// <summary>
@@ -126,27 +126,27 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
 //            TestHelpers.InMethod();
 //            TestHelpers.EnableLogging();
 //
-//            UserAccountHelpers.CreateUserWithInventory(m_scene, m_uaMT, "meowfood");
-//            UserAccountHelpers.CreateUserWithInventory(m_scene, m_uaLL2, "hampshire");
+//            UserAccountHelpers.CreateUserWithInventory(_scene, _uaMT, "meowfood");
+//            UserAccountHelpers.CreateUserWithInventory(_scene, _uaLL2, "hampshire");
 //
-//            m_archiverModule.DearchiveInventory(m_uaMT.FirstName, m_uaMT.LastName, "/", "meowfood", m_iarStream);
+//            _archiverModule.DearchiveInventory(_uaMT.FirstName, _uaMT.LastName, "/", "meowfood", _iarStream);
 //            InventoryItemBase foundItem1
-//                = InventoryArchiveUtils.FindItemByPath(m_scene.InventoryService, m_uaMT.PrincipalID, m_item1Name);
+//                = InventoryArchiveUtils.FindItemByPath(_scene.InventoryService, _uaMT.PrincipalID, _item1Name);
 //
 //            Assert.That(
-//                foundItem1.CreatorId, Is.EqualTo(m_uaLL2.PrincipalID.ToString()),
+//                foundItem1.CreatorId, Is.EqualTo(_uaLL2.PrincipalID.ToString()),
 //                "Loaded item non-uuid creator doesn't match original");
 //            Assert.That(
-//                foundItem1.CreatorIdAsUuid, Is.EqualTo(m_uaLL2.PrincipalID),
+//                foundItem1.CreatorIdAsUuid, Is.EqualTo(_uaLL2.PrincipalID),
 //                "Loaded item uuid creator doesn't match original");
-//            Assert.That(foundItem1.Owner, Is.EqualTo(m_uaMT.PrincipalID),
+//            Assert.That(foundItem1.Owner, Is.EqualTo(_uaMT.PrincipalID),
 //                "Loaded item owner doesn't match inventory reciever");
 //
-//            AssetBase asset1 = m_scene.AssetService.Get(foundItem1.AssetID.ToString());
+//            AssetBase asset1 = _scene.AssetService.Get(foundItem1.AssetID.ToString());
 //            string xmlData = Utils.BytesToString(asset1.Data);
 //            SceneObjectGroup sog1 = SceneObjectSerializer.FromOriginalXmlFormat(xmlData);
 //
-//            Assert.That(sog1.RootPart.CreatorID, Is.EqualTo(m_uaLL2.PrincipalID));
+//            Assert.That(sog1.RootPart.CreatorID, Is.EqualTo(_uaLL2.PrincipalID));
 //        }
 
         /// <summary>
@@ -159,25 +159,25 @@ namespace OpenSim.Region.CoreModules.Avatar.Inventory.Archiver.Tests
             TestHelpers.InMethod();
 //            log4net.Config.XmlConfigurator.Configure();
 
-            UserAccountHelpers.CreateUserWithInventory(m_scene, m_uaMT, "password");
-            m_archiverModule.DearchiveInventory(UUID.Random(), m_uaMT.FirstName, m_uaMT.LastName, "/", "password", m_iarStream);
+            UserAccountHelpers.CreateUserWithInventory(_scene, _uaMT, "password");
+            _archiverModule.DearchiveInventory(UUID.Random(), _uaMT.FirstName, _uaMT.LastName, "/", "password", _iarStream);
 
             InventoryItemBase foundItem1
-                = InventoryArchiveUtils.FindItemByPath(m_scene.InventoryService, m_uaMT.PrincipalID, m_item1Name);
+                = InventoryArchiveUtils.FindItemByPath(_scene.InventoryService, _uaMT.PrincipalID, _item1Name);
 
             Assert.That(foundItem1, Is.Not.Null, "Didn't find loaded item 1");
             Assert.That(
-                foundItem1.CreatorId, Is.EqualTo(m_uaMT.PrincipalID.ToString()),
+                foundItem1.CreatorId, Is.EqualTo(_uaMT.PrincipalID.ToString()),
                 "Loaded item non-uuid creator doesn't match that of the loading user");
             Assert.That(
-                foundItem1.CreatorIdAsUuid, Is.EqualTo(m_uaMT.PrincipalID),
+                foundItem1.CreatorIdAsUuid, Is.EqualTo(_uaMT.PrincipalID),
                 "Loaded item uuid creator doesn't match that of the loading user");
 
-            AssetBase asset1 = m_scene.AssetService.Get(foundItem1.AssetID.ToString());
+            AssetBase asset1 = _scene.AssetService.Get(foundItem1.AssetID.ToString());
             string xmlData = Utils.BytesToString(asset1.Data);
             SceneObjectGroup sog1 = SceneObjectSerializer.FromOriginalXmlFormat(xmlData);
 
-            Assert.That(sog1.RootPart.CreatorID, Is.EqualTo(m_uaMT.PrincipalID));
+            Assert.That(sog1.RootPart.CreatorID, Is.EqualTo(_uaMT.PrincipalID));
         }
     }
 }

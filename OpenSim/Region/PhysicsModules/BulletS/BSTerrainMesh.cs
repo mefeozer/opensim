@@ -34,12 +34,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 {
     static readonly string LogHeader = "[BULLETSIM TERRAIN MESH]";
 
-    private readonly float[] m_savedHeightMap;
-    readonly int m_sizeX;
-    readonly int m_sizeY;
+    private readonly float[] _savedHeightMap;
+    readonly int _sizeX;
+    readonly int _sizeY;
 
-    readonly BulletShape m_terrainShape;
-    readonly BulletBody m_terrainBody;
+    readonly BulletShape _terrainShape;
+    readonly BulletBody _terrainBody;
 
     public BSTerrainMesh(BSScene physicsScene, Vector3 regionBase, uint id, Vector3 regionSize)
         : base(physicsScene, regionBase, id)
@@ -61,25 +61,25 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         int verticesCount;
         float[] vertices;
 
-        m_savedHeightMap = initialMap;
+        _savedHeightMap = initialMap;
 
-        m_sizeX = (int)(maxCoords.X - minCoords.X);
-        m_sizeY = (int)(maxCoords.Y - minCoords.Y);
+        _sizeX = (int)(maxCoords.X - minCoords.X);
+        _sizeY = (int)(maxCoords.Y - minCoords.Y);
 
         bool meshCreationSuccess = false;
         if (BSParam.TerrainMeshMagnification == 1)
         {
             // If a magnification of one, use the old routine that is tried and true.
-            meshCreationSuccess = BSTerrainMesh.ConvertHeightmapToMesh(m_physicsScene,
-                                            initialMap, m_sizeX, m_sizeY,       // input size
+            meshCreationSuccess = BSTerrainMesh.ConvertHeightmapToMesh(_physicsScene,
+                                            initialMap, _sizeX, _sizeY,       // input size
                                             Vector3.Zero,                       // base for mesh
                                             out indicesCount, out indices, out verticesCount, out vertices);
         }
         else
         {
             // Other magnifications use the newer routine
-            meshCreationSuccess = BSTerrainMesh.ConvertHeightmapToMesh2(m_physicsScene,
-                                            initialMap, m_sizeX, m_sizeY,       // input size
+            meshCreationSuccess = BSTerrainMesh.ConvertHeightmapToMesh2(_physicsScene,
+                                            initialMap, _sizeX, _sizeY,       // input size
                                             BSParam.TerrainMeshMagnification,
                                             physicsScene.TerrainManager.DefaultRegionSize,
                                             Vector3.Zero,                       // base for mesh
@@ -88,21 +88,21 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         if (!meshCreationSuccess)
         {
             // DISASTER!!
-            m_physicsScene.DetailLog("{0},BSTerrainMesh.create,failedConversionOfHeightmap,id={1}", BSScene.DetailLogZero, ID);
-            m_physicsScene.Logger.ErrorFormat("{0} Failed conversion of heightmap to mesh! base={1}", LogHeader, TerrainBase);
+            _physicsScene.DetailLog("{0},BSTerrainMesh.create,failedConversionOfHeightmap,id={1}", BSScene.DetailLogZero, ID);
+            _physicsScene.Logger.ErrorFormat("{0} Failed conversion of heightmap to mesh! base={1}", LogHeader, TerrainBase);
             // Something is very messed up and a crash is in our future.
             return;
         }
 
-        m_physicsScene.DetailLog("{0},BSTerrainMesh.create,meshed,id={1},indices={2},indSz={3},vertices={4},vertSz={5}",
+        _physicsScene.DetailLog("{0},BSTerrainMesh.create,meshed,id={1},indices={2},indSz={3},vertices={4},vertSz={5}",
                                 BSScene.DetailLogZero, ID, indicesCount, indices.Length, verticesCount, vertices.Length);
 
-        m_terrainShape = m_physicsScene.PE.CreateMeshShape(m_physicsScene.World, indicesCount, indices, verticesCount, vertices);
-        if (!m_terrainShape.HasPhysicalShape)
+        _terrainShape = _physicsScene.PE.CreateMeshShape(_physicsScene.World, indicesCount, indices, verticesCount, vertices);
+        if (!_terrainShape.HasPhysicalShape)
         {
             // DISASTER!!
-            m_physicsScene.DetailLog("{0},BSTerrainMesh.create,failedCreationOfShape,id={1}", BSScene.DetailLogZero, ID);
-            m_physicsScene.Logger.ErrorFormat("{0} Failed creation of terrain mesh! base={1}", LogHeader, TerrainBase);
+            _physicsScene.DetailLog("{0},BSTerrainMesh.create,failedCreationOfShape,id={1}", BSScene.DetailLogZero, ID);
+            _physicsScene.Logger.ErrorFormat("{0} Failed creation of terrain mesh! base={1}", LogHeader, TerrainBase);
             // Something is very messed up and a crash is in our future.
             return;
         }
@@ -110,54 +110,54 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         Vector3 pos = regionBase;
         Quaternion rot = Quaternion.Identity;
 
-        m_terrainBody = m_physicsScene.PE.CreateBodyWithDefaultMotionState(m_terrainShape, ID, pos, rot);
-        if (!m_terrainBody.HasPhysicalBody)
+        _terrainBody = _physicsScene.PE.CreateBodyWithDefaultMotionState(_terrainShape, ID, pos, rot);
+        if (!_terrainBody.HasPhysicalBody)
         {
             // DISASTER!!
-            m_physicsScene.Logger.ErrorFormat("{0} Failed creation of terrain body! base={1}", LogHeader, TerrainBase);
+            _physicsScene.Logger.ErrorFormat("{0} Failed creation of terrain body! base={1}", LogHeader, TerrainBase);
             // Something is very messed up and a crash is in our future.
             return;
         }
-        physicsScene.PE.SetShapeCollisionMargin(m_terrainShape, BSParam.TerrainCollisionMargin);
+        physicsScene.PE.SetShapeCollisionMargin(_terrainShape, BSParam.TerrainCollisionMargin);
 
         // Set current terrain attributes
-        m_physicsScene.PE.SetFriction(m_terrainBody, BSParam.TerrainFriction);
-        m_physicsScene.PE.SetHitFraction(m_terrainBody, BSParam.TerrainHitFraction);
-        m_physicsScene.PE.SetRestitution(m_terrainBody, BSParam.TerrainRestitution);
-        m_physicsScene.PE.SetContactProcessingThreshold(m_terrainBody, BSParam.TerrainContactProcessingThreshold);
-        m_physicsScene.PE.SetCollisionFlags(m_terrainBody, CollisionFlags.CF_STATIC_OBJECT);
+        _physicsScene.PE.SetFriction(_terrainBody, BSParam.TerrainFriction);
+        _physicsScene.PE.SetHitFraction(_terrainBody, BSParam.TerrainHitFraction);
+        _physicsScene.PE.SetRestitution(_terrainBody, BSParam.TerrainRestitution);
+        _physicsScene.PE.SetContactProcessingThreshold(_terrainBody, BSParam.TerrainContactProcessingThreshold);
+        _physicsScene.PE.SetCollisionFlags(_terrainBody, CollisionFlags.CF_STATIC_OBJECT);
 
         // Static objects are not very massive.
-        m_physicsScene.PE.SetMassProps(m_terrainBody, 0f, Vector3.Zero);
+        _physicsScene.PE.SetMassProps(_terrainBody, 0f, Vector3.Zero);
 
         // Put the new terrain to the world of physical objects
-        m_physicsScene.PE.AddObjectToWorld(m_physicsScene.World, m_terrainBody);
+        _physicsScene.PE.AddObjectToWorld(_physicsScene.World, _terrainBody);
 
         // Redo its bounding box now that it is in the world
-        m_physicsScene.PE.UpdateSingleAabb(m_physicsScene.World, m_terrainBody);
+        _physicsScene.PE.UpdateSingleAabb(_physicsScene.World, _terrainBody);
 
-        m_terrainBody.collisionType = CollisionType.Terrain;
-        m_terrainBody.ApplyCollisionMask(m_physicsScene);
+        _terrainBody.collisionType = CollisionType.Terrain;
+        _terrainBody.ApplyCollisionMask(_physicsScene);
 
         if (BSParam.UseSingleSidedMeshes)
         {
-            m_physicsScene.DetailLog("{0},BSTerrainMesh.settingCustomMaterial,id={1}", BSScene.DetailLogZero, id);
-            m_physicsScene.PE.AddToCollisionFlags(m_terrainBody, CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
+            _physicsScene.DetailLog("{0},BSTerrainMesh.settingCustomMaterial,id={1}", BSScene.DetailLogZero, id);
+            _physicsScene.PE.AddToCollisionFlags(_terrainBody, CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
         }
 
         // Make it so the terrain will not move or be considered for movement.
-        m_physicsScene.PE.ForceActivationState(m_terrainBody, ActivationState.DISABLE_SIMULATION);
+        _physicsScene.PE.ForceActivationState(_terrainBody, ActivationState.DISABLE_SIMULATION);
     }
 
     public override void Dispose()
     {
-        if (m_terrainBody.HasPhysicalBody)
+        if (_terrainBody.HasPhysicalBody)
         {
-            m_physicsScene.PE.RemoveObjectFromWorld(m_physicsScene.World, m_terrainBody);
+            _physicsScene.PE.RemoveObjectFromWorld(_physicsScene.World, _terrainBody);
             // Frees both the body and the shape.
-            m_physicsScene.PE.DestroyObject(m_physicsScene.World, m_terrainBody);
-            m_terrainBody.Clear();
-            m_terrainShape.Clear();
+            _physicsScene.PE.DestroyObject(_physicsScene.World, _terrainBody);
+            _terrainBody.Clear();
+            _terrainShape.Clear();
         }
     }
 
@@ -167,15 +167,15 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         // TODO: raycast downward to find the true terrain below the position.
         float ret = BSTerrainManager.HEIGHT_GETHEIGHT_RET;
 
-        int mapIndex = (int)pos.Y * m_sizeY + (int)pos.X;
+        int mapIndex = (int)pos.Y * _sizeY + (int)pos.X;
         try
         {
-            ret = m_savedHeightMap[mapIndex];
+            ret = _savedHeightMap[mapIndex];
         }
         catch
         {
             // Sometimes they give us wonky values of X and Y. Give a warning and return something.
-            m_physicsScene.Logger.WarnFormat("{0} Bad request for terrain height. terrainBase={1}, pos={2}",
+            _physicsScene.Logger.WarnFormat("{0} Bad request for terrain height. terrainBase={1}, pos={2}",
                                                 LogHeader, TerrainBase, pos);
             ret = BSTerrainManager.HEIGHT_GETHEIGHT_RET;
         }
@@ -185,7 +185,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
     // The passed position is relative to the base of the region.
     public override float GetWaterLevelAtXYZ(Vector3 pos)
     {
-        return m_physicsScene.SimpleWaterLevel;
+        return _physicsScene.SimpleWaterLevel;
     }
 
     // Convert the passed heightmap to mesh information suitable for CreateMeshShape2().
@@ -277,32 +277,32 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
     private class HeightMapGetter
     {
-        private readonly float[] m_heightMap;
-        private readonly int m_sizeX;
-        private readonly int m_sizeY;
+        private readonly float[] _heightMap;
+        private readonly int _sizeX;
+        private readonly int _sizeY;
         public HeightMapGetter(float[] pHeightMap, int pSizeX, int pSizeY)
         {
-            m_heightMap = pHeightMap;
-            m_sizeX = pSizeX;
-            m_sizeY = pSizeY;
+            _heightMap = pHeightMap;
+            _sizeX = pSizeX;
+            _sizeY = pSizeY;
         }
         // The heightmap is extended as an infinite plane at the last height
         public float GetHeight(int xx, int yy)
         {
             int offset = 0;
             // Extend the height with the height from the last row or column
-            if (yy >= m_sizeY)
-                if (xx >= m_sizeX)
-                    offset = (m_sizeY - 1) * m_sizeX + (m_sizeX - 1);
+            if (yy >= _sizeY)
+                if (xx >= _sizeX)
+                    offset = (_sizeY - 1) * _sizeX + (_sizeX - 1);
                 else
-                    offset = (m_sizeY - 1) * m_sizeX + xx;
+                    offset = (_sizeY - 1) * _sizeX + xx;
             else
-                if (xx >= m_sizeX)
-                    offset = yy * m_sizeX + (m_sizeX - 1);
+                if (xx >= _sizeX)
+                    offset = yy * _sizeX + (_sizeX - 1);
                 else
-                    offset = yy * m_sizeX + xx;
+                    offset = yy * _sizeX + xx;
 
-            return m_heightMap[offset];
+            return _heightMap[offset];
         }
     }
 

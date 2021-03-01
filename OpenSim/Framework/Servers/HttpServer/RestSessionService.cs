@@ -44,20 +44,20 @@ namespace OpenSim.Framework.Servers.HttpServer
 
         public string SessionID
         {
-            get { return sid; }
-            set { sid = value; }
+            get => sid;
+            set => sid = value;
         }
 
         public string AvatarID
         {
-            get { return aid; }
-            set { aid = value; }
+            get => aid;
+            set => aid = value;
         }
 
         public TRequest Body
         {
-            get { return request_body; }
-            set { request_body = value; }
+            get => request_body;
+            set => request_body = value;
         }
     }
 
@@ -174,7 +174,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
                 // This is currently a bad debug stanza since it gobbles us the response...
                 //                StreamReader reader = new StreamReader(stream);
-                //                m_log.DebugFormat("[REST OBJECT POSTER RESPONSE]: Received {0}", reader.ReadToEnd());
+                //                _log.DebugFormat("[REST OBJECT POSTER RESPONSE]: Received {0}", reader.ReadToEnd());
 
                 deserial = (TResponse)deserializer.Deserialize(stream);
                 if (stream != null)
@@ -193,19 +193,19 @@ namespace OpenSim.Framework.Servers.HttpServer
     public class RestDeserialiseSecureHandler<TRequest, TResponse> : BaseOutputStreamHandler, IStreamHandler
         where TRequest : new()
     {
-        private static readonly ILog m_log
+        private static readonly ILog _log
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly RestDeserialiseMethod<TRequest, TResponse> m_method;
-        private readonly CheckIdentityMethod m_smethod;
+        private readonly RestDeserialiseMethod<TRequest, TResponse> _method;
+        private readonly CheckIdentityMethod _smethod;
 
         public RestDeserialiseSecureHandler(
              string httpMethod, string path,
              RestDeserialiseMethod<TRequest, TResponse> method, CheckIdentityMethod smethod)
             : base(httpMethod, path)
         {
-            m_smethod = smethod;
-            m_method = method;
+            _smethod = smethod;
+            _method = method;
         }
 
         protected override void ProcessRequest(string path, Stream request, Stream responseStream,
@@ -223,15 +223,15 @@ namespace OpenSim.Framework.Servers.HttpServer
                 }
                 catch (Exception e)
                 {
-                    m_log.Error("[REST]: Deserialization problem. Ignoring request. " + e);
+                    _log.Error("[REST]: Deserialization problem. Ignoring request. " + e);
                     fail = true;
                 }
             }
 
             TResponse response = default(TResponse);
-            if (!fail && m_smethod(deserial.SessionID, deserial.AvatarID))
+            if (!fail && _smethod(deserial.SessionID, deserial.AvatarID))
             {
-                response = m_method(deserial.Body);
+                response = _method(deserial.Body);
             }
 
             using (XmlWriter xmlWriter = XmlTextWriter.Create(responseStream))
@@ -247,24 +247,24 @@ namespace OpenSim.Framework.Servers.HttpServer
     public class RestDeserialiseTrustedHandler<TRequest, TResponse> : BaseOutputStreamHandler, IStreamHandler
         where TRequest : new()
     {
-        private static readonly ILog m_log
+        private static readonly ILog _log
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// The operation to perform once trust has been established.
         /// </summary>
-        private readonly RestDeserialiseMethod<TRequest, TResponse> m_method;
+        private readonly RestDeserialiseMethod<TRequest, TResponse> _method;
 
         /// <summary>
         /// The method used to check whether a request is trusted.
         /// </summary>
-        private readonly CheckTrustedSourceMethod m_tmethod;
+        private readonly CheckTrustedSourceMethod _tmethod;
 
         public RestDeserialiseTrustedHandler(string httpMethod, string path, RestDeserialiseMethod<TRequest, TResponse> method, CheckTrustedSourceMethod tmethod)
             : base(httpMethod, path)
         {
-            m_tmethod = tmethod;
-            m_method = method;
+            _tmethod = tmethod;
+            _method = method;
         }
 
         protected override void ProcessRequest(string path, Stream request, Stream responseStream,
@@ -282,15 +282,15 @@ namespace OpenSim.Framework.Servers.HttpServer
                 }
                 catch (Exception e)
                 {
-                    m_log.Error("[REST]: Deserialization problem. Ignoring request. " + e);
+                    _log.Error("[REST]: Deserialization problem. Ignoring request. " + e);
                     fail = true;
                 }
             }
 
             TResponse response = default(TResponse);
-            if (!fail && m_tmethod(httpRequest.RemoteIPEndPoint))
+            if (!fail && _tmethod(httpRequest.RemoteIPEndPoint))
             {
-                response = m_method(deserial);
+                response = _method(deserial);
             }
 
             using (XmlWriter xmlWriter = XmlTextWriter.Create(responseStream))

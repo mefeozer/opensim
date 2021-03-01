@@ -39,13 +39,13 @@ namespace OpenSim.Services.Connectors.Hypergrid
 {
     public class HGFriendsServicesConnector : FriendsSimConnector
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_ServerURI = string.Empty;
-        private readonly string m_ServiceKey = string.Empty;
-        private UUID m_SessionID;
+        private readonly string _ServerURI = string.Empty;
+        private readonly string _ServiceKey = string.Empty;
+        private UUID _SessionID;
 
         public HGFriendsServicesConnector()
         {
@@ -53,14 +53,14 @@ namespace OpenSim.Services.Connectors.Hypergrid
 
         public HGFriendsServicesConnector(string serverURI)
         {
-            m_ServerURI = serverURI.TrimEnd('/');
+            _ServerURI = serverURI.TrimEnd('/');
         }
 
         public HGFriendsServicesConnector(string serverURI, UUID sessionID, string serviceKey)
         {
-            m_ServerURI = serverURI.TrimEnd('/');
-            m_ServiceKey = serviceKey;
-            m_SessionID = sessionID;
+            _ServerURI = serverURI.TrimEnd('/');
+            _ServiceKey = serviceKey;
+            _SessionID = sessionID;
         }
 
         protected override string ServicePath()
@@ -77,11 +77,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
             sendData["PRINCIPALID"] = PrincipalID.ToString();
             sendData["FRIENDID"] = friendID.ToString();
             sendData["METHOD"] = "getfriendperms";
-            sendData["KEY"] = m_ServiceKey;
-            sendData["SESSIONID"] = m_SessionID.ToString();
+            sendData["KEY"] = _ServiceKey;
+            sendData["SESSIONID"] = _SessionID.ToString();
 
             string reqString = ServerUtils.BuildQueryString(sendData);
-            string uri = m_ServerURI + "/hgfriends";
+            string uri = _ServerURI + "/hgfriends";
 
             try
             {
@@ -99,14 +99,14 @@ namespace OpenSim.Services.Connectors.Hypergrid
                         return perms;
                     }
                     else
-                        m_log.DebugFormat("[HGFRIENDS CONNECTOR]: GetFriendPerms {0} received null response",
+                        _log.DebugFormat("[HGFRIENDS CONNECTOR]: GetFriendPerms {0} received null response",
                             PrincipalID);
 
                 }
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
             }
 
             return 0;
@@ -124,11 +124,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
             Dictionary<string, object> sendData = finfo.ToKeyValuePairs();
 
             sendData["METHOD"] = "newfriendship";
-            sendData["KEY"] = m_ServiceKey;
-            sendData["SESSIONID"] = m_SessionID.ToString();
+            sendData["KEY"] = _ServiceKey;
+            sendData["SESSIONID"] = _SessionID.ToString();
 
             string reply = string.Empty;
-            string uri = m_ServerURI + "/hgfriends";
+            string uri = _ServerURI + "/hgfriends";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
@@ -137,7 +137,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
                 return false;
             }
 
@@ -152,11 +152,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
                     return success;
                 }
                 else
-                    m_log.DebugFormat("[HGFRIENDS CONNECTOR]: StoreFriend {0} {1} received null response",
+                    _log.DebugFormat("[HGFRIENDS CONNECTOR]: StoreFriend {0} {1} received null response",
                         PrincipalID, Friend);
             }
             else
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: StoreFriend received null reply");
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: StoreFriend received null reply");
 
             return false;
 
@@ -176,7 +176,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             sendData["SECRET"] = secret;
 
             string reply = string.Empty;
-            string uri = m_ServerURI + "/hgfriends";
+            string uri = _ServerURI + "/hgfriends";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
@@ -185,7 +185,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
                 return false;
             }
 
@@ -201,11 +201,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
                         return false;
                 }
                 else
-                    m_log.DebugFormat("[HGFRIENDS CONNECTOR]: reply data does not contain result field");
+                    _log.DebugFormat("[HGFRIENDS CONNECTOR]: reply data does not contain result field");
 
             }
             else
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: received empty reply");
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: received empty reply");
 
             return false;
 
@@ -224,7 +224,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             sendData["METHOD"] = "validate_friendship_offered";
 
             string reply = string.Empty;
-            string uri = m_ServerURI + "/hgfriends";
+            string uri = _ServerURI + "/hgfriends";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
@@ -233,7 +233,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
                 return false;
             }
 
@@ -249,11 +249,11 @@ namespace OpenSim.Services.Connectors.Hypergrid
                         return false;
                 }
                 else
-                    m_log.DebugFormat("[HGFRIENDS CONNECTOR]: reply data does not contain result field");
+                    _log.DebugFormat("[HGFRIENDS CONNECTOR]: reply data does not contain result field");
 
             }
             else
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: received empty reply");
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: received empty reply");
 
             return false;
 
@@ -275,7 +275,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             }
 
             string reply = string.Empty;
-            string uri = m_ServerURI + "/hgfriends";
+            string uri = _ServerURI + "/hgfriends";
             try
             {
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
@@ -287,7 +287,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: Exception when contacting friends server at {0}: {1}", uri, e.Message);
                 return friendsOnline;
             }
 
@@ -307,7 +307,7 @@ namespace OpenSim.Services.Connectors.Hypergrid
                 }
             }
             else
-                m_log.DebugFormat("[HGFRIENDS CONNECTOR]: Received empty reply from remote StatusNotify");
+                _log.DebugFormat("[HGFRIENDS CONNECTOR]: Received empty reply from remote StatusNotify");
 
             return friendsOnline;
 

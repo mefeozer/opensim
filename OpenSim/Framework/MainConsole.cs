@@ -33,8 +33,8 @@ namespace OpenSim.Framework
 
         public static ICommandConsole Instance
         {
-            get { return instance; }
-            set { instance = value; }
+            get => instance;
+            set => instance = value;
         }
     }
 }

@@ -53,10 +53,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 else
                     return 0;
             }
-            set
-            {
-                Error["code"] = OSD.FromInteger(value);
-            }
+            set => Error["code"] = OSD.FromInteger(value);
         }
 
         public string Message
@@ -68,10 +65,7 @@ namespace OpenSim.Framework.Servers.HttpServer
                 else
                     return null;
             }
-            set
-            {
-                Error["message"] = OSD.FromString(value);
-            }
+            set => Error["message"] = OSD.FromString(value);
         }
 
         public OSD Data
@@ -84,26 +78,14 @@ namespace OpenSim.Framework.Servers.HttpServer
     {
         public string JsonRpc
         {
-            get
-            {
-                return Reply["jsonrpc"].AsString();
-            }
-            set
-            {
-                Reply["jsonrpc"] = OSD.FromString(value);
-            }
+            get => Reply["jsonrpc"].AsString();
+            set => Reply["jsonrpc"] = OSD.FromString(value);
         }
 
         public string Id
         {
-            get
-            {
-                return Reply["id"].AsString();
-            }
-            set
-            {
-                Reply["id"] = OSD.FromString(value);
-            }
+            get => Reply["id"].AsString();
+            set => Reply["id"] = OSD.FromString(value);
         }
 
         public OSD Result

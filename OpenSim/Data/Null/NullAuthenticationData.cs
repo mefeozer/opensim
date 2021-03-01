@@ -32,8 +32,8 @@ namespace OpenSim.Data.Null
 {
     public class NullAuthenticationData : IAuthenticationData
     {
-        private static readonly Dictionary<UUID, AuthenticationData> m_DataByUUID = new Dictionary<UUID, AuthenticationData>();
-        private static readonly Dictionary<UUID, string> m_Tokens = new Dictionary<UUID, string>();
+        private static readonly Dictionary<UUID, AuthenticationData> _DataByUUID = new Dictionary<UUID, AuthenticationData>();
+        private static readonly Dictionary<UUID, string> _Tokens = new Dictionary<UUID, string>();
 
         public NullAuthenticationData(string connectionString, string realm)
         {
@@ -41,15 +41,15 @@ namespace OpenSim.Data.Null
 
         public AuthenticationData Get(UUID principalID)
         {
-            if (m_DataByUUID.ContainsKey(principalID))
-                return m_DataByUUID[principalID];
+            if (_DataByUUID.ContainsKey(principalID))
+                return _DataByUUID[principalID];
 
             return null;
         }
 
         public bool Store(AuthenticationData data)
         {
-            m_DataByUUID[data.PrincipalID] = data;
+            _DataByUUID[data.PrincipalID] = data;
             return true;
         }
 
@@ -61,14 +61,14 @@ namespace OpenSim.Data.Null
 
         public bool SetToken(UUID principalID, string token, int lifetime)
         {
-            m_Tokens[principalID] = token;
+            _Tokens[principalID] = token;
             return true;
         }
 
         public bool CheckToken(UUID principalID, string token, int lifetime)
         {
-            if (m_Tokens.ContainsKey(principalID))
-                return m_Tokens[principalID] == token;
+            if (_Tokens.ContainsKey(principalID))
+                return _Tokens[principalID] == token;
 
             return false;
         }

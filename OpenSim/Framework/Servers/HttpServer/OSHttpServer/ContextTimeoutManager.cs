@@ -42,21 +42,21 @@ namespace OSHttpServer
         /// <summary>
         /// Use a Thread or a Timer to monitor the ugly
         /// </summary>
-        private static Thread m_internalThread = null;
-        private static readonly object m_threadLock = new object();
-        private static readonly ConcurrentQueue<HttpClientContext> m_contexts = new ConcurrentQueue<HttpClientContext>();
-        private static readonly ConcurrentQueue<HttpClientContext> m_highPrio = new ConcurrentQueue<HttpClientContext>();
-        private static readonly ConcurrentQueue<HttpClientContext> m_midPrio = new ConcurrentQueue<HttpClientContext>();
-        private static readonly ConcurrentQueue<HttpClientContext> m_lowPrio = new ConcurrentQueue<HttpClientContext>();
-        private static AutoResetEvent m_processWaitEven = new AutoResetEvent(false);
-        private static bool m_shuttingDown;
+        private static Thread _internalThread = null;
+        private static readonly object _threadLock = new object();
+        private static readonly ConcurrentQueue<HttpClientContext> _contexts = new ConcurrentQueue<HttpClientContext>();
+        private static readonly ConcurrentQueue<HttpClientContext> _highPrio = new ConcurrentQueue<HttpClientContext>();
+        private static readonly ConcurrentQueue<HttpClientContext> _midPrio = new ConcurrentQueue<HttpClientContext>();
+        private static readonly ConcurrentQueue<HttpClientContext> _lowPrio = new ConcurrentQueue<HttpClientContext>();
+        private static AutoResetEvent _processWaitEven = new AutoResetEvent(false);
+        private static bool _shuttingDown;
 
-        private static int m_ActiveSendingCount;
-        private static double m_lastTimeOutCheckTime = 0;
-        private static double m_lastSendCheckTime = 0;
+        private static int _ActiveSendingCount;
+        private static double _lastTimeOutCheckTime = 0;
+        private static double _lastSendCheckTime = 0;
 
-        const int m_maxBandWidth = 10485760; //80Mbps
-        const int m_maxConcurrenSend = 32;
+        const int _maxBandWidth = 10485760; //80Mbps
+        const int _maxConcurrenSend = 32;
 
         static ContextTimeoutManager()
         {
@@ -66,53 +66,53 @@ namespace OSHttpServer
 
         public static void Start()
         {
-            lock (m_threadLock)
+            lock (_threadLock)
             {
-                if (m_internalThread != null)
+                if (_internalThread != null)
                     return;
 
-                m_lastTimeOutCheckTime = GetTimeStampMS();
+                _lastTimeOutCheckTime = GetTimeStampMS();
                 using(ExecutionContext.SuppressFlow())
-                    m_internalThread = new Thread(ThreadRunProcess);
+                    _internalThread = new Thread(ThreadRunProcess);
 
-                m_internalThread.Priority = ThreadPriority.Normal;
-                m_internalThread.IsBackground = true;
-                m_internalThread.CurrentCulture = new CultureInfo("en-US", false);
-                m_internalThread.Name = "HttpServerMain";
-                m_internalThread.Start();
+                _internalThread.Priority = ThreadPriority.Normal;
+                _internalThread.IsBackground = true;
+                _internalThread.CurrentCulture = new CultureInfo("en-US", false);
+                _internalThread.Name = "HttpServerMain";
+                _internalThread.Start();
             }
         }
 
         public static void Stop()
         {
-            m_shuttingDown = true;
-            m_processWaitEven.Set();
-            //m_internalThread.Join();
+            _shuttingDown = true;
+            _processWaitEven.Set();
+            //_internalThread.Join();
             //ProcessShutDown();
         }
 
         private static void ThreadRunProcess()
         {
-            while (!m_shuttingDown)
+            while (!_shuttingDown)
             {
-                m_processWaitEven.WaitOne(500);
+                _processWaitEven.WaitOne(500);
 
-                if(m_shuttingDown)
+                if(_shuttingDown)
                     return;
 
                 double now = GetTimeStamp();
-                if(m_contexts.Count > 0)
+                if(_contexts.Count > 0)
                 {
                     ProcessSendQueues(now);
 
-                    if (now - m_lastTimeOutCheckTime > 1.0)
+                    if (now - _lastTimeOutCheckTime > 1.0)
                     {
                         ProcessContextTimeouts();
-                        m_lastTimeOutCheckTime = now;
+                        _lastTimeOutCheckTime = now;
                     }
                 }
                 else
-                    m_lastTimeOutCheckTime = now;
+                    _lastTimeOutCheckTime = now;
             }
         }
 
@@ -121,9 +121,9 @@ namespace OSHttpServer
             try
             {
                 SocketError disconnectError = SocketError.HostDown;
-                for (int i = 0; i < m_contexts.Count; i++)
+                for (int i = 0; i < _contexts.Count; i++)
                 {
-                    if (m_contexts.TryDequeue(out HttpClientContext context))
+                    if (_contexts.TryDequeue(out HttpClientContext context))
                     {
                         try
                         {
@@ -132,8 +132,8 @@ namespace OSHttpServer
                         catch { }
                     }
                 }
-                m_processWaitEven.Dispose();
-                m_processWaitEven = null;
+                _processWaitEven.Dispose();
+                _processWaitEven = null;
             }
             catch
             {
@@ -143,16 +143,16 @@ namespace OSHttpServer
 
         public static void ProcessSendQueues(double now)
         {
-            int inqueues = m_highPrio.Count + m_midPrio.Count + m_lowPrio.Count;
+            int inqueues = _highPrio.Count + _midPrio.Count + _lowPrio.Count;
             if(inqueues == 0)
                 return;
 
-            double dt = now - m_lastSendCheckTime;
-            m_lastSendCheckTime = now;
+            double dt = now - _lastSendCheckTime;
+            _lastSendCheckTime = now;
 
-            int totalSending = m_ActiveSendingCount;
+            int totalSending = _ActiveSendingCount;
 
-            int curConcurrentLimit = m_maxConcurrenSend - totalSending;
+            int curConcurrentLimit = _maxConcurrenSend - totalSending;
             if(curConcurrentLimit <= 0)
                 return;
 
@@ -163,7 +163,7 @@ namespace OSHttpServer
                 dt = 0.5;
 
             dt /= curConcurrentLimit;
-            int curbytesLimit = (int)(m_maxBandWidth * dt);
+            int curbytesLimit = (int)(_maxBandWidth * dt);
             if(curbytesLimit < 1024)
                 curbytesLimit = 1024;
 
@@ -172,12 +172,12 @@ namespace OSHttpServer
             while (curConcurrentLimit > 0)
             {
                 sent = 0;
-                while (m_highPrio.TryDequeue(out ctx))
+                while (_highPrio.TryDequeue(out ctx))
                 {
                     if(TrySend(ctx, curbytesLimit))
-                        m_highPrio.Enqueue(ctx);
+                        _highPrio.Enqueue(ctx);
 
-                    if (m_shuttingDown)
+                    if (_shuttingDown)
                         return;
                     --curConcurrentLimit;
                     if (++sent == 4)
@@ -185,26 +185,26 @@ namespace OSHttpServer
                 }
 
                 sent = 0;
-                while(m_midPrio.TryDequeue(out ctx))
+                while(_midPrio.TryDequeue(out ctx))
                 {
                     if(TrySend(ctx, curbytesLimit))
-                        m_midPrio.Enqueue(ctx);
+                        _midPrio.Enqueue(ctx);
 
-                    if (m_shuttingDown)
+                    if (_shuttingDown)
                         return;
                     --curConcurrentLimit;
                     if (++sent >= 2)
                         break;
                 }
 
-                if (m_lowPrio.TryDequeue(out ctx))
+                if (_lowPrio.TryDequeue(out ctx))
                 {
                     --curConcurrentLimit;
                     if(TrySend(ctx, curbytesLimit))
-                        m_lowPrio.Enqueue(ctx);
+                        _lowPrio.Enqueue(ctx);
                 }
 
-                if (m_shuttingDown)
+                if (_shuttingDown)
                     return;
             }
         }
@@ -224,14 +224,14 @@ namespace OSHttpServer
         {
             try
             {
-                for (int i = 0; i < m_contexts.Count; i++)
+                for (int i = 0; i < _contexts.Count; i++)
                 {
-                    if (m_shuttingDown)
+                    if (_shuttingDown)
                         return;
-                    if (m_contexts.TryDequeue(out HttpClientContext context))
+                    if (_contexts.TryDequeue(out HttpClientContext context))
                     {
                         if (!ContextTimedOut(context, out SocketError disconnectError))
-                            m_contexts.Enqueue(context);
+                            _contexts.Enqueue(context);
                         else if(disconnectError != SocketError.InProgress)
                             context.Disconnect(disconnectError);
                     }
@@ -310,7 +310,7 @@ namespace OSHttpServer
         public static void StartMonitoringContext(HttpClientContext context)
         {
             context.LastActivityTimeMS = EnvironmentTickCount();
-            m_contexts.Enqueue(context);
+            _contexts.Enqueue(context);
         }
 
         public static void EnqueueSend(HttpClientContext context, int priority, bool notThrottled = true)
@@ -318,29 +318,29 @@ namespace OSHttpServer
             switch(priority)
             {
                 case 0:
-                    m_highPrio.Enqueue(context);
+                    _highPrio.Enqueue(context);
                     break;
                 case 1:
-                    m_midPrio.Enqueue(context);
+                    _midPrio.Enqueue(context);
                     break;
                 case 2:
-                    m_lowPrio.Enqueue(context);
+                    _lowPrio.Enqueue(context);
                     break;
                 default:
                     return;
             }
             if(notThrottled)
-                m_processWaitEven.Set();
+                _processWaitEven.Set();
         }
 
         public static void ContextEnterActiveSend()
         {
-            Interlocked.Increment(ref m_ActiveSendingCount);
+            Interlocked.Increment(ref _ActiveSendingCount);
         }
 
         public static void ContextLeaveActiveSend()
         {
-            Interlocked.Decrement(ref m_ActiveSendingCount);
+            Interlocked.Decrement(ref _ActiveSendingCount);
         }
 
         /// <summary>

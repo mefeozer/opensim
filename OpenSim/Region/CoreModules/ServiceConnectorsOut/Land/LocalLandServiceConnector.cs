@@ -42,13 +42,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalLandServicesConnector")]
     public class LocalLandServicesConnector : ISharedRegionModule, ILandService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<Scene> m_Scenes = new List<Scene>();
+        private readonly List<Scene> _Scenes = new List<Scene>();
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
         public LocalLandServicesConnector()
         {
@@ -56,20 +56,14 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
 
         public LocalLandServicesConnector(List<Scene> scenes)
         {
-            m_Scenes = scenes;
+            _Scenes = scenes;
         }
 
         #region ISharedRegionModule
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LocalLandServicesConnector"; }
-        }
+        public string Name => "LocalLandServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -79,8 +73,8 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
                 string name = moduleConfig.GetString("LandServices", this.Name);
                 if (name == Name)
                 {
-                    m_Enabled = true;
-                    m_log.Info("[LAND CONNECTOR]: Local land connector enabled");
+                    _Enabled = true;
+                    _log.Info("[LAND CONNECTOR]: Local land connector enabled");
                 }
             }
         }
@@ -91,9 +85,9 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
 
         public void AddRegion(Scene scene)
         {
-            m_Scenes.Add(scene);
+            _Scenes.Add(scene);
 
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
             scene.RegisterModuleInterface<ILandService>(this);
@@ -109,8 +103,8 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
 
         public void RemoveRegion(Scene scene)
         {
-            if (m_Scenes.Contains(scene))
-                m_Scenes.Remove(scene);
+            if (_Scenes.Contains(scene))
+                _Scenes.Remove(scene);
         }
 
         #endregion ISharedRegionModule
@@ -120,13 +114,13 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
         public LandData GetLandData(UUID scopeID, ulong regionHandle, uint x, uint y, out byte regionAccess)
         {
             regionAccess = 2;
-//            m_log.DebugFormat("[LAND CONNECTOR]: request for land data in {0} at {1}, {2}",
+//            _log.DebugFormat("[LAND CONNECTOR]: request for land data in {0} at {1}, {2}",
 //                  regionHandle, x, y);
 
             uint rx = 0, ry = 0;
             Util.RegionHandleToWorldLoc(regionHandle, out rx, out ry);
 
-            foreach (Scene s in m_Scenes)
+            foreach (Scene s in _Scenes)
             {
                 uint t = s.RegionInfo.WorldLocX;
                 if( rx < t)
@@ -150,7 +144,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Land
                 }
             }
 
-            //m_log.Debug("[LAND CONNECTOR]: didn't find land data locally.");
+            //_log.Debug("[LAND CONNECTOR]: didn't find land data locally.");
             return null;
 
         }

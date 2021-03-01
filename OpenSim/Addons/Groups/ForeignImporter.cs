@@ -31,10 +31,10 @@ namespace OpenSim.Groups
 {
     public class ForeignImporter
     {
-        readonly IUserManagement m_UserManagement;
+        readonly IUserManagement _UserManagement;
         public ForeignImporter(IUserManagement uman)
         {
-            m_UserManagement = uman;
+            _UserManagement = uman;
         }
 
         public GroupMembersData ConvertGroupMembersData(ExtendedGroupMembersData _m)
@@ -53,7 +53,7 @@ namespace OpenSim.Groups
             string url = string.Empty, first = string.Empty, last = string.Empty, tmp = string.Empty;
             Util.ParseUniversalUserIdentifier(_m.AgentID, out m.AgentID, out url, out first, out last, out tmp);
             if (!string.IsNullOrEmpty(url))
-                m_UserManagement.AddUser(m.AgentID, first, last, url);
+                _UserManagement.AddUser(m.AgentID, first, last, url);
 
             return m;
         }
@@ -68,7 +68,7 @@ namespace OpenSim.Groups
             string url = string.Empty, first = string.Empty, last = string.Empty, tmp = string.Empty;
             Util.ParseUniversalUserIdentifier(_rm.MemberID, out rm.MemberID, out url, out first, out last, out tmp);
             if (!string.IsNullOrEmpty(url))
-                m_UserManagement.AddUser(rm.MemberID, first, last, url);
+                _UserManagement.AddUser(rm.MemberID, first, last, url);
 
             return rm;
         }

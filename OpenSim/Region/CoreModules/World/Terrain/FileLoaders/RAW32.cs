@@ -38,10 +38,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
     {
         #region ITerrainLoader Members
 
-        public string FileExtension
-        {
-            get { return ".r32"; }
-        }
+        public string FileExtension => ".r32";
 
         public ITerrainChannel LoadFile(string filename)
         {
@@ -171,7 +168,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
             bs.Close();
         }
 
-        public virtual void SaveFile(ITerrainChannel m_channel, string filename,
+        public virtual void SaveFile(ITerrainChannel _channel, string filename,
                                      int offsetX, int offsetY,
                                      int fileWidth, int fileHeight,
                                      int regionSizeX, int regionSizeY)

@@ -38,18 +38,18 @@ namespace OpenSim.Region.CoreModules.World
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "CloudModule")]
     public class CloudModule : ICloudModule, INonSharedRegionModule
     {
-//        private static readonly log4net.ILog m_log
+//        private static readonly log4net.ILog _log
 //            = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private uint m_frame = 0;
-        private int m_frameUpdateRate = 1000;
-        private Random m_rndnums;
-        private Scene m_scene = null;
-        private bool m_ready = false;
-        private bool m_enabled = false;
-        private float m_cloudDensity = 1.0F;
+        private uint _frame = 0;
+        private int _frameUpdateRate = 1000;
+        private Random _rndnums;
+        private Scene _scene = null;
+        private bool _ready = false;
+        private bool _enabled = false;
+        private float _cloudDensity = 1.0F;
         private readonly float[] cloudCover = new float[16 * 16];
-        private int m_dataVersion;
-        private bool m_busy;
+        private int _dataVersion;
+        private bool _busy;
         private readonly object cloudlock = new object();
 
 
@@ -59,46 +59,46 @@ namespace OpenSim.Region.CoreModules.World
 
             if (cloudConfig != null)
             {
-                m_enabled = cloudConfig.GetBoolean("enabled", false);
-                m_cloudDensity = cloudConfig.GetFloat("density", 0.5F);
-                m_frameUpdateRate = cloudConfig.GetInt("cloud_update_rate", 1000);
+                _enabled = cloudConfig.GetBoolean("enabled", false);
+                _cloudDensity = cloudConfig.GetFloat("density", 0.5F);
+                _frameUpdateRate = cloudConfig.GetInt("cloud_update_rate", 1000);
             }
 
         }
 
         public void AddRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            m_scene = scene;
+            _scene = scene;
 
             scene.RegisterModuleInterface<ICloudModule>(this);
             int seed = Environment.TickCount;
             seed += (int)(scene.RegionInfo.RegionLocX << 16);
             seed += (int)scene.RegionInfo.RegionLocY;
-            m_rndnums = new Random(seed);
+            _rndnums = new Random(seed);
 
             GenerateCloudCover();
-            m_dataVersion = m_scene.AllocateIntId();
+            _dataVersion = _scene.AllocateIntId();
 
             scene.EventManager.OnNewClient += CloudsToClient;
             scene.EventManager.OnFrame += CloudUpdate;
 
-            m_ready = true;
+            _ready = true;
         }
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_enabled)
+            if (!_enabled)
                 return;
 
-            m_ready = false;
+            _ready = false;
             //  Remove our hooks
-            m_scene.EventManager.OnNewClient -= CloudsToClient;
-            m_scene.EventManager.OnFrame -= CloudUpdate;
-            m_scene.UnregisterModuleInterface<ICloudModule>(this);
-            m_scene = null;
+            _scene.EventManager.OnNewClient -= CloudsToClient;
+            _scene.EventManager.OnFrame -= CloudUpdate;
+            _scene.UnregisterModuleInterface<ICloudModule>(this);
+            _scene = null;
         }
 
         public void RegionLoaded(Scene scene)
@@ -113,15 +113,9 @@ namespace OpenSim.Region.CoreModules.World
         {
         }
 
-        public string Name
-        {
-            get { return "CloudModule"; }
-        }
+        public string Name => "CloudModule";
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
         public float CloudCover(int x, int y, int z)
         {
@@ -192,23 +186,23 @@ namespace OpenSim.Region.CoreModules.World
                                              cloudCover[y * 16 + columnRight] +
                                              cloudCover[rowAbove * 16 + columnRight] +
                                              cloudCover[y * 16 + x]) / 9;
-                    newCover[y * 16 + x] = (neighborAverage / m_cloudDensity + 0.175f) % 1.0f;
-                    newCover[y * 16 + x] *= m_cloudDensity;
+                    newCover[y * 16 + x] = (neighborAverage / _cloudDensity + 0.175f) % 1.0f;
+                    newCover[y * 16 + x] *= _cloudDensity;
                 }
             }
             Array.Copy(newCover, cloudCover, 16 * 16);
-            m_dataVersion++;
+            _dataVersion++;
         }
 
         private void CloudUpdate()
         {
-            if (!m_ready ||  m_busy || m_cloudDensity == 0 ||
-                m_frame++ % m_frameUpdateRate != 0)
+            if (!_ready ||  _busy || _cloudDensity == 0 ||
+                _frame++ % _frameUpdateRate != 0)
                 return;
 
             if(Monitor.TryEnter(cloudlock))
             {
-                m_busy = true;
+                _busy = true;
                 Util.FireAndForget(delegate
                     {
                         try
@@ -216,15 +210,15 @@ namespace OpenSim.Region.CoreModules.World
                             lock(cloudlock)
                             {
                                 UpdateCloudCover();
-                                m_scene.ForEachClient(delegate(IClientAPI client)
+                                _scene.ForEachClient(delegate(IClientAPI client)
                                 {
-                                    client.SendCloudData(m_dataVersion, cloudCover);
+                                    client.SendCloudData(_dataVersion, cloudCover);
                                 });
                             }
                         }
                         finally
                         {
-                            m_busy = false;
+                            _busy = false;
                         }
                     },
                     null, "CloudModuleUpdate");
@@ -234,10 +228,10 @@ namespace OpenSim.Region.CoreModules.World
 
         public void CloudsToClient(IClientAPI client)
         {
-            if (m_ready)
+            if (_ready)
             {
                 lock(cloudlock)
-                       client.SendCloudData(m_dataVersion, cloudCover);
+                       client.SendCloudData(_dataVersion, cloudCover);
             }
         }
 
@@ -251,8 +245,8 @@ namespace OpenSim.Region.CoreModules.World
             {
                 for (int x = 0; x < 16; x++)
                 {
-                    cloudCover[y * 16 + x] = (float)m_rndnums.NextDouble(); // 0 to 1
-                    cloudCover[y * 16 + x] *= m_cloudDensity;
+                    cloudCover[y * 16 + x] = (float)_rndnums.NextDouble(); // 0 to 1
+                    cloudCover[y * 16 + x] *= _cloudDensity;
                 }
             }
         }

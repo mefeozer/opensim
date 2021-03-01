@@ -36,20 +36,20 @@ namespace OpenSim.Server.Handlers.Hypergrid
 {
     public class GatekeeperAgentHandler : OpenSim.Server.Handlers.Simulation.AgentPostHandler
     {
-//        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+//        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IGatekeeperService m_GatekeeperService;
+        private readonly IGatekeeperService _GatekeeperService;
 
         public GatekeeperAgentHandler(IGatekeeperService gatekeeper, bool proxy) : base("/foreignagent")
         {
-            m_GatekeeperService = gatekeeper;
-            m_Proxy = proxy;
+            _GatekeeperService = gatekeeper;
+            _Proxy = proxy;
         }
 
         protected override bool CreateAgent(GridRegion source, GridRegion gatekeeper, GridRegion destination,
             AgentCircuitData aCircuit, uint teleportFlags, bool fromLogin, EntityTransferContext ctx, out string reason)
         {
-            return m_GatekeeperService.LoginAgent(source, aCircuit, destination, out reason);
+            return _GatekeeperService.LoginAgent(source, aCircuit, destination, out reason);
         }
     }
 }

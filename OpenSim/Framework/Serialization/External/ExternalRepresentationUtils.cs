@@ -42,7 +42,7 @@ namespace OpenSim.Framework.Serialization.External
     /// </summary>
     public class ExternalRepresentationUtils
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Populate a node with data read from xml using a dictinoary of processors
@@ -59,7 +59,7 @@ namespace OpenSim.Framework.Serialization.External
                 processors,
                 xtr,
                 (o, nodeName, e) => {
-                    m_log.Debug(string.Format("[ExternalRepresentationUtils]: Error while parsing element {0} ",
+                    _log.Debug(string.Format("[ExternalRepresentationUtils]: Error while parsing element {0} ",
                         nodeName), e);
                 });
         }
@@ -91,12 +91,12 @@ namespace OpenSim.Framework.Serialization.External
             {
                 nodeName = xtr.Name;
 
-                // m_log.DebugFormat("[ExternalRepresentationUtils]: Processing node: {0}", nodeName);
+                // _log.DebugFormat("[ExternalRepresentationUtils]: Processing node: {0}", nodeName);
 
                 Action<NodeType, XmlReader> p = null;
                 if (processors.TryGetValue(xtr.Name, out p))
                 {
-                    // m_log.DebugFormat("[ExternalRepresentationUtils]: Found processor for {0}", nodeName);
+                    // _log.DebugFormat("[ExternalRepresentationUtils]: Found processor for {0}", nodeName);
 
                     try
                     {
@@ -109,13 +109,13 @@ namespace OpenSim.Framework.Serialization.External
 
                         if (xtr.EOF)
                         {
-                            m_log.Debug("[ExternalRepresentationUtils]: Aborting ExecuteReadProcessors due to unexpected end of XML");
+                            _log.Debug("[ExternalRepresentationUtils]: Aborting ExecuteReadProcessors due to unexpected end of XML");
                             break;
                         }
 
                         if (++numErrors == 10)
                         {
-                            m_log.Debug("[ExternalRepresentationUtils]: Aborting ExecuteReadProcessors due to too many parsing errors");
+                            _log.Debug("[ExternalRepresentationUtils]: Aborting ExecuteReadProcessors due to too many parsing errors");
                             break;
                         }
 
@@ -125,13 +125,13 @@ namespace OpenSim.Framework.Serialization.External
                 }
                 else
                 {
-                    // m_log.DebugFormat("[ExternalRepresentationUtils]: found unknown element \"{0}\"", nodeName);
+                    // _log.DebugFormat("[ExternalRepresentationUtils]: found unknown element \"{0}\"", nodeName);
                     xtr.ReadOuterXml(); // ignore
                 }
 
                 if (timer.Elapsed.TotalSeconds >= 60)
                 {
-                    m_log.Debug("[ExternalRepresentationUtils]: Aborting ExecuteReadProcessors due to timeout");
+                    _log.Debug("[ExternalRepresentationUtils]: Aborting ExecuteReadProcessors due to timeout");
                     errors = true;
                     break;
                 }
@@ -181,7 +181,7 @@ namespace OpenSim.Framework.Serialization.External
                     //{
                     //    UserAccount owner = GetUser(node.InnerText);
                     //    if (owner != null)
-                    //        node.InnerText = m_ProfileServiceURL + "/" + node.InnerText + "/" + owner.FirstName + " " + owner.LastName;
+                    //        node.InnerText = _ProfileServiceURL + "/" + node.InnerText + "/" + owner.FirstName + " " + owner.LastName;
                     //}
                 }
                 if (!hasCreatorData && creator != null)
@@ -233,7 +233,7 @@ namespace OpenSim.Framework.Serialization.External
 
         protected static void TransformXml(XmlReader reader, XmlWriter writer, string sceneName, string homeURI, IUserAccountService userAccountService, UUID scopeID)
         {
-            //            m_log.DebugFormat("[HG ASSET MAPPER]: Transforming XML");
+            //            _log.DebugFormat("[HG ASSET MAPPER]: Transforming XML");
 
             int sopDepth = -1;
             UserAccount creator = null;
@@ -263,7 +263,7 @@ namespace OpenSim.Framework.Serialization.External
                         break;
 
                     case XmlNodeType.Element:
-                        //                    m_log.DebugFormat("Depth {0} at element {1}", reader.Depth, reader.Name);
+                        //                    _log.DebugFormat("Depth {0} at element {1}", reader.Depth, reader.Name);
 
                         writer.WriteStartElement(reader.Prefix, reader.LocalName, reader.NamespaceURI);
 
@@ -280,7 +280,7 @@ namespace OpenSim.Framework.Serialization.External
                             if (sopDepth < 0)
                             {
                                 sopDepth = reader.Depth;
-                                //                            m_log.DebugFormat("[HG ASSET MAPPER]: Set sopDepth to {0}", sopDepth);
+                                //                            _log.DebugFormat("[HG ASSET MAPPER]: Set sopDepth to {0}", sopDepth);
                             }
                         }
                         else
@@ -336,20 +336,20 @@ namespace OpenSim.Framework.Serialization.External
 
                         if (reader.IsEmptyElement)
                         {
-                            //                        m_log.DebugFormat("[HG ASSET MAPPER]: Writing end for empty element {0}", reader.Name);
+                            //                        _log.DebugFormat("[HG ASSET MAPPER]: Writing end for empty element {0}", reader.Name);
                             writer.WriteEndElement();
                         }
 
                         break;
 
                     case XmlNodeType.EndElement:
-                        //                    m_log.DebugFormat("Depth {0} at EndElement", reader.Depth);
+                        //                    _log.DebugFormat("Depth {0} at EndElement", reader.Depth);
                         if (sopDepth == reader.Depth)
                         {
                             if (!hasCreatorData && creator != null)
                                 writer.WriteElementString(reader.Prefix, "CreatorData", reader.NamespaceURI, string.Format("{0};{1} {2}", homeURI, creator.FirstName, creator.LastName));
 
-                            //                        m_log.DebugFormat("[HG ASSET MAPPER]: Reset sopDepth");
+                            //                        _log.DebugFormat("[HG ASSET MAPPER]: Reset sopDepth");
                             sopDepth = -1;
                             creator = null;
                             hasCreatorData = false;
@@ -375,7 +375,7 @@ namespace OpenSim.Framework.Serialization.External
                         break;
 
                     default:
-                        m_log.WarnFormat(
+                        _log.WarnFormat(
                             "[HG ASSET MAPPER]: Unrecognized node {0} in asset XML transform in {1}",
                             reader.NodeType, sceneName);
                         break;

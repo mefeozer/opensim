@@ -36,8 +36,8 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Monitors
         public string Name { get; }
         public string FriendlyName { get; }
 
-        private readonly Func<GenericMonitor, double> m_getValueAction;
-        private readonly Func<GenericMonitor, string> m_getFriendlyValueAction;
+        private readonly Func<GenericMonitor, double> _getValueAction;
+        private readonly Func<GenericMonitor, string> _getFriendlyValueAction;
 
         public GenericMonitor(
             Scene scene,
@@ -49,13 +49,13 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Monitors
             Scene = scene;
             Name = name;
             FriendlyName = name;
-            m_getFriendlyValueAction = getFriendlyValueAction;
-            m_getValueAction = getValueAction;
+            _getFriendlyValueAction = getFriendlyValueAction;
+            _getValueAction = getValueAction;
         }
 
         public double GetValue()
         {
-            return m_getValueAction(this);
+            return _getValueAction(this);
         }
 
         public string GetName()
@@ -70,7 +70,7 @@ namespace OpenSim.Region.CoreModules.Framework.Monitoring.Monitors
 
         public string GetFriendlyValue()
         {
-            return m_getFriendlyValueAction(this);
+            return _getFriendlyValueAction(this);
         }
     }
 }

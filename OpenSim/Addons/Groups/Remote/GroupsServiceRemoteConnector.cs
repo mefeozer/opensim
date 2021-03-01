@@ -41,11 +41,11 @@ namespace OpenSim.Groups
 {
     public class GroupsServiceRemoteConnector
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly string m_ServerURI;
-        private readonly IServiceAuth m_Auth;
-        private readonly object m_Lock = new object();
+        private readonly string _ServerURI;
+        private readonly IServiceAuth _Auth;
+        private readonly object _Lock = new object();
 
         public GroupsServiceRemoteConnector(IConfigSource config)
         {
@@ -54,9 +54,9 @@ namespace OpenSim.Groups
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 throw new Exception(string.Format("[Groups.RemoteConnector]: Malformed groups server URL {0}. Fix it or disable the Groups feature.", url));
 
-            m_ServerURI = url;
-            if (!m_ServerURI.EndsWith("/"))
-                m_ServerURI += "/";
+            _ServerURI = url;
+            if (!_ServerURI.EndsWith("/"))
+                _ServerURI += "/";
 
             /// This is from BaseServiceConnector
             string authType = Util.GetConfigVarFromSections<string>(config, "AuthType", new string[] { "Network", "Groups" }, "None");
@@ -64,13 +64,13 @@ namespace OpenSim.Groups
             switch (authType)
             {
                 case "BasicHttpAuthentication":
-                    m_Auth = new BasicHttpAuthentication(config, "Groups");
+                    _Auth = new BasicHttpAuthentication(config, "Groups");
                     break;
             }
             ///
 
-            m_log.DebugFormat("[Groups.RemoteConnector]: Groups server at {0}, authentication {1}",
-                m_ServerURI, m_Auth == null ? "None" : m_Auth.GetType().ToString());
+            _log.DebugFormat("[Groups.RemoteConnector]: Groups server at {0}, authentication {1}",
+                _ServerURI, _Auth == null ? "None" : _Auth.GetType().ToString());
         }
 
         public ExtendedGroupRecord CreateGroup(string RequestingAgentID, string name, string charter, bool showInList, UUID insigniaID, int membershipFee, bool openEnrollment,
@@ -678,11 +678,11 @@ namespace OpenSim.Groups
             sendData["METHOD"] = method;
 
             string reply = string.Empty;
-            lock (m_Lock)
+            lock (_Lock)
                 reply = SynchronousRestFormsRequester.MakeRequest("POST",
-                         m_ServerURI + "groups",
+                         _ServerURI + "groups",
                          ServerUtils.BuildQueryString(sendData),
-                         m_Auth);
+                         _Auth);
 
             if (string.IsNullOrEmpty(reply))
                 return null;

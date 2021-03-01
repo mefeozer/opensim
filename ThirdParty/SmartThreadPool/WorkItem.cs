@@ -159,29 +159,11 @@ namespace Amib.Threading.Internal
 
         #region Properties
 
-        public TimeSpan WaitingTime
-        {
-            get
-            {
-                return _waitingOnQueueStopwatch.Elapsed;
-            }
-        }
+        public TimeSpan WaitingTime => _waitingOnQueueStopwatch.Elapsed;
 
-        public TimeSpan ProcessTime
-        {
-            get
-            {
-                return _processingStopwatch.Elapsed;
-            }
-        }
+        public TimeSpan ProcessTime => _processingStopwatch.Elapsed;
 
-        internal WorkItemInfo WorkItemInfo
-        {
-            get
-            {
-                return _workItemInfo;
-            }
-        }
+        internal WorkItemInfo WorkItemInfo => _workItemInfo;
 
         #endregion
 
@@ -266,14 +248,14 @@ namespace Amib.Threading.Internal
 
         internal CanceledWorkItemsGroup CanceledWorkItemsGroup
         {
-            get { return _canceledWorkItemsGroup; }
-            set { _canceledWorkItemsGroup = value; }
+            get => _canceledWorkItemsGroup;
+            set => _canceledWorkItemsGroup = value;
         }
 
         internal CanceledWorkItemsGroup CanceledSmartThreadPool
         {
-            get { return _canceledSmartThreadPool; }
-            set { _canceledSmartThreadPool = value; }
+            get => _canceledSmartThreadPool;
+            set => _canceledSmartThreadPool = value;
         }
 
         /// <summary>
@@ -957,26 +939,14 @@ namespace Amib.Threading.Internal
  
         internal event WorkItemStateCallback OnWorkItemStarted
         {
-            add
-            {
-                _workItemStartedEvent += value;
-            }
-            remove
-            {
-                _workItemStartedEvent -= value;
-            }
+            add => _workItemStartedEvent += value;
+            remove => _workItemStartedEvent -= value;
         }
 
         internal event WorkItemStateCallback OnWorkItemCompleted
         {
-            add
-            {
-                _workItemCompletedEvent += value;
-            }
-            remove
-            {
-                _workItemCompletedEvent -= value;
-            }
+            add => _workItemCompletedEvent += value;
+            remove => _workItemCompletedEvent -= value;
         }
 
         public void DisposeOfState()

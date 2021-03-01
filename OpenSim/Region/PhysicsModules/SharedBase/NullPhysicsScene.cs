@@ -35,14 +35,14 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 {
     class NullPhysicsScene : PhysicsScene
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static int m_workIndicator;
+        private static int _workIndicator;
 
         public override PhysicsActor AddAvatar(
             string avName, Vector3 position, Vector3 velocity, Vector3 size, bool isFlying)
         {
-            m_log.InfoFormat("[PHYSICS]: NullPhysicsScene : AddAvatar({0})", position);
+            _log.InfoFormat("[PHYSICS]: NullPhysicsScene : AddAvatar({0})", position);
             return PhysicsActor.Null;
         }
 
@@ -61,7 +61,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 /*
         public override PhysicsActor AddPrim(Vector3 position, Vector3 size, Quaternion rotation)
         {
-            m_log.InfoFormat("NullPhysicsScene : AddPrim({0},{1})", position, size);
+            _log.InfoFormat("NullPhysicsScene : AddPrim({0},{1})", position, size);
             return PhysicsActor.Null;
         }
 */
@@ -69,7 +69,7 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
         public override PhysicsActor AddPrimShape(string primName, PrimitiveBaseShape pbs, Vector3 position,
                                                   Vector3 size, Quaternion rotation, bool isPhysical, uint localid)
         {
-            m_log.InfoFormat("[PHYSICS]: NullPhysicsScene : AddPrim({0},{1})", position, size);
+            _log.InfoFormat("[PHYSICS]: NullPhysicsScene : AddPrim({0},{1})", position, size);
             return PhysicsActor.Null;
         }
 
@@ -79,14 +79,14 @@ namespace OpenSim.Region.PhysicsModules.SharedBase
 
         public override float Simulate(float timeStep)
         {
-            m_workIndicator = (m_workIndicator + 1) % 10;
+            _workIndicator = (_workIndicator + 1) % 10;
 
             return 0f;
         }
 
         public override void SetTerrain(float[] heightMap)
         {
-            m_log.InfoFormat("[PHYSICS]: NullPhysicsScene : SetTerrain({0} items)", heightMap.Length);
+            _log.InfoFormat("[PHYSICS]: NullPhysicsScene : SetTerrain({0} items)", heightMap.Length);
         }
 
         public override void DeleteTerrain()

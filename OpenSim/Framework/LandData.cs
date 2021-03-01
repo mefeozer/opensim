@@ -92,24 +92,18 @@ namespace OpenSim.Framework
         private bool _obscureMusic = false;
         private bool _obscureMedia = false;
 
-        private float m_dwell = 0;
+        private float _dwell = 0;
         public double LastDwellTimeMS;
 
         public bool SeeAVs { get; set; }
         public bool AnyAVSounds { get; set; }
         public bool GroupAVSounds { get; set; }
 
-        private UUID m_fakeID = UUID.Zero;
+        private UUID _fakeID = UUID.Zero;
         public UUID FakeID
         {
-            get
-            {
-                return m_fakeID;
-            }
-            set
-            {
-                m_fakeID = value;
-            }
+            get => _fakeID;
+            set => _fakeID = value;
         }
 
         /// <summary>
@@ -118,13 +112,10 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public float Dwell
         {
-            get
-            {
-                return m_dwell;
-            }
+            get => _dwell;
             set
             {
-                m_dwell = value;
+                _dwell = value;
                 LastDwellTimeMS = Util.GetTimeStampMS();
             }
         }
@@ -135,14 +126,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public bool ObscureMedia
         {
-            get
-            {
-                return _obscureMedia;
-            }
-            set
-            {
-                _obscureMedia = value;
-            }
+            get => _obscureMedia;
+            set => _obscureMedia = value;
         }
 
         /// <summary>
@@ -151,14 +136,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public bool ObscureMusic
         {
-            get
-            {
-                return _obscureMusic;
-            }
-            set
-            {
-                _obscureMusic = value;
-            }
+            get => _obscureMusic;
+            set => _obscureMusic = value;
         }
 
         /// <summary>
@@ -167,14 +146,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public bool MediaLoop
         {
-            get
-            {
-                return _mediaLoop;
-            }
-            set
-            {
-                _mediaLoop = value;
-            }
+            get => _mediaLoop;
+            set => _mediaLoop = value;
         }
 
         /// <summary>
@@ -183,14 +156,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public int MediaHeight
         {
-            get
-            {
-                return _mediaHeight;
-            }
-            set
-            {
-                _mediaHeight = value;
-            }
+            get => _mediaHeight;
+            set => _mediaHeight = value;
         }
 
         /// <summary>
@@ -199,14 +166,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public int MediaWidth
         {
-            get
-            {
-                return _mediaWidth;
-            }
-            set
-            {
-                _mediaWidth = value;
-            }
+            get => _mediaWidth;
+            set => _mediaWidth = value;
         }
 
         /// <summary>
@@ -215,14 +176,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public Vector3 AABBMax
         {
-            get
-            {
-                return _AABBMax;
-            }
-            set
-            {
-                _AABBMax = value;
-            }
+            get => _AABBMax;
+            set => _AABBMax = value;
         }
         /// <summary>
         /// Lower corner of the AABB for the parcel
@@ -230,14 +185,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public Vector3 AABBMin
         {
-            get
-            {
-                return _AABBMin;
-            }
-            set
-            {
-                _AABBMin = value;
-            }
+            get => _AABBMin;
+            set => _AABBMin = value;
         }
 
         /// <summary>
@@ -245,14 +194,8 @@ namespace OpenSim.Framework
         /// </summary>
         public int Area
         {
-            get
-            {
-                return _area;
-            }
-            set
-            {
-                _area = value;
-            }
+            get => _area;
+            set => _area = value;
         }
 
         /// <summary>
@@ -260,14 +203,8 @@ namespace OpenSim.Framework
         /// </summary>
         public uint AuctionID
         {
-            get
-            {
-                return _auctionID;
-            }
-            set
-            {
-                _auctionID = value;
-            }
+            get => _auctionID;
+            set => _auctionID = value;
         }
 
         /// <summary>
@@ -275,14 +212,8 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID AuthBuyerID
         {
-            get
-            {
-                return _authBuyerID;
-            }
-            set
-            {
-                _authBuyerID = value;
-            }
+            get => _authBuyerID;
+            set => _authBuyerID = value;
         }
 
         /// <summary>
@@ -290,14 +221,8 @@ namespace OpenSim.Framework
         /// </summary>
         public ParcelCategory Category
         {
-            get
-            {
-                return _category;
-            }
-            set
-            {
-                _category = value;
-            }
+            get => _category;
+            set => _category = value;
         }
 
         /// <summary>
@@ -305,14 +230,8 @@ namespace OpenSim.Framework
         /// </summary>
         public int ClaimDate
         {
-            get
-            {
-                return _claimDate;
-            }
-            set
-            {
-                _claimDate = value;
-            }
+            get => _claimDate;
+            set => _claimDate = value;
         }
 
         /// <summary>
@@ -320,14 +239,8 @@ namespace OpenSim.Framework
         /// </summary>
         public int ClaimPrice
         {
-            get
-            {
-                return _claimPrice;
-            }
-            set
-            {
-                _claimPrice = value;
-            }
+            get => _claimPrice;
+            set => _claimPrice = value;
         }
 
         /// <summary>
@@ -335,14 +248,8 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID GlobalID
         {
-            get
-            {
-                return _globalID;
-            }
-            set
-            {
-                _globalID = value;
-            }
+            get => _globalID;
+            set => _globalID = value;
         }
 
         /// <summary>
@@ -350,14 +257,8 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID GroupID
         {
-            get
-            {
-                return _groupID;
-            }
-            set
-            {
-                _groupID = value;
-            }
+            get => _groupID;
+            set => _groupID = value;
         }
 
         /// <summary>
@@ -365,14 +266,8 @@ namespace OpenSim.Framework
         /// </summary>
         public bool IsGroupOwned
         {
-            get
-            {
-                return _isGroupOwned;
-            }
-            set
-            {
-                _isGroupOwned = value;
-            }
+            get => _isGroupOwned;
+            set => _isGroupOwned = value;
         }
 
         /// <summary>
@@ -380,14 +275,8 @@ namespace OpenSim.Framework
         /// </summary>
         public byte[] Bitmap
         {
-            get
-            {
-                return _bitmap;
-            }
-            set
-            {
-                _bitmap = value;
-            }
+            get => _bitmap;
+            set => _bitmap = value;
         }
 
         /// <summary>
@@ -395,14 +284,8 @@ namespace OpenSim.Framework
         /// </summary>
         public string Description
         {
-            get
-            {
-                return _description;
-            }
-            set
-            {
-                _description = value;
-            }
+            get => _description;
+            set => _description = value;
         }
 
         /// <summary>
@@ -410,14 +293,8 @@ namespace OpenSim.Framework
         /// </summary>
         public uint Flags
         {
-            get
-            {
-                return _flags;
-            }
-            set
-            {
-                _flags = value;
-            }
+            get => _flags;
+            set => _flags = value;
         }
 
         /// <summary>
@@ -426,14 +303,8 @@ namespace OpenSim.Framework
         /// </summary>
         public byte LandingType
         {
-            get
-            {
-                return _landingType;
-            }
-            set
-            {
-                _landingType = value;
-            }
+            get => _landingType;
+            set => _landingType = value;
         }
 
         /// <summary>
@@ -441,14 +312,8 @@ namespace OpenSim.Framework
         /// </summary>
         public string Name
         {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
+            get => _name;
+            set => _name = value;
         }
 
         /// <summary>
@@ -456,14 +321,8 @@ namespace OpenSim.Framework
         /// </summary>
         public ParcelStatus Status
         {
-            get
-            {
-                return _status;
-            }
-            set
-            {
-                _status = value;
-            }
+            get => _status;
+            set => _status = value;
         }
 
         /// <summary>
@@ -471,14 +330,8 @@ namespace OpenSim.Framework
         /// </summary>
         public int LocalID
         {
-            get
-            {
-                return _localID;
-            }
-            set
-            {
-                _localID = value;
-            }
+            get => _localID;
+            set => _localID = value;
         }
 
         /// <summary>
@@ -486,14 +339,8 @@ namespace OpenSim.Framework
         /// </summary>
         public byte MediaAutoScale
         {
-            get
-            {
-                return _mediaAutoScale;
-            }
-            set
-            {
-                _mediaAutoScale = value;
-            }
+            get => _mediaAutoScale;
+            set => _mediaAutoScale = value;
         }
 
         /// <summary>
@@ -501,14 +348,8 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID MediaID
         {
-            get
-            {
-                return _mediaID;
-            }
-            set
-            {
-                _mediaID = value;
-            }
+            get => _mediaID;
+            set => _mediaID = value;
         }
 
         /// <summary>
@@ -516,26 +357,14 @@ namespace OpenSim.Framework
         /// </summary>
         public string MediaURL
         {
-            get
-            {
-                return _mediaURL;
-            }
-            set
-            {
-                _mediaURL = value;
-            }
+            get => _mediaURL;
+            set => _mediaURL = value;
         }
 
         public string MediaType
         {
-            get
-            {
-                return _mediaType;
-            }
-            set
-            {
-                _mediaType = value;
-            }
+            get => _mediaType;
+            set => _mediaType = value;
         }
 
         /// <summary>
@@ -543,14 +372,8 @@ namespace OpenSim.Framework
         /// </summary>
         public string MusicURL
         {
-            get
-            {
-                return _musicURL;
-            }
-            set
-            {
-                _musicURL = value;
-            }
+            get => _musicURL;
+            set => _musicURL = value;
         }
 
         /// <summary>
@@ -559,14 +382,8 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID OwnerID
         {
-            get
-            {
-                return _ownerID;
-            }
-            set
-            {
-                _ownerID = value;
-            }
+            get => _ownerID;
+            set => _ownerID = value;
         }
 
         /// <summary>
@@ -574,14 +391,8 @@ namespace OpenSim.Framework
         /// </summary>
         public List<LandAccessEntry> ParcelAccessList
         {
-            get
-            {
-                return _parcelAccessList;
-            }
-            set
-            {
-                _parcelAccessList = value;
-            }
+            get => _parcelAccessList;
+            set => _parcelAccessList = value;
         }
 
         /// <summary>
@@ -589,14 +400,8 @@ namespace OpenSim.Framework
         /// </summary>
         public float PassHours
         {
-            get
-            {
-                return _passHours;
-            }
-            set
-            {
-                _passHours = value;
-            }
+            get => _passHours;
+            set => _passHours = value;
         }
 
         /// <summary>
@@ -604,14 +409,8 @@ namespace OpenSim.Framework
         /// </summary>
         public int PassPrice
         {
-            get
-            {
-                return _passPrice;
-            }
-            set
-            {
-                _passPrice = value;
-            }
+            get => _passPrice;
+            set => _passPrice = value;
         }
 
         /// <summary>
@@ -619,14 +418,8 @@ namespace OpenSim.Framework
         /// </summary>
         public int SalePrice
         {
-            get
-            {
-                return _salePrice;
-            }
-            set
-            {
-                _salePrice = value;
-            }
+            get => _salePrice;
+            set => _salePrice = value;
         }
 
         /// <summary>
@@ -635,14 +428,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public int SimwideArea
         {
-            get
-            {
-                return _simwideArea;
-            }
-            set
-            {
-                _simwideArea = value;
-            }
+            get => _simwideArea;
+            set => _simwideArea = value;
         }
 
         /// <summary>
@@ -651,14 +438,8 @@ namespace OpenSim.Framework
         [XmlIgnore]
         public int SimwidePrims
         {
-            get
-            {
-                return _simwidePrims;
-            }
-            set
-            {
-                _simwidePrims = value;
-            }
+            get => _simwidePrims;
+            set => _simwidePrims = value;
         }
 
         /// <summary>
@@ -666,14 +447,8 @@ namespace OpenSim.Framework
         /// </summary>
         public UUID SnapshotID
         {
-            get
-            {
-                return _snapshotID;
-            }
-            set
-            {
-                _snapshotID = value;
-            }
+            get => _snapshotID;
+            set => _snapshotID = value;
         }
 
         /// <summary>
@@ -682,14 +457,8 @@ namespace OpenSim.Framework
         /// </summary>
         public Vector3 UserLocation
         {
-            get
-            {
-                return _userLocation;
-            }
-            set
-            {
-                _userLocation = value;
-            }
+            get => _userLocation;
+            set => _userLocation = value;
         }
 
         /// <summary>
@@ -698,14 +467,8 @@ namespace OpenSim.Framework
         /// </summary>
         public Vector3 UserLookAt
         {
-            get
-            {
-                return _userLookAt;
-            }
-            set
-            {
-                _userLookAt = value;
-            }
+            get => _userLookAt;
+            set => _userLookAt = value;
         }
 
         /// <summary>
@@ -714,14 +477,8 @@ namespace OpenSim.Framework
         /// </summary>
         public int OtherCleanTime
         {
-            get
-            {
-                return _otherCleanTime;
-            }
-            set
-            {
-                _otherCleanTime = value;
-            }
+            get => _otherCleanTime;
+            set => _otherCleanTime = value;
         }
 
         /// <summary>
@@ -729,14 +486,8 @@ namespace OpenSim.Framework
         /// </summary>
         public string MediaDescription
         {
-            get
-            {
-                return _mediaDescription;
-            }
-            set
-            {
-                _mediaDescription = value;
-            }
+            get => _mediaDescription;
+            set => _mediaDescription = value;
         }
 
         public int EnvironmentVersion = -1;
@@ -772,7 +523,7 @@ namespace OpenSim.Framework
                 _claimDate = _claimDate,
                 _claimPrice = _claimPrice,
                 _globalID = _globalID,
-                m_fakeID = m_fakeID,
+                _fakeID = _fakeID,
                 _groupID = _groupID,
                 _isGroupOwned = _isGroupOwned,
                 _localID = _localID,
@@ -803,7 +554,7 @@ namespace OpenSim.Framework
                 _obscureMedia = _obscureMedia,
                 _simwideArea = _simwideArea,
                 _simwidePrims = _simwidePrims,
-                m_dwell = m_dwell,
+                _dwell = _dwell,
                 SeeAVs = SeeAVs,
                 AnyAVSounds = AnyAVSounds,
                 GroupAVSounds = GroupAVSounds

@@ -35,21 +35,21 @@ namespace OpenSim.Services.FreeswitchService
 {
     public class FreeswitchServiceBase : ServiceBase
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected string m_freeSwitchRealm;
-        protected string m_freeSwitchSIPProxy;
-        protected bool m_freeSwitchAttemptUseSTUN = false;
-        protected string m_freeSwitchEchoServer;
-        protected int m_freeSwitchEchoPort = 50505;
-        protected string m_freeSwitchDefaultWellKnownIP;
-        protected int m_freeSwitchDefaultTimeout = 5000;
-        protected string m_freeSwitchContext = "default";
-        protected string m_freeSwitchServerUser = "freeswitch";
-        protected string m_freeSwitchServerPass = "password";
-        protected readonly string m_freeSwitchAPIPrefix = "/fsapi";
+        protected string _freeSwitchRealm;
+        protected string _freeSwitchSIPProxy;
+        protected bool _freeSwitchAttemptUseSTUN = false;
+        protected string _freeSwitchEchoServer;
+        protected int _freeSwitchEchoPort = 50505;
+        protected string _freeSwitchDefaultWellKnownIP;
+        protected int _freeSwitchDefaultTimeout = 5000;
+        protected string _freeSwitchContext = "default";
+        protected string _freeSwitchServerUser = "freeswitch";
+        protected string _freeSwitchServerPass = "password";
+        protected readonly string _freeSwitchAPIPrefix = "/fsapi";
 
-        protected bool m_Enabled = false;
+        protected bool _Enabled = false;
 
         public FreeswitchServiceBase(IConfigSource config) : base(config)
         {
@@ -59,24 +59,24 @@ namespace OpenSim.Services.FreeswitchService
             IConfig freeswitchConfig = config.Configs["FreeswitchService"];
             if (freeswitchConfig != null)
             {
-                m_freeSwitchDefaultWellKnownIP = freeswitchConfig.GetString("ServerAddress", string.Empty);
-                if (string.IsNullOrEmpty(m_freeSwitchDefaultWellKnownIP))
+                _freeSwitchDefaultWellKnownIP = freeswitchConfig.GetString("ServerAddress", string.Empty);
+                if (string.IsNullOrEmpty(_freeSwitchDefaultWellKnownIP))
                 {
-                    m_log.Error("[FREESWITCH]: No ServerAddress given, cannot start service.");
+                    _log.Error("[FREESWITCH]: No ServerAddress given, cannot start service.");
                     return;
                 }
 
-                m_freeSwitchRealm = freeswitchConfig.GetString("Realm", m_freeSwitchDefaultWellKnownIP);
-                m_freeSwitchSIPProxy = freeswitchConfig.GetString("SIPProxy", m_freeSwitchDefaultWellKnownIP + ":5060");
-                m_freeSwitchEchoServer = freeswitchConfig.GetString("EchoServer", m_freeSwitchDefaultWellKnownIP);
-                m_freeSwitchEchoPort = freeswitchConfig.GetInt("EchoPort", m_freeSwitchEchoPort);
-                m_freeSwitchAttemptUseSTUN = freeswitchConfig.GetBoolean("AttemptSTUN", false); // This may not work
-                m_freeSwitchDefaultTimeout = freeswitchConfig.GetInt("DefaultTimeout", m_freeSwitchDefaultTimeout);
-                m_freeSwitchContext = freeswitchConfig.GetString("Context", m_freeSwitchContext);
-                m_freeSwitchServerUser = freeswitchConfig.GetString("UserName", m_freeSwitchServerUser);
-                m_freeSwitchServerPass = freeswitchConfig.GetString("Password", m_freeSwitchServerPass);
+                _freeSwitchRealm = freeswitchConfig.GetString("Realm", _freeSwitchDefaultWellKnownIP);
+                _freeSwitchSIPProxy = freeswitchConfig.GetString("SIPProxy", _freeSwitchDefaultWellKnownIP + ":5060");
+                _freeSwitchEchoServer = freeswitchConfig.GetString("EchoServer", _freeSwitchDefaultWellKnownIP);
+                _freeSwitchEchoPort = freeswitchConfig.GetInt("EchoPort", _freeSwitchEchoPort);
+                _freeSwitchAttemptUseSTUN = freeswitchConfig.GetBoolean("AttemptSTUN", false); // This may not work
+                _freeSwitchDefaultTimeout = freeswitchConfig.GetInt("DefaultTimeout", _freeSwitchDefaultTimeout);
+                _freeSwitchContext = freeswitchConfig.GetString("Context", _freeSwitchContext);
+                _freeSwitchServerUser = freeswitchConfig.GetString("UserName", _freeSwitchServerUser);
+                _freeSwitchServerPass = freeswitchConfig.GetString("Password", _freeSwitchServerPass);
 
-                m_Enabled = true;
+                _Enabled = true;
             }
         }
     }

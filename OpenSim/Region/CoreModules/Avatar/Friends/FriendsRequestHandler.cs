@@ -46,9 +46,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
     //    public class FriendsRequestHandler : BaseStreamHandlerBasicDOSProtector
     public class FriendsSimpleRequestHandler : SimpleStreamHandler
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly FriendsModule m_FriendsModule;
+        private readonly FriendsModule _FriendsModule;
         /*
         public FriendsRequestHandler(FriendsModule fmodule)
                 : base("POST", "/friends", new BasicDosProtectorOptions()
@@ -63,12 +63,12 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
         */
         public FriendsSimpleRequestHandler(FriendsModule fmodule) : base("/friends")
         {
-            m_FriendsModule = fmodule;
+            _FriendsModule = fmodule;
         }
 
         protected override void ProcessRequest(IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
         {
-            if (m_FriendsModule == null)
+            if (_FriendsModule == null)
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.NotImplemented;
                 return;
@@ -83,7 +83,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             httpResponse.KeepAlive = false;
             httpResponse.StatusCode = (int)HttpStatusCode.OK;
             httpResponse.ContentType = "text/xml";
-            //m_log.DebugFormat("[XXX]: query String: {0}", body);
+            //_log.DebugFormat("[XXX]: query String: {0}", body);
 
             try
             {
@@ -127,7 +127,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             }
             catch (Exception e)
             {
-                m_log.Debug("[FRIENDS]: Exception {0}" + e.ToString());
+                _log.Debug("[FRIENDS]: Exception {0}" + e.ToString());
                 httpResponse.StatusCode = (int)HttpStatusCode.BadRequest;
 
             }
@@ -152,16 +152,16 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (!UUID.TryParse(request["ToID"].ToString(), out toID))
                 return FailureResult();
 
-            UserAccount account = m_FriendsModule.UserAccountService.GetUserAccount(UUID.Zero, fromID);
+            UserAccount account = _FriendsModule.UserAccountService.GetUserAccount(UUID.Zero, fromID);
             string name = account == null ? "Unknown" : account.FirstName + " " + account.LastName;
 
-            GridInstantMessage im = new GridInstantMessage(m_FriendsModule.Scene, fromID, name, toID,
+            GridInstantMessage im = new GridInstantMessage(_FriendsModule.Scene, fromID, name, toID,
                 (byte)InstantMessageDialog.FriendshipOffered, message, false, Vector3.Zero);
 
             // !! HACK
             im.imSessionID = im.fromAgentID;
 
-            if (m_FriendsModule.LocalFriendshipOffered(toID, im))
+            if (_FriendsModule.LocalFriendshipOffered(toID, im))
                 return SuccessResult();
 
             return FailureResult();
@@ -185,7 +185,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (request.ContainsKey("FromName"))
                 fromName = request["FromName"].ToString();
 
-            if (m_FriendsModule.LocalFriendshipApproved(fromID, fromName, toID))
+            if (_FriendsModule.LocalFriendshipApproved(fromID, fromName, toID))
                 return SuccessResult();
 
             return FailureResult();
@@ -209,7 +209,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (request.ContainsKey("FromName"))
                 fromName = request["FromName"].ToString();
 
-            if (m_FriendsModule.LocalFriendshipDenied(fromID, fromName, toID))
+            if (_FriendsModule.LocalFriendshipDenied(fromID, fromName, toID))
                 return SuccessResult();
 
             return FailureResult();
@@ -229,7 +229,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (!UUID.TryParse(request["ToID"].ToString(), out toID))
                 return FailureResult();
 
-            if (m_FriendsModule.LocalFriendshipTerminated(fromID, toID))
+            if (_FriendsModule.LocalFriendshipTerminated(fromID, toID))
                 return SuccessResult();
 
             return FailureResult();
@@ -256,7 +256,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (!int.TryParse(request["Rights"].ToString(), out newRights))
                 return FailureResult();
 
-            if (m_FriendsModule.LocalGrantRights(fromID, toID, oldRights, newRights))
+            if (_FriendsModule.LocalGrantRights(fromID, toID, oldRights, newRights))
                 return SuccessResult();
 
             return FailureResult();
@@ -280,7 +280,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
             if (!bool.TryParse(request["Online"].ToString(), out online))
                 return FailureResult();
 
-            if (m_FriendsModule.LocalStatusNotification(fromID, toID, online))
+            if (_FriendsModule.LocalStatusNotification(fromID, toID, online))
                 return SuccessResult();
 
             return FailureResult();

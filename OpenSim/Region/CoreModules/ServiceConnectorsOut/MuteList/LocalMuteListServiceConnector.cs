@@ -43,26 +43,20 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
     [Extension(Path = "/OpenSim/RegionModules", NodeName = "RegionModule", Id = "LocalMuteListServicesConnector")]
     public class LocalMuteListServicesConnector : ISharedRegionModule, IMuteListService
     {
-        private static readonly ILog m_log =
+        private static readonly ILog _log =
                 LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<Scene> m_Scenes = new List<Scene>();
-        protected IMuteListService m_service = null;
+        private readonly List<Scene> _Scenes = new List<Scene>();
+        protected IMuteListService _service = null;
 
-        private bool m_Enabled = false;
+        private bool _Enabled = false;
 
          #region ISharedRegionModule
 
-        public Type ReplaceableInterface
-        {
-            get { return null; }
-        }
+        public Type ReplaceableInterface => null;
 
-        public string Name
-        {
-            get { return "LocalMuteListServicesConnector"; }
-        }
+        public string Name => "LocalMuteListServicesConnector";
 
         public void Initialise(IConfigSource source)
         {
@@ -86,7 +80,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
             IConfig userConfig = source.Configs["MuteListService"];
             if (userConfig == null)
             {
-                m_log.Error("[MuteList LOCALCONNECTOR]: MuteListService missing from configuration");
+                _log.Error("[MuteList LOCALCONNECTOR]: MuteListService missing from configuration");
                 return;
             }
 
@@ -95,29 +89,29 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
 
             if (string.IsNullOrEmpty(serviceDll))
             {
-                m_log.Error("[MuteList LOCALCONNECTOR]: No LocalServiceModule named in section MuteListService");
+                _log.Error("[MuteList LOCALCONNECTOR]: No LocalServiceModule named in section MuteListService");
                 return;
             }
 
             object[] args = new object[] { source };
             try
             {
-                m_service = ServerUtils.LoadPlugin<IMuteListService>(serviceDll, args);
+                _service = ServerUtils.LoadPlugin<IMuteListService>(serviceDll, args);
             }
             catch
             {
-                m_log.Error("[MuteList LOCALCONNECTOR]: Failed to load mute service");
+                _log.Error("[MuteList LOCALCONNECTOR]: Failed to load mute service");
                 return;
             }
 
-            if (m_service == null)
+            if (_service == null)
             {
-                m_log.Error("[MuteList LOCALCONNECTOR]: Can't load MuteList service");
+                _log.Error("[MuteList LOCALCONNECTOR]: Can't load MuteList service");
                 return;
             }
 
-            m_Enabled = true;
-            m_log.Info("[MuteList LOCALCONNECTOR]: enabled");
+            _Enabled = true;
+            _log.Info("[MuteList LOCALCONNECTOR]: enabled");
         }
 
         public void Close()
@@ -126,12 +120,12 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
 
         public void AddRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            lock(m_Scenes)
+            lock(_Scenes)
             {
-                m_Scenes.Add(scene);
+                _Scenes.Add(scene);
                 scene.RegisterModuleInterface<IMuteListService>(this);
             }
         }
@@ -146,14 +140,14 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
 
         public void RemoveRegion(Scene scene)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return;
 
-            lock(m_Scenes)
+            lock(_Scenes)
             {
-                if (m_Scenes.Contains(scene))
+                if (_Scenes.Contains(scene))
                 {
-                    m_Scenes.Remove(scene);
+                    _Scenes.Remove(scene);
                     scene.UnregisterModuleInterface<IMuteListService>(this);
                 }
             }
@@ -164,23 +158,23 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.MuteList
         #region IMuteListService
         public byte[] MuteListRequest(UUID agentID, uint crc)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return null;
-            return m_service.MuteListRequest(agentID, crc);
+            return _service.MuteListRequest(agentID, crc);
         }
 
         public bool UpdateMute(MuteData mute)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return false;
-            return m_service.UpdateMute(mute);
+            return _service.UpdateMute(mute);
         }
 
         public bool RemoveMute(UUID agentID, UUID muteID, string muteName)
         {
-            if (!m_Enabled)
+            if (!_Enabled)
                 return false;
-            return m_service.RemoveMute(agentID, muteID, muteName);
+            return _service.RemoveMute(agentID, muteID, muteName);
         }
 
         #endregion IMuteListService

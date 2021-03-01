@@ -148,8 +148,8 @@ namespace OpenSim.Region.Framework.Scenes
     public class UndoRedoState
     {
         readonly int size;
-        public LinkedList<UndoState> m_redo = new LinkedList<UndoState>();
-        public LinkedList<UndoState> m_undo = new LinkedList<UndoState>();
+        public LinkedList<UndoState> _redo = new LinkedList<UndoState>();
+        public LinkedList<UndoState> _undo = new LinkedList<UndoState>();
 
         /// <summary>
         /// creates a new UndoRedoState with default states memory size
@@ -177,10 +177,7 @@ namespace OpenSim.Region.Framework.Scenes
         /// returns number of undo entries in memory
         /// </summary>
 
-        public int Count
-        {
-            get { return m_undo.Count; }
-        }
+        public int Count => _undo.Count;
 
         /// <summary>
         /// clears all undo and redo entries
@@ -188,8 +185,8 @@ namespace OpenSim.Region.Framework.Scenes
 
         public void Clear()
         {
-            m_undo.Clear();
-            m_redo.Clear();
+            _undo.Clear();
+            _redo.Clear();
         }
 
         /// <summary>
@@ -200,21 +197,21 @@ namespace OpenSim.Region.Framework.Scenes
 
         public void StoreUndo(SceneObjectPart part, ObjectChangeType change)
         {
-            lock (m_undo)
+            lock (_undo)
             {
                 UndoState last;
 
-                if (m_redo.Count > 0) // last code seems to clear redo on every new undo
+                if (_redo.Count > 0) // last code seems to clear redo on every new undo
                 {
-                    m_redo.Clear();
+                    _redo.Clear();
                 }
 
-                if (m_undo.Count > 0)
+                if (_undo.Count > 0)
                 {
                     // check expired entry
-                    last = m_undo.First.Value;
+                    last = _undo.First.Value;
                     if (last != null && last.checkExpire())
-                        m_undo.Clear();
+                        _undo.Clear();
                     else
                     {
                         // see if we actually have a change
@@ -227,11 +224,11 @@ namespace OpenSim.Region.Framework.Scenes
                 }
 
                 // limite size
-                while (m_undo.Count >= size)
-                    m_undo.RemoveLast();
+                while (_undo.Count >= size)
+                    _undo.RemoveLast();
 
                 UndoState nUndo = new UndoState(part, change);
-                m_undo.AddFirst(nUndo);
+                _undo.AddFirst(nUndo);
             }
         }
 
@@ -243,38 +240,38 @@ namespace OpenSim.Region.Framework.Scenes
 
         public void Undo(SceneObjectPart part)
         {
-            lock (m_undo)
+            lock (_undo)
             {
                 UndoState nUndo;
 
                 // expire redo
-                if (m_redo.Count > 0)
+                if (_redo.Count > 0)
                 {
-                    nUndo = m_redo.First.Value;
+                    nUndo = _redo.First.Value;
                     if (nUndo != null && nUndo.checkExpire())
-                        m_redo.Clear();
+                        _redo.Clear();
                 }
 
-                if (m_undo.Count > 0)
+                if (_undo.Count > 0)
                 {
-                    UndoState goback = m_undo.First.Value;
+                    UndoState goback = _undo.First.Value;
                     // check expired
                     if (goback != null && goback.checkExpire())
                     {
-                        m_undo.Clear();
+                        _undo.Clear();
                         return;
                     }
 
                     if (goback != null)
                     {
-                        m_undo.RemoveFirst();
+                        _undo.RemoveFirst();
 
                         // redo limite size
-                        while (m_redo.Count >= size)
-                            m_redo.RemoveLast();
+                        while (_redo.Count >= size)
+                            _redo.RemoveLast();
 
                         nUndo = new UndoState(part, goback.data.change); // new value in part should it be full goback copy?
-                        m_redo.AddFirst(nUndo);
+                        _redo.AddFirst(nUndo);
 
                         goback.PlayState(part);
                     }
@@ -290,38 +287,38 @@ namespace OpenSim.Region.Framework.Scenes
 
         public void Redo(SceneObjectPart part)
         {
-            lock (m_undo)
+            lock (_undo)
             {
                 UndoState nUndo;
 
                 // expire undo
-                if (m_undo.Count > 0)
+                if (_undo.Count > 0)
                 {
-                    nUndo = m_undo.First.Value;
+                    nUndo = _undo.First.Value;
                     if (nUndo != null && nUndo.checkExpire())
-                        m_undo.Clear();
+                        _undo.Clear();
                 }
 
-                if (m_redo.Count > 0)
+                if (_redo.Count > 0)
                 {
-                    UndoState gofwd = m_redo.First.Value;
+                    UndoState gofwd = _redo.First.Value;
                     // check expired
                     if (gofwd != null && gofwd.checkExpire())
                     {
-                        m_redo.Clear();
+                        _redo.Clear();
                         return;
                     }
 
                     if (gofwd != null)
                     {
-                        m_redo.RemoveFirst();
+                        _redo.RemoveFirst();
 
                         // limite undo size
-                        while (m_undo.Count >= size)
-                            m_undo.RemoveLast();
+                        while (_undo.Count >= size)
+                            _undo.RemoveLast();
 
                         nUndo = new UndoState(part, gofwd.data.change);   // new value in part should it be full gofwd copy?
-                        m_undo.AddFirst(nUndo);
+                        _undo.AddFirst(nUndo);
 
                         gofwd.PlayState(part);
                     }
@@ -332,23 +329,23 @@ namespace OpenSim.Region.Framework.Scenes
 
     public class LandUndoState
     {
-        public ITerrainModule m_terrainModule;
-        public ITerrainChannel m_terrainChannel;
+        public ITerrainModule _terrainModule;
+        public ITerrainChannel _terrainChannel;
 
         public LandUndoState(ITerrainModule terrainModule, ITerrainChannel terrainChannel)
         {
-            m_terrainModule = terrainModule;
-            m_terrainChannel = terrainChannel;
+            _terrainModule = terrainModule;
+            _terrainChannel = terrainChannel;
         }
 
         public bool Compare(ITerrainChannel terrainChannel)
         {
-            return m_terrainChannel == terrainChannel;
+            return _terrainChannel == terrainChannel;
         }
 
         public void PlaybackState()
         {
-            m_terrainModule.UndoTerrain(m_terrainChannel);
+            _terrainModule.UndoTerrain(_terrainChannel);
         }
     }
 }

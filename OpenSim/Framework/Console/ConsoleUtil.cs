@@ -35,7 +35,7 @@ namespace OpenSim.Framework.Console
 {
     public class ConsoleUtil
     {
-    //    private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    //    private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public const int LocalIdNotFound = 0;
 

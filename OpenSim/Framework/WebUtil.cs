@@ -55,7 +55,7 @@ namespace OpenSim.Framework
 
     public static class WebUtil
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static ExpiringKey<string> GlobalExpiringBadURLs = new ExpiringKey<string>(30000);
         /// <summary>
@@ -176,7 +176,7 @@ namespace OpenSim.Framework
                     output = output.Substring(0, MaxRequestDiagLength) + "...";
             }
 
-            m_log.DebugFormat("[LOGHTTP]: {0}{1}", context, Util.BinaryToASCII(output));
+            _log.DebugFormat("[LOGHTTP]: {0}{1}", context, Util.BinaryToASCII(output));
         }
 
         public static void LogResponseDetail(int reqnum, Stream inputStream)
@@ -194,7 +194,7 @@ namespace OpenSim.Framework
             int reqnum = RequestNumber++;
 
             if (DebugLevel >= 3)
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} JSON-RPC {1} to {2}",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} JSON-RPC {1} to {2}",
                     reqnum, method, url);
 
             string errorMessage = "unknown error";
@@ -216,7 +216,7 @@ namespace OpenSim.Framework
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
-                m_log.Debug("[WEB UTIL]: SvcOSD error creating request " + ex.Message);
+                _log.Debug("[WEB UTIL]: SvcOSD error creating request " + ex.Message);
                 return ErrorResponseMap(errorMessage);
             }
 
@@ -282,25 +282,25 @@ namespace OpenSim.Framework
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
-                m_log.Debug("[WEB UTIL]: Exception making request: " + ex.ToString());
+                _log.Debug("[WEB UTIL]: Exception making request: " + ex.ToString());
             }
             finally
             {
                 int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
                 if (tickdiff > LongCallTime)
                 {
-                    m_log.InfoFormat(
+                    _log.InfoFormat(
                         "[WEB UTIL]: SvcOSD {0} {1} {2} took {3}ms, {4}/{5}bytes",
                         reqnum, method, url, tickdiff, sendlen, rcvlen );
                 }
                 else if (DebugLevel >= 4)
                 {
-                    m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
+                    _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
                         reqnum, tickdiff);
                 }
             }
 
-            m_log.DebugFormat("[LOGHTTP]: JSON request {0} {1} to {2} FAILED: {3}", reqnum, method, url, errorMessage);
+            _log.DebugFormat("[LOGHTTP]: JSON request {0} {1} to {2} FAILED: {3}", reqnum, method, url, errorMessage);
 
             return ErrorResponseMap(errorMessage);
         }
@@ -345,7 +345,7 @@ namespace OpenSim.Framework
             catch
             {
                 // don't need to treat this as an error... we're just guessing anyway
-//                m_log.DebugFormat("[WEB UTIL] couldn't decode <{0}>: {1}",response,e.Message);
+//                _log.DebugFormat("[WEB UTIL] couldn't decode <{0}>: {1}",response,e.Message);
             }
 
             return result;
@@ -370,7 +370,7 @@ namespace OpenSim.Framework
             string method = data != null && data["RequestMethod"] != null ? data["RequestMethod"] : "unknown";
 
             if (DebugLevel >= 3)
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} ServiceForm '{1}' to {2}",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} ServiceForm '{1}' to {2}",
                     reqnum, method, url);
 
             string errorMessage = "unknown error";
@@ -448,18 +448,18 @@ namespace OpenSim.Framework
                 int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
                 if (tickdiff > LongCallTime)
                 {
-                    m_log.InfoFormat(
+                    _log.InfoFormat(
                         "[LOGHTTP]: Slow ServiceForm request {0} '{1}' to {2} took {3}ms, {4}/{5}bytes",
                         reqnum, method, url, tickdiff, sendlen, rcvlen);
                 }
                 else if (DebugLevel >= 4)
                 {
-                    m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
+                    _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
                         reqnum, tickdiff);
                 }
             }
 
-            m_log.WarnFormat("[LOGHTTP]: ServiceForm request {0} '{1}' to {2} failed: {3}", reqnum, method, url, errorMessage);
+            _log.WarnFormat("[LOGHTTP]: ServiceForm request {0} '{1}' to {2} failed: {3}", reqnum, method, url, errorMessage);
 
             return ErrorResponseMap(errorMessage);
         }
@@ -722,7 +722,7 @@ namespace OpenSim.Framework
 
     public static class AsynchronousRestObjectRequester
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Perform an asynchronous REST request.
@@ -771,7 +771,7 @@ namespace OpenSim.Framework
             int reqnum = WebUtil.RequestNumber++;
 
             if (WebUtil.DebugLevel >= 3)
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} AsynchronousRequestObject {1} to {2}",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} AsynchronousRequestObject {1} to {2}",
                     reqnum, verb, requestUrl);
 
             int tickstart = Util.EnvironmentTickCount();
@@ -885,7 +885,7 @@ namespace OpenSim.Framework
                                         {
                                             // We don't appear to be handling any other status codes, so log these feailures to that
                                             // people don't spend unnecessary hours hunting phantom bugs.
-                                            m_log.DebugFormat(
+                                            _log.DebugFormat(
                                                 "[ASYNC REQUEST]: Request {0} {1} failed with unexpected status code {2}",
                                                 verb, requestUrl, httpResponse.StatusCode);
                                         }
@@ -894,19 +894,19 @@ namespace OpenSim.Framework
                             }
                             else
                             {
-                                m_log.ErrorFormat(
+                                _log.ErrorFormat(
                                     "[ASYNC REQUEST]: Request {0} {1} failed with status {2} and message {3}",
                                     verb, requestUrl, e.Status, e.Message);
                             }
                         }
                         catch (Exception e)
                         {
-                            m_log.ErrorFormat(
+                            _log.ErrorFormat(
                                 "[ASYNC REQUEST]: Request {0} {1} failed with exception {2}{3}",
                                 verb, requestUrl, e.Message, e.StackTrace);
                         }
 
-                        //  m_log.DebugFormat("[ASYNC REQUEST]: Received {0}", deserial.ToString());
+                        //  _log.DebugFormat("[ASYNC REQUEST]: Received {0}", deserial.ToString());
 
                         try
                         {
@@ -914,7 +914,7 @@ namespace OpenSim.Framework
                         }
                         catch (Exception e)
                         {
-                            m_log.ErrorFormat(
+                            _log.ErrorFormat(
                                 "[ASYNC REQUEST]: Request {0} {1} callback failed with exception {2}{3}",
                                 verb, requestUrl, e.Message, e.StackTrace);
                         }
@@ -934,14 +934,14 @@ namespace OpenSim.Framework
                         if (originalRequest.Length > WebUtil.MaxRequestDiagLength)
                             originalRequest = originalRequest.Remove(WebUtil.MaxRequestDiagLength);
                     }
-                     m_log.InfoFormat(
+                     _log.InfoFormat(
                         "[LOGHTTP]: Slow AsynchronousRequestObject request {0} {1} to {2} took {3}ms, {4}ms writing, {5}",
                         reqnum, verb, requestUrl, tickdiff, tickdata,
                         originalRequest);
                 }
                 else if (WebUtil.DebugLevel >= 4)
                 {
-                    m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms, {2}ms writing",
+                    _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms, {2}ms writing",
 
                         reqnum, tickdiff, tickdata);
                 }
@@ -952,7 +952,7 @@ namespace OpenSim.Framework
 
     public static class SynchronousRestFormsRequester
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Perform a synchronous REST request.
@@ -971,7 +971,7 @@ namespace OpenSim.Framework
             int reqnum = WebUtil.RequestNumber++;
 
             if (WebUtil.DebugLevel >= 3)
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} SynchronousRestForms {1} to {2}",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} SynchronousRestForms {1} to {2}",
                     reqnum, verb, requestUrl);
 
             int tickstart = Util.EnvironmentTickCount();
@@ -993,7 +993,7 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.InfoFormat("[FORMS]: Error creating {0} request to : {1}. Request: {2}", verb, requestUrl, e.Message);
+                _log.InfoFormat("[FORMS]: Error creating {0} request to : {1}. Request: {2}", verb, requestUrl, e.Message);
                 throw e;
             }
 
@@ -1015,7 +1015,7 @@ namespace OpenSim.Framework
                 }
                 catch (Exception e)
                 {
-                    m_log.InfoFormat("[FORMS]: Error sending {0} request to: {1}. {2}", verb,requestUrl, e.Message);
+                    _log.InfoFormat("[FORMS]: Error sending {0} request to: {1}. {2}", verb,requestUrl, e.Message);
                     throw e;
                 }
             }
@@ -1036,19 +1036,19 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.InfoFormat("[FORMS]: Error receiving response from {0}: {1}.", requestUrl, e.Message);
+                _log.InfoFormat("[FORMS]: Error receiving response from {0}: {1}.", requestUrl, e.Message);
                 throw e;
             }
 
             int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
             if (tickdiff > WebUtil.LongCallTime)
             {
-                m_log.InfoFormat("[FORMS]: request {0} {1} {2} took {3}ms, {4}/{5}bytes",
+                _log.InfoFormat("[FORMS]: request {0} {1} {2} took {3}ms, {4}/{5}bytes",
                     reqnum, verb, requestUrl, tickdiff, sendlen, rcvlen);
             }
             else if (WebUtil.DebugLevel >= 4)
             {
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
                     reqnum, tickdiff);
                 if (WebUtil.DebugLevel >= 5)
                     WebUtil.LogResponseDetail(reqnum, respstring);
@@ -1069,7 +1069,7 @@ namespace OpenSim.Framework
             int reqnum = WebUtil.RequestNumber++;
 
             if (WebUtil.DebugLevel >= 3)
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} SynchronousRestForms POST to {1}",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} SynchronousRestForms POST to {1}",
                     reqnum, requestUrl);
 
             int tickstart = Util.EnvironmentTickCount();
@@ -1091,7 +1091,7 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.InfoFormat("[FORMS]: Error creating POST request to {0}: {1}", requestUrl, e.Message);
+                _log.InfoFormat("[FORMS]: Error creating POST request to {0}: {1}", requestUrl, e.Message);
                 throw e;
             }
 
@@ -1110,7 +1110,7 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.InfoFormat("[FORMS]: Error sending POST request to {0}: {1}", requestUrl, e.Message);
+                _log.InfoFormat("[FORMS]: Error sending POST request to {0}: {1}", requestUrl, e.Message);
                 throw e;
             }
 
@@ -1129,19 +1129,19 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.InfoFormat("[FORMS]: Error receiving response from {0}: {1}", requestUrl, e.Message);
+                _log.InfoFormat("[FORMS]: Error receiving response from {0}: {1}", requestUrl, e.Message);
                 throw e;
             }
 
             int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
             if (tickdiff > WebUtil.LongCallTime)
             {
-                m_log.InfoFormat("[FORMS]: request {0} POST {1} took {2}ms {3}/{4}bytes",
+                _log.InfoFormat("[FORMS]: request {0} POST {1} took {2}ms {3}/{4}bytes",
                     reqnum, requestUrl, tickdiff, sendlen, rcvlen);
             }
             else if (WebUtil.DebugLevel >= 4)
             {
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
                     reqnum, tickdiff);
                 if (WebUtil.DebugLevel >= 5)
                     WebUtil.LogResponseDetail(reqnum, respstring);
@@ -1153,7 +1153,7 @@ namespace OpenSim.Framework
 
     public class SynchronousRestObjectRequester
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Perform a synchronous REST request.
@@ -1233,7 +1233,7 @@ namespace OpenSim.Framework
             int reqnum = WebUtil.RequestNumber++;
 
             if (WebUtil.DebugLevel >= 3)
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} SRestObjectRequest {1} {2}",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} SRestObjectRequest {1} {2}",
                     reqnum, verb, requestUrl);
 
             int tickstart = Util.EnvironmentTickCount();
@@ -1258,7 +1258,7 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[SRestObjectRequest]: Exception in creating request {0} {1}: {2}{3}",
+                _log.DebugFormat("[SRestObjectRequest]: Exception in creating request {0} {1}: {2}{3}",
                     verb, requestUrl, e.Message, e.StackTrace);
                 return deserial;
             }
@@ -1293,7 +1293,7 @@ namespace OpenSim.Framework
             }
             catch (Exception e)
             {
-                m_log.DebugFormat(
+                _log.DebugFormat(
                     "[SRestObjectRequest]: Exception in making request {0} {1}: {2}{3}",
                     verb, requestUrl, e.Message, e.StackTrace);
 
@@ -1317,7 +1317,7 @@ namespace OpenSim.Framework
                     }
                     else
                     {
-                        m_log.DebugFormat("[SRestObjectRequest]: Oops! no content found in response stream from {0} {1}",
+                        _log.DebugFormat("[SRestObjectRequest]: Oops! no content found in response stream from {0} {1}",
                             verb, requestUrl);
                     }
                 }
@@ -1330,17 +1330,17 @@ namespace OpenSim.Framework
                     {
                         if (hwr.StatusCode == HttpStatusCode.Unauthorized)
                         {
-                            m_log.ErrorFormat("[SRestObjectRequest]: {0} requires authentication",
+                            _log.ErrorFormat("[SRestObjectRequest]: {0} requires authentication",
                                 requestUrl);
                         }
                         else if(hwr.StatusCode != HttpStatusCode.NotFound)
                         {
-                            m_log.WarnFormat("[SRestObjectRequest]: {0} returned error: {1}",
+                            _log.WarnFormat("[SRestObjectRequest]: {0} returned error: {1}",
                                 requestUrl, hwr.StatusCode);
                         }
                     }
                     else
-                        m_log.ErrorFormat(
+                        _log.ErrorFormat(
                             "[SRestObjectRequest]: WebException for {0} {1} {2} {3}",
                             verb, requestUrl, typeof(TResponse).ToString(), e.Message);
                 }
@@ -1348,24 +1348,24 @@ namespace OpenSim.Framework
             catch (System.InvalidOperationException)
             {
                 // This is what happens when there is invalid XML
-                m_log.DebugFormat("[SRestObjectRequest]: Invalid XML from {0} {1} {2}",
+                _log.DebugFormat("[SRestObjectRequest]: Invalid XML from {0} {1} {2}",
                     verb, requestUrl, typeof(TResponse).ToString());
             }
             catch (Exception e)
             {
-                m_log.DebugFormat("[SRestObjectRequest]: Exception on response from {0} {1}: {2}",
+                _log.DebugFormat("[SRestObjectRequest]: Exception on response from {0} {1}: {2}",
                     verb, requestUrl, e.Message);
             }
 
             int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
             if (tickdiff > WebUtil.LongCallTime)
             {
-                m_log.InfoFormat("[LOGHTTP]: Slow SRestObjectRequest {0} {1} {2} took {3}ms, {4}bytes",
+                _log.InfoFormat("[LOGHTTP]: Slow SRestObjectRequest {0} {1} {2} took {3}ms, {4}bytes",
                     reqnum, verb, requestUrl, tickdiff, rcvlen);
             }
             else if (WebUtil.DebugLevel >= 4)
             {
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms",
                     reqnum, tickdiff);
             }
             return deserial;
@@ -1423,14 +1423,14 @@ namespace OpenSim.Framework
 
     public static class XMLRPCRequester
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static Hashtable SendRequest(Hashtable ReqParams, string method, string url)
         {
             int reqnum = WebUtil.RequestNumber++;
 
             if (WebUtil.DebugLevel >= 3)
-                m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} XML-RPC '{1}' to {2}",
+                _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} XML-RPC '{1}' to {2}",
                     reqnum, method, url);
 
             int tickstart = Util.EnvironmentTickCount();
@@ -1463,12 +1463,12 @@ namespace OpenSim.Framework
                 }
                 catch (Exception e)
                 {
-                    m_log.Error("Error parsing XML-RPC response", e);
+                    _log.Error("Error parsing XML-RPC response", e);
                 }
 
                 if (Resp.IsFault)
                 {
-                    m_log.DebugFormat(
+                    _log.DebugFormat(
                         "[LOGHTTP]: XML-RPC request {0} '{1}' to {2} FAILED: FaultCode={3}, FaultMessage={4}",
                         reqnum, method, url, Resp.FaultCode, Resp.FaultString);
                     return null;
@@ -1482,7 +1482,7 @@ namespace OpenSim.Framework
                 int tickdiff = Util.EnvironmentTickCountSubtract(tickstart);
                 if (tickdiff > WebUtil.LongCallTime)
                 {
-                    m_log.InfoFormat(
+                    _log.InfoFormat(
                         "[LOGHTTP]: Slow XML-RPC request {0} '{1}' to {2} took {3}ms, {4}",
                         reqnum, method, url, tickdiff,
                         responseStr != null
@@ -1491,7 +1491,7 @@ namespace OpenSim.Framework
                 }
                 else if (WebUtil.DebugLevel >= 4)
                 {
-                    m_log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms", reqnum, tickdiff);
+                    _log.DebugFormat("[LOGHTTP]: HTTP OUT {0} took {1}ms", reqnum, tickdiff);
                 }
             }
         }

@@ -36,7 +36,7 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence.Tests
     [TestFixture]
     public class PresenceConnectorsTests : OpenSimTestCase
     {
-        LocalPresenceServicesConnector m_LocalConnector;
+        LocalPresenceServicesConnector _LocalConnector;
 
         public override void SetUp()
         {
@@ -49,11 +49,11 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence.Tests
             config.Configs["PresenceService"].Set("LocalServiceModule", "OpenSim.Services.PresenceService.dll:PresenceService");
             config.Configs["PresenceService"].Set("StorageProvider", "OpenSim.Data.Null.dll");
 
-            m_LocalConnector = new LocalPresenceServicesConnector();
-            m_LocalConnector.Initialise(config);
+            _LocalConnector = new LocalPresenceServicesConnector();
+            _LocalConnector.Initialise(config);
 
             // Let's stick in a test presence
-            m_LocalConnector.m_PresenceService.LoginAgent(UUID.Zero.ToString(), UUID.Zero, UUID.Zero);
+            _LocalConnector._PresenceService.LoginAgent(UUID.Zero.ToString(), UUID.Zero, UUID.Zero);
         }
 
         /// <summary>
@@ -71,36 +71,36 @@ namespace OpenSim.Region.CoreModules.ServiceConnectorsOut.Presence.Tests
                 p.UserID = UUID.Zero.ToString();
                 p.Data = new Dictionary<string, string>();
                 p.Data["Online"] = true.ToString();
-                m_presenceData.Add(UUID.Zero, p);
+                _presenceData.Add(UUID.Zero, p);
                 */
 
             string user1 = UUID.Zero.ToString();
             UUID session1 = UUID.Zero;
 
             // this is not implemented by this connector
-            //m_LocalConnector.LoginAgent(user1, session1, UUID.Zero);
-            PresenceInfo result = m_LocalConnector.GetAgent(session1);
+            //_LocalConnector.LoginAgent(user1, session1, UUID.Zero);
+            PresenceInfo result = _LocalConnector.GetAgent(session1);
             Assert.IsNotNull(result, "Retrieved GetAgent is null");
             Assert.That(result.UserID, Is.EqualTo(user1), "Retrieved userID does not match");
 
             UUID region1 = UUID.Random();
-            bool r = m_LocalConnector.ReportAgent(session1, region1);
+            bool r = _LocalConnector.ReportAgent(session1, region1);
             Assert.IsTrue(r, "First ReportAgent returned false");
-            result = m_LocalConnector.GetAgent(session1);
+            result = _LocalConnector.GetAgent(session1);
             Assert.That(result.RegionID, Is.EqualTo(region1), "Agent is not in the right region (region1)");
 
             UUID region2 = UUID.Random();
-            r = m_LocalConnector.ReportAgent(session1, region2);
+            r = _LocalConnector.ReportAgent(session1, region2);
             Assert.IsTrue(r, "Second ReportAgent returned false");
-            result = m_LocalConnector.GetAgent(session1);
+            result = _LocalConnector.GetAgent(session1);
             Assert.That(result.RegionID, Is.EqualTo(region2), "Agent is not in the right region (region2)");
 
-            r = m_LocalConnector.LogoutAgent(session1);
+            r = _LocalConnector.LogoutAgent(session1);
             Assert.IsTrue(r, "LogoutAgent returned false");
-            result = m_LocalConnector.GetAgent(session1);
+            result = _LocalConnector.GetAgent(session1);
             Assert.IsNull(result, "Agent session is still stored after logout");
 
-            r = m_LocalConnector.ReportAgent(session1, region1);
+            r = _LocalConnector.ReportAgent(session1, region1);
             Assert.IsFalse(r, "ReportAgent of non-logged in user returned true");
         }
     }

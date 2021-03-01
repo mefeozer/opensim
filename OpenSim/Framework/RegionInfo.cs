@@ -42,7 +42,7 @@ namespace OpenSim.Framework
 
     public class RegionInfo
     {
-        private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string LogHeader = "[REGION INFO]";
 
         public bool commFailTF = false;
@@ -53,9 +53,9 @@ namespace OpenSim.Framework
         public bool isSandbox = false;
         public bool Persistent = true;
 
-        private EstateSettings m_estateSettings;
-        private RegionSettings m_regionSettings;
-        // private IConfigSource m_configSource = null;
+        private EstateSettings _estateSettings;
+        private RegionSettings _regionSettings;
+        // private IConfigSource _configSource = null;
 
         public UUID originRegionID = UUID.Zero;
         public string proxyUrl = "";
@@ -67,26 +67,26 @@ namespace OpenSim.Framework
         public UUID lastMapUUID = UUID.Zero;
         public string lastMapRefresh = "0";
 
-        private float m_nonphysPrimMin = 0;
-        private int m_nonphysPrimMax = 0;
-        private float m_physPrimMin = 0;
-        private int m_physPrimMax = 0;
-        private bool m_clampPrimSize = false;
-        private int m_objectCapacity = 15000;
-        private int m_maxPrimsPerUser = -1;
-        private int m_linksetCapacity = 0;
-        private string m_regionType = string.Empty;
-        protected uint m_httpPort;
-        protected string m_serverURI;
-        protected string m_regionName = string.Empty;
-        protected string m_externalHostName;
-        protected IPEndPoint m_internalEndPoint;
-        protected uint m_remotingPort;
+        private float _nonphysPrimMin = 0;
+        private int _nonphysPrimMax = 0;
+        private float _physPrimMin = 0;
+        private int _physPrimMax = 0;
+        private bool _clampPrimSize = false;
+        private int _objectCapacity = 15000;
+        private int _maxPrimsPerUser = -1;
+        private int _linksetCapacity = 0;
+        private string _regionType = string.Empty;
+        protected uint _httpPort;
+        protected string _serverURI;
+        protected string _regionName = string.Empty;
+        protected string _externalHostName;
+        protected IPEndPoint _internalEndPoint;
+        protected uint _remotingPort;
         public UUID RegionID = UUID.Zero;
         public string RemotingAddress;
         public UUID ScopeID = UUID.Zero;
-        private UUID m_maptileStaticUUID = UUID.Zero;
-        private bool m_resolveAddress = false;
+        private UUID _maptileStaticUUID = UUID.Zero;
+        private bool _resolveAddress = false;
 
         public uint WorldLocX = 0;
         public uint WorldLocY = 0;
@@ -119,7 +119,7 @@ namespace OpenSim.Framework
         // If entering avatar has no specific coords, this is where they land
         public Vector3 DefaultLandingPoint = new Vector3(128, 128, 30);
 
-        private readonly Dictionary<string, string> m_extraSettings = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _extraSettings = new Dictionary<string, string>();
 
         // Apparently, we're applying the same estatesettings regardless of whether it's local or remote.
 
@@ -136,7 +136,7 @@ namespace OpenSim.Framework
 
         public RegionInfo(string description, string filename, bool skipConsoleConfig, IConfigSource configSource, string configName)
         {
-            // m_configSource = configSource;
+            // _configSource = configSource;
             if (filename.ToLower().EndsWith(".ini"))
             {
                 if (!File.Exists(filename)) // New region config request
@@ -193,7 +193,7 @@ namespace OpenSim.Framework
             XmlConfigSource source = new XmlConfigSource(XmlReader.Create(new StringReader(xmlstr)));
             ReadNiniConfig(source, name);
 
-            m_serverURI = string.Empty;
+            _serverURI = string.Empty;
         }
 
         public RegionInfo(uint legacyRegionLocX, uint legacyRegionLocY, IPEndPoint internalEndPoint, string externalUri)
@@ -202,102 +202,69 @@ namespace OpenSim.Framework
             RegionLocY = legacyRegionLocY;
             RegionSizeX = Constants.RegionSize;
             RegionSizeY = Constants.RegionSize;
-            m_internalEndPoint = internalEndPoint;
-            m_externalHostName = externalUri;
-            m_serverURI = string.Empty;
+            _internalEndPoint = internalEndPoint;
+            _externalHostName = externalUri;
+            _serverURI = string.Empty;
         }
 
         public RegionInfo()
         {
-            m_serverURI = string.Empty;
+            _serverURI = string.Empty;
         }
 
         public EstateSettings EstateSettings
         {
             get
             {
-                if (m_estateSettings == null)
+                if (_estateSettings == null)
                 {
-                    m_estateSettings = new EstateSettings();
+                    _estateSettings = new EstateSettings();
                 }
 
-                return m_estateSettings;
+                return _estateSettings;
             }
 
-            set { m_estateSettings = value; }
+            set => _estateSettings = value;
         }
 
         public RegionSettings RegionSettings
         {
             get
             {
-                if (m_regionSettings == null)
+                if (_regionSettings == null)
                 {
-                    m_regionSettings = new RegionSettings();
+                    _regionSettings = new RegionSettings();
                 }
 
-                return m_regionSettings;
+                return _regionSettings;
             }
 
-            set { m_regionSettings = value; }
+            set => _regionSettings = value;
         }
 
-        public float NonphysPrimMin
-        {
-            get { return m_nonphysPrimMin; }
-        }
+        public float NonphysPrimMin => _nonphysPrimMin;
 
-        public int NonphysPrimMax
-        {
-            get { return m_nonphysPrimMax; }
-        }
+        public int NonphysPrimMax => _nonphysPrimMax;
 
-        public float PhysPrimMin
-        {
-            get { return m_physPrimMin; }
-        }
+        public float PhysPrimMin => _physPrimMin;
 
-        public int PhysPrimMax
-        {
-            get { return m_physPrimMax; }
-        }
+        public int PhysPrimMax => _physPrimMax;
 
-        public bool ClampPrimSize
-        {
-            get { return m_clampPrimSize; }
-        }
+        public bool ClampPrimSize => _clampPrimSize;
 
-        public int ObjectCapacity
-        {
-            get { return m_objectCapacity; }
-        }
+        public int ObjectCapacity => _objectCapacity;
 
-        public int MaxPrimsPerUser
-        {
-            get { return m_maxPrimsPerUser; }
-        }
+        public int MaxPrimsPerUser => _maxPrimsPerUser;
 
-        public int LinksetCapacity
-        {
-            get { return m_linksetCapacity; }
-        }
+        public int LinksetCapacity => _linksetCapacity;
 
         public int AgentCapacity { get; set; }
 
-        public byte AccessLevel
-        {
-            get { return (byte)Util.ConvertMaturityToAccessLevel((uint)RegionSettings.Maturity); }
-        }
+        public byte AccessLevel => (byte)Util.ConvertMaturityToAccessLevel((uint)RegionSettings.Maturity);
 
-        public string RegionType
-        {
-            get { return m_regionType; }
-        }
+        public string RegionType => _regionType;
 
-        public UUID MaptileStaticUUID
-        {
-            get { return m_maptileStaticUUID; }
-        }
+        public UUID MaptileStaticUUID => _maptileStaticUUID;
 
         public string MaptileStaticFile { get; private set; }
 
@@ -306,8 +273,8 @@ namespace OpenSim.Framework
         /// </summary>
         public uint HttpPort
         {
-            get { return m_httpPort; }
-            set { m_httpPort = value; }
+            get => _httpPort;
+            set => _httpPort = value;
         }
 
         /// <summary>
@@ -317,31 +284,31 @@ namespace OpenSim.Framework
         public string ServerURI
         {
             get {
-                if (!string.IsNullOrEmpty(m_serverURI)) {
-                    return m_serverURI;
+                if (!string.IsNullOrEmpty(_serverURI)) {
+                    return _serverURI;
                 } else {
-                    return "http://" + m_externalHostName + ":" + m_httpPort + "/";
+                    return "http://" + _externalHostName + ":" + _httpPort + "/";
                 }
             }
             set {
                 if ( value.EndsWith("/") ) {
-                    m_serverURI = value;
+                    _serverURI = value;
                 } else {
-                    m_serverURI = value + '/';
+                    _serverURI = value + '/';
                 }
             }
         }
 
         public string RegionName
         {
-            get { return m_regionName; }
-            set { m_regionName = value; }
+            get => _regionName;
+            set => _regionName = value;
         }
 
         public uint RemotingPort
         {
-            get { return m_remotingPort; }
-            set { m_remotingPort = value; }
+            get => _remotingPort;
+            set => _remotingPort = value;
         }
 
         
@@ -352,20 +319,20 @@ namespace OpenSim.Framework
         /// </value>
         public IPEndPoint ExternalEndPoint
         {
-            get { return Util.getEndPoint(m_externalHostName, m_internalEndPoint.Port); }
-            set { m_externalHostName = value.ToString(); }
+            get => Util.getEndPoint(_externalHostName, _internalEndPoint.Port);
+            set => _externalHostName = value.ToString();
         }
 
         public string ExternalHostName
         {
-            get { return m_externalHostName; }
-            set { m_externalHostName = value; }
+            get => _externalHostName;
+            set => _externalHostName = value;
         }
 
         public IPEndPoint InternalEndPoint
         {
-            get { return m_internalEndPoint; }
-            set { m_internalEndPoint = value; }
+            get => _internalEndPoint;
+            set => _internalEndPoint = value;
         }
 
         /// <summary>
@@ -375,8 +342,8 @@ namespace OpenSim.Framework
         /// </summary>
         public uint RegionLocX
         {
-            get { return WorldLocX / Constants.RegionSize; }
-            set { WorldLocX = value * Constants.RegionSize; }
+            get => WorldLocX / Constants.RegionSize;
+            set => WorldLocX = value * Constants.RegionSize;
         }
 
         /// <summary>
@@ -386,8 +353,8 @@ namespace OpenSim.Framework
         /// </summary>
         public uint RegionLocY
         {
-            get { return WorldLocY / Constants.RegionSize; }
-            set { WorldLocY = value * Constants.RegionSize; }
+            get => WorldLocY / Constants.RegionSize;
+            set => WorldLocY = value * Constants.RegionSize;
         }
 
         public void SetDefaultRegionSize()
@@ -403,32 +370,29 @@ namespace OpenSim.Framework
         // A unique region handle is created from the region's world coordinates.
         // This cannot be changed because some code expects to receive the region handle and then
         //    compute the region coordinates from it.
-        public ulong RegionHandle
-        {
-            get { return Util.UIntsToLong(WorldLocX, WorldLocY); }
-        }
+        public ulong RegionHandle => Util.UIntsToLong(WorldLocX, WorldLocY);
 
         public void SetEndPoint(string ipaddr, int port)
         {
             IPAddress tmpIP = IPAddress.Parse(ipaddr);
             IPEndPoint tmpEPE = new IPEndPoint(tmpIP, port);
-            m_internalEndPoint = tmpEPE;
+            _internalEndPoint = tmpEPE;
         }
 
         public string GetSetting(string key)
         {
             string val;
             string keylower = key.ToLower();
-            if (m_extraSettings.TryGetValue(keylower, out val))
+            if (_extraSettings.TryGetValue(keylower, out val))
                 return val;
-            m_log.DebugFormat("[RegionInfo] Could not locate value for parameter {0}", key);
+            _log.DebugFormat("[RegionInfo] Could not locate value for parameter {0}", key);
             return null;
         }
 
         public void SetExtraSetting(string key, string value)
         {
             string keylower = key.ToLower();
-            m_extraSettings[keylower] = value;
+            _extraSettings[keylower] = value;
         }
 
         private void ReadNiniConfig(IConfigSource source, string name)
@@ -559,21 +523,21 @@ namespace OpenSim.Framework
                 port = Convert.ToInt32(MainConsole.Instance.Prompt("Internal port", "9000"));
                 config.Set("InternalPort", port);
             }
-            m_internalEndPoint = new IPEndPoint(address, port);
+            _internalEndPoint = new IPEndPoint(address, port);
 
             // ResolveAddress
             //
             allKeys.Remove("ResolveAddress");
             if (config.Contains("ResolveAddress"))
             {
-                m_resolveAddress = config.GetBoolean("ResolveAddress", false);
+                _resolveAddress = config.GetBoolean("ResolveAddress", false);
             }
             else
             {
                 if (creatingNew)
-                    m_resolveAddress = Convert.ToBoolean(MainConsole.Instance.Prompt("Resolve hostname to IP on start (for running inside Docker)", "False"));
+                    _resolveAddress = Convert.ToBoolean(MainConsole.Instance.Prompt("Resolve hostname to IP on start (for running inside Docker)", "False"));
 
-                config.Set("ResolveAddress", m_resolveAddress.ToString());
+                config.Set("ResolveAddress", _resolveAddress.ToString());
             }
 
             // ExternalHostName
@@ -591,26 +555,26 @@ namespace OpenSim.Framework
             }
             if (externalName == "SYSTEMIP")
             {
-                m_externalHostName = Util.GetLocalHost().ToString();
-                m_log.InfoFormat(
+                _externalHostName = Util.GetLocalHost().ToString();
+                _log.InfoFormat(
                     "[REGIONINFO]: Resolving SYSTEMIP to {0} for external hostname of region {1}",
-                    m_externalHostName, name);
+                    _externalHostName, name);
             }
-            else if (!m_resolveAddress)
+            else if (!_resolveAddress)
             {
-                m_externalHostName = externalName;
+                _externalHostName = externalName;
             }
             else
             {
                 IPAddress[] addrs = Dns.GetHostAddresses(externalName);
                 if (addrs.Length != 1) // If it is ambiguous or not resolveable, use it literally
-                    m_externalHostName = externalName;
+                    _externalHostName = externalName;
                 else
-                    m_externalHostName = addrs[0].ToString();
+                    _externalHostName = addrs[0].ToString();
             }
 
             // RegionType
-            m_regionType = config.GetString("RegionType", string.Empty);
+            _regionType = config.GetString("RegionType", string.Empty);
             allKeys.Remove("RegionType");
 
             // Get Default Landing Location (Defaults to 128,128)
@@ -620,7 +584,7 @@ namespace OpenSim.Framework
             if (Vector3.TryParse(temp_location, out temp_vector))
                 DefaultLandingPoint = temp_vector;
             else
-                m_log.ErrorFormat("[RegionInfo]: Unable to parse DefaultLanding for '{0}'. The value given was '{1}'", RegionName, temp_location);
+                _log.ErrorFormat("[RegionInfo]: Unable to parse DefaultLanding for '{0}'. The value given was '{1}'", RegionName, temp_location);
 
             allKeys.Remove("DefaultLanding");
 
@@ -628,35 +592,35 @@ namespace OpenSim.Framework
 
             #region Prim and map stuff
 
-            m_nonphysPrimMin = config.GetFloat("NonPhysicalPrimMin", 0);
+            _nonphysPrimMin = config.GetFloat("NonPhysicalPrimMin", 0);
             allKeys.Remove("NonPhysicalPrimMin");
 
-            m_nonphysPrimMax = config.GetInt("NonPhysicalPrimMax", 0);
+            _nonphysPrimMax = config.GetInt("NonPhysicalPrimMax", 0);
             allKeys.Remove("NonPhysicalPrimMax");
 
-            m_physPrimMin = config.GetFloat("PhysicalPrimMin", 0);
+            _physPrimMin = config.GetFloat("PhysicalPrimMin", 0);
             allKeys.Remove("PhysicalPrimMin");
 
-            m_physPrimMax = config.GetInt("PhysicalPrimMax", 0);
+            _physPrimMax = config.GetInt("PhysicalPrimMax", 0);
             allKeys.Remove("PhysicalPrimMax");
 
-            m_clampPrimSize = config.GetBoolean("ClampPrimSize", false);
+            _clampPrimSize = config.GetBoolean("ClampPrimSize", false);
             allKeys.Remove("ClampPrimSize");
 
-            m_objectCapacity = config.GetInt("MaxPrims", m_objectCapacity);
+            _objectCapacity = config.GetInt("MaxPrims", _objectCapacity);
             allKeys.Remove("MaxPrims");
 
-            m_maxPrimsPerUser = config.GetInt("MaxPrimsPerUser", -1);
+            _maxPrimsPerUser = config.GetInt("MaxPrimsPerUser", -1);
             allKeys.Remove("MaxPrimsPerUser");
 
-            m_linksetCapacity = config.GetInt("LinksetPrims", 0);
+            _linksetCapacity = config.GetInt("LinksetPrims", 0);
             allKeys.Remove("LinksetPrims");
 
             allKeys.Remove("MaptileStaticUUID");
             string mapTileStaticUUID = config.GetString("MaptileStaticUUID", UUID.Zero.ToString());
-            if (UUID.TryParse(mapTileStaticUUID.Trim(), out m_maptileStaticUUID))
+            if (UUID.TryParse(mapTileStaticUUID.Trim(), out _maptileStaticUUID))
             {
-                config.Set("MaptileStaticUUID", m_maptileStaticUUID.ToString());
+                config.Set("MaptileStaticUUID", _maptileStaticUUID.ToString());
             }
 
             MaptileStaticFile = config.GetString("MaptileStaticFile", string.Empty);
@@ -717,7 +681,7 @@ namespace OpenSim.Framework
                 DefaultLandingPoint.Z = 0f;
 
             if (ValuesCapped == true)
-                m_log.WarnFormat("[RegionInfo]: The default landing location for {0} has been capped to {1}", RegionName, DefaultLandingPoint);
+                _log.WarnFormat("[RegionInfo]: The default landing location for {0} has been capped to {1}", RegionName, DefaultLandingPoint);
         }
 
         // Make sure user specified region sizes are sane.
@@ -734,8 +698,8 @@ namespace OpenSim.Framework
                     RegionSizeX -= partial;
                     if (RegionSizeX == 0)
                         RegionSizeX = Constants.RegionSize;
-                    m_log.ErrorFormat("{0} Region size must be multiple of {1}. Enforcing {2}.RegionSizeX={3} instead of specified {4}",
-                        LogHeader, Constants.RegionSize, m_regionName, RegionSizeX, RegionSizeX + partial);
+                    _log.ErrorFormat("{0} Region size must be multiple of {1}. Enforcing {2}.RegionSizeX={3} instead of specified {4}",
+                        LogHeader, Constants.RegionSize, _regionName, RegionSizeX, RegionSizeX + partial);
                 }
                 partial = RegionSizeY % Constants.RegionSize;
                 if (partial != 0)
@@ -743,8 +707,8 @@ namespace OpenSim.Framework
                     RegionSizeY -= partial;
                     if (RegionSizeY == 0)
                         RegionSizeY = Constants.RegionSize;
-                    m_log.ErrorFormat("{0} Region size must be multiple of {1}. Enforcing {2}.RegionSizeY={3} instead of specified {4}",
-                        LogHeader, Constants.RegionSize, m_regionName, RegionSizeY, RegionSizeY + partial);
+                    _log.ErrorFormat("{0} Region size must be multiple of {1}. Enforcing {2}.RegionSizeY={3} instead of specified {4}",
+                        LogHeader, Constants.RegionSize, _regionName, RegionSizeY, RegionSizeY + partial);
                 }
 
                 // Because of things in the viewer, regions MUST be square.
@@ -754,8 +718,8 @@ namespace OpenSim.Framework
                     uint minSize = Math.Min(RegionSizeX, RegionSizeY);
                     RegionSizeX = minSize;
                     RegionSizeY = minSize;
-                    m_log.ErrorFormat("{0} Regions must be square until viewers are updated. Forcing region {1} size to <{2},{3}>",
-                                        LogHeader, m_regionName, RegionSizeX, RegionSizeY);
+                    _log.ErrorFormat("{0} Regions must be square until viewers are updated. Forcing region {1} size to <{2},{3}>",
+                                        LogHeader, _regionName, RegionSizeX, RegionSizeY);
                 }
 
                 // There is a practical limit to region size.
@@ -763,11 +727,11 @@ namespace OpenSim.Framework
                 {
                     RegionSizeX = Util.Clamp<uint>(RegionSizeX, Constants.RegionSize, Constants.MaximumRegionSize);
                     RegionSizeY = Util.Clamp<uint>(RegionSizeY, Constants.RegionSize, Constants.MaximumRegionSize);
-                    m_log.ErrorFormat("{0} Region dimensions must be less than {1}. Clamping {2}'s size to <{3},{4}>",
-                                        LogHeader, Constants.MaximumRegionSize, m_regionName, RegionSizeX, RegionSizeY);
+                    _log.ErrorFormat("{0} Region dimensions must be less than {1}. Clamping {2}'s size to <{3},{4}>",
+                                        LogHeader, Constants.MaximumRegionSize, _regionName, RegionSizeX, RegionSizeY);
                 }
 
-                m_log.InfoFormat("{0} Region {1} size set to <{2},{3}>", LogHeader, m_regionName, RegionSizeX, RegionSizeY);
+                _log.InfoFormat("{0} Region {1} size set to <{2},{3}>", LogHeader, _regionName, RegionSizeX, RegionSizeY);
             }
         }
 
@@ -796,33 +760,33 @@ namespace OpenSim.Framework
                 //                config.Set("SizeZ", RegionSizeZ);
             }
 
-            config.Set("InternalAddress", m_internalEndPoint.Address.ToString());
-            config.Set("InternalPort", m_internalEndPoint.Port);
+            config.Set("InternalAddress", _internalEndPoint.Address.ToString());
+            config.Set("InternalPort", _internalEndPoint.Port);
 
-            config.Set("ExternalHostName", m_externalHostName);
+            config.Set("ExternalHostName", _externalHostName);
 
-            if (m_nonphysPrimMin > 0)
-                config.Set("NonphysicalPrimMax", m_nonphysPrimMin);
+            if (_nonphysPrimMin > 0)
+                config.Set("NonphysicalPrimMax", _nonphysPrimMin);
 
-            if (m_nonphysPrimMax > 0)
-                config.Set("NonphysicalPrimMax", m_nonphysPrimMax);
+            if (_nonphysPrimMax > 0)
+                config.Set("NonphysicalPrimMax", _nonphysPrimMax);
 
-            if (m_physPrimMin > 0)
-                config.Set("PhysicalPrimMax", m_physPrimMin);
+            if (_physPrimMin > 0)
+                config.Set("PhysicalPrimMax", _physPrimMin);
 
-            if (m_physPrimMax > 0)
-                config.Set("PhysicalPrimMax", m_physPrimMax);
+            if (_physPrimMax > 0)
+                config.Set("PhysicalPrimMax", _physPrimMax);
 
-            config.Set("ClampPrimSize", m_clampPrimSize.ToString());
+            config.Set("ClampPrimSize", _clampPrimSize.ToString());
 
-            if (m_objectCapacity > 0)
-                config.Set("MaxPrims", m_objectCapacity);
+            if (_objectCapacity > 0)
+                config.Set("MaxPrims", _objectCapacity);
 
-            if (m_maxPrimsPerUser > -1)
-                config.Set("MaxPrimsPerUser", m_maxPrimsPerUser);
+            if (_maxPrimsPerUser > -1)
+                config.Set("MaxPrimsPerUser", _maxPrimsPerUser);
 
-            if (m_linksetCapacity > 0)
-                config.Set("LinksetPrims", m_linksetCapacity);
+            if (_linksetCapacity > 0)
+                config.Set("LinksetPrims", _linksetCapacity);
 
             if (AgentCapacity > 0)
                 config.Set("MaxAgents", AgentCapacity);
@@ -833,8 +797,8 @@ namespace OpenSim.Framework
             if (!string.IsNullOrEmpty(RegionType))
                 config.Set("RegionType", RegionType);
 
-            if (m_maptileStaticUUID != UUID.Zero)
-                config.Set("MaptileStaticUUID", m_maptileStaticUUID.ToString());
+            if (_maptileStaticUUID != UUID.Zero)
+                config.Set("MaptileStaticUUID", _maptileStaticUUID.ToString());
 
             if (MaptileStaticFile != null && !string.IsNullOrEmpty(MaptileStaticFile))
                 config.Set("MaptileStaticFile", MaptileStaticFile);
@@ -865,60 +829,60 @@ namespace OpenSim.Framework
 
         public void loadConfigurationOptionsFromMe()
         {
-            configMember.addConfigurationOption("sim_UUID", ConfigurationOption.ConfigurationTypes.TYPE_UUID_NULL_FREE,
+            configMember.addConfigurationOption("si_UUID", ConfigurationOption.ConfigurationTypes.TYPE_UUID_NULL_FREE,
                                                 "UUID of Region (Default is recommended, random UUID)",
                                                 RegionID.ToString(), true);
-            configMember.addConfigurationOption("sim_name", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY,
+            configMember.addConfigurationOption("si_name", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY,
                                                 "Region Name", RegionName, true);
 
-            configMember.addConfigurationOption("sim_location_x", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_location_x", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Grid Location (X Axis)", RegionLocX.ToString(), true);
-            configMember.addConfigurationOption("sim_location_y", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_location_y", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Grid Location (Y Axis)", RegionLocY.ToString(), true);
-            configMember.addConfigurationOption("sim_size_x", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_size_x", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Size of region in X dimension", RegionSizeX.ToString(), true);
-            configMember.addConfigurationOption("sim_size_y", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_size_y", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Size of region in Y dimension", RegionSizeY.ToString(), true);
-            configMember.addConfigurationOption("sim_size_z", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_size_z", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Size of region in Z dimension", RegionSizeZ.ToString(), true);
 
-            //m_configMember.addConfigurationOption("datastore", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY, "Filename for local storage", "OpenSim.db", false);
+            //_configMember.addConfigurationOption("datastore", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY, "Filename for local storage", "OpenSim.db", false);
             configMember.addConfigurationOption("internal_ip_address",
                                                 ConfigurationOption.ConfigurationTypes.TYPE_IP_ADDRESS,
                                                 "Internal IP Address for incoming UDP client connections",
-                                                m_internalEndPoint.Address.ToString(),
+                                                _internalEndPoint.Address.ToString(),
                                                 true);
             configMember.addConfigurationOption("internal_ip_port", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
                                                 "Internal IP Port for incoming UDP client connections",
-                                                m_internalEndPoint.Port.ToString(), true);
+                                                _internalEndPoint.Port.ToString(), true);
             configMember.addConfigurationOption("external_host_name",
                                                 ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY,
-                                                "External Host Name", m_externalHostName, true);
+                                                "External Host Name", _externalHostName, true);
             configMember.addConfigurationOption("lastmap_uuid", ConfigurationOption.ConfigurationTypes.TYPE_UUID,
                                                 "Last Map UUID", lastMapUUID.ToString(), true);
             configMember.addConfigurationOption("lastmap_refresh", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY,
                                                 "Last Map Refresh", Util.UnixTimeSinceEpoch().ToString(), true);
 
-            configMember.addConfigurationOption("nonphysical_prim_min", ConfigurationOption.ConfigurationTypes.TYPE_FLOAT,
-                                                "Minimum size for nonphysical prims", m_nonphysPrimMin.ToString(), true);
+            configMember.addConfigurationOption("nonphysical_pri_min", ConfigurationOption.ConfigurationTypes.TYPE_FLOAT,
+                                                "Minimum size for nonphysical prims", _nonphysPrimMin.ToString(), true);
 
-            configMember.addConfigurationOption("nonphysical_prim_max", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
-                                                "Maximum size for nonphysical prims", m_nonphysPrimMax.ToString(), true);
+            configMember.addConfigurationOption("nonphysical_pri_max", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
+                                                "Maximum size for nonphysical prims", _nonphysPrimMax.ToString(), true);
 
-            configMember.addConfigurationOption("physical_prim_min", ConfigurationOption.ConfigurationTypes.TYPE_FLOAT,
-                                                "Minimum size for nonphysical prims", m_physPrimMin.ToString(), true);
+            configMember.addConfigurationOption("physical_pri_min", ConfigurationOption.ConfigurationTypes.TYPE_FLOAT,
+                                                "Minimum size for nonphysical prims", _physPrimMin.ToString(), true);
 
-            configMember.addConfigurationOption("physical_prim_max", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
-                                                "Maximum size for physical prims", m_physPrimMax.ToString(), true);
+            configMember.addConfigurationOption("physical_pri_max", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
+                                                "Maximum size for physical prims", _physPrimMax.ToString(), true);
 
-            configMember.addConfigurationOption("clamp_prim_size", ConfigurationOption.ConfigurationTypes.TYPE_BOOLEAN,
-                                                "Clamp prims to max size", m_clampPrimSize.ToString(), true);
+            configMember.addConfigurationOption("clamp_pri_size", ConfigurationOption.ConfigurationTypes.TYPE_BOOLEAN,
+                                                "Clamp prims to max size", _clampPrimSize.ToString(), true);
 
             configMember.addConfigurationOption("object_capacity", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
-                                                "Max objects this sim will hold", m_objectCapacity.ToString(), true);
+                                                "Max objects this sim will hold", _objectCapacity.ToString(), true);
 
             configMember.addConfigurationOption("linkset_capacity", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
-                                                "Max prims an object will hold", m_linksetCapacity.ToString(), true);
+                                                "Max prims an object will hold", _linksetCapacity.ToString(), true);
 
             configMember.addConfigurationOption("agent_capacity", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
                                                 "Max avatars this sim will hold",AgentCapacity.ToString(), true);
@@ -930,29 +894,29 @@ namespace OpenSim.Framework
                                                 "Free form string describing the type of region", string.Empty, true);
 
             configMember.addConfigurationOption("region_static_maptile", ConfigurationOption.ConfigurationTypes.TYPE_UUID,
-                                                "UUID of a texture to use as the map for this region", m_maptileStaticUUID.ToString(), true);
+                                                "UUID of a texture to use as the map for this region", _maptileStaticUUID.ToString(), true);
         }
 
         public void loadConfigurationOptions()
         {
-            configMember.addConfigurationOption("sim_UUID", ConfigurationOption.ConfigurationTypes.TYPE_UUID,
+            configMember.addConfigurationOption("si_UUID", ConfigurationOption.ConfigurationTypes.TYPE_UUID,
                                                 "UUID of Region (Default is recommended, random UUID)",
                                                 UUID.Random().ToString(), true);
-            configMember.addConfigurationOption("sim_name", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY,
+            configMember.addConfigurationOption("si_name", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY,
                                                 "Region Name", "OpenSim Test", false);
 
-            configMember.addConfigurationOption("sim_location_x", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_location_x", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Grid Location (X Axis)", "1000", false);
-            configMember.addConfigurationOption("sim_location_y", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_location_y", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Grid Location (Y Axis)", "1000", false);
-            configMember.addConfigurationOption("sim_size_x", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_size_x", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Size of region in X dimension", Constants.RegionSize.ToString(), false);
-            configMember.addConfigurationOption("sim_size_y", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_size_y", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Size of region in Y dimension", Constants.RegionSize.ToString(), false);
-            configMember.addConfigurationOption("sim_size_z", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
+            configMember.addConfigurationOption("si_size_z", ConfigurationOption.ConfigurationTypes.TYPE_UINT32,
                                                 "Size of region in Z dimension", Constants.RegionHeight.ToString(), false);
 
-            //m_configMember.addConfigurationOption("datastore", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY, "Filename for local storage", "OpenSim.db", false);
+            //_configMember.addConfigurationOption("datastore", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY, "Filename for local storage", "OpenSim.db", false);
             configMember.addConfigurationOption("internal_ip_address",
                                                 ConfigurationOption.ConfigurationTypes.TYPE_IP_ADDRESS,
                                                 "Internal IP Address for incoming UDP client connections", "0.0.0.0",
@@ -969,13 +933,13 @@ namespace OpenSim.Framework
             configMember.addConfigurationOption("lastmap_refresh", ConfigurationOption.ConfigurationTypes.TYPE_STRING_NOT_EMPTY,
                                                 "Last Map Refresh", Util.UnixTimeSinceEpoch().ToString(), true);
 
-            configMember.addConfigurationOption("nonphysical_prim_max", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
+            configMember.addConfigurationOption("nonphysical_pri_max", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
                                                 "Maximum size for nonphysical prims", "0", true);
 
-            configMember.addConfigurationOption("physical_prim_max", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
+            configMember.addConfigurationOption("physical_pri_max", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
                                                 "Maximum size for physical prims", "0", true);
 
-            configMember.addConfigurationOption("clamp_prim_size", ConfigurationOption.ConfigurationTypes.TYPE_BOOLEAN,
+            configMember.addConfigurationOption("clamp_pri_size", ConfigurationOption.ConfigurationTypes.TYPE_BOOLEAN,
                                                 "Clamp prims to max size", "false", true);
 
             configMember.addConfigurationOption("object_capacity", ConfigurationOption.ConfigurationTypes.TYPE_INT32,
@@ -998,26 +962,26 @@ namespace OpenSim.Framework
         {
             switch (configuration_key)
             {
-                case "sim_UUID":
+                case "si_UUID":
                     RegionID = (UUID) configuration_result;
                     originRegionID = (UUID) configuration_result;
                     break;
-                case "sim_name":
+                case "si_name":
                     RegionName = (string) configuration_result;
                     break;
-                case "sim_location_x":
+                case "si_location_x":
                     RegionLocX = (uint) configuration_result;
                     break;
-                case "sim_location_y":
+                case "si_location_y":
                     RegionLocY = (uint) configuration_result;
                     break;
-                case "sim_size_x":
+                case "si_size_x":
                     RegionSizeX = (uint) configuration_result;
                     break;
-                case "sim_size_y":
+                case "si_size_y":
                     RegionSizeY = (uint) configuration_result;
                     break;
-                case "sim_size_z":
+                case "si_size_z":
                     RegionSizeZ = (uint) configuration_result;
                     break;
                 case "datastore":
@@ -1025,19 +989,19 @@ namespace OpenSim.Framework
                     break;
                 case "internal_ip_address":
                     IPAddress address = (IPAddress) configuration_result;
-                    m_internalEndPoint = new IPEndPoint(address, 0);
+                    _internalEndPoint = new IPEndPoint(address, 0);
                     break;
                 case "internal_ip_port":
-                    m_internalEndPoint.Port = (int) configuration_result;
+                    _internalEndPoint.Port = (int) configuration_result;
                     break;
                 case "external_host_name":
                     if ((string) configuration_result != "SYSTEMIP")
                     {
-                        m_externalHostName = (string) configuration_result;
+                        _externalHostName = (string) configuration_result;
                     }
                     else
                     {
-                        m_externalHostName = Util.GetLocalHost().ToString();
+                        _externalHostName = Util.GetLocalHost().ToString();
                     }
                     break;
                 case "lastmap_uuid":
@@ -1046,20 +1010,20 @@ namespace OpenSim.Framework
                 case "lastmap_refresh":
                     lastMapRefresh = (string)configuration_result;
                     break;
-                case "nonphysical_prim_max":
-                    m_nonphysPrimMax = (int)configuration_result;
+                case "nonphysical_pri_max":
+                    _nonphysPrimMax = (int)configuration_result;
                     break;
-                case "physical_prim_max":
-                    m_physPrimMax = (int)configuration_result;
+                case "physical_pri_max":
+                    _physPrimMax = (int)configuration_result;
                     break;
-                case "clamp_prim_size":
-                    m_clampPrimSize = (bool)configuration_result;
+                case "clamp_pri_size":
+                    _clampPrimSize = (bool)configuration_result;
                     break;
                 case "object_capacity":
-                    m_objectCapacity = (int)configuration_result;
+                    _objectCapacity = (int)configuration_result;
                     break;
                 case "linkset_capacity":
-                    m_linksetCapacity = (int)configuration_result;
+                    _linksetCapacity = (int)configuration_result;
                     break;
                 case "agent_capacity":
                     AgentCapacity = (int)configuration_result;
@@ -1068,10 +1032,10 @@ namespace OpenSim.Framework
                     ScopeID = (UUID)configuration_result;
                     break;
                 case "region_type":
-                    m_regionType = (string)configuration_result;
+                    _regionType = (string)configuration_result;
                     break;
                 case "region_static_maptile":
-                    m_maptileStaticUUID = (UUID)configuration_result;
+                    _maptileStaticUUID = (UUID)configuration_result;
                     break;
             }
 
@@ -1123,7 +1087,7 @@ namespace OpenSim.Framework
             if (args["external_host_name"] != null)
                 ExternalHostName = args["external_host_name"].AsString();
             if (args["http_port"] != null)
-                uint.TryParse(args["http_port"].AsString(), out m_httpPort);
+                uint.TryParse(args["http_port"].AsString(), out _httpPort);
             if (args["server_uri"] != null)
                 ServerURI = args["server_uri"].AsString();
             if (args["region_xloc"] != null)
@@ -1159,11 +1123,11 @@ namespace OpenSim.Framework
             if (args["remoting_address"] != null)
                 RemotingAddress = args["remoting_address"].AsString();
             if (args["remoting_port"] != null)
-                uint.TryParse(args["remoting_port"].AsString(), out m_remotingPort);
+                uint.TryParse(args["remoting_port"].AsString(), out _remotingPort);
             if (args["proxy_url"] != null)
                 proxyUrl = args["proxy_url"].AsString();
             if (args["region_type"] != null)
-                m_regionType = args["region_type"].AsString();
+                _regionType = args["region_type"].AsString();
         }
 
         public static RegionInfo Create(UUID regionID, string regionName, uint regX, uint regY, string externalHostName, uint httpPort, uint simPort, uint remotingPort, string serverURI)
@@ -1184,7 +1148,7 @@ namespace OpenSim.Framework
 
         public int getInternalEndPointPort()
         {
-            return m_internalEndPoint.Port;
+            return _internalEndPoint.Port;
         }
 
         public Dictionary<string, object> ToKeyValuePairs()

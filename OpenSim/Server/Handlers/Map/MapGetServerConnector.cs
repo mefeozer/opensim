@@ -42,17 +42,17 @@ namespace OpenSim.Server.Handlers.MapImage
 {
     public class MapGetServiceConnector : ServiceConnector
     {
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IMapImageService m_MapService;
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly IMapImageService _MapService;
 
-        private readonly string m_ConfigName = "MapImageService";
+        private readonly string _ConfigName = "MapImageService";
 
         public MapGetServiceConnector(IConfigSource config, IHttpServer server, string configName) :
             base(config, server, configName)
         {
-            IConfig serverConfig = config.Configs[m_ConfigName];
+            IConfig serverConfig = config.Configs[_ConfigName];
             if (serverConfig == null)
-                throw new Exception(string.Format("No section {0} in config file", m_ConfigName));
+                throw new Exception(string.Format("No section {0} in config file", _ConfigName));
 
             string gridService = serverConfig.GetString("LocalServiceModule", string.Empty);
 
@@ -60,9 +60,9 @@ namespace OpenSim.Server.Handlers.MapImage
                 throw new Exception("No LocalServiceModule in config file");
 
             object[] args = new object[] { config };
-            m_MapService = ServerUtils.LoadPlugin<IMapImageService>(gridService, args);
+            _MapService = ServerUtils.LoadPlugin<IMapImageService>(gridService, args);
 
-            server.AddStreamHandler(new MapServerGetHandler(m_MapService));
+            server.AddStreamHandler(new MapServerGetHandler(_MapService));
         }
     }
 
@@ -70,14 +70,14 @@ namespace OpenSim.Server.Handlers.MapImage
     {
         public static readonly object ev = new object();
 
-        //private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IMapImageService m_MapService;
+        private readonly IMapImageService _MapService;
 
         public MapServerGetHandler(IMapImageService service) :
                 base("GET", "/map")
         {
-            m_MapService = service;
+            _MapService = service;
         }
 
         protected override byte[] ProcessRequest(string path, Stream request, IOSHttpRequest httpRequest, IOSHttpResponse httpResponse)
@@ -120,7 +120,7 @@ namespace OpenSim.Server.Handlers.MapImage
                 return new byte[0];
             }
 
-            result = m_MapService.GetMapTile(path, scopeID, out format);
+            result = _MapService.GetMapTile(path, scopeID, out format);
             if (result.Length > 0)
             {
                 httpResponse.StatusCode = (int)HttpStatusCode.OK;
