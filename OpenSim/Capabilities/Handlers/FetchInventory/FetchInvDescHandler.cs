@@ -211,7 +211,7 @@ namespace OpenSim.Capabilities.Handlers
                             LLSDxmlEncode2.AddEle_parent_id(invFolder.ParentID, lastresponse);
                             LLSDxmlEncode2.AddEle_name(invFolder.Name, lastresponse);
                             LLSDxmlEncode2.AddElem("type", invFolder.Type, lastresponse);
-                            LLSDxmlEncode2.AddElem("preferred_type", (int)-1, lastresponse);
+                            LLSDxmlEncode2.AddElem("preferred_type", -1, lastresponse);
                             LLSDxmlEncode2.AddElem("version", invFolder.Version, lastresponse);
 
                             LLSDxmlEncode2.AddEndMap(lastresponse);

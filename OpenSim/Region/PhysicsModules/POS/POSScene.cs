@@ -155,7 +155,7 @@ namespace OpenSim.Region.PhysicsModule.POS
             return prim;
         }
 
-        private bool isColliding(POSCharacter c, POSPrim p)
+        private bool isColliding(PhysicsActor c, POSPrim p)
         {
             Vector3 rotatedPos = new Vector3(c.Position.X - p.Position.X, c.Position.Y - p.Position.Y,
                                              c.Position.Z - p.Position.Z) * Quaternion.Inverse(p.Orientation);
@@ -166,7 +166,7 @@ namespace OpenSim.Region.PhysicsModule.POS
                    Math.Abs(rotatedPos.Z) < p.Size.Z*0.5 + Math.Abs(avatarSize.Z);
         }
 
-        private bool isCollidingWithPrim(POSCharacter c)
+        private bool isCollidingWithPrim(PhysicsActor c)
         {
             foreach (POSPrim p in _prims)
             {
@@ -185,12 +185,8 @@ namespace OpenSim.Region.PhysicsModule.POS
 
         public override float Simulate(float timeStep)
         {
-            float fps = 0;
-            for (int i = 0; i < _characters.Count; ++i)
+            foreach (var character in _characters)
             {
-                fps++;
-                POSCharacter character = _characters[i];
-
                 float oldposX = character.Position.X;
                 float oldposY = character.Position.Y;
                 float oldposZ = character.Position.Z;
@@ -280,15 +276,16 @@ namespace OpenSim.Region.PhysicsModule.POS
                 {
                     character._velocity.Z = 0;
                     character._target_velocity.Z = 0;
-                    ((PhysicsActor)character).IsColliding = true;
+                    character.IsColliding = true;
                     character.RequestPhysicsterseUpdate();
                 }
                 else
                 {
-                    ((PhysicsActor)character).IsColliding = false;
+                    character.IsColliding = false;
                     character._velocity.Z = (character.Position.Z - oldposZ)/timeStep;
                 }
             }
+
             return 1.0f;
         }
 

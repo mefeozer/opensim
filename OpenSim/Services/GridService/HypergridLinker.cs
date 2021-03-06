@@ -348,7 +348,7 @@ namespace OpenSim.Services.GridService
 
             try
             {
-                regInfo.InternalEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), (int)0);
+                regInfo.InternalEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 0);
             }
             catch (Exception e)
             {

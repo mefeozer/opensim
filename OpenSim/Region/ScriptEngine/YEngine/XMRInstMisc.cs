@@ -384,7 +384,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             if(element is LSL_Integer)
             {
-                return (int)(LSL_Integer)element;
+                return (LSL_Integer)element;
             }
             return (int)element;
         }
@@ -396,7 +396,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             if(element is LSL_String)
             {
-                return (string)(LSL_String)element;
+                return (LSL_String)element;
             }
             return (string)element;
         }

@@ -46,7 +46,7 @@ namespace OpenSim.ConsoleClient
             request.ContentType = "application/x-www-form-urlencoded";
 
             byte[] buffer = Encoding.ASCII.GetBytes(data);
-            int length = (int) buffer.Length;
+            int length = buffer.Length;
             request.ContentLength = length;
 
             request.BeginGetRequestStream(delegate(IAsyncResult res)

@@ -573,7 +573,7 @@ namespace OpenSim.Region.CoreModules.Scripting.VectorRender
                         {
                             if (image != null)
                             {
-                                graph.DrawImage(image, (float)startPoint.X, (float)startPoint.Y, x, y);
+                                graph.DrawImage(image, startPoint.X, startPoint.Y, x, y);
                             }
                             else
                             {

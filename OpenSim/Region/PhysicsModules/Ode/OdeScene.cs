@@ -1650,7 +1650,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                         if (index < TerrainHeightFieldHeights[heightFieldGeom].Length)
                         {
                             //_log.DebugFormat("x{0} y{1} = {2}", x, y, (float)TerrainHeightFieldHeights[heightFieldGeom][index]);
-                            return (float)TerrainHeightFieldHeights[heightFieldGeom][index];
+                            return TerrainHeightFieldHeights[heightFieldGeom][index];
                         }
 
                         else

@@ -558,7 +558,7 @@ namespace OpenSim.Region.CoreModules.World.Archiver
         {
             Vector2 size;
 
-            size = new Vector2((float)scene.RegionInfo.RegionSizeX, (float)scene.RegionInfo.RegionSizeY);
+            size = new Vector2(scene.RegionInfo.RegionSizeX, scene.RegionInfo.RegionSizeY);
 
             xtw.WriteElementString("size_in_meters", string.Format("{0},{1}", size.X, size.Y));
         }

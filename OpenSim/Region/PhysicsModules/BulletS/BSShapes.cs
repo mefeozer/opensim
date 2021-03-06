@@ -745,7 +745,7 @@ public class BSShapeHull : BSShape
             }
             float[] convHulls = new float[totalVertices];
 
-            convHulls[0] = (float)hullCount;
+            convHulls[0] = hullCount;
             int jj = 1;
             int hullIndex = 0;
             foreach (List<OMV.Vector3> hullVerts in allHulls)
@@ -896,7 +896,7 @@ public class BSShapeHull : BSShape
             }
             float[] convHulls = new float[totalVertices];
 
-            convHulls[0] = (float)hullCount;
+            convHulls[0] = hullCount;
             int jj = 1;
             foreach (ConvexResult cr in _hulls)
             {

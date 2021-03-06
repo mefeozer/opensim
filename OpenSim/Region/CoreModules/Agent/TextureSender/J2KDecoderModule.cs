@@ -305,10 +305,10 @@ namespace OpenSim.Region.CoreModules.Agent.TextureSender
             // with extra padding thrown in for good measure. This is a worst case fallback plan
             // and may not gracefully handle all real world data
             layers[0].Start = 0;
-            layers[1].Start = (int)((float)j2kLength * 0.02f);
-            layers[2].Start = (int)((float)j2kLength * 0.05f);
-            layers[3].Start = (int)((float)j2kLength * 0.20f);
-            layers[4].Start = (int)((float)j2kLength * 0.50f);
+            layers[1].Start = (int)(j2kLength * 0.02f);
+            layers[2].Start = (int)(j2kLength * 0.05f);
+            layers[3].Start = (int)(j2kLength * 0.20f);
+            layers[4].Start = (int)(j2kLength * 0.50f);
 
             layers[0].End = layers[1].Start - 1;
             layers[1].End = layers[2].Start - 1;

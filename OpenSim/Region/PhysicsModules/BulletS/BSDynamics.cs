@@ -54,7 +54,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         public Vehicle Type { get; set; }
 
         // private Quaternion _referenceFrame = Quaternion.Identity;   // Axis modifier
-        private VehicleFlag _flags = (VehicleFlag) 0;                  // Boolean settings:
+        private VehicleFlag _flags = 0;                  // Boolean settings:
                                                                         // HOVER_TERRAIN_ONLY
                                                                         // HOVER_GLOBAL_HEIGHT
                                                                         // NO_DEFLECTION_UP
@@ -314,7 +314,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             VDetailLog("{0},ProcessVehicleFlags,param={1},remove={2}", ControllingPrim.LocalID, pParam, remove);
             VehicleFlag parm = (VehicleFlag)pParam;
             if (pParam == -1)
-                _flags = (VehicleFlag)0;
+                _flags = 0;
             else
             {
                 if (remove)
@@ -361,7 +361,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     _bankingMix = 1;
 
                     _referenceFrame = Quaternion.Identity;
-                    _flags = (VehicleFlag)0;
+                    _flags = 0;
 
                     break;
 
@@ -758,10 +758,10 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 }
 
                 if ((_knownChanged & _knownChangedForce) != 0)
-                    ControllingPrim.AddForce(false /* inTaintTime */, (Vector3)_knownForce);
+                    ControllingPrim.AddForce(false /* inTaintTime */, _knownForce);
 
                 if ((_knownChanged & _knownChangedForceImpulse) != 0)
-                    ControllingPrim.AddForceImpulse((Vector3)_knownForceImpulse, false /*pushforce*/, true /*inTaintTime*/);
+                    ControllingPrim.AddForceImpulse(_knownForceImpulse, false /*pushforce*/, true /*inTaintTime*/);
 
                 if ((_knownChanged & _knownChangedRotationalVelocity) != 0)
                 {
@@ -770,11 +770,11 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                 }
 
                 if ((_knownChanged & _knownChangedRotationalImpulse) != 0)
-                    ControllingPrim.ApplyTorqueImpulse((Vector3)_knownRotationalImpulse, true /*inTaintTime*/);
+                    ControllingPrim.ApplyTorqueImpulse(_knownRotationalImpulse, true /*inTaintTime*/);
 
                 if ((_knownChanged & _knownChangedRotationalForce) != 0)
                 {
-                    ControllingPrim.AddAngularForce(true /* inTaintTime */, (Vector3)_knownRotationalForce);
+                    ControllingPrim.AddAngularForce(true /* inTaintTime */, _knownRotationalForce);
                 }
 
                 // If we set one of the values (ie, the physics engine didn't do it) we must force
@@ -900,7 +900,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     _knownRotationalVelocity = ControllingPrim.ForceRotationalVelocity;
                     _knownHas |= _knownChangedRotationalVelocity;
                 }
-                return (Vector3)_knownRotationalVelocity;
+                return _knownRotationalVelocity;
             }
             set
             {
@@ -1207,17 +1207,17 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             Vector3 posChange = pos - _lastPositionVector;
             if (_BlockingEndPoint != Vector3.Zero)
             {
-                if (pos.X >= _BlockingEndPoint.X - (float)1)
+                if (pos.X >= _BlockingEndPoint.X - 1)
                 {
                     pos.X -= posChange.X + 1;
                     changed = true;
                 }
-                if (pos.Y >= _BlockingEndPoint.Y - (float)1)
+                if (pos.Y >= _BlockingEndPoint.Y - 1)
                 {
                     pos.Y -= posChange.Y + 1;
                     changed = true;
                 }
-                if (pos.Z >= _BlockingEndPoint.Z - (float)1)
+                if (pos.Z >= _BlockingEndPoint.Z - 1)
                 {
                     pos.Z -= posChange.Z + 1;
                     changed = true;
@@ -1477,7 +1477,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                             // Create the axis that is perpendicular to the up vector and the rotated up vector.
                             Vector3 differenceAxisW = Vector3.Cross(Vector3.UnitZ * justZOrientation, Vector3.UnitZ * VehicleFrameOrientation);
                             // Compute the angle between those to vectors.
-                            double differenceAngle = Math.Acos((double)Vector3.Dot(Vector3.UnitZ, Vector3.Normalize(Vector3.UnitZ * VehicleFrameOrientation)));
+                            double differenceAngle = Math.Acos(Vector3.Dot(Vector3.UnitZ, Vector3.Normalize(Vector3.UnitZ * VehicleFrameOrientation)));
                             // 'differenceAngle' is the angle to rotate and 'differenceAxis' is the plane to rotate in to get the vehicle vertical
 
                             // Reduce the change by the time period it is to change in. Timestep is handled when velocity is applied.

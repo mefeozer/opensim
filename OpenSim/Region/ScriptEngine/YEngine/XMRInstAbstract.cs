@@ -1496,13 +1496,13 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(graph is LSL_Float)
             {
                 mow.Write((byte)Ser.LSLFLOAT);
-                mow.Write((double)((LSL_Float)graph).value);
+                mow.Write(((LSL_Float)graph).value);
                 return;
             }
             if(graph is LSL_Integer)
             {
                 mow.Write((byte)Ser.LSLINT);
-                mow.Write((int)((LSL_Integer)graph).value);
+                mow.Write(((LSL_Integer)graph).value);
                 return;
             }
             if(graph is LSL_Key)
@@ -1515,10 +1515,10 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(graph is LSL_Rotation)
             {
                 mow.Write((byte)Ser.LSLROT);
-                mow.Write((double)((LSL_Rotation)graph).x);
-                mow.Write((double)((LSL_Rotation)graph).y);
-                mow.Write((double)((LSL_Rotation)graph).z);
-                mow.Write((double)((LSL_Rotation)graph).s);
+                mow.Write(((LSL_Rotation)graph).x);
+                mow.Write(((LSL_Rotation)graph).y);
+                mow.Write(((LSL_Rotation)graph).z);
+                mow.Write(((LSL_Rotation)graph).s);
                 return;
             }
             if(graph is LSL_String)
@@ -1531,9 +1531,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(graph is LSL_Vector)
             {
                 mow.Write((byte)Ser.LSLVEC);
-                mow.Write((double)((LSL_Vector)graph).x);
-                mow.Write((double)((LSL_Vector)graph).y);
-                mow.Write((double)((LSL_Vector)graph).z);
+                mow.Write(((LSL_Vector)graph).x);
+                mow.Write(((LSL_Vector)graph).y);
+                mow.Write(((LSL_Vector)graph).z);
                 return;
             }
             if(graph is bool)
@@ -1632,7 +1632,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 Array array = (Array)graph;
                 mow.Write((byte)Ser.SYSARRAY);
                 mow.Write(SysType2String(array.GetType().GetElementType()));
-                mow.Write((int)array.Length);
+                mow.Write(array.Length);
                 for(int i = 0; i < array.Length; i++)
                     this.SendObjValue(array.GetValue(i));
             }
@@ -1677,7 +1677,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 bformatter.Serialize(memoryStream, graph);
                 byte[] rawBytes = memoryStream.ToArray();
                 mow.Write((byte)Ser.THROWNEX);
-                mow.Write((int)rawBytes.Length);
+                mow.Write(rawBytes.Length);
                 mow.Write(rawBytes);
                 SendObjValue(((ScriptThrownException)graph).thrown);
             }
@@ -1689,7 +1689,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 bformatter.Serialize(memoryStream, graph);
                 byte[] rawBytes = memoryStream.ToArray();
                 mow.Write((byte)Ser.SYSERIAL);
-                mow.Write((int)rawBytes.Length);
+                mow.Write(rawBytes.Length);
                 mow.Write(rawBytes);
             }
         }

@@ -88,7 +88,7 @@ namespace OpenSim.Server.Handlers.Asset
                     if (asset != null)
                     {
                         if (_allowedTypes == AllowedRemoteDeleteTypes.All
-                            || (int)(asset.Flags & AssetFlags.Maptile) != 0)
+                            || (asset.Flags & AssetFlags.Maptile) != 0)
                         {
                             result = _AssetService.Delete(assetID);
                         }
@@ -96,7 +96,7 @@ namespace OpenSim.Server.Handlers.Asset
                         {
                             _log.DebugFormat(
                                 "[ASSET SERVER DELETE HANDLER]: Request to delete asset {0}, but type is {1} and allowed remote delete types are {2}",
-                                assetID, (AssetFlags)asset.Flags, _allowedTypes);
+                                assetID, asset.Flags, _allowedTypes);
                         }
                     }
                 }

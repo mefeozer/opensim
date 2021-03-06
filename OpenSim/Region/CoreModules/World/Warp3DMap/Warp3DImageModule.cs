@@ -901,12 +901,12 @@ namespace OpenSim.Region.CoreModules.World.Warp3DMap
                 }
                 // Get the averages for each channel
                 const decimal OO_255 = 1m / 255m;
-                decimal totalPixels = (decimal)(width * height);
+                decimal totalPixels = width * height;
 
-                decimal rm = (decimal)r / totalPixels * OO_255;
-                decimal gm = (decimal)g / totalPixels * OO_255;
-                decimal bm = (decimal)b / totalPixels * OO_255;
-                decimal am = (decimal)a / totalPixels * OO_255;
+                decimal rm = r / totalPixels * OO_255;
+                decimal gm = g / totalPixels * OO_255;
+                decimal bm = b / totalPixels * OO_255;
+                decimal am = a / totalPixels * OO_255;
 
                 if (pixelBytes == 3)
                     am = 1m;

@@ -111,7 +111,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             LSL_Types.Quaternion expectedQuaternion = new LSL_Types.Quaternion(0.0, 0.70711, 0.0, 0.70711);
             LSL_Types.Quaternion stringQuaternion = (LSL_Types.Quaternion) quaternionString;
-            LSL_Types.Quaternion LSLStringQuaternion = (LSL_Types.Quaternion) quaternionLSLString;
+            LSL_Types.Quaternion LSLStringQuaternion = quaternionLSLString;
 
             Assert.AreEqual(expectedQuaternion, stringQuaternion);
             Assert.AreEqual(expectedQuaternion, LSLStringQuaternion);

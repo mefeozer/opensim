@@ -104,7 +104,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
 
                     terrainRenderer.Initialise(_scene, _config);
 
-                    mapbmp = new Bitmap((int)_scene.Heightmap.Width, (int)_scene.Heightmap.Height,
+                    mapbmp = new Bitmap(_scene.Heightmap.Width, _scene.Heightmap.Height,
                                             System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                     //long t = System.Environment.TickCount;
                     //for (int i = 0; i < 10; ++i) {

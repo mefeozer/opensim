@@ -294,7 +294,7 @@ namespace OpenSim.Framework
             sbyte assetType;
             if (!content2Asset.TryGetValue(contentType, out assetType))
                 assetType = (sbyte)AssetType.Unknown;
-            return (sbyte)assetType;
+            return assetType;
         }
 
         public static sbyte ContentTypeToSLInvType(string contentType)
@@ -302,7 +302,7 @@ namespace OpenSim.Framework
             sbyte invType;
             if (!content2Inventory.TryGetValue(contentType, out invType))
                 invType = (sbyte)InventoryType.Unknown;
-            return (sbyte)invType;
+            return invType;
         }
 
         public static string SLAssetTypeToExtension(int assetType)

@@ -97,7 +97,7 @@ namespace OpenSim.Data.SQLite
         {
             string sql = "select estate_settings."+ string.Join(",estate_settings.", FieldList)+" from estate_map left join estate_settings on estate_map.EstateID = estate_settings.EstateID where estate_settings.EstateID is not null and RegionID = :RegionID";
 
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue(":RegionID", regionID.ToString());
@@ -234,7 +234,7 @@ namespace OpenSim.Data.SQLite
             foreach (string f in fields)
                 terms.Add(f+" = :"+f);
 
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = "update estate_settings set " + string.Join(", ", terms.ToArray()) + " where EstateID = :EstateID"; ;
                 cmd.Parameters.AddWithValue(":EstateID", es.EstateID);
@@ -269,7 +269,7 @@ namespace OpenSim.Data.SQLite
 
             IDataReader r;
 
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = "select * from estateban where EstateID = :EstateID";
                 cmd.Parameters.AddWithValue(":EstateID", es.EstateID);
@@ -295,7 +295,7 @@ namespace OpenSim.Data.SQLite
 
         private void SaveBanList(EstateSettings es)
         {
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = "delete from estateban where EstateID = :EstateID";
                 cmd.Parameters.AddWithValue(":EstateID", es.EstateID.ToString());
@@ -321,7 +321,7 @@ namespace OpenSim.Data.SQLite
 
         void SaveUUIDList(uint EstateID, string table, UUID[] data)
         {
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = "delete from "+table+" where EstateID = :EstateID";
                 cmd.Parameters.AddWithValue(":EstateID", EstateID.ToString());
@@ -348,7 +348,7 @@ namespace OpenSim.Data.SQLite
             List<UUID> uuids = new List<UUID>();
             IDataReader r;
 
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = "select uuid from "+table+" where EstateID = :EstateID";
                 cmd.Parameters.AddWithValue(":EstateID", EstateID);
@@ -374,7 +374,7 @@ namespace OpenSim.Data.SQLite
         {
             string sql = "select estate_settings."+ string.Join(",estate_settings.", FieldList)+" from estate_settings where estate_settings.EstateID = :EstateID";
 
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue(":EstateID", estateID.ToString());
@@ -401,7 +401,7 @@ namespace OpenSim.Data.SQLite
             string sql = "select EstateID from estate_settings where estate_settings.EstateName = :EstateName";
             IDataReader r;
 
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue(":EstateName", search);
@@ -425,7 +425,7 @@ namespace OpenSim.Data.SQLite
             string sql = "select EstateID from estate_settings";
             IDataReader r;
 
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = sql;
 
@@ -448,7 +448,7 @@ namespace OpenSim.Data.SQLite
             string sql = "select EstateID from estate_settings where estate_settings.EstateOwner = :EstateOwner";
             IDataReader r;
 
-            using (SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+            using (SqliteCommand cmd = _connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue(":EstateOwner", ownerID);
@@ -470,7 +470,7 @@ namespace OpenSim.Data.SQLite
             using(SqliteTransaction transaction = _connection.BeginTransaction())
             {
                 // Delete any existing estate mapping for this region.
-                using(SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+                using(SqliteCommand cmd = _connection.CreateCommand())
                 {
                     cmd.CommandText = "delete from estate_map where RegionID = :RegionID";
                     cmd.Transaction = transaction;
@@ -479,7 +479,7 @@ namespace OpenSim.Data.SQLite
                     cmd.ExecuteNonQuery();
                 }
 
-                using(SqliteCommand cmd = (SqliteCommand)_connection.CreateCommand())
+                using(SqliteCommand cmd = _connection.CreateCommand())
                 {
                     cmd.CommandText = "insert into estate_map values (:RegionID, :EstateID)";
                     cmd.Transaction = transaction;

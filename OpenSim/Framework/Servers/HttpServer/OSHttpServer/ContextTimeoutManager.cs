@@ -60,8 +60,8 @@ namespace OSHttpServer
 
         static ContextTimeoutManager()
         {
-            TimeStampClockPeriod = 1.0 / (double)Stopwatch.Frequency;
-            TimeStampClockPeriodMS = 1e3 / (double)Stopwatch.Frequency;
+            TimeStampClockPeriod = 1.0 / Stopwatch.Frequency;
+            TimeStampClockPeriodMS = 1e3 / Stopwatch.Frequency;
         }
 
         public static void Start()

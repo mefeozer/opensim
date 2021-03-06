@@ -183,19 +183,19 @@ namespace OpenSim.Data.PGSQL
                     {
                         cmd.Parameters.Add(_database.CreateParameter("ClassifiedId", ad.ClassifiedId));
                         cmd.Parameters.Add(_database.CreateParameter("CreatorId", ad.CreatorId));
-                        cmd.Parameters.Add(_database.CreateParameter("CreatedDate", (int)ad.CreationDate));
-                        cmd.Parameters.Add(_database.CreateParameter("ExpirationDate", (int)ad.ExpirationDate));
+                        cmd.Parameters.Add(_database.CreateParameter("CreatedDate", ad.CreationDate));
+                        cmd.Parameters.Add(_database.CreateParameter("ExpirationDate", ad.ExpirationDate));
                         cmd.Parameters.Add(_database.CreateParameter("Category", ad.Category.ToString()));
                         cmd.Parameters.Add(_database.CreateParameter("Name", ad.Name.ToString()));
                         cmd.Parameters.Add(_database.CreateParameter("Description", ad.Description.ToString()));
                         cmd.Parameters.Add(_database.CreateParameter("ParcelId", ad.ParcelId));
-                        cmd.Parameters.Add(_database.CreateParameter("ParentEstate", (int)ad.ParentEstate));
+                        cmd.Parameters.Add(_database.CreateParameter("ParentEstate", ad.ParentEstate));
                         cmd.Parameters.Add(_database.CreateParameter("SnapshotId", ad.SnapshotId));
                         cmd.Parameters.Add(_database.CreateParameter("SimName", ad.SimName.ToString()));
                         cmd.Parameters.Add(_database.CreateParameter("GlobalPos", ad.GlobalPos.ToString()));
                         cmd.Parameters.Add(_database.CreateParameter("ParcelName", ad.ParcelName.ToString()));
-                        cmd.Parameters.Add(_database.CreateParameter("Flags", (int)Convert.ToInt32(ad.Flags)));
-                        cmd.Parameters.Add(_database.CreateParameter("ListingPrice", (int)Convert.ToInt32(ad.Price)));
+                        cmd.Parameters.Add(_database.CreateParameter("Flags", Convert.ToInt32(ad.Flags)));
+                        cmd.Parameters.Add(_database.CreateParameter("ListingPrice", Convert.ToInt32(ad.Price)));
 
                         cmd.ExecuteNonQuery();
                     }
@@ -376,7 +376,7 @@ namespace OpenSim.Data.PGSQL
                                 pick.CreatorId = DBGuid.FromDB(reader["creatoruuid"]);
                                 pick.ParcelId = DBGuid.FromDB(reader["parceluuid"]);
                                 pick.SnapshotId = DBGuid.FromDB(reader["snapshotuuid"]);
-                                pick.GlobalPos = (string)reader["posglobal"].ToString();
+                                pick.GlobalPos = reader["posglobal"].ToString();
                                 pick.TopPick = Convert.ToBoolean(reader["toppick"]);
                                 pick.Enabled = Convert.ToBoolean(reader["enabled"]);
                                 pick.Name = reader["name"].ToString();
@@ -603,7 +603,7 @@ namespace OpenSim.Data.PGSQL
                                 // _log.DebugFormat("[PROFILES_DATA]" +
                                 //                  ": Getting data for {0}.", props.UserId);
                                 reader.Read();
-                                props.WebUrl = (string)reader["profileURL"].ToString();
+                                props.WebUrl = reader["profileURL"].ToString();
                                 props.ImageId = DBGuid.FromDB(reader["profileImage"]);
                                 props.AboutText = (string)reader["profileAboutText"];
                                 props.FirstLifeImageId = DBGuid.FromDB(reader["profileFirstImage"]);

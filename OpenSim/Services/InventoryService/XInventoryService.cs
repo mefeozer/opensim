@@ -692,8 +692,8 @@ namespace OpenSim.Services.InventoryService
             XInventoryFolder newFolder = new XInventoryFolder
             {
                 parentFolderID = folder.ParentID,
-                type = (int)folder.Type,
-                version = (int)folder.Version,
+                type = folder.Type,
+                version = folder.Version,
                 folderName = folder.Name,
                 agentID = folder.Owner,
                 folderID = folder.ID
@@ -759,7 +759,7 @@ namespace OpenSim.Services.InventoryService
             else
                 newItem.groupOwned = 0;
             newItem.salePrice = item.SalePrice;
-            newItem.saleType = (int)item.SaleType;
+            newItem.saleType = item.SaleType;
             newItem.flags = (int)item.Flags;
             newItem.creationDate = item.CreationDate;
 

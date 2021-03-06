@@ -256,7 +256,7 @@ namespace OpenSim.Framework
             double[,] ret = new double[SizeX, SizeY];
             for (int xx = 0; xx < SizeX; xx++)
                 for (int yy = 0; yy < SizeY; yy++)
-                    ret[xx, yy] = (double)_heightmap[xx, yy];
+                    ret[xx, yy] = _heightmap[xx, yy];
 
             return ret;
         }
@@ -334,12 +334,12 @@ namespace OpenSim.Framework
 
         public float FromCompressedHeight(short pHeight)
         {
-            return (float)pHeight / CompressionFactor;
+            return pHeight / CompressionFactor;
         }
 
         public float FromCompressedHeight(ushort pHeight)
         {
-            return (float)pHeight / CompressionFactor;
+            return pHeight / CompressionFactor;
         }
 
         // To keep with the legacy theme, create an instance of this class based on the
@@ -493,8 +493,8 @@ namespace OpenSim.Framework
                 {
                     using (BinaryWriter bw = new BinaryWriter(str))
                     {
-                        bw.Write((int)SizeX);
-                        bw.Write((int)SizeY);
+                        bw.Write(SizeX);
+                        bw.Write(SizeY);
                         for (int yy = 0; yy < SizeY; yy++)
                             for (int xx = 0; xx < SizeX; xx++)
                             {
@@ -523,8 +523,8 @@ namespace OpenSim.Framework
                 {
                     using (BinaryWriter bw = new BinaryWriter(inp))
                     {
-                        bw.Write((int)SizeX);
-                        bw.Write((int)SizeY);
+                        bw.Write(SizeX);
+                        bw.Write(SizeY);
                         for (int yy = 0; yy < SizeY; yy++)
                             for (int xx = 0; xx < SizeX; xx++)
                             {

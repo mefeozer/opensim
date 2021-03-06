@@ -63,7 +63,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
             {
                 for (int j = 0; j < 256; j++)
                 {
-                    LookupHeightTable[i + j * 256] = new HeightmapLookupValue((ushort)(i + j * 256), (float)((double)i * ((double)j / 128.0d)));
+                    LookupHeightTable[i + j * 256] = new HeightmapLookupValue((ushort)(i + j * 256), (float)(i * (j / 128.0d)));
                 }
             }
             Array.Sort<HeightmapLookupValue>(LookupHeightTable);
@@ -151,7 +151,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
         {
             // The raw format doesn't contain any dimension information.
             // Guess the square dimensions by using the length of the raw file.
-            double dimension = Math.Sqrt((double)(s.Length / 13));
+            double dimension = Math.Sqrt(s.Length / 13);
             // Regions are always multiples of 256.
             int trimmedDimension = (int)dimension - (int)dimension % (int)Constants.RegionSize;
             if (trimmedDimension < Constants.RegionSize)

@@ -1457,7 +1457,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
                 {
                     ret *= (double)nums.Data[i];
                 }
-                return Math.Exp(Math.Log(ret) / (double)nums.Data.Length);
+                return Math.Exp(Math.Log(ret) / nums.Data.Length);
             }
 
             public double HarmonicMean()
@@ -1468,7 +1468,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
                 {
                     ret += 1.0 / (double)nums.Data[i];
                 }
-                return (double)nums.Data.Length / ret;
+                return nums.Data.Length / ret;
             }
 
             public double Variance()
@@ -1642,7 +1642,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public static bool operator true(key k)
             {
-                return (bool)k;
+                return k;
             }
 
             public static bool operator false(key k)
@@ -2181,7 +2181,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             static public implicit operator double(LSLInteger i)
             {
-                return (double)i.value;
+                return i.value;
             }
 
             public static bool operator true(LSLInteger i)
@@ -2215,7 +2215,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             public LSLFloat(int i)
             {
-                this.value = (double)i;
+                this.value = i;
             }
 
             public LSLFloat(double d)
@@ -2330,22 +2330,22 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             static public LSLFloat operator +(LSLFloat f, int i)
             {
-                return new LSLFloat(f.value + (double)i);
+                return new LSLFloat(f.value + i);
             }
 
             static public LSLFloat operator -(LSLFloat f, int i)
             {
-                return new LSLFloat(f.value - (double)i);
+                return new LSLFloat(f.value - i);
             }
 
             static public LSLFloat operator *(LSLFloat f, int i)
             {
-                return new LSLFloat(f.value * (double)i);
+                return new LSLFloat(f.value * i);
             }
 
             static public LSLFloat operator /(LSLFloat f, int i)
             {
-                double r = f.value / (double)i;
+                double r = f.value / i;
                 if (IsBadNumber(r))
                     throw new ScriptException("Float division by zero");
                 return new LSLFloat(r);
@@ -2353,7 +2353,7 @@ namespace OpenSim.Region.ScriptEngine.Shared
 
             static public LSLFloat operator %(LSLFloat f, int i)
             {
-                double r = f.value % (double)i;
+                double r = f.value % i;
                 if (IsBadNumber(r))
                     throw new ScriptException("Float division by zero");
                 return new LSLFloat(r);

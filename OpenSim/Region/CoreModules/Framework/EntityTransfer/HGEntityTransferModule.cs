@@ -801,7 +801,7 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 HttpPort = (uint)uri.Port,
                 ServerURI = wantedURI,  //uri.AbsoluteUri for some reason default ports are needed
                 RegionName = string.Empty,
-                InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), (int)0),
+                InternalEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse("0.0.0.0"), 0),
                 RegionFlags = OpenSim.Framework.RegionFlags.Hyperlink
             };
         }

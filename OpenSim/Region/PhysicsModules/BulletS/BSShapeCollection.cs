@@ -373,7 +373,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
         // If not a solid object, body is a GhostObject. Otherwise a RigidBody.
         if (!mustRebuild)
         {
-            CollisionObjectTypes bodyType = (CollisionObjectTypes)_physicsScene.PE.GetBodyType(prim.PhysBody);
+            CollisionObjectTypes bodyType = _physicsScene.PE.GetBodyType(prim.PhysBody);
             if (prim.IsSolid && bodyType != CollisionObjectTypes.CO_RIGID_BODY
                 || !prim.IsSolid && bodyType != CollisionObjectTypes.CO_GHOST_OBJECT)
             {

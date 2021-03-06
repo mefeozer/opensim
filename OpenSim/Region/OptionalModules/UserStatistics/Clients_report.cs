@@ -227,7 +227,7 @@ TD.align_top { vertical-align: top; }
                 output.Append(cvd.count);
                 output.Append("/");
                 if (totalclients > 0)
-                    output.Append(((float)cvd.count / (float)totalclients*100).ToString());
+                    output.Append((cvd.count / (float)totalclients*100).ToString());
                 else
                     output.Append(0);
 
@@ -271,7 +271,7 @@ TD.align_top { vertical-align: top; }
                     output.Append(cvd.count);
                     output.Append("/");
                     if ((int)regionTotals[cvd.region_id] > 0)
-                        output.Append(((float)cvd.count / (float)(int)regionTotals[cvd.region_id] * 100).ToString());
+                        output.Append((cvd.count / (float)(int)regionTotals[cvd.region_id] * 100).ToString());
                     else
                         output.Append(0);
 

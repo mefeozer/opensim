@@ -826,15 +826,15 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
             coords = new List<Coord>();
             faces = new List<Face>();
 
-            float pathShearX = primShape.PathShearX < 128 ? (float)primShape.PathShearX * 0.01f : (float)(primShape.PathShearX - 256) * 0.01f;
-            float pathShearY = primShape.PathShearY < 128 ? (float)primShape.PathShearY * 0.01f : (float)(primShape.PathShearY - 256) * 0.01f;
-            float pathBegin = (float)primShape.PathBegin * 2.0e-5f;
-            float pathEnd = 1.0f - (float)primShape.PathEnd * 2.0e-5f;
-            float pathScaleX = (float)(primShape.PathScaleX - 100) * 0.01f;
-            float pathScaleY = (float)(primShape.PathScaleY - 100) * 0.01f;
+            float pathShearX = primShape.PathShearX < 128 ? primShape.PathShearX * 0.01f : (primShape.PathShearX - 256) * 0.01f;
+            float pathShearY = primShape.PathShearY < 128 ? primShape.PathShearY * 0.01f : (primShape.PathShearY - 256) * 0.01f;
+            float pathBegin = primShape.PathBegin * 2.0e-5f;
+            float pathEnd = 1.0f - primShape.PathEnd * 2.0e-5f;
+            float pathScaleX = (primShape.PathScaleX - 100) * 0.01f;
+            float pathScaleY = (primShape.PathScaleY - 100) * 0.01f;
 
-            float profileBegin = (float)primShape.ProfileBegin * 2.0e-5f;
-            float profileEnd = 1.0f - (float)primShape.ProfileEnd * 2.0e-5f;
+            float profileBegin = primShape.ProfileBegin * 2.0e-5f;
+            float profileEnd = 1.0f - primShape.ProfileEnd * 2.0e-5f;
 
             if (profileBegin < 0.0f)
                 profileBegin = 0.0f;
@@ -847,7 +847,7 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
             if (profileBegin >= profileEnd)
                 profileBegin = profileEnd - 0.02f;
 
-            float profileHollow = (float)primShape.ProfileHollow * 2.0e-5f;
+            float profileHollow = primShape.ProfileHollow * 2.0e-5f;
             if(convex)
                 profileHollow = 0.0f;
             else if (profileHollow > 0.95f)
@@ -922,8 +922,8 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
             
             if (primShape.PathCurve == (byte)Extrusion.Straight || primShape.PathCurve == (byte) Extrusion.Flexible)
             {
-                primMesh.twistBegin = (float)(primShape.PathTwistBegin * (floatPI * 0.01f));
-                primMesh.twistEnd = (float)(primShape.PathTwist * (floatPI * 0.01f));
+                primMesh.twistBegin = primShape.PathTwistBegin * (floatPI * 0.01f);
+                primMesh.twistEnd = primShape.PathTwist * (floatPI * 0.01f);
                 primMesh.taperX = pathScaleX;
                 primMesh.taperY = pathScaleY;
 
@@ -947,8 +947,8 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
                 primMesh.radius = 0.01f * primShape.PathRadiusOffset;
                 primMesh.revolutions = 1.0f + 0.015f * primShape.PathRevolutions;
                 primMesh.skew = 0.01f * primShape.PathSkew;
-                primMesh.twistBegin = (float)(primShape.PathTwistBegin * (floatPI * 0.02f));
-                primMesh.twistEnd = (float)(primShape.PathTwistBegin * (floatPI * 0.02f));
+                primMesh.twistBegin = primShape.PathTwistBegin * (floatPI * 0.02f);
+                primMesh.twistEnd = primShape.PathTwistBegin * (floatPI * 0.02f);
                 primMesh.taperX = primShape.PathTaperX * 0.01f;
                 primMesh.taperY = primShape.PathTaperY * 0.01f;
 
@@ -1058,12 +1058,12 @@ namespace OpenSim.Region.PhysicsModule.ubODEMeshing
 
         private ulong mdjb2(ulong hash, byte c)
         {
-            return (hash << 5) + hash + (ulong)c;
+            return (hash << 5) + hash + c;
         }
 
         private ulong mdjb2(ulong hash, ushort c)
         {
-            hash = (hash << 5) + hash + (ulong)(byte)c;
+            hash = (hash << 5) + hash + (byte)c;
             return (hash << 5) + hash + (ulong)(c >> 8);
         }
 

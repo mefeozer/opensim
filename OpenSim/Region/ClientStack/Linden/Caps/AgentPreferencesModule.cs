@@ -172,7 +172,7 @@ namespace OpenSim.Region.ClientStack.LindenCaps
                 aps?.StoreAgentPreferences(data);
 
             IAvatarFactoryModule afm = _scenes[0].RequestModuleInterface<IAvatarFactoryModule>();
-            afm?.SetPreferencesHoverZ(agent, (float)data.HoverHeight);
+            afm?.SetPreferencesHoverZ(agent, data.HoverHeight);
 
             OSDMap resp = new OSDMap();
             OSDMap respAccessPrefs = new OSDMap();

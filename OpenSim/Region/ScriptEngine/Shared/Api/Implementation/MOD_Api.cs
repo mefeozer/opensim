@@ -372,7 +372,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
 
                 // Need to check for UUID since keys are often treated as strings
                 if (type == typeof(UUID))
-                    return new UUID((string)(LSL_String)lslparm);
+                    return new UUID((LSL_String)lslparm);
             }
 
             // ---------- Integer ----------

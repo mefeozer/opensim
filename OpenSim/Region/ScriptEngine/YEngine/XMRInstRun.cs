@@ -210,8 +210,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 {
                     int evc1 = (int)evc;
                     int evc2 = evc1 - 32;
-                    if((uint)evc1 < (uint)32 && ((_SleepEventMask1 >> evc1) & 1) != 0 ||
-                            (uint)evc2 < (uint)32 && ((_SleepEventMask2 >> evc2) & 1) != 0)
+                    if((uint)evc1 < 32 && ((_SleepEventMask1 >> evc1) & 1) != 0 ||
+                            (uint)evc2 < 32 && ((_SleepEventMask2 >> evc2) & 1) != 0)
                         wakeIt = true;
                 }
             }

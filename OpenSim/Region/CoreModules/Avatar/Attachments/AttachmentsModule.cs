@@ -593,7 +593,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments
             // if we didn't find an attach point, look for where it was last attached
             if (attachmentPt == 0)
             {
-                attachmentPt = (uint)group.RootPart.Shape.LastAttachPoint;
+                attachmentPt = group.RootPart.Shape.LastAttachPoint;
                 attachPos = group.RootPart.AttachedPos;
             }
 
@@ -1243,11 +1243,11 @@ namespace OpenSim.Region.CoreModules.Avatar.Attachments
 
             if (ItemIDNotZero)
                 objatt = _invAccessModule.RezObject(sp.ControllingClient,
-                    itemID, rezGroupID, Vector3.Zero, Vector3.Zero, UUID.Zero, (byte)1, true,
+                    itemID, rezGroupID, Vector3.Zero, Vector3.Zero, UUID.Zero, 1, true,
                     false, false, sp.UUID, true);
             else
                 objatt = _invAccessModule.RezObject(sp.ControllingClient,
-                    null, rezGroupID, assetID, Vector3.Zero, Vector3.Zero, UUID.Zero, (byte)1, true,
+                    null, rezGroupID, assetID, Vector3.Zero, Vector3.Zero, UUID.Zero, 1, true,
                     false, false, sp.UUID, true);
 
             if (objatt == null)

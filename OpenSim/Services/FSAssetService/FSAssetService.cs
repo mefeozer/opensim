@@ -223,10 +223,10 @@ namespace OpenSim.Services.FSAssetService
                 {
                     if (_readCount > 0)
                     {
-                        double avg = (double)_readTicks / (double)_readCount;
+                        double avg = _readTicks / (double)_readCount;
 //                        if (avg > 10000)
 //                            Environment.Exit(0);
-                        _log.InfoFormat("[FSASSETS]: Read stats: {0} files, {1} ticks, avg {2:F2}, missing {3}, FS {4}", _readCount, _readTicks, (double)_readTicks / (double)_readCount, _missingAssets, _missingAssetsFS);
+                        _log.InfoFormat("[FSASSETS]: Read stats: {0} files, {1} ticks, avg {2:F2}, missing {3}, FS {4}", _readCount, _readTicks, _readTicks / (double)_readCount, _missingAssets, _missingAssetsFS);
                     }
                     _readCount = 0;
                     _readTicks = 0;
@@ -342,7 +342,7 @@ namespace OpenSim.Services.FSAssetService
                     int totalTicks = System.Environment.TickCount - tickCount;
                     if (totalTicks > 0) // Wrap?
                     {
-                        _log.InfoFormat("[ASSET]: Write cycle complete, {0} files, {1} ticks, avg {2:F2}", files.Length, totalTicks, (double)totalTicks / (double)files.Length);
+                        _log.InfoFormat("[ASSET]: Write cycle complete, {0} files, {1} ticks, avg {2:F2}", files.Length, totalTicks, totalTicks / (double)files.Length);
                     }
                 }
 
@@ -444,7 +444,7 @@ namespace OpenSim.Services.FSAssetService
                     if (asset != null)
                     {
                         asset.Metadata.ContentType =
-                                SLUtil.SLAssetTypeToContentType((int)asset.Type);
+                                SLUtil.SLAssetTypeToContentType(asset.Type);
                         sha = GetSHA256Hash(asset.Data);
                         _log.InfoFormat("[FSASSETS]: Added asset {0} from fallback to local store", id);
                         Store(asset);
@@ -473,7 +473,7 @@ namespace OpenSim.Services.FSAssetService
                         if (asset != null)
                         {
                             asset.Metadata.ContentType =
-                                    SLUtil.SLAssetTypeToContentType((int)asset.Type);
+                                    SLUtil.SLAssetTypeToContentType(asset.Type);
                             sha = GetSHA256Hash(asset.Data);
                             _log.InfoFormat("[FSASSETS]: Added asset {0} from fallback to local store", id);
                             Store(asset);

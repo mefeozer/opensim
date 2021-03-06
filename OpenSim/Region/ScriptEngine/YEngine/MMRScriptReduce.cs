@@ -3666,7 +3666,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                         break;             // equal preced, if assignment type, leave 1st on stack to do later
                                            //               if non-asn type, do 1st op first (ie left-to-right)
                     do1st:
-                    TokenRVal result = PerformBinOp((TokenRVal)operands.prevToken, binOps, (TokenRVal)operands);
+                    TokenRVal result = PerformBinOp((TokenRVal)operands.prevToken, binOps, operands);
                     result.prevToken = operands.prevToken.prevToken;
                     operands = result;
                     binOps = binOps.pop;
@@ -3704,7 +3704,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
              // At end of expression, perform any stacked computations.
             while(binOps != null)
             {
-                TokenRVal result = PerformBinOp((TokenRVal)operands.prevToken, binOps, (TokenRVal)operands);
+                TokenRVal result = PerformBinOp((TokenRVal)operands.prevToken, binOps, operands);
                 result.prevToken = operands.prevToken.prevToken;
                 operands = result;
                 binOps = binOps.pop;
@@ -4783,7 +4783,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             objFileWriter.Write(this.file);
             objFileWriter.Write(this.line);
             objFileWriter.Write(this.posn);
-            objFileWriter.Write((byte)CLASS);
+            objFileWriter.Write(CLASS);
             objFileWriter.Write(this.sdTypeIndex);
 
             this.instSizes.WriteToFile(objFileWriter);
@@ -5151,7 +5151,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             objFileWriter.Write(this.file);
             objFileWriter.Write(this.line);
             objFileWriter.Write(this.posn);
-            objFileWriter.Write((byte)DELEGATE);
+            objFileWriter.Write(DELEGATE);
             objFileWriter.Write(this.sdTypeIndex);
 
             objFileWriter.Write(retType.ToString());
@@ -5336,7 +5336,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             objFileWriter.Write(this.file);
             objFileWriter.Write(this.line);
             objFileWriter.Write(this.posn);
-            objFileWriter.Write((byte)INTERFACE);
+            objFileWriter.Write(INTERFACE);
             objFileWriter.Write(this.sdTypeIndex);
         }
 
@@ -5442,7 +5442,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             objFileWriter.Write(this.file);
             objFileWriter.Write(this.line);
             objFileWriter.Write(this.posn);
-            objFileWriter.Write((byte)TYPEDEF);
+            objFileWriter.Write(TYPEDEF);
             objFileWriter.Write(this.sdTypeIndex);
         }
 

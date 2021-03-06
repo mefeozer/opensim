@@ -45,7 +45,7 @@ namespace OpenSim.Framework
         public Location(ulong regionHandle)
         {
             _x =  (uint)(regionHandle >> 32);
-            _y = (uint)(regionHandle & (ulong)uint.MaxValue);
+            _y = (uint)(regionHandle & uint.MaxValue);
         }
 
         public ulong RegionHandle => Utils.UIntsToLong(_x, _y);

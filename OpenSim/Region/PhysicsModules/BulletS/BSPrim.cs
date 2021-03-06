@@ -989,7 +989,7 @@ public class BSPrim : BSPhysObject
     //     the functions after this one set up the state of a possibly newly created collision body.
     private void MakeSolid(bool makeSolid)
     {
-        CollisionObjectTypes bodyType = (CollisionObjectTypes)PhysScene.PE.GetBodyType(PhysBody);
+        CollisionObjectTypes bodyType = PhysScene.PE.GetBodyType(PhysBody);
         if (makeSolid)
         {
             // Verify the previous code created the correct shape for this type of thing.
@@ -1274,7 +1274,7 @@ public class BSPrim : BSPhysObject
         float tmp;
 
         float returnMass = 0;
-        float hollowAmount = (float)BaseShape.ProfileHollow * 2.0e-5f;
+        float hollowAmount = BaseShape.ProfileHollow * 2.0e-5f;
         float hollowVolume = hollowAmount * hollowAmount;
 
         switch (BaseShape.ProfileShape)
@@ -1314,8 +1314,8 @@ public class BSPrim : BSPhysObject
                     {
                     //a tube
 
-                    volume *= 0.78539816339e-2f * (float)(200 - BaseShape.PathScaleX);
-                    tmp= 1.0f -2.0e-2f * (float)(200 - BaseShape.PathScaleY);
+                    volume *= 0.78539816339e-2f * (200 - BaseShape.PathScaleX);
+                    tmp= 1.0f -2.0e-2f * (200 - BaseShape.PathScaleY);
                     volume -= volume*tmp*tmp;
 
                     if (hollowAmount > 0.0)
@@ -1377,8 +1377,8 @@ public class BSPrim : BSPhysObject
 
                 else if (BaseShape.PathCurve == (byte)Extrusion.Curve1)
                     {
-                    volume *= 0.61685027506808491367715568749226e-2f * (float)(200 - BaseShape.PathScaleX);
-                    tmp = 1.0f - .02f * (float)(200 - BaseShape.PathScaleY);
+                    volume *= 0.61685027506808491367715568749226e-2f * (200 - BaseShape.PathScaleX);
+                    tmp = 1.0f - .02f * (200 - BaseShape.PathScaleY);
                     volume *= 1.0f - tmp * tmp;
 
                     if (hollowAmount > 0.0)
@@ -1455,8 +1455,8 @@ public class BSPrim : BSPhysObject
                 else if (BaseShape.PathCurve == (byte)Extrusion.Curve1)
                     {
                     volume *= 0.32475953f;
-                    volume *= 0.01f * (float)(200 - BaseShape.PathScaleX);
-                    tmp = 1.0f - .02f * (float)(200 - BaseShape.PathScaleY);
+                    volume *= 0.01f * (200 - BaseShape.PathScaleX);
+                    tmp = 1.0f - .02f * (200 - BaseShape.PathScaleY);
                     volume *= 1.0f - tmp * tmp;
 
                     if (hollowAmount > 0.0)
@@ -1533,13 +1533,13 @@ public class BSPrim : BSPhysObject
 
         volume *= taperX1 * taperY1 + 0.5f * (taperX1 * taperY + taperX * taperY1) + 0.3333333333f * taperX * taperY;
 
-        pathBegin = (float)BaseShape.PathBegin * 2.0e-5f;
-        pathEnd = 1.0f - (float)BaseShape.PathEnd * 2.0e-5f;
+        pathBegin = BaseShape.PathBegin * 2.0e-5f;
+        pathEnd = 1.0f - BaseShape.PathEnd * 2.0e-5f;
         volume *= pathEnd - pathBegin;
 
         // this is crude aproximation
-        profileBegin = (float)BaseShape.ProfileBegin * 2.0e-5f;
-        profileEnd = 1.0f - (float)BaseShape.ProfileEnd * 2.0e-5f;
+        profileBegin = BaseShape.ProfileBegin * 2.0e-5f;
+        profileEnd = 1.0f - BaseShape.ProfileEnd * 2.0e-5f;
         volume *= profileEnd - profileBegin;
 
         returnMass = Density * BSParam.DensityScaleFactor * volume;
@@ -1672,7 +1672,7 @@ public class BSPrim : BSPhysObject
                     }
                 }
                 InitializeAxisActor();
-                ret = (object)index;
+                ret = index;
             }
         }
         catch (Exception e)

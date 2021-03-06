@@ -162,7 +162,7 @@ namespace OpenSim.Framework
         {
             LogThreadPool = 0;
             LogOverloads = true;
-            TimeStampClockPeriod = 1.0D/ (double)Stopwatch.Frequency;
+            TimeStampClockPeriod = 1.0D/ Stopwatch.Frequency;
             TimeStampClockPeriodMS = 1e3 * TimeStampClockPeriod;
             _log.InfoFormat("[UTIL] TimeStamp clock with period of {0}ms", Math.Round(TimeStampClockPeriodMS,6,MidpointRounding.AwayFromZero));
         }
@@ -383,7 +383,7 @@ namespace OpenSim.Framework
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static ulong UIntsToLong(uint X, uint Y)
         {
-            return ((ulong)X << 32) | (ulong)Y;
+            return ((ulong)X << 32) | Y;
         }
 
         // Regions are identified with a 'handle' made up of its world coordinates packed into a ulong.
@@ -2174,7 +2174,7 @@ namespace OpenSim.Framework
         {
             if (bytes.Length < 8) return 0;
             return ((ulong)bytes[0] << 56) | ((ulong)bytes[1] << 48) | ((ulong)bytes[2] << 40) | ((ulong)bytes[3] << 32) |
-                ((ulong)bytes[4] << 24) | ((ulong)bytes[5] << 16) | ((ulong)bytes[6] << 8) | (ulong)bytes[7];
+                ((ulong)bytes[4] << 24) | ((ulong)bytes[5] << 16) | ((ulong)bytes[6] << 8) | bytes[7];
         }
 
         // used for RemoteParcelRequest (for "About Landmark")

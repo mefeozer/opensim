@@ -150,7 +150,7 @@ namespace OpenSim.Framework
                 ulong.TryParse(args["region_handle"].AsString(), out RegionHandle);
 
             if (args["circuit_code"] != null)
-                uint.TryParse((string)args["circuit_code"].AsString(), out CircuitCode);
+                uint.TryParse(args["circuit_code"].AsString(), out CircuitCode);
 
             if (args["agent_uuid"] != null)
                 AgentID = args["agent_uuid"].AsUUID();
@@ -275,7 +275,7 @@ namespace OpenSim.Framework
             if (args["group_id"] != null)
                 GroupID = args["group_id"].AsUUID();
             if (args["group_powers"] != null)
-                ulong.TryParse((string)args["group_powers"].AsString(), out GroupPowers);
+                ulong.TryParse(args["group_powers"].AsString(), out GroupPowers);
             if (args["accept_notices"] != null)
                 AcceptNotices = args["accept_notices"].AsBoolean();
         }

@@ -345,7 +345,7 @@ namespace OpenSim.Region.Framework.Scenes
                 {
                     if (estateModule == null)
                         estateModule = _scene.RequestModuleInterface<IEstateModule>();
-                    regionFlags = estateModule != null ? estateModule.GetRegionFlags() : (uint) 0;
+                    regionFlags = estateModule != null ? estateModule.GetRegionFlags() : 0;
                 }
                 catch (Exception)
                 {

@@ -77,7 +77,7 @@ namespace OpenSim.Framework.Monitoring
 
         public virtual string XReport(string uptime, string version)
         {
-            return (string) Math.Round(GC.GetTotalMemory(false) / 1024.0 / 1024.0).ToString() ;
+            return Math.Round(GC.GetTotalMemory(false) / 1024.0 / 1024.0).ToString();
         }
 
         public virtual OSDMap OReport(string uptime, string version)

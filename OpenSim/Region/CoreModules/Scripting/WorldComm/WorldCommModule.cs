@@ -810,7 +810,7 @@ namespace OpenSim.Region.CoreModules.Scripting.WorldComm
                     }
                 }
             }
-            return (object[])data.ToArray();
+            return data.ToArray();
         }
 
         public void AddFromData(uint localID, UUID itemID, UUID hostID,

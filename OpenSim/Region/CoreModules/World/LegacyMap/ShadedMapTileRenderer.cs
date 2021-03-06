@@ -92,7 +92,7 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                 for (int y = 0; y < hm.Height; y++)
                 {
                     // Y flip the cordinates for the bitmap: hf origin is lower left, bm origin is upper left
-                    int yr = (int)hm.Height - 1 - y;
+                    int yr = hm.Height - 1 - y;
 
                     float heightvalue = (float)hm[x, y];
 

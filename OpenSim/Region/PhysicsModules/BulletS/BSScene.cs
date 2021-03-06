@@ -756,7 +756,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             // These are summed and normalized to one second and divided by 1000 to give the reported physics FPS.
             // Multiply by a fixed nominal frame rate to give a rate similar to the simulator (usually 55).
 //            _simulatedTime +=  (float)numSubSteps * _fixedTimeStep * 1000f * NominalFrameRate;
-            _simulatedTime +=  (float)numSubSteps * _fixedTimeStep;
+            _simulatedTime += numSubSteps * _fixedTimeStep;
         }
 
         // Called by a BSPhysObject to note that it has changed properties and this information
@@ -1115,27 +1115,27 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
         public static string PrimitiveBaseShapeToString(PrimitiveBaseShape pbs)
         {
-            float pathShearX = pbs.PathShearX < 128 ? (float)pbs.PathShearX * 0.01f : (float)(pbs.PathShearX - 256) * 0.01f;
-            float pathShearY = pbs.PathShearY < 128 ? (float)pbs.PathShearY * 0.01f : (float)(pbs.PathShearY - 256) * 0.01f;
-            float pathBegin = (float)pbs.PathBegin * 2.0e-5f;
-            float pathEnd = 1.0f - (float)pbs.PathEnd * 2.0e-5f;
-            float pathScaleX = (float)(200 - pbs.PathScaleX) * 0.01f;
-            float pathScaleY = (float)(200 - pbs.PathScaleY) * 0.01f;
+            float pathShearX = pbs.PathShearX < 128 ? pbs.PathShearX * 0.01f : (pbs.PathShearX - 256) * 0.01f;
+            float pathShearY = pbs.PathShearY < 128 ? pbs.PathShearY * 0.01f : (pbs.PathShearY - 256) * 0.01f;
+            float pathBegin = pbs.PathBegin * 2.0e-5f;
+            float pathEnd = 1.0f - pbs.PathEnd * 2.0e-5f;
+            float pathScaleX = (200 - pbs.PathScaleX) * 0.01f;
+            float pathScaleY = (200 - pbs.PathScaleY) * 0.01f;
             float pathTaperX = pbs.PathTaperX * 0.01f;
             float pathTaperY = pbs.PathTaperY * 0.01f;
 
-            float profileBegin = (float)pbs.ProfileBegin * 2.0e-5f;
-            float profileEnd = 1.0f - (float)pbs.ProfileEnd * 2.0e-5f;
-            float profileHollow = (float)pbs.ProfileHollow * 2.0e-5f;
+            float profileBegin = pbs.ProfileBegin * 2.0e-5f;
+            float profileEnd = 1.0f - pbs.ProfileEnd * 2.0e-5f;
+            float profileHollow = pbs.ProfileHollow * 2.0e-5f;
             if (profileHollow > 0.95f)
                 profileHollow = 0.95f;
 
             StringBuilder buff = new StringBuilder();
             buff.Append("shape=");
-            buff.Append(((ProfileShape)pbs.ProfileShape).ToString());
+            buff.Append(pbs.ProfileShape.ToString());
             buff.Append(",");
             buff.Append("hollow=");
-            buff.Append(((HollowShape)pbs.HollowShape).ToString());
+            buff.Append(pbs.HollowShape.ToString());
             buff.Append(",");
             buff.Append("pathCurve=");
             buff.Append(((Extrusion)pbs.PathCurve).ToString());

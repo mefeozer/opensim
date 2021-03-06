@@ -555,7 +555,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 timeout = int.Parse(requestData["milliseconds"].ToString());
 
                 message
-                    = "Region is going down in " + ((int) (timeout/1000)).ToString()
+                    = "Region is going down in " + (timeout / 1000).ToString()
                       + " second(s). Please save what you are doing and log out.";
             }
             else
@@ -769,7 +769,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                     try
                     {
                         // OpenSim.ini can specify a different regions dir
-                        IConfig startupConfig = (IConfig) _configSource.Configs["Startup"];
+                        IConfig startupConfig = _configSource.Configs["Startup"];
                         regionConfigPath = startupConfig.GetString("regionload_regionsdir", regionConfigPath).Trim();
                     }
                     catch (Exception)
@@ -1082,7 +1082,7 @@ namespace OpenSim.ApplicationPlugins.RemoteController
                 if (requestData.ContainsKey("enable_voice"))
                 {
                     bool enableVoice = GetBoolean(requestData, "enable_voice", true);
-                    List<ILandObject> parcels = ((Scene)scene).LandChannel.AllParcels();
+                    List<ILandObject> parcels = scene.LandChannel.AllParcels();
 
                     foreach (ILandObject parcel in parcels)
                     {

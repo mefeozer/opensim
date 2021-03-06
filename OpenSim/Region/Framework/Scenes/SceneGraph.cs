@@ -238,11 +238,11 @@ namespace OpenSim.Region.Framework.Scenes
             // try to work around that scale down X and Y acording to region size, so reducing the resolution
             //
             // viewers need to scale up
-            float scaleX = (float)_parentScene.RegionInfo.RegionSizeX / (float)Constants.RegionSize;
+            float scaleX = _parentScene.RegionInfo.RegionSizeX / (float)Constants.RegionSize;
             if (scaleX == 0)
                 scaleX = 1.0f;
             scaleX = 1.0f / scaleX;
-            float scaleY = (float)_parentScene.RegionInfo.RegionSizeY / (float)Constants.RegionSize;
+            float scaleY = _parentScene.RegionInfo.RegionSizeY / (float)Constants.RegionSize;
             if (scaleY == 0)
                     scaleY = 1.0f;
             scaleY = 1.0f / scaleY;
@@ -1412,7 +1412,7 @@ namespace OpenSim.Region.Framework.Scenes
                         if (data.change == ObjectChangeType.groupPS)
                             data.change = ObjectChangeType.primPS;
                         part.StoreUndoState(data.change); // lets test only saving what we changed
-                        grp.doChangeObject(part, (ObjectChangeData)data);
+                        grp.doChangeObject(part, data);
                     }
                     else
                     {
@@ -1429,7 +1429,7 @@ namespace OpenSim.Region.Framework.Scenes
                                     data.change &= ObjectChangeType.Group | ObjectChangeType.Position | ObjectChangeType.Rotation;
 
                                     part.StoreUndoState(data.change);
-                                    grp.doChangeObject(part, (ObjectChangeData)data);
+                                    grp.doChangeObject(part, data);
                                 }
                             }
                         }

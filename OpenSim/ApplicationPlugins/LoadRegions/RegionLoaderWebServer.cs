@@ -59,7 +59,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
             }
             else
             {
-                IConfig startupConfig = (IConfig)_configSource.Configs["Startup"];
+                IConfig startupConfig = _configSource.Configs["Startup"];
                 string url = startupConfig.GetString("regionload_webserver_url", string.Empty).Trim();
                 bool allowRegionless = startupConfig.GetBoolean("allow_regionless", false);
 

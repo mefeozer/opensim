@@ -257,7 +257,7 @@ namespace OpenSim.Region.Framework.Scenes
                     vd._verticalAttractionEfficiency = 0;
                     vd._verticalAttractionTimescale = 1000;
 
-                    vd._flags = (VehicleFlag)0;
+                    vd._flags = 0;
                     break;
 
                 case Vehicle.TYPE_SLED:

@@ -371,7 +371,7 @@ namespace OpenSim.Region.ClientStack.Linden
                         LLSDxmlEncode2.AddElem("OwnerID", data.OwnerID, sb);
                         LLSDxmlEncode2.AddElem("SimName", data.SimName, sb);
                         LLSDxmlEncode2.AddElem("SnapShotID", data.SnapshotID, sb);
-                        LLSDxmlEncode2.AddElem("ProductSku", (int)0, sb);
+                        LLSDxmlEncode2.AddElem("ProductSku", 0, sb);
                         LLSDxmlEncode2.AddElem("Price", data.Price, sb);
                     LLSDxmlEncode2.AddEndMap(sb);
                 }

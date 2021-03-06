@@ -714,8 +714,8 @@ namespace OpenSim.Services.GridService
         {
             RegionData rdata = new RegionData
             {
-                posX = (int)rinfo.RegionLocX,
-                posY = (int)rinfo.RegionLocY,
+                posX = rinfo.RegionLocX,
+                posY = rinfo.RegionLocY,
                 sizeX = rinfo.RegionSizeX,
                 sizeY = rinfo.RegionSizeY,
                 RegionID = rinfo.RegionID,

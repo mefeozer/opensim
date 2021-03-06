@@ -374,8 +374,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                     _eventCodeMap.TryGetValue(evt.EventName, out evc);
                     evc1 = (int)evc;
                     evc2 = evc1 - 32;
-                    if((uint)evc1 < (uint)32 && ((mask1 >> evc1) & 1) != 0 ||
-                        (uint)evc2 < (uint)32 && ((mask2 >> evc2) & 1) != 0)
+                    if((uint)evc1 < 32 && ((mask1 >> evc1) & 1) != 0 ||
+                        (uint)evc2 < 32 && ((mask2 >> evc2) & 1) != 0)
                         goto remfromq;
                 }
 
@@ -400,8 +400,8 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 _InstEHEvent++;
 
                  // See if returnable or background event.
-                if((uint)evc1 < (uint)32 && ((returnMask1 >> evc1) & 1) != 0 ||
-                    (uint)evc2 < (uint)32 && ((returnMask2 >> evc2) & 1) != 0)
+                if((uint)evc1 < 32 && ((returnMask1 >> evc1) & 1) != 0 ||
+                    (uint)evc2 < 32 && ((returnMask2 >> evc2) & 1) != 0)
                 {
                      // Returnable event, return its parameters in a list.
                      // Also set the detect parameters to what the event has.

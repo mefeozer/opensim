@@ -1925,7 +1925,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 partPhysCost = 1.0f;
                 partCost = 1.0f;
-                linksetResCost = (float)nparts;
+                linksetResCost = nparts;
                 linksetPhysCost = linksetResCost;
             }
         }
@@ -2014,7 +2014,7 @@ namespace OpenSim.Region.Framework.Scenes
             //    parts[i].AttachedAvatar = UUID.Zero;
 
             _rootPart.SetParentLocalId(0);
-            AttachmentPoint = (byte)0;
+            AttachmentPoint = 0;
             // must check if buildind should be true or false here
 //            _rootPart.ApplyPhysics(_rootPart.GetEffectiveObjectFlags(), _rootPart.VolumeDetectActive,false);
             ApplyPhysics();

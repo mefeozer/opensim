@@ -422,11 +422,11 @@ namespace OpenSim.Framework.Servers.HttpServer
                                 {
                                     byte[] writebytes = new byte[_bufferPosition - offset];
 
-                                    Buffer.BlockCopy(_buffer, offset, writebytes, 0, (int) _bufferPosition - offset);
+                                    Buffer.BlockCopy(_buffer, offset, writebytes, 0, _bufferPosition - offset);
                                     _socketState.ExpectedBytes = (int) pheader.PayloadLen;
                                     _socketState.ReceivedBytes.AddRange(writebytes);
                                     _socketState.Header = pheader; // We need to add the header so that we can unmask it
-                                    offset += (int) _bufferPosition - offset;
+                                    offset += _bufferPosition - offset;
                                 }
                                 else
                                 {
@@ -466,19 +466,19 @@ namespace OpenSim.Framework.Servers.HttpServer
                         {
                             byte[] writebytes = new byte[_bufferPosition];
 
-                            Buffer.BlockCopy(_buffer, offset, writebytes, 0, (int) _bufferPosition);
+                            Buffer.BlockCopy(_buffer, offset, writebytes, 0, _bufferPosition);
                             _socketState.ReceivedBytes.AddRange(writebytes);
                             _socketState.Header = frameHeader; // We need to add the header so that we can unmask it
-                            offset += (int) _bufferPosition;
+                            offset += _bufferPosition;
                         }
                         else
                         {
                             byte[] writebytes = new byte[_bufferPosition];
-                            Buffer.BlockCopy(_buffer, offset, writebytes, 0, (int) _bufferPosition);
+                            Buffer.BlockCopy(_buffer, offset, writebytes, 0, _bufferPosition);
                             _socketState.FrameComplete = true;
                             _socketState.ReceivedBytes.AddRange(writebytes);
                             _socketState.Header = frameHeader;
-                            offset += (int) _bufferPosition;
+                            offset += _bufferPosition;
                         }
                         if (_socketState.FrameComplete)
                         {

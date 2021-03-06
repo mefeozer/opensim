@@ -1567,8 +1567,8 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
             }
 
             // Compute the entity's position relative to the new region
-            newpos = new Vector3((float)(presenceWorldX - (double)neighbourRegion.RegionLocX),
-                                      (float)(presenceWorldY - (double)neighbourRegion.RegionLocY),
+            newpos = new Vector3((float)(presenceWorldX - neighbourRegion.RegionLocX),
+                                      (float)(presenceWorldY - neighbourRegion.RegionLocY),
                                       pos.Z);
 
             string homeURI = scene.GetAgentHomeURI(agentID);
@@ -2600,8 +2600,8 @@ namespace OpenSim.Region.CoreModules.Framework.EntityTransfer
                 // If we found some regions, check to see if the point is within
                 foreach (GridRegion gr in possibleRegions)
                 {
-                    if (px >= (double)gr.RegionLocX && px < (double)(gr.RegionLocX + gr.RegionSizeX)
-                                && py >= (double)gr.RegionLocY && py < (double)(gr.RegionLocY + gr.RegionSizeY))
+                    if (px >= gr.RegionLocX && px < gr.RegionLocX + gr.RegionSizeX
+                                && py >= gr.RegionLocY && py < gr.RegionLocY + gr.RegionSizeY)
                     {
                         // Found a region that contains the point
                         return gr;

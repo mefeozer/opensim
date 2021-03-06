@@ -1893,7 +1893,7 @@ namespace OpenSim.Region.Framework.Scenes
 
                 // estimate sleep time
                 nowMS = lastMS - framestart;
-                nowMS = (double)frameTimeMS - nowMS - sleepError;
+                nowMS = frameTimeMS - nowMS - sleepError;
 
                 // reuse frameMS as temporary
                 frameMS = (float)nowMS;
@@ -2406,7 +2406,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             Vector3 pos = Vector3.Zero;
 
-            if (RayEndIsIntersection != (byte)1)
+            if (RayEndIsIntersection != 1)
             {
                 float dist = dir.Length();
                 if (dist != 0)
@@ -4611,7 +4611,7 @@ Label_GroupsDone:
 
             // TODO: This check should probably be in QueryAccess().
             ILandObject nearestParcel = GetNearestAllowedParcel(cAgentData.AgentID,
-                (float)RegionInfo.RegionSizeX * 0.5f, (float)RegionInfo.RegionSizeY  * 0.5f);
+                RegionInfo.RegionSizeX * 0.5f, RegionInfo.RegionSizeY * 0.5f);
             if (nearestParcel == null)
             {
                 _log.InfoFormat(
@@ -5726,11 +5726,11 @@ Environment.Exit(1);
 
             p1.X += 1.0f;
             if (p1.X < Heightmap.Width)
-                p1.Z = (float)Heightmap[(int)p1.X, (int)p1.Y];
+                p1.Z = Heightmap[(int)p1.X, (int)p1.Y];
 
             p2.Y += 1.0f;
             if (p2.Y < Heightmap.Height)
-                p2.Z = (float)Heightmap[(int)p2.X, (int)p2.Y];
+                p2.Z = Heightmap[(int)p2.X, (int)p2.Y];
 
             Vector3 v0 = new Vector3(p1.X - p0.X, p1.Y - p0.Y, p1.Z - p0.Z);
             Vector3 v1 = new Vector3(p2.X - p0.X, p2.Y - p0.Y, p2.Z - p0.Z);
@@ -5745,8 +5745,8 @@ Environment.Exit(1);
             );
             vsn.Normalize();
 
-            float xdiff = x - (float)((int)x);
-            float ydiff = y - (float)((int)y);
+            float xdiff = x - (int)x;
+            float ydiff = y - (int)y;
 
             return (((vsn.X * xdiff) + (vsn.Y * ydiff)) / (-1 * vsn.Z)) + p0.Z;
         }

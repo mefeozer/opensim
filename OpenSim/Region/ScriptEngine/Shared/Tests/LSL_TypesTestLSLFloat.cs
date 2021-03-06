@@ -354,7 +354,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             foreach (int number in _intList)
             {
-                testFloat = (LSL_Types.LSLFloat) new LSL_Types.LSLInteger(number);
+                testFloat = new LSL_Types.LSLInteger(number);
                 Assert.That(testFloat.value, new DoubleToleranceConstraint(number, _lowPrecisionTolerance));
             }
         }
@@ -388,7 +388,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
 
             foreach (KeyValuePair<string, double> number in _stringDoubleSet)
             {
-                testFloat = (LSL_Types.LSLFloat) new LSL_Types.LSLString(number.Key);
+                testFloat = new LSL_Types.LSLString(number.Key);
                 Assert.That(testFloat.value, new DoubleToleranceConstraint(number.Value, _lowPrecisionTolerance));
             }
         }
@@ -448,7 +448,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Tests
                 numberAsFloat = (float)number;
                 testFloat = (float)testLSLFloat;
 
-                Assert.That((double)testFloat, new DoubleToleranceConstraint((double)numberAsFloat, _lowPrecisionTolerance));
+                Assert.That((double)testFloat, new DoubleToleranceConstraint(numberAsFloat, _lowPrecisionTolerance));
             }
         }
 

@@ -464,19 +464,19 @@ namespace OpenSim.Services.LLLoginService
                     + "r" + userProfile.homelookat.Z.ToString()
                     + "]}";
             lookAt = "[r0.99949799999999999756,r0.03166859999999999814,r0]";
-            RegionX = (uint) 255232;
-            RegionY = (uint) 254976;
+            RegionX = 255232;
+            RegionY = 254976;
 
             // Classifieds;
-            AddClassifiedCategory((int) 1, "Shopping");
-            AddClassifiedCategory((int) 2, "Land Rental");
-            AddClassifiedCategory((int) 3, "Property Rental");
-            AddClassifiedCategory((int) 4, "Special Attraction");
-            AddClassifiedCategory((int) 5, "New Products");
-            AddClassifiedCategory((int) 6, "Employment");
-            AddClassifiedCategory((int) 7, "Wanted");
-            AddClassifiedCategory((int) 8, "Service");
-            AddClassifiedCategory((int) 9, "Personal");
+            AddClassifiedCategory(1, "Shopping");
+            AddClassifiedCategory(2, "Land Rental");
+            AddClassifiedCategory(3, "Property Rental");
+            AddClassifiedCategory(4, "Special Attraction");
+            AddClassifiedCategory(5, "New Products");
+            AddClassifiedCategory(6, "Employment");
+            AddClassifiedCategory(7, "Wanted");
+            AddClassifiedCategory(8, "Service");
+            AddClassifiedCategory(9, "Personal");
 
             SessionID = UUID.Random();
             SecureSessionID = UUID.Random();
@@ -559,8 +559,8 @@ namespace OpenSim.Services.LLLoginService
                 responseData["message"] = welcomeMessage;
                 responseData["region_x"] = (int)RegionX;
                 responseData["region_y"] = (int)RegionY;
-                responseData["region_size_x"] = (int)RegionSizeX;
-                responseData["region_size_y"] = (int)RegionSizeY;
+                responseData["region_size_x"] = RegionSizeX;
+                responseData["region_size_y"] = RegionSizeY;
                 _log.DebugFormat("[LOGIN RESPONSE] returning sizeX={0}, sizeY={1}", RegionSizeX, RegionSizeY);
 
                 if (!string.IsNullOrEmpty(searchURL))
@@ -791,8 +791,8 @@ namespace OpenSim.Services.LLLoginService
                         // junk entry
                         continue;
                 }
-                buddyitem.BuddyRightsHave = (int)finfo.TheirFlags;
-                buddyitem.BuddyRightsGiven = (int)finfo.MyFlags;
+                buddyitem.BuddyRightsHave = finfo.TheirFlags;
+                buddyitem.BuddyRightsGiven = finfo.MyFlags;
                 buddylistreturn.AddNewBuddy(buddyitem);
             }
             return buddylistreturn;

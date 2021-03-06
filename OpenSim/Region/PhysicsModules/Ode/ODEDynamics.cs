@@ -63,7 +63,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         // Vehicle properties
         private Vehicle _type = Vehicle.TYPE_NONE;                     // If a 'VEHICLE', and what kind
         // private Quaternion _referenceFrame = Quaternion.Identity;   // Axis modifier
-        private VehicleFlag _flags = (VehicleFlag) 0;                  // Boolean settings:
+        private VehicleFlag _flags = 0;                  // Boolean settings:
                                                                         // HOVER_TERRAIN_ONLY
                                                                         // HOVER_GLOBAL_HEIGHT
                                                                         // NO_DEFLECTION_UP
@@ -71,7 +71,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                                                                         // HOVER_UP_ONLY
                                                                         // LIMIT_MOTOR_UP
                                                                         // LIMIT_ROLL_ONLY
-        private VehicleFlag _Hoverflags = (VehicleFlag)0;
+        private VehicleFlag _Hoverflags = 0;
         private Vector3 _BlockingEndPoint = Vector3.Zero;
         private Quaternion _RollreferenceFrame = Quaternion.Identity;
         // Linear properties
@@ -272,88 +272,88 @@ namespace OpenSim.Region.PhysicsModule.ODE
             {
                 if (pParam == -1)
                 {
-                    _flags = (VehicleFlag)0;
-                    _Hoverflags = (VehicleFlag)0;
+                    _flags = 0;
+                    _Hoverflags = 0;
                     return;
                 }
                 if ((pParam & (int)VehicleFlag.HOVER_GLOBAL_HEIGHT) == (int)VehicleFlag.HOVER_GLOBAL_HEIGHT)
                 {
-                    if ((_Hoverflags & VehicleFlag.HOVER_GLOBAL_HEIGHT) != (VehicleFlag)0)
+                    if ((_Hoverflags & VehicleFlag.HOVER_GLOBAL_HEIGHT) != 0)
                         _Hoverflags &= ~VehicleFlag.HOVER_GLOBAL_HEIGHT;
                 }
                 if ((pParam & (int)VehicleFlag.HOVER_TERRAIN_ONLY) == (int)VehicleFlag.HOVER_TERRAIN_ONLY)
                 {
-                    if ((_Hoverflags & VehicleFlag.HOVER_TERRAIN_ONLY) != (VehicleFlag)0)
+                    if ((_Hoverflags & VehicleFlag.HOVER_TERRAIN_ONLY) != 0)
                         _Hoverflags &= ~VehicleFlag.HOVER_TERRAIN_ONLY;
                 }
                 if ((pParam & (int)VehicleFlag.HOVER_UP_ONLY) == (int)VehicleFlag.HOVER_UP_ONLY)
                 {
-                    if ((_Hoverflags & VehicleFlag.HOVER_UP_ONLY) != (VehicleFlag)0)
+                    if ((_Hoverflags & VehicleFlag.HOVER_UP_ONLY) != 0)
                         _Hoverflags &= ~VehicleFlag.HOVER_UP_ONLY;
                 }
                 if ((pParam & (int)VehicleFlag.HOVER_WATER_ONLY) == (int)VehicleFlag.HOVER_WATER_ONLY)
                 {
-                    if ((_Hoverflags & VehicleFlag.HOVER_WATER_ONLY) != (VehicleFlag)0)
+                    if ((_Hoverflags & VehicleFlag.HOVER_WATER_ONLY) != 0)
                         _Hoverflags &= ~VehicleFlag.HOVER_WATER_ONLY;
                 }
                 if ((pParam & (int)VehicleFlag.LIMIT_MOTOR_UP) == (int)VehicleFlag.LIMIT_MOTOR_UP)
                 {
-                    if ((_flags & VehicleFlag.LIMIT_MOTOR_UP) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.LIMIT_MOTOR_UP) != 0)
                         _flags &= ~VehicleFlag.LIMIT_MOTOR_UP;
                 }
                 if ((pParam & (int)VehicleFlag.LIMIT_ROLL_ONLY) == (int)VehicleFlag.LIMIT_ROLL_ONLY)
                 {
-                    if ((_flags & VehicleFlag.LIMIT_ROLL_ONLY) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.LIMIT_ROLL_ONLY) != 0)
                         _flags &= ~VehicleFlag.LIMIT_ROLL_ONLY;
                 }
                 if ((pParam & (int)VehicleFlag.MOUSELOOK_BANK) == (int)VehicleFlag.MOUSELOOK_BANK)
                 {
-                    if ((_flags & VehicleFlag.MOUSELOOK_BANK) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.MOUSELOOK_BANK) != 0)
                         _flags &= ~VehicleFlag.MOUSELOOK_BANK;
                 }
                 if ((pParam & (int)VehicleFlag.MOUSELOOK_STEER) == (int)VehicleFlag.MOUSELOOK_STEER)
                 {
-                    if ((_flags & VehicleFlag.MOUSELOOK_STEER) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.MOUSELOOK_STEER) != 0)
                         _flags &= ~VehicleFlag.MOUSELOOK_STEER;
                 }
                 if ((pParam & (int)VehicleFlag.NO_DEFLECTION_UP) == (int)VehicleFlag.NO_DEFLECTION_UP)
                 {
-                    if ((_flags & VehicleFlag.NO_DEFLECTION_UP) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.NO_DEFLECTION_UP) != 0)
                         _flags &= ~VehicleFlag.NO_DEFLECTION_UP;
                 }
                 if ((pParam & (int)VehicleFlag.CAMERA_DECOUPLED) == (int)VehicleFlag.CAMERA_DECOUPLED)
                 {
-                    if ((_flags & VehicleFlag.CAMERA_DECOUPLED) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.CAMERA_DECOUPLED) != 0)
                         _flags &= ~VehicleFlag.CAMERA_DECOUPLED;
                 }
                 if ((pParam & (int)VehicleFlag.NO_X) == (int)VehicleFlag.NO_X)
                 {
-                    if ((_flags & VehicleFlag.NO_X) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.NO_X) != 0)
                         _flags &= ~VehicleFlag.NO_X;
                 }
                 if ((pParam & (int)VehicleFlag.NO_Y) == (int)VehicleFlag.NO_Y)
                 {
-                    if ((_flags & VehicleFlag.NO_Y) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.NO_Y) != 0)
                         _flags &= ~VehicleFlag.NO_Y;
                 }
                 if ((pParam & (int)VehicleFlag.NO_Z) == (int)VehicleFlag.NO_Z)
                 {
-                    if ((_flags & VehicleFlag.NO_Z) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.NO_Z) != 0)
                         _flags &= ~VehicleFlag.NO_Z;
                 }
                 if ((pParam & (int)VehicleFlag.LOCK_HOVER_HEIGHT) == (int)VehicleFlag.LOCK_HOVER_HEIGHT)
                 {
-                    if ((_Hoverflags & VehicleFlag.LOCK_HOVER_HEIGHT) != (VehicleFlag)0)
+                    if ((_Hoverflags & VehicleFlag.LOCK_HOVER_HEIGHT) != 0)
                         _Hoverflags &= ~VehicleFlag.LOCK_HOVER_HEIGHT;
                 }
                 if ((pParam & (int)VehicleFlag.NO_DEFLECTION) == (int)VehicleFlag.NO_DEFLECTION)
                 {
-                    if ((_flags & VehicleFlag.NO_DEFLECTION) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.NO_DEFLECTION) != 0)
                         _flags &= ~VehicleFlag.NO_DEFLECTION;
                 }
                 if ((pParam & (int)VehicleFlag.LOCK_ROTATION) == (int)VehicleFlag.LOCK_ROTATION)
                 {
-                    if ((_flags & VehicleFlag.LOCK_ROTATION) != (VehicleFlag)0)
+                    if ((_flags & VehicleFlag.LOCK_ROTATION) != 0)
                         _flags &= ~VehicleFlag.LOCK_ROTATION;
                 }
             }
@@ -440,7 +440,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
                     _VhoverHeight = 0;
                     _VhoverTimescale = 0;
                     _VehicleBuoyancy = 0;
-                    _flags = (VehicleFlag)0;
+                    _flags = 0;
                     break;
 
                 case Vehicle.TYPE_SLED:
@@ -681,17 +681,17 @@ namespace OpenSim.Region.PhysicsModule.ODE
             double Zchange = Math.Abs(posChange.Z);
             if (_BlockingEndPoint != Vector3.Zero)
             {
-                if (pos.X >= _BlockingEndPoint.X - (float)1)
+                if (pos.X >= _BlockingEndPoint.X - 1)
                 {
                     pos.X -= posChange.X + 1;
                     SafeNativeMethods.BodySetPosition(Body, pos.X, pos.Y, pos.Z);
                 }
-                if (pos.Y >= _BlockingEndPoint.Y - (float)1)
+                if (pos.Y >= _BlockingEndPoint.Y - 1)
                 {
                     pos.Y -= posChange.Y + 1;
                     SafeNativeMethods.BodySetPosition(Body, pos.X, pos.Y, pos.Z);
                 }
-                if (pos.Z >= _BlockingEndPoint.Z - (float)1)
+                if (pos.Z >= _BlockingEndPoint.Z - 1)
                 {
                     pos.Z -= posChange.Z + 1;
                     SafeNativeMethods.BodySetPosition(Body, pos.X, pos.Y, pos.Z);
@@ -767,11 +767,11 @@ namespace OpenSim.Region.PhysicsModule.ODE
                 //Start Experimental Values
                 if (Zchange > .3)
                 {
-                    grav.Z = (float)(grav.Z * 3);
+                    grav.Z = grav.Z * 3;
                 }
                 if (Zchange > .15)
                 {
-                    grav.Z = (float)(grav.Z * 2);
+                    grav.Z = grav.Z * 2;
                 }
                 if (Zchange > .75)
                 {

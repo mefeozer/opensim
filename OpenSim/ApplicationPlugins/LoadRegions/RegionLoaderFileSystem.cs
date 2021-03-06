@@ -53,7 +53,7 @@ namespace OpenSim.ApplicationPlugins.LoadRegions
 
             try
             {
-                IConfig startupConfig = (IConfig)_configSource.Configs["Startup"];
+                IConfig startupConfig = _configSource.Configs["Startup"];
                 regionConfigPath = startupConfig.GetString("regionload_regionsdir", regionConfigPath).Trim();
                 allowRegionless = startupConfig.GetBoolean("allow_regionless", false);
             }

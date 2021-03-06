@@ -392,7 +392,7 @@ namespace OpenSim.Data.PGSQL
                 conn.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("EstateID", (int)estateID);
+                    cmd.Parameters.AddWithValue("EstateID", estateID);
                     using (NpgsqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())

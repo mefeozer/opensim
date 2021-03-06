@@ -1640,9 +1640,9 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     for (int y = 0; y < _channel.Height / 2; y++)
                     {
                         float height = _channel[x, y];
-                        float flippedHeight = _channel[x, (int)_channel.Height - 1 - y];
+                        float flippedHeight = _channel[x, _channel.Height - 1 - y];
                         _channel[x, y] = flippedHeight;
-                        _channel[x, (int)_channel.Height - 1 - y] = height;
+                        _channel[x, _channel.Height - 1 - y] = height;
 
                     }
                 }
@@ -1654,9 +1654,9 @@ namespace OpenSim.Region.CoreModules.World.Terrain
                     for (int x = 0; x < _channel.Width / 2; x++)
                     {
                         float height = _channel[x, y];
-                        float flippedHeight = _channel[(int)_channel.Width - 1 - x, y];
+                        float flippedHeight = _channel[_channel.Width - 1 - x, y];
                         _channel[x, y] = flippedHeight;
-                        _channel[(int)_channel.Width - 1 - x, y] = height;
+                        _channel[_channel.Width - 1 - x, y] = height;
 
                     }
                 }

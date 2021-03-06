@@ -160,7 +160,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Profile
                         Util.ToDateTime(created).ToString(
                                 "M/d/yyyy", CultureInfo.InvariantCulture),
                         membershipType, firstLifeAboutText,
-                        (uint)(0 & 0xff),
+                        0 & 0xff,
                         firstLifeImage, image, profileUrl, partner);
 
             //Viewer expects interest data when it asks for properties.

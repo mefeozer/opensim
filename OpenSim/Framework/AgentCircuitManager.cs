@@ -72,7 +72,7 @@ namespace OpenSim.Framework
                     InventoryFolder = validcircuit.InventoryFolder,
                     BaseFolder = validcircuit.BaseFolder,
                     StartPos = validcircuit.startpos,
-                    StartFar = (float)validcircuit.startfar
+                    StartFar = validcircuit.startfar
                 };
             }
             else

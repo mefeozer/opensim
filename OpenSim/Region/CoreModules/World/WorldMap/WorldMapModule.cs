@@ -144,7 +144,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                 config, "WorldMapModule", configSections, "WorldMap") == "WorldMap")
                 _Enabled = true;
 
-            expireBlackListTime = (int)Util.GetConfigVarFromSections<int>(config, "BlacklistTimeout", configSections, 10 * 60);
+            expireBlackListTime = Util.GetConfigVarFromSections<int>(config, "BlacklistTimeout", configSections, 10 * 60);
             expireBlackListTime *= 1000;
             _exportPrintScale =
                 Util.GetConfigVarFromSections<bool>(config, "ExportMapAddScale", configSections, _exportPrintScale);
@@ -1182,7 +1182,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                 MemoryStream imgstream = null;
                 Bitmap mapTexture = new Bitmap(1, 1);
                 ManagedImage managedImage;
-                Image image = (Image)mapTexture;
+                Image image = mapTexture;
 
                 try
                 {
@@ -1605,7 +1605,7 @@ namespace OpenSim.Region.CoreModules.World.WorldMap
                             mb = by;
                         if(mb > Constants.RegionSize && mb > 0)
                         {
-                            float scale = (float)Constants.RegionSize/(float)mb;
+                            float scale = Constants.RegionSize / (float)mb;
                             using(Bitmap scaledbmp = Util.ResizeImageSolid(mapbmp, (int)(bx * scale), (int)(by * scale)))
                                 data = OpenJPEG.EncodeFromImage(scaledbmp, true);
                         }

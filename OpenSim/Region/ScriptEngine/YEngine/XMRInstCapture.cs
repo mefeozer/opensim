@@ -212,7 +212,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             // Write script state out, frames and all, to the stream.
             // Does not change script state.
             stream.WriteByte(migrationVersion);
-            stream.WriteByte((byte)16);
+            stream.WriteByte(16);
             this.MigrateOut(new BinaryWriter(stream));
         }
 

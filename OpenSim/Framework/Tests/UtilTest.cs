@@ -282,7 +282,7 @@ namespace OpenSim.Framework.Tests
             byte[] hexBytes16 = {
                         0xf0, 0xe1, 0xd2, 0xc3, 0xb4, 0xa5, 0x96, 0x87,
                         0x77, 0x69, 0x5a, 0x4b, 0x3c, 0x2d, 0x1e, 0x0f };
-            ulong var64Bit = (ulong)0xfedcba9876543210;
+            ulong var64Bit = 0xfedcba9876543210;
 
             //Region handle is for location 255000,256000.
             ulong regionHandle1 = 1095216660736000;

@@ -802,7 +802,7 @@ namespace OpenSim.Data.MySQL
                             {
                                 while (reader.Read())
                                 {
-                                    data.Add(new OSDString((string)reader["snapshotuuid"].ToString ()));
+                                    data.Add(new OSDString(reader["snapshotuuid"].ToString()));
                                 }
                             }
                         }
@@ -821,7 +821,7 @@ namespace OpenSim.Data.MySQL
                             {
                                 while (reader.Read())
                                 {
-                                    data.Add(new OSDString((string)reader["snapshotuuid"].ToString ()));
+                                    data.Add(new OSDString(reader["snapshotuuid"].ToString()));
                                 }
                             }
                         }
@@ -842,8 +842,8 @@ namespace OpenSim.Data.MySQL
                             {
                                 while (reader.Read())
                                 {
-                                    data.Add(new OSDString((string)reader["profileImage"].ToString ()));
-                                    data.Add(new OSDString((string)reader["profileFirstImage"].ToString ()));
+                                    data.Add(new OSDString(reader["profileImage"].ToString()));
+                                    data.Add(new OSDString(reader["profileFirstImage"].ToString()));
                                 }
                             }
                         }

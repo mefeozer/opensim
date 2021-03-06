@@ -1239,7 +1239,7 @@ namespace OpenSim.Data.PGSQL
                 // permissions
                 Flags = (PrimFlags)Convert.ToUInt32(primRow["ObjectFlags"]),
                 //prim.creatorID = new UUID((Guid)primRow["creatorID"]);
-                CreatorIdentification = (string)primRow["CreatorID"].ToString(),
+                CreatorIdentification = primRow["CreatorID"].ToString(),
                 OwnerID = new UUID((Guid)primRow["OwnerID"]),
                 GroupID = new UUID((Guid)primRow["GroupID"]),
                 LastOwnerID = new UUID((Guid)primRow["LastOwnerID"])
@@ -1476,7 +1476,7 @@ namespace OpenSim.Data.PGSQL
                 Description = (string)inventoryRow["description"],
                 CreationDate = Convert.ToUInt32(inventoryRow["creationDate"]),
                 //taskItem.creatorID = new UUID((Guid)inventoryRow["creatorID"]);
-                CreatorIdentification = (string)inventoryRow["creatorID"].ToString(),
+                CreatorIdentification = inventoryRow["creatorID"].ToString(),
                 OwnerID = new UUID((Guid)inventoryRow["ownerID"]),
                 LastOwnerID = new UUID((Guid)inventoryRow["lastOwnerID"]),
                 GroupID = new UUID((Guid)inventoryRow["groupID"]),
@@ -1815,8 +1815,8 @@ namespace OpenSim.Data.PGSQL
             parameters.Add(_Database.CreateParameter("CollisionSound", prim.CollisionSound));
             parameters.Add(_Database.CreateParameter("CollisionSoundVolume", prim.CollisionSoundVolume));
 
-            parameters.Add(_Database.CreateParameter("PassTouches", (bool)prim.PassTouches));
-            parameters.Add(_Database.CreateParameter("PassCollisions", (bool)prim.PassCollisions));
+            parameters.Add(_Database.CreateParameter("PassTouches", prim.PassTouches));
+            parameters.Add(_Database.CreateParameter("PassCollisions", prim.PassCollisions));
 
             if (prim.PassTouches)
                 parameters.Add(_Database.CreateParameter("PassTouches", true));

@@ -222,9 +222,9 @@ namespace OpenSim.Region.CoreModules.World.LegacyMap
                 for (int x = 0; x < bmp.Width; ++x)
                 {
                     Color c = bmp.GetPixel(x, y);
-                    r += (int)c.R & 0xff;
-                    g += (int)c.G & 0xff;
-                    b += (int)c.B & 0xff;
+                    r += c.R & 0xff;
+                    g += c.G & 0xff;
+                    b += c.B & 0xff;
                 }
             }
 

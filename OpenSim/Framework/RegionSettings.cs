@@ -64,7 +64,7 @@ namespace OpenSim.Framework
             Quaternion p = Quaternion.CreateFromEulers(0, Pitch, 0);
 
             Vector3 dir = new Vector3(1, 0, 0) * p * y;
-            Vector3 offset = dir * (float)Distance;
+            Vector3 offset = dir * Distance;
 
             offset *= rot;
 

@@ -165,7 +165,7 @@ namespace OpenSim.Services.Connectors.Simulation
         /// </summary>
         public bool UpdateAgent(GridRegion destination, AgentData data, EntityTransferContext ctx)
         {
-            return UpdateAgent(destination, (IAgentData)data, ctx, 200000); // yes, 200 seconds
+            return UpdateAgent(destination, data, ctx, 200000); // yes, 200 seconds
         }
 
         private readonly ExpiringCache<string, bool> _failedSims = new ExpiringCache<string, bool>();
@@ -227,7 +227,7 @@ namespace OpenSim.Services.Connectors.Simulation
                 }
 
                 EntityTransferContext ctx = new EntityTransferContext(); // Dummy, not needed for position
-                success = UpdateAgent(destination, (IAgentData)pos, ctx, 10000);
+                success = UpdateAgent(destination, pos, ctx, 10000);
             }
             // we get here iff success == false
             // blacklist sim for 2 minutes

@@ -1438,11 +1438,11 @@ namespace OpenSim.Region.CoreModules.World.Land
                     // now flags
                     // local sound
                     if ((currentParcel.LandData.Flags & (uint)ParcelFlags.SoundLocal) != 0)
-                        curByte |= (byte)LandChannel.LAND_FLAG_LOCALSOUND;
+                        curByte |= LandChannel.LAND_FLAG_LOCALSOUND;
 
                     // hide avatars
                     if (!currentParcel.LandData.SeeAVs)
-                        curByte |= (byte)LandChannel.LAND_FLAG_HIDEAVATARS;
+                        curByte |= LandChannel.LAND_FLAG_HIDEAVATARS;
 
                     // border flags for current
                     if (y == 0)
@@ -2132,7 +2132,7 @@ namespace OpenSim.Region.CoreModules.World.Land
                     {
                         // if you do a "About Landmark" on a landmark a second time, the viewer sends the
                         // region_handle it got earlier via RegionHandleRequest
-                        ulong regionHandle = Util.BytesToUInt64Big((byte[])tmp);
+                        ulong regionHandle = Util.BytesToUInt64Big(tmp);
                         if(regionHandle == myHandle)
                         {
                             ILandObject l = GetLandObjectClippedXY(x, y);

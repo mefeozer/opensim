@@ -228,7 +228,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Chat
             switch (sourceType)
             {
                 case ChatSourceType.Agent:
-                    ScenePresence avatar = (scene as Scene).GetScenePresence(c.Sender.AgentId);
+                    ScenePresence avatar = scene.GetScenePresence(c.Sender.AgentId);
                     if(avatar == null)
                         return;
                     fromPos = avatar.AbsolutePosition;

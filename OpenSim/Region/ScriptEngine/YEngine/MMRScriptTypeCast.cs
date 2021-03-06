@@ -872,11 +872,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(x is string)
                 return double.Parse((string)x);
             if(x is LSL_Float)
-                return (double)(LSL_Float)x;
+                return (LSL_Float)x;
             if(x is LSL_Integer)
-                return (double)(int)(LSL_Integer)x;
+                return (int)(LSL_Integer)x;
             if(x is int)
-                return (double)(int)x;
+                return (int)x;
             return (double)x;
         }
 
@@ -887,7 +887,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             if(x is string)
                 return int.Parse((string)x);
             if(x is LSL_Integer)
-                return (int)(LSL_Integer)x;
+                return (LSL_Integer)x;
             return (int)x;
         }
 
@@ -927,14 +927,14 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public static double EHArgUnwrapFloat(object x)
         {
             if(x is LSL_Float)
-                return (double)(LSL_Float)x;
+                return (LSL_Float)x;
             return (double)x;
         }
 
         public static int EHArgUnwrapInteger(object x)
         {
             if(x is LSL_Integer)
-                return (int)(LSL_Integer)x;
+                return (LSL_Integer)x;
             return (int)x;
         }
 
@@ -951,9 +951,9 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         public static string EHArgUnwrapString(object x)
         {
             if(x is LSL_Key)
-                return (string)(LSL_Key)x;
+                return (LSL_Key)x;
             if(x is LSL_String)
-                return (string)(LSL_String)x;
+                return (LSL_String)x;
             return (string)x;
         }
 

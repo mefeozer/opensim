@@ -97,9 +97,9 @@ namespace OpenSim.Server.Handlers.Hypergrid
                 uint timestamp = 0;
                 string fromAgentName = "";
                 string message = "";
-                byte dialog = (byte)0;
+                byte dialog = 0;
                 bool fromGroup = false;
-                byte offline = (byte)0;
+                byte offline = 0;
                 uint ParentEstateID = 0;
                 Vector3 Position = Vector3.Zero;
                 UUID RegionID = UUID.Zero;

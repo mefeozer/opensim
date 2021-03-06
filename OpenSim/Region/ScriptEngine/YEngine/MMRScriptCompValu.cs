@@ -212,11 +212,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             scg.ilGen.Emit(errorAt, OpCodes.Ldc_I4, var.vTableIndex);  // which array element
             if(type is TokenTypeFloat)
             {
-                scg.ilGen.Emit(errorAt, OpCodes.Ldele_R8);
+                scg.ilGen.Emit(errorAt, OpCodes.Ldelem_R8);
             }
             else if(type is TokenTypeInt)
             {
-                scg.ilGen.Emit(errorAt, OpCodes.Ldele_I4);
+                scg.ilGen.Emit(errorAt, OpCodes.Ldelem_I4);
             }
             else if(type is TokenTypeSDTypeDelegate)
             {
@@ -261,11 +261,11 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             else if(type is TokenTypeFloat)
             {
-                scg.ilGen.Emit(errorAt, OpCodes.Stele_R8);
+                scg.ilGen.Emit(errorAt, OpCodes.Stelem_R8);
             }
             else if(type is TokenTypeInt)
             {
-                scg.ilGen.Emit(errorAt, OpCodes.Stele_I4);
+                scg.ilGen.Emit(errorAt, OpCodes.Stelem_I4);
             }
             else if(type is TokenTypeSDTypeDelegate)
             {
@@ -425,7 +425,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         }
         public override void PushVal(ScriptCodeGen scg, Token errorAt)
         {
-            scg.ilGen.Emit(errorAt, OpCodes.Ldc_I4, (int)x);
+            scg.ilGen.Emit(errorAt, OpCodes.Ldc_I4, x);
         }
         public override void PushRef(ScriptCodeGen scg, Token errorAt)
         {

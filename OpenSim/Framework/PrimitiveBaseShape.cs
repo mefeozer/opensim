@@ -816,12 +816,12 @@ namespace OpenSim.Framework
 
         private ulong djb2(ulong hash, byte c)
         {
-            return (hash << 5) + hash + (ulong)c;
+            return (hash << 5) + hash + c;
         }
 
         private ulong djb2(ulong hash, ushort c)
         {
-            hash = (hash << 5) + hash + (ulong)(byte)c;
+            hash = (hash << 5) + hash + (byte)c;
             return (hash << 5) + hash + (ulong)(c >> 8);
         }
 
@@ -1095,10 +1095,10 @@ namespace OpenSim.Framework
                 _flexiEntry = true;
                 _flexiSoftness = ((data[pos] & 0x80) >> 6) | ((data[pos + 1] & 0x80) >> 7);
 
-                _flexiTension = (float)(data[pos++] & 0x7F) / 10.0f;
-                _flexiDrag = (float)(data[pos++] & 0x7F) / 10.0f;
+                _flexiTension = (data[pos++] & 0x7F) / 10.0f;
+                _flexiDrag = (data[pos++] & 0x7F) / 10.0f;
                 _flexiGravity = (float)(data[pos++] / 10.0f) - 10.0f;
-                _flexiWind = (float)data[pos++] / 10.0f;
+                _flexiWind = data[pos++] / 10.0f;
                 _flexiForceX = Utils.BytesToFloat(data, pos);
                 _flexiForceY = Utils.BytesToFloat(data, pos + 4);
                 _flexiForceZ = Utils.BytesToFloat(data, pos + 8);
@@ -1217,10 +1217,10 @@ namespace OpenSim.Framework
                 };
             }
 
-            prim.PrimData.PathShearX = this.PathShearX < 128 ? (float)this.PathShearX * 0.01f : (float)(this.PathShearX - 256) * 0.01f;
-            prim.PrimData.PathShearY = this.PathShearY < 128 ? (float)this.PathShearY * 0.01f : (float)(this.PathShearY - 256) * 0.01f;
-            prim.PrimData.PathBegin = (float)this.PathBegin * 2.0e-5f;
-            prim.PrimData.PathEnd = 1.0f - (float)this.PathEnd * 2.0e-5f;
+            prim.PrimData.PathShearX = this.PathShearX < 128 ? PathShearX * 0.01f : (this.PathShearX - 256) * 0.01f;
+            prim.PrimData.PathShearY = this.PathShearY < 128 ? PathShearY * 0.01f : (this.PathShearY - 256) * 0.01f;
+            prim.PrimData.PathBegin = PathBegin * 2.0e-5f;
+            prim.PrimData.PathEnd = 1.0f - PathEnd * 2.0e-5f;
 
             prim.PrimData.PathScaleX = (200 - this.PathScaleX) * 0.01f;
             prim.PrimData.PathScaleY = (200 - this.PathScaleY) * 0.01f;
@@ -1231,9 +1231,9 @@ namespace OpenSim.Framework
             prim.PrimData.PathTwistBegin = this.PathTwistBegin * 0.01f;
             prim.PrimData.PathTwist = this.PathTwist * 0.01f;
 
-            prim.PrimData.ProfileBegin = (float)this.ProfileBegin * 2.0e-5f;
-            prim.PrimData.ProfileEnd = 1.0f - (float)this.ProfileEnd * 2.0e-5f;
-            prim.PrimData.ProfileHollow = (float)this.ProfileHollow * 2.0e-5f;
+            prim.PrimData.ProfileBegin = ProfileBegin * 2.0e-5f;
+            prim.PrimData.ProfileEnd = 1.0f - ProfileEnd * 2.0e-5f;
+            prim.PrimData.ProfileHollow = ProfileHollow * 2.0e-5f;
 
             prim.PrimData.profileCurve = this.ProfileCurve;
             prim.PrimData.ProfileHole = (HoleType)this.HollowShape;

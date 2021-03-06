@@ -664,7 +664,7 @@ namespace OpenSim.Services.HypergridService
                 message = string.Format("New login detected"),
                 dialog = 250, // God kick
                 fromGroup = false,
-                offline = (byte)0,
+                offline = 0,
                 ParentEstateID = 0,
                 Position = Vector3.Zero,
                 RegionID = scopeID.Guid,

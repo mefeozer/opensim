@@ -725,7 +725,7 @@ namespace OpenSim.Region.Framework.Scenes
         public int ScriptAccessPin
         {
             get { return _scriptAccessPin; }
-            set { _scriptAccessPin = (int)value; }
+            set { _scriptAccessPin = value; }
         }
 
         public byte[] TextureAnimation
@@ -1643,7 +1643,7 @@ namespace OpenSim.Region.Framework.Scenes
                     {
                         if (PhysActor != null)
                         {
-                            PhysActor.SetMaterial((int)value);
+                            PhysActor.SetMaterial(value);
                         }
                         if(ParentGroup != null)
                         {
@@ -5861,7 +5861,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             try
             {
-                int count = (int)Utils.BytesToUInt16(data, 0);
+                int count = Utils.BytesToUInt16(data, 0);
                 if(count == 0)
                     return;
 

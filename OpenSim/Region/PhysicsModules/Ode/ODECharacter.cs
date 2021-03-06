@@ -202,8 +202,8 @@ namespace OpenSim.Region.PhysicsModule.ODE
             {
                 _position
                     = new Vector3(
-                        (float)_parent_scene.WorldExtents.X * 0.5f,
-                        (float)_parent_scene.WorldExtents.Y * 0.5f,
+                        _parent_scene.WorldExtents.X * 0.5f,
+                        _parent_scene.WorldExtents.Y * 0.5f,
                         parent_scene.GetTerrainHeightAtXY(128f, 128f) + 10f);
                 _taintPosition = _position;
 
@@ -511,7 +511,7 @@ namespace OpenSim.Region.PhysicsModule.ODE
         private void AlignAvatarTiltWithCurrentDirectionOfMovement(Vector3 movementVector)
         {
             movementVector.Z = 0f;
-            float magnitude = (float)Math.Sqrt((double)(movementVector.X * movementVector.X + movementVector.Y * movementVector.Y));
+            float magnitude = (float)Math.Sqrt(movementVector.X * movementVector.X + movementVector.Y * movementVector.Y);
             if (magnitude < 0.1f) return;
 
             // normalize the velocity vector

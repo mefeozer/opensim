@@ -1571,7 +1571,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 ilGen.Emit(curDeclFunc, OpCodes.Dup);
                 ilGen.Emit(curDeclFunc, OpCodes.Ldc_I4, i);
                 argVar.location.PushVal(this, argVar.name, tokenTypeObj);
-                ilGen.Emit(curDeclFunc, OpCodes.Stele_Ref);
+                ilGen.Emit(curDeclFunc, OpCodes.Stelem_Ref);
                 i++;
             }
 
@@ -1598,7 +1598,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 {
                     ilGen.Emit(curDeclFunc, OpCodes.Box, t);
                 }
-                ilGen.Emit(curDeclFunc, OpCodes.Stele_Ref);
+                ilGen.Emit(curDeclFunc, OpCodes.Stelem_Ref);
             }
 
             ilGen.Emit(curDeclFunc, OpCodes.Pop);
@@ -1630,7 +1630,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 argLoc.PopPre(this, argVar.name);
                 ilGen.Emit(curDeclFunc, OpCodes.Ldloc, objArray);
                 ilGen.Emit(curDeclFunc, OpCodes.Ldc_I4, i);
-                ilGen.Emit(curDeclFunc, OpCodes.Ldele_Ref);
+                ilGen.Emit(curDeclFunc, OpCodes.Ldelem_Ref);
                 TypeCast.CastTopOfStack(this, argVar.name, tokenTypeObj, argLoc.type, true);
                 argLoc.PopPost(this, argVar.name);
                 i++;
@@ -1653,7 +1653,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 }
                 ilGen.Emit(curDeclFunc, OpCodes.Ldloc, objArray);
                 ilGen.Emit(curDeclFunc, OpCodes.Ldc_I4, i++);
-                ilGen.Emit(curDeclFunc, OpCodes.Ldele_Ref);
+                ilGen.Emit(curDeclFunc, OpCodes.Ldelem_Ref);
                 if(u.IsValueType)
                 {
                     ilGen.Emit(curDeclFunc, OpCodes.Unbox_Any, u);
@@ -2642,7 +2642,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 for(TokenSwitchCase scanCase = thisCase; scanCase != null; scanCase = scanCase.nextSortedCase)
                 {
                     int nVals = scanCase.val2 - thisCase.val1 + 1;
-                    double ratio = (double)nVals / (double)++numCases;
+                    double ratio = nVals / (double)++numCases;
                     if(ratio >= 0.5 && ratio <= 2.0)
                     {
                         numFound = numCases;
@@ -5096,7 +5096,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 {
                     if(dimNo + 1 < rank)
                     {
-                        ErrorMsg((Token)val, "not enough brace levels");
+                        ErrorMsg(val, "not enough brace levels");
                     }
                     else
                     {
@@ -5434,7 +5434,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             if(expr is CompValuFloat)
             {
-                constVal = ((CompValuFloat)expr).x != (double)0;
+                constVal = ((CompValuFloat)expr).x != 0;
                 return true;
             }
             if(expr is CompValuInteger)
@@ -5468,7 +5468,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
         {
             if(expr is CompValuChar)
             {
-                constVal = (int)((CompValuChar)expr).x;
+                constVal = ((CompValuChar)expr).x;
                 return true;
             }
             if(expr is CompValuInteger)

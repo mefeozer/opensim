@@ -1068,7 +1068,7 @@ namespace OpenSim.Groups
                 FromName = data.Data["FromName"],
                 NoticeID = data.NoticeID,
                 Subject = data.Data["Subject"],
-                Timestamp = uint.Parse((string)data.Data["TMStamp"]),
+                Timestamp = uint.Parse(data.Data["TMStamp"]),
                 HasAttachment = data.Data["HasAttachment"] == "1" ? true : false
             };
             if (notice.HasAttachment)

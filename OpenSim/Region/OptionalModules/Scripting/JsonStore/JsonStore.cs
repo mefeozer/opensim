@@ -576,7 +576,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 int aval = Convert.ToInt32(akey);
 
                 if (aval < amap.Count)
-                    return (OSD) amap[aval];
+                    return amap[aval];
 
                 return null;
             }
@@ -599,7 +599,7 @@ namespace OpenSim.Region.OptionalModules.Scripting.JsonStore
                 string hkey = groups[1].Value;
 
                 if (hmap.ContainsKey(hkey))
-                    return (OSD) hmap[hkey];
+                    return hmap[hkey];
 
                 return null;
             }

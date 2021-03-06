@@ -360,10 +360,10 @@ namespace OpenSim.Region.CoreModules.World.Land
             {
                 // Normal Calculations
                 int parcelMax = (int)(
-                                (double)LandData.Area
+                                LandData.Area
                               * (double)_scene.RegionInfo.ObjectCapacity
                               * (double)_scene.RegionInfo.RegionSettings.ObjectBonus
-                              / (double)(_scene.RegionInfo.RegionSizeX * _scene.RegionInfo.RegionSizeY)
+                              / (_scene.RegionInfo.RegionSizeX * _scene.RegionInfo.RegionSizeY)
                               + 0.5 );
 
                 if(parcelMax > _scene.RegionInfo.ObjectCapacity)
@@ -384,11 +384,11 @@ namespace OpenSim.Region.CoreModules.World.Land
             else
             {
                 //Normal Calculations
-                int simMax = (int)(   (double)LandData.SimwideArea
+                int simMax = (int)(LandData.SimwideArea
                                     * (double)_scene.RegionInfo.ObjectCapacity
                                     * (double)_scene.RegionInfo.RegionSettings.ObjectBonus
-                                    / (long)(_scene.RegionInfo.RegionSizeX * _scene.RegionInfo.RegionSizeY)
-                                    +0.5 );
+                                    / (_scene.RegionInfo.RegionSizeX * _scene.RegionInfo.RegionSizeY)
+                                    + 0.5 );
                 // sanity check
                 if(simMax > _scene.RegionInfo.ObjectCapacity)
                     simMax = _scene.RegionInfo.ObjectCapacity;
@@ -502,7 +502,7 @@ namespace OpenSim.Region.CoreModules.World.Land
 
                 allowedDelta |= (uint)(ParcelFlags.ShowDirectory |
                         ParcelFlags.AllowPublish |
-                        ParcelFlags.MaturePublish) | (uint)(1 << 23);
+                        ParcelFlags.MaturePublish) | 1 << 23;
             }
 
             if (_scene.Permissions.CanEditParcelProperties(remote_client.AgentId,this, GroupPowers.LandChangeIdentity, false))

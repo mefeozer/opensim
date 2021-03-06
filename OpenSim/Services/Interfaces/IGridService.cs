@@ -432,7 +432,7 @@ namespace OpenSim.Services.Interfaces
         /// </summary>
         public bool Equals(GridRegion region)
         {
-            if ((object)region == null)
+            if (region == null)
                 return false;
             // Return true if the non-zero UUIDs are equal:
             return RegionID != UUID.Zero && RegionID.Equals(region.RegionID);

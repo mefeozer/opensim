@@ -135,8 +135,8 @@ namespace OpenSim.Framework
         private static bool CAS(ref SingleLinkNode location, SingleLinkNode comparand, SingleLinkNode newValue)
         {
             return
-                (object)comparand ==
-                (object)Interlocked.CompareExchange<SingleLinkNode>(ref location, newValue, comparand);
+                comparand ==
+                Interlocked.CompareExchange<SingleLinkNode>(ref location, newValue, comparand);
         }
     }
 }

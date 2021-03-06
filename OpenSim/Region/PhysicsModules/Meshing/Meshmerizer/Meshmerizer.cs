@@ -673,7 +673,7 @@ namespace OpenSim.Region.PhysicsModule.Meshing
                         managedImage.ConvertChannels(managedImage.Channels & ~OpenMetaverse.Imaging.ManagedImage.ImageChannels.Alpha);
 
                     Bitmap imgData = OpenMetaverse.Imaging.LoadTGAClass.LoadTGA(new MemoryStream(managedImage.ExportTGA()));
-                    idata = (Image)imgData;
+                    idata = imgData;
                     managedImage = null;
 
                     if (cacheSculptMaps)
@@ -752,16 +752,16 @@ namespace OpenSim.Region.PhysicsModule.Meshing
             coords = new List<Coord>();
             faces = new List<Face>();
 
-            float pathShearX = primShape.PathShearX < 128 ? (float)primShape.PathShearX * 0.01f : (float)(primShape.PathShearX - 256) * 0.01f;
-            float pathShearY = primShape.PathShearY < 128 ? (float)primShape.PathShearY * 0.01f : (float)(primShape.PathShearY - 256) * 0.01f;
-            float pathBegin = (float)primShape.PathBegin * 2.0e-5f;
-            float pathEnd = 1.0f - (float)primShape.PathEnd * 2.0e-5f;
-            float pathScaleX = (float)(primShape.PathScaleX - 100) * 0.01f;
-            float pathScaleY = (float)(primShape.PathScaleY - 100) * 0.01f;
+            float pathShearX = primShape.PathShearX < 128 ? primShape.PathShearX * 0.01f : (primShape.PathShearX - 256) * 0.01f;
+            float pathShearY = primShape.PathShearY < 128 ? primShape.PathShearY * 0.01f : (primShape.PathShearY - 256) * 0.01f;
+            float pathBegin = primShape.PathBegin * 2.0e-5f;
+            float pathEnd = 1.0f - primShape.PathEnd * 2.0e-5f;
+            float pathScaleX = (primShape.PathScaleX - 100) * 0.01f;
+            float pathScaleY = (primShape.PathScaleY - 100) * 0.01f;
 
-            float profileBegin = (float)primShape.ProfileBegin * 2.0e-5f;
-            float profileEnd = 1.0f - (float)primShape.ProfileEnd * 2.0e-5f;
-            float profileHollow = (float)primShape.ProfileHollow * 2.0e-5f;
+            float profileBegin = primShape.ProfileBegin * 2.0e-5f;
+            float profileEnd = 1.0f - primShape.ProfileEnd * 2.0e-5f;
+            float profileHollow = primShape.ProfileHollow * 2.0e-5f;
             if (profileHollow > 0.95f)
                 profileHollow = 0.95f;
 

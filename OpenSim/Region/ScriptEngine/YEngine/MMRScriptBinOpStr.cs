@@ -1533,7 +1533,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
         public static double MethVecMulVec(LSL_Vector left, LSL_Vector right)
         {
-            return (double)(left * right).value;
+            return (left * right).value;
         }
 
         public static LSL_Vector MethVecModVec(LSL_Vector left, LSL_Vector right)

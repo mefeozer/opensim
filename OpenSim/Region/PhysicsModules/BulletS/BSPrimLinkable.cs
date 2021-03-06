@@ -278,7 +278,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             // pParams = [ BSPhysObject root, null ]
             case ExtendedPhysics.PhysFunctGetLinksetType:
             {
-                ret = (object)LinksetType;
+                ret = LinksetType;
                 DetailLog("{0},BSPrimLinkable.Extension.physGetLinksetType,type={1}", LocalID, ret);
                 break;
             }
@@ -299,7 +299,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                             ConvertLinkset(linksetType);
                         });
                     }
-                    ret = (object)(int)linksetType;
+                    ret = (int)linksetType;
                 }
                 break;
             }

@@ -134,7 +134,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Friends
                 transferModule.SendInstantMessage(new GridInstantMessage(
                         client.Scene, client.AgentId,
                         client.FirstName+" "+client.LastName,
-                        destID, (byte)211, false,
+                        destID, 211, false,
                         string.Empty,
                         transactionID, false, new Vector3(), new byte[0], true),
                         delegate(bool success) {} );

@@ -1343,7 +1343,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 ProposalData.VoteCast = Utils.StringToBytes("false");
                 ProposalData.VoteID = new UUID(Proposal.VoteID);
                 ProposalData.VoteInitiator = new UUID(Proposal.VoteInitiator);
-                ProposalData.Majority = (float)Convert.ToInt32(Proposal.Majority);
+                ProposalData.Majority = Convert.ToInt32(Proposal.Majority);
                 ProposalData.Quorum = Convert.ToInt32(Proposal.Quorum);
                 ProposalData.TerseDateID = Utils.StringToBytes(Proposal.TerseDateID);
                 ProposalData.StartDateTime = Utils.StringToBytes(Proposal.StartDateTime);
@@ -1392,7 +1392,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 GVHIRP.TransactionData.TotalNumItems = (uint)i+1;
                 GVHIRP.HistoryItemData.VoteID = new UUID(Vote.VoteID);
                 GVHIRP.HistoryItemData.VoteInitiator = new UUID(Vote.VoteInitiator);
-                GVHIRP.HistoryItemData.Majority = (float)Convert.ToInt32(Vote.Majority);
+                GVHIRP.HistoryItemData.Majority = Convert.ToInt32(Vote.Majority);
                 GVHIRP.HistoryItemData.Quorum = Convert.ToInt32(Vote.Quorum);
                 GVHIRP.HistoryItemData.TerseDateID = Utils.StringToBytes(Vote.TerseDateID);
                 GVHIRP.HistoryItemData.StartDateTime = Utils.StringToBytes(Vote.StartDateTime);
@@ -1718,8 +1718,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 string Ys = "";
                 for (int pp = 0; pp < numPatches; pp++)
                 {
-                    Xs += string.Format("{0}", (int)pX[pp]) + ",";
-                    Ys += string.Format("{0}", (int)pY[pp]) + ",";
+                    Xs += string.Format("{0}", pX[pp]) + ",";
+                    Ys += string.Format("{0}", pY[pp]) + ",";
                 }
                 _log.DebugFormat("{0} {1}: numPatches={2}, X={3}, Y={4}", LogHeader, pWho, numPatches, Xs, Ys);
             }
@@ -1866,7 +1866,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             enablesimpacket.SimulatorInfo.IP = (uint)byteIP[3] << 24;
             enablesimpacket.SimulatorInfo.IP += (uint)byteIP[2] << 16;
             enablesimpacket.SimulatorInfo.IP += (uint)byteIP[1] << 8;
-            enablesimpacket.SimulatorInfo.IP += (uint)byteIP[0];
+            enablesimpacket.SimulatorInfo.IP += byteIP[0];
             enablesimpacket.SimulatorInfo.Port = neighbourPort;
 
             enablesimpacket.Header.Reliable = true; // ESP's should be reliable.
@@ -1926,7 +1926,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             newSimPack.RegionData.SimIP = (uint)byteIP[3] << 24;
             newSimPack.RegionData.SimIP += (uint)byteIP[2] << 16;
             newSimPack.RegionData.SimIP += (uint)byteIP[1] << 8;
-            newSimPack.RegionData.SimIP += (uint)byteIP[0];
+            newSimPack.RegionData.SimIP += byteIP[0];
             newSimPack.RegionData.SimPort = (ushort)externalIPEndPoint.Port;
             newSimPack.RegionData.SeedCapability = Util.StringToBytes256(capsURL);
 
@@ -2176,7 +2176,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             uint ip = (uint)byteIP[3] << 24;
             ip += (uint)byteIP[2] << 16;
             ip += (uint)byteIP[1] << 8;
-            ip += (uint)byteIP[0];
+            ip += byteIP[0];
 
             teleport.Info.SimIP = ip;
             teleport.Info.SimPort = (ushort)newRegionEndPoint.Port;
@@ -2484,7 +2484,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 EveryoneMask = 0,
                 OwnerMask = 0,
                 FolderID = UUID.Zero,
-                InvType = (sbyte)0,
+                InvType = 0,
                 Name = new byte[0],
                 NextOwnerMask = 0,
                 OwnerID = UUID.Zero,
@@ -2528,7 +2528,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         public void SendInventoryItemDetails(InventoryItemBase[] items)
         {
             // Fudge this value. It's only needed to make the CRC anyway
-            const uint FULL_MASK_PERMISSIONS = (uint)0x7fffffff;
+            const uint FULL_MASK_PERMISSIONS = 0x7fffffff;
 
             FetchInventoryReplyPacket inventoryReply = (FetchInventoryReplyPacket)PacketPool.Instance.GetPacket(PacketType.FetchInventoryReply);
             inventoryReply.AgentData.AgentID = AgentId;
@@ -2761,7 +2761,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
         protected void SendBulkUpdateInventoryItem(InventoryItemBase item, UUID? transationID = null)
         {
-            const uint FULL_MASK_PERMISSIONS = (uint)0x7ffffff;
+            const uint FULL_MASK_PERMISSIONS = 0x7ffffff;
 
             BulkUpdateInventoryPacket bulkUpdate
                 = (BulkUpdateInventoryPacket)PacketPool.Instance.GetPacket(PacketType.BulkUpdateInventory);
@@ -2824,7 +2824,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
         /// <see>IClientAPI.SendInventoryItemCreateUpdate(InventoryItemBase)</see>
         public void SendInventoryItemCreateUpdate(InventoryItemBase Item, UUID transactionID, uint callbackId)
         {
-            const uint FULL_MASK_PERMISSIONS = (uint)0x7fffffff;
+            const uint FULL_MASK_PERMISSIONS = 0x7fffffff;
 
             UpdateCreateInventoryItemPacket InventoryReply
                 = (UpdateCreateInventoryItemPacket)PacketPool.Instance.GetPacket(
@@ -3799,9 +3799,9 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             reply.Data.ActualArea = land.Area;
             reply.Data.BillableArea = land.Area; // TODO: what is this?
 
-            reply.Data.Flags = (byte)Util.ConvertAccessLevelToMaturity((byte)info.AccessLevel);
+            reply.Data.Flags = (byte)Util.ConvertAccessLevelToMaturity(info.AccessLevel);
             if((land.Flags & (uint)ParcelFlags.ForSale) != 0)
-                reply.Data.Flags |= (byte)(1 << 7);
+                reply.Data.Flags |= 1 << 7;
 
             if (land.IsGroupOwned)
                 reply.Data.Flags |= 0x04;
@@ -4911,7 +4911,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             {
                 data[pos++] = (byte)CoarseLocations[i].X;
                 data[pos++] = (byte)CoarseLocations[i].Y;
-                data[pos++] = CoarseLocations[i].Z > 1024 ? (byte)0 : (byte)(CoarseLocations[i].Z * 0.25f);
+                data[pos++] = CoarseLocations[i].Z > 1024 ? 0 : (byte)(CoarseLocations[i].Z * 0.25f);
                 
                 if (i < totalAgents)
                 {
@@ -6285,7 +6285,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     continue;
                 }
 
-                SceneObjectPart sop = (SceneObjectPart)update.Entity as SceneObjectPart;
+                SceneObjectPart sop = (SceneObjectPart)update.Entity;
                 if(sop == null)
                 {
                     update.Free();
@@ -6789,35 +6789,35 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             if (landData.Area > 0)
                 LLSDxmlEncode2.AddElem("MaxPrims", parcelObjectCapacity, sb);
             else
-                LLSDxmlEncode2.AddElem("MaxPrims", (int)0, sb);
+                LLSDxmlEncode2.AddElem("MaxPrims", 0, sb);
             LLSDxmlEncode2.AddElem("MediaID", landData.MediaID, sb);
             LLSDxmlEncode2.AddElem("MediaURL", landData.MediaURL, sb);
             LLSDxmlEncode2.AddElem("MediaAutoScale", landData.MediaAutoScale != 0, sb);
             LLSDxmlEncode2.AddElem("MusicURL", landData.MusicURL, sb);
             LLSDxmlEncode2.AddElem("Name", landData.Name, sb);
             LLSDxmlEncode2.AddElem("OtherCleanTime", landData.OtherCleanTime, sb);
-            LLSDxmlEncode2.AddElem("OtherCount", (int)0 , sb); //TODO
+            LLSDxmlEncode2.AddElem("OtherCount", 0, sb); //TODO
             LLSDxmlEncode2.AddElem("OtherPrims", pc.Others, sb);
             LLSDxmlEncode2.AddElem("OwnerID", landData.OwnerID, sb);
             LLSDxmlEncode2.AddElem("OwnerPrims", pc.Owner, sb);
             LLSDxmlEncode2.AddElem("ParcelPrimBonus", simObjectBonusFactor, sb);
             LLSDxmlEncode2.AddElem("PassHours", landData.PassHours, sb);
             LLSDxmlEncode2.AddElem("PassPrice", landData.PassPrice, sb);
-            LLSDxmlEncode2.AddElem("PublicCount", (int)0, sb); //TODO
+            LLSDxmlEncode2.AddElem("PublicCount", 0, sb); //TODO
             LLSDxmlEncode2.AddElem("RegionDenyAnonymous", (regionFlags & (uint)RegionFlags.DenyAnonymous) != 0, sb);
             LLSDxmlEncode2.AddElem("RegionDenyIdentified", false, sb);
             LLSDxmlEncode2.AddElem("RegionDenyTransacted", false, sb);
             LLSDxmlEncode2.AddElem("RegionPushOverride", (regionFlags & (uint)RegionFlags.RestrictPushObject) != 0, sb);
-            LLSDxmlEncode2.AddElem("RentPrice", (int) 0, sb);;
+            LLSDxmlEncode2.AddElem("RentPrice", 0, sb);;
             LLSDxmlEncode2.AddElem("RequestResult", request_result, sb);
             LLSDxmlEncode2.AddElem("SalePrice", landData.SalePrice, sb);
             LLSDxmlEncode2.AddElem("SelectedPrims", pc.Selected, sb);
-            LLSDxmlEncode2.AddElem("SelfCount", (int)0, sb); //TODO
+            LLSDxmlEncode2.AddElem("SelfCount", 0, sb); //TODO
             LLSDxmlEncode2.AddElem("SequenceID", sequence_id, sb);
             if (landData.SimwideArea > 0)
                 LLSDxmlEncode2.AddElem("SimWideMaxPrims", lo.GetSimulatorMaxPrimCount(), sb);
             else
-                LLSDxmlEncode2.AddElem("SimWideMaxPrims", (int)0, sb);
+                LLSDxmlEncode2.AddElem("SimWideMaxPrims", 0, sb);
             LLSDxmlEncode2.AddElem("SimWideTotalPrims", pc.Simulator, sb);
             LLSDxmlEncode2.AddElem("SnapSelection", snap_selection, sb);
             LLSDxmlEncode2.AddElem("SnapshotID", landData.SnapshotID, sb);
@@ -9470,7 +9470,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             if (packX == 255.5f || packY == 255.5f)
             {
                 ScenePresence avatar = null;
-                if (((Scene)_scene).TryGetScenePresence(AgentId, out avatar))
+                if (_scene.TryGetScenePresence(AgentId, out avatar))
                 {
                     if (packX == 255.5f)
                     {
@@ -10192,7 +10192,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             UUID taskID = UUID.Zero;
             if (transfer.TransferInfo.SourceType == (int)SourceType.SimInventoryItem)
             {
-                if (!((Scene)_scene).Permissions.BypassPermissions())
+                if (!_scene.Permissions.BypassPermissions())
                 {
                     // We're spawning a thread because the permissions check can block this thread
                     Util.FireAndForget(delegate
@@ -10231,7 +10231,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             //
             if (taskID != UUID.Zero) // Prim
             {
-                SceneObjectPart part = ((Scene)_scene).GetSceneObjectPart(taskID);
+                SceneObjectPart part = _scene.GetSceneObjectPart(taskID);
 
                 if (part == null)
                 {
@@ -10252,12 +10252,12 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 
                 if (tii.Type == (int)AssetType.LSLText)
                 {
-                    if (!((Scene)_scene).Permissions.CanEditScript(itemID, taskID, AgentId))
+                    if (!_scene.Permissions.CanEditScript(itemID, taskID, AgentId))
                         return;
                 }
                 else if (tii.Type == (int)AssetType.Notecard)
                 {
-                    if (!((Scene)_scene).Permissions.CanEditNotecard(itemID, taskID, AgentId))
+                    if (!_scene.Permissions.CanEditNotecard(itemID, taskID, AgentId))
                         return;
                 }
                 else
@@ -11454,7 +11454,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     for (int i = 0; i < messagePacket.ParamList.Length; i++)
                     {
                         EstateOwnerMessagePacket.ParamListBlock block = messagePacket.ParamList[i];
-                        string data = (string)Utils.BytesToString(block.Parameter);
+                        string data = Utils.BytesToString(block.Parameter);
                         _log.DebugFormat("[LLCLIENTVIEW]: Param {0}={1}", i, data);
                     }
 
@@ -11897,7 +11897,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                                       Utils.BytesToString(
                                           dirPlacesQueryPacket.QueryData.QueryText),
                                       (int)dirPlacesQueryPacket.QueryData.QueryFlags,
-                                      (int)dirPlacesQueryPacket.QueryData.Category,
+                                      dirPlacesQueryPacket.QueryData.Category,
                                       Utils.BytesToString(
                                           dirPlacesQueryPacket.QueryData.SimName),
                                       dirPlacesQueryPacket.QueryData.QueryStart);
@@ -12980,7 +12980,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
 //            _log.DebugFormat(
 //                "[CLIENT]: Incoming MultipleObjectUpdatePacket contained {0} blocks", multipleupdate.ObjectData.Length);
 
-            Scene tScene = (Scene)_scene;
+            Scene tScene = _scene;
 
             for (int i = 0; i < multipleupdate.ObjectData.Length; i++)
             {
@@ -13340,8 +13340,8 @@ namespace OpenSim.Region.ClientStack.LindenUDP
             uint regionY = 0;
 
             Utils.LongToUInts(_scene.RegionInfo.RegionHandle, out regionX, out regionY);
-            locx = (float)(Convert.ToDouble(args[0]) - (double)regionX);
-            locy = (float)(Convert.ToDouble(args[1]) - (double)regionY);
+            locx = (float)(Convert.ToDouble(args[0]) - regionX);
+            locy = (float)(Convert.ToDouble(args[1]) - regionY);
             locz = Convert.ToSingle(args[2]);
 
             OnAutoPilotGo?.Invoke(new Vector3(locx, locy, locz), false, true);
@@ -14043,7 +14043,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                     LLSDxmlEncode2.AddMap(sb);
                     LLSDxmlEncode2.AddElem("FolderID", folder.ID, sb);
                     LLSDxmlEncode2.AddElem("ParentID", folder.ParentID, sb);
-                    LLSDxmlEncode2.AddElem("Type", (int)folder.Type, sb);
+                    LLSDxmlEncode2.AddElem("Type", folder.Type, sb);
                     LLSDxmlEncode2.AddElem("Name", folder.Name, sb);
                     LLSDxmlEncode2.AddEndMap(sb);
                 }

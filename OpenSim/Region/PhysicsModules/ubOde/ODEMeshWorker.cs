@@ -575,7 +575,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             PrimitiveBaseShape _pbs = repData.pbs;
             float tmp;
 
-            float hollowAmount = (float)_pbs.ProfileHollow * 2.0e-5f;
+            float hollowAmount = _pbs.ProfileHollow * 2.0e-5f;
             float hollowVolume = hollowAmount * hollowAmount;
 
             switch (_pbs.ProfileShape)
@@ -615,8 +615,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     {
                         //a tube
 
-                        volume *= 0.78539816339e-2f * (float)(200 - _pbs.PathScaleX);
-                        tmp = 1.0f - 2.0e-2f * (float)(200 - _pbs.PathScaleY);
+                        volume *= 0.78539816339e-2f * (200 - _pbs.PathScaleX);
+                        tmp = 1.0f - 2.0e-2f * (200 - _pbs.PathScaleY);
                         volume -= volume * tmp * tmp;
 
                         if (hollowAmount > 0.0)
@@ -678,8 +678,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                     else if (_pbs.PathCurve == (byte)Extrusion.Curve1)
                     {
-                        volume *= 0.61685027506808491367715568749226e-2f * (float)(200 - _pbs.PathScaleX);
-                        tmp = 1.0f - .02f * (float)(200 - _pbs.PathScaleY);
+                        volume *= 0.61685027506808491367715568749226e-2f * (200 - _pbs.PathScaleX);
+                        tmp = 1.0f - .02f * (200 - _pbs.PathScaleY);
                         volume *= 1.0f - tmp * tmp;
 
                         if (hollowAmount > 0.0)
@@ -782,8 +782,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     else if (_pbs.PathCurve == (byte)Extrusion.Curve1)
                     {
                         volume *= 0.32475953f;
-                        volume *= 0.01f * (float)(200 - _pbs.PathScaleX);
-                        tmp = 1.0f - .02f * (float)(200 - _pbs.PathScaleY);
+                        volume *= 0.01f * (200 - _pbs.PathScaleX);
+                        tmp = 1.0f - .02f * (200 - _pbs.PathScaleY);
                         volume *= 1.0f - tmp * tmp;
 
                         if (hollowAmount > 0.0)
@@ -856,13 +856,13 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             volume *= taperX1 * taperY1 + 0.5f * (taperX1 * taperY + taperX * taperY1) + 0.3333333333f * taperX * taperY;
 
-            pathBegin = (float)_pbs.PathBegin * 2.0e-5f;
-            pathEnd = 1.0f - (float)_pbs.PathEnd * 2.0e-5f;
+            pathBegin = _pbs.PathBegin * 2.0e-5f;
+            pathEnd = 1.0f - _pbs.PathEnd * 2.0e-5f;
             volume *= pathEnd - pathBegin;
 
             // this is crude aproximation
-            profileBegin = (float)_pbs.ProfileBegin * 2.0e-5f;
-            profileEnd = 1.0f - (float)_pbs.ProfileEnd * 2.0e-5f;
+            profileBegin = _pbs.ProfileBegin * 2.0e-5f;
+            profileEnd = 1.0f - _pbs.ProfileEnd * 2.0e-5f;
             volume *= profileEnd - profileBegin;
 
             repData.volume = volume;

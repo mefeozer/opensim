@@ -4280,7 +4280,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.Api
                 else if (p is string)
                     return int.TryParse((string)p, out i);
                 else if (p is LSL_String)
-                    return int.TryParse((string)(LSL_String)p, out i);
+                    return int.TryParse((LSL_String)p, out i);
                 else
                 {
                     i = 0;

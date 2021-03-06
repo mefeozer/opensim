@@ -391,7 +391,7 @@ namespace OpenSim.Groups
                                 message = string.Format("You have been added to the group."),
                                 dialog = (byte)OpenMetaverse.InstantMessageDialog.MessageBox,
                                 fromGroup = false,
-                                offline = (byte)0,
+                                offline = 0,
                                 ParentEstateID = 0,
                                 Position = Vector3.Zero,
                                 RegionID = UUID.Zero.Guid,
@@ -1078,7 +1078,7 @@ namespace OpenSim.Groups
             msg.toAgentID = agentID.Guid;
             msg.dialog = dialog;
             msg.fromGroup = true;
-            msg.offline = (byte)1;
+            msg.offline = 1;
             msg.ParentEstateID = 0;
             msg.Position = Vector3.Zero;
             msg.RegionID = UUID.Zero.Guid;
@@ -1257,7 +1257,7 @@ namespace OpenSim.Groups
                 // or provide the notification via xmlrpc update queue
 
                 msg.imSessionID = groupInfo.GroupID.Guid;
-                msg.dialog = (byte)210; //interop
+                msg.dialog = 210; //interop
             }
             msg.fromAgentID = agentID.Guid;
             // msg.fromAgentID = info.GroupID;
@@ -1268,7 +1268,7 @@ namespace OpenSim.Groups
             msg.message = string.Format("You have been ejected from '{1}' by {0}.", agentName, groupInfo.GroupName);
 
             msg.fromGroup = false;
-            msg.offline = (byte)0;
+            msg.offline = 0;
             msg.ParentEstateID = 0;
             msg.Position = Vector3.Zero;
             msg.RegionID = regionInfo.RegionID.Guid;
@@ -1296,7 +1296,7 @@ namespace OpenSim.Groups
             }
             msg.dialog = (byte)OpenMetaverse.InstantMessageDialog.MessageFromAgent;
             msg.fromGroup = false;
-            msg.offline = (byte)0;
+            msg.offline = 0;
             msg.ParentEstateID = 0;
             msg.Position = Vector3.Zero;
             msg.RegionID = regionInfo.RegionID.Guid;
@@ -1345,7 +1345,7 @@ namespace OpenSim.Groups
                         message = string.Format("{0} has invited you to join a group called {1}. There is no cost to join this group.", agentName, group.GroupName),
                         dialog = (byte)OpenMetaverse.InstantMessageDialog.GroupInvitation,
                         fromGroup = true,
-                        offline = (byte)0,
+                        offline = 0,
                         ParentEstateID = 0,
                         Position = Vector3.Zero,
                         RegionID = regionInfo.RegionID.Guid,

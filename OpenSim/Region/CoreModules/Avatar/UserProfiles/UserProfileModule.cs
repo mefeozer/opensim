@@ -557,7 +557,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
             OSDMap parameters= new OSDMap();
 
             parameters.Add("creatorId", OSD.FromUUID(targetID));
-            OSD Params = (OSD)parameters;
+            OSD Params = parameters;
             if(!rpc.JsonRpcRequest(ref Params, "avatarclassifiedsrequest", serverURI, UUID.Random().ToString()))
             {
                 remoteClient.SendAvatarClassifiedReply(targetID, classifieds);
@@ -657,7 +657,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                 return;
             }
 
-            object Ad = (object)ad;
+            object Ad = ad;
             if(!rpc.JsonRpcRequest(ref Ad, "classifieds_info_query", serverURI, UUID.Random().ToString()))
             {
                 remoteClient.SendAgentAlertMessage(
@@ -758,7 +758,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
             }
 
             OSDMap parameters = new OSDMap {{"creatorId", OSD.FromUUID(creatorId)}};
-            OSD Params = (OSD)parameters;
+            OSD Params = parameters;
             if (!rpc.JsonRpcRequest(ref Params, "avatarclassifiedsrequest", serverURI, UUID.Random().ToString()))
             {
                 remoteClient.SendAgentAlertMessage("Error fetching classifieds", false);
@@ -860,7 +860,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
 
             OSDMap parameters= new OSDMap();
             parameters.Add("classifiedId", OSD.FromUUID(classifiedId));
-            OSD Params = (OSD)parameters;
+            OSD Params = parameters;
             if(!rpc.JsonRpcRequest(ref Params, "classified_delete", serverURI, UUID.Random().ToString()))
             {
                 remoteClient.SendAgentAlertMessage(
@@ -945,7 +945,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
 
             OSDMap parameters= new OSDMap();
             parameters.Add("creatorId", OSD.FromUUID(targetId));
-            OSD Params = (OSD)parameters;
+            OSD Params = parameters;
             if(!rpc.JsonRpcRequest(ref Params, "avatarpicksrequest", serverURI, UUID.Random().ToString()))
             {
                 remoteClient.SendAvatarPicksReply(targetId, picks);
@@ -1033,7 +1033,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                 return;
             }
 
-            object Pick = (object)pick;
+            object Pick = pick;
             if (!rpc.JsonRpcRequest (ref Pick, "pickinforequest", serverURI, UUID.Random ().ToString ())) {
                 remoteClient.SendAgentAlertMessage ("Error selecting pick", false);
                 return;
@@ -1191,7 +1191,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
             pick.SortOrder = sortOrder;
             pick.Enabled = enabled;
 
-            object Pick = (object)pick;
+            object Pick = pick;
             if(!rpc.JsonRpcRequest(ref Pick, "picks_update", serverURI, UUID.Random().ToString()))
             {
                 remoteClient.SendAgentAlertMessage(
@@ -1240,7 +1240,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
 
             OSDMap parameters= new OSDMap();
             parameters.Add("pickId", OSD.FromUUID(queryPickID));
-            OSD Params = (OSD)parameters;
+            OSD Params = parameters;
             if(!rpc.JsonRpcRequest(ref Params, "picks_delete", serverURI, UUID.Random().ToString()))
             {
                 remoteClient.SendAgentAlertMessage(
@@ -1301,7 +1301,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
                 return;
             }
 
-            object Note = (object)note;
+            object Note = note;
             if(!rpc.JsonRpcRequest(ref Note, "avatarnotesrequest", serverURI, UUID.Random().ToString()))
             {
                 remoteClient.SendAvatarNotesReply(note.TargetId, note.Notes);
@@ -1413,7 +1413,7 @@ namespace OpenSim.Region.CoreModules.Avatar.UserProfiles
             if(string.IsNullOrWhiteSpace(serverURI))
                 return;
 
-            object Pref = (object)pref;
+            object Pref = pref;
             if(!rpc.JsonRpcRequest(ref Pref, "user_preferences_request", serverURI, UUID.Random().ToString()))
             {
 //                _log.InfoFormat("[PROFILES]: UserPreferences request error");

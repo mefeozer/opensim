@@ -1112,7 +1112,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
                 case "connect":
                     // Add the Telehub
-                    part = Scene.GetSceneObjectPart((uint)param1);
+                    part = Scene.GetSceneObjectPart(param1);
                     if (part == null)
                         return;
                     SceneObjectGroup grp = part.ParentGroup;
@@ -1127,7 +1127,7 @@ namespace OpenSim.Region.CoreModules.World.Estate
 
                 case "spawnpoint add":
                     // Add SpawnPoint to the Telehub
-                    part = Scene.GetSceneObjectPart((uint)param1);
+                    part = Scene.GetSceneObjectPart(param1);
                     if (part == null)
                         return;
                     _Telehub.AddSpawnPoint(part.AbsolutePosition);

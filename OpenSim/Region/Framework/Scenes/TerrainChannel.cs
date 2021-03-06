@@ -132,7 +132,7 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 for (int jj = 0; jj < Height; jj++)
                 {
-                    heights[ii, jj] = (double)_terrainData[ii, jj];
+                    heights[ii, jj] = _terrainData[ii, jj];
                     idx++;
                 }
             }
@@ -229,12 +229,12 @@ namespace OpenSim.Region.Framework.Scenes
                         //    to ints will mean heightmap entries will not get changed
                         // First compute the rotation location for the new height.
                         dispX += (int)(rotationDisplacement.X
-                            + ((float)xx - rotationDisplacement.X) * Math.Cos(radianRotation)
-                            - ((float)yy - rotationDisplacement.Y) * Math.Sin(radianRotation) );
+                            + (xx - rotationDisplacement.X) * Math.Cos(radianRotation)
+                            - (yy - rotationDisplacement.Y) * Math.Sin(radianRotation) );
 
                         dispY += (int)(rotationDisplacement.Y
-                            + ((float)xx - rotationDisplacement.X) * Math.Sin(radianRotation)
-                            + ((float)yy - rotationDisplacement.Y) * Math.Cos(radianRotation) );
+                            + (xx - rotationDisplacement.X) * Math.Sin(radianRotation)
+                            + (yy - rotationDisplacement.Y) * Math.Cos(radianRotation) );
 
                         if (dispX >= 0 && dispX < _terrainData.SizeX && dispY >= 0 && dispY < _terrainData.SizeY)
                         {

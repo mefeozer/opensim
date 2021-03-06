@@ -59,7 +59,7 @@ namespace OpenSim.Tools.LSL.Compiler
 
              try
              {
-                 ICodeConverter cvt = (ICodeConverter) new CSCodeGenerator();
+                 ICodeConverter cvt = new CSCodeGenerator();
                  source = cvt.Convert(File.ReadAllText(args[0]));
              }
              catch(Exception e)

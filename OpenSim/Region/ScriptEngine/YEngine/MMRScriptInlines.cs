@@ -481,7 +481,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             else if(p is LSL_String)
             {
-                PrintParamString(sb, (string)(LSL_String)p);
+                PrintParamString(sb, (LSL_String)p);
             }
             else if(p is LSL_Vector)
             {

@@ -178,7 +178,7 @@ namespace OpenSim.Region.ClientStack.Linden
             // textures cost
             if (resources.texture_list != null && resources.texture_list.Array.Count > 0)
             {
-                float textures_cost = (float)(resources.texture_list.Array.Count * basicCost);
+                float textures_cost = resources.texture_list.Array.Count * basicCost;
                 textures_cost *= ModelTextureCostFactor;
 
                 itmp = (int)(textures_cost + 0.5f); // round
@@ -322,7 +322,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 meshsfee = ModelMinCostFactor;
 
             // actually scale it to basic cost
-            meshsfee *= (float)basicCost;
+            meshsfee *= basicCost;
 
             meshsfee += 0.5f; // rounding
 

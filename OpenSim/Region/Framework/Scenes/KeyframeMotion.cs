@@ -721,7 +721,7 @@ namespace OpenSim.Region.Framework.Scenes
             _lasttickMS = nowMS;
 
             // Do the frame processing
-            double remainingSteps = (double)_currentFrame.TimeMS / tickDuration;
+            double remainingSteps = _currentFrame.TimeMS / tickDuration;
 
             if (remainingSteps <= 1.0)
             {
@@ -762,7 +762,7 @@ namespace OpenSim.Region.Framework.Scenes
                 Quaternion currentRotation = _group.GroupRotation;
                 if ((Quaternion)_currentFrame.Rotation != currentRotation)
                 {
-                    float completed = ((float)_currentFrame.TimeTotal - (float)_currentFrame.TimeMS) / (float)_currentFrame.TimeTotal;
+                    float completed = (_currentFrame.TimeTotal - (float)_currentFrame.TimeMS) / _currentFrame.TimeTotal;
                     Quaternion step = Quaternion.Slerp(_currentFrame.StartRotation, (Quaternion)_currentFrame.Rotation, completed);
                     step.Normalize();
                     _group.RootPart.RotationOffset = step;

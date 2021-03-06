@@ -513,11 +513,11 @@ namespace OpenSim.Framework.Console
             ProcessTreeLevel(tree, root, doc);
 
             if (!tree.ContainsKey("help"))
-                tree["help"] = (object) new Dictionary<string, object>();
+                tree["help"] = new Dictionary<string, object>();
             ((Dictionary<string, object>)tree["help"])[string.Empty] = help;
 
             if (!tree.ContainsKey("quit"))
-                tree["quit"] = (object) new Dictionary<string, object>();
+                tree["quit"] = new Dictionary<string, object>();
             ((Dictionary<string, object>)tree["quit"])[string.Empty] = quit;
 
             return root;
@@ -586,11 +586,11 @@ namespace OpenSim.Framework.Console
             ReadTreeLevel(tree, root, fn);
 
             if (!tree.ContainsKey("help"))
-                tree["help"] = (object) new Dictionary<string, object>();
+                tree["help"] = new Dictionary<string, object>();
             ((Dictionary<string, object>)tree["help"])[string.Empty] = help;
 
             if (!tree.ContainsKey("quit"))
-                tree["quit"] = (object) new Dictionary<string, object>();
+                tree["quit"] = new Dictionary<string, object>();
             ((Dictionary<string, object>)tree["quit"])[string.Empty] = quit;
         }
 

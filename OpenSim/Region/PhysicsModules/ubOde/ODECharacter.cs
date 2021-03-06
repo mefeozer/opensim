@@ -187,7 +187,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             }
             else
             {
-                _position = new Vector3((float)_parent_scene.WorldExtents.X * 0.5f,(float)_parent_scene.WorldExtents.Y * 0.5f,parent_scene.GetTerrainHeightAtXY(128f,128f) + 10f);
+                _position = new Vector3(_parent_scene.WorldExtents.X * 0.5f, _parent_scene.WorldExtents.Y * 0.5f,parent_scene.GetTerrainHeightAtXY(128f,128f) + 10f);
                 _log.Warn("[PHYSICS]: Got NaN Position on Character Create");
             }
 
@@ -264,7 +264,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             set => _localID = value;
         }
 
-        public override PhysicsActor ParentActor => (PhysicsActor)this;
+        public override PhysicsActor ParentActor => this;
 
         public override bool Grabbed
         {
@@ -937,7 +937,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     if(r > 1.0f)
                         return false;
 
-                    float dp = 1.0f -(float)Math.Sqrt((double)r);
+                    float dp = 1.0f -(float)Math.Sqrt(r);
                     if(dp > 0.05f)
                         dp = 0.05f;
 
@@ -1727,7 +1727,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
                     AvatarGeomAndBodyCreation(_position.X,_position.Y,_position.Z);
 
-                    _parent_scene.actor_name_map[capsule] = (PhysicsActor)this;
+                    _parent_scene.actor_name_map[capsule] = this;
                     _parent_scene.AddCharacter(this);
                 }
                 else
@@ -2138,7 +2138,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         public void AddChange(changes what,object arg)
         {
-            _parent_scene.AddChange((PhysicsActor)this,what,arg);
+            _parent_scene.AddChange(this, what,arg);
         }
 
         private struct strAvatarSize

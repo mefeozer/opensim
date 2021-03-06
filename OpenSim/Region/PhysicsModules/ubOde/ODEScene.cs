@@ -565,7 +565,7 @@ readonly float TerrainFriction = 0.3f;
             SharedTmpcontact.geom.pos = contactGeom.pos;
             SharedTmpcontact.geom.normal = contactGeom.normal;
 
-            IntPtr contact = new IntPtr(GlobalContactsArray.ToInt64() + (long)(_global_contactcount * SafeNativeMethods.Contact.unmanagedSizeOf));
+            IntPtr contact = new IntPtr(GlobalContactsArray.ToInt64() + _global_contactcount * SafeNativeMethods.Contact.unmanagedSizeOf);
             Marshal.StructureToPtr(SharedTmpcontact, contact, true);
             return SafeNativeMethods.JointCreateContactPtr(world, contactgroup, contact);
         }
@@ -575,7 +575,7 @@ readonly float TerrainFriction = 0.3f;
             if (ContactgeomsArray == IntPtr.Zero || index >= contactsPerCollision)
                 return false;
 
-            IntPtr contactptr = new IntPtr(ContactgeomsArray.ToInt64() + (long)(index * SafeNativeMethods.ContactGeom.unmanagedSizeOf));
+            IntPtr contactptr = new IntPtr(ContactgeomsArray.ToInt64() + index * SafeNativeMethods.ContactGeom.unmanagedSizeOf);
             newcontactgeom = (SafeNativeMethods.ContactGeom)Marshal.PtrToStructure(contactptr, typeof(SafeNativeMethods.ContactGeom));
             return true;
         }
@@ -1604,14 +1604,14 @@ readonly float TerrainFriction = 0.3f;
                             {
                                 case ActorTypes.Agent:
                                     OdeCharacter cobj = (OdeCharacter)obj;
-                                    cobj.SendCollisions((int)odetimestepMS);
+                                    cobj.SendCollisions(odetimestepMS);
                                     break;
 
                                 case ActorTypes.Prim:
                                     OdePrim pobj = (OdePrim)obj;
                                     if (!pobj._outbounds)
                                     {
-                                        pobj.SendCollisions((int)odetimestepMS);
+                                        pobj.SendCollisions(odetimestepMS);
                                         lock(SimulationLock)
                                         {
                                             if(pobj.Body != IntPtr.Zero && !pobj._isSelected &&
@@ -1762,7 +1762,7 @@ readonly float TerrainFriction = 0.3f;
 
                 }
 */
-                fps = (float)nodeframes * ODE_STEPSIZE / reqTimeStep;
+                fps = nodeframes * ODE_STEPSIZE / reqTimeStep;
 
                 if(step_time < HalfOdeStep)
                     _timeDilation = 1.0f;
@@ -1815,14 +1815,14 @@ readonly float TerrainFriction = 0.3f;
             float dx;
             float dy;
 
-            int regsizeX = (int)_regionWidth + 3; // map size see setterrain number of samples
-            int regsizeY = (int)_regionHeight + 3; // map size see setterrain number of samples
+            int regsizeX = _regionWidth + 3; // map size see setterrain number of samples
+            int regsizeY = _regionHeight + 3; // map size see setterrain number of samples
             int regsize = regsizeX;
 
             if (x < regsizeX - 1)
             {
                 ix = (int)x;
-                dx = x - (float)ix;
+                dx = x - ix;
             }
             else // out world use external height
             {
@@ -1832,7 +1832,7 @@ readonly float TerrainFriction = 0.3f;
             if (y < regsizeY - 1)
             {
                 iy = (int)y;
-                dy = y - (float)iy;
+                dy = y - iy;
             }
             else
             {
@@ -1862,21 +1862,21 @@ readonly float TerrainFriction = 0.3f;
                             h2 = (((float)heights[iy + regsize]) - h0) * (1 - dx); // 1,1 vertice minus 0,1
                         }
             */
-            h0 = (float)heights[iy]; // 0,0 vertice
+            h0 = heights[iy]; // 0,0 vertice
 
             if (dy>dx)
             {
                 iy += regsize;
-                h2 = (float)heights[iy]; // 0,1 vertice
+                h2 = heights[iy]; // 0,1 vertice
                 h1 = (h2 - h0) * dy; // 0,1 vertice minus 0,0
-                h2 = ((float)heights[iy + 1] - h2) * dx; // 1,1 vertice minus 0,1
+                h2 = (heights[iy + 1] - h2) * dx; // 1,1 vertice minus 0,1
             }
             else
             {
                 iy++;
-                h2 = (float)heights[iy]; // vertice 1,0
+                h2 = heights[iy]; // vertice 1,0
                 h1 = (h2 - h0) * dx; // 1,0 vertice minus 0,0
-                h2 = ((float)heights[iy + regsize] - h2) * dy; // 1,1 vertice minus 1,0
+                h2 = (heights[iy + regsize] - h2) * dy; // 1,1 vertice minus 1,0
             }
 
             return h0 + h1 + h2;
@@ -1909,8 +1909,8 @@ readonly float TerrainFriction = 0.3f;
             float dx;
             float dy;
 
-            int regsizeX = (int)_regionWidth + 3; // map size see setterrain number of samples
-            int regsizeY = (int)_regionHeight + 3; // map size see setterrain number of samples
+            int regsizeX = _regionWidth + 3; // map size see setterrain number of samples
+            int regsizeY = _regionHeight + 3; // map size see setterrain number of samples
             int regsize = regsizeX;
 
             int xstep = 1;
@@ -1920,7 +1920,7 @@ readonly float TerrainFriction = 0.3f;
             if (x < regsizeX - 1)
             {
                 ix = (int)x;
-                dx = x - (float)ix;
+                dx = x - ix;
             }
             else // out world use external height
             {
@@ -1930,7 +1930,7 @@ readonly float TerrainFriction = 0.3f;
             if (y < regsizeY - 1)
             {
                 iy = (int)y;
-                dy = y - (float)iy;
+                dy = y - iy;
             }
             else
             {
@@ -1950,19 +1950,19 @@ readonly float TerrainFriction = 0.3f;
 
             if (firstTri)
             {
-                h1 = (float)heights[iy]; // 0,0 vertice
+                h1 = heights[iy]; // 0,0 vertice
                 iy += ystep;
-                h0 = (float)heights[iy]; // 0,1
-                h2 = (float)heights[iy+xstep]; // 1,1 vertice
+                h0 = heights[iy]; // 0,1
+                h2 = heights[iy + xstep]; // 1,1 vertice
                 norm.X = h0 - h2;
                 norm.Y = h1 - h0;
             }
             else
             {
-                h2 = (float)heights[iy]; // 0,0 vertice
+                h2 = heights[iy]; // 0,0 vertice
                 iy += xstep;
-                h0 = (float)heights[iy]; // 1,0 vertice
-                h1 = (float)heights[iy+ystep]; // vertice 1,1
+                h0 = heights[iy]; // 1,0 vertice
+                h1 = heights[iy + ystep]; // vertice 1,1
                 norm.X = h2 - h0;
                 norm.Y = h0 - h1;
             }

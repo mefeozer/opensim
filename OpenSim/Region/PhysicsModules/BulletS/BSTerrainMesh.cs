@@ -234,8 +234,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                     if (xx == sizeX) offset -= 1;
                     float height = heightMap[offset];
                     minHeight = Math.Min(minHeight, height);
-                    vertices[verticesCount + 0] = (float)xx + extentBase.X;
-                    vertices[verticesCount + 1] = (float)yy + extentBase.Y;
+                    vertices[verticesCount + 0] = xx + extentBase.X;
+                    vertices[verticesCount + 1] = yy + extentBase.Y;
                     vertices[verticesCount + 2] = height + extentBase.Z;
                     verticesCount += 3;
                 }
@@ -358,12 +358,12 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             {
                 for (int xx = 0; xx <= meshX; xx++)     // Hint: the "<=" means we go around sizeX + 1 times
                 {
-                    float offsetY = (float)yy * (float)sizeY / (float)meshY;     // The Y that is closest to the mesh point
+                    float offsetY = yy * (float)sizeY / meshY;     // The Y that is closest to the mesh point
                     int stepY = (int)offsetY;
-                    float fractionalY = offsetY - (float)stepY;
-                    float offsetX = (float)xx * (float)sizeX / (float)meshX;     // The X that is closest to the mesh point
+                    float fractionalY = offsetY - stepY;
+                    float offsetX = xx * (float)sizeX / meshX;     // The X that is closest to the mesh point
                     int stepX = (int)offsetX;
-                    float fractionalX = offsetX - (float)stepX;
+                    float fractionalX = offsetX - stepX;
 
                     // physicsScene.DetailLog("{0},BSTerrainMesh.ConvertHeightMapToMesh2,xx={1},yy={2},offX={3},stepX={4},fractX={5},offY={6},stepY={7},fractY={8}",
                     //                 BSScene.DetailLogZero, xx, yy, offsetX, stepX, fractionalX, offsetY, stepY, fractionalY);
@@ -385,8 +385,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
 
                     minHeight = Math.Min(minHeight, height);
 
-                    vertices[verticesCount + 0] = (float)xx * meshXStep + extentBase.X;
-                    vertices[verticesCount + 1] = (float)yy * meshYStep + extentBase.Y;
+                    vertices[verticesCount + 0] = xx * meshXStep + extentBase.X;
+                    vertices[verticesCount + 1] = yy * meshYStep + extentBase.Y;
                     vertices[verticesCount + 2] = height + extentBase.Z;
                     verticesCount += 3;
                 }

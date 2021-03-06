@@ -112,7 +112,7 @@ namespace OpenSim.Framework.Servers.HttpServer
 
             if (Error.Code != 0)
             {
-                Reply["error"] = (OSD)Error.Error;
+                Reply["error"] = Error.Error;
             }
 
             string result = string.Empty;

@@ -649,7 +649,7 @@ namespace OpenSim.Region.CoreModules.Scripting.HttpRequest
             {
                 if (e.Status == WebExceptionStatus.ProtocolError)
                 {
-                    HttpWebResponse webRsp = (HttpWebResponse)((WebException)e).Response;
+                    HttpWebResponse webRsp = (HttpWebResponse)e.Response;
                     Status = (int)webRsp.StatusCode;
                     try
                     {

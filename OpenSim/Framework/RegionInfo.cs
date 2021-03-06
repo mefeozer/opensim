@@ -260,7 +260,7 @@ namespace OpenSim.Framework
 
         public int AgentCapacity { get; set; }
 
-        public byte AccessLevel => (byte)Util.ConvertMaturityToAccessLevel((uint)RegionSettings.Maturity);
+        public byte AccessLevel => Util.ConvertMaturityToAccessLevel((uint)RegionSettings.Maturity);
 
         public string RegionType => _regionType;
 

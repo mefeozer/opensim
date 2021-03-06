@@ -232,8 +232,8 @@ namespace OpenSim.Framework.Serialization.External
 
             xtw.WriteElementString("Bitmap",         Convert.ToBase64String(landData.Bitmap));
             xtw.WriteElementString("Description",    landData.Description);
-            xtw.WriteElementString("Flags",          Convert.ToString((uint)landData.Flags));
-            xtw.WriteElementString("LandingType",    Convert.ToString((byte)landData.LandingType));
+            xtw.WriteElementString("Flags",          Convert.ToString(landData.Flags));
+            xtw.WriteElementString("LandingType",    Convert.ToString(landData.LandingType));
             xtw.WriteElementString("Name",           landData.Name);
             xtw.WriteElementString("Status",         Convert.ToString((sbyte)landData.Status));
             xtw.WriteElementString("LocalID",        landData.LocalID.ToString());

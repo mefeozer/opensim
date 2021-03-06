@@ -156,7 +156,7 @@ namespace OpenSim.Region.Framework.Scenes
 
             bool doneownsound = false;
 
-            int thisMaterial = (int)part.Material;
+            int thisMaterial = part.Material;
             if (thisMaterial >= MaxMaterials)
                 thisMaterial = 3;
             int thisMatScaled = thisMaterial * MaxMaterials;
@@ -232,7 +232,7 @@ namespace OpenSim.Region.Framework.Scenes
                             if (vol > 1.0f)
                                 vol = 1.0f;
 
-                            int otherMaterial = (int)otherPart.Material;
+                            int otherMaterial = otherPart.Material;
                             if (otherMaterial >= MaxMaterials)
                                 otherMaterial = 3;
 
@@ -313,7 +313,7 @@ namespace OpenSim.Region.Framework.Scenes
                         volume *= volume * .0125f; // 4m/s == volume 0.2
                         if (volume > 0.2f)
                             volume = 0.2f;
-                        otherMaterial = (int)otherPart.Material;
+                        otherMaterial = otherPart.Material;
                         if (otherMaterial >= MaxMaterials)
                             otherMaterial = 3;
 

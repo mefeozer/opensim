@@ -65,7 +65,7 @@ namespace OpenSim.Framework.Serialization.Tests
                 Name = "LandDataSerializerTest Land",
                 Status = ParcelStatus.Leased,
                 LocalID = 1,
-                MediaAutoScale = (byte)0x01,
+                MediaAutoScale = 0x01,
                 MediaID = new UUID("d4452578-2f25-4b97-a81b-819af559cfd7"),
                 MediaURL = "http://videos.opensimulator.org/bumblebee.mp4",
                 OwnerID = new UUID("1b8eedf9-6d15-448b-8015-24286f1756bf")

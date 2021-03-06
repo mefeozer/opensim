@@ -118,7 +118,7 @@ namespace OpenSim.Region.CoreModules.World.Terrain.FileLoaders
         {
             // The raw format doesn't contain any dimension information.
             // Guess the square dimensions by using the length of the raw file.
-            double dimension = Math.Sqrt((double)(s.Length / 4));
+            double dimension = Math.Sqrt(s.Length / 4);
             // Regions are always multiples of 256.
             int trimmedDimension = (int)dimension - (int)dimension % (int)Constants.RegionSize;
             if (trimmedDimension < Constants.RegionSize)

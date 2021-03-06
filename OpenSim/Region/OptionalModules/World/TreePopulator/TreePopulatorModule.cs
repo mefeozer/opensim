@@ -722,7 +722,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
                 if (!low && Util.RandomClass.NextDouble() < 0.75)
                     return;
 
-                int maxbirths =  (int)copse._tree_quantity - copse._trees.Count;
+                int maxbirths = copse._tree_quantity - copse._trees.Count;
                 if(maxbirths <= 1)
                     return;
 
@@ -847,7 +847,7 @@ namespace OpenSim.Region.OptionalModules.World.TreePopulator
 
         private void CreateTree(UUID uuid, Copse copse, Vector3 position, bool randomScale)
         {
-            position.Z = (float)_scene.Heightmap[(int)position.X, (int)position.Y];
+            position.Z = _scene.Heightmap[(int)position.X, (int)position.Y];
             if (position.Z < copse._treeline_low || position.Z > copse._treeline_high)
                 return;
 

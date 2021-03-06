@@ -478,7 +478,7 @@ namespace OpenSim.Region.Framework.Scenes
                 if (item.Owner != remoteClient.AgentId)
                     return;
 
-                item.Flags = (item.Flags & ~(uint)255) | (itemUpd.Flags & (uint)255);
+                item.Flags = (item.Flags & ~(uint)255) | (itemUpd.Flags & 255);
                 item.Name = itemUpd.Name;
                 item.Description = itemUpd.Description;
 
@@ -564,7 +564,7 @@ namespace OpenSim.Region.Framework.Scenes
 
                     if (item.InvType == (int)InventoryType.Wearable && (item.Flags & 0xf) == 0 && (itemUpd.Flags & 0xf) != 0)
                     {
-                        item.Flags = (uint)(item.Flags & 0xfffffff0) | (itemUpd.Flags & 0xf);
+                        item.Flags = item.Flags & 0xfffffff0 | (itemUpd.Flags & 0xf);
                         sendUpdate = true;
                     }
 
@@ -2563,7 +2563,7 @@ namespace OpenSim.Region.Framework.Scenes
                             XmlDocument doc = new XmlDocument();
                             doc.LoadXml(xmlData);
                             XmlElement e = (XmlElement)doc.SelectSingleNode("/CoalescedObject");
-                            XmlElement coll = (XmlElement)e;
+                            XmlElement coll = e;
                             float bx = Convert.ToSingle(coll.GetAttribute("x"));
                             float by = Convert.ToSingle(coll.GetAttribute("y"));
                             float bz = Convert.ToSingle(coll.GetAttribute("z"));

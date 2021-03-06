@@ -106,7 +106,7 @@ namespace OpenSim.Region.PhysicsModule.ODE.Tests
         public void CreateAndDropPhysicalCube()
         {
             PrimitiveBaseShape newcube = PrimitiveBaseShape.CreateBox();
-            Vector3 position = new Vector3((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f, 128f);
+            Vector3 position = new Vector3(Constants.RegionSize * 0.5f, Constants.RegionSize * 0.5f, 128f);
             Vector3 size = new Vector3(0.5f, 0.5f, 0.5f);
             Quaternion rot = Quaternion.Identity;
             PhysicsActor prim = pScene.AddPrimShape("CoolShape", newcube, position, size, rot, true, 0);

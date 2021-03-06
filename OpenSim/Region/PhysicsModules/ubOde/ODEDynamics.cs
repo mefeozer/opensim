@@ -62,7 +62,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         private Vehicle _type = Vehicle.TYPE_NONE;                     // If a 'VEHICLE', and what kind
 
-        private VehicleFlag _flags = (VehicleFlag) 0;                  // Boolean settings:
+        private VehicleFlag _flags = 0;                  // Boolean settings:
                                                                         // HOVER_TERRAIN_ONLY
                                                                         // HOVER_GLOBAL_HEIGHT
                                                                         // NO_DEFLECTION_UP
@@ -484,7 +484,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                     _verticalAttractionEfficiency = 0;
                     _verticalAttractionTimescale = 1000;
 
-                    _flags = (VehicleFlag)0;
+                    _flags = 0;
                     break;
 
                 case Vehicle.TYPE_SLED:

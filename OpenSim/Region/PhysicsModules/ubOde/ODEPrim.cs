@@ -308,7 +308,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 if (childPrim)
                     return _parent;
                 else
-                    return (PhysicsActor)this;
+                    return this;
             }
         }
 
@@ -538,7 +538,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             if (inertia.TotalMass > _parent_scene.maximumMassObject)
                 inertia.TotalMass = _parent_scene.maximumMassObject;
-            AddChange(changes.SetInertia,(object)_fakeInertiaOverride);
+            AddChange(changes.SetInertia, _fakeInertiaOverride);
         }
 
         public override Vector3 CenterOfMass
@@ -1201,8 +1201,8 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
             if (!pos.IsFinite())
             {
-                pos = new Vector3((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f,
-                    parent_scene.GetTerrainHeightAtXY((float)Constants.RegionSize * 0.5f, (float)Constants.RegionSize * 0.5f) + 0.5f);
+                pos = new Vector3(Constants.RegionSize * 0.5f, Constants.RegionSize * 0.5f,
+                    parent_scene.GetTerrainHeightAtXY(Constants.RegionSize * 0.5f, Constants.RegionSize * 0.5f) + 0.5f);
                 _log.WarnFormat("[PHYSICS]: Got nonFinite Object create Position for {0}", Name);
             }
             _position = pos;
@@ -1657,7 +1657,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
                 return false;
             }
 
-            _physCost = 0.0013f * (float)indexCount;
+            _physCost = 0.0013f * indexCount;
             // todo
             _streamCost = 1.0f;
 
@@ -3404,7 +3404,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
             if (newbuilding == _building)
                 return;
 
-            if ((bool)newbuilding)
+            if (newbuilding)
             {
                 _building = true;
                 if (!childPrim)
@@ -4239,7 +4239,7 @@ namespace OpenSim.Region.PhysicsModule.ubOde
 
         public void AddChange(changes what, object arg)
         {
-            _parent_scene.AddChange((PhysicsActor) this, what, arg);
+            _parent_scene.AddChange(this, what, arg);
         }
 
         private struct strVehicleBoolParam

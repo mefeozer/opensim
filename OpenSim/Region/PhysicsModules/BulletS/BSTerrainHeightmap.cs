@@ -147,8 +147,8 @@ namespace OpenSim.Region.PhysicsModule.BulletS
             int baseY = (int)pos.Y;
             int maxX = (int)_mapInfo.sizeX;
             int maxY = (int)_mapInfo.sizeY;
-            float diffX = pos.X - (float)baseX;
-            float diffY = pos.Y - (float)baseY;
+            float diffX = pos.X - baseX;
+            float diffY = pos.Y - baseY;
 
             float mapHeight1 = _mapInfo.heightMap[baseY * maxY + baseX];
             float mapHeight2 = _mapInfo.heightMap[Math.Min(baseY + 1, maxY - 1) * maxY + baseX];

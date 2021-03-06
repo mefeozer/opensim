@@ -147,9 +147,9 @@ namespace PrimMesher
                 {
 
                     if (mirror)
-                        row.Add(new Coord(-((float)redBytes[smNdx] * pixScale - 0.5f), (float)greenBytes[smNdx] * pixScale - 0.5f, (float)blueBytes[smNdx] * pixScale - 0.5f));
+                        row.Add(new Coord(-(redBytes[smNdx] * pixScale - 0.5f), greenBytes[smNdx] * pixScale - 0.5f, blueBytes[smNdx] * pixScale - 0.5f));
                     else
-                        row.Add(new Coord((float)redBytes[smNdx] * pixScale - 0.5f, (float)greenBytes[smNdx] * pixScale - 0.5f, (float)blueBytes[smNdx] * pixScale - 0.5f));
+                        row.Add(new Coord(redBytes[smNdx] * pixScale - 0.5f, greenBytes[smNdx] * pixScale - 0.5f, blueBytes[smNdx] * pixScale - 0.5f));
 
                     ++smNdx;
                 }

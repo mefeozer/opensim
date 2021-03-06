@@ -153,7 +153,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
                 else if(fieldType == typeof(LSL_String))
                 {
                     cv = new CompValuString(new TokenTypeStr(null),
-                                             (string)(LSL_String)constField.GetValue(null));
+                                             (LSL_String)constField.GetValue(null));
                 }
 
                  // The location of everything else (objects) is the static field in the interface definition.
@@ -188,7 +188,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             else if (value is float)
             {
-                cv = new CompValuFloat(new TokenTypeFloat(null), (double)(float)value);
+                cv = new CompValuFloat(new TokenTypeFloat(null), (float)value);
             }
             else if (value is int)
             {
@@ -201,7 +201,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
 
             else if (value is LSL_Float)
             {
-                cv = new CompValuFloat(new TokenTypeFloat(null), (double)((LSL_Float)value).value);
+                cv = new CompValuFloat(new TokenTypeFloat(null), ((LSL_Float)value).value);
             }
             else if (value is LSL_Integer)
             {
@@ -218,7 +218,7 @@ namespace OpenSim.Region.ScriptEngine.Yengine
             }
             else if (value is LSL_String)
             {
-                cv = new CompValuString(new TokenTypeStr(null), (string)(LSL_String)value);
+                cv = new CompValuString(new TokenTypeStr(null), (LSL_String)value);
             }
             else if (value is LSL_Vector)
             {

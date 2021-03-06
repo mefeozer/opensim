@@ -150,9 +150,9 @@ namespace PrimMesher
                 {
 
                     if (mirror)
-                        row.Add(new Coord(-((float)redBytes[smNdx] * pixScale - 0.5f), (float)greenBytes[smNdx] * pixScale - 0.5f, (float)blueBytes[smNdx] * pixScale - 0.5f));
+                        row.Add(new Coord(-(redBytes[smNdx] * pixScale - 0.5f), greenBytes[smNdx] * pixScale - 0.5f, blueBytes[smNdx] * pixScale - 0.5f));
                     else
-                        row.Add(new Coord((float)redBytes[smNdx] * pixScale - 0.5f, (float)greenBytes[smNdx] * pixScale - 0.5f, (float)blueBytes[smNdx] * pixScale - 0.5f));
+                        row.Add(new Coord(redBytes[smNdx] * pixScale - 0.5f, greenBytes[smNdx] * pixScale - 0.5f, blueBytes[smNdx] * pixScale - 0.5f));
 
                     ++smNdx;
                 }
@@ -169,8 +169,8 @@ namespace PrimMesher
 
             // will let last step to be eventually diferent, as seems to be in sl
 
-            float xscale = (float)srcImage.Width / (float)destWidth;
-            float yscale = (float)srcImage.Height / (float)destHeight;
+            float xscale = srcImage.Width / (float)destWidth;
+            float yscale = srcImage.Height / (float)destHeight;
 
             int lastsx = srcImage.Width - 1;
             int lastsy = srcImage.Height - 1;

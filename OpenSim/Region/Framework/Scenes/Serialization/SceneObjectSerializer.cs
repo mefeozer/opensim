@@ -1046,27 +1046,27 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
 
         private static void ProcessPayPrice0(SceneObjectPart obj, XmlReader reader)
         {
-            obj.PayPrice[0] = (int)reader.ReadElementContentAsInt("PayPrice0", string.Empty);
+            obj.PayPrice[0] = reader.ReadElementContentAsInt("PayPrice0", string.Empty);
         }
 
         private static void ProcessPayPrice1(SceneObjectPart obj, XmlReader reader)
         {
-            obj.PayPrice[1] = (int)reader.ReadElementContentAsInt("PayPrice1", string.Empty);
+            obj.PayPrice[1] = reader.ReadElementContentAsInt("PayPrice1", string.Empty);
         }
 
         private static void ProcessPayPrice2(SceneObjectPart obj, XmlReader reader)
         {
-            obj.PayPrice[2] = (int)reader.ReadElementContentAsInt("PayPrice2", string.Empty);
+            obj.PayPrice[2] = reader.ReadElementContentAsInt("PayPrice2", string.Empty);
         }
 
         private static void ProcessPayPrice3(SceneObjectPart obj, XmlReader reader)
         {
-            obj.PayPrice[3] = (int)reader.ReadElementContentAsInt("PayPrice3", string.Empty);
+            obj.PayPrice[3] = reader.ReadElementContentAsInt("PayPrice3", string.Empty);
         }
 
         private static void ProcessPayPrice4(SceneObjectPart obj, XmlReader reader)
         {
-            obj.PayPrice[4] = (int)reader.ReadElementContentAsInt("PayPrice4", string.Empty);
+            obj.PayPrice[4] = reader.ReadElementContentAsInt("PayPrice4", string.Empty);
         }
 
         private static void ProcessBuoyancy(SceneObjectPart obj, XmlReader reader)
@@ -1872,7 +1872,7 @@ namespace OpenSim.Region.Framework.Scenes.Serialization
                 reader,
                 (o, nodeName, e) => {
                     _log.Debug(string.Format("[SceneObjectSerializer]: Error while parsing element {0} in object {1} {2} ",
-                        nodeName, ((SceneObjectPart)o).Name, ((SceneObjectPart)o).UUID), e);
+                        nodeName, o.Name, o.UUID), e);
                 });
 
             if (errors)

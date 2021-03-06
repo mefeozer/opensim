@@ -66,7 +66,7 @@ namespace OpenSim.Region.Framework.Scenes.Animation
                         {
                             string name = nod.Attributes["name"].Value;
                             UUID id = (UUID)nod.InnerText;
-                            string animState = (string)nod.Attributes["state"].Value;
+                            string animState = nod.Attributes["state"].Value;
 
                             AnimsUUIDbyName.Add(name, id);
                             AnimsNamesbyUUID.Add(id, name);

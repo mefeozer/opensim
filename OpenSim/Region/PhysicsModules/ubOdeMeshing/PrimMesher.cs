@@ -1006,7 +1006,7 @@ namespace PrimMesher
                     steps += (int)(twistTotalAbs * 3.66); //  dahlia's magic number
 
                 float start = -0.5f;
-                float stepSize = length / (float)steps;
+                float stepSize = length / steps;
                 float percentOfPathMultiplier = stepSize * 0.999999f;
                 float xOffset = topShearX * pathCutBegin;
                 float yOffset = topShearY * pathCutBegin;

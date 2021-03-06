@@ -219,7 +219,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Gods
                 {
                     _log.DebugFormat("[GODS]: Sending nonlocal kill for agent {0}", agentID);
                     transferModule.SendInstantMessage(new GridInstantMessage(
-                            _scene, godID, "God", agentID, (byte)250, false,
+                            _scene, godID, "God", agentID, 250, false,
                             reason, UUID.Zero, true,
                             new Vector3(), new byte[] {(byte)kickflags}, true),
                             delegate(bool success) {} );
@@ -298,7 +298,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Gods
                 {
                     _log.DebugFormat("[GODS]: Sending nonlocal kill for agent {0}", agentID);
                     transferModule.SendInstantMessage(new GridInstantMessage(
-                            _scene, Constants.servicesGodAgentID, "GRID", agentID, (byte)250, false,
+                            _scene, Constants.servicesGodAgentID, "GRID", agentID, 250, false,
                             reason, UUID.Zero, true,
                             new Vector3(), new byte[] {0}, true),
                             delegate(bool success) {} );
@@ -336,7 +336,7 @@ namespace OpenSim.Region.CoreModules.Avatar.Gods
                 UUID agentID = new UUID(msg.toAgentID);
                 string reason = msg.message;
                 UUID godID = new UUID(msg.fromAgentID);
-                uint kickMode = (uint)msg.binaryBucket[0];
+                uint kickMode = msg.binaryBucket[0];
 
                 if(godID == Constants.servicesGodAgentID)
                     GridKickUser(agentID, reason);

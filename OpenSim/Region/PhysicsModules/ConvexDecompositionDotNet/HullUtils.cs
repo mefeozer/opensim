@@ -1010,7 +1010,7 @@ namespace OpenSim.Region.PhysicsModules.ConvexDecompositionDotNet
                 ConvexH.HalfEdge edge = under.edges[under_edge_count + i];
                 edge.p = (byte)(underplanescount - 1);
                 edge.ea = (short)coplanaredges[i].ea;
-                edge.v = (byte)coplanaredges[i].v0;
+                edge.v = coplanaredges[i].v0;
                 under.edges[under_edge_count + i] = edge;
 
                 tmpunderedges[coplanaredges[i].ea].ea = (short)(under_edge_count + i);

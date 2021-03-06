@@ -71,7 +71,7 @@ namespace OpenSim.Region.CoreModules.Hypergrid
                         _MapImageServerURL = _MapImageServerURL + "/";
                 }
 
-                expireBlackListTime = (int)Util.GetConfigVarFromSections<int>(source, "BlacklistTimeout", configSections, 10 * 60);
+                expireBlackListTime = Util.GetConfigVarFromSections<int>(source, "BlacklistTimeout", configSections, 10 * 60);
                 expireBlackListTime *= 1000;
                 _exportPrintScale =
                     Util.GetConfigVarFromSections<bool>(source, "ExportMapAddScale", configSections, _exportPrintScale);

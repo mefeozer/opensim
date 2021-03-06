@@ -158,11 +158,6 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
 
             _astRoot = codeTransformer.Transform();
 
-
-            // standard preamble
-
-
-
             _braceCount++;
             _braceCount++;
 
@@ -174,23 +169,11 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
             foreach (SYMBOL s in _astRoot.kids)
                 GenerateNodeToSB(_astRoot, s, sb);
 
-            codeTransformer = null;
-            p._lexer._buf=null;
-            p._lexer.yytext = null;
-            p._lexer = null;
-            p._symbols = null;
-            p = null;
-            errorHandler = null;
+            p.m_lexer.m_buf=null;
+            p.m_lexer.yytext = null;
+            p.m_lexer = null;
+            p.m_symbols = null;
 
-            // close braces!
-//            _braceCount--;
-            //retstr += GenerateIndentedLine("}");
-//            _braceCount--;
-            //retstr += GenerateLine("}");
-
-            // Removes all carriage return characters which may be generated in Windows platform. Is there
-            // cleaner way of doing this?
-//            sb.Replace("\r", "");
         }
 
         /// <summary>
@@ -285,14 +268,13 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
                 foreach (SYMBOL kid in s.kids)
                     GenerateNodeToSB(s, kid,sb);
             }
-
-            return;
         }
 
         /// <summary>
         /// Generates the code for a GlobalFunctionDefinition node.
         /// </summary>
         /// <param name="gf">The GlobalFunctionDefinition node.</param>
+        /// <param name="sb"></param>
         /// <returns>String containing C# code for GlobalFunctionDefinition gf.</returns>
         private void GenerateGlobalFunctionDefinition(GlobalFunctionDefinition gf, StringBuilder sb)
         {
@@ -306,7 +288,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
                 else
                     remainingKids.Add(kid);
 
-            GenerateIndented(string.Format("{0} {1}(", gf.ReturnType, CheckName(gf.Name)), gf, sb);
+            GenerateIndented($"{gf.ReturnType} {CheckName(gf.Name)}(", gf, sb);
 
             // print the state arguments, if any
             foreach (SYMBOL kid in argumentDeclarationListKids)

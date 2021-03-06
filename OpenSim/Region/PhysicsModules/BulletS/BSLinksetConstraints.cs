@@ -564,7 +564,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                                     if (linkInfoC != null)
                                     {
                                         linkInfoC.constraintType = (ConstraintType)requestedType;
-                                        ret = (object)true;
+                                        ret = true;
                                         DetailLog("{0},BSLinksetConstraint.ChangeLinkType,link={1},type={2}",
                                                     linkInfo.member.LocalID, linkInfo.member.LocalID, linkInfoC.constraintType);
                                     }
@@ -606,7 +606,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS
                             BSLinkInfoConstraint linkInfoC = linkInfo as BSLinkInfoConstraint;
                             if (linkInfoC != null)
                             {
-                                ret = (object)(int)linkInfoC.constraintType;
+                                ret = (int)linkInfoC.constraintType;
                                 DetailLog("{0},BSLinksetConstraint.GetLinkType,link={1},type={2}",
                                             linkInfo.member.LocalID, linkInfo.member.LocalID, linkInfoC.constraintType);
 

@@ -152,7 +152,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserClassifiedAdd ad = new UserClassifiedAdd();
-            object Ad = (object)ad;
+            object Ad = ad;
             OSD.DeserializeMembers(ref Ad, (OSDMap)tmpParams);
             if(Service.ClassifiedInfoRequest(ref ad, ref result))
             {
@@ -204,7 +204,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserProfilePick pick = new UserProfilePick();
-            object Pick = (object)pick;
+            object Pick = pick;
             OSD.DeserializeMembers(ref Pick, (OSDMap)tmpParams);
             if(Service.PickInfoRequest(ref pick, ref result))
             {
@@ -230,7 +230,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserProfilePick pick = new UserProfilePick();
-            object Pick = (object)pick;
+            object Pick = pick;
             OSD.DeserializeMembers(ref Pick, (OSDMap)tmpParams);
             if(Service.PicksUpdate(ref pick, ref result))
             {
@@ -278,7 +278,7 @@ namespace OpenSim.Server.Handlers
             }
 
             UserProfileNotes note = new UserProfileNotes();
-            object Note = (object)note;
+            object Note = note;
             OSD.DeserializeMembers(ref Note, (OSDMap)tmpParams);
             if(Service.AvatarNotesRequest(ref note))
             {
@@ -304,7 +304,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserProfileNotes note = new UserProfileNotes();
-            object Notes = (object) note;
+            object Notes = note;
             OSD.DeserializeMembers(ref Notes, (OSDMap)tmpParams);
             if(Service.NotesUpdate(ref note, ref result))
             {
@@ -328,7 +328,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserProfileProperties props = new UserProfileProperties();
-            object Props = (object)props;
+            object Props = props;
             OSD.DeserializeMembers(ref Props, (OSDMap)json["params"]);
             if(Service.AvatarPropertiesRequest(ref props, ref result))
             {
@@ -353,7 +353,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserProfileProperties props = new UserProfileProperties();
-            object Props = (object)props;
+            object Props = props;
             OSD.DeserializeMembers(ref Props, (OSDMap)json["params"]);
             if(Service.AvatarPropertiesUpdate(ref props, ref result))
             {
@@ -380,7 +380,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserProfileProperties props = new UserProfileProperties();
-            object Props = (object)props;
+            object Props = props;
             OSD.DeserializeMembers(ref Props, (OSDMap)json["params"]);
             if(Service.AvatarInterestsUpdate(props, ref result))
             {
@@ -406,7 +406,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserPreferences prefs = new UserPreferences();
-            object Prefs = (object)prefs;
+            object Prefs = prefs;
             OSD.DeserializeMembers(ref Prefs, (OSDMap)json["params"]);
             if(Service.UserPreferencesRequest(ref prefs, ref result))
             {
@@ -432,7 +432,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserPreferences prefs = new UserPreferences();
-            object Prefs = (object)prefs;
+            object Prefs = prefs;
             OSD.DeserializeMembers(ref Prefs, (OSDMap)json["params"]);
             if(Service.UserPreferencesUpdate(ref prefs, ref result))
             {
@@ -481,7 +481,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserAppData props = new UserAppData();
-            object Props = (object)props;
+            object Props = props;
             OSD.DeserializeMembers(ref Props, (OSDMap)json["params"]);
             if(Service.RequestUserAppData(ref props, ref result))
             {
@@ -510,7 +510,7 @@ namespace OpenSim.Server.Handlers
 
             string result = string.Empty;
             UserAppData props = new UserAppData();
-            object Props = (object)props;
+            object Props = props;
             OSD.DeserializeMembers(ref Props, (OSDMap)json["params"]);
             if(Service.SetUserAppData(props, ref result))
             {

@@ -208,9 +208,9 @@ namespace OpenSim.Region.CoreModules.Avatar.Lure
 
             Vector3 position = new Vector3
             {
-                X = (float)x,
-                Y = (float)y,
-                Z = (float)z
+                X = x,
+                Y = y,
+                Z = z
             };
 
             scene.RequestTeleportLocation(client, handle, position,

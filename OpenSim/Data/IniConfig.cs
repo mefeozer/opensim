@@ -74,12 +74,12 @@ namespace OpenSim.Data
                     if (match.Success)
                     {
                         string currentKey =
-                            match.Groups["Key"].Value as string;
+                            match.Groups["Key"].Value;
                         if (currentKey != null &&
                             currentKey.Trim().CompareTo(key) == 0)
                         {
                             string value =
-                                match.Groups["Value"].Value as string;
+                                match.Groups["Value"].Value;
                             return value;
                         }
                     }

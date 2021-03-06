@@ -182,7 +182,7 @@ namespace OpenSim.Region.OptionalModules.PhysicsParameters
             }
             string parm = "xxx";
             string valparm = string.Empty;
-            uint localID = (uint)PhysParameterEntry.APPLY_TO_NONE;  // set default value
+            uint localID = PhysParameterEntry.APPLY_TO_NONE;  // set default value
             try
             {
                 parm = cmdparms[2];
@@ -190,7 +190,7 @@ namespace OpenSim.Region.OptionalModules.PhysicsParameters
                 if (cmdparms.Length > 4)
                 {
                     if (cmdparms[4].ToLower() == "all")
-                        localID = (uint)PhysParameterEntry.APPLY_TO_ALL;
+                        localID = PhysParameterEntry.APPLY_TO_ALL;
                     else
                         localID = uint.Parse(cmdparms[2], Culture.NumberFormatInfo);
                 }

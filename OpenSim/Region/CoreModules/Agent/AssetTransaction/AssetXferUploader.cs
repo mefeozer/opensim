@@ -492,7 +492,7 @@ namespace OpenSim.Region.CoreModules.Agent.AssetTransaction
             item.GroupPermissions=0;
             item.EveryOnePermissions=0;
             item.NextPermissions = nextPerm;
-            item.Flags = (uint) wearableType;
+            item.Flags = wearableType;
             item.CreationDate = Util.UnixTimeSinceEpoch();
 
             _log.DebugFormat("[XFER]: Created item {0} with asset {1}",

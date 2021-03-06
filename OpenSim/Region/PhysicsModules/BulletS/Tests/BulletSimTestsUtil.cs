@@ -92,7 +92,7 @@ namespace OpenSim.Region.PhysicsModule.BulletS.Tests
         mod.RegionLoaded(scene);
 
         BSScene pScene = new BSScene();
-        mod = pScene as INonSharedRegionModule;
+        mod = pScene;
         mod.Initialise(openSimINI);
         mod.AddRegion(scene);
         mod.RegionLoaded(scene);

@@ -595,7 +595,7 @@ namespace OpenSim.Region.ClientStack.Linden
                         // check funds
                         else
                         {
-                            if (!mm.UploadCovered(client.AgentId, (int)cost))
+                            if (!mm.UploadCovered(client.AgentId, cost))
                             {
                                 LLSDAssetUploadError resperror = new LLSDAssetUploadError
                                 {
@@ -661,7 +661,7 @@ namespace OpenSim.Region.ClientStack.Linden
             {
                 uploader = uploaderURL,
                 state = "upload",
-                upload_price = (int)cost
+                upload_price = cost
             };
 
             if (llsdRequest.asset_type == "mesh")
@@ -720,7 +720,7 @@ namespace OpenSim.Region.ClientStack.Linden
             if (mm != null)
             {
                 // make sure client still has enougth credit
-                if (!mm.UploadCovered(_HostCapsObj.AgentID, (int)cost))
+                if (!mm.UploadCovered(_HostCapsObj.AgentID, cost))
                 {
                     error = "Insufficient funds.";
                     return;
@@ -1682,7 +1682,7 @@ namespace OpenSim.Region.ClientStack.Linden
                         {
                             LLSDxmlEncode2.AddMap(sb);
                             LLSDxmlEncode2.AddElem("id", asi.id, sb);
-                            LLSDxmlEncode2.AddElem("is_group_owned", (int)0, sb);
+                            LLSDxmlEncode2.AddElem("is_group_owned", 0, sb);
                             LLSDxmlEncode2.AddElem("location", asi.pos, sb);
                             LLSDxmlEncode2.AddElem("name", asi.name, sb);
                             LLSDxmlEncode2.AddElem("owner_id", _AgentID, sb);
@@ -1712,7 +1712,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 LLSDxmlEncode2.AddEndMap(sb);
 
                 LLSDxmlEncode2.AddMap(sb);
-                LLSDxmlEncode2.AddElem("amount", (int)-1, sb);
+                LLSDxmlEncode2.AddElem("amount", -1, sb);
                 LLSDxmlEncode2.AddElem("type", "memory", sb);
                 LLSDxmlEncode2.AddEndMap(sb);
 
@@ -2627,7 +2627,7 @@ namespace OpenSim.Region.ClientStack.Linden
                 LLSDxmlEncode2.AddEndMap(sb);
 
                 LLSDxmlEncode2.AddMap(sb);
-                LLSDxmlEncode2.AddElem("amount", (int)-1, sb);
+                LLSDxmlEncode2.AddElem("amount", -1, sb);
                 LLSDxmlEncode2.AddElem("type", "memory", sb);
                 LLSDxmlEncode2.AddEndMap(sb);
 

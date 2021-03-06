@@ -587,8 +587,8 @@ namespace OpenSim.Region.Framework.Scenes
             {
                 _rootRegionHandle = value;
                 // position rounded to lower multiple of 256m
-                _rootRegionPosition.X = (float)((_rootRegionHandle >> 32) & 0xffffff00);
-                _rootRegionPosition.Y = (float)(_rootRegionHandle & 0xffffff00);
+                _rootRegionPosition.X = (_rootRegionHandle >> 32) & 0xffffff00;
+                _rootRegionPosition.Y = _rootRegionHandle & 0xffffff00;
             }
         }
 

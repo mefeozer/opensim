@@ -382,7 +382,7 @@ namespace OpenSim.Region.ClientStack.LindenUDP
                 int now = start;
                 while (now == start)
                     now = Environment.TickCount;
-                TickCountResolution += (float)(now - start);
+                TickCountResolution += now - start;
             }
             _log.Info("[LLUDPSERVER]: Average Environment.TickCount resolution: " + TickCountResolution * 0.1f + "ms");
 

@@ -339,7 +339,7 @@ namespace OpenSim.Region.ScriptEngine.Shared.CodeTools
 
                 StringBuilder sb = new StringBuilder(16394);
 
-                LSL_Converter = (ICodeConverter)new CSCodeGenerator(comms, _insertCoopTerminationCalls);
+                LSL_Converter = new CSCodeGenerator(comms, _insertCoopTerminationCalls);
                 AddCSScriptHeader(
                         _scriptEngine.ScriptClassName,
                         _scriptEngine.ScriptBaseClassName,

@@ -303,7 +303,7 @@ namespace OpenSim.Groups
                     message = string.Format("Please confirm your acceptance to join group {0}.", groupName),
                     dialog = (byte)OpenMetaverse.InstantMessageDialog.GroupInvitation,
                     fromGroup = true,
-                    offline = (byte)0,
+                    offline = 0,
                     ParentEstateID = 0,
                     Position = Vector3.Zero,
                     RegionID = UUID.Zero.Guid,
